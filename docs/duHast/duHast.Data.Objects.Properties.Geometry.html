@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Data.Objects.Properties.Geometry package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Data.Objects.Properties package" href="duHast.Data.Objects.Properties.html" />
+    <link rel="next" title="duHast.Data.Utils package" href="duHast.Data.Utils.html" />
+    <link rel="prev" title="duHast.Data.Objects.Properties package" href="duHast.Data.Objects.Properties.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Data.Objects.Properties.Geometry package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Data.Utils.html" title="duHast.Data.Utils package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Data.Objects.Properties.html" title="duHast.Data.Objects.Properties package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Data.Objects.Properties.Geometry.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-data-objects-properties-geometry-package">
+<h1>duHast.Data.Objects.Properties.Geometry package<a class="headerlink" href="#duhast-data-objects-properties-geometry-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Data.Objects.Properties.Geometry.from_revit_conversion">
+<span id="duhast-data-objects-properties-geometry-from-revit-conversion-module"></span><h2>duHast.Data.Objects.Properties.Geometry.from_revit_conversion module<a class="headerlink" href="#module-duHast.Data.Objects.Properties.Geometry.from_revit_conversion" title="Permalink to this heading">¶</a></h2>
+<section id="revit-geometry-to-data-geometry-conversion-helper-functions">
+<h3>Revit Geometry to data geometry conversion helper functions.<a class="headerlink" href="#revit-geometry-to-data-geometry-conversion-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.Geometry.from_revit_conversion.convert_xyz_in_data_geometry_polygons">
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Properties.Geometry.from_revit_conversion.</span></span><span class="sig-name descname"><span class="pre">convert_xyz_in_data_geometry_polygons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dgObject</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Properties.Geometry.from_revit_conversion.convert_xyz_in_data_geometry_polygons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts Revit XYZ objects stored in a data geometry object into groups of doubles for inner and outer loops        and stores them in new data geometry object. It also populates translation and rotation matrix data of            coordinate system information.
+:param doc: _description_
+:type doc: _type_
+:param dgObject: A data geometry object.
+:type dgObject: <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryPolygon</span></code>
+:return: A data geometry object.
+:rtype: <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryPolygon</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.Geometry.from_revit_conversion.convert_solid_to_flattened_2d_points">
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Properties.Geometry.from_revit_conversion.</span></span><span class="sig-name descname"><span class="pre">convert_solid_to_flattened_2d_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Properties.Geometry.from_revit_conversion.convert_solid_to_flattened_2d_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a solid into a 2D polygon by projecting it onto a plane.( Removes Z values…)
+First nested list is the outer loop, any other following lists describe holes within the area of the polygon defined be points in first list.
+Arcs, circles will be tessellated to polygons.
+:param solid: A solid.
+:type solid: Autodesk.Revit.DB.Solid
+:return: A list of data geometry instances.
+:rtype: list of <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryPolygon</span></code></p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Data.Objects.Properties.Geometry.from_revit_elements">
+<span id="duhast-data-objects-properties-geometry-from-revit-elements-module"></span><h2>duHast.Data.Objects.Properties.Geometry.from_revit_elements module<a class="headerlink" href="#module-duHast.Data.Objects.Properties.Geometry.from_revit_elements" title="Permalink to this heading">¶</a></h2>
+<section id="utility-function-getting-2d-points-from-element-solids">
+<h3>Utility function getting 2D points from element solids.<a class="headerlink" href="#utility-function-getting-2d-points-from-element-solids" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.Geometry.from_revit_elements.get_2d_points_from_revit_element_type_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Properties.Geometry.from_revit_elements.</span></span><span class="sig-name descname"><span class="pre">get_2d_points_from_revit_element_type_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_instance_getter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Properties.Geometry.from_revit_elements.get_2d_points_from_revit_element_type_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of lists of points representing the flattened(2D geometry) of the elements
+List of Lists because a elements can be made up of multiple solids. Each nested list represents one solid within the elements geometry.
+Does not work with in place elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element_instance_getter</strong> (<em>func</em><em>(</em><em>doc</em><em>)</em>) – Function returning all element instances of a particular category in the model as an element collector</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of data geometry instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Data.Objects.Properties.Geometry.geometry_base">
+<span id="duhast-data-objects-properties-geometry-geometry-base-module"></span><h2>duHast.Data.Objects.Properties.Geometry.geometry_base module<a class="headerlink" href="#module-duHast.Data.Objects.Properties.Geometry.geometry_base" title="Permalink to this heading">¶</a></h2>
+<section id="geometry-data-storage-class">
+<h3>Geometry data storage class.<a class="headerlink" href="#geometry-data-storage-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.Geometry.geometry_base.DataGeometryBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Properties.Geometry.geometry_base.</span></span><span class="sig-name descname"><span class="pre">DataGeometryBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Properties.Geometry.geometry_base.DataGeometryBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Data.Utils.html#duHast.Data.Utils.data_base.DataBase" title="duHast.Data.Utils.data_base.DataBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataBase</span></code></a></p>
+<p>Class constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – json formatted dictionary of this class, defaults to {}</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Data.Objects.Properties.Geometry.geometry_polygon">
+<span id="duhast-data-objects-properties-geometry-geometry-polygon-module"></span><h2>duHast.Data.Objects.Properties.Geometry.geometry_polygon module<a class="headerlink" href="#module-duHast.Data.Objects.Properties.Geometry.geometry_polygon" title="Permalink to this heading">¶</a></h2>
+<section id="id1">
+<h3>Geometry data storage class.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.Geometry.geometry_polygon.DataPolygon">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Properties.Geometry.geometry_polygon.</span></span><span class="sig-name descname"><span class="pre">DataPolygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Properties.Geometry.geometry_polygon.DataPolygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Data.Objects.Properties.Geometry.geometry_base.DataGeometryBase" title="duHast.Data.Objects.Properties.Geometry.geometry_base.DataGeometryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryBase</span></code></a></p>
+<p>Class constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – json formatted dictionary of this class, defaults to {}</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.Geometry.geometry_polygon.DataPolygon.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'polygon'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.Geometry.geometry_polygon.DataPolygon.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Data.Objects.Properties.Geometry.geometry_topo_cell">
+<span id="duhast-data-objects-properties-geometry-geometry-topo-cell-module"></span><h2>duHast.Data.Objects.Properties.Geometry.geometry_topo_cell module<a class="headerlink" href="#module-duHast.Data.Objects.Properties.Geometry.geometry_topo_cell" title="Permalink to this heading">¶</a></h2>
+<section id="id2">
+<h3>Geometry data storage class.<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.Geometry.geometry_topo_cell.DataTopologyCell">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Properties.Geometry.geometry_topo_cell.</span></span><span class="sig-name descname"><span class="pre">DataTopologyCell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Properties.Geometry.geometry_topo_cell.DataTopologyCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Data.Objects.Properties.Geometry.geometry_base.DataGeometryBase" title="duHast.Data.Objects.Properties.Geometry.geometry_base.DataGeometryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryBase</span></code></a></p>
+<p>Class constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – json formatted dictionary of this class, defaults to {}</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.Geometry.geometry_topo_cell.DataTopologyCell.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'topology</span> <span class="pre">cell'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.Geometry.geometry_topo_cell.DataTopologyCell.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Data.Objects.Properties.Geometry">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Data.Objects.Properties.Geometry" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Data.html" >duHast.Data package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Data.Objects.html" >duHast.Data.Objects package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Data.Objects.Properties.html" >duHast.Data.Objects.Properties package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Data.Objects.Properties.Geometry package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.Categories.Utility package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit.Categories package" href="duHast.Revit.Categories.html" />
+    <link rel="next" title="duHast.Revit.Ceilings package" href="duHast.Revit.Ceilings.html" />
+    <link rel="prev" title="duHast.Revit.Categories.Reporting package" href="duHast.Revit.Categories.Reporting.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Categories.Utility package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Ceilings.html" title="duHast.Revit.Ceilings package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Categories.Reporting.html" title="duHast.Revit.Categories.Reporting package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Categories.Utility.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-categories-utility-package">
+<h1>duHast.Revit.Categories.Utility package<a class="headerlink" href="#duhast-revit-categories-utility-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Categories.Utility.category_properties_get_utils">
+<span id="duhast-revit-categories-utility-category-properties-get-utils-module"></span><h2>duHast.Revit.Categories.Utility.category_properties_get_utils module<a class="headerlink" href="#module-duHast.Revit.Categories.Utility.category_properties_get_utils" title="Permalink to this heading">¶</a></h2>
+<section id="revit-sub-category-property-get-functions">
+<h3>Revit sub-category property get functions .<a class="headerlink" href="#revit-sub-category-property-get-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_graphic_style_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_properties_get_utils.</span></span><span class="sig-name descname"><span class="pre">get_category_graphic_style_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_graphic_style_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary with keys: Projection, Cut, 3D and their respective ids
+:param cat: A category.
+:type cat: Autodesk.REvit.DB.Category
+:return: A dictionary
+:rtype: dictionary {str: Autodesk.Revit.DB.ElementId}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_material">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_properties_get_utils.</span></span><span class="sig-name descname"><span class="pre">get_category_material</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the material properties name and id as a dictionary where key is property name and         value the property id.
+:param cat: A category.
+:type cat: Autodesk.REvit.DB.Category
+:return: A dictionary
+:rtype: dictionary {str: Autodesk.Revit.DB.ElementId}        If no material is assigned to a category it will return {‘None: Autodesk.Revit.DB.ElementId.InvalidElementId}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_line_weights">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_properties_get_utils.</span></span><span class="sig-name descname"><span class="pre">get_category_line_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_line_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the line weight properties (cut and projection) as a dictionary         where key is property description and value the property value
+:param cat: A category.
+:type cat: Autodesk.Revit.DB.Category
+:return: A dictionary.
+:rtype: dictionary {str: nullable integer}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_colour">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_properties_get_utils.</span></span><span class="sig-name descname"><span class="pre">get_category_colour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the colour properties (RGB) and values as a dictionary where key is colour name         and value the property value
+:param cat: A category.
+:type cat: Autodesk.Revit.DB.Category
+:return: A dictionary.
+:rtype: dictionary {str: byte}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_properties">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_properties_get_utils.</span></span><span class="sig-name descname"><span class="pre">get_category_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary where keys are category property names and value is the associated property value.
+:param cat: A category.
+:type cat: Autodesk.Revit.DB.Category
+:param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A dictionary.
+:rtype: list [{str: var}]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_properties_get_utils.get_saved_category_property_by_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_properties_get_utils.</span></span><span class="sig-name descname"><span class="pre">get_saved_category_property_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">properties</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_properties_get_utils.get_saved_category_property_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns property values matching property names in saved category data.
+:param properties: List of dictionaries in format as per GetCategoryProperties(cat) method.
+:type properties: list [{str: var}]
+:param prop_names: List of property names of which the values are to be returned
+:type prop_names: list str
+:return: A list of values.
+:rtype: list var</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Categories.Utility.category_properties_set_utils">
+<span id="duhast-revit-categories-utility-category-properties-set-utils-module"></span><h2>duHast.Revit.Categories.Utility.category_properties_set_utils module<a class="headerlink" href="#module-duHast.Revit.Categories.Utility.category_properties_set_utils" title="Permalink to this heading">¶</a></h2>
+<section id="revit-sub-category-property-set-functions">
+<h3>Revit sub-category property set functions .<a class="headerlink" href="#revit-sub-category-property-set-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_material">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_properties_set_utils.</span></span><span class="sig-name descname"><span class="pre">set_category_material</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates material property of a given category.
+:param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:param cat: A category.
+:type cat: Autodesk.Revit.DB.Category
+:param material_id: The new material element id.
+:type material_id: Autodesk.Revit.DB.ElementId
+:return: True if material property was updated successfully, otherwise False.
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_line_pattern">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_properties_set_utils.</span></span><span class="sig-name descname"><span class="pre">set_category_line_pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_pattern_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_missing_cut_style</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_line_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates line pattern property of a given category.
+Note: in cases where the ‘cut’ property does not exist on a sub category this will return false even though the ‘projection’ property will most
+likely have been updated without a problem…
+:param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:param cat: A category.
+:type cat: Autodesk.Revit.DB.Category
+:param line_pattern_id: The newline pattern element id.
+:type line_pattern_id: Autodesk.Revit.DB.ElementId
+:param ignore_missing_cut_style: If true will not flag an exception if applying styles fails on missing cut style.
+:type ignore_missing_cut_style: bool
+:return: True if line pattern property was updated successfully, otherwise False.
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_line_weights">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_properties_set_utils.</span></span><span class="sig-name descname"><span class="pre">set_category_line_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_thick_ness_cut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_thickness_projection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_missing_cut_style</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_line_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates line weight properties of a given category.
+:param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:param cat: A category.
+:type cat: Autodesk.Revit.DB.Category
+:param line_thick_ness_cut: The cut line weight.
+:type line_thick_ness_cut: int
+:param line_thickness_projection: The projection line weight.
+:type line_thickness_projection: int
+:param ignore_missing_cut_style: If true will not flag an exception if applying styles fails on missing cut style.
+:type ignore_missing_cut_style: bool
+:return: True if line weight property was updated successfully, otherwise False.
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_colour">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_properties_set_utils.</span></span><span class="sig-name descname"><span class="pre">set_category_colour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">red</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">green</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blue</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates colour properties of a given category.
+:param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:param cat: A category.
+:type cat: Autodesk.Revit.DB.Category
+:param red: The colour red channel.
+:type red: byte
+:param green: The colour green channel.
+:type green: byte
+:param blue: The colour blue channel.
+:type blue: byte
+:return: True if colour property was updated successfully, otherwise False.
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_properties">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_properties_set_utils.</span></span><span class="sig-name descname"><span class="pre">set_category_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_missing_cut_style</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates varies property values of a given category.
+:param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:param cat: A category.
+:type cat: Autodesk.Revit.DB.Category
+:param properties: List of property values to be applied to category.
+:type properties: list of dictionaries in format as per GetCategoryProperties(cat) method.
+:param ignore_missing_cut_style: If true will not flag an exception if applying styles fails on missing cut style.
+:type ignore_missing_cut_style: bool
+:return: True if all properties where updated successfully, otherwise False.
+:rtype: bool</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Categories.Utility.category_property_names">
+<span id="duhast-revit-categories-utility-category-property-names-module"></span><h2>duHast.Revit.Categories.Utility.category_property_names module<a class="headerlink" href="#module-duHast.Revit.Categories.Utility.category_property_names" title="Permalink to this heading">¶</a></h2>
+<section id="revit-category-property-names">
+<h3>Revit category property names.<a class="headerlink" href="#revit-category-property-names" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_property_names.PROPERTY_MATERIAL_NAME">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_property_names.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_MATERIAL_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'MaterialName'</span></em><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_MATERIAL_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>category properties dictionary key names and default values
+material name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_property_names.PROPERTY_MATERIAL_NAME_VALUE_DEFAULT">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_property_names.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_MATERIAL_NAME_VALUE_DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'None'</span></em><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_MATERIAL_NAME_VALUE_DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd><p>material name default value</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_property_names.PROPERTY_MATERIAL_ID">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_property_names.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_MATERIAL_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'MaterialId'</span></em><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_MATERIAL_ID" title="Permalink to this definition">¶</a></dt>
+<dd><p>material id</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_WEIGHT_PROJECTION_NAME">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_property_names.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_LINE_WEIGHT_PROJECTION_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'LineWeightProjection'</span></em><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_WEIGHT_PROJECTION_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>line weight projection name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_WEIGHT_CUT_NAME">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_property_names.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_LINE_WEIGHT_CUT_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'LineWeightCut'</span></em><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_WEIGHT_CUT_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>line weight cut name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_COLOUR_RED_NAME">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_property_names.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_LINE_COLOUR_RED_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Red'</span></em><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_COLOUR_RED_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>line colour red name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_COLOUR_GREEN_NAME">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_property_names.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_LINE_COLOUR_GREEN_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Green'</span></em><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_COLOUR_GREEN_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>line colour green name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_COLOUR_BLUE_NAME">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_property_names.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_LINE_COLOUR_BLUE_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Blue'</span></em><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_COLOUR_BLUE_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>line colour blue name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_property_names.CATEGORY_GRAPHIC_STYLE_PROJECTION">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_property_names.</span></span><span class="sig-name descname"><span class="pre">CATEGORY_GRAPHIC_STYLE_PROJECTION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Projection'</span></em><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_property_names.CATEGORY_GRAPHIC_STYLE_PROJECTION" title="Permalink to this definition">¶</a></dt>
+<dd><p>graphic styles used for elements in families
+graphic style projection name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_property_names.CATEGORY_GRAPHIC_STYLE_CUT">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_property_names.</span></span><span class="sig-name descname"><span class="pre">CATEGORY_GRAPHIC_STYLE_CUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cut'</span></em><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_property_names.CATEGORY_GRAPHIC_STYLE_CUT" title="Permalink to this definition">¶</a></dt>
+<dd><p>graphic style cut name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.category_property_names.CATEGORY_GRAPHIC_STYLE_3D">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.category_property_names.</span></span><span class="sig-name descname"><span class="pre">CATEGORY_GRAPHIC_STYLE_3D</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'3D'</span></em><a class="headerlink" href="#duHast.Revit.Categories.Utility.category_property_names.CATEGORY_GRAPHIC_STYLE_3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>graphic style 3D name</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Categories.Utility.elements_by_category_utils">
+<span id="duhast-revit-categories-utility-elements-by-category-utils-module"></span><h2>duHast.Revit.Categories.Utility.elements_by_category_utils module<a class="headerlink" href="#module-duHast.Revit.Categories.Utility.elements_by_category_utils" title="Permalink to this heading">¶</a></h2>
+<section id="revit-elements-to-category-helper-functions">
+<h3>Revit elements to category helper functions.<a class="headerlink" href="#revit-elements-to-category-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.elements_by_category_utils.sort_elements_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.elements_by_category_utils.</span></span><span class="sig-name descname"><span class="pre">sort_elements_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.elements_by_category_utils.sort_elements_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of element ids where key is the category they belong to.
+:param elements:  List of revit elements.
+:type elements: [Autodesk.Revit.DB.Element]
+:param element_dic:  Dictionary where key is subcategory and values are element ids.
+:type element_dic: {Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}
+:return: Dictionary where key is subcategory id and values are element ids.
+:rtype: {Autodesk.Revit.DB.ElementId: [Autodesk.Revit.DB.ElementId]}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.elements_by_category_utils.sort_geometry_elements_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.elements_by_category_utils.</span></span><span class="sig-name descname"><span class="pre">sort_geometry_elements_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_dic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.elements_by_category_utils.sort_geometry_elements_by_category" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.elements_by_category_utils.get_elements_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.elements_by_category_utils.</span></span><span class="sig-name descname"><span class="pre">get_elements_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.elements_by_category_utils.get_elements_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns elements in family assigned to a specific category
+:param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:param cat: A category.
+:type cat: Autodesk.Revit.DB.Category
+:return: Dictionary where key is subcategory and values are element ids.
+:rtype: {Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.elements_by_category_utils.move_elements_to_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.elements_by_category_utils.</span></span><span class="sig-name descname"><span class="pre">move_elements_to_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_category_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_cat_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.elements_by_category_utils.move_elements_to_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves elements provided in dictionary to another category specified by name.
+:param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:param elements: Dictionary of elements, key are graphic style names.
+:type elements: {Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}
+:param to_category_name: The name of the subcategory elements are to be moved to.
+:type to_category_name: str
+:param destination_cat_ids: Dictionary of ids of graphic style, key are graphic style names
+:type destination_cat_ids: dictionary {str: Autodesk.Revit.DB.ElementId}
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- result.status. True if all elements where moved to destination subcategories, otherwise False.
+- result.message will contain the name of the destination subcategory by element.
+- result.result empty list
+On exception:
+- result.status (bool) will be False.
+- result.message will contain generic exception message.
+- result.result will be empty</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.elements_by_category_utils.move_elements_from_sub_category_to_sub_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.elements_by_category_utils.</span></span><span class="sig-name descname"><span class="pre">move_elements_from_sub_category_to_sub_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_category_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_category_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.elements_by_category_utils.move_elements_from_sub_category_to_sub_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves elements from one subcategory to another one identified by their names.
+:param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:param from_category_name: The source subcategory name.
+:type from_category_name: str
+:param to_category_name: The destination subcategory name.
+:type to_category_name: str
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- result.status. True if all elements from source subcategory where moved to destination subcategory, otherwise False.
+- result.message will contain the name of the destination subcategory by element.
+- result.result empty list
+On exception:
+- result.status (bool) will be False.
+- result.message will contain generic exception message.
+- result.result will be empty</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.elements_by_category_utils.get_used_category_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.elements_by_category_utils.</span></span><span class="sig-name descname"><span class="pre">get_used_category_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.elements_by_category_utils.get_used_category_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all category ids in a family which have an element assigned to them
+:param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of categories.
+:rtype: [Autodesk.Revit.DB.Category]</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Categories.Utility">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Categories.Utility" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.Categories.html" >duHast.Revit.Categories package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.Categories.Utility package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

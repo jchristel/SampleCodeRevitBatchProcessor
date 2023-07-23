@@ -1,0 +1,2268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.Common package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
+    <link rel="next" title="duHast.Revit.Common.Geometry package" href="duHast.Revit.Common.Geometry.html" />
+    <link rel="prev" title="duHast.Revit.Ceilings.Utility package" href="duHast.Revit.Ceilings.Utility.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Common package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Common.Geometry.html" title="duHast.Revit.Common.Geometry package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Ceilings.Utility.html" title="duHast.Revit.Ceilings.Utility package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Common.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-common-package">
+<h1>duHast.Revit.Common package<a class="headerlink" href="#duhast-revit-common-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Common.Geometry.html">duHast.Revit.Common.Geometry package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#module-duHast.Revit.Common.Geometry.geometry">duHast.Revit.Common.Geometry.geometry module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#revit-geometry-extraction-helper-functions">Revit geometry extraction helper functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_point_as_string"><code class="docutils literal notranslate"><span class="pre">get_point_as_string()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_edge_as_string"><code class="docutils literal notranslate"><span class="pre">get_edge_as_string()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.is_close"><code class="docutils literal notranslate"><span class="pre">is_close()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.are_points_identical"><code class="docutils literal notranslate"><span class="pre">are_points_identical()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.check_duplicate_point"><code class="docutils literal notranslate"><span class="pre">check_duplicate_point()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_point_as_doubles"><code class="docutils literal notranslate"><span class="pre">get_point_as_doubles()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.flatten_xyz_point"><code class="docutils literal notranslate"><span class="pre">flatten_xyz_point()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.flatten_xyz_point_list"><code class="docutils literal notranslate"><span class="pre">flatten_xyz_point_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.flatten_xyz_point_list_of_lists"><code class="docutils literal notranslate"><span class="pre">flatten_xyz_point_list_of_lists()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_coordinate_system_translation_and_rotation"><code class="docutils literal notranslate"><span class="pre">get_coordinate_system_translation_and_rotation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_quadrant"><code class="docutils literal notranslate"><span class="pre">get_quadrant()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.x_intercept"><code class="docutils literal notranslate"><span class="pre">x_intercept()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.adjust_delta"><code class="docutils literal notranslate"><span class="pre">adjust_delta()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.is_point_within_polygon"><code class="docutils literal notranslate"><span class="pre">is_point_within_polygon()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_signed_polygon_area"><code class="docutils literal notranslate"><span class="pre">get_signed_polygon_area()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.convert_edge_arrays_into_list_of_points"><code class="docutils literal notranslate"><span class="pre">convert_edge_arrays_into_list_of_points()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_edge_points"><code class="docutils literal notranslate"><span class="pre">get_edge_points()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.check_duplicate_edge"><code class="docutils literal notranslate"><span class="pre">check_duplicate_edge()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.check_solid_is_zero_height"><code class="docutils literal notranslate"><span class="pre">check_solid_is_zero_height()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.check_edges_are_zero_height"><code class="docutils literal notranslate"><span class="pre">check_edges_are_zero_height()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_lowest_z_from_solid"><code class="docutils literal notranslate"><span class="pre">get_lowest_z_from_solid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_lowest_z_from_edges_point_collection"><code class="docutils literal notranslate"><span class="pre">get_lowest_z_from_edges_point_collection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.edges_are_connected"><code class="docutils literal notranslate"><span class="pre">edges_are_connected()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_faces_sorted_by_area_from_solid"><code class="docutils literal notranslate"><span class="pre">get_faces_sorted_by_area_from_solid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.pair_faces_by_area"><code class="docutils literal notranslate"><span class="pre">pair_faces_by_area()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_faces_with_lowest_z_from_pairs"><code class="docutils literal notranslate"><span class="pre">get_faces_with_lowest_z_from_pairs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_unique_horizontal_faces"><code class="docutils literal notranslate"><span class="pre">get_unique_horizontal_faces()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.is_loop_within_other_loop_but_not_reference_loops"><code class="docutils literal notranslate"><span class="pre">is_loop_within_other_loop_but_not_reference_loops()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.build_loops_dictionary"><code class="docutils literal notranslate"><span class="pre">build_loops_dictionary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#module-duHast.Revit.Common.Geometry.solids">duHast.Revit.Common.Geometry.solids module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#revit-solids-helper-functions">Revit solids helper functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.solids.get_2d_points_from_solid"><code class="docutils literal notranslate"><span class="pre">get_2d_points_from_solid()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#module-duHast.Revit.Common.Geometry">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Common.Reporting.html">duHast.Revit.Common.Reporting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Reporting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Reporting.html#module-duHast.Revit.Common.Reporting.groups_report_header">duHast.Revit.Common.Reporting.groups_report_header module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Reporting.html#this-module-contains-the-header-row-for-any-groups-reports">This module contains the header row for any groups reports.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Reporting.html#duHast.Revit.Common.Reporting.groups_report_header.REPORT_GROUPS_HEADER"><code class="docutils literal notranslate"><span class="pre">REPORT_GROUPS_HEADER</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Reporting.html#module-duHast.Revit.Common.Reporting.worksets_report_header">duHast.Revit.Common.Reporting.worksets_report_header module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Reporting.html#this-module-contains-the-header-row-for-any-worksets-reports">This module contains the header row for any worksets reports.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Reporting.html#duHast.Revit.Common.Reporting.worksets_report_header.REPORT_WORKSETS_HEADER"><code class="docutils literal notranslate"><span class="pre">REPORT_WORKSETS_HEADER</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Reporting.html#module-duHast.Revit.Common.Reporting.worksets_report_utils">duHast.Revit.Common.Reporting.worksets_report_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Reporting.html#this-module-contains-utility-function-s-for-workset-reports">This module contains utility function(s) for workset reports.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Reporting.html#duHast.Revit.Common.Reporting.worksets_report_utils.get_workset_report_data"><code class="docutils literal notranslate"><span class="pre">get_workset_report_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Reporting.html#module-duHast.Revit.Common.Reporting">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Common.common">
+<span id="duhast-revit-common-common-module"></span><h2>duHast.Revit.Common.common module<a class="headerlink" href="#module-duHast.Revit.Common.common" title="Permalink to this heading">¶</a></h2>
+<section id="common-revit-api-utility-functions">
+<h3>Common Revit API utility functions.<a class="headerlink" href="#common-revit-api-utility-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.common.get_element_mark">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.common.</span></span><span class="sig-name descname"><span class="pre">get_element_mark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.common.get_element_mark" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the mark value of an element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>e</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The element mark value.
+If an exception occurred, the message will be ‘Failed with exception: ‘ + the exception string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.common.get_legend_components_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.common.</span></span><span class="sig-name descname"><span class="pre">get_legend_components_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.common.get_legend_components_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all symbol (type) ids of families which have been placed as legend components and have match in list past in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>type_ids</strong> (<em>list str</em>) – List of typeIds to check against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Values are representing symbol (type) ids of legend components in models filtered by ids past in.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.common.get_similar_type_families_by_type">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.common.</span></span><span class="sig-name descname"><span class="pre">get_similar_type_families_by_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_getter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.common.get_similar_type_families_by_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of unique types its similar family (symbol) types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>type_getter</strong> (<em>function</em>) – The function which takes the document as an argument and returns a list of family symbols (types).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.Symbol and Autodesk.Revit.DB.ElementId:</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List [[Autodesk.Revit.DB.ElementType, Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,…],]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.common.check_unique_type_data">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.common.</span></span><span class="sig-name descname"><span class="pre">check_unique_type_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">existing_types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_type_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.common.check_unique_type_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares two lists of types and their similar types (ids).</p>
+<p>Assumes that second list past in has only one occurrence of type and its similar types
+Compares types by name and if match their similar types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>existing_types</strong> (<em>List</em><em> of </em><em>List in format</em><em> [</em><em>[</em><em>Autodesk.Revit.DB.ElementType</em><em> , </em><em>Autodesk.Revit.DB.ElementId</em><em>, </em><em>Autodesk.Revit.DB.ElementId</em><em>,</em><em>...</em><em>]</em><em>,</em><em>]</em>) – Source list</p></li>
+<li><p><strong>new_type_data</strong> (<em>List in format</em><em> [</em><em>Autodesk.Revit.DB.ElementType</em><em>, </em><em>Autodesk.Revit.DB.ElementId</em><em>, </em><em>Autodesk.Revit.DB.ElementId</em><em>,</em><em>...</em><em>]</em>) – Comparison list</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True, if new type is not in list existing Types passed in or
+if ids of similar family types do not match any similar types already in list</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.common.get_unused_type_ids_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.common.</span></span><span class="sig-name descname"><span class="pre">get_unused_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_getter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_getter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.common.get_unused_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns ID of unused family types in the model.</p>
+<p>Used in purge code since it leaves at least one type behind (built in families require at least one type in the model)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>type_getter</strong> (<em>func</em>) – Function accepting current document as argument and returning a collector of types in model</p></li>
+<li><p><strong>instance_getter</strong> (<em>func</em>) – Function accepting current document as argument and returning a list of instances in model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of type ids which can be purged from the model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.common.get_not_placed_types">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.common.</span></span><span class="sig-name descname"><span class="pre">get_not_placed_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_instances</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.common.get_not_placed_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a list of unused types foo by comparing type Ids of placed instances with types past in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>get_types</strong> (<em>func</em><em> (</em><em>doc</em><em>)</em>) – Types getter function. Needs to accept doc as argument and return a collector of type foo</p></li>
+<li><p><strong>get_instances</strong> (<em>func</em><em>(</em><em>doc</em><em>)</em>) – Instances getter function. Needs to accept doc as argument and return a collector of instances foo</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>returns a list of unused types</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of type foo</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.common.check_group_for_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.common.</span></span><span class="sig-name descname"><span class="pre">check_group_for_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.common.check_group_for_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters passed in list of type ids by type ids found in group and returns list of unmatched Id’s</p>
+<p>This only returns valid data if at least one instance of the group is placed in the model, otherwise GetMemberIds() returns empty!!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>group_type</strong> (<em>Autodesk.Revit.DB.GroupType</em>) – Group to be checked whether they contains elements of types past in.</p></li>
+<li><p><strong>type_ids</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.Db.ElementId</em>) – List of type ids to confirm whether they are in use a group</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns all type ids not matched</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.Db.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.common.check_groups_for_matching_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.common.</span></span><span class="sig-name descname"><span class="pre">check_groups_for_matching_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.common.check_groups_for_matching_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks all elements in groups past in whether group includes element of which type Id is matching any type ids past in</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>group_types</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.GroupType</em>) – Groups to be checked whether they contains elements of types past in.</p></li>
+<li><p><strong>type_ids</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.Db.ElementId</em>) – List of type ids to confirm whether they are in use a group</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns all type ids not matched</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.Db.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.common.get_unused_type_ids_from_detail_groups">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.common.</span></span><span class="sig-name descname"><span class="pre">get_unused_type_ids_from_detail_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.common.get_unused_type_ids_from_detail_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks elements in nested detail groups and detail groups whether their type ElementId is in the list past in.</p>
+<p>This only returns valid data if at least one instance of the group is placed in the model!!!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>type_ids</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.Db.ElementId</em>) – List of type ids to confirm whether they are in use a group</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns all type Ids from list past in not found in group definitions</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.common.get_ids_from_element_collector">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.common.</span></span><span class="sig-name descname"><span class="pre">get_ids_from_element_collector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.common.get_ids_from_element_collector" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will return a list of all element ids in collector.</p>
+<p>Any element in collector which is invalid will be ignored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>col</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – A filtered element collector.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of all element ids of valid elements in collector.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.custom_element_filter">
+<span id="duhast-revit-common-custom-element-filter-module"></span><h2>duHast.Revit.Common.custom_element_filter module<a class="headerlink" href="#module-duHast.Revit.Common.custom_element_filter" title="Permalink to this heading">¶</a></h2>
+<section id="customizable-element-filter-class">
+<h3>Customizable element filter class.<a class="headerlink" href="#customizable-element-filter-class" title="Permalink to this heading">¶</a></h3>
+<p>This class takes as constructor arguments</p>
+<ul class="simple">
+<li><p>a number of filter actions</p></li>
+<li><p>a boolean indicating whether filters are logical and or OR filters</p></li>
+</ul>
+<p>Filter actions checks whether a property matches or does not match provided values. Refer to module: custom_element_filter_actions. The actual property test is undertaken by another function. Samples of those can be found in
+module custom_element_filter_tests.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Common.custom_element_filter.RevitCustomElementFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.custom_element_filter.</span></span><span class="sig-name descname"><span class="pre">RevitCustomElementFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_logical_and_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.custom_element_filter.RevitCustomElementFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Constructor: This takes a list of element filters and a flag whether this class instance is a logical AND filter (default)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element_filters</strong> (<em>list</em><em> of </em><em>functions</em><em>, </em><em>optional</em>) – List of element filter functions which will need to accept document and elementId as their arguments, defaults to []</p></li>
+<li><p><strong>is_logical_and_filter</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag indicating whether list of filters are logical AND filters or logical OR, defaults to True (logical AND)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Common.custom_element_filter.RevitCustomElementFilter.check_element">
+<span class="sig-name descname"><span class="pre">check_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.custom_element_filter.RevitCustomElementFilter.check_element" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter checking whether element meets criteria.</p>
+<p>This function will loop over all the filters past in through the class constructor and test the element for each filter.
+Depending on whether these filters are logical and filters it will return True if all of them evaluate to True or, if logical or filter
+it will return True if one of them evaluates to True, otherwise False will be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be checked against the filter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if it matches the filter(s), otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.custom_element_filter_actions">
+<span id="duhast-revit-common-custom-element-filter-actions-module"></span><h2>duHast.Revit.Common.custom_element_filter_actions module<a class="headerlink" href="#module-duHast.Revit.Common.custom_element_filter_actions" title="Permalink to this heading">¶</a></h2>
+<section id="customizable-element-filter-actions-which-can-be-used-with-the-custom-element-filter-class">
+<h3>Customizable element filter actions which can be used with the custom element filter class.<a class="headerlink" href="#customizable-element-filter-actions-which-can-be-used-with-the-custom-element-filter-class" title="Permalink to this heading">¶</a></h3>
+<p>Thw two action in this module check whether:</p>
+<ul class="simple">
+<li><p>a given property does contain / match a set of test value</p></li>
+<li><p>a given property does not contain / match a set of test value</p></li>
+</ul>
+<p>actions expect:</p>
+<ul class="simple">
+<li><p>the test to be performed</p></li>
+<li><p>the test values to be performed against</p></li>
+<li><p>an output function to pipe any exception message to</p></li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.custom_element_filter_actions.action_element_property_contains_any_of_values">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.custom_element_filter_actions.</span></span><span class="sig-name descname"><span class="pre">action_element_property_contains_any_of_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.custom_element_filter_actions.action_element_property_contains_any_of_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up a function checking whether element name contains any of the test values.</p>
+<p>Note:
+If element names does contain any of the test values, the function will return True, Otherwise False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>[</em><em>str</em><em>]</em>) – List of values the element name may contain.</p></li>
+<li><p><strong>output</strong> (<em>func</em><em>(</em><em>message</em><em>)</em>) – A function piping the string output to a required location.(console…)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.custom_element_filter_actions.action_element_property_does_not_contains_any_of_values">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.custom_element_filter_actions.</span></span><span class="sig-name descname"><span class="pre">action_element_property_does_not_contains_any_of_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.custom_element_filter_actions.action_element_property_does_not_contains_any_of_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up a function checking whether element name does not contains any of the test values.</p>
+<p>Note:
+If element names does contain any of the test values, the function will return False, Otherwise True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>[</em><em>str</em><em>]</em>) – List of values the element name may not contain.</p></li>
+<li><p><strong>output</strong> (<em>func</em><em>(</em><em>message</em><em>)</em>) – A function piping the string output to a required location.(console…)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.custom_element_filter_tests">
+<span id="duhast-revit-common-custom-element-filter-tests-module"></span><h2>duHast.Revit.Common.custom_element_filter_tests module<a class="headerlink" href="#module-duHast.Revit.Common.custom_element_filter_tests" title="Permalink to this heading">¶</a></h2>
+<section id="customizable-element-filter-tests-which-can-be-used-with-the-custom-element-filter-actions">
+<h3>Customizable element filter tests which can be used with the custom element filter actions.<a class="headerlink" href="#customizable-element-filter-tests-which-can-be-used-with-the-custom-element-filter-actions" title="Permalink to this heading">¶</a></h3>
+<p>These tests are used in the custom element filter actions as an argument.</p>
+<p>test expects:</p>
+<ul class="simple">
+<li><p>the element of which is the test to be performed against</p></li>
+<li><p>the test value</p></li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.custom_element_filter_tests.value_in_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.custom_element_filter_tests.</span></span><span class="sig-name descname"><span class="pre">value_in_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.custom_element_filter_tests.value_in_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if provided value is in the element name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>str</em>) – test value</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if part of the element name, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.custom_element_filter_tests.value_equals_workset_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.custom_element_filter_tests.</span></span><span class="sig-name descname"><span class="pre">value_equals_workset_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.custom_element_filter_tests.value_equals_workset_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if provided value is equal to the elements workset name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>str</em>) – test value</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if elements workset name matches, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.custom_element_filter_tests.value_in_family_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.custom_element_filter_tests.</span></span><span class="sig-name descname"><span class="pre">value_in_family_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.custom_element_filter_tests.value_in_family_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if provided value is part of the elements Family name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>str</em>) – test value</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if elements family name partly matches, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.custom_element_filter_tests.value_in_element_type_family_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.custom_element_filter_tests.</span></span><span class="sig-name descname"><span class="pre">value_in_element_type_family_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.custom_element_filter_tests.value_in_element_type_family_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if provided value is part of the element type Family name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>str</em>) – test value</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if elements family name partly matches, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.custom_element_filter_tests.value_is_family_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.custom_element_filter_tests.</span></span><span class="sig-name descname"><span class="pre">value_is_family_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.custom_element_filter_tests.value_is_family_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if provided value is equal to the elements Family name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>str</em>) – test value</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if elements family name matches, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.custom_element_filter_tests.value_is_element_type_family_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.custom_element_filter_tests.</span></span><span class="sig-name descname"><span class="pre">value_is_element_type_family_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.custom_element_filter_tests.value_is_element_type_family_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if provided value is equal to the element type Family name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>str</em>) – test value</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if elements family name matches, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.delete">
+<span id="duhast-revit-common-delete-module"></span><h2>duHast.Revit.Common.delete module<a class="headerlink" href="#module-duHast.Revit.Common.delete" title="Permalink to this heading">¶</a></h2>
+<section id="delete-elements-from-model">
+<h3>Delete elements from model.<a class="headerlink" href="#delete-elements-from-model" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.delete.delete_by_element_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.delete.</span></span><span class="sig-name descname"><span class="pre">delete_by_element_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.delete.delete_by_element_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deleting elements in list all at once.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param ids: List containing ids of all elements to be deleted.
+:type ids: list of Autodesk.Revit.DB.ElementId
+:param transaction_name: The transaction name used for the deletion.
+:type transaction_name: str
+:param element_name: The element name added to deletion status message.
+:type element_name: str
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- .result = True if successfully deleted all elements. Otherwise False.
+- .message will contain deletion status</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.delete.delete_by_element_ids_one_by_one">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.delete.</span></span><span class="sig-name descname"><span class="pre">delete_by_element_ids_one_by_one</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.delete.delete_by_element_ids_one_by_one" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deleting elements in list one at the time.
+Each element gets deleted in its own transaction. If the deletion fails the transaction is rolled back.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param ids: List containing ids of all elements to be deleted.
+:type ids: list of Autodesk.Revit.DB.ElementId
+:param transaction_name: The transaction name used for the deletion.
+:type transaction_name: str
+:param element_name: The name of the element (?) Not used!!
+:type element_name: str
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- .result = True if successfully deleted all elements. Otherwise False.
+- .message will contain each id and its deletion status</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.design_set_options">
+<span id="duhast-revit-common-design-set-options-module"></span><h2>duHast.Revit.Common.design_set_options module<a class="headerlink" href="#module-duHast.Revit.Common.design_set_options" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-functions-around-revit-design-sets-and-design-options">
+<h3>This module contains a number of functions around Revit Design Sets and Design Options.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-revit-design-sets-and-design-options" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.REPORT_DESIGNSET_HEADER">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.design_set_options.</span></span><span class="sig-name descname"><span class="pre">REPORT_DESIGNSET_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME',</span> <span class="pre">'PRIMARY</span> <span class="pre">OPTION',</span> <span class="pre">'OTHER</span> <span class="pre">OPTIONS']</span></em><a class="headerlink" href="#duHast.Revit.Common.design_set_options.REPORT_DESIGNSET_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.get_design_options">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.design_set_options.</span></span><span class="sig-name descname"><span class="pre">get_design_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.get_design_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all design options in a model,</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Design options in current model</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.get_design_sets">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.design_set_options.</span></span><span class="sig-name descname"><span class="pre">get_design_sets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.get_design_sets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all the design sets in a model,</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Design sets in the current model</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.Element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.is_design_option_primary">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.design_set_options.</span></span><span class="sig-name descname"><span class="pre">is_design_option_primary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_set_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_option_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.is_design_option_primary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a design option is the primary option within a design set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>design_set_name</strong> (<em>str</em>) – The name of the design set the option belongs to,</p></li>
+<li><p><strong>design_option_name</strong> (<em>str</em>) – The name of the design option to be checked,</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if this option is primary otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.get_design_set_option_info">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.design_set_options.</span></span><span class="sig-name descname"><span class="pre">get_design_set_option_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.get_design_set_option_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the design set, design option information of an element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element of which the design set/option data is to be returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary
+Design Set Name: (can be either Main Model or the design set name)
+designOptionName:    Design Option Name (empty string if Main Model
+isPrimary:           Indicating whether design option is primary (true also if Main Model)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary
+designSetName:str
+designOptionName:str
+isPrimary:bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.element_filtering">
+<span id="duhast-revit-common-element-filtering-module"></span><h2>duHast.Revit.Common.element_filtering module<a class="headerlink" href="#module-duHast.Revit.Common.element_filtering" title="Permalink to this heading">¶</a></h2>
+<section id="varies-element-filter-check-functions">
+<h3>Varies Element filter / check functions.<a class="headerlink" href="#varies-element-filter-check-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.element_filtering.is_element_of_built_in_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.element_filtering.</span></span><span class="sig-name descname"><span class="pre">is_element_of_built_in_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtin_categories</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.element_filtering.is_element_of_built_in_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether an element is of the built in categories past in.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param element_id: The id of the element to be tested.
+:type element_id: Autodesk.Revit.DB.ElementId
+:param builtin_categories: The builtin category the element does needs to match.
+:type builtin_categories: Autodesk.Revit.DB.Definition
+:return: True if element’s builtin category does equals the test category, otherwise False.
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.element_filtering.is_element_not_of_built_in_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.element_filtering.</span></span><span class="sig-name descname"><span class="pre">is_element_not_of_built_in_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtin_categories</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.element_filtering.is_element_not_of_built_in_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether an element is not of the built in categories past in.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param element_id: The id of the element to be tested.
+:type element_id: Autodesk.Revit.DB.ElementId
+:param builtin_categories: The builtin category the element does not needs to match.
+:type builtin_categories: Autodesk.Revit.DB.Definition
+:return: True if element’s builtin category does not equals the test category, otherwise False.
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.element_filtering.is_family_name_from_instance">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.element_filtering.</span></span><span class="sig-name descname"><span class="pre">is_family_name_from_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.element_filtering.is_family_name_from_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the family name of a given family instance matches filter value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>family_name</strong> (<em>str</em>) – The string the name of the family needs to match.</p></li>
+<li><p><strong>element_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be tested.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if family equals the test string, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.element_filtering.is_family_name_from_instance_contains">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.element_filtering.</span></span><span class="sig-name descname"><span class="pre">is_family_name_from_instance_contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contains_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#duHast.Revit.Common.element_filtering.is_family_name_from_instance_contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the family name of a given family instance contains filter value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>contains_value</strong> – The string the name of the family instance is to be tested for.</p></li>
+<li><p><strong>element_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be tested.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if family name does contain the test string, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.element_filtering.is_family_name_from_instance_does_not_contains">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.element_filtering.</span></span><span class="sig-name descname"><span class="pre">is_family_name_from_instance_does_not_contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contains_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#duHast.Revit.Common.element_filtering.is_family_name_from_instance_does_not_contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the family name of a given family instance does not contains filter value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>contains_value</strong> (<em>str</em>) – The string the name of the family instance is to be tested for.</p></li>
+<li><p><strong>element_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be tested.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if family name does not contain the test string, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.element_filtering.is_symbol_name_from_instance_contains">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.element_filtering.</span></span><span class="sig-name descname"><span class="pre">is_symbol_name_from_instance_contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contains_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#duHast.Revit.Common.element_filtering.is_symbol_name_from_instance_contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the family symbol name of a given family instance contains filter value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>contains_value</strong> (<em>str</em>) – The string the name of the family instance is to be tested for.</p></li>
+<li><p><strong>element_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be tested.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>: True if family name does contain the test string, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.element_filtering.is_symbol_name_from_instance_does_not_contains">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.element_filtering.</span></span><span class="sig-name descname"><span class="pre">is_symbol_name_from_instance_does_not_contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contains_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#duHast.Revit.Common.element_filtering.is_symbol_name_from_instance_does_not_contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the family symbol name of a given family instance does not contains filter value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>contains_value</strong> (<em>string</em>) – The string the name of the family is to be tested for.</p></li>
+<li><p><strong>element_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be tested.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if symbol name does not contain the test string, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.file_io">
+<span id="duhast-revit-common-file-io-module"></span><h2>duHast.Revit.Common.file_io module<a class="headerlink" href="#module-duHast.Revit.Common.file_io" title="Permalink to this heading">¶</a></h2>
+<section id="revit-file-operations-utility-functions">
+<h3>Revit file operations utility functions.<a class="headerlink" href="#revit-file-operations-utility-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.file_io.sync_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.file_io.</span></span><span class="sig-name descname"><span class="pre">sync_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compact_central_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#duHast.Revit.Common.file_io.sync_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronizes a Revit central file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>compact_central_file</strong> (<em>bool</em><em>, </em><em>optional</em>) – option to compact the central file, defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- .result = True if successfully synced file. Otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.file_io.saves_as_workshared_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.file_io.</span></span><span class="sig-name descname"><span class="pre">saves_as_workshared_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#duHast.Revit.Common.file_io.saves_as_workshared_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a Revit project file as a workshared file.
+Save as options are:
+Workset configuration is : Ask users on open to specify.
+Any existing file will be overwritten.
+Number of backups is 5
+File will bew compacted on save.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>full_file_name</strong> (<em>string</em>) – The fully qualified file path of where to save the file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- .result = True if successfully saved file, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.file_io.save_as_family">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.file_io.</span></span><span class="sig-name descname"><span class="pre">save_as_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_full_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.rfa'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compact_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.file_io.save_as_family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a family file under new name in given location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>target_directory_path</strong> (<em>str</em>) – The directory path of where to save the file.</p></li>
+<li><p><strong>current_full_file_name</strong> (<em>str</em>) – The current (old) name of the file.</p></li>
+<li><p><strong>name_data</strong> (<em>List</em><em> of </em><em>string arrays in format</em><em>[</em><em>[</em><em>oldname</em><em>, </em><em>newName</em><em>]</em><em>]</em>) – Old name and new name are Revit file names without file extension. Used to rename the family on save from old name to new name.</p></li>
+<li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>optional</em>) – The file extension used for the new file, defaults to ‘.rfa’</p></li>
+<li><p><strong>compact_file</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag whether family is to be compacted on save, defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Result class instance.</dt><dd><ul class="simple">
+<li><p>.result = True if successfully saved file, otherwise False.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.file_io.save_as">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.file_io.</span></span><span class="sig-name descname"><span class="pre">save_as</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_full_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.rvt'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.file_io.save_as" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a project file under new name in given location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>target_directory_path</strong> (<em>str</em>) – The directory path of where to save the file.</p></li>
+<li><p><strong>current_full_file_name</strong> (<em>str</em>) – The current (old) name of the file.</p></li>
+<li><p><strong>name_data</strong> (<em>List</em><em> of </em><em>string arrays in format</em><em>[</em><em>[</em><em>oldname</em><em>, </em><em>newName</em><em>]</em><em>]</em>) – Old name and new name are revit file names without file extension. Used to rename the model on save from old name to new name.</p></li>
+<li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>optional</em>) – The file extension used for the new file, defaults to ‘.rvt’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- .result = True if successfully saved file, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.file_io.save_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.file_io.</span></span><span class="sig-name descname"><span class="pre">save_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compact_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#duHast.Revit.Common.file_io.save_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a non workshared Revit file. To be used for families and non workshared revit files only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>compact_file</strong> (<em>bool</em><em>, </em><em>optional</em>) – True file will be compacted on save, defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- .result = True if file was saved successfully. Otherwise False.
+- .message = ‘Saved revit file!’
+On exception:
+- result.status (bool) will be False.
+- result.message will contain exception message.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.file_io.enable_worksharing">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.file_io.</span></span><span class="sig-name descname"><span class="pre">enable_worksharing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workset_name_grid_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Shared</span> <span class="pre">Levels</span> <span class="pre">and</span> <span class="pre">Grids'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Workset1'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#duHast.Revit.Common.file_io.enable_worksharing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables worksharing in a non workshared revit project file.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param workset_name_grid_level: _description_, defaults to ‘Shared Levels and Grids’
+:type workset_name_grid_level: str, optional
+:param workset_name: _description_, defaults to ‘Workset1’
+:type workset_name: str, optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Result class instance.
+- .result = True if worksharing was enabled successfully. Otherwise False.
+- .message = ‘Successfully enabled worksharing.’
+On exception:
+- result.status (bool) will be False.
+- result.message will contain exception message.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.groups">
+<span id="duhast-revit-common-groups-module"></span><h2>duHast.Revit.Common.groups module<a class="headerlink" href="#module-duHast.Revit.Common.groups" title="Permalink to this heading">¶</a></h2>
+<section id="revit-groups-helper-functions">
+<h3>Revit groups helper functions.<a class="headerlink" href="#revit-groups-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_model_groups">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_model_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_model_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all model group types from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of model group types in the model</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_detail_groups">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_detail_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_detail_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all detail groups in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing detail group types.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_nested_detail_groups">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_nested_detail_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_nested_detail_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all nested detail groups in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing nested detail group types.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_model_group_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_model_group_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_model_group_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of all model group type ids in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of model group type ids</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_detail_group_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_detail_group_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_detail_group_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of all detail group types from the model.</p>
+<p>This will not include any attached detail groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of detail group type ids</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_nested_detail_group_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_nested_detail_group_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_nested_detail_group_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of all nested detail group types from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of nested detail group type ids</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_unplaced_groups">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_unplaced_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_unplaced_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of unplaced groups from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>group_category</strong> (<em>either BuiltInCategory.OST_IOSDetailGroups</em><em> or </em><em>BuiltInCategory.OST_IOSModelGroups</em>) – A built in category defining the group category (model vs detail)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of unplaced group types</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_unplaced_detail_groups">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_unplaced_detail_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_unplaced_detail_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of unplaced detail groups from the model</p>
+<p>This will not include any attached detail groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of unplaced detail group types</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_unplaced_detail_group_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_unplaced_detail_group_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_unplaced_detail_group_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of unplaced detail groups type Ids from the model.</p>
+<p>This will not include any attached detail groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of unplaced detail group type ids</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_unplaced_nested_detail_groups">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_unplaced_nested_detail_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_unplaced_nested_detail_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of unplaced nested detail groups from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of unplaced nested detail group types</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_unplaced_nested_detail_group_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_unplaced_nested_detail_group_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_unplaced_nested_detail_group_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of unplaced nested detail group Ids from the model.</p>
+<p>This will not list any none nested detail groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of unplaced model group type ids</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_unplaced_model_groups">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_unplaced_model_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_unplaced_model_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of unplaced model groups types from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of unplaced model group types</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_unplaced_model_group_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_unplaced_model_group_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_unplaced_model_group_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of unplaced model group type Ids from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of unplaced model group type ids</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.parameter_get_utils">
+<span id="duhast-revit-common-parameter-get-utils-module"></span><h2>duHast.Revit.Common.parameter_get_utils module<a class="headerlink" href="#module-duHast.Revit.Common.parameter_get_utils" title="Permalink to this heading">¶</a></h2>
+<section id="revit-api-utility-functions-to-get-parameter-values">
+<h3>Revit API utility functions to get parameter values.<a class="headerlink" href="#revit-api-utility-functions-to-get-parameter-values" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.check_parameter_value">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">check_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">para_condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_value</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.check_parameter_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks a parameter value based on passed in condition function.</p>
+<p>This extracts the value of the past in parameter and compares it against a past in value using
+the also past in compare function.
+Note that values will be past into compare function as ASCII encoded.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – Parameter of which the value is to be checked.</p></li>
+<li><p><strong>para_condition</strong> (<em>function</em>) – Function taking 2 arguments:
+First argument is the value to be checked against
+Second argument is the actual parameter value
+Needs to return a bool!
+Both arguments will be ASCII encoded at passing in.</p></li>
+<li><p><strong>condition_value</strong> (<em>var</em>) – The value to be checked for</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if condition value is evaluated to be True by past in function paraCondition.
+Will return False if compare function returns None or a False.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.getter_none">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">getter_none</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.getter_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for parameters where the storage type is None</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.getter_double_or_int_as_string">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">getter_double_or_int_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.getter_double_or_int_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type double or integer as string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String representation of double or integer value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.getter_double_as_double">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">getter_double_as_double</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.getter_double_as_double" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type double as a double.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Double value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Double or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.getter_double_as_double_converted_to_metric">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">getter_double_as_double_converted_to_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.getter_double_as_double_converted_to_metric" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type double to metric if required.
+Revit uses feet internally for any length value.
+Revit uses square feet for areas</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Double value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Double or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.getter_int_as_int">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">getter_int_as_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.getter_int_as_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type integer as a integer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Integer value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Integer or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.getter_string_as_UTF8_string">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">getter_string_as_UTF8_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.getter_string_as_UTF8_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type string as a utf-8 formatted string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>String or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.getter_string_as_string">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">getter_string_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.getter_string_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type string as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>String or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.getter_element_id_as_string">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">getter_element_id_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.getter_element_id_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type element id as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>String or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.getter_element_id_as_element_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">getter_element_id_as_element_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.getter_element_id_as_element_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type element id as a element id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Element id value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Element id or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.getter_element_id_as_element_int">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">getter_element_id_as_element_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.getter_element_id_as_element_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type element id as an integer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Integer value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Integer or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.get_parameter_value_with_over_load">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">get_parameter_value_with_over_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value_getters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.get_parameter_value_with_over_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value in format depending on storage type.</p>
+<p>Storage type can be:</p>
+<ul class="simple">
+<li><p>Double</p></li>
+<li><p>Integer</p></li>
+<li><p>String</p></li>
+<li><p>ElementId</p></li>
+</ul>
+<p>Will throw an exception if a storage type is not covered by parameter value getter functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The Parameter.</p></li>
+<li><p><strong>parameter_value_getters</strong> (<em>{Autodesk.Revit.DB.StorageType: func</em><em>(</em><em>)</em><em>}</em>) – Dictionary containing the functions returning the parameter value depending on parameter storage type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The parameter value or if empty: None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Depends on value getters functions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.get_parameter_value">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">get_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.get_parameter_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value as string independent of its storage type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – Parameter of which the value is to be returned.</p>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>If an exception occurs the exception message will be returned as the parameter value prefixed with ‘Exception: ‘</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Default value is ‘no Value’ if parameter value is empty.
+Otherwise the actual parameter value.
+Will return ‘Exception: ‘ + exception message if an exception occurred.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.get_parameter_value_utf8_string">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">get_parameter_value_utf8_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.get_parameter_value_utf8_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the parameter value as utf-8 string independent of its storage type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – Parameter of which the value is to be returned.</p>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>If an exception occurs the exception message will be returned as the parameter value prefixed with ‘Exception: ‘</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Default value is ‘no Value’ if parameter value is empty.
+Otherwise the actual parameter value.
+Will return ‘Exception: ‘ + exception message if an exception occurred.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.get_parameter_value_as_integer">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">get_parameter_value_as_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.get_parameter_value_as_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the parameter value as integer only if the storage type is integer. Otherwise -1 will be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – Parameter of which the value is to be returned.</p>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Default value is -1 if parameter value is empty or storage type is not integer.
+Otherwise the actual parameter value.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.get_parameter_value_as_element_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">get_parameter_value_as_element_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.get_parameter_value_as_element_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the parameter value as element Id only if the storage type is ElementId. Otherwise InvalidElementId (-1) will be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – Parameter of which the value is to be returned.</p>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Default value is -1 if parameter value is empty or storage type is not integer.
+Otherwise the actual parameter value.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.get_all_parameters_and_values_wit_custom_getters">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">get_all_parameters_and_values_wit_custom_getters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value_getters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.get_all_parameters_and_values_wit_custom_getters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all parameters and their values as using custom value getter associated with provided element in form of a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element</strong> (<em>var</em>) – The element</p></li>
+<li><p><strong>parameter_value_getters</strong> (<em>{Autodesk.Revit.DB.StorageType: func</em><em>(</em><em>)</em><em>}</em>) – Dictionary containing the functions returning the parameter value depending on parameter storage type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary where key is the parameter name, and the value is the parameter value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{str:var}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.get_built_in_parameter_value">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">get_built_in_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_parameter_def</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value_getter=&lt;function</span> <span class="pre">get_parameter_value_utf8_string&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.get_built_in_parameter_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the built-in parameter value. Return value type depends on past in value getter function. Default is UTF-8 encoded string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – Element to which the built-in parameter belongs.</p></li>
+<li><p><strong>built_in_parameter_def</strong> (<em>Autodesk.Revit.DB.Definition</em>) – The parameters built-in definition of which the value is to be returned.</p></li>
+<li><p><strong>parameter_value_getter</strong> (<em>function</em>) – The function which takes the parameter as an argument and returns it’s value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>As per value getter method.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Default value is None if parameter does not exist on element.
+Otherwise the actual parameter value as per value getter method.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>var</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.get_parameter_value_by_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">get_parameter_value_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value_getter=&lt;function</span> <span class="pre">get_parameter_value_utf8_string&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.get_parameter_value_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the parameter value by parameter name.</p>
+<p>Return value type depends on past in value getter function. Default is UTF-8 encoded string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – Element to which the built-in parameter belongs.</p></li>
+<li><p><strong>parameter_name</strong> (<em>str</em>) – The parameters name of which the value is to be returned.</p></li>
+<li><p><strong>parameter_value_getter</strong> (<em>function</em>) – The function which takes the parameter as an argument and returns it’s value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>As per value getter method.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Default value is None if parameter does not exist on element.
+Otherwise the actual parameter value as per value getter method.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>var</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.parameter_grouping">
+<span id="duhast-revit-common-parameter-grouping-module"></span><h2>duHast.Revit.Common.parameter_grouping module<a class="headerlink" href="#module-duHast.Revit.Common.parameter_grouping" title="Permalink to this heading">¶</a></h2>
+<section id="built-in-parameter-grouping-to-human-readable-names">
+<h3>built in parameter grouping to human readable names.<a class="headerlink" href="#built-in-parameter-grouping-to-human-readable-names" title="Permalink to this heading">¶</a></h3>
+</section>
+</section>
+<section id="module-duHast.Revit.Common.parameter_set_utils">
+<span id="duhast-revit-common-parameter-set-utils-module"></span><h2>duHast.Revit.Common.parameter_set_utils module<a class="headerlink" href="#module-duHast.Revit.Common.parameter_set_utils" title="Permalink to this heading">¶</a></h2>
+<section id="revit-api-utility-functions-to-set-parameter-values">
+<h3>Revit API utility functions to set parameter values.<a class="headerlink" href="#revit-api-utility-functions-to-set-parameter-values" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_set_utils.set_parameter_value">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_set_utils.</span></span><span class="sig-name descname"><span class="pre">set_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_as_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_transaction=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_set_utils.set_parameter_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the parameter value by trying to convert the past in string representing the value into the appropriate value type.</p>
+<p>Changing a parameter value requires this action to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – Parameter of which the value is to be set.</p></li>
+<li><p><strong>value_as_string</strong> (<em>str</em>) – The new parameter value.</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>in_transaction</strong> (<em>func</em><em>(</em><em>Autodesk.Revit.DB.Transaction</em><em>, </em><em>action</em><em>(</em><em>)</em><em>, </em><em>Autodesk.Revit.DB.Document</em><em>)</em>) – The transaction wrapper function to be used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+</dl>
+<p>ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Set parameter status (bool) returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>Result.message property updated in format: Changed parameter value of type x [‘parameter name’] : ‘old value’ to: ‘new value’.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>Set parameter.status (bool) will be False.</p></li>
+<li><p>Set parameter.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_set_utils.set_built_in_parameter_value">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_set_utils.</span></span><span class="sig-name descname"><span class="pre">set_built_in_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_parameter_def</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_as_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value_setter=&lt;function</span> <span class="pre">set_parameter_value&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_set_utils.set_built_in_parameter_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the built-in parameter value by trying to convert the past in string representing the value into the appropriate value type.</p>
+<p>Changing a parameter value requires this action to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – Element to which the built-in parameter belongs.</p></li>
+<li><p><strong>built_in_parameter_def</strong> (<em>Autodesk.Revit.DB.Definition</em>) – The parameters built-in definition of which the value is to be returned.</p></li>
+<li><p><strong>value_as_string</strong> (<em>str</em>) – The new parameter value.</p></li>
+<li><p><strong>parameter_value_setter</strong> (<em>function</em>) – The function which takes the parameter as an argument and changes it’s value to.
+The function needs to accept these args: parameter, new parameter value as string, document</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>As per value setter method.</p>
+</dd>
+</dl>
+<p>ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Set parameter status (bool) returned in result.status. False if an exception occurred, or parameter does not exist on element, otherwise True.</p></li>
+<li><p>Result.message property updated in format: Changed parameter value of type x [‘parameter name’] : ‘old value’ to: ‘new value’.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>Set parameter.status (bool) will be False.</p></li>
+<li><p>Set parameter.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.phases">
+<span id="duhast-revit-common-phases-module"></span><h2>duHast.Revit.Common.phases module<a class="headerlink" href="#module-duHast.Revit.Common.phases" title="Permalink to this heading">¶</a></h2>
+<section id="model-phase-functions">
+<h3>Model phase functions.<a class="headerlink" href="#model-phase-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.phases.get_all_phases">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.phases.</span></span><span class="sig-name descname"><span class="pre">get_all_phases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.phases.get_all_phases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary where key is the id and value is the name of the phase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary where key is the id and value is the name of the phase. Dictionary will be empty if no phases exist (family doc?)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dic{key Autodesk.Revit.DB.ElementId: value str}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.phases.get_phase_name_by_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.phases.</span></span><span class="sig-name descname"><span class="pre">get_phase_name_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.phases.get_phase_name_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of a phase by Id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>phase_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The phase element id.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Name of the phase, otherwise ‘No phase in document’ if no phase exists or ‘Invalid phase id.’ if no phase matching the id was found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.purge_utils">
+<span id="duhast-revit-common-purge-utils-module"></span><h2>duHast.Revit.Common.purge_utils module<a class="headerlink" href="#module-duHast.Revit.Common.purge_utils" title="Permalink to this heading">¶</a></h2>
+<section id="revit-purge-utility-functions">
+<h3>Revit purge utility functions.<a class="headerlink" href="#revit-purge-utility-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.purge_utils.build_category_dictionary">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.purge_utils.</span></span><span class="sig-name descname"><span class="pre">build_category_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.purge_utils.build_category_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a dictionary from elementId s past in.
+Dictionary key is the element category and values are all the elements of that category.
+If no category can be found the key ‘invalid category’ will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element_ids</strong> (<em>list</em><em> of </em><em>AutoDesk.Revit.DB.ElementId</em>) – List of element id of which to build the dictionary from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary key is the element category and values are all the elements of that category.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dictionary, key is string, value is list of AutoDesk.Revit.DB.Element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.purge_utils.check_whether_dependent_elements_are_multiple_orphaned_legend_components">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.purge_utils.</span></span><span class="sig-name descname"><span class="pre">check_whether_dependent_elements_are_multiple_orphaned_legend_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.purge_utils.check_whether_dependent_elements_are_multiple_orphaned_legend_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if element are orphaned legend components</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element_ids</strong> (<em>list</em><em> of </em><em>AutoDesk.Revit.DB.ElementId</em>) – List of elements to check</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all but one element are orphaned legend components.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.purge_utils.filter_out_warnings">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.purge_utils.</span></span><span class="sig-name descname"><span class="pre">filter_out_warnings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dependent_elements</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.purge_utils.filter_out_warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to filter out any warnings from ids supplied by checking the workset name
+of each element for ‘Reviewable Warnings’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>dependent_elements</strong> (<em>list</em><em> of </em><em>AutoDesk.Revit.DB.Element</em>) – List of elements to check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of elements id where the workset name of the element is not ‘Reviewable Warnings’</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of AutoDesk.Revit.DB.Element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.purge_utils.has_dependent_elements">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.purge_utils.</span></span><span class="sig-name descname"><span class="pre">has_dependent_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.purge_utils.has_dependent_elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether an element has dependent elements.
+The dependent elements are collected via Element.GetDependentElements(filter).
+This also includes a check as to whether elements returned as dependent are orphaned. (for lack of better words)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>el</strong> (<em>AutoDesk.Revit.DB.Element</em>) – The element to be checked for dependent elements.</p></li>
+<li><p><strong>filter</strong> (<em>Autodesk.Revit.DB.ElementFilter</em><em> , </em><em>optional</em>) – What type of dependent elements to filter, defaults to None which will return all dependent elements</p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of how many dependant elements an element can have but still be considered not used, defaults to 2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occurred</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.purge_utils.get_used_unused_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.purge_utils.</span></span><span class="sig-name descname"><span class="pre">get_used_unused_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_id_getter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.purge_utils.get_used_unused_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets either the used or not used type Ids provided by typeIdGetter.
+Whether the used or unused type ids depends on the useType value.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param type_id_getter: Function returning type ids
+:type type_id_getter: list of Autodesk.Revit.DB.ElementId
+:param use_type: 0, no dependent elements; 1: has dependent elements, defaults to 0
+:type use_type: int, optional
+:param threshold: The number of how many dependant elements an element can have but still be considered not used, defaults to 2
+:type threshold: int, optional
+:return: A list of either all used or unused element ids. Depends on useType.
+:rtype: list of Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.revit_version">
+<span id="duhast-revit-common-revit-version-module"></span><h2>duHast.Revit.Common.revit_version module<a class="headerlink" href="#module-duHast.Revit.Common.revit_version" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.revit_version.get_revit_version_number">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.revit_version.</span></span><span class="sig-name descname"><span class="pre">get_revit_version_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.revit_version.get_revit_version_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the revit version as an integer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Revit version</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.transaction">
+<span id="duhast-revit-common-transaction-module"></span><h2>duHast.Revit.Common.transaction module<a class="headerlink" href="#module-duHast.Revit.Common.transaction" title="Permalink to this heading">¶</a></h2>
+<section id="revit-transaction-wrapper-utility-functions">
+<h3>Revit transaction wrapper utility functions.<a class="headerlink" href="#revit-transaction-wrapper-utility-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.transaction.in_transaction">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.transaction.</span></span><span class="sig-name descname"><span class="pre">in_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">res.Result</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">res.Result</span></span></span><a class="headerlink" href="#duHast.Revit.Common.transaction.in_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revit transaction wrapper.</p>
+<p>This function is used to execute any actions requiring a transaction in the Revit api. On exception this will roll back the transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tranny</strong> (<em>Autodesk.Revit.DB.Transaction</em>) – The transaction to be executed.</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document. (not used in this function)</p></li>
+<li><p><strong>action</strong> (<em>action</em><em>(</em><em>)</em><em>.</em>) – The action to be nested within the transaction. This needs to return a Result class instance!</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if successfully executed transaction, otherwise False.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.worksets">
+<span id="duhast-revit-common-worksets-module"></span><h2>duHast.Revit.Common.worksets module<a class="headerlink" href="#module-duHast.Revit.Common.worksets" title="Permalink to this heading">¶</a></h2>
+<section id="a-number-of-helper-functions-relating-to-revit-worksets">
+<h3>A number of helper functions relating to Revit worksets.<a class="headerlink" href="#a-number-of-helper-functions-relating-to-revit-worksets" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.worksets.get_workset_id_by_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.worksets.</span></span><span class="sig-name descname"><span class="pre">get_workset_id_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workset_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.worksets.get_workset_id_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the element id of a workset identified by its name, otherwise invalid Id (-1) if no such workset exists</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>workset_name</strong> (<em>str</em>) – The name of the workset of which to retrieve the Element Id</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The workset element id, otherwise invalid Id (-1) if no such workset exists</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.worksets.get_workset_name_by_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.worksets.</span></span><span class="sig-name descname"><span class="pre">get_workset_name_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_integer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.worksets.get_workset_name_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of the workset identified by its Element Id, otherwise ‘unknown’ if no such workset exists</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>id_integer</strong> (<em>int</em>) – The element id as integer value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The name of the workset identified by its Id, otherwise ‘unknown’</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.worksets.get_workset_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.worksets.</span></span><span class="sig-name descname"><span class="pre">get_workset_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.worksets.get_workset_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all ids of all user defined worksets in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of all user defined workset element ids</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.worksets.get_worksets">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.worksets.</span></span><span class="sig-name descname"><span class="pre">get_worksets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.worksets.get_worksets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all user defined worksets in the model as list.</p>
+<p>Will return a list of zero length if no worksets in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of worksets</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.Workset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.worksets.get_worksets_from_collector">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.worksets.</span></span><span class="sig-name descname"><span class="pre">get_worksets_from_collector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.worksets.get_worksets_from_collector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all user defined worksets in the model as collector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered elements collector of user defined worksets</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.worksets.open_worksets_with_elements_hack">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.worksets.</span></span><span class="sig-name descname"><span class="pre">open_worksets_with_elements_hack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.worksets.open_worksets_with_elements_hack" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is based on a hack from the AutoDesk forum and an article from the building coder:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://forums.autodesk.com/t5/revit-api-forum/open-closed-worksets-in-open-document/td-p/6238121">https://forums.autodesk.com/t5/revit-api-forum/open-closed-worksets-in-open-document/td-p/6238121</a></p></li>
+<li><p><a class="reference external" href="https://thebuildingcoder.typepad.com/blog/2018/03/switch-view-or-document-by-showing-elements.html">https://thebuildingcoder.typepad.com/blog/2018/03/switch-view-or-document-by-showing-elements.html</a></p></li>
+</ul>
+<p>this method will open worksets in a model containing elements only</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.worksets.modify_element_workset">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.worksets.</span></span><span class="sig-name descname"><span class="pre">modify_element_workset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_workset_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_type_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.worksets.modify_element_workset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to change the worksets of elements provided through an element collector.</p>
+<p>Will return false if target workset does not exist in file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>default_workset_name</strong> (<em>str</em>) – The name of the workset the elements are to be moved to.</p></li>
+<li><p><strong>collector</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – The element collector containing the elements.</p></li>
+<li><p><strong>element_type_name</strong> (<em>str</em>) – A description used in the status message returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if successfully moved all elements to new workset. Otherwise False.</p></li>
+<li><p>.message will contain stats in format [success :: failure]</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.worksets.get_action_change_element_workset">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.worksets.</span></span><span class="sig-name descname"><span class="pre">get_action_change_element_workset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.worksets.get_action_change_element_workset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains the required action to change a single elements workset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>el</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element</p></li>
+<li><p><strong>default_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The workset element Id</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.worksets.is_element_on_workset_by_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.worksets.</span></span><span class="sig-name descname"><span class="pre">is_element_on_workset_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workset_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.worksets.is_element_on_workset_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether an element is on a given workset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>el</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element.</p></li>
+<li><p><strong>workset_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The workset element Id</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if element is on given workset, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.worksets.is_element_on_workset_by_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.worksets.</span></span><span class="sig-name descname"><span class="pre">is_element_on_workset_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workset_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.worksets.is_element_on_workset_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether an element is on a workset identified by name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>el</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element</p></li>
+<li><p><strong>workset_name</strong> (<em>str</em>) – The name of the workset</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if element is on given workset, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.worksets.get_element_workset_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.worksets.</span></span><span class="sig-name descname"><span class="pre">get_element_workset_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.worksets.get_element_workset_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of the workset an element is on, or ‘invalid workset’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>el</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The name of the workset. If an exception occurred it wil return ‘invalid workset’.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.worksets.update_workset_default_visibility_from_report">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.worksets.</span></span><span class="sig-name descname"><span class="pre">update_workset_default_visibility_from_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.worksets.update_workset_default_visibility_from_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the default visibility of worksets based on a workset report file.</p>
+<p>The data for the report files is generated by GetWorksetReportData() function in this module</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>report_path</strong> (<em>str</em>) – The fully qualified file path to tab separated report text file containing workset data.</p></li>
+<li><p><strong>revit_file_path</strong> (<em>str</em>) – The fully qualified file path of the Revit file. Will be used to identify the file in the report data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul>
+<li><p>.result = True if:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>successfully updated all workset default visibility where different to report</p></li>
+<li><p>or none needed updating.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Otherwise False:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>An exception occurred.</p></li>
+<li><p>A workset has no matching data in the report.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Common:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>.message will contain each workset and whether it needed updating or not</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Common" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.Common package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

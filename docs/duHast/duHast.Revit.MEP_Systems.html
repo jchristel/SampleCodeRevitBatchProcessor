@@ -1,0 +1,1036 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.MEP_Systems package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
+    <link rel="next" title="duHast.Revit.MEP_Systems.Reporting package" href="duHast.Revit.MEP_Systems.Reporting.html" />
+    <link rel="prev" title="duHast.Revit.Links.Utility package" href="duHast.Revit.Links.Utility.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.MEP_Systems package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.MEP_Systems.Reporting.html" title="duHast.Revit.MEP_Systems.Reporting package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Links.Utility.html" title="duHast.Revit.Links.Utility package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.MEP_Systems.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-mep-systems-package">
+<h1>duHast.Revit.MEP_Systems package<a class="headerlink" href="#duhast-revit-mep-systems-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.MEP_Systems.Reporting.html">duHast.Revit.MEP_Systems.Reporting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.MEP_Systems.Reporting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.MEP_Systems.Reporting.html#module-duHast.Revit.MEP_Systems.Reporting.mep_report_header">duHast.Revit.MEP_Systems.Reporting.mep_report_header module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Reporting.html#this-module-contains-the-header-row-for-any-mep-system-reports">This module contains the header row for any MEP system reports.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Reporting.html#duHast.Revit.MEP_Systems.Reporting.mep_report_header.REPORT_REVIT_MEP_SYSTEMS_HEADER"><code class="docutils literal notranslate"><span class="pre">REPORT_REVIT_MEP_SYSTEMS_HEADER</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.MEP_Systems.Reporting.html#module-duHast.Revit.MEP_Systems.Reporting">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html">duHast.Revit.MEP_Systems.Utility package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#module-duHast.Revit.MEP_Systems.Utility.MergeLists">duHast.Revit.MEP_Systems.Utility.MergeLists module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#this-module-contains-a-helper-functions-to-merge-two-lists-into-a-unique-list">This module contains a helper functions to merge two lists into a unique list.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.MergeLists.merge_into_unique_list"><code class="docutils literal notranslate"><span class="pre">merge_into_unique_list()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#module-duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#revit-mep-built-in-categories">Revit MEP built-in categories.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.CATS_LOADABLE_CABLE_TRAYS"><code class="docutils literal notranslate"><span class="pre">CATS_LOADABLE_CABLE_TRAYS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.CATS_LOADABLE_CONDUITS"><code class="docutils literal notranslate"><span class="pre">CATS_LOADABLE_CONDUITS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.CATS_LOADABLE_PIPES"><code class="docutils literal notranslate"><span class="pre">CATS_LOADABLE_PIPES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.ROUTING_PREF_RULE_GROUP_TYPES"><code class="docutils literal notranslate"><span class="pre">ROUTING_PREF_RULE_GROUP_TYPES</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#module-duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#revit-mep-systems-names-eng">Revit MEP systems names (ENG).</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.DUCT_OVAL_FAMILY_NAME"><code class="docutils literal notranslate"><span class="pre">DUCT_OVAL_FAMILY_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.DUCT_ROUND_FAMILY_NAME"><code class="docutils literal notranslate"><span class="pre">DUCT_ROUND_FAMILY_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.DUCT_RECTANGULAR_FAMILY_NAME"><code class="docutils literal notranslate"><span class="pre">DUCT_RECTANGULAR_FAMILY_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_DUCT_TYPE_FAMILY_NAMES"><code class="docutils literal notranslate"><span class="pre">BUILTIN_DUCT_TYPE_FAMILY_NAMES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.FLEX_DUCT_REC_FAMILY_NAME"><code class="docutils literal notranslate"><span class="pre">FLEX_DUCT_REC_FAMILY_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.FLEX_DUCT_ROUND_FAMILY_NAME"><code class="docutils literal notranslate"><span class="pre">FLEX_DUCT_ROUND_FAMILY_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES"><code class="docutils literal notranslate"><span class="pre">BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CONDUIT_WITH_FITTING_FAMILY_NAME"><code class="docutils literal notranslate"><span class="pre">CONDUIT_WITH_FITTING_FAMILY_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CONDUIT_WITHOUT_FITTING_FAMILY_NAME"><code class="docutils literal notranslate"><span class="pre">CONDUIT_WITHOUT_FITTING_FAMILY_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_CONDUIT_TYPE_FAMILY_NAMES"><code class="docutils literal notranslate"><span class="pre">BUILTIN_CONDUIT_TYPE_FAMILY_NAMES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CABLE_TRAY_WITH_FITTING_FAMILY_NAME"><code class="docutils literal notranslate"><span class="pre">CABLE_TRAY_WITH_FITTING_FAMILY_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME"><code class="docutils literal notranslate"><span class="pre">CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES"><code class="docutils literal notranslate"><span class="pre">BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.PIPE_FAMILY_NAME"><code class="docutils literal notranslate"><span class="pre">PIPE_FAMILY_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_PIPE_TYPE_FAMILY_NAMES"><code class="docutils literal notranslate"><span class="pre">BUILTIN_PIPE_TYPE_FAMILY_NAMES</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#module-duHast.Revit.MEP_Systems.Utility.RevitMEPTypeSorting">duHast.Revit.MEP_Systems.Utility.RevitMEPTypeSorting module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#this-module-contains-a-number-of-helper-functions-relating-to-building-mep-ype-dictionaries">This module contains a number of helper functions relating to building MEP ype dictionaries.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPTypeSorting.build_type_dictionary"><code class="docutils literal notranslate"><span class="pre">build_type_dictionary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.RevitMEPTypeSorting.sort_types_by_family_name"><code class="docutils literal notranslate"><span class="pre">sort_types_by_family_name()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#module-duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes">duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#this-module-contains-a-number-of-helper-functions-around-families-used-in-system-types">This module contains a number of helper functions around families used in system types.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_unique_ids_of_used_symbols_from_system_type_id"><code class="docutils literal notranslate"><span class="pre">get_unique_ids_of_used_symbols_from_system_type_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_unique_ids_of_used_symbols_from_system_type_ids"><code class="docutils literal notranslate"><span class="pre">get_unique_ids_of_used_symbols_from_system_type_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_symbol_ids_of_mep_system_types"><code class="docutils literal notranslate"><span class="pre">get_symbol_ids_of_mep_system_types()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.MEP_Systems.Utility.html#module-duHast.Revit.MEP_Systems.Utility">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.MEP_Systems.cable_trays">
+<span id="duhast-revit-mep-systems-cable-trays-module"></span><h2>duHast.Revit.MEP_Systems.cable_trays module<a class="headerlink" href="#module-duHast.Revit.MEP_Systems.cable_trays" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-cable-trays">
+<h3>This module contains a number of helper functions relating to Revit cable trays.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-cable-trays" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.cable_trays.get_all_cable_tray_types_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.cable_trays.</span></span><span class="sig-name descname"><span class="pre">get_all_cable_tray_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.cable_trays.get_all_cable_tray_types_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all cable tray types in the model.
+- with fittings
+- without fittings
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of cable tray types
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.cable_trays.get_cable_tray_types_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.cable_trays.</span></span><span class="sig-name descname"><span class="pre">get_cable_tray_types_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.cable_trays.get_cable_tray_types_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all cable tray types in the model.
+- with fittings
+- without fittings
+Will exclude in place families.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of cable tray types
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.cable_trays.get_all_cable_tray_instances_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.cable_trays.</span></span><span class="sig-name descname"><span class="pre">get_all_cable_tray_instances_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.cable_trays.get_all_cable_tray_instances_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all cable tray elements placed in model.
+TODO: check these actually work…
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of cable tray instances
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.cable_trays.get_all_cable_tray_instances_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.cable_trays.</span></span><span class="sig-name descname"><span class="pre">get_all_cable_tray_instances_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.cable_trays.get_all_cable_tray_instances_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all cable tray elements placed in model.
+Will exclude in place families.
+TODO: check these actually work…
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of cable tray instances
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.cable_trays.get_all_cable_tray_type_ids_in_model_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.cable_trays.</span></span><span class="sig-name descname"><span class="pre">get_all_cable_tray_type_ids_in_model_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.cable_trays.get_all_cable_tray_type_ids_in_model_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all cable tray type ids available in model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing cable tray types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.cable_trays.get_all_cable_tray_type_ids_in_model_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.cable_trays.</span></span><span class="sig-name descname"><span class="pre">get_all_cable_tray_type_ids_in_model_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.cable_trays.get_all_cable_tray_type_ids_in_model_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all cable tray type ids available in model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing cable tray types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.cable_trays.get_symbol_ids_used_in_cable_tray_types">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.cable_trays.</span></span><span class="sig-name descname"><span class="pre">get_symbol_ids_used_in_cable_tray_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.cable_trays.get_symbol_ids_used_in_cable_tray_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of unique symbol ids used in system type properties of cable tray types.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of unique ids representing family symbols used in cable tray systems.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.cable_trays.get_symbol_ids_for_cable_tray_types_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.cable_trays.</span></span><span class="sig-name descname"><span class="pre">get_symbol_ids_for_cable_tray_types_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.cable_trays.get_symbol_ids_for_cable_tray_types_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets list of symbol ids of the following categories:
+- BuiltInCategory.OST_CableTrayFitting
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.MEP_Systems.conduits">
+<span id="duhast-revit-mep-systems-conduits-module"></span><h2>duHast.Revit.MEP_Systems.conduits module<a class="headerlink" href="#module-duHast.Revit.MEP_Systems.conduits" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-conduits">
+<h3>This module contains a number of helper functions relating to Revit conduits.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-conduits" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.conduits.get_all_conduit_types_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.conduits.</span></span><span class="sig-name descname"><span class="pre">get_all_conduit_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.conduits.get_all_conduit_types_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all conduit types in the model.
+- with fittings
+- without fittings
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of conduit types
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.conduits.get_all_conduit_types_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.conduits.</span></span><span class="sig-name descname"><span class="pre">get_all_conduit_types_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.conduits.get_all_conduit_types_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all conduit types in the model.
+- with fittings
+- without fittings
+Will exclude in place families.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of conduit types
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.conduits.get_all_conduit_instances_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.conduits.</span></span><span class="sig-name descname"><span class="pre">get_all_conduit_instances_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.conduits.get_all_conduit_instances_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all conduit elements placed in model.
+TODO: check these actually work…
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of conduit instances
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.conduits.get_all_conduit_instances_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.conduits.</span></span><span class="sig-name descname"><span class="pre">get_all_conduit_instances_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.conduits.get_all_conduit_instances_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all conduit elements placed in model.
+Will exclude in place families.
+TODO: check these actually work…
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of conduit instances
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.conduits.get_all_conduit_type_ids_in_model_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.conduits.</span></span><span class="sig-name descname"><span class="pre">get_all_conduit_type_ids_in_model_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.conduits.get_all_conduit_type_ids_in_model_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all conduit type ids available in model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing conduit types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.conduits.get_all_conduit_type_ids_in_model_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.conduits.</span></span><span class="sig-name descname"><span class="pre">get_all_conduit_type_ids_in_model_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.conduits.get_all_conduit_type_ids_in_model_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all conduit type ids available in model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing conduit types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.conduits.get_symbol_ids_used_in_conduit_types">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.conduits.</span></span><span class="sig-name descname"><span class="pre">get_symbol_ids_used_in_conduit_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.conduits.get_symbol_ids_used_in_conduit_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of unique symbol ids used in system type properties of conduit types.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of unique ids representing family symbols used in conduit systems.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.conduits.get_symbol_ids_for_conduit_types_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.conduits.</span></span><span class="sig-name descname"><span class="pre">get_symbol_ids_for_conduit_types_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.conduits.get_symbol_ids_for_conduit_types_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets list of symbol ids of the following categories:
+- BuiltInCategory.OST_ConduitFitting
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.MEP_Systems.ducts">
+<span id="duhast-revit-mep-systems-ducts-module"></span><h2>duHast.Revit.MEP_Systems.ducts module<a class="headerlink" href="#module-duHast.Revit.MEP_Systems.ducts" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-ducts">
+<h3>This module contains a number of helper functions relating to Revit ducts.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-ducts" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.ducts.get_all_duct_types_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.ducts.</span></span><span class="sig-name descname"><span class="pre">get_all_duct_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.ducts.get_all_duct_types_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all duct types in the model.
+- round
+- oval
+- rectangular
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of duct types
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.ducts.get_all_duct_types_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.ducts.</span></span><span class="sig-name descname"><span class="pre">get_all_duct_types_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.ducts.get_all_duct_types_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all duct types in the model.
+- round
+- oval
+- rectangular
+Will exclude in place families.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of duct types
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.ducts.get_all_duct_instances_in_model_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.ducts.</span></span><span class="sig-name descname"><span class="pre">get_all_duct_instances_in_model_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.ducts.get_all_duct_instances_in_model_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all duct elements placed in model.
+TODO: check these actually work…
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of duct instances
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.ducts.get_all_duct_instances_in_model_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.ducts.</span></span><span class="sig-name descname"><span class="pre">get_all_duct_instances_in_model_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.ducts.get_all_duct_instances_in_model_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all duct elements placed in model.
+Will exclude in place families.
+TODO: check these actually work…
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of duct instances
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.ducts.get_all_duct_type_ids_in_model_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.ducts.</span></span><span class="sig-name descname"><span class="pre">get_all_duct_type_ids_in_model_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.ducts.get_all_duct_type_ids_in_model_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all duct type ids available in model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing duct types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.ducts.get_all_duct_type_ids_in_model_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.ducts.</span></span><span class="sig-name descname"><span class="pre">get_all_duct_type_ids_in_model_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.ducts.get_all_duct_type_ids_in_model_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all duct type ids available in model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing duct types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.ducts.get_symbol_ids_used_in_duct_types">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.ducts.</span></span><span class="sig-name descname"><span class="pre">get_symbol_ids_used_in_duct_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.ducts.get_symbol_ids_used_in_duct_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of unique symbol ids used in system type properties of duct types.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of unique ids representing family symbols used in duct systems.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.ducts.get_symbol_ids_for_duct_types_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.ducts.</span></span><span class="sig-name descname"><span class="pre">get_symbol_ids_for_duct_types_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.ducts.get_symbol_ids_for_duct_types_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets list of symbol ids of the following categories:
+- BuiltInCategory.OST_DuctAccessory,
+- BuiltInCategory.OST_DuctTerminal,
+- BuiltInCategory.OST_DuctFitting
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.MEP_Systems.flex_ducts">
+<span id="duhast-revit-mep-systems-flex-ducts-module"></span><h2>duHast.Revit.MEP_Systems.flex_ducts module<a class="headerlink" href="#module-duHast.Revit.MEP_Systems.flex_ducts" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-flex-ducts">
+<h3>This module contains a number of helper functions relating to Revit flex ducts.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-flex-ducts" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.flex_ducts.get_all_flex_duct_types_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.flex_ducts.</span></span><span class="sig-name descname"><span class="pre">get_all_flex_duct_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.flex_ducts.get_all_flex_duct_types_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all flex duct types in the model.
+- round
+- rectangular
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of flex duct types
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.flex_ducts.get_all_flex_duct_types_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.flex_ducts.</span></span><span class="sig-name descname"><span class="pre">get_all_flex_duct_types_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.flex_ducts.get_all_flex_duct_types_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all flex duct types in the model.
+- round
+- rectangular
+Will exclude in place families.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of flex duct types
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.flex_ducts.get_all_flex_duct_instances_in_model_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.flex_ducts.</span></span><span class="sig-name descname"><span class="pre">get_all_flex_duct_instances_in_model_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.flex_ducts.get_all_flex_duct_instances_in_model_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all flex duct elements placed in model.
+TODO: check these actually work…
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of flex duct instances
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.flex_ducts.get_all_flex_duct_instances_in_model_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.flex_ducts.</span></span><span class="sig-name descname"><span class="pre">get_all_flex_duct_instances_in_model_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.flex_ducts.get_all_flex_duct_instances_in_model_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all flex duct elements placed in model.
+Will exclude in place families.
+TODO: check these actually work…
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of flex duct instances
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.flex_ducts.get_all_flex_duct_type_ids_in_model_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.flex_ducts.</span></span><span class="sig-name descname"><span class="pre">get_all_flex_duct_type_ids_in_model_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.flex_ducts.get_all_flex_duct_type_ids_in_model_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all flex duct type ids available in model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing flex duct types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.flex_ducts.get_all_flex_duct_type_ids_in_model_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.flex_ducts.</span></span><span class="sig-name descname"><span class="pre">get_all_flex_duct_type_ids_in_model_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.flex_ducts.get_all_flex_duct_type_ids_in_model_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all flex duct type ids available in model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing flex duct types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.flex_ducts.get_symbol_ids_used_in_flex_duct_types">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.flex_ducts.</span></span><span class="sig-name descname"><span class="pre">get_symbol_ids_used_in_flex_duct_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.flex_ducts.get_symbol_ids_used_in_flex_duct_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of unique symbol ids used in system type properties of flex duct types.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of unique ids representing family symbols used in flex duct systems.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.flex_ducts.get_symbol_ids_for_flex_duct_types_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.flex_ducts.</span></span><span class="sig-name descname"><span class="pre">get_symbol_ids_for_flex_duct_types_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.flex_ducts.get_symbol_ids_for_flex_duct_types_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets list of symbol ids of the following categories:
+- BuiltInCategory.OST_DuctAccessory,
+- BuiltInCategory.OST_DuctTerminal,
+- BuiltInCategory.OST_DuctFitting
+TODO: flex duct and duct do not differentiate in terms of filtering…one function will get both
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.MEP_Systems.pipes">
+<span id="duhast-revit-mep-systems-pipes-module"></span><h2>duHast.Revit.MEP_Systems.pipes module<a class="headerlink" href="#module-duHast.Revit.MEP_Systems.pipes" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-pipes">
+<h3>This module contains a number of helper functions relating to Revit pipes.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-pipes" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.pipes.get_all_pipe_types_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.pipes.</span></span><span class="sig-name descname"><span class="pre">get_all_pipe_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.pipes.get_all_pipe_types_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all pipe types in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of pipe tray types
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.pipes.get_all_pipe_types_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.pipes.</span></span><span class="sig-name descname"><span class="pre">get_all_pipe_types_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.pipes.get_all_pipe_types_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all pipe types in the model.
+Will exclude in place families.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of pipe tray types
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.pipes.get_all_pipe_instances_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.pipes.</span></span><span class="sig-name descname"><span class="pre">get_all_pipe_instances_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.pipes.get_all_pipe_instances_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all pipe elements placed in model.
+TODO: check these actually work…
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of pipe instances
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.pipes.get_all_pipe_instances_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.pipes.</span></span><span class="sig-name descname"><span class="pre">get_all_pipe_instances_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.pipes.get_all_pipe_instances_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all pipe elements placed in model.
+Will exclude in place families.
+TODO: check these actually work…
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of pipe instances
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.pipes.get_all_pipe_type_ids_in_model_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.pipes.</span></span><span class="sig-name descname"><span class="pre">get_all_pipe_type_ids_in_model_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.pipes.get_all_pipe_type_ids_in_model_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all pipe type ids available in model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing pipe types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.pipes.get_all_pipe_type_ids_in_model_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.pipes.</span></span><span class="sig-name descname"><span class="pre">get_all_pipe_type_ids_in_model_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.pipes.get_all_pipe_type_ids_in_model_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all pipe type ids available in model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing pipe types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.pipes.get_symbol_ids_used_in_pipe_types">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.pipes.</span></span><span class="sig-name descname"><span class="pre">get_symbol_ids_used_in_pipe_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.pipes.get_symbol_ids_used_in_pipe_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of unique symbol ids used in system type properties of pipe types.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of unique ids representing family symbols used in pipe systems.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.pipes.get_symbol_ids_for_pipe_types_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.pipes.</span></span><span class="sig-name descname"><span class="pre">get_symbol_ids_for_pipe_types_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.pipes.get_symbol_ids_for_pipe_types_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets list of symbol ids of the following categories:
+- BuiltInCategory.OST_PipeAccessory,
+- BuiltInCategory.OST_PipeFitting
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.MEP_Systems.purge_unused_mep_symbols">
+<span id="duhast-revit-mep-systems-purge-unused-mep-symbols-module"></span><h2>duHast.Revit.MEP_Systems.purge_unused_mep_symbols module<a class="headerlink" href="#module-duHast.Revit.MEP_Systems.purge_unused_mep_symbols" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-purging-unused-families-which-can-be-used-in-mep-systems">
+<h3>This module contains a number of helper functions relating to purging unused families which can be used in mep systems.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-purging-unused-families-which-can-be-used-in-mep-systems" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_used_duct_and_flex_duct_symbol_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_symbols.</span></span><span class="sig-name descname"><span class="pre">get_used_duct_and_flex_duct_symbol_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_used_duct_and_flex_duct_symbol_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used duct and flex duct symbol ids of categories
+- BuiltInCategory.OST_DuctAccessory,
+- BuiltInCategory.OST_DuctTerminal,
+- BuiltInCategory.OST_DuctFitting
+Used: at least instance per symbol is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_duct_and_flex_duct_symbol_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_symbols.</span></span><span class="sig-name descname"><span class="pre">get_unused_duct_and_flex_duct_symbol_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_duct_and_flex_duct_symbol_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused duct and flex duct symbol ids of categories
+- BuiltInCategory.OST_DuctAccessory,
+- BuiltInCategory.OST_DuctTerminal,
+- BuiltInCategory.OST_DuctFitting
+Unused: not one instance per symbol is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_duct_and_flex_duct_symbol_ids_for_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_symbols.</span></span><span class="sig-name descname"><span class="pre">get_unused_duct_and_flex_duct_symbol_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_duct_and_flex_duct_symbol_ids_for_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused duct and flex duct symbol ids of categories
+- BuiltInCategory.OST_DuctAccessory,
+- BuiltInCategory.OST_DuctTerminal,
+- BuiltInCategory.OST_DuctFitting
+Unused: not one instance per symbol is placed in the model.
+This method can be used to safely delete unused duct symbols and families from the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_used_cable_tray_symbol_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_symbols.</span></span><span class="sig-name descname"><span class="pre">get_used_cable_tray_symbol_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_used_cable_tray_symbol_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used cable tray symbol ids of categories
+- BuiltInCategory.OST_CableTrayFitting
+Used: at least instance per symbol is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_cable_tray_symbol_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_symbols.</span></span><span class="sig-name descname"><span class="pre">get_unused_cable_tray_symbol_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_cable_tray_symbol_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused cable tray symbol ids of categories
+- BuiltInCategory.OST_CableTrayFitting
+Unused: not one instance per symbol is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_cable_tray_symbol_ids_for_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_symbols.</span></span><span class="sig-name descname"><span class="pre">get_unused_cable_tray_symbol_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_cable_tray_symbol_ids_for_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused cable tray symbol ids of categories
+- BuiltInCategory.OST_CableTrayFitting
+Unused: not one instance per symbol is placed in the model.
+This method can be used to safely delete unused cable tray symbols and families from the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_used_conduit_symbol_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_symbols.</span></span><span class="sig-name descname"><span class="pre">get_used_conduit_symbol_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_used_conduit_symbol_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used conduit symbol ids of categories
+- BuiltInCategory.OST_ConduitFitting
+Used: at least instance per symbol is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_conduit_symbol_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_symbols.</span></span><span class="sig-name descname"><span class="pre">get_unused_conduit_symbol_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_conduit_symbol_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused conduit symbol ids of categories
+- BuiltInCategory.OST_ConduitFitting
+Unused: not one instance per symbol is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_conduit_symbol_ids_for_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_symbols.</span></span><span class="sig-name descname"><span class="pre">get_unused_conduit_symbol_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_conduit_symbol_ids_for_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused conduit symbol ids of categories
+- BuiltInCategory.OST_ConduitFitting
+Unused: not one instance per symbol is placed in the model.
+This method can be used to safely delete unused conduit symbols and families from the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_used_pipe_symbol_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_symbols.</span></span><span class="sig-name descname"><span class="pre">get_used_pipe_symbol_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_used_pipe_symbol_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used pipe symbol ids of categories
+- BuiltInCategory.OST_PipeAccessory,
+- BuiltInCategory.OST_PipeFitting
+Used: at least instance per symbol is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_pipe_symbol_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_symbols.</span></span><span class="sig-name descname"><span class="pre">get_unused_pipe_symbol_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_pipe_symbol_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused pipe symbol ids of categories
+- BuiltInCategory.OST_PipeAccessory,
+- BuiltInCategory.OST_PipeFitting
+Unused: not one instance per symbol is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_pipe_symbol_ids_for_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_symbols.</span></span><span class="sig-name descname"><span class="pre">get_unused_pipe_symbol_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_symbols.get_unused_pipe_symbol_ids_for_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused pipe symbol ids of categories
+- BuiltInCategory.OST_PipeAccessory,
+- BuiltInCategory.OST_PipeFitting
+Unused: not one instance per symbol is placed in the model.
+This method can be used to safely delete unused pipe symbols and families from the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.MEP_Systems.purge_unused_mep_types">
+<span id="duhast-revit-mep-systems-purge-unused-mep-types-module"></span><h2>duHast.Revit.MEP_Systems.purge_unused_mep_types module<a class="headerlink" href="#module-duHast.Revit.MEP_Systems.purge_unused_mep_types" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-purging-unused-mep-system-types">
+<h3>This module contains a number of helper functions relating to purging unused mep system types.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-purging-unused-mep-system-types" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_used_duct_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_used_duct_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_used_duct_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used duct type ids available in model.
+Unused: at least instance of each of these types is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing duct types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_used_flex_duct_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_used_flex_duct_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_used_flex_duct_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used flex duct type ids available in model.
+Unused: at least instance of each of these types is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing flex duct types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_used_conduit_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_used_conduit_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_used_conduit_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used conduit type ids available in model.
+Unused: at least instance of each of these types is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing conduit types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_used_cable_tray_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_used_cable_tray_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_used_cable_tray_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used cable tray type ids available in model.
+Unused: at least instance of each of these types is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing cable tray types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_used_pipe_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_used_pipe_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_used_pipe_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used pipe type ids available in model.
+Unused: at least instance of each of these types is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing pipe types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_duct_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_duct_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_duct_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused duct type ids available in model.
+Unused: not one instance of these types is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing duct types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_flex_duct_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_flex_duct_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_flex_duct_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused flex duct type ids available in model.
+Unused: not one instance of these types is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing flex duct types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_conduit_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_conduit_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_conduit_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused conduit type ids available in model.
+Unused: not one instance of these types is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing conduit types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_cable_tray_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_cable_tray_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_cable_tray_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused cable tray type ids available in model.
+Unused: not one instance of these types is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing cable tray types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_pipe_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_pipe_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_pipe_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused pipe type ids available in model.
+Unused: not one instance of these types is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing pipe types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.family_no_types_in_use">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">family_no_types_in_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fam_type_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">un_used_type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.family_no_types_in_use" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares two lists of element ids and returns False if any element id in first list is not in the second list.
+Returns False if any symbols (types) of a family (first list) are in use in a model (second list).
+TODO: repetitive code…Consider generic function!
+:param fam_type_ids: List of family symbols (types).
+:type fam_type_ids: List of Autodesk.Revit.DB.ElementId
+:param un_used_type_ids: List of unused family symbols (types)
+:type un_used_type_ids: List of Autodesk.Revit.DB.ElementId
+:return: True if all ids in first list are also in second list, otherwise False.
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_mep_system_type_ids_to_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_mep_system_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_type_id_getter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_types_getter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_family_type_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_mep_system_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the ids of unused MEP system types. 
+In the case that no mep system instance using any of the types is placed, this will return all but one type id since        Revit requires at least one mep system type definition to be in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param all_type_id_getter: Function getting all available system type ids as a list.
+:type all_type_id_getter: func(doc) -&gt; List Autodesk.Revit.ED.ElementId
+:param all_types_getter: Function getting all available system types as a collector.
+:type all_types_getter: func(doc) -&gt; Autodesk.Revit.DB.FilteredElementCollector
+:param built_in_family_type_names: List containing all available major type names.
+:type built_in_family_type_names: List str
+:return: A list of ids representing mep system types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_duct_type_ids_to_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_duct_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_duct_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused duct type ids. 
+This method can be used to safely delete unused duct types:
+In the case that no duct instance using any of the types is placed, this will return all but one type id since        Revit requires at least one duct type definition to be in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing duct types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_flex_duct_type_ids_to_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_flex_duct_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_flex_duct_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused flex duct type ids. 
+This method can be used to safely delete unused flex duct types:
+In the case that no flex duct instance using any of the types is placed, this will return all but one type id since        Revit requires at least one flex duct type definition to be in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing flex duct types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_conduit_type_ids_to_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_conduit_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_conduit_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused conduit type ids. 
+This method can be used to safely delete unused conduit types:
+In the case that no conduit instance using any of the types is placed, this will return all but one type id since        Revit requires at least one conduit type definition to be in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing conduit types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_cable_tray_type_ids_to_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_cable_tray_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_cable_tray_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused cable tray type ids. 
+This method can be used to safely delete unused cable tray types:
+In the case that no cable tray instance using any of the types is placed, this will return all but one type id since        Revit requires at least one cable tray type definition to be in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing conduit types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_pipe_type_ids_to_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.purge_unused_mep_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_pipe_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.purge_unused_mep_types.get_unused_pipe_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused pipe type ids. 
+This method can be used to safely delete unused pipe types:
+In the case that no pipe instance using any of the types is placed, this will return all but one type id since        Revit requires at least one pipe type definition to be in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of ids representing conduit types.
+:rtype: List Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.MEP_Systems">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.MEP_Systems" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.MEP_Systems package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

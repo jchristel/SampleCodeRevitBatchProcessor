@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.ModelHealth.Reporting package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit.ModelHealth package" href="duHast.Revit.ModelHealth.html" />
+    <link rel="next" title="duHast.Revit.Purge package" href="duHast.Revit.Purge.html" />
+    <link rel="prev" title="duHast.Revit.ModelHealth package" href="duHast.Revit.ModelHealth.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.ModelHealth.Reporting package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Purge.html" title="duHast.Revit.Purge package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.ModelHealth.html" title="duHast.Revit.ModelHealth package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.ModelHealth.Reporting.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-modelhealth-reporting-package">
+<h1>duHast.Revit.ModelHealth.Reporting package<a class="headerlink" href="#duhast-revit-modelhealth-reporting-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.ModelHealth.Reporting.report_file_names">
+<span id="duhast-revit-modelhealth-reporting-report-file-names-module"></span><h2>duHast.Revit.ModelHealth.Reporting.report_file_names module<a class="headerlink" href="#module-duHast.Revit.ModelHealth.Reporting.report_file_names" title="Permalink to this heading">¶</a></h2>
+<section id="contains-file-names-used-by-model-health-report">
+<h3>Contains file names used by model health report.<a class="headerlink" href="#contains-file-names-used-by-model-health-report" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.LOG_FILE_HEADER">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">LOG_FILE_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'REPORT',</span> <span class="pre">'DATE',</span> <span class="pre">'TIME',</span> <span class="pre">'VALUE']</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.LOG_FILE_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header for each report file</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_DATE_LAST_UPDATED">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_DATE_LAST_UPDATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_DateLastUpdated'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_DATE_LAST_UPDATED" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : date last updated</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfWorksets'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : worksets</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_FILE_SIZE">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_FILE_SIZE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_FileSize'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_FILE_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : file size</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfWarnings'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : warnings</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_SETS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_SETS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfDesignSets'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_SETS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : design sets</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_OPTIONS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_OPTIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfDesignOptions'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_OPTIONS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : design options</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_SHEETS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_SHEETS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfSheets'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_SHEETS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : sheet</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_VIEWS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfViews'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : views</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfViewsNotPlaced'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : views not placed</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfLineStyles'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : line styles</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_LINE_PATTERNS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_LINE_PATTERNS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfLinePatterns'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_LINE_PATTERNS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : line patterns</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_FILL_PATTERNS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_FILL_PATTERNS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfFillPatterns'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_FILL_PATTERNS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : fill patterns</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_CAD_IMPORTS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_CAD_IMPORTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfCadImports'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_CAD_IMPORTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : CAD imports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_MODEL">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_MODEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfCadLinksModel'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : CAD links in model</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_VIEW">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_VIEW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfCadLinksView'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_VIEW" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : CAD links in view</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_IMPORTS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_IMPORTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfImageImports'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_IMPORTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : image imports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_LINKS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_LINKS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfImageLinks'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_LINKS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : image links</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfFamilies'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : families in model</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES_IN_PLACE">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES_IN_PLACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfInPlaceFamilies'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES_IN_PLACE" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : in place families in model</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfModelGroups'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : model groups</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS_UNPLACED">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS_UNPLACED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfUnplacedModelGroups'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS_UNPLACED" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : model groups unplaced</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfDetailGroups'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : detail groups</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS_UNPLACED">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS_UNPLACED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfUnplacedDetailGroups'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS_UNPLACED" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : detail groups unplaced</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_ROOMS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfRooms'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : rooms</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNPLACED">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNPLACED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfUnplacedRooms'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNPLACED" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : unplaced rooms</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNENCLOSED">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNENCLOSED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfNotEnclosedRooms'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNENCLOSED" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : not enclosed rooms</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfRedundantRooms'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : redundant rooms</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfRegions'</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : filled regions</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAMES">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.ModelHealth.Reporting.report_file_names.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'_DateLastUpdated',</span> <span class="pre">'_FileSize',</span> <span class="pre">'_NumberOfCadImports',</span> <span class="pre">'_NumberOfCadLinksModel',</span> <span class="pre">'_NumberOfCadLinksView',</span> <span class="pre">'_NumberOfDesignOptions',</span> <span class="pre">'_NumberOfDesignSets',</span> <span class="pre">'_NumberOfDetailGroups',</span> <span class="pre">'_NumberOfFamilies',</span> <span class="pre">'_NumberOfFillPatterns',</span> <span class="pre">'_NumberOfImageImports',</span> <span class="pre">'_NumberOfImageLinks',</span> <span class="pre">'_NumberOfInPlaceFamilies',</span> <span class="pre">'_NumberOfLinePatterns',</span> <span class="pre">'_NumberOfLineStyles',</span> <span class="pre">'_NumberOfModelGroups',</span> <span class="pre">'_NumberOfNotEnclosedRooms',</span> <span class="pre">'_NumberOfRedundantRooms',</span> <span class="pre">'_NumberOfRegions',</span> <span class="pre">'_NumberOfRooms',</span> <span class="pre">'_NumberOfSheets',</span> <span class="pre">'_NumberOfUnplacedDetailGroups',</span> <span class="pre">'_NumberOfUnplacedModelGroups',</span> <span class="pre">'_NumberOfUnplacedRooms',</span> <span class="pre">'_NumberOfViews',</span> <span class="pre">'_NumberOfViewsNotPlaced',</span> <span class="pre">'_NumberOfWarnings',</span> <span class="pre">'_NumberOfWorksets'}</span></em><a class="headerlink" href="#duHast.Revit.ModelHealth.Reporting.report_file_names.PARAM_ACTIONS_FILENAMES" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of report file name extensions</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.ModelHealth.Reporting">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.ModelHealth.Reporting" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.ModelHealth.html" >duHast.Revit.ModelHealth package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.ModelHealth.Reporting package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

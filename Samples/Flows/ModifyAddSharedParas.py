@@ -14,20 +14,20 @@ This flow demonstrates how to add any number of shared parameters to workshared 
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2020  Jan Christel
+# BSD License
+# Copyright © 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
 
@@ -35,23 +35,23 @@ This flow demonstrates how to add any number of shared parameters to workshared 
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
-# import libraries
-from duHast.APISamples import RevitCommonAPI as com
-from duHast.Utilities import Result as res
-from duHast.APISamples import RevitSharedParameterAdd as paraAdd
+# import from duHast
+from duHast.Utilities import files_io as fileIO
+from duHast.Utilities.Objects import result as res
+from duHast.Revit.SharedParameters import shared_parameter_add as paraAdd
 
 # autodesk API
 import Autodesk.Revit.DB as rdb
@@ -60,26 +60,28 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
     # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     #get default revit file name
-    revitFilePath_ = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
+    # get document from python shell
+    DOC = doc
 
 # -------------
 # my code here:
 # -------------
 
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -87,12 +89,12 @@ def Output(message = ''):
     :type message: str, optional
     '''
 
-    if not debug_:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-def UpDateParameters (doc, data):
+def update_parameters (doc, data):
     '''
     Bind parameters to category
 
@@ -118,23 +120,23 @@ def UpDateParameters (doc, data):
 
     status = res.Result()
     try:
-        for paraName, groupName, paraType, isVisible, elementCategory, paraGroup, isInstance in data:
+        for parameter_name, group_name, parameter_type, is_visible, element_category, parameter_group, is_instance in data:
             # add parameter to multiple categories if required
-            for cat in elementCategory:
-                statusBind =  paraAdd.BindSharedParameter(
+            for cat in element_category:
+                statusBind =  paraAdd.bind_shared_parameter(
                     doc, 
                     cat, 
-                    paraName, 
-                    groupName, 
-                    paraType, 
-                    isVisible, 
-                    isInstance, 
-                    paraGroup, 
-                    sharedParameterFilePath_
+                    parameter_name, 
+                    group_name, 
+                    parameter_type, 
+                    is_visible, 
+                    is_instance, 
+                    parameter_group, 
+                    SHARED_PARAMETER_FILE_PATH
                 )
-                status.Update(statusBind)
+                status.update(statusBind)
     except Exception as e:
-        status.UpdateSep(False, 'Terminated with exception: '+ str(e))
+        status.update_sep(False, 'Terminated with exception: '+ str(e))
     return status
 
 # -------------
@@ -142,9 +144,9 @@ def UpDateParameters (doc, data):
 # -------------
 
 # store output here:
-rootPath_ = r'C:\temp'
+ROOT_PATH = r'C:\temp'
 
-sharedParameterFilePath_ = r'C:\temp\Shared Parameters.txt'
+SHARED_PARAMETER_FILE_PATH = r'C:\temp\Shared Parameters.txt'
 '''
 Fully qualified path to shared parameter file
 '''
@@ -197,7 +199,7 @@ Fully qualified path to shared parameter file
             #{"Visibility",BuiltInParameterGroup.PG_VISIBILITY}
 # iS Instance - boolean
 
-listOfParameters_ = [
+LIST_OF_PARAMETERS = [
     ['ParameterOne','Exported Parameters',rdb.ParameterType.Length, True, [rdb.BuiltInCategory.OST_Ceilings], rdb.BuiltInParameterGroup.PG_GEOMETRY, True],
     ['ParameterTwo','Exported Parameters',rdb.ParameterType.YesNo, True, [rdb.BuiltInCategory.OST_Windows,rdb.BuiltInCategory.OST_CurtainWallPanels, rdb.BuiltInCategory.OST_Walls], rdb.BuiltInParameterGroup.PG_IDENTITY_DATA, True],
     ['ParameterThree','Exported Parameters',rdb.ParameterType.Text, True, [rdb.BuiltInCategory.OST_Rooms], rdb.BuiltInParameterGroup.PG_IDENTITY_DATA, True]
@@ -214,15 +216,15 @@ List containing the parameters to be added and their properties
 
 '''
 
-Output('Updating Shared Parameter Data.... start')
+output('Updating Shared Parameter Data.... start')
 
-result = UpDateParameters (doc, listOfParameters_)
-Output(str(result.message) + '....' + str(result.status))
+RESULT = update_parameters (DOC, LIST_OF_PARAMETERS)
+output('{} [{}]'.format (RESULT.message,RESULT.status))
 
 # sync changes back to central
-if (doc.IsWorkshared and debug_ == False):
-    Output('Syncing to Central: start')
-    syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.status))
+if (DOC.IsWorkshared and DEBUG == False):
+    output('Syncing to Central: start')
+    SYNCING = fileIO.SyncFile (DOC)
+    output('Syncing to Central: finished [{}] '.format(SYNCING.status))
 
-Output('Modifying Revit File.... finished ')
+output('Modifying Revit File.... finished ')

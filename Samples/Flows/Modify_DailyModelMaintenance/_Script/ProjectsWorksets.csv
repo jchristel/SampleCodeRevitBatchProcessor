@@ -1,0 +1,3 @@
+HOSTFILE,ID,NAME,ISVISIBLEBYDEFAULT
+C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\Flows\Modify_DailyModelMaintenance\_sampleFiles\Revit_2022.rvt,0,Workset1,TRUE
+C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\Flows\Modify_DailyModelMaintenance\_sampleFiles\Revit_2022.rvt,160,Shared Levels and Grids,TRUE

@@ -20,20 +20,20 @@ Note:
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2020  Jan Christel
+# BSD License
+# Copyright © 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # this sample demonstrates how to 
 # modify the worksets of levels, grids, scope boxes and reference planes
@@ -43,24 +43,25 @@ Note:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
-# debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+SCRIPT_LOCATION = r'C:\temp'
+# DEBUG mode revit project file name
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common libraries
-from duHast.APISamples import RevitCommonAPI as com
-from duHast.APISamples import RevitWorksets as rWork
-from duHast.Utilities import Utility as util
-from duHast.Utilities import Result as res
+from duHast.Revit.Common import file_io as rFileIO
+from duHast.Revit.Common import worksets as rWork
+from duHast.Utilities import utility as util
+from duHast.Utilities.Objects import result as res
+from duHast.Utilities.files_io import get_file_name_without_ext
 
 # autodesk API
 import Autodesk.Revit.DB as rdb
@@ -68,50 +69,52 @@ import Autodesk.Revit.DB as rdb
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
-# flag whether this runs in debug or not
-debug = False
+# flag whether this runs in DEBUG or not
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath = revit_script_util.GetRevitFilePath()
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     # get default revit file name
-    revitFilePath = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
+    # get document from python shell
+    DOC = doc
 
 # -------------
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+# output messages either to batch processor (DEBUG = False) or console (DEBUG = True)
+def output(message = ''):
     '''
-    Output messages either to batch processor (debug = False) or console (debug = True)
+    Output messages either to batch processor (DEBUG = False) or console (DEBUG = True)
 
     :param message: the message, defaults to ''
     :type message: str, optional
     '''
 
-    if not debug:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-def Modify(doc, revitFilePath, gridData):
+def modify(doc, revit_file_path, grid_data):
     '''
     Changes the worksets of grids, levels, reference planes and scope boxes.
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: The current model (document) file path.
-    :type revitFilePath: str
-    :param gridData: List of files and associated worksets names. Refer to `defaultWorksets_` below.
-    :type gridData: [[filename, workset name]]
+    :param revit_file_path: The current model (document) file path.
+    :type revit_file_path: str
+    :param grid_data: List of files and associated worksets names. Refer to `default_worksets` below.
+    :type grid_data: [[filename, workset name]]
 
     :return: 
         Result class instance.
@@ -128,42 +131,43 @@ def Modify(doc, revitFilePath, gridData):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
-    revitFileName = str(util.GetFileNameWithoutExt(revitFilePath))
+    return_value = res.Result()
+    revit_file_name = str(get_file_name_without_ext(revit_file_path))
     flag = False
-    for fileName, defaultWorksetName in gridData:
-        if (revitFileName.startswith(fileName)):
+    for file_name, default_workset_name in grid_data:
+        if (revit_file_name.startswith(file_name)):
             flag = True
-            collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
-            grids = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
-            returnValue.Update(grids)
+            collector_grids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
+            grids = rWork.modify_element_workset(doc, default_workset_name, collector_grids, 'grids')
+            return_value.update(grids)
 
-            collectorLevels = rdb.FilteredElementCollector(doc).OfClass(rdb.Level)
-            levels = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorLevels, 'levels')
-            returnValue.Update(levels)
+            collector_levels = rdb.FilteredElementCollector(doc).OfClass(rdb.Level)
+            levels = rWork.modify_element_workset(doc, default_workset_name, collector_levels, 'levels')
+            return_value.update(levels)
 
-            collectorScopeBoxes = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_VolumeOfInterest)
-            sboxes = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorScopeBoxes, 'scope boxes')
-            returnValue.Update(sboxes)
+            collector_scope_boxes = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_VolumeOfInterest)
+            scope_boxes = rWork.modify_element_workset(doc, default_workset_name, collector_scope_boxes, 'scope boxes')
+            return_value.update(scope_boxes)
             
             # fix up ref planes
-            collectorRefPlanes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
-            refPlanes = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorRefPlanes,  'reference planes')
-            returnValue.Update(refPlanes)
+            collector_ref_planes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
+            ref_planes = rWork.modify_element_workset(doc, default_workset_name, collector_ref_planes,  'reference planes')
+            return_value.update(ref_planes)
             
             break
     if (flag == False):
-        returnValue.UpdateSep(False, 'No grid data provided for current Revit file ' + revitFileName)
-    return returnValue
+        return_value.update_sep(False, 'No grid data provided for current Revit file: {}'.format(revit_file_name))
+    return return_value
+
 
 # -------------
 # main:
 # -------------
 
 # store output here:
-rootPath = r'C:\temp'
+ROOT_PATH = r'C:\temp'
 
-Output('Checking levels and grids.... start')
+output('Checking levels and grids.... start')
 
 # a list in format
 #[
@@ -171,7 +175,7 @@ Output('Checking levels and grids.... start')
 #['Revit file name','workset levels, grids, scope boxes should be on']
 #]
 
-defaultWorksets_ = [
+DEFAULT_WORKSETS = [
     ['Test_grids', 'Shared Levels & Grids']
 ]
 
@@ -180,13 +184,13 @@ List containing the workset name by project file
 '''
 
 # modify workset of levels, grids ands scope boxes
-statusModifyWorkSets_ = Modify(doc, revitFilePath, defaultWorksets_)
-Output(statusModifyWorkSets_.message + ' :: ' + str(statusModifyWorkSets_.status))
+STATUS_MODIFY_WORKSETS = modify(DOC, REVIT_FILE_PATH, DEFAULT_WORKSETS)
+output('{} :: [{}]'.format( STATUS_MODIFY_WORKSETS.message,STATUS_MODIFY_WORKSETS.status))
 
 # sync changes back to central
-if (doc.IsWorkshared and debug == False):
-    Output('Syncing to Central: start')
-    syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.status))
+if (DOC.IsWorkshared and DEBUG == False):
+    output('Syncing to Central: start')
+    SYNCING = rFileIO.sync_file (DOC)
+    output('Syncing to Central: finished [{}] '.format(SYNCING.status))
 
-Output('Checking levels and grids.... finished ')
+output('Checking levels and grids.... finished ')

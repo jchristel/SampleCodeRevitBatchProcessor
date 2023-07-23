@@ -1,0 +1,716 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.Grids package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
+    <link rel="next" title="duHast.Revit.Grids.Reporting package" href="duHast.Revit.Grids.Reporting.html" />
+    <link rel="prev" title="duHast.Revit.Floors.Utility package" href="duHast.Revit.Floors.Utility.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Grids package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Grids.Reporting.html" title="duHast.Revit.Grids.Reporting package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Floors.Utility.html" title="duHast.Revit.Floors.Utility package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Grids.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-grids-package">
+<h1>duHast.Revit.Grids package<a class="headerlink" href="#duhast-revit-grids-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Grids.Reporting.html">duHast.Revit.Grids.Reporting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Grids.Reporting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Grids.Reporting.html#module-duHast.Revit.Grids.Reporting.grid_report_utils">duHast.Revit.Grids.Reporting.grid_report_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Grids.Reporting.html#this-module-contains-utility-function-s-for-grid-reports">This module contains utility function(s) for grid reports.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Grids.Reporting.html#duHast.Revit.Grids.Reporting.grid_report_utils.get_grid_report_data"><code class="docutils literal notranslate"><span class="pre">get_grid_report_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Grids.Reporting.html#module-duHast.Revit.Grids.Reporting.grids_report_header">duHast.Revit.Grids.Reporting.grids_report_header module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Grids.Reporting.html#this-module-contains-the-header-row-for-any-grids-reports">This module contains the header row for any grids reports.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Grids.Reporting.html#duHast.Revit.Grids.Reporting.grids_report_header.REPORT_GRIDS_HEADER"><code class="docutils literal notranslate"><span class="pre">REPORT_GRIDS_HEADER</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Grids.Reporting.html#module-duHast.Revit.Grids.Reporting">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Grids.grids">
+<span id="duhast-revit-grids-grids-module"></span><h2>duHast.Revit.Grids.grids module<a class="headerlink" href="#module-duHast.Revit.Grids.grids" title="Permalink to this heading">¶</a></h2>
+<section id="revit-grids-helper-functions">
+<h3>Revit grids helper functions.<a class="headerlink" href="#revit-grids-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_grids_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_grids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_grids_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all grids in model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A collector with all grids in model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_all_grid_heads_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_all_grid_heads_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_all_grid_heads_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all grid head types in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector with grid head types</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_all_grid_types_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_all_grid_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_all_grid_types_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all grid types in the model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector with grid types</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_all_grid_type_ids_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_all_grid_type_ids_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_all_grid_type_ids_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all grid types ids in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector with grid type ids</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_grid_type_names">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_grid_type_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_grid_type_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all valid grid types, based on a past in grid, available in model.</p>
+<p>Uses grid.GetValidTypes() to get the grid types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A nested set of lists containing grid type id and grid type name</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of lists [[GridTypeId as Revit ElementId, grid type name as string],[…]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_grid_type_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_grid_type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_grid_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the grid type name of a grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The grid type name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_grid_type_id_by_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_grid_type_id_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_type_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_grid_type_id_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the grid type Id based on it’s name, if no match found it returns the Revit Invalid Element Id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>grid_type_name</strong> (<em>str</em>) – The grid type name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The grids type Id or if not match is found Autodesk.Revit.DB.ElementId.InvalidElementId</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.grid_check_parameter_value">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">grid_check_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">para_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">para_condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.grid_check_parameter_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if a given parameter on a grid has a value meeting the parameter condition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid.</p></li>
+<li><p><strong>para_name</strong> (<em>str</em>) – A parameter Name.</p></li>
+<li><p><strong>para_condition</strong> (<em>func</em><em>(</em><em>arg1</em><em>,</em><em>arg2</em><em>)</em>) – A function evaluating the parameter value. First argument is the value to be checked against. Second argument is the actual parameter value.</p></li>
+<li><p><strong>condition_value</strong> (<em>var</em>) – The value to be checked against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if parameter value is evaluated to True otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_max_extent_as_string">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_max_extent_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_max_extent_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the maximum extent of a grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string in format [maxX,maxY,maxZ]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_min_extent_as_string">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_min_extent_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_min_extent_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the minimum extent of a grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string in format [minX,minY,minZ]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_all_grid_head_family_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_all_grid_head_family_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_all_grid_head_family_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will return all ids grid head family types in the model</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Grids.grids_appearance">
+<span id="duhast-revit-grids-grids-appearance-module"></span><h2>duHast.Revit.Grids.grids_appearance module<a class="headerlink" href="#module-duHast.Revit.Grids.grids_appearance" title="Permalink to this heading">¶</a></h2>
+<section id="revit-grids-appearance-modifier-functions">
+<h3>Revit grids appearance modifier functions.<a class="headerlink" href="#revit-grids-appearance-modifier-functions" title="Permalink to this heading">¶</a></h3>
+<p>Note: Any grid appearance modification in a view will throw an exception if the grid is not actually visible in the view.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.change_grids_2D">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">change_grids_2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.change_grids_2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes all grids in view to 2D</p>
+<p>Note: Any grid past in, which is not visible in the view, will throw an exception when attempting to set to 2D.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grids</strong> (<em>[</em><em>Autodesk.Revit.DB.Grid</em><em>]</em>) – List of grids to be changed to 2D.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which to change the grids</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- result.status. True if all grids where set to 2D, otherwise False.
+- result.message will contain the name(s) of the grid(s) changed to 2D
+- result.result empty list
+On exception:
+- result.status (bool) will be False.
+- result.message will contain generic exception message including the grid name.
+- result.result will be empty</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.show_bubble_end">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">show_bubble_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_bubble</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.show_bubble_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles grid bubble visibility on specified end for given grid.
+:param doc: The current model document.
+:type doc: Autodesk.Revit.DB.Document
+:param grid: The grid of which a bubbles visibility is to be toggled.
+:type grid: Autodesk.Revit.DB.Grid
+:param view: The view in which a grid bubbles visibility is to be toggled.
+:type view: Autodesk.Revit.DB.View
+:param end_identifier: An enumerated type representing ends of a datum plane.
+:type end_identifier: Autodesk.Revit.DB.DatumEnds
+:param show_bubble: True bubble will switched on, False it will be switched off
+:type show_bubble: bool
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- result.status. True if all grids bubble(s) visibility was set successfully, otherwise False.
+- result.message will contain the name(s) of the grid(s) where a bubble visibility was set.
+- result.result empty list
+On exception:
+- result.status (bool) will be False.
+- result.message will contain generic exception message including the grid name.
+- result.result will be empty</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.hide_both_bubbles">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">hide_both_bubbles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.hide_both_bubbles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hides both bubbles of grids in given view.
+:param doc: The current model document.
+:type doc: Autodesk.Revit.DB.Document
+:param grid: The grid of which a bubbles visibility is to be toggled.
+:type grid: Autodesk.Revit.DB.Grid
+:param view: The view in which a grid bubbles visibility is to be toggled.
+:type view: Autodesk.Revit.DB.View
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- result.status. True if all grids bubble(s) visibility was switched off successfully, otherwise False.
+- result.message will contain the name(s) of the grid(s) where a bubble visibility was set.
+- result.result empty list
+On exception:
+- result.status (bool) will be False.
+- result.message will contain generic exception message including the grid name.
+- result.result will be empty</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.show_bubble_zero_end">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">show_bubble_zero_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.show_bubble_zero_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns on grid bubbles at zero end in specified view.
+:param doc: The current model document.
+:type doc: Autodesk.Revit.DB.Document
+:param grid: The grids of which a bubbles visibility is to be toggled.
+:type grid: [Autodesk.Revit.DB.Grid]
+:param view: The view in which a grid bubbles visibility is to be toggled.
+:type view: Autodesk.Revit.DB.View
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- result.status. True if all grids bubble(s) visibility at zero end was set to visible successfully, otherwise False.
+- result.message will contain the name(s) of the grid(s) where a bubble visibility was set.
+- result.result empty list
+On exception:
+- result.status (bool) will be False.
+- result.message will contain generic exception message including the grid name.
+- result.result will be empty</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.show_bubble_one_end">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">show_bubble_one_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.show_bubble_one_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns on grid bubbles at One end in specified view.
+:param doc: The current model document.
+:type doc: Autodesk.Revit.DB.Document
+:param grid: The grids of which a bubbles visibility is to be toggled.
+:type grid: [Autodesk.Revit.DB.Grid]
+:param view: The view in which a grid bubbles visibility is to be toggled.
+:type view: Autodesk.Revit.DB.View
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- result.status. True if all grids bubble(s) visibility at one end was set to visible successfully, otherwise False.
+- result.message will contain the name(s) of the grid(s) where a bubble visibility was set.
+- result.result empty list
+On exception:
+- result.status (bool) will be False.
+- result.message will contain generic exception message including the grid name.
+- result.result will be empty</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.toggle_bubble_end">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">toggle_bubble_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.toggle_bubble_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles grid bubble visibility on specified end for given grid in given views.
+:param doc: The current model document.
+:type doc: Autodesk.Revit.DB.Document
+:param grid: The grid of which a bubbles visibility is to be toggled.
+:type grid: Autodesk.Revit.DB.Grid
+:param view: The view in which a grid bubbles visibility is to be toggled.
+:type view: Autodesk.Revit.DB.View
+:param end_identifier: The end of the grid to be modified.
+:type view: Autodesk.Revit.DB.DatumEnds
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- result.status. True if all grids bubble(s) visibility was changed successfully, otherwise False.
+- result.message will contain the name(s) of the grid(s) where a bubble visibility was changed.
+- result.result empty list
+On exception:
+- result.status (bool) will be False.
+- result.message will contain generic exception message including the grid name.
+- result.result will be empty</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.toggle_bubble_one_end">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">toggle_bubble_one_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.toggle_bubble_one_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles grid bubble visibility on one end for given grids
+:param doc: The current model document.
+:type doc: Autodesk.Revit.DB.Document
+:param grids: The grids of which a bubbles visibility at one end is to be toggled.
+:type grids: [Autodesk.Revit.DB.Grid]
+:param view: The view in which a grid bubbles visibility is to be toggled.
+:type view: Autodesk.Revit.DB.View
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- result.status. True if all grids bubble(s) visibility at one end was changed successfully, otherwise False.
+- result.message will contain the name(s) of the grid(s) where a bubble visibility was changed.
+- result.result empty list
+On exception:
+- result.status (bool) will be False.
+- result.message will contain generic exception message including the grid name.
+- result.result will be empty</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.toggle_bubble_zero_end">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">toggle_bubble_zero_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.toggle_bubble_zero_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles grid bubble visibility on zero end for given grids
+:param doc: The current model document.
+:type doc: Autodesk.Revit.DB.Document
+:param grids: The grids of which a bubbles visibility at zero end is to be toggled.
+:type grids: [Autodesk.Revit.DB.Grid]
+:param view: The view in which a grid bubbles visibility is to be toggled.
+:type view: Autodesk.Revit.DB.View
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- result.status. True if all grids bubble(s) visibility at one end was changed successfully, otherwise False.
+- result.message will contain the name(s) of the grid(s) where a bubble visibility was changed.
+- result.result empty list
+On exception:
+- result.status (bool) will be False.
+- result.message will contain generic exception message including the grid name.
+- result.result will be empty</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Grids.grids_worksets">
+<span id="duhast-revit-grids-grids-worksets-module"></span><h2>duHast.Revit.Grids.grids_worksets module<a class="headerlink" href="#module-duHast.Revit.Grids.grids_worksets" title="Permalink to this heading">¶</a></h2>
+<section id="revit-grids-workset-modifier-functions">
+<h3>Revit grids workset modifier functions.<a class="headerlink" href="#revit-grids-workset-modifier-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_worksets.modify_grid_worksets_default">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_worksets.</span></span><span class="sig-name descname"><span class="pre">modify_grid_worksets_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_worksets.modify_grid_worksets_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Workset modifier method. Moves all grids to one workset
+rules format:
+[‘Model name’,[</p>
+<blockquote>
+<div><dl class="simple">
+<dt>[workset modifier method,</dt><dd><p>[worksetName]
+]</p>
+</dd>
+</dl>
+<p>]</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>worksetRules</strong> (<em>_type_</em>) – _description_</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>returns a result object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_type_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_worksets.</span></span><span class="sig-name descname"><span class="pre">modify_grid_worksets_by_type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Workset modifier method. Moves grids matching type condition to a particular workset
+<a href="#id1"><span class="problematic" id="id2">defaultWorksetTypeRules_</span></a> = [</p>
+<blockquote>
+<div><dl class="simple">
+<dt>[‘model name’,[</dt><dd><dl class="simple">
+<dt>[ModifyGridWorkSetsByTypeName,[</dt><dd><p>[‘workset name’, util.ConDoesNotEqual, ‘grid type name’],
+[‘workset name’, util.ConDoesEqual, ‘grid type name’]
+]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>]</p>
+</div></blockquote>
+<p>]
+:param doc: _description_
+:type doc: _type_
+:param worksetRules: _description_
+:type worksetRules: _type_
+:return: returns a result object
+:rtype: _type_</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_parameter_value">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_worksets.</span></span><span class="sig-name descname"><span class="pre">modify_grid_worksets_by_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_parameter_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Workset modifier method. Moves grids matching parameter condition to a particular workset
+#defaultWorksetRulesNames_ = [</p>
+<blockquote>
+<div><dl class="simple">
+<dt>[‘model name’,[</dt><dd><dl class="simple">
+<dt>[ModifyGridWorkSetsByParameterValue,[</dt><dd><p>[‘workset name’, util.ConTwoStartWithOne, ‘Name’ ,’name starts with value’]
+]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>]</p>
+</div></blockquote>
+<p>]
+:param doc: _description_
+:type doc: _type_
+:param worksetRules: _description_
+:type worksetRules: _type_
+:return: returns a result object
+:rtype: _type_</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_worksets.modify_grids_worksets">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_worksets.</span></span><span class="sig-name descname"><span class="pre">modify_grids_worksets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_worksets.modify_grids_worksets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modifies worksets of grids as per workset rules
+rules format:
+<a href="#id3"><span class="problematic" id="id4">defaultWorksetRulesAll_</span></a> = [</p>
+<blockquote>
+<div><dl class="simple">
+<dt>[‘model name’,[</dt><dd><dl class="simple">
+<dt>[ModifyGridWorkSetsDefault,[</dt><dd><p>[‘default workset name’] # there should only be one per model
+]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>]</p>
+</div></blockquote>
+<p>]
+:param doc: _description_
+:type doc: _type_
+:param revitFileName: _description_
+:type revitFileName: _type_
+:param worksetRules: _description_
+:type worksetRules: _type_
+:return: returns a result object
+:rtype: _type_</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Grids.purge_unused_grid_types">
+<span id="duhast-revit-grids-purge-unused-grid-types-module"></span><h2>duHast.Revit.Grids.purge_unused_grid_types module<a class="headerlink" href="#module-duHast.Revit.Grids.purge_unused_grid_types" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-purging-revit-grids-and-grid-heads">
+<h3>This module contains a number of helper functions relating to purging Revit grids and grid heads.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-purging-revit-grids-and-grid-heads" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.purge_unused_grid_types.get_unused_grid_types_for_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.purge_unused_grid_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_grid_types_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.purge_unused_grid_types.get_unused_grid_types_for_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return all ids of unused grid types in the model to be purged</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.purge_unused_grid_types.get_unused_grid_head_families">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.purge_unused_grid_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_grid_head_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.purge_unused_grid_types.get_unused_grid_head_families" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return all ids of unused family symbols (types) of grid head families</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.purge_unused_grid_types.get_unused_grid_head_families_for_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.purge_unused_grid_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_grid_head_families_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.purge_unused_grid_types.get_unused_grid_head_families_for_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return all ids of unused grid head symbols and families to be purged</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Grids">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Grids" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.Grids package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

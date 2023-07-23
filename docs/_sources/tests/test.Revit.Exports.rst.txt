@@ -1,0 +1,61 @@
+test.Revit.Exports package
+==========================
+
+Submodules
+----------
+
+test.Revit.Exports.export\_model\_to\_ifc module
+------------------------------------------------
+
+.. automodule:: test.Revit.Exports.export_model_to_ifc
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Exports.export\_model\_to\_nwc module
+------------------------------------------------
+
+.. automodule:: test.Revit.Exports.export_model_to_nwc
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Exports.export\_view\_to\_ifc module
+-----------------------------------------------
+
+.. automodule:: test.Revit.Exports.export_view_to_ifc
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Exports.export\_view\_to\_nwc module
+-----------------------------------------------
+
+.. automodule:: test.Revit.Exports.export_view_to_nwc
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Exports.exports module
+---------------------------------
+
+.. automodule:: test.Revit.Exports.exports
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Exports.run\_test\_classes module
+--------------------------------------------
+
+.. automodule:: test.Revit.Exports.run_test_classes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: test.Revit.Exports
+   :members:
+   :undoc-members:
+   :show-inheritance:

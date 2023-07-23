@@ -1,0 +1,402 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Model Maintenance &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="up" title="Flows" href="index.html" />
+    <link rel="next" title="FilesIn" href="flows.FilesIn.html" />
+    <link rel="prev" title="Milestone" href="flows.MileStone.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Model Maintenance</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="flows.FilesIn.html" title="FilesIn" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="flows.MileStone.html" title="Milestone" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Flows</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="flows.AddRevision.html">Add Revision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flows.MileStone.html">Milestone</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Model Maintenance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#summary">Summary</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#actions-overview">Actions Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setup">Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="flows.FilesIn.html">FilesIn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flows.FilesOut.html">FilesOut</a></li>
+</ul>
+</li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/flows/flows.ModelMaintenance.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="model-maintenance">
+<h1>Model Maintenance<a class="headerlink" href="#model-maintenance" title="Permalink to this heading">¶</a></h1>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
+<p>The ‘Model Maintenance’ flow ia aimed at a QA process where one has the requirement to regularly:</p>
+<ol class="arabic">
+<li><p>report on given categories:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>links (revit and cad)</p></li>
+<li><p>wall properties</p></li>
+<li><p>grids and levels</p></li>
+<li><p>worksets</p></li>
+<li><p>model health parameters</p></li>
+<li><p>sheets and sheets abbreviated</p></li>
+<li><p>shared parameters</p></li>
+<li><p>families in model and placement count</p></li>
+<li><p>views (abbreviated)</p></li>
+<li><p>rooms and ceilings geometry (which can be processed further -&gt; i.e. which ceiling is in which room)</p></li>
+</ol>
+</div></blockquote>
+</li>
+<li><p>reload families</p></li>
+<li><p>fix worksets of given categories</p></li>
+<li><p>fix some warnings</p></li>
+<li><p>remove duplicated line styles</p></li>
+<li><p>remove unwanted shared parameters</p></li>
+<li><p>rename loaded families</p></li>
+<li><p>Enforce view naming policy</p></li>
+</ol>
+<section id="actions-overview">
+<h3>Actions Overview<a class="headerlink" href="#actions-overview" title="Permalink to this heading">¶</a></h3>
+<p>This flow is run through a powershell script which executes:</p>
+<ol class="arabic">
+<li><p>A pre-processing script collecting all Revit files in a given directory.</p></li>
+<li><p>No 3 off parallel running sessions of Revit Batch Processor processing the selected files.</p></li>
+<li><p>A post process which</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>processes the log files of the above sessions and searches for any exceptions messages therein.</p></li>
+<li><p>collates report files into combined files</p></li>
+<li><p>And finally cleans up any marker files (log and work sharing monitor).</p></li>
+</ol>
+</div></blockquote>
+</li>
+</ol>
+</section>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this heading">¶</a></h3>
+<p>This chapter describes the flow directory setup.</p>
+<section id="directory-structure">
+<h4>Directory structure<a class="headerlink" href="#directory-structure" title="Permalink to this heading">¶</a></h4>
+<p>This flow expects the following directory structure to be in place:</p>
+<p>├───_docs</p>
+<p>├───_LogMarker</p>
+<p>├───_Output</p>
+<p>├───_sampleFiles</p>
+<p>├───_Script</p>
+<p>│   └───logs</p>
+<p>│   └───utils</p>
+<p>├───_SessionData</p>
+<p>├───_settings</p>
+<p>└───_TaskList</p>
+</section>
+<section id="docs">
+<h4>_docs<a class="headerlink" href="#docs" title="Permalink to this heading">¶</a></h4>
+<p>Directory containing flow related documentation.</p>
+</section>
+<section id="logmarker">
+<h4>_LogMarker<a class="headerlink" href="#logmarker" title="Permalink to this heading">¶</a></h4>
+<p>Directory containing log marker files. Those will be deleted at the end of each flow run.</p>
+</section>
+<section id="output">
+<h4>_Output<a class="headerlink" href="#output" title="Permalink to this heading">¶</a></h4>
+<p>Directory containing any flow output.</p>
+<ol class="arabic simple">
+<li><p>A report file per revit file processed and category reported on.</p></li>
+<li><p>A combined report file which contains all the reports per a single categories for all files.</p></li>
+</ol>
+</section>
+<section id="samplefiles">
+<h4>_sampleFiles<a class="headerlink" href="#samplefiles" title="Permalink to this heading">¶</a></h4>
+<p>Any sample files provided.</p>
+</section>
+<section id="script">
+<h4>_Script<a class="headerlink" href="#script" title="Permalink to this heading">¶</a></h4>
+<p>The python and powershell scripts of the flow.</p>
+<ul>
+<li><p>ModifyDailyModelMaintenance.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the task script executed by each Revit Batch Processor session</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Post_DailyModelMaintenance.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the post script executed by the flow after all Revit Batch Processor sessions have finished</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Post_AddRevisionKillWSM.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the post process script executed by each Revit Batch Processor session</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Pre_ModifyDailyModelMaintenanceStandAlone.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the pre script executed by the flow before any Revit Batch Processor sessions are started</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Pre_ModifyDailyModelMaintenance.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the pre process script executed by each Revit Batch Processor session</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>settings.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a module containing global variables / settings for this flow</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>startDailyMaintenance.ps1</p></li>
+<li><dl class="simple">
+<dt>The powershell script executing:</dt><dd><ul class="simple">
+<li><p>pre Revit Batch Processor scripts</p></li>
+<li><p>concurrent Revit Batch Processor sessions</p></li>
+<li><p>post Revit Batch Processor scripts</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Report files used for some scripts:</p>
+<ul>
+<li><p>UnwantedSharedParameters.csv</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>First column: shared parameter name</p></li>
+<li><p>second column: shared parameter GUID</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>ProjectsWorksets.csv</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>First column: host file path</p></li>
+<li><p>Second column: Workset Id</p></li>
+<li><p>Third column: Workset name</p></li>
+<li><p>Fourth column: is workset visible by default (TRUE/FALSE)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>RenameDirective.csv</p>
+<blockquote>
+<div><p>Note: There can be multiple of the files. They all need to start with “RenameDirective” and need to be of file type “.csv”</p>
+<ul class="simple">
+<li><p>First column: old family name</p></li>
+<li><p>Second column: host file path (can be empty )</p></li>
+<li><p>Third column: the family category</p></li>
+<li><p>Fourth column: the new family name</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="script-logs">
+<h4>_Script/logs<a class="headerlink" href="#script-logs" title="Permalink to this heading">¶</a></h4>
+<p>Log files which cover script outputs outside of Revit Batch Processor log files</p>
+</section>
+<section id="script-utils">
+<h4>_Script/utils<a class="headerlink" href="#script-utils" title="Permalink to this heading">¶</a></h4>
+<p>A number of utility scripts executed in the main script.</p>
+<ul>
+<li><p>check_tag_locations.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Moves tags to their location as per report. (use case: In case a family reload moves a tag, this will move the tag back to its original location, since the tag location was recorded prior the family reload.)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>cleanup_actions.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Set’s up filters required to moves items to specified worksets.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>delete_elements.py</p>
+<blockquote>
+<div><ul>
+<li><p>Deletes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Unwanted shared parameters</p></li>
+<li><p>Line styles starting with “IMPORT”</p></li>
+<li><p>Line pattern duplicates ( keeps the one with the lowest Id -&gt; oldest)</p></li>
+<li><p>Un-used elevation markers</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>families.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Reloads family from a given location</p></li>
+<li><p>Renames families as per re-name directives</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>geometry_data.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Exports room data (properties and geometry) and ceiling data (properties and geometry) for post processing</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>mark_views_for_deletion.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Marks any views ending on copy x for deletion. (Prefixed view name with DELETE and a time stamp)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>model_health.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Updates model health tracker family in model with model health values.</p></li>
+<li><p>Writes model health data to file.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>reports.py</p>
+<blockquote>
+<div><p>Created the following reports:</p>
+<ul class="simple">
+<li><p>links (revit and cad)</p></li>
+<li><p>wall properties</p></li>
+<li><p>grids and levels</p></li>
+<li><p>worksets</p></li>
+<li><p>sheets and sheets abbreviated</p></li>
+<li><p>shared parameters</p></li>
+<li><p>families in model and placement count</p></li>
+<li><p>views (abbreviated)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>warnings_solver.py</p>
+<blockquote>
+<div><p>Solves the following warnings:</p>
+<ul class="simple">
+<li><p>Duplicate mark warnings.</p></li>
+<li><p>Room tags outside of room warnings.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>worksets.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Modify element worksets</p></li>
+<li><p>Restores worksets default visibility as per report file.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="settings">
+<h4>_settings<a class="headerlink" href="#settings" title="Permalink to this heading">¶</a></h4>
+<p>Location of Revit Batch Processor settings files.</p>
+<p>For this flow there are 3 settings files in this folder, one for each session of Revit Batch Processor.</p>
+</section>
+<section id="sessiondata">
+<h4>_SessionData<a class="headerlink" href="#sessiondata" title="Permalink to this heading">¶</a></h4>
+<p>Directory containing Revit Batch Processor session data files. (This sample flow has session data files disabled.)</p>
+</section>
+<section id="tasklist">
+<h4>_TaskList<a class="headerlink" href="#tasklist" title="Permalink to this heading">¶</a></h4>
+<p>Location of task list files processed by Revit Batch Processor.</p>
+<p>For this flow there are 3 task list files in this folder, one for each session of Revit Batch Processor.</p>
+</section>
+</section>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="index.html" accesskey="U">Flows</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                Model Maintenance
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

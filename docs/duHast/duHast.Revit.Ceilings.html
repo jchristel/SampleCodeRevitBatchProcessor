@@ -1,0 +1,445 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.Ceilings package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
+    <link rel="next" title="duHast.Revit.Ceilings.Export package" href="duHast.Revit.Ceilings.Export.html" />
+    <link rel="prev" title="duHast.Revit.Categories.Utility package" href="duHast.Revit.Categories.Utility.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Ceilings package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Ceilings.Export.html" title="duHast.Revit.Ceilings.Export package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Categories.Utility.html" title="duHast.Revit.Categories.Utility package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Ceilings.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-ceilings-package">
+<h1>duHast.Revit.Ceilings package<a class="headerlink" href="#duhast-revit-ceilings-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Ceilings.Export.html">duHast.Revit.Ceilings.Export package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Ceilings.Export.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Ceilings.Export.html#module-duHast.Revit.Ceilings.Export.to_data_ceiling">duHast.Revit.Ceilings.Export.to_data_ceiling module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Ceilings.Export.html#this-module-contains-a-revit-ceilings-export-to-data-class-functions">This module contains a Revit ceilings export to DATA class functions.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Ceilings.Export.html#duHast.Revit.Ceilings.Export.to_data_ceiling.populate_data_ceiling_object"><code class="docutils literal notranslate"><span class="pre">populate_data_ceiling_object()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Ceilings.Export.html#duHast.Revit.Ceilings.Export.to_data_ceiling.get_all_ceiling_data"><code class="docutils literal notranslate"><span class="pre">get_all_ceiling_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Ceilings.Export.html#module-duHast.Revit.Ceilings.Export">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Ceilings.Geometry.html">duHast.Revit.Ceilings.Geometry package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Ceilings.Geometry.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Ceilings.Geometry.html#module-duHast.Revit.Ceilings.Geometry.geometry">duHast.Revit.Ceilings.Geometry.geometry module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Ceilings.Geometry.html#this-module-contains-a-revit-ceilings-geometry-extraction-functions">This module contains a Revit ceilings geometry extraction functions.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Ceilings.Geometry.html#duHast.Revit.Ceilings.Geometry.geometry.get_2d_points_from_revit_ceiling"><code class="docutils literal notranslate"><span class="pre">get_2d_points_from_revit_ceiling()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Ceilings.Geometry.html#duHast.Revit.Ceilings.Geometry.geometry.get_2d_points_from_revit_ceilings_in_model"><code class="docutils literal notranslate"><span class="pre">get_2d_points_from_revit_ceilings_in_model()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Ceilings.Geometry.html#module-duHast.Revit.Ceilings.Geometry">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Ceilings.Reporting.html">duHast.Revit.Ceilings.Reporting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Ceilings.Reporting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Ceilings.Reporting.html#module-duHast.Revit.Ceilings.Reporting.ceilings_report_header">duHast.Revit.Ceilings.Reporting.ceilings_report_header module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Ceilings.Reporting.html#this-module-contains-the-header-row-for-any-future-ceiling-reports">This module contains the header row for any (future) ceiling reports.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Ceilings.Reporting.html#duHast.Revit.Ceilings.Reporting.ceilings_report_header.REPORT_CEILINGS_HEADER"><code class="docutils literal notranslate"><span class="pre">REPORT_CEILINGS_HEADER</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Ceilings.Reporting.html#module-duHast.Revit.Ceilings.Reporting">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Ceilings.Utility.html">duHast.Revit.Ceilings.Utility package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Ceilings.Utility.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Ceilings.Utility.html#module-duHast.Revit.Ceilings.Utility.ceilings_filter">duHast.Revit.Ceilings.Utility.ceilings_filter module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Ceilings.Utility.html#this-module-contains-a-revit-ceilings-utility-functions">This module contains a Revit ceilings utility functions.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Ceilings.Utility.html#module-duHast.Revit.Ceilings.Utility.ceilings_type_sorting">duHast.Revit.Ceilings.Utility.ceilings_type_sorting module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Ceilings.Utility.html#id1">This module contains a Revit ceilings utility functions.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Ceilings.Utility.html#duHast.Revit.Ceilings.Utility.ceilings_type_sorting.build_ceiling_type_dictionary"><code class="docutils literal notranslate"><span class="pre">build_ceiling_type_dictionary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Ceilings.Utility.html#duHast.Revit.Ceilings.Utility.ceilings_type_sorting.sort_ceiling_types_by_family_name"><code class="docutils literal notranslate"><span class="pre">sort_ceiling_types_by_family_name()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Ceilings.Utility.html#module-duHast.Revit.Ceilings.Utility">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Ceilings.ceilings">
+<span id="duhast-revit-ceilings-ceilings-module"></span><h2>duHast.Revit.Ceilings.ceilings module<a class="headerlink" href="#module-duHast.Revit.Ceilings.ceilings" title="Permalink to this heading">¶</a></h2>
+<section id="revit-ceilings-helper-functions">
+<h3>Revit ceilings helper functions.<a class="headerlink" href="#revit-ceilings-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.ceilings.get_all_ceiling_types_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.ceilings.</span></span><span class="sig-name descname"><span class="pre">get_all_ceiling_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.ceilings.get_all_ceiling_types_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all ceiling types in the model:</p>
+<ul class="simple">
+<li><p>Compound Ceiling</p></li>
+<li><p>In place families or loaded families</p></li>
+<li><p>Basic Ceiling</p></li>
+</ul>
+<p>Filters by category.
+It will therefore not return any roof soffit types ..</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector containing ceiling types.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.ceilings.get_ceiling_types_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.ceilings.</span></span><span class="sig-name descname"><span class="pre">get_ceiling_types_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.ceilings.get_ceiling_types_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all ceiling types in the model:</p>
+<ul class="simple">
+<li><p>Roof Soffit</p></li>
+<li><p>Compound Ceiling</p></li>
+<li><p>Basic Ceiling</p></li>
+</ul>
+<p>Filters by class.
+It will therefore not return any in place family types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector containing ceiling types.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.ceilings.get_all_ceiling_instances_in_model_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.ceilings.</span></span><span class="sig-name descname"><span class="pre">get_all_ceiling_instances_in_model_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.ceilings.get_all_ceiling_instances_in_model_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all ceiling elements placed in model. Ignores roof soffits.</p>
+<p>Filters by category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector containing ceiling instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.ceilings.get_all_ceiling_instances_in_model_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.ceilings.</span></span><span class="sig-name descname"><span class="pre">get_all_ceiling_instances_in_model_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.ceilings.get_all_ceiling_instances_in_model_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all ceiling elements placed in model. Ignores in place families.</p>
+<p>Filters by class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector containing ceiling instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.ceilings.get_all_ceiling_type_ids_in_model_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.ceilings.</span></span><span class="sig-name descname"><span class="pre">get_all_ceiling_type_ids_in_model_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.ceilings.get_all_ceiling_type_ids_in_model_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all ceiling element type ids available in model.</p>
+<p>Filters by category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector containing ceiling type ids.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.ceilings.get_all_ceiling_type_ids_in_model_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.ceilings.</span></span><span class="sig-name descname"><span class="pre">get_all_ceiling_type_ids_in_model_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.ceilings.get_all_ceiling_type_ids_in_model_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all ceiling element type ids available in model.</p>
+<p>Filters by class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector containing ceiling type ids.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.ceilings.get_in_place_ceiling_family_instances">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.ceilings.</span></span><span class="sig-name descname"><span class="pre">get_in_place_ceiling_family_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.ceilings.get_in_place_ceiling_family_instances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all instances of in place families of category ceiling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector containing in place ceiling instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.ceilings.get_all_in_place_ceiling_type_ids_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.ceilings.</span></span><span class="sig-name descname"><span class="pre">get_all_in_place_ceiling_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.ceilings.get_all_in_place_ceiling_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all type ids off all available in place families of category ceiling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of element ids representing in place ceiling types.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Ceilings.purge_unused_ceiling_types">
+<span id="duhast-revit-ceilings-purge-unused-ceiling-types-module"></span><h2>duHast.Revit.Ceilings.purge_unused_ceiling_types module<a class="headerlink" href="#module-duHast.Revit.Ceilings.purge_unused_ceiling_types" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-purging-revit-ceilings">
+<h3>This module contains a number of helper functions relating to purging Revit ceilings.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-purging-revit-ceilings" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.purge_unused_ceiling_types.COMPOUND_CEILING_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.purge_unused_ceiling_types.</span></span><span class="sig-name descname"><span class="pre">COMPOUND_CEILING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Compound</span> <span class="pre">Ceiling'</span></em><a class="headerlink" href="#duHast.Revit.Ceilings.purge_unused_ceiling_types.COMPOUND_CEILING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for compound ceilings</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.purge_unused_ceiling_types.BASIC_CEILING_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.purge_unused_ceiling_types.</span></span><span class="sig-name descname"><span class="pre">BASIC_CEILING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Basic</span> <span class="pre">Ceiling'</span></em><a class="headerlink" href="#duHast.Revit.Ceilings.purge_unused_ceiling_types.BASIC_CEILING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for basic ceilings</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.purge_unused_ceiling_types.ROOF_SOFFIT_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.purge_unused_ceiling_types.</span></span><span class="sig-name descname"><span class="pre">ROOF_SOFFIT_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Roof</span> <span class="pre">Soffit'</span></em><a class="headerlink" href="#duHast.Revit.Ceilings.purge_unused_ceiling_types.ROOF_SOFFIT_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for roof soffits</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.purge_unused_ceiling_types.BUILTIN_CEILING_TYPE_FAMILY_NAMES">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.purge_unused_ceiling_types.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_CEILING_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Compound</span> <span class="pre">Ceiling',</span> <span class="pre">'Basic</span> <span class="pre">Ceiling',</span> <span class="pre">'Roof</span> <span class="pre">Soffit']</span></em><a class="headerlink" href="#duHast.Revit.Ceilings.purge_unused_ceiling_types.BUILTIN_CEILING_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all Built in ceiling family names</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.purge_unused_ceiling_types.get_used_ceiling_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.purge_unused_ceiling_types.</span></span><span class="sig-name descname"><span class="pre">get_used_ceiling_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.purge_unused_ceiling_types.get_used_ceiling_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used ceiling type ids.
+Filters by category.
+Used: at least one instance of this type is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids representing used ceiling types.
+:rtype: list of Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.purge_unused_ceiling_types.family_no_types_in_use">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.purge_unused_ceiling_types.</span></span><span class="sig-name descname"><span class="pre">family_no_types_in_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fam_type_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">un_used_type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.purge_unused_ceiling_types.family_no_types_in_use" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares two lists of ids. True if any id is not in unUsedTypeIds.
+TODO: check for more generic list comparison and remove this function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fam_type_ids</strong> (<em>List</em><em> of </em><em>Autodesk.Revit.DB.ElementId</em>) – List of family type ids to check.</p></li>
+<li><p><strong>un_used_type_ids</strong> (<em>List</em><em> of </em><em>Autodesk.Revit.DB.ElementId</em>) – Reference list of ids.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if any id from famTypeIds is not in unUsedTypeIds.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.purge_unused_ceiling_types.get_unused_non_in_place_ceiling_type_ids_to_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.purge_unused_ceiling_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_non_in_place_ceiling_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.purge_unused_ceiling_types.get_unused_non_in_place_ceiling_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused ceiling type id’s.
+- Roof Soffit
+- Compound Ceiling
+- Basic Ceiling
+This method can be used to safely delete unused ceiling types:
+In the case that no ceiling instance using any of the types is placed this will return all but one type id since        Revit requires at least one ceiling type definition to be in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids representing not used ceiling types.
+:rtype: list of Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.purge_unused_ceiling_types.get_used_in_place_ceiling_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.purge_unused_ceiling_types.</span></span><span class="sig-name descname"><span class="pre">get_used_in_place_ceiling_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.purge_unused_ceiling_types.get_used_in_place_ceiling_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used in place ceiling type ids in the model.
+Used: at least one instance of this type is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids representing used in place ceiling types.
+:rtype: list of Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.purge_unused_ceiling_types.get_unused_in_place_ceiling_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.purge_unused_ceiling_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_in_place_ceiling_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.purge_unused_ceiling_types.get_unused_in_place_ceiling_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused in place ceiling type ids in the model.
+Unused: Not one instance of this type is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids representing unused in place ceiling types.
+:rtype: list of Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.purge_unused_ceiling_types.get_unused_in_place_ceiling_ids_for_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.purge_unused_ceiling_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_in_place_ceiling_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.purge_unused_ceiling_types.get_unused_in_place_ceiling_ids_for_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets symbol(type) ids and family ids (when no type is in use) of in place ceiling families which can be safely deleted from the model.
+This method can be used to safely delete unused in place ceiling types. There is no requirement by Revit to have at least one        in place ceiling definition in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids representing unused in place ceiling types and families.
+:rtype: list of Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Ceilings">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Ceilings" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.Ceilings package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

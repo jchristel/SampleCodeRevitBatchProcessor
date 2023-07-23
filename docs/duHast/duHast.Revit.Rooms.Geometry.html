@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.Rooms.Geometry package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit.Rooms package" href="duHast.Revit.Rooms.html" />
+    <link rel="next" title="duHast.Revit.Rooms.Reporting package" href="duHast.Revit.Rooms.Reporting.html" />
+    <link rel="prev" title="duHast.Revit.Rooms.Export package" href="duHast.Revit.Rooms.Export.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Rooms.Geometry package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Rooms.Reporting.html" title="duHast.Revit.Rooms.Reporting package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Rooms.Export.html" title="duHast.Revit.Rooms.Export package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Rooms.Geometry.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-rooms-geometry-package">
+<h1>duHast.Revit.Rooms.Geometry package<a class="headerlink" href="#duhast-revit-rooms-geometry-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Rooms.Geometry.geometry">
+<span id="duhast-revit-rooms-geometry-geometry-module"></span><h2>duHast.Revit.Rooms.Geometry.geometry module<a class="headerlink" href="#module-duHast.Revit.Rooms.Geometry.geometry" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-revit-rooms-geometry-extraction-functions">
+<h3>This module contains a Revit rooms geometry extraction functions.<a class="headerlink" href="#this-module-contains-a-revit-rooms-geometry-extraction-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.geometry.get_room_boundary_loops">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_room_boundary_loops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.geometry.get_room_boundary_loops" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all boundary loops for a rooms.
+:param revit_room: The room.
+:type revit_room: Autodesk.Revit.DB.Architecture.Room
+:return: List of boundary loops defining the room.
+:rtype: List of lists of Autodesk.Revit.DB.BoundarySegment</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.geometry.get_points_from_room_boundaries">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_points_from_room_boundaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundary_loops</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.geometry.get_points_from_room_boundaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of lists of points representing the room boundary loops.</p>
+<ul class="simple">
+<li><p>List of Lists because a room can be made up of multiple loops (holes in rooms!)</p></li>
+<li><p>First nested list represents the outer boundary of a room</p></li>
+<li><p>All loops are implicitly closed ( last point is not the first point again!)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>boundary_loops</strong> (<em>List</em><em> of </em><em>lists</em><em> of </em><em>Autodesk.Revit.DB.BoundarySegment</em>) – List of boundary loops defining the room.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A data geometry instance containing the points defining the boundary loop.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.geometry.get_2d_points_from_revit_room">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_2d_points_from_revit_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.geometry.get_2d_points_from_revit_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of dataGeometry object containing points representing the flattened(2D geometry) of a room in the model.
+List should only have one entry.
+:param revit_room: The room.
+:type revit_room: Autodesk.Revit.DB.Architecture.Room
+:return: A list of data geometry instance containing the points defining the boundary loop.
+:rtype: list of  <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.geometry.get_2d_points_from_all_revit_rooms">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_2d_points_from_all_revit_rooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.geometry.get_2d_points_from_all_revit_rooms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of dataGeometry object containing points representing the flattened(2D geometry) of all the rooms in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of data geometry instances containing the points defining the boundary loop per room.
+:rtype: list of  <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Rooms.Geometry">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Rooms.Geometry" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.Rooms.html" >duHast.Revit.Rooms package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.Rooms.Geometry package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

@@ -26,20 +26,20 @@ Note:
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2020  Jan Christel
+# BSD License
+# Copyright © 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
 
@@ -49,24 +49,25 @@ Note:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
-#import common libraries
-from duHast.APISamples import RevitCommonAPI as com
-from duHast.APISamples import RevitViews as rView
-from duHast.Utilities import Utility as util
-from duHast.Utilities import Result as res
+# import from duHast
+from duHast.Revit.Views import delete as rViewDel
+from duHast.Utilities import files_io as fileIO
+from duHast.Utilities.Objects import result as res
+from duHast.Utilities import compare as compare
+from duHast.Revit.Common import file_io as rFileIO
 
 # autodesk API
 import Autodesk.Revit.DB as rdb
@@ -75,26 +76,28 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = True
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     #get default revit file name
-    revitFilePath_ = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
+    # get document from python shell
+    DOC = doc
 
 # -------------
 # my code here:
 # -------------
 
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -102,13 +105,13 @@ def Output(message = ''):
     :type message: str, optional
     '''
 
-    if not debug_:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
 # 
-def CheckName(view):
+def check_name(view):
     '''
     Checks whether view names starts with a number of given strings.
 
@@ -124,16 +127,16 @@ def CheckName(view):
     else:
         return True
 
-def ModifyViews(doc, revitFilePath, viewData):
+def modify_views(doc, revit_file_path, view_data):
     '''
     Deletes views based on rules
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: The current model (document) file path.
-    :type revitFilePath: str
-    :param viewData: List of files and associated view filter rules. Refer to `viewRules_` below.
-    :type viewData: [[filename,[conditions]]]
+    :param revit_file_path: The current model (document) file path.
+    :type revit_file_path: str
+    :param view_data: List of files and associated view filter rules. Refer to `viewRules_` below.
+    :type view_data: [[filename,[conditions]]]
 
     :return: 
         Result class instance.
@@ -151,27 +154,27 @@ def ModifyViews(doc, revitFilePath, viewData):
     '''
 
     #set default values
-    returnValue = res.Result()
-    returnValue.status = False
-    returnValue.message = 'No view data provided for current Revit file'
+    return_value = res.Result()
+    return_value.status = False
+    return_value.message = 'No view data provided for current Revit file'
 
-    revitFileName =  util.GetFileNameWithoutExt(revitFilePath)
-    for fileName, viewRules in viewData:
-        if (revitFileName.startswith(fileName)):
-            collectorViews = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
-            returnValue = rView.DeleteViews(doc, viewRules, collectorViews)
+    revit_file_name =  fileIO.get_file_name_without_ext(revit_file_path)
+    for file_name, view_rules in view_data:
+        if (revit_file_name.startswith(file_name)):
+            collector_views = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
+            return_value = rViewDel.delete_views(doc, view_rules, collector_views)
             break
-    return returnValue
+    return return_value
 
 
-def ModifySheets(doc, sheetsData):
+def modify_sheets(doc, sheets_data):
     '''
     Deletes sheets based on rules.
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
-    :param sheetsData: List of files and associated sheet filter rules. Refer to `sheetRules_` below.
-    :type sheetsData: [[filename,[conditions]]]
+    :param sheets_data: List of files and associated sheet filter rules. Refer to `sheetRules_` below.
+    :type sheets_data: [[filename,[conditions]]]
 
     :return: 
         Result class instance.
@@ -189,37 +192,37 @@ def ModifySheets(doc, sheetsData):
     '''
 
     # set default values
-    returnValue = res.Result()
-    returnValue.UpdateSep(False,'No sheet data provided for current Revit file')
+    return_value = res.Result()
+    return_value.update_sep(False,'No sheet data provided for current Revit file')
     
-    revitFileName = util.GetFileNameWithoutExt(revitFilePath_)
+    revit_file_name = fileIO.get_file_name_without_ext(REVIT_FILE_PATH)
     # Output(sheets)
-    for fileName, sheetRules in sheetsData:
+    for file_name, sheet_rules in sheets_data:
         # check if set of rules applies to this particular project file
-        if (revitFileName.startswith(fileName)):
-            collectorSheets = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
-            returnValue = rView.DeleteSheets(doc, sheetRules, collectorSheets)
+        if (revit_file_name.startswith(file_name)):
+            collector_sheets = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
+            return_value = rViewDel.delete_sheets(doc, sheet_rules, collector_sheets)
             break
-    return returnValue
+    return return_value
 
 # -------------
 # main:
 # -------------
 
 # store output here:
-rootPath_ = r'C:\temp'
+ROOT_PATH = r'C:\temp'
 
 # sheets to delete rules 
-sheetRules_ = [
+SHEET_RULES = [
     ['FileOne', # project file name start (would apply to files FileOneOne and FileOneTwo)
         [
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'] # sheet condition rule
+            ['Parameter Name', compare.does_not_equal, 'Parameter Value'] # sheet condition rule
         ]
     ],
     ['FileTwo', # project file name start
         [
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'], # sheet condition rule
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'] # sheet condition rule
+            ['Parameter Name', compare.does_not_equal, 'Parameter Value'], # sheet condition rule
+            ['Parameter Name', compare.does_not_equal, 'Parameter Value'] # sheet condition rule
         ]
     ]
 ]
@@ -229,12 +232,12 @@ List containing the sheet rules by project file
 '''
 
 # views to delete rules
-viewRules_ = [
+VIEW_RULES = [
     ['File', # project file name start
         [
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'], # view condition rule
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'], # view condition rule
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'] # view condition rule
+            ['Parameter Name', compare.does_not_equal, 'Parameter Value'], # view condition rule
+            ['Parameter Name', compare.does_not_equal, 'Parameter Value'], # view condition rule
+            ['Parameter Name', compare.does_not_equal, 'Parameter Value'] # view condition rule
         ]
     ]
 ]
@@ -244,24 +247,24 @@ List containing the view rules by project file
 '''
 
 #s ave revit file to new location
-Output('Modifying Revit File.... start')
+output('Modifying Revit File.... start')
 
 # delete sheets
-resultDeleteSheets_ = ModifySheets(doc, sheetRules_)
-Output(resultDeleteSheets_.message + '.... status: ' + str(resultDeleteSheets_.status))
+RESULT_DELETE_SHEETS = modify_sheets(DOC, SHEET_RULES)
+output('{} .... status: [{}]'.format( RESULT_DELETE_SHEETS.message,RESULT_DELETE_SHEETS.status))
 
 # delete views
-resultDeleteViews_ = ModifyViews(doc, revitFilePath_, viewRules_)
-Output(resultDeleteViews_.message + '.... status: ' + str(resultDeleteViews_.status))
+RESULT_DELETE_VIEWS = modify_views(DOC, REVIT_FILE_PATH, VIEW_RULES)
+output(RESULT_DELETE_VIEWS.message + '.... status: ' + str(RESULT_DELETE_VIEWS.status))
 
 # delete views not on sheets
-resultDeleteViewsNotOnSheets_ = rView.DeleteViewsNotOnSheets(doc, CheckName)
-Output(str(resultDeleteViewsNotOnSheets_.message)+ '.... status: ' + str(resultDeleteViewsNotOnSheets_.status))
+RESULT_DELETE_VIEWS_NOT_ON_SHEETS = rViewDel.delete_views_not_on_sheets(DOC, check_name)
+output(str(RESULT_DELETE_VIEWS_NOT_ON_SHEETS.message)+ '.... status: ' + str(RESULT_DELETE_VIEWS_NOT_ON_SHEETS.status))
  
 # sync changes back to central, non workshared files will not be saved!
-if (doc.IsWorkshared and debug_ == False):
-    Output('Syncing to Central: start')
-    syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.status))
+if (DOC.IsWorkshared and DEBUG == False):
+    output('Syncing to Central: start')
+    SYNCING = rFileIO.sync_file (DOC)
+    output('Syncing to Central: finished ' + str(SYNCING.status))
 
-Output('Modifying Revit File.... finished ')
+output('Modifying Revit File.... finished ')

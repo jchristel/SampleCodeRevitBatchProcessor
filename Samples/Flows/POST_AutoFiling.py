@@ -29,20 +29,20 @@ This script can be used when:
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2020  Jan Christel
+# BSD License
+# Copyright © 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
 
@@ -56,19 +56,23 @@ This script can be used when:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
-from duHast.Utilities import Utility as util
+from duHast.Utilities import files_get as fileGet
+from duHast.Utilities import files_io as fileIO
+from duHast.Utilities import directory_io as dirIO
+from duHast.Utilities import date_stamps as dateStamp
+from duHast.Utilities import files_csv as fileCSV
 
 import os.path
 from os import path
@@ -81,10 +85,10 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import script_util
 
 # -------------
@@ -92,7 +96,7 @@ if not debug_:
 # -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -100,39 +104,39 @@ def Output(message = ''):
     :type message: str, optional
     '''
 
-    if not debug_:
+    if not DEBUG:
         script_util.Output(str(message))
     else:
         print (message)
 
-def _getNWCFileName(currentFileName):
+def _get_nwc_file_name(current_file_name):
     '''
     Drop revision and other things of current NWC file name so the previous version in a federated model can be replaced.
 
-    :param currentFileName: _description_
-    :type currentFileName: str
+    :param current_file_name: _description_
+    :type current_file_name: str
     :return: _description_
     :rtype: _type_
     '''
 
-    returnValue = currentFileName
-    foundMatch = False
+    return_value = current_file_name
+    found_match = False
     try:
-        for nwcNameStartsWidth, newNWCFileName in nwcFileNaming_:
-            if (currentFileName.startswith(nwcNameStartsWidth)):
-                foundMatch = True
-                returnValue = newNWCFileName
+        for nwc_name_starts_width, new_nwc_file_name in NWC_FILE_NAMING:
+            if (current_file_name.startswith(nwc_name_starts_width)):
+                found_match = True
+                return_value = new_nwc_file_name
                 break
     except Exception as e:
-        Output('Failed to find match: ' + str(e))
-        returnValue = currentFileName
-    if(foundMatch):
-        Output('Found match for:  ' + currentFileName + ' to: ' + returnValue)
+        output('Failed to find match: {}'.format(e))
+        return_value = current_file_name
+    if(found_match):
+        output('Found match for:  {} to: {}'.format(current_file_name, return_value))
     else:
-        Output('Found no match for:  ' + currentFileName )
-    return returnValue
+        output('Found no match for:  {}'.format(current_file_name))
+    return return_value
 
-def _copyNWCFiles():
+def _copy_nwc_files():
     '''
     Copy nwc files to Navisworks. federated model, location
 
@@ -141,107 +145,107 @@ def _copyNWCFiles():
     '''
 
     status = True
-    fileFilter = '*.nwc'
+    file_filter = '*.nwc'
     # check whether any files match the filter
-    for nwcFileNameStart, nwcTargetFolder in defaultNWCLocations_:
-        files = util.GetFilesWithFilter(sourcePath_, fileFilter, nwcFileNameStart + '*')
+    for nwc_file_name_start, nwc_target_folder in DEFAULT_NWC_LOCATIONS:
+        files =  fileGet.get_files_with_filter (SOURCE_PATH, file_filter, nwc_file_name_start + '*')
         if(files != None and len(files) > 0):
-            Output('Copying nwc Files...' + str(len(files)))
+            output('Copying nwc Files...' + str(len(files)))
             for file in files:
                 try:
                     # extract file name only
-                    fileName = Path.GetFileName(file)
-                    src = sourcePath_ + '\\' + fileName
-                    destinationFileName = _getNWCFileName(fileName)
-                    dst = nwcTargetFolder + '\\' + destinationFileName
-                    shutil.copy(src,dst)
-                    status = status & True
-                    Output('Copied file from ' + src + ' to ' + dst)
+                    file_name = Path.GetFileName(file)
+                    src = SOURCE_PATH + '\\' + file_name
+                    destination_file_name = _get_nwc_file_name(file_name)
+                    dst = nwc_target_folder + '\\' + destination_file_name
+                    copy_status = fileIO.copy_file(src,dst)
+                    status = status & copy_status
+                    output('Copied file from:  {} to: {}'.format(src, dst))
                 except Exception:
-                    Output('Failed to copy file from ' + src + ' to ' + dst)
+                    output('Failed to copy file from: {} to: {}'.format(src, dst))
                     status = False
         else:
-            Output('No nwc files matching filter ' + fileFilter + ' in source location: ' + sourcePath_)
+            output('No nwc files matching filter: {} in source path: {}' .format(file_filter, SOURCE_PATH))
     return status
 
-def CreateTargetFolder(targetLocation, folderName):
+def create_target_directory(target_location, directory_name):
     '''
     Set up dated model incoming folder.
 
-    :param targetLocation: Directory in which to create a new folder
-    :type targetLocation: str
-    :param folderName: New folder name.
-    :type folderName: str
+    :param target_location: Directory in which to create a new folder
+    :type target_location: str
+    :param directory_name: New folder name.
+    :type directory_name: str
     :return: True if folder was created successfully, otherwise False
     :rtype: bool
     '''
 
-    returnFolderName = folderName
+    return_directory_name = directory_name
     # check if folder exists
     flag = False
-    if(util.DirectoryExists(targetLocation + '\\' + folderName) == False):
-        gotFolder = False
+    if(dirIO.directory_exists(target_location + '\\' + directory_name) == False):
+        got_folder = False
         n = 1
         # create new folder (stop at 10 attempts)
-        while (gotFolder == False and n < 10):
-            if (util.DirectoryExists(targetLocation + '\\' + folderName + '(' + str(n) + ')') == False):
-                flag = util.CreateFolder(targetLocation, folderName + '(' + str(n) + ')')
-                returnFolderName = folderName + '(' + str(n) + ')'
+        while (got_folder == False and n < 10):
+            if (dirIO.directory_exists(target_location + '\\' + directory_name + '(' + str(n) + ')') == False):
+                flag = dirIO.create_directory(target_location, directory_name + '(' + str(n) + ')')
+                return_directory_name = directory_name + '(' + str(n) + ')'
                 # ignore the flag coming back in to avoid infinite loops
-                gotFolder = True
+                got_folder = True
             n += 1
-    return flag, returnFolderName
+    return flag, return_directory_name
 
-def MoveFiles(fileData):
+def move_files(file_data):
     '''
     Move files into incoming folder(s)
 
-    :param fileData: _description_
-    :type fileData: _type_
+    :param file_data: _description_
+    :type file_data: _type_
     :return: True if all files where moved successfully, otherwise False.
     :rtype: bool
     '''
 
     status = True
     # get the date stamp
-    folderName = util.GetFolderDateStamp() + str('_Models')
-    for fileFilter, targetLocation in fileData:
+    directory_name = dateStamp.get_folder_date_stamp() + str('_Models')
+    for file_filter, target_location in file_data:
         # check if target root path still exists
-        if(path.exists(targetLocation)):
+        if(path.exists(target_location)):
             # check whether any files match the filter
-            files = util.GetFilesWithFilter(sourcePath_, '.*', fileFilter + '*')
+            files = fileGet.get_files_with_filter(SOURCE_PATH, '.*', file_filter + '*')
             # copy any *.nwc files into the right folders first
-            _copyNWCFiles()
+            _copy_nwc_files()
             # move files into file in location
             if(files != None and len(files) > 0):
-                flagGotFolder = util.CreateTargetFolder(targetLocation, folderName)
-                if (flagGotFolder):
-                    Output('Moving Files...' + str(len(files)))
+                flag_got_directory = dirIO.create_target_directory(target_location, directory_name)
+                if flag_got_directory:
+                    output('Moving Files... {}'.format(len(files)))
                     # move files
                     for file in files:
                         try:
                             # extract file name only
-                            fileName = Path.GetFileName(file)
-                            src = sourcePath_ + '\\' + fileName
-                            dst = targetLocation + '\\' + folderName + '\\' + fileName
+                            file_name = Path.GetFileName(file)
+                            src = SOURCE_PATH + '\\' + file_name
+                            dst = target_location + '\\' + directory_name + '\\' + file_name
                             shutil.move(src,dst)
                             status = status & True
-                            Output('Moved file from ' + src + ' to ' + dst)
+                            output('Moved file from : {} to: {}'.format(src, dst))
                         except Exception:
-                            Output('Failed to move file from ' + src + ' to ' + dst)
+                            output('Failed to move file from: {} to: {}'.format(src, dst))
                             status = False
                 else:
-                    Output('Failed to create target folder ' + targetLocation )
+                    output('Failed to create target folder: {}'.format(target_location))
             else:
-                Output('No files matching filter ' + fileFilter + ' in source location: ' + sourcePath_)
+                output('No files matching filter {} in source location: {}'.format(file_filter, SOURCE_PATH))
         else:
-            Output(targetLocation + ' no longer exists!')
+            output(target_location + ' no longer exists!')
             status = False
     return status
 
 # --------------------- saving files received list ---------------------------------
 
-def SaveFilesReceivedList():
+def save_files_received_list():
     '''
     Saves out a file where each row contains the dates a file was received last.
 
@@ -254,136 +258,136 @@ def SaveFilesReceivedList():
 
     status = True
     # get the current received file and read rows into 2D array
-    currentIssueList = _readCurrentFile()
+    current_issue_list = _read_current_file_received()
     # get current data mapping array
-    allFilesMappingTable = _buildMappingTable()
+    all_files_mapping_table = _build_mapping_table()
     # data to be written back
-    newIssueList = []
-    for rowCounter in range(0, len(allFilesMappingTable)):
-        newIssueRow = []
-        columnCounter = 0
-        for files in allFilesMappingTable[rowCounter]:
-            for fileExtension,nameFilter in files:
+    new_issue_list = []
+    for row_counter in range(0, len(all_files_mapping_table)):
+        new_issue_row = []
+        column_counter = 0
+        for files in all_files_mapping_table[row_counter]:
+            for file_extension,name_filter in files:
                 # get files and check for match
-                dateValue, revision = _getMatch(fileExtension, nameFilter)
-                if (dateValue == '-'):
+                date_value, revision = _get_file_match(file_extension, name_filter)
+                if (date_value == '-'):
                     # use the value from currentIssueList (if there is one...)
-                    if(currentIssueList is not None and len(currentIssueList)>0):
+                    if(current_issue_list is not None and len(current_issue_list)>0):
                         try:
-                            newIssueRow.append(currentIssueList[rowCounter + outPutRowHeadersCount_][columnCounter + outPutColumnHeadersCount_])
-                            columnCounter += 1
-                            newIssueRow.append(currentIssueList[rowCounter + outPutRowHeadersCount_][columnCounter + outPutColumnHeadersCount_])
+                            new_issue_row.append(current_issue_list[row_counter + OUTPUT_ROW_HEADERS_COUNT][column_counter + OUTPUT_COLUMN_HEADERS_COUNT])
+                            column_counter += 1
+                            new_issue_row.append(current_issue_list[row_counter + OUTPUT_ROW_HEADERS_COUNT][column_counter + OUTPUT_COLUMN_HEADERS_COUNT])
                         except Exception:
                             # current file issue list has less columns the new one...add default
-                            newIssueRow.append('-')# date
-                            columnCounter += 1
-                            newIssueRow.append('-')# revision
+                            new_issue_row.append('-')# date
+                            column_counter += 1
+                            new_issue_row.append('-')# revision
                     else:
                         # no file issue list was found...add default value
-                        newIssueRow.append('-')# date
-                        columnCounter += 1
-                        newIssueRow.append('-')# revision
+                        new_issue_row.append('-')# date
+                        column_counter += 1
+                        new_issue_row.append('-')# revision
                 else:
-                    newIssueRow.append(dateValue)
-                    columnCounter += 1
-                    newIssueRow.append(revision)
+                    new_issue_row.append(date_value)
+                    column_counter += 1
+                    new_issue_row.append(revision)
                 # increase column counter
-                columnCounter += 1
-        newIssueList.append(newIssueRow)
+                column_counter += 1
+        new_issue_list.append(new_issue_row)
     # write array back to file
-    paddedData = _addHeadersToData(newIssueList)
-    status = _writeNewData(paddedData)
+    padded_data = _add_headers_to_data(new_issue_list)
+    status = _write_new_file_received_data(padded_data)
     return status
 
-def _addHeadersToData(newIssueList):
+def _add_headers_to_data(new_issue_list):
     '''
     Adds row and column headers to files received data
 
-    :param newIssueList: _description_
-    :type newIssueList: _type_
+    :param new_issue_list: _description_
+    :type new_issue_list: _type_
     :return: _description_
     :rtype: _type_
     '''
-    updatedData = []
+    updated_data = []
     # check if row headers are required
-    if (outPutRowHeadersCount_ > 0):
+    if (OUTPUT_ROW_HEADERS_COUNT > 0):
         # row counter
-        rowIndex = 0
-        for dataRow in newIssueList:
-            columnIndex = 0
-            for rowHeader in outPutRowHeaders_:
-                dataRow.insert(columnIndex, rowHeader[rowIndex])
-                columnIndex  += 1
-            updatedData.append(dataRow)
-            rowIndex += 1
+        row_index = 0
+        for data_row in new_issue_list:
+            column_index = 0
+            for row_header in OUTPUT_ROW_HEADERS:
+                data_row.insert(column_index, row_header[row_index])
+                column_index  += 1
+            updated_data.append(data_row)
+            row_index += 1
     else:
-        for dataRow in newIssueList:
-            updatedData.append(dataRow)
+        for data_row in new_issue_list:
+            updated_data.append(data_row)
     # check if column headers are required
-    if (outPutColumnHeadersCount_ > 0):
-        rowIndex = 0
-        for columnHeader in outPutColumnHeaders_:
+    if (OUTPUT_COLUMN_HEADERS_COUNT > 0):
+        row_index = 0
+        for column_header in OUTPUT_COLUMN_HEADERS:
             # Insert blank columns for row headers
-            if (outPutRowHeadersCount_ > 0):
-                for x in range(0,outPutRowHeadersCount_):
-                    columnHeader.insert(0,'-')
+            if (OUTPUT_ROW_HEADERS_COUNT > 0):
+                for x in range(0,OUTPUT_ROW_HEADERS_COUNT):
+                    column_header.insert(0,'-')
             # need to allow for row headers!!
-            updatedData.insert(rowIndex, columnHeader)
-            rowIndex += 1
-    return updatedData
+            updated_data.insert(row_index, column_header)
+            row_index += 1
+    return updated_data
 
-def _getMatch(fileExtension, nameFilter):
+def _get_file_match(file_extension, name_filter):
     '''
     Find file match with filters provided
     File extension in format '.rvt'
 
-    :param fileExtension: _description_
-    :type fileExtension: _type_
-    :param nameFilter: _description_
-    :type nameFilter: _type_
+    :param file_extension: _description_
+    :type file_extension: _type_
+    :param name_filter: _description_
+    :type name_filter: _type_
     :return: _description_
     :rtype: str (default='-'), str(default='-')
     '''
 
-    returnValue = '-'
+    return_value = '-'
     revision = '-'
     # check whether valid name filter otherwise return '-'
-    if(nameFilter is not ''):
-        files = util.GetFilesWithFilter(sourcePath_, fileExtension, nameFilter + '*')
+    if(name_filter is not ''):
+        files = fileGet.get_files_with_filter(SOURCE_PATH, file_extension, name_filter + '*')
         if (files is not None and len(files) > 0):
             # got a match
-            returnValue = util.GetFolderDateStamp()
+            return_value = dateStamp.get_folder_date_stamp()
             # get the revision
-            revision = _getRevision(files[0])
-    return returnValue, revision
+            revision = _get_file_revision(files[0])
+    return return_value, revision
 
-def _getRevision(filename):
+def _get_file_revision(file_name):
     '''
     Get the revision information from the file name.
 
-    :param filename: the file name
-    :type filename: str
+    :param file_name: the file name
+    :type file_name: str
     :return: the file revision, if exists, otherwise '-'
     :rtype: str (default='-')
     '''
 
     # default value in case no revision information is included in file name
-    returnValue = '-'
-    for revStart in revisionSeparatorsStart_:
+    return_value = '-'
+    for revision_start_char in REVISION_SEPARATOR_START:
         # check if file contains any of these
-        startIndex = filename.find(revStart)
-        if ( startIndex > 0):
-            endIndex = startIndex + 1
+        start_index = file_name.find(revision_start_char)
+        if ( start_index > 0):
+            end_index = start_index + 1
             # look for end of revision
-            for revEnd in revisionSeparatorsEnd_:
-                endIndex = filename.find(revEnd)
-                if (endIndex > 0):
+            for revision_end_char in REVISION_SEPARATOR_END:
+                end_index = file_name.find(revision_end_char)
+                if (end_index > 0):
                     break
-            returnValue = filename[startIndex + 1:endIndex]
+            return_value = file_name[start_index + 1:end_index]
             break
-    return returnValue
+    return return_value
 
-def _buildMappingTable():
+def _build_mapping_table():
     '''
     Builds a mapping array from global nwc and rvt all files received lists
     This defines the rows and column of the incoming file tracker
@@ -393,39 +397,39 @@ def _buildMappingTable():
     :rtype: _type_
     '''
 
-    mappingArray = []
+    mapping_array = []
     # loop over lists and build mapping table as required
-    rvtList = _rebuildList(allFilesReceivedRVT_)
-    nwcList = _rebuildList(allFilesReceivedNWC_)
+    rvt_list = _rebuild_file_list(ALL_FILES_RECEIVED_RVT)
+    nwc_list = _rebuild_file_list(ALL_FILES_RECEIVED_NWC)
     # loop over array and build mapping 2d array:
     # row discipline, column building in format ([filter (rvt), filename], [filter(nwc), filename])
-    for x in range(0, len(nwcList)):
-        mappingRow = []
-        for y in range(0,len(nwcList[x])):
-            mappingRow.append([nwcList[x][y], rvtList[x][y]])
-        mappingArray.append(mappingRow)
-    return mappingArray
+    for x in range(0, len(nwc_list)):
+        mapping_row = []
+        for y in range(0,len(nwc_list[x])):
+            mapping_row.append([nwc_list[x][y], rvt_list[x][y]])
+        mapping_array.append(mapping_row)
+    return mapping_array
 
-def _rebuildList(receivedFiles):
+def _rebuild_file_list(received_files):
     '''
     Loops over list of received files and builds a list of pairs of [file filter, file name]
 
-    :param receivedFiles: _description_
-    :type receivedFiles: _type_
+    :param received_files: _description_
+    :type received_files: _type_
     :return: _description_
     :rtype: _type_
     '''
 
-    outputList = []
-    for x in receivedFiles:
+    output_list = []
+    for x in received_files:
         dummy = []
-        for fileTypeFilter,fileNameFilters in x:
-            for fileNameFilter in fileNameFilters:
-                dummy.append([fileTypeFilter, fileNameFilter])
-            outputList.append(dummy)
-    return outputList
+        for file_type_filter,file_name_filters in x:
+            for file_name_filter in file_name_filters:
+                dummy.append([file_type_filter, file_name_filter])
+            output_list.append(dummy)
+    return output_list
 
-def _readCurrentFile():
+def _read_current_file_received():
     '''
     Read the current issue date file located in SourcePath location with name
     'issueList.csv'
@@ -434,17 +438,14 @@ def _readCurrentFile():
     :rtype: _type_
     '''
 
-    referenceList = []
+    reference_list = []
     try:
-        with open(currentIssueDatafileName_) as csvFile:
-            reader = csv.reader(csvFile)
-            for row in reader: # each row is a list
-                referenceList.append(row)
+        reference_list = fileCSV.read_csv_file(CURRENT_ISSUE_DATA_FILE_NAME)
     except Exception as e:
-        Output('Failed to open current model issue list with exception: ' + str(e))
-    return referenceList
+        output('Failed to open current model issue list with exception: {}'.format(e))
+    return reference_list
 
-def _writeNewData(data):
+def _write_new_file_received_data(data):
     '''
     Write new revision data out to file.
 
@@ -456,15 +457,10 @@ def _writeNewData(data):
 
     status = True
     try:
-        f = open(currentIssueDatafileName_, "w")
-        for row in data:
-            f.write(','.join(row) + "\n")
-        f.close()
+        fileCSV.write_report_data_as_csv(CURRENT_ISSUE_DATA_FILE_NAME,[],data)
     except Exception as e:
         status = False
-        if (f is not None):
-            f.close()
-        Output('Failed to write data file!' + currentIssueDatafileName_+ ' with exception: ' + str(e))
+        output('Failed to write data file: {} with exception: {}'.format(CURRENT_ISSUE_DATA_FILE_NAME, e))
     return status
 
 # -------------
@@ -472,15 +468,15 @@ def _writeNewData(data):
 # -------------
 
 # store output here:
-rootPath_ = r'C:\temp'
+ROOT_PATH = r'C:\temp'
 # directory containing incoming files
-sourcePath_ = r'C:\temp'
+SOURCE_PATH = r'C:\temp'
 
 # list of locations where incoming files are to be saved,
 # format is:
 # [Name starts with, fully qualified directory path]
 # this script will create a dated folder in the location provided and move files into it
-defaultModelInLocations_ = [
+DEFAULT_MODEL_IN_LOCATIONS = [
     ['Structure File Name', r'C:\temp\Structure\In'],
     ['Fire Dry File Name', r'C:\temp\Fire\In'],
     ['Fire Wet File Name', r'C:\temp\Fire\In'],
@@ -493,7 +489,7 @@ defaultModelInLocations_ = [
 
 
 # list of locations where incoming NavisWorks files are to be saved
-defaultNWCLocations_ = [
+DEFAULT_NWC_LOCATIONS = [
     ['Structure File Name', r'C:\temp\NavisWorks'],
     ['Fire Dry File Name', r'C:\temp\NavisWorks'],
     ['Fire Wet File Name', r'C:\temp\NavisWorks'],
@@ -502,7 +498,7 @@ defaultNWCLocations_ = [
 
 # list containing the default file names:
 # [[Navis file name before move, Navis file name after move]]
-nwcFileNaming_ = [
+NWC_FILE_NAMING = [
     ['StructureFileBeforeName', 'StructureFileAfterName'],
     ['FireDryBeforeName', 'FireDryAfterName'],
     ['FireWetBeforeName', 'FireWetAfterName'],
@@ -514,52 +510,52 @@ nwcFileNaming_ = [
 ]
 
 # nwc files list to build files received array 
-nwcSTNorth_ = [['.nwc',['StructureFileBeforeName']]]
-nwcSTSteelOne_ = [['.nwc',['SteelFileBeforeName']]]
-nwcHY_ = [['.nwc',['HydraulicFileBeforeName']]]
-nwcFPW_ = [['.nwc',['FireWetBeforeName']]]
-nwcFPD_ = [['.nwc',['FireDryBeforeName']]]
-nwcME_ = [['.nwc',['MechanicalFileBeforeName']]]
-nwcEL_ = [['.nwc',['ElectricalFileBeforeName']]]
-nwcSE_ = [['.nwc',['SecurityFileBeforeName']]]
+NWC_ST_NORTH = [['.nwc',['StructureFileBeforeName']]]
+NWC_ST_ONE = [['.nwc',['SteelFileBeforeName']]]
+NWC_HY = [['.nwc',['HydraulicFileBeforeName']]]
+NWC_FPW = [['.nwc',['FireWetBeforeName']]]
+NWC_FPD = [['.nwc',['FireDryBeforeName']]]
+NWC_ME = [['.nwc',['MechanicalFileBeforeName']]]
+NWC_EL = [['.nwc',['ElectricalFileBeforeName']]]
+NWC_SE = [['.nwc',['SecurityFileBeforeName']]]
 
 # rvt files list to build files received array 
-rvtSTNorth_ = [['.rvt',['StructureFileBeforeName']]]
-rvtSTSteelOne_ = [['.rvt',['SteelFileBeforeName']]]
-rvtHY_ = [['.rvt',['HydraulicFileBeforeName']]]
-rvtFPW_ = [['.rvt',['FireWetBeforeName']]]
-rvtFPD_ = [['.rvt',['FireDryBeforeName']]]
-rvtME_ = [['.rvt',['MechanicalFileBeforeName']]]
-rvtEL_ = [['.rvt',['ElectricalFileBeforeName']]]
-rvtSE_ = [['.rvt',['SecurityFileBeforeName']]]
+RVT_ST_NORTH = [['.rvt',['StructureFileBeforeName']]]
+RVT_ST_ONE = [['.rvt',['SteelFileBeforeName']]]
+RVT_HY = [['.rvt',['HydraulicFileBeforeName']]]
+RVT_FPW = [['.rvt',['FireWetBeforeName']]]
+RVT_FPD = [['.rvt',['FireDryBeforeName']]]
+RVT_ME = [['.rvt',['MechanicalFileBeforeName']]]
+RVT_EL = [['.rvt',['ElectricalFileBeforeName']]]
+RVT_SE = [['.rvt',['SecurityFileBeforeName']]]
 
 # build full files received baseline 2D array
 
-Output('Building files received mapping table.... start')
-allFilesReceivedNWC_ = [nwcSTNorth_, nwcSTSteelOne_,  nwcHY_,  nwcFPW_, nwcFPD_, nwcME_,  nwcEL_,  nwcSE_]
-allFilesReceivedRVT_ = [rvtSTNorth_, rvtSTSteelOne_,  rvtHY_, rvtFPW_, rvtFPD_, rvtME_, rvtEL_, rvtSE_]
+output('Building files received mapping table.... start')
+ALL_FILES_RECEIVED_NWC = [NWC_ST_NORTH, NWC_ST_ONE,  NWC_HY,  NWC_FPW, NWC_FPD, NWC_ME,  NWC_EL,  NWC_SE]
+ALL_FILES_RECEIVED_RVT = [RVT_ST_NORTH, RVT_ST_ONE,  RVT_HY, RVT_FPW, RVT_FPD, RVT_ME, RVT_EL, RVT_SE]
 
-currentIssueDatafileName_ = sourcePath_ + r'\issueList.csv'
-revisionSeparatorsStart_ = ['[', '(']
-revisionSeparatorsEnd_ = [']', ')']
+CURRENT_ISSUE_DATA_FILE_NAME = SOURCE_PATH + r'\issueList.csv'
+REVISION_SEPARATOR_START = ['[', '(']
+REVISION_SEPARATOR_END = [']', ')']
 
 # output headers
-outPutColumnHeaders_ = [
+OUTPUT_COLUMN_HEADERS = [
     ['NWC','REVISION','REVIT','REVISION']
 ]
-outPutRowHeaders_ = [
+OUTPUT_ROW_HEADERS = [
     ['structure', 'structure - steel zone one','hydraulic','fire - wet','fire - dry','mechanical','electrical','security']
 ]
 
 # these are used to correctly calculate the columns and rows containing data when reading existing data file
-outPutColumnHeadersCount_ = len(outPutColumnHeaders_)
-outPutRowHeadersCount_ = len(outPutRowHeaders_)
+OUTPUT_COLUMN_HEADERS_COUNT = len(OUTPUT_COLUMN_HEADERS)
+OUTPUT_ROW_HEADERS_COUNT = len(OUTPUT_ROW_HEADERS)
 
 # save files received list
-resultSaveFileStats_ = SaveFilesReceivedList()
-Output('Writing files received mapping table.... status ' + str(resultSaveFileStats_))
+RESULT_SAVE_FILE_STATS = save_files_received_list()
+output('Writing files received mapping table.... status [{}]'.format(RESULT_SAVE_FILE_STATS))
 
 # move files
-Output('Moving files .... start')
-result_ = MoveFiles(defaultModelInLocations_)
-Output('Moving files .... status: ' + str(result_))
+output('Moving files .... start')
+RESULT = move_files(DEFAULT_MODEL_IN_LOCATIONS)
+output('Moving files .... status: [{}]'.format(RESULT))

@@ -1,0 +1,554 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.Railings package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
+    <link rel="next" title="duHast.Revit.Railings.Reporting package" href="duHast.Revit.Railings.Reporting.html" />
+    <link rel="prev" title="duHast.Revit.Purge package" href="duHast.Revit.Purge.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Railings package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Railings.Reporting.html" title="duHast.Revit.Railings.Reporting package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Purge.html" title="duHast.Revit.Purge package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Railings.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-railings-package">
+<h1>duHast.Revit.Railings package<a class="headerlink" href="#duhast-revit-railings-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Railings.Reporting.html">duHast.Revit.Railings.Reporting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Railings.Reporting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Railings.Reporting.html#module-duHast.Revit.Railings.Reporting.railings_report_header">duHast.Revit.Railings.Reporting.railings_report_header module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Railings.Reporting.html#this-module-contains-the-header-row-for-any-revit-railing-reports">This module contains the header row for any Revit railing reports.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Railings.Reporting.html#duHast.Revit.Railings.Reporting.railings_report_header.REPORT_RAILINGS_HEADER"><code class="docutils literal notranslate"><span class="pre">REPORT_RAILINGS_HEADER</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Railings.Reporting.html#module-duHast.Revit.Railings.Reporting">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Railings.Utility.html">duHast.Revit.Railings.Utility package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#module-duHast.Revit.Railings.Utility.merge_lists">duHast.Revit.Railings.Utility.merge_lists module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#this-module-contains-a-helper-functions-to-merge-two-lists-into-a-unique-list">This module contains a helper functions to merge two lists into a unique list.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#duHast.Revit.Railings.Utility.merge_lists.merge_into_unique_list"><code class="docutils literal notranslate"><span class="pre">merge_into_unique_list()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#module-duHast.Revit.Railings.Utility.railing_categories">duHast.Revit.Railings.Utility.railing_categories module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#revit-railings-built-in-categories">Revit railings built-in categories.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#module-duHast.Revit.Railings.Utility.railing_family_names">duHast.Revit.Railings.Utility.railing_family_names module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#revit-railing-built-in-family-names-eng">Revit railing built in family names (ENG).</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#duHast.Revit.Railings.Utility.railing_family_names.RAILING_FAMILY_NAME"><code class="docutils literal notranslate"><span class="pre">RAILING_FAMILY_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#duHast.Revit.Railings.Utility.railing_family_names.TOP_RAIL_FAMILY_NAME"><code class="docutils literal notranslate"><span class="pre">TOP_RAIL_FAMILY_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#duHast.Revit.Railings.Utility.railing_family_names.HAND_RAIL_FAMILY_NAME"><code class="docutils literal notranslate"><span class="pre">HAND_RAIL_FAMILY_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#duHast.Revit.Railings.Utility.railing_family_names.BUILTIN_RAILING_TYPE_FAMILY_NAMES"><code class="docutils literal notranslate"><span class="pre">BUILTIN_RAILING_TYPE_FAMILY_NAMES</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#module-duHast.Revit.Railings.Utility.railings_filter">duHast.Revit.Railings.Utility.railings_filter module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#this-module-contains-a-revit-railings-utility-functions">This module contains a Revit railings utility functions.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#module-duHast.Revit.Railings.Utility.railings_type_sorting">duHast.Revit.Railings.Utility.railings_type_sorting module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#id1">This module contains a Revit railings utility functions.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#duHast.Revit.Railings.Utility.railings_type_sorting.build_railing_type_dictionary"><code class="docutils literal notranslate"><span class="pre">build_railing_type_dictionary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#duHast.Revit.Railings.Utility.railings_type_sorting.sort_railing_types_by_family_name"><code class="docutils literal notranslate"><span class="pre">sort_railing_types_by_family_name()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Railings.Utility.html#module-duHast.Revit.Railings.Utility">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Railings.balusters">
+<span id="duhast-revit-railings-balusters-module"></span><h2>duHast.Revit.Railings.balusters module<a class="headerlink" href="#module-duHast.Revit.Railings.balusters" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-railing-balusters">
+<h3>This module contains a number of helper functions relating to Revit railing balusters.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-railing-balusters" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.balusters.get_balusters_used_in_pattern">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.balusters.</span></span><span class="sig-name descname"><span class="pre">get_balusters_used_in_pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b_pattern</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_balusters_used_in_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets list of unique baluster family ids used in a pattern only.
+:param b_pattern: A revit baluster pattern.
+:type b_pattern: Autodesk.Revit.DB.Architecture.BalusterPattern
+:return: List of element ids of baluster family ids.
+:rtype: list Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.balusters.get_used_baluster_post_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.balusters.</span></span><span class="sig-name descname"><span class="pre">get_used_baluster_post_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b_post_pattern</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_used_baluster_post_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets list of unique baluster posts ids only.
+Includes:
+- CornerPost
+- EndPost
+- StartPost
+:param b_post_pattern: A revit post pattern.
+:type b_post_pattern: Autodesk.Revit.DB.Architecture.PostPattern
+:return: List of element ids of baluster family ids.
+:rtype: list Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.balusters.get_used_baluster_per_tread">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.balusters.</span></span><span class="sig-name descname"><span class="pre">get_used_baluster_per_tread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b_placement</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_used_baluster_per_tread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the id of the baluster per stair tread.
+:param b_placement: A baluster placement element.
+:type b_placement: Autodesk.Revit.DB.Architecture.BalusterPlacement
+:return: List of element ids of baluster family ids.
+:rtype: list Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.balusters.get_all_baluster_symbols">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.balusters.</span></span><span class="sig-name descname"><span class="pre">get_all_baluster_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_all_baluster_symbols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all baluster symbols (fam types) in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of baluster symbols (types).
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.balusters.get_all_baluster_symbols_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.balusters.</span></span><span class="sig-name descname"><span class="pre">get_all_baluster_symbols_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_all_baluster_symbols_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all baluster symbol (fam type) ids in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids of baluster family ids.
+:rtype: list Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.balusters.get_baluster_types_from_railings">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.balusters.</span></span><span class="sig-name descname"><span class="pre">get_baluster_types_from_railings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_baluster_types_from_railings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of unique baluster symbol (fam type) ids used in railing types in the model.
+Incl:
+- baluster patterns
+- baluster posts
+- baluster per stair 
+There can be additional baluster symbols in the model. Those belong to loaded families which are not used in        any railing type definition.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids of baluster family ids.
+:rtype: list Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Railings.purge_unused_railing_and_baluster_types">
+<span id="duhast-revit-railings-purge-unused-railing-and-baluster-types-module"></span><h2>duHast.Revit.Railings.purge_unused_railing_and_baluster_types module<a class="headerlink" href="#module-duHast.Revit.Railings.purge_unused_railing_and_baluster_types" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-purging-revit-railings">
+<h3>This module contains a number of helper functions relating to purging Revit railings.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-purging-revit-railings" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_railing_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_used_railing_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_railing_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used Railing element types available in model excluding in place types.
+Used: at least one instance of this type is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids of railing types.
+:rtype: list Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.family_no_types_in_use">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">family_no_types_in_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fam_type_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">un_used_type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.family_no_types_in_use" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares two lists of element ids and returns False if any element id in first list is not in the second list.
+Returns False if any symbols (types) of a family (first list) are in use in a model (second list).
+TODO: repetitive code…Consider generic function!
+:param fam_type_ids: List of family symbols (types).
+:type fam_type_ids: List of Autodesk.Revit.DB.ElementId
+:param un_used_type_ids: List of unused family symbols (types)
+:type un_used_type_ids: List of Autodesk.Revit.DB.ElementId
+:return: True if all ids in first list are also in second list, otherwise False.
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_non_in_place_railing_type_ids_to_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_non_in_place_railing_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_non_in_place_railing_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused Railing type ids for:
+- Top Rail
+- Rail support
+- Hand rail
+- Rail termination
+- Railing Systems
+- loaded families
+Excludes any in place family types.
+This method can be used to safely delete unused railing types:
+In the case that no railing instance using any of the types is placed, this will return all but one type id since        Revit requires at least one railing type definition to be in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids of railing types.
+:rtype: list Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_in_place_railing_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_used_in_place_railing_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_in_place_railing_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used in place railing type ids.
+Used: at least one instance of this type is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids of in place railing types.
+:rtype: list Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_in_place_railing_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_in_place_railing_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_in_place_railing_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused in place railing type ids.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids of in place railing types.
+:rtype: list Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_in_place_railing_ids_for_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_in_place_railing_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_in_place_railing_ids_for_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets symbol(type) ids and family ids (when no type is in use) of in place Railing families which can be purged.
+This method can be used to safely delete unused in place railing types and families.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids of in place railing types.
+:rtype: list Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_baluster_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_used_baluster_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_baluster_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used baluster type ids in the model.
+Used: at least one instance of this family symbol (type) is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids of baluster family ids.
+:rtype: list Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_baluster_type_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_baluster_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_baluster_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused baluster type ids in the model.
+Unused: Not one instance of this family symbol (type) is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids of baluster family ids.
+:rtype: list Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_baluster_type_ids_for_purge">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_baluster_type_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_baluster_type_ids_for_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused baluster type ids in the model.
+Unused: at least one instance of this family symbol (type) is placed in the model.
+This method can be used to safely delete unused baluster families and symbols.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids of baluster family ids.
+:rtype: list Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Railings.railings">
+<span id="duhast-revit-railings-railings-module"></span><h2>duHast.Revit.Railings.railings module<a class="headerlink" href="#module-duHast.Revit.Railings.railings" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-railings">
+<h3>This module contains a number of helper functions relating to Revit railings.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-railings" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_all_railing_types_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_all_railing_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_types_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all Railing types in the model.</p>
+<p>Collector will include types of:
+- Top Rail
+- Rail support
+- Hand rail
+- Rail termination
+- Railing Systems
+- In place families or loaded families</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector of railing related types</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_all_railing_types_by_category_excl_in_place">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_all_railing_types_by_category_excl_in_place</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_types_by_category_excl_in_place" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all Railing types in the model.</p>
+<p>Collector will include types of:
+- Top Rail
+- Rail support
+- Hand rail
+- Rail termination
+- Railing Systems
+- loaded families</p>
+<p>Will exclude any inplace families.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list railing related types</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of types</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_railing_types_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_railing_types_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_railing_types_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all Railing types in the model:</p>
+<p>Collector will include types of:
+- Railing</p>
+<p>It will therefore not return any top rail or hand rail or in place family types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector of railing types</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_all_railing_instances_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_all_railing_instances_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_instances_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all Railing elements placed in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector of railing instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_all_railing_instances_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_all_railing_instances_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_instances_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all Railing elements placed in model. Ignores any in place families.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector of railing instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_all_railing_type_ids_by_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_all_railing_type_ids_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_type_ids_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all railing element type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of element ids of railing types.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_all_railing_type_ids_by_class">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_all_railing_type_ids_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_type_ids_by_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all railing element type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of element ids of railing types.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_all_railing_type_ids_by_class_and_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_all_railing_type_ids_by_class_and_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_type_ids_by_class_and_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all Railing element types available in model excluding in place types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of element ids of railing types.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_in_place_railing_family_instances">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_in_place_railing_family_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_in_place_railing_family_instances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all instances of in place families of category Railing in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector of railing instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_in_place_railing_type_ids_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_in_place_railing_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_in_place_railing_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets type ids off all available in place families of category Railing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of element ids of in place railing types.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Railings">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Railings" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.Railings package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

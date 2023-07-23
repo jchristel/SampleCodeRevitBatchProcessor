@@ -1,0 +1,10 @@
+to build auto docs:
+
+- browse to: \SampleCodeRevitBatchProcessor
+- run: sphinx-apidoc -o docsource/duHast duHast/src/duHast/
+
+
+to build the html output from auto docs:
+
+- browse to \SampleCodeRevitBatchProcessor
+- run: sphinx-build -b html docsource/ docs/

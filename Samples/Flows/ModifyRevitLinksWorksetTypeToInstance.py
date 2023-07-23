@@ -21,20 +21,20 @@ Notes:
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2020  Jan Christel
+# BSD License
+# Copyright © 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
 
@@ -44,25 +44,25 @@ Notes:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
-from duHast.APISamples import RevitCommonAPI as com
-from duHast.APISamples import RevitWorksets as rWork
-from duHast.Utilities import Utility as util
-from duHast.Utilities import Result as res
-from duHast.APISamples import RevitTransaction as rTran
+from duHast.Revit.Common import file_io as rFileIO
+from duHast.Revit.Common import worksets as rWork
+from duHast.Utilities import utility as util
+from duHast.Utilities.Objects import result as res
+from duHast.Revit.Common import transaction as rTran
 
 # autodesk API
 import Autodesk.Revit.DB as rdb
@@ -71,27 +71,29 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = True
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
-     # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    # NOTE: these only make sense for batch Revit file processing mode.
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     #get default revit file name
-    revitFilePath_ = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
+    # get document from python shell
+    DOC = doc
 
 # -------------
 # my code here:
 # -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -99,7 +101,7 @@ def Output(message = ''):
     :type message: str, optional
     '''
 
-    if not debug_:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
@@ -125,7 +127,7 @@ def _getRevitLinkTypeDataByName(revitLinkName, doc):
             wsparam = p.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
             typeWorksetName = wsparam.AsValueString()
             break
-    return rWork.GetWorksetIdByName(doc, typeWorksetName)
+    return rWork.get_workset_id_by_name(doc, typeWorksetName)
 
 def _modifyRevitLinkInstanceData(revitLink, doc):
     '''
@@ -155,7 +157,7 @@ def _modifyRevitLinkInstanceData(revitLink, doc):
     #get the workset ot the revit link instance
     wsparam = revitLink.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
     instanceWorksetName = wsparam.AsValueString()
-    instanceWorksetId = rWork.GetWorksetIdByName(doc, instanceWorksetName)
+    instanceWorksetId = rWork.get_workset_id_by_name(doc, instanceWorksetName)
 
     lN = "unknown"
     #split revit link name at colon
@@ -165,21 +167,21 @@ def _modifyRevitLinkInstanceData(revitLink, doc):
         #get the link type data before extension is stripped from the name,
         # strip space of end of name too
         typeWorksetId = _getRevitLinkTypeDataByName(lN[0:-1], doc)
-        typeWorksetName = rWork.GetWorksetNameById(doc, typeWorksetId)
+        typeWorksetName = rWork.get_workset_name_by_id(doc, typeWorksetId)
         #revit will return a -1 if link is not loaded...
         if(typeWorksetId != rdb.ElementId.InvalidElementId):
-            linkInstanceNameEncoded = util.EncodeAscii(lN[0:-1])
+            linkInstanceNameEncoded = util.encode_ascii(lN[0:-1])
             if(instanceWorksetId != typeWorksetId):
-                Output('Moving '+ str(linkInstanceNameEncoded) + ' from ' + str(instanceWorksetName) + ' to ' + str(typeWorksetName))
+                output('Moving '+ str(linkInstanceNameEncoded) + ' from ' + str(instanceWorksetName) + ' to ' + str(typeWorksetName))
                 transaction = rdb.Transaction(doc, "Changing workset of " + linkInstanceNameEncoded)
-                returnValue = rTran.in_transaction(transaction,  rWork.GetActionChangeElementWorkset(revitLink, typeWorksetId))
-                Output(linkInstanceNameEncoded + ' ' + str(returnValue.status))
+                returnValue = rTran.in_transaction(transaction,  rWork.get_action_change_element_workset(revitLink, typeWorksetId))
+                output(linkInstanceNameEncoded + ' ' + str(returnValue.status))
             else:
                returnValue.message = str(linkInstanceNameEncoded + ' is already on default workset ' + str(typeWorksetName))
         else:
-          returnValue.message = str('Link is not loaded' + str(util.EncodeAscii(lN[0:-1])))
+          returnValue.message = str('Link is not loaded' + str(util.encode_ascii(lN[0:-1])))
     else:
-        returnValue.UpdateSep(False, 'Failed to split link name into 3 parts')
+        returnValue.update_sep(False, 'Failed to split link name into 3 parts')
     return returnValue
 
 def modifyRevitLinkInstance(doc):
@@ -208,9 +210,9 @@ def modifyRevitLinkInstance(doc):
     try:
         for p in rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkInstance):
             changeLink = _modifyRevitLinkInstanceData(p, doc)
-            returnValue.Update(changeLink)
+            returnValue.update(changeLink)
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to modify revit link instances with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to modify revit link instances with exception: ' + str(e))
     return returnValue
 
 # -------------
@@ -221,14 +223,14 @@ def modifyRevitLinkInstance(doc):
 rootPath_ = r'C:\temp'
 
 # modify revit links
-Output('Modifying Revit Link(s).... start')
-result_ = modifyRevitLinkInstance(doc)
-Output(str(result_.message) + ' ' + str(result_.status))
+output('Modifying Revit Link(s).... start')
+result_ = modifyRevitLinkInstance(DOC)
+output('{} [{}]'.format(result_.message, result_.status))
 
 #sync changes back to central
-if (doc.IsWorkshared and debug_ == False):
-    Output('Syncing to Central: start')
-    syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.status))
+if (DOC.IsWorkshared and DEBUG == False):
+    output('Syncing to Central: start')
+    syncing_ = rFileIO.sync_file (DOC)
+    output('Syncing to Central: finished [{}]'.format(syncing_.status))
 
-Output('Modifying Revit Link(s).... finished ')
+output('Modifying Revit Link(s).... finished ')

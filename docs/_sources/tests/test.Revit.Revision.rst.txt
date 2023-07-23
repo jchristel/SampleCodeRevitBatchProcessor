@@ -1,0 +1,109 @@
+test.Revit.Revision package
+===========================
+
+Submodules
+----------
+
+test.Revit.Revision.revision module
+-----------------------------------
+
+.. automodule:: test.Revit.Revision.revision
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Revision.revision\_change\_seq module
+------------------------------------------------
+
+.. automodule:: test.Revit.Revision.revision_change_seq
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Revision.revision\_create module
+-------------------------------------------
+
+.. automodule:: test.Revit.Revision.revision_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Revision.revision\_get\_issued module
+------------------------------------------------
+
+.. automodule:: test.Revit.Revision.revision_get_issued
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Revision.revision\_get\_last\_issued module
+------------------------------------------------------
+
+.. automodule:: test.Revit.Revision.revision_get_last_issued
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Revision.revision\_mark\_issued module
+-------------------------------------------------
+
+.. automodule:: test.Revit.Revision.revision_mark_issued
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Revision.revision\_mark\_issued\_id module
+-----------------------------------------------------
+
+.. automodule:: test.Revit.Revision.revision_mark_issued_id
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Revision.revision\_re\_order module
+----------------------------------------------
+
+.. automodule:: test.Revit.Revision.revision_re_order
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Revision.run\_test\_classes module
+---------------------------------------------
+
+.. automodule:: test.Revit.Revision.run_test_classes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Revision.sequence module
+-----------------------------------
+
+.. automodule:: test.Revit.Revision.sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Revision.sequence\_create\_alpha module
+--------------------------------------------------
+
+.. automodule:: test.Revit.Revision.sequence_create_alpha
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Revision.sequence\_get\_by\_name module
+--------------------------------------------------
+
+.. automodule:: test.Revit.Revision.sequence_get_by_name
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: test.Revit.Revision
+   :members:
+   :undoc-members:
+   :show-inheritance:

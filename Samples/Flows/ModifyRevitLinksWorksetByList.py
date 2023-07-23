@@ -22,20 +22,20 @@ Notes:
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2020  Jan Christel
+# BSD License
+# Copyright © 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
 
@@ -45,25 +45,25 @@ Notes:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
-from duHast.APISamples import RevitCommonAPI as com
-from duHast.APISamples import RevitWorksets as rWork
-from duHast.Utilities import Utility as util
-from duHast.Utilities import Result as res
-from duHast.APISamples import RevitTransaction as rTran
+from duHast.Revit.Common import file_io as rFileIO
+from duHast.Revit.Common import worksets as rWork
+from duHast.Utilities import utility as util
+from duHast.Utilities.Objects import result as res
+from duHast.Revit.Common import transaction as rTran
 
 # autodesk API
 import Autodesk.Revit.DB as rdb
@@ -72,27 +72,29 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = True
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     # get default revit file name
-    revitFilePath_ = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
+    # get document from python shell
+    DOC = doc
 
 # -------------
 # my code here:
 # -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -100,12 +102,12 @@ def Output(message = ''):
     :type message: str, optional
     '''
 
-    if not debug_:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-def _changeWorkset(doc, el, linkName, fromWorksetName, toWorksetName, toWorksetId, descriptor):
+def _changeWorkset(doc, el, link_name, from_workset_name, to_workset_name, to_workset_id, descriptor):
     '''
     Changes the workset of a link instance or link type
 
@@ -113,14 +115,14 @@ def _changeWorkset(doc, el, linkName, fromWorksetName, toWorksetName, toWorksetI
     :type doc: Autodesk.Revit.DB.Document
     :param el: The element of which the workset is to be changed.
     :type el: AutoDesk.Revit.DB.Element
-    :param linkName: The link name
-    :type linkName: str
-    :param fromWorksetName: The current workset name.
-    :type fromWorksetName: str
-    :param toWorksetName: The new workset name.
-    :type toWorksetName: str
-    :param toWorksetId: The new workset element id.
-    :type toWorksetId: AutoDesk.Revit.DB.ElementId
+    :param link_name: The link name
+    :type link_name: str
+    :param from_workset_name: The current workset name.
+    :type from_workset_name: str
+    :param to_workset_name: The new workset name.
+    :type to_workset_name: str
+    :param to_workset_id: The new workset element id.
+    :type to_workset_id: AutoDesk.Revit.DB.ElementId
     :param descriptor: Human readable description of the transaction.
     :type descriptor: str
 
@@ -139,22 +141,22 @@ def _changeWorkset(doc, el, linkName, fromWorksetName, toWorksetName, toWorksetI
     :rtype: :class:`.Result`
     '''
 
-    Output(str(descriptor) + ':: Moving '+ str(linkName) + ' from ' + str(fromWorksetName) + ' to ' + str(toWorksetName))
-    transaction = rdb.Transaction(doc, "Changing workset of " + linkName)
-    result = rTran.in_transaction(transaction,  rWork.GetActionChangeElementWorkset(el,toWorksetId))
-    Output(linkName + ' ' + str(result.status))
+    output('{} :: Moving {} from: {} to: {}'.format(descriptor, link_name, from_workset_name, to_workset_name))
+    transaction = rdb.Transaction(doc, "Changing workset of " + link_name)
+    result = rTran.in_transaction(transaction,  rWork.get_action_change_element_workset(el,to_workset_id))
+    output('{} [{}] '.format(link_name ,result.status))
     return result
 
-def _ModifyRevitLinkTypeWorksetName(doc, linkName, workSetName):
+def _ModifyRevitLinkTypeWorksetName(doc, link_name, workset_name):
     '''
     Modifies a revit link type workset.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param linkName: The link name.
-    :type linkName: str
-    :param workSetName: The target workset name.
-    :type workSetName: str
+    :param link_name: The link name.
+    :type link_name: str
+    :param workset_name: The target workset name.
+    :type workset_name: str
 
     :return: 
         Result class instance.
@@ -171,38 +173,38 @@ def _ModifyRevitLinkTypeWorksetName(doc, linkName, workSetName):
     :rtype: :class:`.Result`
     '''
     
-    returnValue = res.Result()
+    return_value = res.Result()
     # get the target workset id
-    targetWorksetId = rWork.GetWorksetIdByName(doc, workSetName)
+    target_workset_id = rWork.get_workset_id_by_name(doc, workset_name)
     # check if workset still exists
-    if(targetWorksetId != rdb.ElementId.InvalidElementId):
+    if(target_workset_id != rdb.ElementId.InvalidElementId):
         # loop over link types and try to find a match
         for p in rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkType):
-            linkTypeName = rdb.Element.Name.GetValue(p)
-            if (linkTypeName.startswith(linkName)):
-                wsparam = p.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-                typeWorksetName = wsparam.AsValueString()
-                if(typeWorksetName != workSetName):
+            link_type_name = rdb.Element.Name.GetValue(p)
+            if (link_type_name.startswith(link_name)):
+                workset_param = p.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+                type_workset_name = workset_param.AsValueString()
+                if(type_workset_name != workset_name):
                     # change the workset of the link type
-                    returnValue = _changeWorkset(doc, p, linkTypeName, typeWorksetName, workSetName, targetWorksetId,'Type')
+                    return_value = _changeWorkset(doc, p, link_type_name, type_workset_name, workset_name, target_workset_id,'Type')
                 else:
                     # no need to do anything
-                    returnValue.message = 'Type ' + str(util.EncodeAscii(linkTypeName)) + ' is already on default workset ' + str(workSetName)
+                    return_value.message = 'Type {} is already on default workset {}.'.format(link_type_name, workset_name)
                 break
     else:
-        returnValue.UpdateSep(False, 'Workset ' + workSetName + ' does no longer exist in file!')
-    return returnValue
+        return_value.update_sep(False, 'Workset {} does no longer exist in file!'.format(workset_name ))
+    return return_value
 
-def _ModifyRevitLinkInstanceWorkset(doc, linkName, workSetName):
+def _ModifyRevitLinkInstanceWorkset(doc, link_name, workset_name):
     '''
     Modifies a revit link instance workset.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param linkName: The link instance name.
-    :type linkName: str
-    :param workSetName: the target workset name.
-    :type workSetName: str
+    :param link_name: The link instance name.
+    :type link_name: str
+    :param workset_name: the target workset name.
+    :type workset_name: str
 
     :return: 
         Result class instance.
@@ -219,34 +221,34 @@ def _ModifyRevitLinkInstanceWorkset(doc, linkName, workSetName):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # get the target workset id
-    targetWorksetId = rWork.GetWorksetIdByName(doc, workSetName)
+    target_workset_id = rWork.get_workset_id_by_name(doc, workset_name)
     # check if workset still exists
-    if(targetWorksetId != rdb.ElementId.InvalidElementId):
+    if(target_workset_id != rdb.ElementId.InvalidElementId):
         # loop over instances and find match
         for p in rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkInstance):
             #get the workset
-            wsparam = p.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-            instanceWorksetName = wsparam.AsValueString()
-            lN = "unknown"
+            workset_param = p.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+            instance_workset_name = workset_param.AsValueString()
+            link_name = "unknown"
             # split revit link name at colon
-            linkTypeNameParts = p.Name.split(':')
-            if(len(linkTypeNameParts) == 3):
-                lN = linkTypeNameParts[0][0:-1]
-                linkInstanceNameEncoded = util.EncodeAscii(lN[0:-1])
-                if (lN.startswith(linkName)):
-                    if (instanceWorksetName != workSetName):
+            link_type_name_parts = p.Name.split(':')
+            if(len(link_type_name_parts) == 3):
+                link_name = link_type_name_parts[0][0:-1]
+                link_instance_name_encoded = util.encode_ascii(link_name[0:-1])
+                if (link_name.startswith(link_name)):
+                    if (instance_workset_name != workset_name):
                         # change the workset of the link instance
-                        returnValue = _changeWorkset(doc, p, linkInstanceNameEncoded, instanceWorksetName, workSetName, targetWorksetId, 'Instance')
+                        return_value = _changeWorkset(doc, p, link_instance_name_encoded, instance_workset_name, workset_name, target_workset_id, 'Instance')
                     else:
                         # no need to do anything
-                        returnValue.message = 'Instance ' + linkInstanceNameEncoded + ' is already on default workset ' + str(workSetName)
+                        return_value.message = 'Instance {} is already on default workset: '.format(link_instance_name_encoded ,workset_name)
             else:
-                returnValue.UpdateSep(False, 'Failed to split link name into 3 parts')
+                return_value.update_sep(False, 'Failed to split link name into 3 parts')
     else:
-        returnValue.UpdateSep(False, 'Workset '+ workSetName + ' does no longer exist in file!')
-    return returnValue
+        return_value.update_sep(False, 'Workset: {} does no longer exist in file!'.format(workset_name ))
+    return return_value
 
 # 
 def ModifyRevitLinkData(doc, revitFilePath, linkData):
@@ -285,14 +287,14 @@ def ModifyRevitLinkData(doc, revitFilePath, linkData):
                 # loop over link data and change link worksets as required
                 for linkName, newWorksetName in worksetData:
                     changeLinkInstance = _ModifyRevitLinkInstanceWorkset(doc, linkName, newWorksetName)
-                    returnValue.Update(changeLinkInstance)
+                    returnValue.update(changeLinkInstance)
                     changeLinkType = _ModifyRevitLinkTypeWorksetName(doc, linkName, newWorksetName)
-                    returnValue.Update(changeLinkType)
+                    returnValue.update(changeLinkType)
                 break
         if (match == False):
-            Output('Failed to find current Revit file link workset data!')
+            output('Failed to find current Revit file link workset data!')
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to modify revit link instances with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to modify revit link instances with exception: ' + str(e))
     return returnValue
 
 # -------------
@@ -319,19 +321,19 @@ defaultWorksets_ = [
 ]
 
 # modify revit links
-Output('Modifying Revit Link(s).... start')
+output('Modifying Revit Link(s).... start')
 result_ = ModifyRevitLinkData(
-    doc, 
-    revitFilePath_, 
+    DOC, 
+    REVIT_FILE_PATH, 
     defaultWorksets_
 )
 
-Output(str(result_.message) + str(result_.status))
+output('{} [{}]'.format(result_.message, result_.status))
 
 # sync changes back to central
-if (doc.IsWorkshared and debug_ == False):
-    Output('Syncing to Central: start')
-    syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.status))
+if (DOC.IsWorkshared and DEBUG == False):
+    output('Syncing to Central: start')
+    syncing_ = rFileIO.sync_file (DOC)
+    output('Syncing to Central: finished [{}]'.format(syncing_.status))
 
-Output('Modifying Revit Link(s).... finished ')
+output('Modifying Revit Link(s).... finished ')

@@ -1,0 +1,578 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.Categories package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
+    <link rel="next" title="duHast.Revit.Categories.Data package" href="duHast.Revit.Categories.Data.html" />
+    <link rel="prev" title="duHast.Revit.BuildingPads.Utility package" href="duHast.Revit.BuildingPads.Utility.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Categories package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Categories.Data.html" title="duHast.Revit.Categories.Data package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.BuildingPads.Utility.html" title="duHast.Revit.BuildingPads.Utility package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Categories.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-categories-package">
+<h1>duHast.Revit.Categories package<a class="headerlink" href="#duhast-revit-categories-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Categories.Data.html">duHast.Revit.Categories.Data package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Data.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Data.html#module-duHast.Revit.Categories.Data.category_data">duHast.Revit.Categories.Data.category_data module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Data.html#family-category-data-class">Family category data class.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Data.html#duHast.Revit.Categories.Data.category_data.CategoryData"><code class="docutils literal notranslate"><span class="pre">CategoryData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.html#duHast.Revit.Categories.Data.category_data.CategoryData.add_data"><code class="docutils literal notranslate"><span class="pre">CategoryData.add_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.html#duHast.Revit.Categories.Data.category_data.CategoryData.process"><code class="docutils literal notranslate"><span class="pre">CategoryData.process()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.html#duHast.Revit.Categories.Data.category_data.CategoryData.get_data"><code class="docutils literal notranslate"><span class="pre">CategoryData.get_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Data.html#module-duHast.Revit.Categories.Data.category_data_processor">duHast.Revit.Categories.Data.category_data_processor module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Data.html#family-category-data-processor-class">Family category data processor class.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Data.html#duHast.Revit.Categories.Data.category_data_processor.CategoryProcessor"><code class="docutils literal notranslate"><span class="pre">CategoryProcessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.html#duHast.Revit.Categories.Data.category_data_processor.CategoryProcessor.process"><code class="docutils literal notranslate"><span class="pre">CategoryProcessor.process()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Data.html#module-duHast.Revit.Categories.Data.category_data_purge_unused">duHast.Revit.Categories.Data.category_data_purge_unused module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Data.html#family-category-purge-unused-utilities">Family category purge unused utilities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Data.html#duHast.Revit.Categories.Data.category_data_purge_unused.purge_unused_sub_categories"><code class="docutils literal notranslate"><span class="pre">purge_unused_sub_categories()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Data.html#module-duHast.Revit.Categories.Data">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html">duHast.Revit.Categories.Reporting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html#module-duHast.Revit.Categories.Reporting.categories_report_header">duHast.Revit.Categories.Reporting.categories_report_header module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html#revit-category-report-headers">Revit category report headers.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html#module-duHast.Revit.Categories.Reporting.categories_report_utils">duHast.Revit.Categories.Reporting.categories_report_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html#revit-category-report-functions">Revit category report functions .</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html#duHast.Revit.Categories.Reporting.categories_report_utils.build_report_data_by_category"><code class="docutils literal notranslate"><span class="pre">build_report_data_by_category()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html#duHast.Revit.Categories.Reporting.categories_report_utils.get_report_data"><code class="docutils literal notranslate"><span class="pre">get_report_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html#module-duHast.Revit.Categories.Reporting">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Categories.Utility.html">duHast.Revit.Categories.Utility package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#module-duHast.Revit.Categories.Utility.category_properties_get_utils">duHast.Revit.Categories.Utility.category_properties_get_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#revit-sub-category-property-get-functions">Revit sub-category property get functions .</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_graphic_style_ids"><code class="docutils literal notranslate"><span class="pre">get_category_graphic_style_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_material"><code class="docutils literal notranslate"><span class="pre">get_category_material()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_line_weights"><code class="docutils literal notranslate"><span class="pre">get_category_line_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_colour"><code class="docutils literal notranslate"><span class="pre">get_category_colour()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_properties_get_utils.get_category_properties"><code class="docutils literal notranslate"><span class="pre">get_category_properties()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_properties_get_utils.get_saved_category_property_by_name"><code class="docutils literal notranslate"><span class="pre">get_saved_category_property_by_name()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#module-duHast.Revit.Categories.Utility.category_properties_set_utils">duHast.Revit.Categories.Utility.category_properties_set_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#revit-sub-category-property-set-functions">Revit sub-category property set functions .</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_material"><code class="docutils literal notranslate"><span class="pre">set_category_material()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_line_pattern"><code class="docutils literal notranslate"><span class="pre">set_category_line_pattern()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_line_weights"><code class="docutils literal notranslate"><span class="pre">set_category_line_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_colour"><code class="docutils literal notranslate"><span class="pre">set_category_colour()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_properties_set_utils.set_category_properties"><code class="docutils literal notranslate"><span class="pre">set_category_properties()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#module-duHast.Revit.Categories.Utility.category_property_names">duHast.Revit.Categories.Utility.category_property_names module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#revit-category-property-names">Revit category property names.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_MATERIAL_NAME"><code class="docutils literal notranslate"><span class="pre">PROPERTY_MATERIAL_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_MATERIAL_NAME_VALUE_DEFAULT"><code class="docutils literal notranslate"><span class="pre">PROPERTY_MATERIAL_NAME_VALUE_DEFAULT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_MATERIAL_ID"><code class="docutils literal notranslate"><span class="pre">PROPERTY_MATERIAL_ID</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_WEIGHT_PROJECTION_NAME"><code class="docutils literal notranslate"><span class="pre">PROPERTY_LINE_WEIGHT_PROJECTION_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_WEIGHT_CUT_NAME"><code class="docutils literal notranslate"><span class="pre">PROPERTY_LINE_WEIGHT_CUT_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_COLOUR_RED_NAME"><code class="docutils literal notranslate"><span class="pre">PROPERTY_LINE_COLOUR_RED_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_COLOUR_GREEN_NAME"><code class="docutils literal notranslate"><span class="pre">PROPERTY_LINE_COLOUR_GREEN_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_property_names.PROPERTY_LINE_COLOUR_BLUE_NAME"><code class="docutils literal notranslate"><span class="pre">PROPERTY_LINE_COLOUR_BLUE_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_property_names.CATEGORY_GRAPHIC_STYLE_PROJECTION"><code class="docutils literal notranslate"><span class="pre">CATEGORY_GRAPHIC_STYLE_PROJECTION</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_property_names.CATEGORY_GRAPHIC_STYLE_CUT"><code class="docutils literal notranslate"><span class="pre">CATEGORY_GRAPHIC_STYLE_CUT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.category_property_names.CATEGORY_GRAPHIC_STYLE_3D"><code class="docutils literal notranslate"><span class="pre">CATEGORY_GRAPHIC_STYLE_3D</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#module-duHast.Revit.Categories.Utility.elements_by_category_utils">duHast.Revit.Categories.Utility.elements_by_category_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#revit-elements-to-category-helper-functions">Revit elements to category helper functions.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.elements_by_category_utils.sort_elements_by_category"><code class="docutils literal notranslate"><span class="pre">sort_elements_by_category()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.elements_by_category_utils.sort_geometry_elements_by_category"><code class="docutils literal notranslate"><span class="pre">sort_geometry_elements_by_category()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.elements_by_category_utils.get_elements_by_category"><code class="docutils literal notranslate"><span class="pre">get_elements_by_category()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.elements_by_category_utils.move_elements_to_category"><code class="docutils literal notranslate"><span class="pre">move_elements_to_category()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.elements_by_category_utils.move_elements_from_sub_category_to_sub_category"><code class="docutils literal notranslate"><span class="pre">move_elements_from_sub_category_to_sub_category()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#duHast.Revit.Categories.Utility.elements_by_category_utils.get_used_category_ids"><code class="docutils literal notranslate"><span class="pre">get_used_category_ids()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.Utility.html#module-duHast.Revit.Categories.Utility">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Categories.categories">
+<span id="duhast-revit-categories-categories-module"></span><h2>duHast.Revit.Categories.categories module<a class="headerlink" href="#module-duHast.Revit.Categories.categories" title="Permalink to this heading">¶</a></h2>
+<section id="revit-category-helper-functions">
+<h3>Revit category helper functions.<a class="headerlink" href="#revit-category-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.CAT_RENAMING">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories.</span></span><span class="sig-name descname"><span class="pre">CAT_RENAMING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'Clearance</span> <span class="pre">Zones':</span> <span class="pre">'AMAZING'}</span></em><a class="headerlink" href="#duHast.Revit.Categories.categories.CAT_RENAMING" title="Permalink to this definition">¶</a></dt>
+<dd><p>subcategory renaming sampled dictionary
+key is the current subcategory name, value is the new subcategory name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.ELEMENTS_PARAS_SUB">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories.</span></span><span class="sig-name descname"><span class="pre">ELEMENTS_PARAS_SUB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE_MINUS_ANALYTICAL,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.FAMILY_ELEM_SUBCATEGORY,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.CLINE_SUBCATEGORY]</span></em><a class="headerlink" href="#duHast.Revit.Categories.categories.ELEMENTS_PARAS_SUB" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of built in parameters attached to family elements containing subcategory ids</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.get_main_sub_categories">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories.</span></span><span class="sig-name descname"><span class="pre">get_main_sub_categories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.get_main_sub_categories" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Returns all subcategories of the family category in a dictionary where        key: sub category name</dt><dd><p>value: sub category</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dictionary {str: Autodesk.Revit.DB.Category}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.does_main_sub_category_exists">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories.</span></span><span class="sig-name descname"><span class="pre">does_main_sub_category_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_cat_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.does_main_sub_category_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a given subcategory exists in the family.</p>
+<p>Note: Only subcategory directly belonging to the family category will be checked for a match.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>sub_cat_name</strong> (<em>str</em>) – The name of the subcategory to be checked against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if subcategory exists in family, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.delete_main_sub_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories.</span></span><span class="sig-name descname"><span class="pre">delete_main_sub_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_cat_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.delete_main_sub_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a given subcategory from the family.</p>
+<p>Note: Only subcategory directly belonging to the family category will be checked for a match.</p>
+<p>::param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:param sub_cat_name: The name of the subcategory to be deleted.
+:type sub_cat_name: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if subcategory exists in family and was deleted successfully, otherwise False</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.get_family_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories.</span></span><span class="sig-name descname"><span class="pre">get_family_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.get_family_category" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Gets the family category in a dictionary where        key: category name</dt><dd><p>value: category</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dictionary {str: Autodesk.Revit.DB.Category}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.get_other_sub_categories">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories.</span></span><span class="sig-name descname"><span class="pre">get_other_sub_categories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.get_other_sub_categories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all family subcategories which do not belong to the actual family category.</p>
+<p>key: category name
+value: dictionary : key sub cat name, value: subcategory</p>
+<p>Note: custom subcategories have an Id greater 0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dictionary {str: {str:Autodesk.Revit.DB.Category} }</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.get_other_custom_sub_categories">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories.</span></span><span class="sig-name descname"><span class="pre">get_other_custom_sub_categories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.get_other_custom_sub_categories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all family custom subcategories which do not belong to the actual family category.
+Custom categories have an Id greater then 0.</p>
+<p>key: category name
+value: dictionary : key sub cat name, value: subcategory</p>
+<p>Note: custom subcategories have an Id greater 0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dictionary {str: {str:Autodesk.Revit.DB.Category} }</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.get_other_categories">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories.</span></span><span class="sig-name descname"><span class="pre">get_other_categories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.get_other_categories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all family pre defined categories which do not belong to the actual family category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of categories.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.Category]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.get_category_by_built_in_def_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories.</span></span><span class="sig-name descname"><span class="pre">get_category_by_built_in_def_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_defs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.get_category_by_built_in_def_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns categories by their built in definition</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>built_in_defs</strong> (<em>[</em><em>Autodesk.Revit.DB.BuiltInCategory</em><em>]</em>) – list of BuiltInCategory Enumeration values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of categories</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.Category]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.set_family_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories.</span></span><span class="sig-name descname"><span class="pre">set_family_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_category_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.set_family_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes the family category to new one specified by name. (this will not re-instate any custom sub categories created under the new family category)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>new_category_name</strong> (<em>str</em>) – The name of the new family category.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True only if the category was changed successfully. Any other case False! (That includes situations when the family is already of the new category)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Categories.change_family_category">
+<span id="duhast-revit-categories-change-family-category-module"></span><h2>duHast.Revit.Categories.change_family_category module<a class="headerlink" href="#module-duHast.Revit.Categories.change_family_category" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.change_family_category.change_family_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.change_family_category.</span></span><span class="sig-name descname"><span class="pre">change_family_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_category_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.change_family_category.change_family_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes the current family category to the new one specified.
+Revit’s default behavior when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories        to the new family category.
+This function will also re-create any user created subcategories under the new category and assign elements to it to match the subcategory they where on before         the category change.
+:param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:param new_category_name: The new family category
+:type new_category_name: str
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- result.status. True if all custom subcategories where re-created under the new family category and elements where moved to those subcategories, otherwise False.
+- result.message will confirm successful creation of subcategories and element move.
+- result.result empty list
+On exception:
+- result.status (bool) will be False.
+- result.message will contain generic exception message.
+- result.result will be empty</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Categories.family_sub_categories">
+<span id="duhast-revit-categories-family-sub-categories-module"></span><h2>duHast.Revit.Categories.family_sub_categories module<a class="headerlink" href="#module-duHast.Revit.Categories.family_sub_categories" title="Permalink to this heading">¶</a></h2>
+<section id="revit-sub-category-helper-functions">
+<h3>Revit sub-category helper functions.<a class="headerlink" href="#revit-sub-category-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.family_sub_categories.create_new_sub_category_to_family_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.family_sub_categories.</span></span><span class="sig-name descname"><span class="pre">create_new_sub_category_to_family_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_sub_category_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.family_sub_categories.create_new_sub_category_to_family_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new subcategory to the family category and returns it.</p>
+<p>Note: if a subcategory with the name provided already exist it will be returned instead of trying to create another one with the same name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>new_sub_category_name</strong> (<em>str</em>) – The new subcategory name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new subcategory. Exception “The name ‘xys’ is already in use” if subcategory with the same name is already in file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A category. (or str if exception occurred)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.family_sub_categories.create_new_category_from_saved_properties">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.family_sub_categories.</span></span><span class="sig-name descname"><span class="pre">create_new_category_from_saved_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_cat_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_cat_props</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_missing_cut_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.family_sub_categories.create_new_category_from_saved_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new category and applies properties stored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>new_cat_name</strong> (<em>str</em>) – The new sub category name.</p></li>
+<li><p><strong>saved_cat_props</strong> (<em>list</em><em> of </em><em>dictionaries in format as per GetCategoryProperties</em><em>(</em><em>cat</em><em>) </em><em>method.</em>) – Dictionary containing subcategory properties.</p></li>
+<li><p><strong>ignore_missing_cut_style</strong> (<em>bool</em>) – If true will not flag an exception if applying styles fails on missing cut style.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- result.status. True if category was created or already existed in file, otherwise False.
+- result.message will contain the name of the category created.
+- result.result returns new category, if category already exists in file it will return that
+On exception:
+- result.status (bool) will be False.
+- result.message will contain generic exception message.
+- result.result will be empty</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.family_sub_categories.create_new_category_and_transfer_properties">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.family_sub_categories.</span></span><span class="sig-name descname"><span class="pre">create_new_category_and_transfer_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_cat_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existing_cat_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.family_sub_categories.create_new_category_and_transfer_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new subcategory and transfer properties from existing subcategory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>new_cat_name</strong> (<em>str</em>) – The new sub category name.</p></li>
+<li><p><strong>existing_cat_name</strong> (<em>str</em>) – The existing subcategory name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- result.status. True if category was created or already existed in file, otherwise False.
+- result.message will contain the name of the category created.
+- result.result returns new category, if category already exists in file it will return that
+On exception:
+- result.status (bool) will be False.
+- result.message will contain generic exception message.
+- result.result will be empty</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.family_sub_categories.rename_sub_category">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.family_sub_categories.</span></span><span class="sig-name descname"><span class="pre">rename_sub_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_sub_cat_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_sub_cat_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.family_sub_categories.rename_sub_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renames a family custom subcategory.
+Note: Only subcategory directly belonging to the family category will be checked for a match.
+- Revit API does currently not allow to change a subcategory name. This method instead:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>duplicates the old subcategory with the new name</p></li>
+<li><p>moves all elements belonging to the old subcategory to the new subcategory</p></li>
+<li><p>deletes the old subcategory</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>If the new subcategory already exists in the file:</dt><dd><ul>
+<li><p>moves all elements belonging to the old subcategory to the new subcategory</p></li>
+<li><p>deletes the old subcategory</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>old_sub_cat_name</strong> (<em>str</em>) – The subcategory name to be re-named</p></li>
+<li><p><strong>new_sub_cat_name</strong> (<em>str</em>) – The new subcategory name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- result.status. True if subcategory was renamed successfully , otherwise False.
+- result.message will contain rename process messages.
+- result.result empty list
+On exception:
+- result.status (bool) will be False.
+- result.message will contain generic exception message.
+- result.result will be empty</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Categories">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Categories" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.Categories package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

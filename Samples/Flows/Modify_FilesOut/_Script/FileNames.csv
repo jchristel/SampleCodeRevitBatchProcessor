@@ -1,0 +1,8 @@
+Sample File One Name,Number One[,A,] - SAMPLE,.rvt,DOC_NUMBER_ONE_RVT,SAMPLE ONE - REVIT FILE
+Sample File One Name,Number One[,A,] - SAMPLE,.nwc,DOC_NUMBER_ONE_NWC,SAMPLE ONE - NAVIS CACHE FILE
+Sample File One Name,Number One[,A,] - SAMPLE,.ifc,DOC_NUMBER_ONE_IFC,SAMPLE ONE - IFC FILE
+Sample Revit File Two Name,Number Two[,04,] - SAMPLE,.rvt,DOC_NUMBER_TWO_RVT,SAMPLE TWO - REVIT FILE
+Sample Revit File Two Name,Number Two[,04,] - SAMPLE,.rvt,DOC_NUMBER_TWO_NWC,SAMPLE TWO - NAVIS CACHE FILE
+Sample Revit File Two Name,Number Two[,04,] - SAMPLE,.rvt,DOC_NUMBER_TWO_IFC,SAMPLE TWO - IFC FILE
+Sample Revit File Two Name,Number Three[,04,] - SAMPLE,.rvt,DOC_NUMBER_THREE_NWC,SAMPLE THREE - NAVIS CACHE FILE
+Sample Revit File Two Name,Number Three[,04,] - SAMPLE,.rvt,DOC_NUMBER_THREE_IFC,SAMPLE THREE - IFC FILE

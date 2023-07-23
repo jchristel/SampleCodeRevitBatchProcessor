@@ -1,0 +1,352 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Files Out &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="up" title="Flows" href="index.html" />
+    <link rel="prev" title="FilesIn" href="flows.FilesIn.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Files Out</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="flows.FilesIn.html" title="FilesIn" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Flows</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="flows.AddRevision.html">Add Revision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flows.MileStone.html">Milestone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flows.ModelMaintenance.html">Model Maintenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flows.FilesIn.html">FilesIn</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Files Out</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#summary">Summary</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#actions-overview">Actions Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setup">Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/flows/flows.FilesOut.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="files-out">
+<h1>Files Out<a class="headerlink" href="#files-out" title="Permalink to this heading">¶</a></h1>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
+<p>The ‘File Out’ flow is aimed at model issue processes requiring:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Revit models to be issued and:</dt><dd><ul>
+<li><p>Certain views / sheets are removed from the model prior issue.</p></li>
+<li><p>A purge unused elements is under taken.</p></li>
+<li><p>Worksets of levels / grids / scope boxes / reference planes are checked and if required changed to the default value</p></li>
+<li><p>Revision information is appended to the revit file name.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>NavisWorks:</dt><dd><ul>
+<li><p>Cache files are generated either from a number of 3D views or the entire model</p></li>
+<li><p>Cache files are named following a given naming convention.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>IFC:</dt><dd><ul>
+<li><p>IFC files are generated either from a number of 3D views or the entire model</p></li>
+<li><p>IFC files are named following a given naming convention.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>A meta data file for document exchange platforms</p></li>
+</ul>
+<section id="actions-overview">
+<h3>Actions Overview<a class="headerlink" href="#actions-overview" title="Permalink to this heading">¶</a></h3>
+<p>This flow is run through a powershell script which executes:</p>
+<ol class="arabic simple">
+<li><p>A pre-processing script allowing the user to select which files to issue out.</p></li>
+<li><dl class="simple">
+<dt>STEP 1: No 3 off parallel running sessions of Revit Batch Processor which:</dt><dd><ol class="arabic simple">
+<li><dl class="simple">
+<dt>Create a detached copy of the Revit file(s) in a given location. (Revit files are opened with all worksets closed)</dt><dd><ol class="arabic simple">
+<li><p>Saves file under a new file name includes Revision information</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><p>Delete views as specified per model.</p></li>
+<li><p>Delete any links from the model ( That is so that the second step can open this model with all worksets open for exports to NWC and IFC)</p></li>
+<li><p>Workset checking and, if required adjusting, of of worksets of levels / grids / scope boxes / reference planes</p></li>
+<li><p>Create a text file for each new revit file containing meta data for document exchange platform</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><p>A STEP 2 pre-processing script creating task files based on revit files created in STEP 1.</p></li>
+<li><dl class="simple">
+<dt>STEP 2: No 3 off parallel running sessions of Revit Batch Processor which:</dt><dd><ol class="arabic simple">
+<li><p>Create detached copies of Revit files created in STEP 1</p></li>
+<li><p>Delete all views but the ones required to export.</p></li>
+<li><p>Exports view or entire model to navisworks cache file ( including revision information in file name )</p></li>
+<li><p>Create a text file for navisworks cache file containing meta data for document exchange platform</p></li>
+<li><p>Copies navisworks cache file into separate /BIM360 folder and strip revision information from file name. (This file can be used on BIM360 to directly overwrite previous versions)</p></li>
+<li><p>Exports view or entire model to ifc file ( including revision information in file name )</p></li>
+<li><p>Create a text file for ifc file containing meta data for document exchange platform</p></li>
+<li><p>Optimizes ifc file using Solibri IFC optimizer ( separate installation required )</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>A post process which:</dt><dd><ol class="arabic simple">
+<li><p>Combines meta data text files of all exports into single meta data file.</p></li>
+<li><p>Updates file list with latest revision information.</p></li>
+<li><p>Checks revit batch processor log files for any exceptions</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this heading">¶</a></h3>
+<p>This chapter describes the flow directory setup.</p>
+<section id="directory-structure">
+<h4>Directory structure<a class="headerlink" href="#directory-structure" title="Permalink to this heading">¶</a></h4>
+<p>This flow expects the following directory structure to be in place:</p>
+<p>├───_docs</p>
+<p>├───_LogMarker</p>
+<p>├───_Output</p>
+<p>├───_sampleFiles</p>
+<p>├───_Script</p>
+<p>│   └───logs</p>
+<p>│   └───utils</p>
+<p>├───_SessionData</p>
+<p>├───_settings</p>
+<p>└───_TaskList</p>
+</section>
+<section id="docs">
+<h4>_docs<a class="headerlink" href="#docs" title="Permalink to this heading">¶</a></h4>
+<p>Directory containing flow related documentation.</p>
+</section>
+<section id="logmarker">
+<h4>_LogMarker<a class="headerlink" href="#logmarker" title="Permalink to this heading">¶</a></h4>
+<p>Directory containing log marker files. Those will be deleted at the end of each flow run.</p>
+</section>
+<section id="output">
+<h4>_Output<a class="headerlink" href="#output" title="Permalink to this heading">¶</a></h4>
+<p>This folder contains a number of temp files:</p>
+<ul class="simple">
+<li><p>Step 2 creates temp revit files which are saved in this directory and deleted at the end of the flow.</p></li>
+<li><p>Pre processing script for STEP 2 writes task files for STEP 2 into this directory as well.</p></li>
+</ul>
+</section>
+<section id="samplefiles">
+<h4>_sampleFiles<a class="headerlink" href="#samplefiles" title="Permalink to this heading">¶</a></h4>
+<p>Any sample files provided.</p>
+</section>
+<section id="script">
+<h4>_Script<a class="headerlink" href="#script" title="Permalink to this heading">¶</a></h4>
+<p>The python and powershell scripts of the flow:</p>
+<ul>
+<li><p>ModifyFilesOut_StepOne.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the first task script executed by each Revit Batch Processor session</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>ModifyFilesOut_StepTwo</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the second task script executed by each Revit Batch Processor session</p></li>
+</ul>
+</div></blockquote>
+<ul>
+<li><p>Post_FilesOut.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the post script executed by the flow after all Revit Batch Processor sessions of STEP 1 and STEP 2 have finished</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Post_KillWSM.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the post process script executed by each Revit Batch Processor session</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Pre_MarkerFiles.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the pre process script executed by the second and third Revit Batch Processor session</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Pre_StepOne_MarkerFilesAndModelOutDir.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the pre process script executed by the first Revit Batch Processor session of STEP 1 only</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Pre_StepTwo_FilesOut.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the pre process script executed by the first Revit Batch Processor session of STEP 2 only</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>settings.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a module containing global variables / settings for this flow</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>startAddRevision.ps1</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>The powershell script executing:</dt><dd><ul>
+<li><p>pre Revit Batch Processor scripts</p></li>
+<li><p>concurrent Revit Batch Processor sessions STEP 1</p></li>
+<li><p>concurrent Revit Batch Processor sessions STEP 2</p></li>
+<li><p>post Revit Batch Processor scripts</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>FileNames.csv</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>Revit project meta data file:</dt><dd><ul>
+<li><p>This is a comma separated text files which contains meta data of the revit files to be processed in the following format:</p></li>
+<li><p>header row: none</p></li>
+<li><p>column 1: current file name (Revit) or view name for IFC / NWC exports</p></li>
+<li><p>column 2: Export file name (including revision separator prefix)</p></li>
+<li><p>column 3: revision</p></li>
+<li><p>column 4: revision suffix and end of file name</p></li>
+<li><p>column 5: file extension in format .extension</p></li>
+<li><p>column 6: meta data document number</p></li>
+<li><p>column 7: meta data document name</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="script-logs">
+<h4>_Script/logs<a class="headerlink" href="#script-logs" title="Permalink to this heading">¶</a></h4>
+<p>Log files which cover script outputs outside of Revit Batch Processor log files</p>
+</section>
+<section id="settings">
+<h4>_settings<a class="headerlink" href="#settings" title="Permalink to this heading">¶</a></h4>
+<p>Location of Revit Batch Processor settings files.</p>
+<p>For this flow there are 6 settings files in this folder:</p>
+<ul class="simple">
+<li><p>3 for STEP 1 - one for each session of Revit Batch Processor (OneA, OneB, OneC)</p></li>
+<li><p>3 for STEP 2 - one for each session of Revit Batch Processor. (TwoA, TwoB, TwoC)</p></li>
+</ul>
+</section>
+<section id="sessiondata">
+<h4>_SessionData<a class="headerlink" href="#sessiondata" title="Permalink to this heading">¶</a></h4>
+<p>Directory containing Revit Batch Processor session data files. (This sample flow has session data files disabled.)</p>
+</section>
+<section id="tasklist">
+<h4>_TaskList<a class="headerlink" href="#tasklist" title="Permalink to this heading">¶</a></h4>
+<p>Location of task list files processed by Revit Batch Processor.</p>
+<p>For this flow there are 3 task list files in this folder, one for each session of Revit Batch Processor.</p>
+</section>
+</section>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="index.html" accesskey="U">Flows</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                Files Out
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

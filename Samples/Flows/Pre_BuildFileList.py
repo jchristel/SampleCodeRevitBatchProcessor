@@ -1,4 +1,4 @@
-﻿'''
+﻿"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Write files to task lists.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -23,29 +23,29 @@ This script can be used when:
     - started as a pre - process script in the first session of Revit Batch Processor 
 
 
-'''
+"""
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2020  Jan Christel
+# BSD License
+# Copyright © 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
 
@@ -56,60 +56,65 @@ This script can be used when:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r"C:\temp"
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r"C:\temp"
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
-from duHast.UI import FileList as fl
+from duHast.UI import file_list as fl
 
-# flag whether this runs in debug or not 
-debug_ = False
+# flag whether this runs in debug or not
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import script_util
 
 # -------------
 # my code here:
 # -------------
 
+
 # output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
-    '''
+def output(message=""):
+    """
     Output messages either to batch processor (debug = False) or console (debug = True)
 
     :param message: the message, defaults to ''
     :type message: str, optional
-    '''
-    if not debug_:
+    """
+    if not DEBUG:
         script_util.Output(str(message))
     else:
-        print (message)
+        print(message)
+
 
 # -------------
 # main:
 # -------------
 
 # directory containing files
-rootPath_ = r''
+ROOT_PATH = r""
 # store task files lists here
-rootPathExport_ = r''
+ROOT_PATH_EXPORT = r""
 # number of task list files to be written out
-taskFilesNumber_ = 1
+TASK_FILES_NUMBER = 1
 
 # get file data
-Output('Writing file Data.... start')
+output("Writing file Data.... start")
 try:
-    result_ = fl.WriteFileList(rootPath_ ,'.rvt', rootPathExport_, taskFilesNumber_, fl.getRevitFiles)
-    Output (result_.message)
-    Output('Writing file Data.... status: ' + str(result_.status))
+    RESULT = fl.write_file_list(
+        ROOT_PATH, ".rvt", ROOT_PATH_EXPORT, TASK_FILES_NUMBER, fl.get_revit_files
+    )
+    output(RESULT.message)
+    output("Writing file Data.... status: [{}]".format(RESULT.status))
 except Exception as e:
-    Output ('Failed to write file list with exception: ' + str(e))
+    output("Failed to write file list with exception: {}".format(e))

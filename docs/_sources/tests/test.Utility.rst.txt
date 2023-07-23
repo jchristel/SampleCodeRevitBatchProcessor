@@ -1,0 +1,237 @@
+test.Utility package
+====================
+
+Submodules
+----------
+
+test.Utility.file\_append\_files module
+---------------------------------------
+
+.. automodule:: test.Utility.file_append_files
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_combine\_files module
+----------------------------------------
+
+.. automodule:: test.Utility.file_combine_files
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_combine\_files\_csv\_independent\_headers module
+-------------------------------------------------------------------
+
+.. automodule:: test.Utility.file_combine_files_csv_independent_headers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_combine\_files\_tab\_independent\_headers module
+-------------------------------------------------------------------
+
+.. automodule:: test.Utility.file_combine_files_tab_independent_headers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_copy module
+------------------------------
+
+.. automodule:: test.Utility.file_copy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_csv\_read module
+-----------------------------------
+
+.. automodule:: test.Utility.file_csv_read
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_csv\_read\_first\_row module
+-----------------------------------------------
+
+.. automodule:: test.Utility.file_csv_read_first_row
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_csv\_write\_report module
+--------------------------------------------
+
+.. automodule:: test.Utility.file_csv_write_report
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_delete module
+--------------------------------
+
+.. automodule:: test.Utility.file_delete
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_exist module
+-------------------------------
+
+.. automodule:: test.Utility.file_exist
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_get\_directory\_path module
+----------------------------------------------
+
+.. automodule:: test.Utility.file_get_directory_path
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_json\_read\_data module
+------------------------------------------
+
+.. automodule:: test.Utility.file_json_read_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_json\_write\_data module
+-------------------------------------------
+
+.. automodule:: test.Utility.file_json_write_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_name\_without\_extension module
+--------------------------------------------------
+
+.. automodule:: test.Utility.file_name_without_extension
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_rename module
+--------------------------------
+
+.. automodule:: test.Utility.file_rename
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.file\_size module
+------------------------------
+
+.. automodule:: test.Utility.file_size
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.files\_get module
+------------------------------
+
+.. automodule:: test.Utility.files_get
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.get\_date\_stamp\_directory module
+-----------------------------------------------
+
+.. automodule:: test.Utility.get_date_stamp_directory
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.get\_date\_stamp\_file module
+------------------------------------------
+
+.. automodule:: test.Utility.get_date_stamp_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.run\_test\_classes module
+--------------------------------------
+
+.. automodule:: test.Utility.run_test_classes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.template module
+----------------------------
+
+.. automodule:: test.Utility.template
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.util\_encode\_ascii module
+---------------------------------------
+
+.. automodule:: test.Utility.util_encode_ascii
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.util\_flatten\_dictionary module
+---------------------------------------------
+
+.. automodule:: test.Utility.util_flatten_dictionary
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.util\_get\_first module
+------------------------------------
+
+.. automodule:: test.Utility.util_get_first
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.util\_get\_index\_of module
+----------------------------------------
+
+.. automodule:: test.Utility.util_get_index_of
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.util\_pad\_single\_digit\_string module
+----------------------------------------------------
+
+.. automodule:: test.Utility.util_pad_single_digit_string
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.util\_remove\_items module
+---------------------------------------
+
+.. automodule:: test.Utility.util_remove_items
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Utility.util\_string\_to\_bool module
+------------------------------------------
+
+.. automodule:: test.Utility.util_string_to_bool
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: test.Utility
+   :members:
+   :undoc-members:
+   :show-inheritance:

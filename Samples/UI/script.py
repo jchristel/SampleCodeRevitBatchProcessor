@@ -10,20 +10,20 @@ The entry point for the file selection GUI.
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2020  Jan Christel
+# BSD License
+# Copyright © 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
 
@@ -31,18 +31,18 @@ import sys, getopt, os
 
 
 # import file item class
-from duHast.UI import FileItem as fi
+from duHast.UI import file_item as fi
 # import file list methods
-from duHast.UI import FileList as fl
+from duHast.UI import file_list as fl
 # import UI class
 import UIFileSelect as UIFs
 # import settings class
-from duHast.UI import FileSelectSettings as set
+from duHast.UI import file_select_settings as set
 # import workloader utils
-from duHast.UI import Workloader as wl
+from duHast.UI import workloader as wl
 
 # import bim360 utils from Library
-from duHast.APISamples import UtilBIM360 as ub360
+from duHast.Revit.BIM360 import util_bim_360 as ub360
 
 def main(argv):
     '''
@@ -60,9 +60,9 @@ def main(argv):
         # check whether this is a BIM360 project or file system and assign
         # data retriever method accordingly
         if(isBIM360File(revitFiles)):
-            getData = fl.BucketToTaskListBIM360
+            getData = fl.bucket_to_task_list_bim_360
         else:
-            getData = fl.BucketToTaskListFileSystem
+            getData = fl.bucket_to_task_list_file_system
         # check if anything came back
         if(len(revitFiles) > 0):
             # lets show the window
@@ -70,12 +70,12 @@ def main(argv):
             uiResult = ui.ShowDialog()
             if(uiResult):
                 # build bucket list
-                buckets = wl.DistributeWorkload(settings.outputFileNum, ui.selectedFiles, fl.getFileSize)
+                buckets = wl.distribute_workload(settings.output_file_num, ui.selectedFiles, fl.get_file_size)
                 # write out file lists
                 counter = 0
                 for bucket in buckets:
-                    fileName =  os.path.join(settings.outputDir, 'Tasklist_' + str(counter)+ '.txt')
-                    statusWrite = fl.writeRevitTaskFile(fileName, bucket, getData)
+                    fileName =  os.path.join(settings.output_dir, 'Tasklist_' + str(counter)+ '.txt')
+                    statusWrite = fl.write_revit_task_file(fileName, bucket, getData)
                     print (statusWrite.message)
                     counter += 1
                 print('Finished writing out task files')
@@ -214,21 +214,21 @@ def GetFileData(settings):
     try:
         if(os.path.isfile(settings.inputDir)):
             # got a text file...extract BIM 360 data
-            revitFiles = ub360.GetBIM360Data(settings.inputDir)
+            revitFiles = ub360.get_bim_360_file_data(settings.inputDir)
         elif(os.path.isdir(settings.inputDir)):
             # check a to search for files is to include sub dirs
             revitFilesUnfiltered = []
             if(settings.inclSubDirs):
                 # get revit files in input dir and subdirs
-                revitFilesUnfiltered = fl.getRevitFilesInclSubDirs(settings.inputDir, settings.revitFileExtension)
+                revitFilesUnfiltered = fl.get_revit_files_incl_sub_dirs(settings.inputDir, settings.revitFileExtension)
             else:
                 # get revit files in input dir
-                revitFilesUnfiltered = fl.getRevitFiles(settings.inputDir, settings.revitFileExtension)
+                revitFilesUnfiltered = fl.get_revit_files(settings.inputDir, settings.revitFileExtension)
             # check for max path violations!
             # The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters.
             for revitFile in revitFilesUnfiltered:
                 # remove any back up files from selection
-                if(fl.isBackUpFile(os.path.basename(revitFile.name)) == False):
+                if(fl.is_back_up_file(os.path.basename(revitFile.name)) == False):
                     if(len(os.path.dirname(os.path.abspath(revitFile.name))) < 248  and len(revitFile.name) < 260 ):
                         revitFiles.append(revitFile)
                     else:

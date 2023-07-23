@@ -1,0 +1,703 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>duHast.Revit.SharedParameters package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
+    <link rel="next" title="duHast.Revit.SharedParameters.Reporting package" href="duHast.Revit.SharedParameters.Reporting.html" />
+    <link rel="prev" title="duHast.Revit.Rooms.Reporting package" href="duHast.Revit.Rooms.Reporting.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.SharedParameters package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="duHast.Revit.SharedParameters.Reporting.html" title="duHast.Revit.SharedParameters.Reporting package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Rooms.Reporting.html" title="duHast.Revit.Rooms.Reporting package" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">duHast</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.SharedParameters.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-sharedparameters-package">
+<h1>duHast.Revit.SharedParameters package<a class="headerlink" href="#duhast-revit-sharedparameters-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.SharedParameters.Reporting.html">duHast.Revit.SharedParameters.Reporting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.SharedParameters.Reporting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.SharedParameters.Reporting.html#module-duHast.Revit.SharedParameters.Reporting.shared_parameter_report">duHast.Revit.SharedParameters.Reporting.shared_parameter_report module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.Reporting.html#this-module-contains-the-hrevit-shared-parameter-report-functionality">This module contains the hRevit shared parameter report functionality.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.Reporting.html#duHast.Revit.SharedParameters.Reporting.shared_parameter_report.get_shared_parameter_report_data"><code class="docutils literal notranslate"><span class="pre">get_shared_parameter_report_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.SharedParameters.Reporting.html#module-duHast.Revit.SharedParameters.Reporting.shared_parameter_report_header">duHast.Revit.SharedParameters.Reporting.shared_parameter_report_header module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.Reporting.html#this-module-contains-the-header-row-for-any-revit-shared-parameter-reports">This module contains the header row for any Revit shared parameter reports.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.Reporting.html#duHast.Revit.SharedParameters.Reporting.shared_parameter_report_header.REPORT_SHARED_PARAMETERS_HEADER"><code class="docutils literal notranslate"><span class="pre">REPORT_SHARED_PARAMETERS_HEADER</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.SharedParameters.Reporting.html#module-duHast.Revit.SharedParameters.Reporting">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.SharedParameters.shared_parameter_add">
+<span id="duhast-revit-sharedparameters-shared-parameter-add-module"></span><h2>duHast.Revit.SharedParameters.shared_parameter_add module<a class="headerlink" href="#module-duHast.Revit.SharedParameters.shared_parameter_add" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-function-to-bind-a-shared-parameter-to-a-category">
+<h3>This module contains a function to bind a shared parameter to a category.<a class="headerlink" href="#this-module-contains-a-function-to-bind-a-shared-parameter-to-a-category" title="Permalink to this heading">¶</a></h3>
+<p>based on building coder article:
+<a class="reference external" href="https://thebuildingcoder.typepad.com/blog/2012/04/adding-a-category-to-a-shared-parameter-binding.html">https://thebuildingcoder.typepad.com/blog/2012/04/adding-a-category-to-a-shared-parameter-binding.html</a></p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_add.load_shared_parameter_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameter_add.</span></span><span class="sig-name descname"><span class="pre">load_shared_parameter_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_add.load_shared_parameter_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a shared parameter file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Fully qualified file path to shared parameter text file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The opened shared parameter file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.DefinitionFile</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_add.bind_shared_parameter">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameter_add.</span></span><span class="sig-name descname"><span class="pre">bind_shared_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_visible</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_grouping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shared_parameter_filepath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_add.bind_shared_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binds a shared parameter to a revit category.</p>
+<p>Refer building coder article referenced in header</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>category</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – The built in category, to which the parameter will be bound.</p></li>
+<li><p><strong>parameter_name</strong> (<em>str</em>) – The parameter name.</p></li>
+<li><p><strong>group_name</strong> (<em>str</em>) – The group under which the parameter appears in shared parameter text file.</p></li>
+<li><p><strong>paramType</strong> (<em>Autodesk.Revit.DB.ParameterType</em>) – The parameter type. (Area, vs text vs… (deprecated in Revit 2022!)</p></li>
+<li><p><strong>is_visible</strong> (<em>bool</em>) – Is parameter visible in UI to users.</p></li>
+<li><p><strong>is_instance</strong> (<em>bool</em>) – True parameter is an instance parameter, otherwise type parameter.</p></li>
+<li><p><strong>parameter_grouping</strong> (<em>str</em>) – Where parameter appears in properties section in UI.</p></li>
+<li><p><strong>shared_parameter_filepath</strong> (<em>str</em>) – Fully qualified file path to shared parameter text file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Parameter binding status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the name of the shared parameter.</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_add.add_shared_parameter_to_family">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameter_add.</span></span><span class="sig-name descname"><span class="pre">add_shared_parameter_to_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mgr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_add.add_shared_parameter_to_family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a shared parameter definition to a family document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>para</strong> (<em>tuple</em><em> (</em><em>refer module RevitSharedParametersTuple</em><em>)</em>) – Tuple containing parameter info</p></li>
+<li><p><strong>mgr</strong> (<em>Autodesk.Revit.DB.FamilyManager</em>) – The family manager object</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>def_file</strong> (<em>_type_</em>) – The shared parameter definition file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>True if added successfully. False if an exception occurred.</p></li>
+<li><p>result.message will contain the name of the shared parameter.</p></li>
+<li><p>.result.result will contain the family parameter object.</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.SharedParameters.shared_parameter_data">
+<span id="duhast-revit-sharedparameters-shared-parameter-data-module"></span><h2>duHast.Revit.SharedParameters.shared_parameter_data module<a class="headerlink" href="#module-duHast.Revit.SharedParameters.shared_parameter_data" title="Permalink to this heading">¶</a></h2>
+<section id="family-shared-parameter-data-class">
+<h3>Family shared parameter data class.<a class="headerlink" href="#family-shared-parameter-data-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_data.SharedParameterData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameter_data.</span></span><span class="sig-name descname"><span class="pre">SharedParameterData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_data.SharedParameterData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Revit.Family.Data.html#duHast.Revit.Family.Data.ifamily_data.IFamilyData" title="duHast.Revit.Family.Data.ifamily_data.IFamilyData"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyData</span></code></a></p>
+<p>Class constructor</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_data.SharedParameterData.process">
+<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_data.SharedParameterData.process" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_data.SharedParameterData.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_data.SharedParameterData.get_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.SharedParameters.shared_parameter_swap">
+<span id="duhast-revit-sharedparameters-shared-parameter-swap-module"></span><h2>duHast.Revit.SharedParameters.shared_parameter_swap module<a class="headerlink" href="#module-duHast.Revit.SharedParameters.shared_parameter_swap" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-function-to-swap-out-one-shard-parameter-for-another">
+<h3>This module contains a function to swap out one shard parameter for another.<a class="headerlink" href="#this-module-contains-a-function-to-swap-out-one-shard-parameter-for-another" title="Permalink to this heading">¶</a></h3>
+<p>The swap is done by:
+- changing current shared parameter to a family parameter (dummy)
+- deleting the old shared parameter definition
+- swapping the family parameter (dummy) to the new shared parameter.</p>
+<p>Note: storage types of old and new shared parameter need to be identical.</p>
+<p>Parameter change directives are read from a .csv file:</p>
+<ul class="simple">
+<li><p>header row: yes</p></li>
+<li><p>column 1: current shared parameter name</p></li>
+<li><p>column 2: new shared parameter name</p></li>
+<li><p>column 3: fully qualified file path of shared parameter file</p></li>
+<li><p>column 4: Is parameter instance (True / False)</p></li>
+<li><p>column 5: parameter grouping name ( refer to module: RevitParameterGrouping)</p></li>
+</ul>
+</section>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_swap.PARAMETER_SETTINGS_DATA">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameter_swap.</span></span><span class="sig-name descname"><span class="pre">PARAMETER_SETTINGS_DATA</span></span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_swap.PARAMETER_SETTINGS_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">parameterSettingsData</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_swap.swap_shared_parameters">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameter_swap.</span></span><span class="sig-name descname"><span class="pre">swap_shared_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">change_directive_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_swap.swap_shared_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Swaps out a shared parameter for another. (refer to module header for details)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>change_directive_file_path</strong> (<em>str</em>) – Fully qualified file path to shared parameter change directive.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the names of the changed shared parameter(s).</p></li>
+<li><p>result status will contain lists of new shared parameters</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.SharedParameters.shared_parameter_type_change">
+<span id="duhast-revit-sharedparameters-shared-parameter-type-change-module"></span><h2>duHast.Revit.SharedParameters.shared_parameter_type_change module<a class="headerlink" href="#module-duHast.Revit.SharedParameters.shared_parameter_type_change" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-changing-revit-shared-parameters-to-family-parameters-and-vise-versa">
+<h3>This module contains a number of helper functions relating to changing Revit shared parameters to family parameters and vise versa.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-changing-revit-shared-parameters-to-family-parameters-and-vise-versa" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_type_change.change_shared_parameter_to_family_parameter">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameter_type_change.</span></span><span class="sig-name descname"><span class="pre">change_shared_parameter_to_family_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_type_change.change_shared_parameter_to_family_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes a shared family parameter to a standard family parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>parameter_name</strong> (<em>str</em>) – The shared parameter name.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – Revit requires the new parameter to have a different name to the shard parameter, therefore a prefix to the name is applied, defaults to ‘_’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- Parameter change status returned in result.status. False if an exception occurred, otherwise True.
+- result.message will contain the name of the shared parameter and the new family parameter name.
+- result.status will contain the new family parameter.
+On exception (handled by optimizer itself!):
+- result.status (bool) will be False.
+- result.message will contain generic exception message.
+- result.status will be an empty list</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_type_change.change_family_parameter_to_shared_parameter">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameter_type_change.</span></span><span class="sig-name descname"><span class="pre">change_family_parameter_to_shared_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_def</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_type_change.change_family_parameter_to_shared_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes a family parameter to a shared parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>parameter_name</strong> (<em>str</em>) – The family parameter name.</p></li>
+<li><p><strong>parameter_data</strong> (<em>RevitSharedParametersTuple.parameterData</em>) – A named tup[le containing the shared parameter information</p></li>
+<li><p><strong>parameter_def</strong> (<em>Autodesk.Revit.DB.ExternalDefinition</em>) – The external definition of the shared parameter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- Parameter change status returned in result.status. False if an exception occurred, otherwise True.
+- result.message will contain the name of the family parameter and the new shared parameter name.
+- result.status will contain the new shared parameter.
+On exception (handled by optimizer itself!):
+- result.status (bool) will be False.
+- result.message will contain generic exception message.
+- result.status will be an empty list</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.SharedParameters.shared_parameters">
+<span id="duhast-revit-sharedparameters-shared-parameters-module"></span><h2>duHast.Revit.SharedParameters.shared_parameters module<a class="headerlink" href="#module-duHast.Revit.SharedParameters.shared_parameters" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-shared-parameters">
+<h3>This module contains a number of helper functions relating to Revit shared parameters.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-shared-parameters" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters.get_all_shared_parameters">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters.</span></span><span class="sig-name descname"><span class="pre">get_all_shared_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters.get_all_shared_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all shared parameters in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filtered element collector containing shared parameter elements</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters.get_family_shared_parameters">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters.</span></span><span class="sig-name descname"><span class="pre">get_family_shared_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters.get_family_shared_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all family parameters which are shared parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – “Document is not a family document.” when a non family document is past in.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of family parameters</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>[Autodesk.Revit.DB.FamilyParameter]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters.get_family_parameters">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters.</span></span><span class="sig-name descname"><span class="pre">get_family_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters.get_family_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all family parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – “Document is not a family document.” when a non family document is past in.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of family parameters</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>[Autodesk.Revit.DB.FamilyParameter]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters.check_whether_shared_parameters_are_in_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters.</span></span><span class="sig-name descname"><span class="pre">check_whether_shared_parameters_are_in_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_gui_ds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters.check_whether_shared_parameters_are_in_file" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Filters the past in list of shared parameter GUIDs by using the shared parameters in the document.</dt><dd><p>Only parameter in both will be returned.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>parameter_gui_ds</strong> (<em>list str</em>) – list of shared parameter GUIDs as string values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of shared parameter GUIDs as string values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters.check_whether_shared_parameters_by_name_is_family_parameter">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters.</span></span><span class="sig-name descname"><span class="pre">check_whether_shared_parameters_by_name_is_family_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters.check_whether_shared_parameters_by_name_is_family_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks, by name, whether a shared parameter exists as a family parameter in a family.</p>
+<p>param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:param parameter_name: The name of the parameter.
+:type parameter_name: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A family parameter if match was found, otherwise None</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Autodesk.Revit.DB.FamilyParameter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters.is_shared_parameter_definition_used">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters.</span></span><span class="sig-name descname"><span class="pre">is_shared_parameter_definition_used</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shared_para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters.is_shared_parameter_definition_used" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if a shared parameter GUID is used by a family parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>shared_para</strong> (<em>Autodesk.Revit.DB.SharedParameterElement</em>) – A shared parameter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True is match is found, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters.get_unused_shared_parameter_definitions">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters.</span></span><span class="sig-name descname"><span class="pre">get_unused_shared_parameter_definitions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters.get_unused_shared_parameter_definitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all unused shard parameter definitions in a family document.</p>
+<p>Note: These shared parameters might be used in any nested family!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of shared parameters</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.SharedParameterElement]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters.get_shared_parameter_definition">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters.</span></span><span class="sig-name descname"><span class="pre">get_shared_parameter_definition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters.get_shared_parameter_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a shared parameter definition from a shared parameter file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parameter_name</strong> (<em>str</em>) – The shared parameter name.</p></li>
+<li><p><strong>def_file</strong> (<em>Autodesk.Revit.DB.DefinitionFile</em>) – The shared parameter file definition.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The shared parameter definition. None if no parameter with a matching name was found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.ExternalDefinition</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters.param_binding_exists">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters.</span></span><span class="sig-name descname"><span class="pre">param_binding_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters.param_binding_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all parameter bindings for a given parameter depending on revit version.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>param_name</strong> (<em>str</em>) – The name of the parameter.</p></li>
+<li><p><strong>param_type</strong> (<em>Autodesk.Revit.DB.ParameterType</em>) – The parameter type. (Area, vs text vs… (deprecated in Revit 2022!)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of categories a parameter is attached to.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters.param_binding_exists_2022">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters.</span></span><span class="sig-name descname"><span class="pre">param_binding_exists_2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters.param_binding_exists_2022" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all parameter bindings for a given parameter fro Revit versions up to 2022.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>param_name</strong> (<em>str</em>) – The name of the parameter.</p></li>
+<li><p><strong>param_type</strong> (<em>Autodesk.Revit.DB.ParameterType</em>) – The parameter type. (Area, vs text vs… (deprecated in Revit 2022!)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of categories a parameter is attached to.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters.param_binding_exists_2023">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters.</span></span><span class="sig-name descname"><span class="pre">param_binding_exists_2023</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters.param_binding_exists_2023" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all parameter bindings for a given parameter for Revit 2023 onwards</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>param_name</strong> (<em>str</em>) – The name of the parameter.</p></li>
+<li><p><strong>type_id</strong> (<em>Autodesk.Revit.DB.ForgeTypeId</em>) – Forge type id</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of categories a parameter is attached to.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.SharedParameters.shared_parameters_delete">
+<span id="duhast-revit-sharedparameters-shared-parameters-delete-module"></span><h2>duHast.Revit.SharedParameters.shared_parameters_delete module<a class="headerlink" href="#module-duHast.Revit.SharedParameters.shared_parameters_delete" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-deleting-revit-shared-parameters">
+<h3>This module contains a number of helper functions relating to deleting Revit shared parameters.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-deleting-revit-shared-parameters" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters_delete.delete_shared_parameter_by_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters_delete.</span></span><span class="sig-name descname"><span class="pre">delete_shared_parameter_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shared_parameter_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters_delete.delete_shared_parameter_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a single shared parameter based on a name provided.
+param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param shared_parameter_name: The name of the shared parameter.
+:type shared_parameter_name: str
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- Parameter delete status returned in result.status. False if an exception occurred, otherwise True.
+- result.message will contain the name of the shared parameter.
+- result.status will be an empty list.
+On exception (handled by optimizer itself!):
+- result.status (bool) will be False.
+- result.message will contain generic exception message.
+- result.status will be an empty list</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters_delete.delete_shared_parameter_by_guid">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters_delete.</span></span><span class="sig-name descname"><span class="pre">delete_shared_parameter_by_guid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters_delete.delete_shared_parameter_by_guid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a single shared parameter based on a guid provided.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param guid: A shared parameter GUID as string.
+:type guid: str
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- Parameter delete status returned in result.status. False if an exception occurred, otherwise True.
+- result.message will contain the name of the shared parameter.
+- result.status will be an empty list.
+On exception (handled by optimizer itself!):
+- result.status (bool) will be False.
+- result.message will contain generic exception message.
+- result.status will be an empty list</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters_delete.delete_shared_parameters">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters_delete.</span></span><span class="sig-name descname"><span class="pre">delete_shared_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_gui_ds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters_delete.delete_shared_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes shared parameters by GUID from document.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param parameter_gui_ds: List of shared parameter GUIDs as string.
+:type parameter_gui_ds: list str
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- Parameter deletion status returned in result.status. False if an exception occurred, otherwise True.
+- result.message will contain the name of the shared parameter deleted.
+On exception (handled by optimizer itself!):
+- result.status (bool) will be False.
+- result.message will contain generic exception message.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.SharedParameters.shared_parameters_tuple">
+<span id="duhast-revit-sharedparameters-shared-parameters-tuple-module"></span><h2>duHast.Revit.SharedParameters.shared_parameters_tuple module<a class="headerlink" href="#module-duHast.Revit.SharedParameters.shared_parameters_tuple" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-tuple-used-to-store-settings-retrieved-from-a-file">
+<h3>This module contains a tuple used to store settings retrieved from a file.<a class="headerlink" href="#this-module-contains-a-tuple-used-to-store-settings-retrieved-from-a-file" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters_tuple.PARAMETER_DATA">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters_tuple.</span></span><span class="sig-name descname"><span class="pre">PARAMETER_DATA</span></span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters_tuple.PARAMETER_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">parameterData</span></code></p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.SharedParameters">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.SharedParameters" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                duHast.Revit.SharedParameters package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

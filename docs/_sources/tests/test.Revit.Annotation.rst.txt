@@ -1,0 +1,61 @@
+test.Revit.Annotation package
+=============================
+
+Submodules
+----------
+
+test.Revit.Annotation.annotations\_report module
+------------------------------------------------
+
+.. automodule:: test.Revit.Annotation.annotations_report
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Annotation.independent\_tag\_get\_report\_data module
+----------------------------------------------------------------
+
+.. automodule:: test.Revit.Annotation.independent_tag_get_report_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Annotation.independent\_tag\_read\_report\_data\_from\_file module
+-----------------------------------------------------------------------------
+
+.. automodule:: test.Revit.Annotation.independent_tag_read_report_data_from_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Annotation.independent\_tag\_update\_tag\_location module
+--------------------------------------------------------------------
+
+.. automodule:: test.Revit.Annotation.independent_tag_update_tag_location
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Annotation.independent\_tag\_update\_tag\_location\_from\_report module
+----------------------------------------------------------------------------------
+
+.. automodule:: test.Revit.Annotation.independent_tag_update_tag_location_from_report
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Annotation.run\_test\_classes module
+-----------------------------------------------
+
+.. automodule:: test.Revit.Annotation.run_test_classes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: test.Revit.Annotation
+   :members:
+   :undoc-members:
+   :show-inheritance:

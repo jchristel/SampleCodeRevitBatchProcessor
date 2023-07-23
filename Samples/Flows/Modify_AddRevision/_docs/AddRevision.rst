@@ -6,7 +6,7 @@ Add Revision
 Summary
 *******
 
-The 'Add Revision' flow ia aimed at a QA process where one has the requirement to apply a revision to a model issued to other parties. The revision information needs to be stored within the model, not just as part of the file name.
+The 'Add Revision' flow is aimed at a QA process where one has the requirement to apply a revision to a model issued to other parties. The revision information needs to be stored within the model, not just as part of the file name.
 This flow adds a revision to the model and then applies that revision to a nominated sheet which, in turn, is set as the start up view for the model.
 
 The revision information of that sheet can be used in other flows to append a revision to other exported  models (i.e. IFC or NavisWorks files)
@@ -84,11 +84,11 @@ The python and powershell scripts of the flow.
 
     - the post script executed by the flow after all Revit Batch Processor sessions have finished
 
-- Post_AddRevisionKillWSM.py
+- Post_KillWSM.py
 
     - the post process script executed by each Revit Batch Processor session
 
-- Pre_AddRevision.py
+- Pre_MarkerFiles.py
 
     - the pre process script executed by each Revit Batch Processor session
 

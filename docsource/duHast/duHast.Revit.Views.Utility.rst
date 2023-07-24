@@ -4,10 +4,10 @@ duHast.Revit.Views.Utility package
 Submodules
 ----------
 
-duHast.Revit.Views.Utility.data\_category\_override module
-----------------------------------------------------------
+duHast.Revit.Views.Utility.data\_view module
+--------------------------------------------
 
-.. automodule:: duHast.Revit.Views.Utility.data_category_override
+.. automodule:: duHast.Revit.Views.Utility.data_view
    :members:
    :undoc-members:
    :show-inheritance:

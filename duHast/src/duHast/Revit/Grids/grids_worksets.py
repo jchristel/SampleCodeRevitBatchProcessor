@@ -10,7 +10,7 @@ Revit grids workset modifier functions.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright © 2023, Jan Christel
+# Copyright 2023, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -63,6 +63,7 @@ def modify_grid_worksets_default(doc, worksetRules):
 def modify_grid_worksets_by_type_name(doc, worksetRules):
     """
     Workset modifier method. Moves grids matching type condition to a particular workset
+    
     defaultWorksetTypeRules_ = [
         ['model name',[
             [ModifyGridWorkSetsByTypeName,[
@@ -73,6 +74,7 @@ def modify_grid_worksets_by_type_name(doc, worksetRules):
             ]
         ]
     ]
+    
     :param doc: _description_
     :type doc: _type_
     :param worksetRules: _description_

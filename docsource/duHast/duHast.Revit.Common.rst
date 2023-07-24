@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    duHast.Revit.Common.Geometry
+   duHast.Revit.Common.Objects
    duHast.Revit.Common.Reporting
 
 Submodules

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Grids package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <title>duHast.Revit.Grids package &#8212; Sample Code Revit Batch Processor 0.0.8 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.8 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Grids.Reporting package" href="duHast.Revit.Grids.Reporting.html" />
     <link rel="prev" title="duHast.Revit.Floors.Utility package" href="duHast.Revit.Floors.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+    <p>Sample Code Revit Batch Processor 0.0.8 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Grids package</h1></div>
@@ -586,10 +586,9 @@ rules format:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_type_name">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_worksets.</span></span><span class="sig-name descname"><span class="pre">modify_grid_worksets_by_type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_type_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Workset modifier method. Moves grids matching type condition to a particular workset
-<a href="#id1"><span class="problematic" id="id2">defaultWorksetTypeRules_</span></a> = [</p>
-<blockquote>
-<div><dl class="simple">
+<dd><p>Workset modifier method. Moves grids matching type condition to a particular workset</p>
+<dl>
+<dt><a href="#id1"><span class="problematic" id="id2">defaultWorksetTypeRules_</span></a> = [</dt><dd><dl class="simple">
 <dt>[‘model name’,[</dt><dd><dl class="simple">
 <dt>[ModifyGridWorkSetsByTypeName,[</dt><dd><p>[‘workset name’, util.ConDoesNotEqual, ‘grid type name’],
 [‘workset name’, util.ConDoesEqual, ‘grid type name’]
@@ -599,14 +598,23 @@ rules format:
 </dd>
 </dl>
 <p>]</p>
-</div></blockquote>
-<p>]
-:param doc: _description_
-:type doc: _type_
-:param worksetRules: _description_
-:type worksetRules: _type_
-:return: returns a result object
-:rtype: _type_</p>
+</dd>
+</dl>
+<p>]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>worksetRules</strong> (<em>_type_</em>) – _description_</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>returns a result object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

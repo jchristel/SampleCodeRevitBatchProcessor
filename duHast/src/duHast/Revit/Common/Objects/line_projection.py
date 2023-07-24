@@ -1,8 +1,14 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Category override data storage class.
+A base class used to store line category overrides.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Stores overrides of projection lines.
+
 """
+
+
 #
 # License:
 #
@@ -10,7 +16,7 @@ Category override data storage class.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright © 2023, Jan Christel
+# Copyright 2023, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -26,36 +32,19 @@ Category override data storage class.
 #
 #
 
-import json
-from duHast.Utilities.Objects import base
 
+from duHast.Revit.Common.Objects.line_graphic_base import LineGraphicBase
 
-class DataCategoryOverride(base.Base):
-    def __init__(self, data_type, j={}):
+class LineProjection(LineGraphicBase):
+    data_type = "line_projection"
+
+    def __init__(self, j={}):
         """
-        Class constructor
+        Class constructor.
 
-        :param j:  json formatted dictionary of this class, defaults to {}
+        :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
         # store data type  in base class
-        super(DataCategoryOverride, self).__init__()
-
-        # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
-            # check type of data that came in:
-            if type(j) == str:
-                # a string
-                j = json.loads(j)
-            elif type(j) == dict:
-                # no action required
-                pass
-            else:
-                print("j", j)
-                raise ValueError(
-                    "Argument supplied must be of type string or type dictionary"
-                )
-
-        else:
-            pass
+        super(LineProjection, self).__init__(j=j)

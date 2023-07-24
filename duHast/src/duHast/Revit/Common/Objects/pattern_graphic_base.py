@@ -1,8 +1,17 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Category override data storage class.
+A base class used to store pattern graphic settings.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Stores pattern graphic settings:
+
+- colour
+- pattern_id
+- is_visible
+
 """
+
 #
 # License:
 #
@@ -27,20 +36,18 @@ Category override data storage class.
 #
 
 import json
+
 from duHast.Utilities.Objects import base
+from colour_base import ColourBase
 
-
-class DataCategoryOverride(base.Base):
-    def __init__(self, data_type, j={}):
+class PatternGraphicBase(base.Base):
+    def __init__(self,j={},**kwargs):
         """
-        Class constructor
+        Class constructor.
 
-        :param j:  json formatted dictionary of this class, defaults to {}
-        :type j: dict, optional
         """
 
-        # store data type  in base class
-        super(DataCategoryOverride, self).__init__()
+        super(PatternGraphicBase, self).__init__(**kwargs)
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -52,10 +59,32 @@ class DataCategoryOverride(base.Base):
                 # no action required
                 pass
             else:
-                print("j", j)
                 raise ValueError(
                     "Argument supplied must be of type string or type dictionary"
                 )
-
+            
+            # load overrides
+            
+            if ColourBase.data_type in j:
+                self.colour = ColourBase(
+                        j[ColourBase.data_type]
+                    )
+            else:
+                self.colour = ColourBase()
+                
+            if "is_visible" in j:
+                self.is_visible = j["is_visible"]
+            else:
+                self.is_visible = True
+            
+            if "pattern_id" in j:
+                self.pattern_id = j["pattern_id"]
+            else:
+                self.pattern_id = -1
         else:
-            pass
+            # set default values
+            self.colour = ColourBase()
+            self.pattern_id = -1
+            self.is_visible = True
+
+        

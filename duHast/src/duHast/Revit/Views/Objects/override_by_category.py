@@ -32,7 +32,7 @@ Stores common overrides between categories and filters
 #
 #
 
-from category_base import OverrideModelCategory
+from duHast.Revit.Views.Objects.category_base import OverrideModelCategory
 
 
 class OverrideByCategory(OverrideModelCategory):

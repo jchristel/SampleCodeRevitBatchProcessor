@@ -33,7 +33,7 @@ Stores overrides of background patterns.
 #
 
 
-from pattern_graphic_base import PatternGraphicBase
+from duHast.Revit.Common.Objects.pattern_graphic_base import PatternGraphicBase
 
 class PatternBackground(PatternGraphicBase):
     data_type = "pattern_background"

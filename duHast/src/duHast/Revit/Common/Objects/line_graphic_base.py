@@ -39,7 +39,7 @@ Stores line graphic settings:
 import json
 
 from duHast.Utilities.Objects import base
-from colour_base import ColourBase
+from duHast.Revit.Common.Objects.colour_base import ColourBase
 
 class LineGraphicBase(base.Base):
     def __init__(self,j={},**kwargs):

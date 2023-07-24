@@ -40,8 +40,8 @@ import json
 
 from duHast.Utilities.Objects import base
 
-from override_by_category import OverrideByCategory
-from override_by_filter import OverrideByFilter
+from duHast.Revit.Views.Objects.override_by_category import OverrideByCategory
+from duHast.Revit.Views.Objects.override_by_filter import OverrideByFilter
 
 
 class ViewGraphicsSettings(base.Base):

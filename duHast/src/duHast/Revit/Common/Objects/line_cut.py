@@ -33,7 +33,7 @@ Stores overrides of cut lines.
 #
 
 
-from line_graphic_base import LineGraphicBase
+from duHast.Revit.Common.Objects.line_graphic_base import LineGraphicBase
 
 class LineCut(LineGraphicBase):
     data_type = "line_cut"

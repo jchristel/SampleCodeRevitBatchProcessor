@@ -27,9 +27,9 @@ Category override data storage class.
 #
 
 import json
-from Objects.override_by_category import OverrideByCategory
-from Objects.override_by_filter import OverrideByFilter
-from Objects.view_graphics_settings import ViewGraphicsSettings
+from duHast.Revit.Views.Objects.override_by_category import OverrideByCategory
+from duHast.Revit.Views.Objects.override_by_filter import OverrideByFilter
+from duHast.Revit.Views.Objects.view_graphics_settings import ViewGraphicsSettings
 
 
 def _get_model_overrides(view):
@@ -62,3 +62,4 @@ def convert_revit_view_to_data(doc, view):
     )
 
     return return_value
+ 

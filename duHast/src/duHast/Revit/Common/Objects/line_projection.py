@@ -33,7 +33,7 @@ Stores overrides of projection lines.
 #
 
 
-from line_graphic_base import LineGraphicBase
+from duHast.Revit.Common.Objects.line_graphic_base import LineGraphicBase
 
 class LineProjection(LineGraphicBase):
     data_type = "line_projection"

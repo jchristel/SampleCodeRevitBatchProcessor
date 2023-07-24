@@ -33,7 +33,7 @@ Stores overrides of foreground patterns.
 #
 
 
-from pattern_graphic_base import PatternGraphicBase
+from duHast.Revit.Common.Objects.pattern_graphic_base import PatternGraphicBase
 
 class PatternForeground(PatternGraphicBase):
     data_type = "pattern_foreground"

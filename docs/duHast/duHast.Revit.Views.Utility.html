@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Views.Utility package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <title>duHast.Revit.Views.Utility package &#8212; Sample Code Revit Batch Processor 0.0.8 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.8 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Views package" href="duHast.Revit.Views.html" />
     <link rel="next" title="duHast.Revit.Walls package" href="duHast.Revit.Walls.html" />
     <link rel="prev" title="duHast.Revit.Views.Reporting package" href="duHast.Revit.Views.Reporting.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+    <p>Sample Code Revit Batch Processor 0.0.8 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Views.Utility package</h1></div>
@@ -91,19 +91,24 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="module-duHast.Revit.Views.Utility.data_category_override">
-<span id="duhast-revit-views-utility-data-category-override-module"></span><h2>duHast.Revit.Views.Utility.data_category_override module<a class="headerlink" href="#module-duHast.Revit.Views.Utility.data_category_override" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Revit.Views.Utility.data_view">
+<span id="duhast-revit-views-utility-data-view-module"></span><h2>duHast.Revit.Views.Utility.data_view module<a class="headerlink" href="#module-duHast.Revit.Views.Utility.data_view" title="Permalink to this heading">¶</a></h2>
 <section id="category-override-data-storage-class">
 <h3>Category override data storage class.<a class="headerlink" href="#category-override-data-storage-class" title="Permalink to this heading">¶</a></h3>
 </section>
-<dl class="py class">
-<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.data_category_override.DataCategoryOverride">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.data_category_override.</span></span><span class="sig-name descname"><span class="pre">DataCategoryOverride</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.data_category_override.DataCategoryOverride" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
-<p>Class constructor</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.data_view.convert_revit_view_to_data">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.data_view.</span></span><span class="sig-name descname"><span class="pre">convert_revit_view_to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.data_view.convert_revit_view_to_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convertes a Revit view element into an instance of class ViewGraphicsSettings</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – json formatted dictionary of this class, defaults to {}</p>
+<dd class="field-odd"><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – A Revit view instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A storage class which contains graphics settings</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Revit.Views.Objects.html#duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings" title="duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">ViewGraphicsSettings</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

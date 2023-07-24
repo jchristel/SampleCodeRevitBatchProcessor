@@ -63,6 +63,7 @@ def modify_grid_worksets_default(doc, worksetRules):
 def modify_grid_worksets_by_type_name(doc, worksetRules):
     """
     Workset modifier method. Moves grids matching type condition to a particular workset
+    
     defaultWorksetTypeRules_ = [
         ['model name',[
             [ModifyGridWorkSetsByTypeName,[
@@ -73,6 +74,7 @@ def modify_grid_worksets_by_type_name(doc, worksetRules):
             ]
         ]
     ]
+    
     :param doc: _description_
     :type doc: _type_
     :param worksetRules: _description_

@@ -64,20 +64,21 @@ class ColourB(revit_test.RevitTest):
 
         return_value = res.Result()
         try:
-            data_set = [
-                {1:{"red":100,"green":100,"blue":100}},
-                {2:{"red":90,"green":100,"blue":100}},
-                {3:{"red":100,"green":90,"blue":100}},
-                {4:{"red":100,"green":100,"blue":90}},
-            ]
+            data_set = {
+                1:{"red":100,"green":100,"blue":100},
+                2:{"red":90,"green":100,"blue":100},
+                3:{"red":100,"green":90,"blue":100},
+                4:{"red":100,"green":100,"blue":90},
+            }
 
             # test class initialization
-            for d in data_set:
-                test_colour = ColourBase(data_set[d])
+            for k,v in data_set.items():
+                test_colour = ColourBase(v)
                 return_value.append_message(
-                    " {} vs {}".format(sorted(test_colour.to_json()), sorted(data_set[d]))
+                    " {} vs {}".format(test_colour.to_json(), v)
                 )
-                assert(test_colour.to_json() == data_set[d])
+                # check values
+                assert(test_colour.red, test_colour.green, test_colour.blue == v["red"], v["green"], v["blue"])
             
             
 

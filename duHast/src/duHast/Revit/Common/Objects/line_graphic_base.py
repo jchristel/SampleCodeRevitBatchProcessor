@@ -29,8 +29,8 @@ Stores line graphic settings:
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -41,14 +41,17 @@ import json
 from duHast.Utilities.Objects import base
 from duHast.Revit.Common.Objects.colour_base import ColourBase
 
+
 class LineGraphicBase(base.Base):
-    def __init__(self,j={},**kwargs):
+    def __init__(self, data_type="unknown", j={}, **kwargs):
         """
         Class constructor.
 
         """
 
         super(LineGraphicBase, self).__init__(**kwargs)
+
+        self.data_type = data_type
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -63,21 +66,19 @@ class LineGraphicBase(base.Base):
                 raise ValueError(
                     "Argument supplied must be of type string or type dictionary"
                 )
-            
+
             # load overrides
-            
+
             if ColourBase.data_type in j:
-                self.colour = ColourBase(
-                        j[ColourBase.data_type]
-                    )
+                self.colour = ColourBase(j[ColourBase.data_type])
             else:
                 self.colour = ColourBase()
-            
+
             if "pattern_id" in j:
                 self.pattern_id = j["pattern_id"]
             else:
                 self.pattern_id = -1
-            
+
             if "weight" in j:
                 self.weight = j["weight"]
             else:
@@ -87,4 +88,16 @@ class LineGraphicBase(base.Base):
             self.colour = ColourBase()
             self.pattern_id = -1
             self.weight = 1
-        
+
+    def __eq__(self, other):
+        """
+        Custom compare is equal override.
+        The comparison ignores the pattern_id value!
+
+        :param other: Another instance of line graphic base class
+        :type other: :class:`.LineGraphicBase`
+        :return: True if weight and colour values of other colour class instance equal the weight and colour values of this instance, otherwise False.
+        :rtype: Bool
+        """
+    
+        return (self.weight, self.colour) == (other.weight, other.colour)

@@ -39,14 +39,16 @@ from duHast.Revit.Views.Objects.override_projection import OverrideProjection
 from duHast.Revit.Views.Objects.override_cut import OverrideCut
 
 
-class OverrideModelCategory(base.Base):
-    def __init__(self, j={}, **kwargs):
+class OverrideByBase(base.Base):
+    def __init__(self, data_type="unknown", j={}, **kwargs):
         """
         Class constructor.
 
         """
 
-        super(OverrideModelCategory, self).__init__(**kwargs)
+        super(OverrideByBase, self).__init__(**kwargs)
+
+        self.data_type = data_type
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -89,3 +91,25 @@ class OverrideModelCategory(base.Base):
             self.transparency = 0
             self.override_projection = OverrideProjection()
             self.override_cut = OverrideCut()
+
+    def __eq__(self, other):
+        """
+        Custom compare is equal override.
+
+        :param other: Another instance of OverrideByBase base class
+        :type other: :class:`.OverrideByBase`
+        :return: True if all properties of compared class instances are equal, otherwise False.
+        :rtype: Bool
+        """
+
+        return (
+            self.halftone,
+            self.transparency,
+            self.override_projection,
+            self.override_cut,
+        ) == (
+            other.halftone,
+            other.transparency,
+            other.override_projection,
+            other.override_cut,
+        )

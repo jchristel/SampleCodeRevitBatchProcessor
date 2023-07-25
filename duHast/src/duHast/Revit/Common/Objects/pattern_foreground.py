@@ -47,4 +47,4 @@ class PatternForeground(PatternGraphicBase):
         """
 
         # store data type  in base class
-        super(PatternForeground, self).__init__(j=j)
+        super(PatternForeground, self).__init__(data_type=self.data_type, j=j)

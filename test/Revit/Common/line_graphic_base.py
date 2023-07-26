@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains colour base tests . 
+This module contains line graphic base tests . 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -27,21 +27,21 @@ This module contains colour base tests .
 #
 
 from test.Revit.TestUtils import revit_test
-from duHast.Revit.Common.Objects.colour_base import ColourBase
+from duHast.Revit.Common.Objects.line_graphic_base import LineGraphicBase
 from duHast.Utilities.Objects import result as res
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
 
-class ColourB(revit_test.RevitTest):
+class LineGraphicB(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(ColourB, self).__init__(doc=doc, test_name="colour base tests")
+        super(LineGraphicB, self).__init__(doc=doc, test_name="line graphic base tests")
 
     def test(self):
         """
-        colour base tests
+        line graphic base tests
 
         :param doc: Current Revit model document.
         :type doc: Autodesk.Revit.DB.Document
@@ -50,7 +50,7 @@ class ColourB(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if colour base tests completed successfully, otherwise False.
+                - .result = True if line graphic base tests completed successfully, otherwise False.
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 
@@ -66,57 +66,87 @@ class ColourB(revit_test.RevitTest):
 
         try:
             data_set = {
-                1: {"red": 100, "green": 100, "blue": 100},
-                2: {"red": 90, "green": 100, "blue": 100},
-                3: {"red": 100, "green": 90, "blue": 100},
-                4: {"red": 100, "green": 100, "blue": 90},
+                1: {
+                    "colour": {"red": 100, "green": 100, "blue": 100},
+                    "pattern_id": 1000,
+                    "weight": 10,
+                },
+                2: {
+                    "colour": {"red": 10, "green": 100, "blue": 10},
+                    "pattern_id": 90,
+                    "weight": 5,
+                },
+                3: {
+                    "colour": {"red": 50, "green": 50, "blue": 50},
+                    "pattern_id": 1000234,
+                    "weight": 14,
+                },
+                4: {
+                    "colour": {"red": 100, "green": 10, "blue": 100},
+                    "pattern_id": 1,
+                    "weight": 1,
+                },
             }
 
             # test class initialization
             for k, v in data_set.items():
-                test_colour = ColourBase(v)
+                test_line_graphic = LineGraphicBase(v)
                 return_value.append_message(
-                    " {} vs {}".format(test_colour.to_json(), v)
+                    " {} vs {}".format(test_line_graphic.to_json(), v)
                 )
                 # check values
                 # vars(object instance) returns a dictionary of the class instance properties
-                assert vars(test_colour) == v
+                assert vars(test_line_graphic) == v
 
             data_set = {
                 1: {
-                    "first": {"red": 100, "green": 100, "blue": 100},
-                    "second": {"red": 100, "green": 100, "blue": 100},
+                    "first": {
+                        {
+                            "colour": {"red": 100, "green": 100, "blue": 100},
+                            "pattern_id": 1000,
+                            "weight": 10,
+                        }
+                    },
+                    "second": {
+                        {
+                            "colour": {"red": 100, "green": 100, "blue": 100},
+                            "pattern_id": 1000,
+                            "weight": 10,
+                        }
+                    },
                     "is_equal": True,
                 },
                 2: {
-                    "first": {"red": 100, "green": 100, "blue": 0},
-                    "second": {"red": 100, "green": 100, "blue": 100},
-                    "is_equal": False,
-                },
-                3: {
-                    "first": {"red": 100, "green": 0, "blue": 100},
-                    "second": {"red": 100, "green": 100, "blue": 100},
-                    "is_equal": False,
-                },
-                4: {
-                    "first": {"red": 0, "green": 100, "blue": 100},
-                    "second": {"red": 100, "green": 100, "blue": 100},
+                    "first": {
+                        {
+                            "colour": {"red": 100, "green": 100, "blue": 100},
+                            "pattern_id": 1000,
+                            "weight": 10,
+                        }
+                    },
+                    "second": {
+                        {
+                            "colour": {"red": 50, "green": 50, "blue": 50},
+                            "pattern_id": 1000234,
+                            "weight": 14,
+                        }
+                    },
                     "is_equal": False,
                 },
             }
 
             # test class instance comparison
             for k, v in data_set.items():
-                test_colour_one = ColourBase(v["first"])
-                test_colour_two = ColourBase(v["second"])
+                test_line_graphic_one = LineGraphicBase(v["first"])
+                test_line_graphic_two = LineGraphicBase(v["second"])
                 return_value.append_message(
                     " {} vs {} is equal: {}".format(
-                        test_colour_one.to_json(),
-                        test_colour_two.to_json(),
+                        test_line_graphic_one.to_json(),
+                        test_line_graphic_two.to_json(),
                         v["is_equal"],
                     )
                 )
-                is_equal = test_colour_one == test_colour_two
+                is_equal = test_line_graphic_one == test_line_graphic_two
                 assert is_equal == v["is_equal"]
 
         except Exception as e:

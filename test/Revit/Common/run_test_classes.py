@@ -36,6 +36,8 @@ from test.Revit.Common import design_options_get
 from test.Revit.Common import custom_element_filter_action_contains_any_of_values
 from test.Revit.Common import custom_element_filter_action_does_not_contain_values
 from test.Revit.Common import colour_base
+from test.Revit.Common import line_graphic_base
+from test.Revit.Common import pattern_graphic_base
 
 
 def run_design_set_options_tests(doc):
@@ -68,6 +70,14 @@ def run_design_set_options_tests(doc):
         [
             "Colour base ini test",
             colour_base.ColourB,
+        ],
+        [
+            "line graphic base ini test",
+            line_graphic_base.LineGraphicB,
+        ],
+        [
+            "pattern graphic base ini test",
+            pattern_graphic_base.PatternGraphicB,
         ],
     ]
 

@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains colour base tests . 
+This module contains pattern graphic base tests . 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -27,21 +27,23 @@ This module contains colour base tests .
 #
 
 from test.Revit.TestUtils import revit_test
-from duHast.Revit.Common.Objects.colour_base import ColourBase
+from duHast.Revit.Common.Objects.pattern_graphic_base import PatternGraphicBase
 from duHast.Utilities.Objects import result as res
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
 
-class ColourB(revit_test.RevitTest):
+class PatternGraphicB(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(ColourB, self).__init__(doc=doc, test_name="colour base tests")
+        super(PatternGraphicB, self).__init__(
+            doc=doc, test_name="pattern graphic base tests"
+        )
 
     def test(self):
         """
-        colour base tests
+        pattern graphic base tests
 
         :param doc: Current Revit model document.
         :type doc: Autodesk.Revit.DB.Document
@@ -50,7 +52,7 @@ class ColourB(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if colour base tests completed successfully, otherwise False.
+                - .result = True if pattern graphic base tests completed successfully, otherwise False.
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 
@@ -66,57 +68,87 @@ class ColourB(revit_test.RevitTest):
 
         try:
             data_set = {
-                1: {"red": 100, "green": 100, "blue": 100},
-                2: {"red": 90, "green": 100, "blue": 100},
-                3: {"red": 100, "green": 90, "blue": 100},
-                4: {"red": 100, "green": 100, "blue": 90},
+                1: {
+                    "colour": {"red": 100, "green": 100, "blue": 100},
+                    "pattern_id": 1000,
+                    "is_visible": True,
+                },
+                2: {
+                    "colour": {"red": 10, "green": 100, "blue": 10},
+                    "pattern_id": 90,
+                    "is_visible": True,
+                },
+                3: {
+                    "colour": {"red": 50, "green": 50, "blue": 50},
+                    "pattern_id": 1000234,
+                    "is_visible": False,
+                },
+                4: {
+                    "colour": {"red": 100, "green": 10, "blue": 100},
+                    "pattern_id": 1,
+                    "is_visible": False,
+                },
             }
 
             # test class initialization
             for k, v in data_set.items():
-                test_colour = ColourBase(v)
+                test_pattern_graphic = PatternGraphicBase(v)
                 return_value.append_message(
-                    " {} vs {}".format(test_colour.to_json(), v)
+                    " {} vs {}".format(test_pattern_graphic.to_json(), v)
                 )
                 # check values
                 # vars(object instance) returns a dictionary of the class instance properties
-                assert vars(test_colour) == v
+                assert vars(test_pattern_graphic) == v
 
             data_set = {
                 1: {
-                    "first": {"red": 100, "green": 100, "blue": 100},
-                    "second": {"red": 100, "green": 100, "blue": 100},
+                    "first": {
+                        {
+                            "colour": {"red": 100, "green": 100, "blue": 100},
+                            "pattern_id": 1000,
+                            "is_visible": True,
+                        }
+                    },
+                    "second": {
+                        {
+                            "colour": {"red": 100, "green": 100, "blue": 100},
+                            "pattern_id": 1000,
+                            "is_visible": True,
+                        }
+                    },
                     "is_equal": True,
                 },
                 2: {
-                    "first": {"red": 100, "green": 100, "blue": 0},
-                    "second": {"red": 100, "green": 100, "blue": 100},
-                    "is_equal": False,
-                },
-                3: {
-                    "first": {"red": 100, "green": 0, "blue": 100},
-                    "second": {"red": 100, "green": 100, "blue": 100},
-                    "is_equal": False,
-                },
-                4: {
-                    "first": {"red": 0, "green": 100, "blue": 100},
-                    "second": {"red": 100, "green": 100, "blue": 100},
+                    "first": {
+                        {
+                            "colour": {"red": 100, "green": 100, "blue": 100},
+                            "pattern_id": 1000,
+                            "is_visible": True,
+                        }
+                    },
+                    "second": {
+                        {
+                            "colour": {"red": 100, "green": 100, "blue": 100},
+                            "pattern_id": 1000,
+                            "is_visible": False,
+                        }
+                    },
                     "is_equal": False,
                 },
             }
 
             # test class instance comparison
             for k, v in data_set.items():
-                test_colour_one = ColourBase(v["first"])
-                test_colour_two = ColourBase(v["second"])
+                test_pattern_one = PatternGraphicBase(v["first"])
+                test_pattern_two = PatternGraphicBase(v["second"])
                 return_value.append_message(
                     " {} vs {} is equal: {}".format(
-                        test_colour_one.to_json(),
-                        test_colour_two.to_json(),
+                        test_pattern_one.to_json(),
+                        test_pattern_two.to_json(),
                         v["is_equal"],
                     )
                 )
-                is_equal = test_colour_one == test_colour_two
+                is_equal = test_pattern_one == test_pattern_two
                 assert is_equal == v["is_equal"]
 
         except Exception as e:

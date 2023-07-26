@@ -98,5 +98,5 @@ class PatternGraphicBase(base.Base):
         :return: True if is_visible and colour values of other colour class instance equal the is_visible and colour values of this instance, otherwise False.
         :rtype: Bool
         """
-    
+
         return (self.is_visible, self.colour) == (other.is_visible, other.colour)

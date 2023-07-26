@@ -121,3 +121,19 @@ def get_redundant_rooms(doc):
         if r.Area == 0.0 and (boundary_segments != None and len(boundary_segments) > 0):
             unplaced.append(r)
     return unplaced
+
+def get_all_placed_rooms(doc):
+    """
+    Gets a list of all placed rooms from the model.
+
+    Placed criteria is Location is not null and Area > 0.0m2
+
+    :param doc: Revit model document to search.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: All the placed rooms in the model as a list.
+    :rtype: List Autodesk.Revit.DB.Architecture.Room
+    """
+
+    all_rooms = get_all_rooms(doc)
+    return [rm for rm in all_rooms if rm.Location != None and rm.Area > 0.0]

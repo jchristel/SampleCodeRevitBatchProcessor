@@ -556,3 +556,20 @@ def get_parameter_value_by_name(
             parameter_value = parameter_value_getter(para)
             break
     return parameter_value
+
+def param_is_empty_or_null(param):
+	""" 
+	Checks if a parameter is empty or null
+	:param param: The parameter to check
+	:type param: Parameter
+	:return: True if the parameter is empty or null, False if it is not
+	:rtype: bool
+	"""
+
+	if param == None:
+		return True
+	else:
+		if param.AsString() == '' or param.AsString() == None:
+			return True
+		else:
+			return False

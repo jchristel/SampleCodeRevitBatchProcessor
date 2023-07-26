@@ -19,15 +19,15 @@ This module contains revit design set tests .
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
 from test.Revit.TestUtils import revit_test
-from duHast.src.duHast.Revit.Common.Objects.colour_base import ColourBase
+from duHast.Revit.Common.Objects.colour_base import ColourBase
 from duHast.Utilities.Objects import result as res
 
 # import Autodesk
@@ -65,27 +65,26 @@ class ColourB(revit_test.RevitTest):
         return_value = res.Result()
         try:
             data_set = {
-                1:{"red":100,"green":100,"blue":100},
-                2:{"red":90,"green":100,"blue":100},
-                3:{"red":100,"green":90,"blue":100},
-                4:{"red":100,"green":100,"blue":90},
+                1: {"red": 100, "green": 100, "blue": 100},
+                2: {"red": 90, "green": 100, "blue": 100},
+                3: {"red": 100, "green": 90, "blue": 100},
+                4: {"red": 100, "green": 100, "blue": 90},
             }
 
             # test class initialization
-            for k,v in data_set.items():
+            for k, v in data_set.items():
                 test_colour = ColourBase(v)
                 return_value.append_message(
                     " {} vs {}".format(test_colour.to_json(), v)
                 )
                 # check values
-                assert(test_colour.red, test_colour.green, test_colour.blue == v["red"], v["green"], v["blue"])
-            
-            
+                # vars(object instance) returns a dictionary of the class instance properties
+                assert vars(test_colour) == v
 
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {}: {}".format(self.test_name,e),
+                "An exception occurred in function {}: {}".format(self.test_name, e),
             )
 
         return return_value

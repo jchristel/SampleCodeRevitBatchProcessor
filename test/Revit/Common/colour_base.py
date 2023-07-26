@@ -63,6 +63,7 @@ class ColourB(revit_test.RevitTest):
         """
 
         return_value = res.Result()
+
         try:
             data_set = {
                 1: {"red": 100, "green": 100, "blue": 100},
@@ -80,6 +81,43 @@ class ColourB(revit_test.RevitTest):
                 # check values
                 # vars(object instance) returns a dictionary of the class instance properties
                 assert vars(test_colour) == v
+
+            data_set = {
+                1: {
+                    "first": {"red": 100, "green": 100, "blue": 100},
+                    "second": {"red": 100, "green": 100, "blue": 100},
+                    "is_equal": True,
+                },
+                2: {
+                    "first": {"red": 100, "green": 100, "blue": 0},
+                    "second": {"red": 100, "green": 100, "blue": 100},
+                    "is_equal": False,
+                },
+                3: {
+                    "first": {"red": 100, "green": 0, "blue": 100},
+                    "second": {"red": 100, "green": 100, "blue": 100},
+                    "is_equal": False,
+                },
+                4: {
+                    "first": {"red": 0, "green": 100, "blue": 100},
+                    "second": {"red": 100, "green": 100, "blue": 100},
+                    "is_equal": False,
+                },
+            }
+
+            # test class instance comparison
+            for k, v in data_set.items():
+                test_colour_one = ColourBase(v["first"])
+                test_colour_two = ColourBase(v["second"])
+                return_value.append_message(
+                    " {} vs {} is equal: {}".format(
+                        test_colour_one.to_json(),
+                        test_colour_two.to_json(),
+                        v["is_equal"],
+                    )
+                )
+                is_equal = test_colour_one == test_colour_two
+                assert is_equal == v["is_equal"]
 
         except Exception as e:
             return_value.update_sep(

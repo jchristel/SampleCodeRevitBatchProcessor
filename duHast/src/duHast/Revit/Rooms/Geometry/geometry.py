@@ -32,9 +32,12 @@ from duHast.Revit.Rooms.rooms import get_all_rooms
 from duHast.Data.Objects.Properties.Geometry import geometry_polygon as dGeometryPoly
 
 
-def get_room_boundary_loops(revit_room):
+def get_room_boundary_loops(revit_room,
+                            spatial_boundary_option=rdb.SpatialElementBoundaryOptions(),
+                            boundary_location=rdb.SpatialElementBoundaryLocation.Center):
     """
-    Returns all boundary loops for a rooms.
+    Returns all boundary loops for a rooms. Default value set to the center
+    boundary location.
     :param revit_room: The room.
     :type revit_room: Autodesk.Revit.DB.Architecture.Room
     :return: List of boundary loops defining the room.
@@ -43,11 +46,8 @@ def get_room_boundary_loops(revit_room):
 
     all_boundary_loops = []
     # set up spatial boundary option
-    spatial_boundary_option = rdb.SpatialElementBoundaryOptions()
     spatial_boundary_option.StoreFreeBoundaryFaces = True
-    spatial_boundary_option.SpatialElementBoundaryLocation = (
-        rdb.SpatialElementBoundaryLocation.Center
-    )
+    spatial_boundary_option.SpatialElementBoundaryLocation = boundary_location
     # get loops
     loops = revit_room.GetBoundarySegments(spatial_boundary_option)
     all_boundary_loops.append(loops)

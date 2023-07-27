@@ -68,3 +68,21 @@ def get_phase_name_by_id(doc, phase_id):
         else:
             return_value = "Invalid phase id."
     return return_value
+
+def get_name_to_phase_dict(rvt_doc):
+    '''
+    Returns a dictionary where key is the name and value is the phase.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: A dictionary where key is the name and value is the phase. Dictionary will be empty if no phases exist (family doc?)
+    :rtype: dic{key str: value Autodesk.Revit.DB.Phase}
+    '''
+    phases = rvt_doc.Phases
+    phase_dict = {}
+
+    for phase in phases:
+        phase_dict[phase.Name] = phase
+    
+    return phase_dict

@@ -67,21 +67,25 @@ class LineGraphicB(revit_test.RevitTest):
         try:
             data_set = {
                 1: {
+                    "data_type": "test",
                     "colour": {"red": 100, "green": 100, "blue": 100},
                     "pattern_id": 1000,
                     "weight": 10,
                 },
                 2: {
+                    "data_type": "test",
                     "colour": {"red": 10, "green": 100, "blue": 10},
                     "pattern_id": 90,
                     "weight": 5,
                 },
                 3: {
+                    "data_type": "test",
                     "colour": {"red": 50, "green": 50, "blue": 50},
                     "pattern_id": 1000234,
                     "weight": 14,
                 },
                 4: {
+                    "data_type": "test",
                     "colour": {"red": 100, "green": 10, "blue": 100},
                     "pattern_id": 1,
                     "weight": 1,
@@ -90,18 +94,18 @@ class LineGraphicB(revit_test.RevitTest):
 
             # test class initialization
             for k, v in data_set.items():
-                test_line_graphic = LineGraphicBase(v)
+                test_line_graphic = LineGraphicBase(v["data_type"],v)
                 return_value.append_message(
                     " {} vs {}".format(test_line_graphic.to_json(), v)
                 )
                 # check values
-                # vars(object instance) returns a dictionary of the class instance properties
-                assert vars(test_line_graphic) == v
+                assert test_line_graphic.class_to_dict() == v
 
             data_set = {
                 1: {
                     "first": {
                         {
+                            "data_type": "test",
                             "colour": {"red": 100, "green": 100, "blue": 100},
                             "pattern_id": 1000,
                             "weight": 10,
@@ -109,6 +113,7 @@ class LineGraphicB(revit_test.RevitTest):
                     },
                     "second": {
                         {
+                            "data_type": "test",
                             "colour": {"red": 100, "green": 100, "blue": 100},
                             "pattern_id": 1000,
                             "weight": 10,
@@ -119,6 +124,7 @@ class LineGraphicB(revit_test.RevitTest):
                 2: {
                     "first": {
                         {
+                            "data_type": "test",
                             "colour": {"red": 100, "green": 100, "blue": 100},
                             "pattern_id": 1000,
                             "weight": 10,
@@ -126,6 +132,7 @@ class LineGraphicB(revit_test.RevitTest):
                     },
                     "second": {
                         {
+                            "data_type": "test",
                             "colour": {"red": 50, "green": 50, "blue": 50},
                             "pattern_id": 1000234,
                             "weight": 14,

@@ -49,7 +49,9 @@ def get_room_boundary_loops(revit_room,
     spatial_boundary_option.StoreFreeBoundaryFaces = True
     spatial_boundary_option.SpatialElementBoundaryLocation = boundary_location
     # get loops
-    return revit_room.GetBoundarySegments(spatial_boundary_option)
+    loops = revit_room.GetBoundarySegments(spatial_boundary_option)
+    all_boundary_loops.append(loops)
+    return all_boundary_loops
 
 
 def get_points_from_room_boundaries(boundary_loops):

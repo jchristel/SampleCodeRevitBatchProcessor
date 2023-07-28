@@ -69,21 +69,25 @@ class PatternGraphicB(revit_test.RevitTest):
         try:
             data_set = {
                 1: {
+                    "data_type": "test",
                     "colour": {"red": 100, "green": 100, "blue": 100},
                     "pattern_id": 1000,
                     "is_visible": True,
                 },
                 2: {
+                    "data_type": "test",
                     "colour": {"red": 10, "green": 100, "blue": 10},
                     "pattern_id": 90,
                     "is_visible": True,
                 },
                 3: {
+                    "data_type": "test",
                     "colour": {"red": 50, "green": 50, "blue": 50},
                     "pattern_id": 1000234,
                     "is_visible": False,
                 },
                 4: {
+                    "data_type": "test",
                     "colour": {"red": 100, "green": 10, "blue": 100},
                     "pattern_id": 1,
                     "is_visible": False,
@@ -92,46 +96,42 @@ class PatternGraphicB(revit_test.RevitTest):
 
             # test class initialization
             for k, v in data_set.items():
-                test_pattern_graphic = PatternGraphicBase(v)
+                test_pattern_graphic = PatternGraphicBase(v["data_type"], v)
                 return_value.append_message(
                     " {} vs {}".format(test_pattern_graphic.to_json(), v)
                 )
                 # check values
                 # vars(object instance) returns a dictionary of the class instance properties
-                assert vars(test_pattern_graphic) == v
+                assert test_pattern_graphic.class_to_dict() == v
 
             data_set = {
                 1: {
                     "first": {
-                        {
-                            "colour": {"red": 100, "green": 100, "blue": 100},
-                            "pattern_id": 1000,
-                            "is_visible": True,
-                        }
+                        "data_type": "test",
+                        "colour": {"red": 100, "green": 100, "blue": 100},
+                        "pattern_id": 1000,
+                        "is_visible": True,
                     },
                     "second": {
-                        {
-                            "colour": {"red": 100, "green": 100, "blue": 100},
-                            "pattern_id": 1000,
-                            "is_visible": True,
-                        }
+                        "data_type": "test",
+                        "colour": {"red": 100, "green": 100, "blue": 100},
+                        "pattern_id": 1000,
+                        "is_visible": True,
                     },
                     "is_equal": True,
                 },
                 2: {
                     "first": {
-                        {
-                            "colour": {"red": 100, "green": 100, "blue": 100},
-                            "pattern_id": 1000,
-                            "is_visible": True,
-                        }
+                        "data_type": "test",
+                        "colour": {"red": 100, "green": 100, "blue": 100},
+                        "pattern_id": 1000,
+                        "is_visible": True,
                     },
                     "second": {
-                        {
-                            "colour": {"red": 100, "green": 100, "blue": 100},
-                            "pattern_id": 1000,
-                            "is_visible": False,
-                        }
+                        "data_type": "test",
+                        "colour": {"red": 100, "green": 100, "blue": 100},
+                        "pattern_id": 1000,
+                        "is_visible": False,
                     },
                     "is_equal": False,
                 },
@@ -139,8 +139,12 @@ class PatternGraphicB(revit_test.RevitTest):
 
             # test class instance comparison
             for k, v in data_set.items():
-                test_pattern_one = PatternGraphicBase(v["first"])
-                test_pattern_two = PatternGraphicBase(v["second"])
+                test_pattern_one = PatternGraphicBase(
+                    v["first"]["data_type"], v["first"]
+                )
+                test_pattern_two = PatternGraphicBase(
+                    v["second"]["data_type"], v["second"]
+                )
                 return_value.append_message(
                     " {} vs {} is equal: {}".format(
                         test_pattern_one.to_json(),

@@ -31,7 +31,7 @@ from duHast.Revit.Common.Objects.line_graphic_base import LineGraphicBase
 from duHast.Utilities.Objects import result as res
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+# import Autodesk.Revit.DB as rdb
 
 
 class LineGraphicB(revit_test.RevitTest):
@@ -94,49 +94,40 @@ class LineGraphicB(revit_test.RevitTest):
 
             # test class initialization
             for k, v in data_set.items():
-                test_line_graphic = LineGraphicBase(v["data_type"],v)
+                test_line_graphic = LineGraphicBase(v["data_type"], v)
                 return_value.append_message(
                     " {} vs {}".format(test_line_graphic.to_json(), v)
                 )
                 # check values
                 assert test_line_graphic.class_to_dict() == v
-
             data_set = {
                 1: {
                     "first": {
-                        {
-                            "data_type": "test",
-                            "colour": {"red": 100, "green": 100, "blue": 100},
-                            "pattern_id": 1000,
-                            "weight": 10,
-                        }
+                        "data_type": "test",
+                        "colour": {"red": 100, "green": 100, "blue": 100},
+                        "pattern_id": 1000,
+                        "weight": 10,
                     },
                     "second": {
-                        {
-                            "data_type": "test",
-                            "colour": {"red": 100, "green": 100, "blue": 100},
-                            "pattern_id": 1000,
-                            "weight": 10,
-                        }
+                        "data_type": "test",
+                        "colour": {"red": 100, "green": 100, "blue": 100},
+                        "pattern_id": 1000,
+                        "weight": 10,
                     },
                     "is_equal": True,
                 },
                 2: {
                     "first": {
-                        {
-                            "data_type": "test",
-                            "colour": {"red": 100, "green": 100, "blue": 100},
-                            "pattern_id": 1000,
-                            "weight": 10,
-                        }
+                        "data_type": "test",
+                        "colour": {"red": 100, "green": 100, "blue": 100},
+                        "pattern_id": 1000,
+                        "weight": 10,
                     },
                     "second": {
-                        {
-                            "data_type": "test",
-                            "colour": {"red": 50, "green": 50, "blue": 50},
-                            "pattern_id": 1000234,
-                            "weight": 14,
-                        }
+                        "data_type": "test",
+                        "colour": {"red": 50, "green": 50, "blue": 50},
+                        "pattern_id": 1000234,
+                        "weight": 14,
                     },
                     "is_equal": False,
                 },
@@ -144,8 +135,12 @@ class LineGraphicB(revit_test.RevitTest):
 
             # test class instance comparison
             for k, v in data_set.items():
-                test_line_graphic_one = LineGraphicBase(v["first"])
-                test_line_graphic_two = LineGraphicBase(v["second"])
+                test_line_graphic_one = LineGraphicBase(
+                    v["first"]["data_type"], v["first"]
+                )
+                test_line_graphic_two = LineGraphicBase(
+                    v["second"]["data_type"], v["second"]
+                )
                 return_value.append_message(
                     " {} vs {} is equal: {}".format(
                         test_line_graphic_one.to_json(),
@@ -159,7 +154,9 @@ class LineGraphicB(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {}: {}".format(self.test_name, e),
+                "An exception occurred in function {}: {}".format(
+                    "test_line_graphic_base", e
+                ),
             )
 
         return return_value

@@ -1,14 +1,10 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A base class used to store line graphic settings.
+A base class used to store category overrides.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Stores line graphic settings:
-
-- colour
-- pattern_id
-- weight
+Stores common overrides between categories and filters
 
 """
 
@@ -39,17 +35,18 @@ Stores line graphic settings:
 import json
 
 from duHast.Utilities.Objects import base
-from duHast.Revit.Common.Objects.colour_base import ColourBase
+from duHast.Revit.Views.Objects.Data.override_projection import OverrideProjection
+from duHast.Revit.Views.Objects.Data.override_cut import OverrideCut
 
 
-class LineGraphicBase(base.Base):
+class OverrideByBase(base.Base):
     def __init__(self, data_type="unknown", j={}, **kwargs):
         """
         Class constructor.
 
         """
 
-        super(LineGraphicBase, self).__init__(**kwargs)
+        super(OverrideByBase, self).__init__(**kwargs)
 
         self.data_type = data_type
 
@@ -68,36 +65,51 @@ class LineGraphicBase(base.Base):
                 )
 
             # load overrides
-
-            if ColourBase.data_type in j:
-                self.colour = ColourBase(j[ColourBase.data_type])
+            if "halftone" in j:
+                self.halftone = j["halftone"]
             else:
-                self.colour = ColourBase()
+                self.halftone = False
 
-            if "pattern_id" in j:
-                self.pattern_id = j["pattern_id"]
+            if "transparency" in j:
+                self.transparency = j["transparency"]
             else:
-                self.pattern_id = -1
+                self.transparency = 0
 
-            if "weight" in j:
-                self.weight = j["weight"]
+            if OverrideProjection.data_type in j:
+                self.override_projection = OverrideProjection(
+                    j[OverrideProjection.data_type]
+                )
             else:
-                self.weight = 1
+                self.override_projection = OverrideProjection()
+
+            if OverrideCut.data_type in j:
+                self.override_cut = OverrideCut(j[OverrideCut.data_type])
+            else:
+                self.override_cut = OverrideCut()
         else:
-            # set default values
-            self.colour = ColourBase()
-            self.pattern_id = -1
-            self.weight = 1
+            self.halftone = False
+            self.transparency = 0
+            self.override_projection = OverrideProjection()
+            self.override_cut = OverrideCut()
 
     def __eq__(self, other):
         """
         Custom compare is equal override.
-        The comparison ignores the pattern_id value!
 
-        :param other: Another instance of line graphic base class
-        :type other: :class:`.LineGraphicBase`
-        :return: True if weight and colour values of other colour class instance equal the weight and colour values of this instance, otherwise False.
+        :param other: Another instance of OverrideByBase base class
+        :type other: :class:`.OverrideByBase`
+        :return: True if all properties of compared class instances are equal, otherwise False.
         :rtype: Bool
         """
-    
-        return (self.weight, self.colour) == (other.weight, other.colour)
+
+        return (
+            self.halftone,
+            self.transparency,
+            self.override_projection,
+            self.override_cut,
+        ) == (
+            other.halftone,
+            other.transparency,
+            other.override_projection,
+            other.override_cut,
+        )

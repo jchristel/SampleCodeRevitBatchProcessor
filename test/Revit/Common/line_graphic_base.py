@@ -27,7 +27,7 @@ This module contains line graphic base tests .
 #
 
 from test.Revit.TestUtils import revit_test
-from duHast.Revit.Common.Objects.line_graphic_base import LineGraphicBase
+from duHast.Revit.Common.Objects.Data.line_graphic_base import LineGraphicBase
 from duHast.Utilities.Objects import result as res
 
 # import Autodesk
@@ -69,25 +69,25 @@ class LineGraphicB(revit_test.RevitTest):
                 1: {
                     "data_type": "test",
                     "colour": {"red": 100, "green": 100, "blue": 100},
-                    "pattern_id": 1000,
+                    "line_pattern_settings": {"name":"test_pattern", "id":1000},
                     "weight": 10,
                 },
                 2: {
                     "data_type": "test",
                     "colour": {"red": 10, "green": 100, "blue": 10},
-                    "pattern_id": 90,
+                    "line_pattern_settings": {"name":"test_pattern", "id":1000},
                     "weight": 5,
                 },
                 3: {
                     "data_type": "test",
                     "colour": {"red": 50, "green": 50, "blue": 50},
-                    "pattern_id": 1000234,
+                    "line_pattern_settings": {"name":"test_pattern", "id":1000},
                     "weight": 14,
                 },
                 4: {
                     "data_type": "test",
                     "colour": {"red": 100, "green": 10, "blue": 100},
-                    "pattern_id": 1,
+                    "line_pattern_settings": {"name":"test_pattern", "id":1010},
                     "weight": 1,
                 },
             }
@@ -105,13 +105,13 @@ class LineGraphicB(revit_test.RevitTest):
                     "first": {
                         "data_type": "test",
                         "colour": {"red": 100, "green": 100, "blue": 100},
-                        "pattern_id": 1000,
+                        "line_pattern_settings": {"name":"test_pattern", "id":1000},
                         "weight": 10,
                     },
                     "second": {
                         "data_type": "test",
                         "colour": {"red": 100, "green": 100, "blue": 100},
-                        "pattern_id": 1000,
+                        "line_pattern_settings": {"name":"test_pattern", "id":1000},
                         "weight": 10,
                     },
                     "is_equal": True,
@@ -120,14 +120,29 @@ class LineGraphicB(revit_test.RevitTest):
                     "first": {
                         "data_type": "test",
                         "colour": {"red": 100, "green": 100, "blue": 100},
-                        "pattern_id": 1000,
+                        "line_pattern_settings": {"name":"test_pattern", "id":1000},
                         "weight": 10,
                     },
                     "second": {
                         "data_type": "test",
                         "colour": {"red": 50, "green": 50, "blue": 50},
-                        "pattern_id": 1000234,
+                        "line_pattern_settings": {"name":"test_pattern", "id":1000},
                         "weight": 14,
+                    },
+                    "is_equal": False,
+                },
+                3: {
+                    "first": {
+                        "data_type": "test",
+                        "colour": {"red": 100, "green": 100, "blue": 100},
+                        "line_pattern_settings": {"name":"test_pattern", "id":1000},
+                        "weight": 10,
+                    },
+                    "second": {
+                        "data_type": "test",
+                        "colour": {"red": 100, "green": 100, "blue": 100},
+                        "line_pattern_settings": {"name":"test_pattern_different", "id":1000},
+                        "weight": 10,
                     },
                     "is_equal": False,
                 },

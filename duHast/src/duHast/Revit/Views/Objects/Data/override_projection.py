@@ -35,20 +35,23 @@ Stores common overrides between categories and filters
 import json
 
 from duHast.Utilities.Objects import base
-from duHast.Revit.Views.Objects.override_projection import OverrideProjection
-from duHast.Revit.Views.Objects.override_cut import OverrideCut
+from duHast.Revit.Common.Objects.Data import (
+    pattern_foreground,
+    pattern_background,
+    line_projection,
+)
 
 
-class OverrideByBase(base.Base):
-    def __init__(self, data_type="unknown", j={}, **kwargs):
+class OverrideProjection(base.Base):
+    data_type = "override_projection"
+
+    def __init__(self, j={}, **kwargs):
         """
         Class constructor.
 
         """
 
-        super(OverrideByBase, self).__init__(**kwargs)
-
-        self.data_type = data_type
+        super(OverrideProjection, self).__init__(**kwargs)
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -65,51 +68,43 @@ class OverrideByBase(base.Base):
                 )
 
             # load overrides
-            if "halftone" in j:
-                self.halftone = j["halftone"]
-            else:
-                self.halftone = False
-
-            if "transparency" in j:
-                self.transparency = j["transparency"]
-            else:
-                self.transparency = 0
-
-            if OverrideProjection.data_type in j:
-                self.override_projection = OverrideProjection(
-                    j[OverrideProjection.data_type]
+            if pattern_background.PatternBackground.data_type in j:
+                self.pattern_background = pattern_background.PatternBackground(
+                    j[pattern_background.PatternBackground.data_type]
                 )
             else:
-                self.override_projection = OverrideProjection()
+                self.pattern_background = pattern_background.PatternBackground()
 
-            if OverrideCut.data_type in j:
-                self.override_cut = OverrideCut(j[OverrideCut.data_type])
+            if pattern_foreground.PatternForeground.data_type in j:
+                self.pattern_foreground = pattern_foreground.PatternForeground(
+                    j[pattern_foreground.PatternForeground.data_type]
+                )
             else:
-                self.override_cut = OverrideCut()
+                self.pattern_foreground = pattern_foreground.PatternForeground()
+
+            if line_projection.LineProjection.data_type in j:
+                self.line_projection = line_projection.LineProjection(
+                    j[line_projection.LineProjection.data_type]
+                )
+            else:
+                self.line_projection = line_projection.LineProjection()
         else:
-            self.halftone = False
-            self.transparency = 0
-            self.override_projection = OverrideProjection()
-            self.override_cut = OverrideCut()
+            self.pattern_background = pattern_background.PatternBackground()
+            self.pattern_foreground = pattern_foreground.PatternForeground()
+            self.line_projection = line_projection.LineProjection()
 
     def __eq__(self, other):
         """
         Custom compare is equal override.
 
-        :param other: Another instance of OverrideByBase base class
-        :type other: :class:`.OverrideByBase`
+        :param other: Another instance of OverrideProjection class
+        :type other: :class:`.OverrideProjection`
         :return: True if all properties of compared class instances are equal, otherwise False.
         :rtype: Bool
         """
 
-        return (
-            self.halftone,
-            self.transparency,
-            self.override_projection,
-            self.override_cut,
-        ) == (
-            other.halftone,
-            other.transparency,
-            other.override_projection,
-            other.override_cut,
+        return (self.pattern_background, self.pattern_foreground, self.line_projection) == (
+            other.pattern_background,
+            other.pattern_foreground,
+            other.line_projection,
         )

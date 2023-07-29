@@ -1,13 +1,16 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A base class used to store category overrides.
+A base class used to store pattern graphic settings.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Stores common overrides between categories and filters
+Stores pattern graphic settings:
+
+- colour
+- pattern_id
+- is_visible
 
 """
-
 
 #
 # License:
@@ -35,19 +38,22 @@ Stores common overrides between categories and filters
 import json
 
 from duHast.Utilities.Objects import base
-from duHast.Revit.Common.Objects import pattern_foreground, pattern_background, line_cut
+from duHast.Revit.Common.Objects.Data.colour_base import ColourBase
+from duHast.Revit.LinePattern.Objects.Data.fill_pattern_settings import (
+    FillPatternSettings,
+)
 
 
-class OverrideCut(base.Base):
-    data_type = "override_cut"
-
-    def __init__(self, j={}, **kwargs):
+class PatternGraphicBase(base.Base):
+    def __init__(self, data_type="unknown", j={}, **kwargs):
         """
         Class constructor.
 
         """
 
-        super(OverrideCut, self).__init__(**kwargs)
+        super(PatternGraphicBase, self).__init__(**kwargs)
+
+        self.data_type = data_type
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -64,41 +70,42 @@ class OverrideCut(base.Base):
                 )
 
             # load overrides
-            if pattern_background.PatternBackground.data_type in j:
-                self.pattern_background = pattern_background.PatternBackground(
-                    j[pattern_background.PatternBackground.data_type]
+
+            if ColourBase.data_type in j:
+                self.colour = ColourBase(j[ColourBase.data_type])
+            else:
+                self.colour = ColourBase()
+
+            if "is_visible" in j:
+                self.is_visible = j["is_visible"]
+            else:
+                self.is_visible = True
+
+            if "fill_pattern_setting" in j:
+                self.fill_pattern_setting = FillPatternSettings(
+                    j["fill_pattern_setting"]
                 )
             else:
-                self.pattern_background = pattern_background.PatternBackground()
-
-            if pattern_foreground.PatternForeground.data_type in j:
-                self.pattern_foreground = pattern_foreground.PatternForeground(
-                    j[pattern_foreground.PatternForeground.data_type]
-                )
-            else:
-                self.pattern_foreground = pattern_foreground.PatternForeground()
-
-            if line_cut.LineCut.data_type in j:
-                self.line_cut = line_cut.LineCut(j[line_cut.LineCut.data_type])
-            else:
-                self.line_cut = line_cut.LineCut()
+                self.fill_pattern_setting = FillPatternSettings()
         else:
-            self.pattern_background = pattern_background.PatternBackground()
-            self.pattern_foreground = pattern_foreground.PatternForeground()
-            self.line_cut = line_cut.LineCut()
+            # set default values
+            self.colour = ColourBase()
+            self.fill_pattern_setting = FillPatternSettings()
+            self.is_visible = True
 
     def __eq__(self, other):
         """
         Custom compare is equal override.
+        The comparison ignores the pattern_id value!
 
-        :param other: Another instance of OverrideCut class
-        :type other: :class:`.OverrideCut`
-        :return: True if all properties of compared class instances are equal, otherwise False.
+        :param other: Another instance of line graphic base class
+        :type other: :class:`.PatternGraphicBase`
+        :return: True if is_visible, fill pattern settings and colour values of other colour class instance equal the is_visible, fill pattern settings, colour values of this instance, otherwise False.
         :rtype: Bool
         """
 
-        return (self.pattern_background, self.pattern_foreground, self.line_cut) == (
-            other.pattern_background,
-            other.pattern_foreground,
-            other.line_cut,
+        return (self.is_visible, self.fill_pattern_setting, self.colour) == (
+            other.is_visible,
+            other.self.fill_pattern_setting,
+            other.colour,
         )

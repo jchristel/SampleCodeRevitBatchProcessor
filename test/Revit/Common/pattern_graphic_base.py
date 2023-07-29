@@ -27,7 +27,7 @@ This module contains pattern graphic base tests .
 #
 
 from test.Revit.TestUtils import revit_test
-from duHast.Revit.Common.Objects.pattern_graphic_base import PatternGraphicBase
+from duHast.Revit.Common.Objects.Data.pattern_graphic_base import PatternGraphicBase
 from duHast.Utilities.Objects import result as res
 
 # import Autodesk
@@ -71,25 +71,25 @@ class PatternGraphicB(revit_test.RevitTest):
                 1: {
                     "data_type": "test",
                     "colour": {"red": 100, "green": 100, "blue": 100},
-                    "pattern_id": 1000,
+                    "fill_pattern_setting": {"name":"test_pattern", "id":1010},
                     "is_visible": True,
                 },
                 2: {
                     "data_type": "test",
                     "colour": {"red": 10, "green": 100, "blue": 10},
-                    "pattern_id": 90,
+                    "fill_pattern_setting": {"name":"test_pattern", "id":1010},
                     "is_visible": True,
                 },
                 3: {
                     "data_type": "test",
                     "colour": {"red": 50, "green": 50, "blue": 50},
-                    "pattern_id": 1000234,
+                    "fill_pattern_setting": {"name":"test_pattern", "id":1010},
                     "is_visible": False,
                 },
                 4: {
                     "data_type": "test",
                     "colour": {"red": 100, "green": 10, "blue": 100},
-                    "pattern_id": 1,
+                    "fill_pattern_setting": {"name":"test_pattern", "id":1010},
                     "is_visible": False,
                 },
             }
@@ -109,13 +109,13 @@ class PatternGraphicB(revit_test.RevitTest):
                     "first": {
                         "data_type": "test",
                         "colour": {"red": 100, "green": 100, "blue": 100},
-                        "pattern_id": 1000,
+                        "fill_pattern_setting": {"name":"test_pattern", "id":1010},
                         "is_visible": True,
                     },
                     "second": {
                         "data_type": "test",
                         "colour": {"red": 100, "green": 100, "blue": 100},
-                        "pattern_id": 1000,
+                        "fill_pattern_setting": {"name":"test_pattern", "id":1010},
                         "is_visible": True,
                     },
                     "is_equal": True,
@@ -124,14 +124,29 @@ class PatternGraphicB(revit_test.RevitTest):
                     "first": {
                         "data_type": "test",
                         "colour": {"red": 100, "green": 100, "blue": 100},
-                        "pattern_id": 1000,
+                        "fill_pattern_setting": {"name":"test_pattern", "id":1010},
                         "is_visible": True,
                     },
                     "second": {
                         "data_type": "test",
                         "colour": {"red": 100, "green": 100, "blue": 100},
-                        "pattern_id": 1000,
+                        "fill_pattern_setting": {"name":"test_pattern", "id":1010},
                         "is_visible": False,
+                    },
+                    "is_equal": False,
+                },
+                3: {
+                    "first": {
+                        "data_type": "test",
+                        "colour": {"red": 100, "green": 100, "blue": 100},
+                        "fill_pattern_setting": {"name":"test_pattern", "id":1010},
+                        "is_visible": True,
+                    },
+                    "second": {
+                        "data_type": "test",
+                        "colour": {"red": 100, "green": 100, "blue": 100},
+                        "fill_pattern_setting": {"name":"test_pattern_change", "id":1010},
+                        "is_visible": True,
                     },
                     "is_equal": False,
                 },

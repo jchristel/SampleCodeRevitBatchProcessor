@@ -1,10 +1,10 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A base class used to store line category overrides.
+A base class used to store category overrides.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Stores overrides of cut lines.
+Stores common overrides between categories and filters
 
 """
 
@@ -32,20 +32,22 @@ Stores overrides of cut lines.
 #
 #
 
+from duHast.Revit.Views.Objects.Data.override_by_base import OverrideByBase
 
-from duHast.Revit.Common.Objects.line_graphic_base import LineGraphicBase
 
+class OverrideByCategory(OverrideByBase):
+    data_type = "override_by_category"
 
-class LineCut(LineGraphicBase):
-    data_type = "line_cut"
-
-    def __init__(self, j={}):
+    def __init__(
+        self, main_category_name="", sub_category_name="", category_id=-1, j={}
+    ):
         """
         Class constructor.
 
-        :param j: A json formatted dictionary of this class, defaults to {}
-        :type j: dict, optional
         """
 
-        # store data type  in base class
-        super(LineCut, self).__init__(data_type=self.data_type, j=j)
+        super(OverrideByCategory, self).__init__(data_type=self.data_type, j=j)
+
+        self.main_category_name = main_category_name
+        self.sub_category_name = sub_category_name
+        self.category_id = category_id

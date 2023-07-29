@@ -27,7 +27,7 @@ This module contains colour base tests .
 #
 
 from test.Revit.TestUtils import revit_test
-from duHast.Revit.Common.Objects.colour_base import ColourBase
+from duHast.Revit.Common.Objects.Data.colour_base import ColourBase
 from duHast.Utilities.Objects import result as res
 
 # import Autodesk

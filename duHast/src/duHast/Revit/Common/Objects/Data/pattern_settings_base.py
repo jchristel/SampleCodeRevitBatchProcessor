@@ -1,10 +1,10 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A base class used to store category overrides.
+A base class used to store pattern data.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Stores common overrides between categories and filters
+Stores pattern base data for line and fill pattern.
 
 """
 
@@ -35,23 +35,18 @@ Stores common overrides between categories and filters
 import json
 
 from duHast.Utilities.Objects import base
-from duHast.Revit.Common.Objects import (
-    pattern_foreground,
-    pattern_background,
-    line_projection,
-)
 
 
-class OverrideProjection(base.Base):
-    data_type = "override_projection"
-
-    def __init__(self, j={}, **kwargs):
+class PatternSettingBase(base.Base):
+    def __init__(self, data_type="unknown", j={}, **kwargs):
         """
         Class constructor.
 
         """
 
-        super(OverrideProjection, self).__init__(**kwargs)
+        super(PatternSettingBase, self).__init__(**kwargs)
+
+        self.data_type = data_type
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -68,43 +63,28 @@ class OverrideProjection(base.Base):
                 )
 
             # load overrides
-            if pattern_background.PatternBackground.data_type in j:
-                self.pattern_background = pattern_background.PatternBackground(
-                    j[pattern_background.PatternBackground.data_type]
-                )
+            if "id" in j:
+                self.id = j["id"]
             else:
-                self.pattern_background = pattern_background.PatternBackground()
+                self.id = -1
 
-            if pattern_foreground.PatternForeground.data_type in j:
-                self.pattern_foreground = pattern_foreground.PatternForeground(
-                    j[pattern_foreground.PatternForeground.data_type]
-                )
+            if "name" in j:
+                self.name = j["name"]
             else:
-                self.pattern_foreground = pattern_foreground.PatternForeground()
+                self.name = "unknown pattern"
 
-            if line_projection.LineProjection.data_type in j:
-                self.line_projection = line_projection.LineProjection(
-                    j[line_projection.LineProjection.data_type]
-                )
-            else:
-                self.line_projection = line_projection.LineProjection()
         else:
-            self.pattern_background = pattern_background.PatternBackground()
-            self.pattern_foreground = pattern_foreground.PatternForeground()
-            self.line_projection = line_projection.LineProjection()
+            self.id = -1
+            self.name = "unknown pattern"
 
     def __eq__(self, other):
         """
-        Custom compare is equal override.
+        Custom compare is equal override (name comparison only!)
 
-        :param other: Another instance of OverrideProjection class
-        :type other: :class:`.OverrideProjection`
-        :return: True if all properties of compared class instances are equal, otherwise False.
+        :param other: Another instance of pattern class
+        :type other: :class:`.PatternBase`
+        :return: True if name value of other colour class instance equal the name values of this instance, otherwise False.
         :rtype: Bool
         """
 
-        return (self.pattern_background, self.pattern_foreground, self.line_projection) == (
-            other.pattern_background,
-            other.pattern_foreground,
-            other.line_projection,
-        )
+        return (self.name) == (other.name)

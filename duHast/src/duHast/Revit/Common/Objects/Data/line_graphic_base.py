@@ -1,16 +1,17 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A base class used to store pattern graphic settings.
+A base class used to store line graphic settings.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Stores pattern graphic settings:
+Stores line graphic settings:
 
 - colour
 - pattern_id
-- is_visible
+- weight
 
 """
+
 
 #
 # License:
@@ -38,17 +39,20 @@ Stores pattern graphic settings:
 import json
 
 from duHast.Utilities.Objects import base
-from duHast.Revit.Common.Objects.colour_base import ColourBase
+from duHast.Revit.Common.Objects.Data.colour_base import ColourBase
+from duHast.Revit.LinePattern.Objects.Data.line_pattern_settings import (
+    LinePatternSettings,
+)
 
 
-class PatternGraphicBase(base.Base):
+class LineGraphicBase(base.Base):
     def __init__(self, data_type="unknown", j={}, **kwargs):
         """
         Class constructor.
 
         """
 
-        super(PatternGraphicBase, self).__init__(**kwargs)
+        super(LineGraphicBase, self).__init__(**kwargs)
 
         self.data_type = data_type
 
@@ -73,20 +77,22 @@ class PatternGraphicBase(base.Base):
             else:
                 self.colour = ColourBase()
 
-            if "is_visible" in j:
-                self.is_visible = j["is_visible"]
+            if "line_pattern_settings" in j:
+                self.line_pattern_settings = LinePatternSettings(
+                    j["line_pattern_settings"]
+                )
             else:
-                self.is_visible = True
+                self.line_pattern_settings = LinePatternSettings()
 
-            if "pattern_id" in j:
-                self.pattern_id = j["pattern_id"]
+            if "weight" in j:
+                self.weight = j["weight"]
             else:
-                self.pattern_id = -1
+                self.weight = 1
         else:
             # set default values
             self.colour = ColourBase()
-            self.pattern_id = -1
-            self.is_visible = True
+            self.line_pattern_settings = LinePatternSettings()
+            self.weight = 1
 
     def __eq__(self, other):
         """
@@ -94,9 +100,13 @@ class PatternGraphicBase(base.Base):
         The comparison ignores the pattern_id value!
 
         :param other: Another instance of line graphic base class
-        :type other: :class:`.PatternGraphicBase`
-        :return: True if is_visible and colour values of other colour class instance equal the is_visible and colour values of this instance, otherwise False.
+        :type other: :class:`.LineGraphicBase`
+        :return: True if weight and colour values of other colour class instance equal the weight and colour values of this instance, otherwise False.
         :rtype: Bool
         """
 
-        return (self.is_visible, self.colour) == (other.is_visible, other.colour)
+        return (self.weight, self.line_pattern_settings, self.colour) == (
+            other.weight,
+            other.line_pattern_settings,
+            other.colour,
+        )

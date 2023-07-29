@@ -1,10 +1,10 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A base class used to store category overrides.
+A base class used to store pattern category overrides.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Stores common overrides between categories and filters
+Stores line patterns.
 
 """
 
@@ -25,29 +25,26 @@ Stores common overrides between categories and filters
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-from duHast.Revit.Views.Objects.override_by_base import OverrideByBase
 
+from duHast.Revit.Common.Objects.Data.pattern_base import PatternBase
 
-class OverrideByCategory(OverrideByBase):
-    data_type = "override_by_category"
+class LinePatternSettings(PatternBase):
+    data_type = "line_pattern_settings"
 
-    def __init__(
-        self, main_category_name="", sub_category_name="", category_id=-1, j={}
-    ):
+    def __init__(self, j={}):
         """
         Class constructor.
 
+        :param j: A json formatted dictionary of this class, defaults to {}
+        :type j: dict, optional
         """
 
-        super(OverrideByCategory, self).__init__(data_type=self.data_type, j=j)
-
-        self.main_category_name = main_category_name
-        self.sub_category_name = sub_category_name
-        self.category_id = category_id
+        # store data type  in base class
+        super(LinePatternSettings, self).__init__(data_type=self.data_type, j=j)

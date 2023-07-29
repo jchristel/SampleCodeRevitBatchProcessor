@@ -4,7 +4,7 @@ A base class used to store pattern category overrides.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Stores overrides of background patterns.
+Stores line patterns.
 
 """
 
@@ -33,10 +33,10 @@ Stores overrides of background patterns.
 #
 
 
-from duHast.Revit.Common.Objects.pattern_graphic_base import PatternGraphicBase
+from duHast.Revit.Common.Objects.Data.pattern_base import PatternBase
 
-class PatternBackground(PatternGraphicBase):
-    data_type = "pattern_background"
+class FillPatternSettings(PatternBase):
+    data_type = "fill_pattern_setting"
 
     def __init__(self, j={}):
         """
@@ -47,4 +47,4 @@ class PatternBackground(PatternGraphicBase):
         """
 
         # store data type  in base class
-        super(PatternBackground, self).__init__(data_type=self.data_type, j=j)
+        super(FillPatternSettings, self).__init__(data_type=self.data_type, j=j)

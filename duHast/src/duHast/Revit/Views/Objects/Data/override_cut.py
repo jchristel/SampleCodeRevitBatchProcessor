@@ -1,14 +1,10 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A base class used to store view (template) graphic settings .
+A base class used to store category overrides.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Stores:
-
-- model overrides
-- filter overrides
-
+Stores common overrides between categories and filters
 
 """
 
@@ -39,22 +35,19 @@ Stores:
 import json
 
 from duHast.Utilities.Objects import base
-
-from duHast.Revit.Views.Objects.Data.override_by_category import OverrideByCategory
-from duHast.Revit.Views.Objects.Data.override_by_filter import OverrideByFilter
+from duHast.Revit.Common.Objects.Data import pattern_foreground, pattern_background, line_cut
 
 
-class ViewGraphicsSettings(base.Base):
-    def __init__(self, view_name="", view_id=-1, j={}, **kwargs):
+class OverrideCut(base.Base):
+    data_type = "override_cut"
+
+    def __init__(self, j={}, **kwargs):
         """
         Class constructor.
 
         """
 
-        super(ViewGraphicsSettings, self).__init__(**kwargs)
-
-        self.view_name = view_name
-        self.view_id = view_id
+        super(OverrideCut, self).__init__(**kwargs)
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -70,39 +63,42 @@ class ViewGraphicsSettings(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load settings
-            if OverrideByCategory.data_type in j:
-                for override in j[OverrideByCategory.data_type]:
-                    self.override_by_category.append(OverrideByCategory(override))
+            # load overrides
+            if pattern_background.PatternBackground.data_type in j:
+                self.pattern_background = pattern_background.PatternBackground(
+                    j[pattern_background.PatternBackground.data_type]
+                )
             else:
-                self.override_by_category = []
+                self.pattern_background = pattern_background.PatternBackground()
 
-            if OverrideByFilter.data_type in j:
-                for override in j[OverrideByFilter.data_type]:
-                    self.override_by_filter.append(OverrideByFilter(override))
+            if pattern_foreground.PatternForeground.data_type in j:
+                self.pattern_foreground = pattern_foreground.PatternForeground(
+                    j[pattern_foreground.PatternForeground.data_type]
+                )
             else:
-                self.override_by_filter = []
+                self.pattern_foreground = pattern_foreground.PatternForeground()
 
+            if line_cut.LineCut.data_type in j:
+                self.line_cut = line_cut.LineCut(j[line_cut.LineCut.data_type])
+            else:
+                self.line_cut = line_cut.LineCut()
         else:
-            self.override_by_category = []
-            self.override_by_filter = []
+            self.pattern_background = pattern_background.PatternBackground()
+            self.pattern_foreground = pattern_foreground.PatternForeground()
+            self.line_cut = line_cut.LineCut()
 
-    def add_overrides_by_category(self, override):
+    def __eq__(self, other):
         """
-        Add overrides by category settings
+        Custom compare is equal override.
 
-        :param override: _description_
-        :type override: _type_
-        """
-
-        self.override_by_category.append(override)
-
-    def add_overrides_by_filter(self, override):
-        """
-        Add overrides by filter settings
-
-        :param override: _description_
-        :type override: _type_
+        :param other: Another instance of OverrideCut class
+        :type other: :class:`.OverrideCut`
+        :return: True if all properties of compared class instances are equal, otherwise False.
+        :rtype: Bool
         """
 
-        self.override_by_filter.append(override)
+        return (self.pattern_background, self.pattern_foreground, self.line_cut) == (
+            other.pattern_background,
+            other.pattern_foreground,
+            other.line_cut,
+        )

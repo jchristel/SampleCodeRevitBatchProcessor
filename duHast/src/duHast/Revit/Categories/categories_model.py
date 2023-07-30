@@ -1,14 +1,9 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A base class used to store pattern category overrides.
+Revit category helper functions for project files.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-Stores line patterns.
-
 """
-
-
+#
 #
 # License:
 #
@@ -30,21 +25,37 @@ Stores line patterns.
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
-#
 
 
-from duHast.Revit.Common.Objects.Data.pattern_settings_base import PatternSettingBase
+import clr
+import System
+from System.Collections.Generic import List
 
-class FillPatternSettings(PatternSettingBase):
-    data_type = "fill_pattern_setting"
+from duHast.Utilities.Objects import result as res
+from collections import namedtuple
 
-    def __init__(self, j={}):
-        """
-        Class constructor.
+import Autodesk.Revit.DB as rdb
 
-        :param j: A json formatted dictionary of this class, defaults to {}
-        :type j: dict, optional
-        """
 
-        # store data type  in base class
-        super(FillPatternSettings, self).__init__(data_type=self.data_type, j=j)
+# tuples containing categories data
+category_data = namedtuple("category_data", "category_name sub_category_name id")
+
+def get_categories_in_model(doc):
+    """
+    Returns all categories and subcategories in a model
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of named tuples of type category_data
+    :rtype: [category_data]
+    """
+
+    cats = doc.Settings.Categories
+    categories = []
+    for main_category in cats:
+        categories.append(category_data(category_name=main_category.Name, sub_category_name=main_category.Name, id=main_category.Id))
+        for sub_cat in main_category.SubCategories:
+            categories.append(category_data(category_name=main_category.Name, sub_category_name=sub_cat.Name, id=sub_cat.Id))
+    
+    return categories

@@ -33,9 +33,9 @@ Stores line patterns.
 #
 
 
-from duHast.Revit.Common.Objects.Data.pattern_base import PatternBase
+from duHast.Revit.Common.Objects.Data.pattern_settings_base import PatternSettingBase
 
-class LinePatternSettings(PatternBase):
+class LinePatternSettings(PatternSettingBase):
     data_type = "line_pattern_settings"
 
     def __init__(self, j={}):

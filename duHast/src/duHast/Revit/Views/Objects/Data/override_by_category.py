@@ -32,8 +32,9 @@ Stores common overrides between categories and filters
 #
 #
 
-from duHast.Revit.Views.Objects.Data.override_by_base import OverrideByBase
+import json
 
+from duHast.Revit.Views.Objects.Data.override_by_base import OverrideByBase
 
 class OverrideByCategory(OverrideByBase):
     data_type = "override_by_category"
@@ -51,3 +52,4 @@ class OverrideByCategory(OverrideByBase):
         self.main_category_name = main_category_name
         self.sub_category_name = sub_category_name
         self.category_id = category_id
+

@@ -75,6 +75,11 @@ class OverrideByBase(base.Base):
             else:
                 self.transparency = 0
 
+            if "is_visible" in j:
+                self.is_visible = j["is_visible"]
+            else:
+                self.is_visible = True
+            
             if OverrideProjection.data_type in j:
                 self.override_projection = OverrideProjection(
                     j[OverrideProjection.data_type]
@@ -91,6 +96,7 @@ class OverrideByBase(base.Base):
             self.transparency = 0
             self.override_projection = OverrideProjection()
             self.override_cut = OverrideCut()
+            self.is_visible = True
 
     def __eq__(self, other):
         """
@@ -105,11 +111,13 @@ class OverrideByBase(base.Base):
         return (
             self.halftone,
             self.transparency,
+            self.is_visible,
             self.override_projection,
             self.override_cut,
         ) == (
             other.halftone,
             other.transparency,
+            other.is_visible,
             other.override_projection,
             other.override_cut,
         )

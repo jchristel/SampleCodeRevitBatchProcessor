@@ -31,6 +31,7 @@ Stores common overrides between categories and filters
 #
 #
 #
+import json
 
 from duHast.Revit.Views.Objects.Data.override_by_base import OverrideByBase
 
@@ -48,3 +49,24 @@ class OverrideByFilter(OverrideByBase):
 
         self.filter_name = filter_name
         self.filter_id = filter_id
+
+        # check if any data was past in with constructor!
+        if j != None and len(j) > 0:
+            # check type of data that came in:
+            if type(j) == str:
+                # a string
+                j = json.loads(j)
+            elif type(j) == dict:
+                # no action required
+                pass
+            else:
+                raise ValueError(
+                    "Argument supplied must be of type string or type dictionary"
+                )
+
+            if "is_enabled" in j:
+                self.is_enabled = j["is_enabled"]
+            else:
+                self.is_enabled = True
+        else:
+            self.is_enabled = True

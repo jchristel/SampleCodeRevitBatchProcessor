@@ -19,8 +19,8 @@ Revit line line patterns helper functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -40,7 +40,14 @@ from duHast.Utilities.Objects import result as res
 
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import (
+    BuiltInParameter,
+    Element,
+    ElementId,
+    GraphicsStyleType,
+    LinePatternElement,
+    FilteredElementCollector,
+)
 
 # -------------------------------------------------PATTERN PROPERTIES ------------
 
@@ -69,20 +76,20 @@ def get_line_pattern_from_category(cat, doc):
     dic_pattern = {}
     dic_pattern[PROPERTY_PATTERN_NAME] = PROPERTY_PATTERN_NAME_VALUE_DEFAULT
     dic_pattern[PROPERTY_PATTERN_ID] = pattern_id = cat.GetLinePatternId(
-        rdb.GraphicsStyleType.Projection
+        GraphicsStyleType.Projection
     )
     """check for 'solid' pattern which apparently is not a pattern at all
     *The RevitAPI.chm documents says: Note that Solid is special. It isn't a line pattern at all -- 
     * it is a special code that tells drawing and export code to use solid lines rather than patterned lines. 
     * Solid is visible to the user when selecting line patterns. 
     """
-    if pattern_id != rdb.LinePatternElement.GetSolidPatternId():
+    if pattern_id != LinePatternElement.GetSolidPatternId():
         # not a solid line pattern
-        collector = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement)
+        collector = FilteredElementCollector(doc).OfClass(LinePatternElement)
         line_pattern_element = None
         for c in collector:
             if pattern_id == c.Id:
-                dic_pattern[PROPERTY_PATTERN_NAME] = rdb.Element.Name.GetValue(c)
+                dic_pattern[PROPERTY_PATTERN_NAME] = Element.Name.GetValue(c)
     return dic_pattern
 
 
@@ -102,15 +109,15 @@ def get_line_pattern_from_level_element(doc, level):
 
     dic_pattern = {}
     dic_pattern[PROPERTY_PATTERN_NAME] = PROPERTY_PATTERN_NAME_VALUE_DEFAULT
-    dic_pattern[PROPERTY_PATTERN_ID] = rdb.ElementId.InvalidElementId
+    dic_pattern[PROPERTY_PATTERN_ID] = ElementId.InvalidElementId
     try:
         l_type_id = level.GetTypeId()
         level_type = doc.GetElement(l_type_id)
         line_pattern_id_string = rParaGet.get_built_in_parameter_value(
-            level_type, rdb.BuiltInParameter.LINE_PATTERN
+            level_type, BuiltInParameter.LINE_PATTERN
         )
-        dic_pattern[PROPERTY_PATTERN_ID] = rdb.ElementId(int(line_pattern_id_string))
-        dic_pattern[PROPERTY_PATTERN_NAME] = rdb.Element.Name.GetValue(level_type)
+        dic_pattern[PROPERTY_PATTERN_ID] = ElementId(int(line_pattern_id_string))
+        dic_pattern[PROPERTY_PATTERN_NAME] = Element.Name.GetValue(level_type)
     except Exception as ex:
         dic_pattern[PROPERTY_PATTERN_NAME] = str(ex)
     return dic_pattern
@@ -137,15 +144,15 @@ def delete_line_patterns_contains(doc, contains):
     :rtype: :class:`.Result`
     """
 
-    lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
+    lps = FilteredElementCollector(doc).OfClass(LinePatternElement).ToList()
     ids = list(
         lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)
-    ).ToList[rdb.ElementId]()
+    ).ToList[ElementId]()
     result = rDel.delete_by_element_ids(
         doc,
         ids,
-        "Deleting line patterns where name contains: " + str(contains),
-        "line patterns containing: " + str(contains),
+        "Deleting line patterns where name contains: {}".format(contains),
+        "line patterns containing: {}".format(contains),
     )
     return result
 
@@ -168,10 +175,10 @@ def delete_line_pattern_starts_with(doc, starts_with):
     :rtype: :class:`.Result`
     """
 
-    lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
+    lps = FilteredElementCollector(doc).OfClass(LinePatternElement).ToList()
     ids = list(
         lp.Id for lp in lps if lp.GetLinePattern().Name.StartsWith(starts_with)
-    ).ToList[rdb.ElementId]()
+    ).ToList[ElementId]()
     result = rDel.delete_by_element_ids(
         doc,
         ids,
@@ -199,11 +206,11 @@ def delete_line_patterns_without(doc, contains):
     :rtype: :class:`.Result`
     """
 
-    lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
-    ids = list(lp.Id for lp in lps).ToList[rdb.ElementId]()
+    lps = FilteredElementCollector(doc).OfClass(LinePatternElement).ToList()
+    ids = list(lp.Id for lp in lps).ToList[ElementId]()
     ids_contain = list(
         lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)
-    ).ToList[rdb.ElementId]()
+    ).ToList[ElementId]()
     delete_ids = list(set(ids) - set(ids_contain))
     result = rDel.delete_by_element_ids(
         doc,
@@ -221,10 +228,10 @@ def get_all_line_patterns(doc):
     :param doc: _description_
     :type doc: _type_
 
-    :return: List of all line pattern elements in model.
-    :rtype: list of Autodesk.Revit.DB.LinePatternElement
+    :return: filtered element collector of all line pattern elements in model.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
+    return FilteredElementCollector(doc).OfClass(LinePatternElement)
 
 
 def build_patterns_dictionary_by_name(doc):
@@ -239,7 +246,7 @@ def build_patterns_dictionary_by_name(doc):
     """
 
     lp_dic = {}
-    lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement)
+    lps = FilteredElementCollector(doc).OfClass(LinePatternElement)
     for lp in lps:
         if lp_dic.has_key(lp.GetLinePattern().Name):
             lp_dic[lp.GetLinePattern().Name].append(lp.Id)

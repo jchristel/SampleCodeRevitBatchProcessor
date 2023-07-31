@@ -36,7 +36,7 @@ from System import Linq
 clr.ImportExtensions(Linq)
 
 # import everything from Autodesk Revit DataBase namespace (Revit API)
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import ElementId, ParameterType, StorageType
 
 # utilities
 from duHast.Utilities import utility as util
@@ -157,17 +157,17 @@ def getter_double_as_double_converted_to_metric(para):
 
     parameter_value = None
     if para.AsValueString() != None and para.AsValueString() != "":
-        if para.Definition.ParameterType == rdb.ParameterType.Length:
+        if para.Definition.ParameterType == ParameterType.Length:
             parameter_value = unitConversion.convert_imperial_feet_to_metric_mm(
                 para.AsDouble()
             )
-        elif para.Definition.ParameterType == rdb.ParameterType.Area:
+        elif para.Definition.ParameterType == ParameterType.Area:
             parameter_value = (
                 unitConversion.convert_imperial_square_feet_to_metric_square_metre(
                     para.AsDouble()
                 )
             )
-        elif para.Definition.ParameterType == rdb.ParameterType.Volume:
+        elif para.Definition.ParameterType == ParameterType.Volume:
             parameter_value = (
                 unitConversion.convert_imperial_cubic_feet_to_metric_cubic_metre(
                     para.AsDouble()
@@ -207,7 +207,7 @@ def getter_string_as_UTF8_string(para):
     """
 
     parameter_value = "None"
-    if para.StorageType == rdb.StorageType.String:
+    if para.StorageType == StorageType.String:
         if para.AsString() != None and para.AsString() != "":
             parameter_value = para.AsString().encode("utf-8")
     return parameter_value
@@ -225,7 +225,7 @@ def getter_string_as_string(para):
     """
 
     parameter_value = "None"
-    if para.StorageType == rdb.StorageType.String:
+    if para.StorageType == StorageType.String:
         if para.AsString() != None and para.AsString() != "":
             parameter_value = para.AsString()
     return parameter_value
@@ -243,7 +243,7 @@ def getter_element_id_as_string(para):
     """
 
     parameter_value = "None"
-    if para.StorageType == rdb.StorageType.ElementId:
+    if para.StorageType == StorageType.ElementId:
         if para.AsElementId() != None:
             parameter_value = str(para.AsElementId())
     return parameter_value
@@ -261,7 +261,7 @@ def getter_element_id_as_element_id(para):
     """
 
     parameter_value = None
-    if para.StorageType == rdb.StorageType.ElementId:
+    if para.StorageType == StorageType.ElementId:
         if para.AsElementId() != None:
             parameter_value = para.AsElementId()
     return parameter_value
@@ -279,7 +279,7 @@ def getter_element_id_as_element_int(para):
     """
 
     parameter_value = None
-    if para.StorageType == rdb.StorageType.ElementId:
+    if para.StorageType == StorageType.ElementId:
         if para.AsElementId() != None:
             parameter_value = para.AsElementId().IntegerValue
     return parameter_value
@@ -313,30 +313,30 @@ def get_parameter_value_with_over_load(para, parameter_value_getters):
     parameter_value = None
     try:
         # extract parameter value depending on its storage type
-        if para.StorageType == rdb.StorageType.Double:
-            if rdb.StorageType.Double in parameter_value_getters:
-                parameter_value = parameter_value_getters[rdb.StorageType.Double](para)
+        if para.StorageType == StorageType.Double:
+            if StorageType.Double in parameter_value_getters:
+                parameter_value = parameter_value_getters[StorageType.Double](para)
             else:
                 raise ValueError(
                     "No parameter value getter for storage type Double provided"
                 )
-        elif para.StorageType == rdb.StorageType.Integer:
-            if rdb.StorageType.Integer in parameter_value_getters:
-                parameter_value = parameter_value_getters[rdb.StorageType.Integer](para)
+        elif para.StorageType == StorageType.Integer:
+            if StorageType.Integer in parameter_value_getters:
+                parameter_value = parameter_value_getters[StorageType.Integer](para)
             else:
                 raise ValueError(
                     "No parameter value getter for storage type Integer provided"
                 )
-        elif para.StorageType == rdb.StorageType.String:
-            if rdb.StorageType.String in parameter_value_getters:
-                parameter_value = parameter_value_getters[rdb.StorageType.String](para)
+        elif para.StorageType == StorageType.String:
+            if StorageType.String in parameter_value_getters:
+                parameter_value = parameter_value_getters[StorageType.String](para)
             else:
                 raise ValueError(
                     "No parameter value getter for storage type String provided"
                 )
-        elif para.StorageType == rdb.StorageType.ElementId:
-            if rdb.StorageType.ElementId in parameter_value_getters:
-                parameter_value = parameter_value_getters[rdb.StorageType.ElementId](
+        elif para.StorageType == StorageType.ElementId:
+            if StorageType.ElementId in parameter_value_getters:
+                parameter_value = parameter_value_getters[StorageType.ElementId](
                     para
                 )
             else:
@@ -372,10 +372,10 @@ def get_parameter_value(para):
     parameter_value = "no Value"
     try:
         value_getter = {
-            rdb.StorageType.Double: getter_double_or_int_as_string,
-            rdb.StorageType.Integer: getter_double_or_int_as_string,
-            rdb.StorageType.String: getter_string_as_string,
-            rdb.StorageType.ElementId: getter_element_id_as_string,
+            StorageType.Double: getter_double_or_int_as_string,
+            StorageType.Integer: getter_double_or_int_as_string,
+            StorageType.String: getter_string_as_string,
+            StorageType.ElementId: getter_element_id_as_string,
             str(None): getter_none,
         }
 
@@ -407,10 +407,10 @@ def get_parameter_value_utf8_string(para):
     parameter_value = "no Value"
 
     value_getter = {
-        rdb.StorageType.Double: getter_double_or_int_as_string,  # no specific utf encoding required
-        rdb.StorageType.Integer: getter_double_or_int_as_string,  # no specific utf encoding required
-        rdb.StorageType.String: getter_string_as_UTF8_string,
-        rdb.StorageType.ElementId: getter_element_id_as_string,  # no specific utf encoding required
+        StorageType.Double: getter_double_or_int_as_string,  # no specific utf encoding required
+        StorageType.Integer: getter_double_or_int_as_string,  # no specific utf encoding required
+        StorageType.String: getter_string_as_UTF8_string,
+        StorageType.ElementId: getter_element_id_as_string,  # no specific utf encoding required
         str(None): getter_none,
     }
 
@@ -437,10 +437,10 @@ def get_parameter_value_as_integer(para):
     # set return value default
     parameter_value = -1
 
-    value_getter = {rdb.StorageType.Integer: getter_int_as_int}
+    value_getter = {StorageType.Integer: getter_int_as_int}
 
     # extract parameter value depending on whether its storage type is integer, otherwise default value
-    if para.StorageType == rdb.StorageType.Integer:
+    if para.StorageType == StorageType.Integer:
         parameter_value = get_parameter_value_with_over_load(para, value_getter)
     return parameter_value
 
@@ -460,12 +460,12 @@ def get_parameter_value_as_element_id(para):
     """
 
     # set return value default
-    parameter_value = rdb.ElementId.InvalidElementId
+    parameter_value = ElementId.InvalidElementId
 
-    value_getter = {rdb.StorageType.ElementId: getter_element_id_as_element_id}
+    value_getter = {StorageType.ElementId: getter_element_id_as_element_id}
 
     # check if element id...otherwise return the default value
-    if para.StorageType == rdb.StorageType.ElementId:
+    if para.StorageType == StorageType.ElementId:
         parameter_value = get_parameter_value_with_over_load(para, value_getter)
     return parameter_value
 

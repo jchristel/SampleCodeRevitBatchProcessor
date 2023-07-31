@@ -26,15 +26,9 @@ Revit category helper functions for project files.
 #
 #
 
-
-import clr
-import System
-from System.Collections.Generic import List
-
-from duHast.Utilities.Objects import result as res
 from collections import namedtuple
 
-import Autodesk.Revit.DB as rdb
+
 
 
 # tuples containing categories data

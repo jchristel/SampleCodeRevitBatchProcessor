@@ -25,16 +25,16 @@ Revit fill patterns helper functions.
 #
 #
 #
-import Autodesk.Revit.DB as rdb
 
+from Autodesk.Revit.DB import FilteredElementCollector, FillPatternElement
 
 def get_all_fill_pattern(doc):
     """
     Gets all fill pattern elements in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :return: A list of all fill pattern elements.
-    :rtype: list of Autodesk.Revit.DB.FillPatternElement
+    :return: A filtered element collector of all fill pattern elements.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.FillPatternElement).ToList()
+    return FilteredElementCollector(doc).OfClass(FillPatternElement)

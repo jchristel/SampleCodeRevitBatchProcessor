@@ -32,11 +32,9 @@ A number of functions used to revit elements to data storage classes.
 #
 #
 
-import Autodesk.Revit.DB as rdb
-
 from duHast.Revit.Common.Objects.Data.colour_base import ColourBase
 
-def colour (revit_colour):
+def to_colour (revit_colour):
     """
     Convertes a Revit colour instance to a ColourBase storage instance
 
@@ -48,7 +46,12 @@ def colour (revit_colour):
     """
 
     c = ColourBase()
-    c.red = revit_colour.Red
-    c.green = revit_colour.Green
-    c.blue = revit_colour.Blue
+    try:
+        c.red = revit_colour.Red
+        c.green = revit_colour.Green
+        c.blue = revit_colour.Blue
+    except Exception as e:
+        c.red = -1
+        c.green = -1
+        c.blue = -1
     return c

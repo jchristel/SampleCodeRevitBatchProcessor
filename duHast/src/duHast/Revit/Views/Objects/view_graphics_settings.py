@@ -87,22 +87,3 @@ class ViewGraphicsSettings(base.Base):
             self.override_by_category = []
             self.override_by_filter = []
 
-    def add_overrides_by_category(self, override):
-        """
-        Add overrides by category settings
-
-        :param override: _description_
-        :type override: _type_
-        """
-
-        self.override_by_category.append(override)
-
-    def add_overrides_by_filter(self, override):
-        """
-        Add overrides by filter settings
-
-        :param override: _description_
-        :type override: _type_
-        """
-
-        self.override_by_filter.append(override)

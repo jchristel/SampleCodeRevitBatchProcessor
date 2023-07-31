@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Category override data storage class.
+Category override to data storage class helper functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -26,40 +26,356 @@ Category override data storage class.
 #
 #
 
-import json
-from duHast.Revit.Views.Objects.override_by_category import OverrideByCategory
-from duHast.Revit.Views.Objects.override_by_filter import OverrideByFilter
+from Autodesk.Revit.DB import Element
+
 from duHast.Revit.Views.Objects.view_graphics_settings import ViewGraphicsSettings
+from duHast.Revit.LinePattern.line_patterns import get_all_line_patterns
+from duHast.Revit.LinePattern.fill_patterns import get_all_fill_pattern
+from duHast.Revit.Categories.categories_model import get_categories_in_model
+from duHast.Revit.Views.Objects.Data.override_by_category import OverrideByCategory
+from duHast.Revit.Views.Objects.Data.override_by_filter import OverrideByFilter
+from duHast.Revit.Views.Objects.Data.override_projection import OverrideProjection
+from duHast.Revit.Views.Objects.Data.override_cut import OverrideCut
+from duHast.Revit.Common.Objects.Data.pattern_background import PatternBackground
+from duHast.Revit.Common.Objects.Data.pattern_foreground import PatternForeground
+from duHast.Revit.Common.Objects.Data.line_projection import LineProjection
+from duHast.Revit.Common.Objects.Data.line_cut import LineCut
+from duHast.Revit.LinePattern.Objects.Data.line_pattern_settings import (
+    LinePatternSettings,
+)
+from duHast.Revit.LinePattern.Objects.Data.fill_pattern_settings import (
+    FillPatternSettings,
+)
+from duHast.Revit.Common.Utility.revit_to_data_conversion import to_colour
 
 
-def _get_model_overrides(view):
-    pass
+# ----------------------  utility ----------------------
 
 
-def _get_filter_overrides(view):
-    pass
-
-
-def convert_revit_view_to_data(doc, view):
+def _get_name_from_pattern_id(id, pattern_list):
     """
-    Convertes a Revit view element into an instance of class ViewGraphicsSettings
+    Returns the matching name of a pattern from the list past in by the id
 
-    :param view: A Revit view instance.
+    :param id: The pattern id to match
+    :type id: Autodesk.Revit.DB.ElementId
+    :param pattern_list: A list of pattern elements
+    :type pattern_list: [PatternElement] (Can be AutoDesk.Revit.LinePatternElement or Autodesk.Revit.DB.FillPatternElement)
+    :return: The pattern name if a match was found, otherwise None
+    :rtype: str
+    """
+
+    for pat in pattern_list:
+        if id == pat.Id:
+            return Element.Name.GetValue(pat)
+    return None
+
+
+# ----------------------  overrides ----------------------
+
+
+def get_projection_overrides(view_override_graphic, line_patterns, fill_patterns):
+    """
+    Retrieves projection override settings from an OverridesGraphicSettings object
+
+    :param view_override_graphic: An overrides graphic setting
+    :type view_override_graphic: Autodesk.Revit.DB.OverridesGraphicSettings
+    :param line_patterns: All line patterns in the model
+    :type line_patterns: [AutoDesk.Revit.LinePatternElement]
+    :param fill_patterns: All fill patterns in the model
+    :type fill_patterns: [Autodesk.Revit.DB.FillPatternElement]
+
+    :return: An overrides projections object instance.
+    :rtype: :class:`.OverrideProjection`
+    """
+
+    # set up data storage class instance
+    projection_override = OverrideProjection()
+
+    # start
+    # projection line pattern
+    line_pat = LineProjection()
+    line_pat.colour = to_colour(view_override_graphic.ProjectionLineColor)
+    line_pat.weight = view_override_graphic.ProjectionLineWeight
+    # basic line pattern details
+    line_pat_settings = LinePatternSettings()
+    line_pat_settings.id = view_override_graphic.ProjectionLinePatternId.IntegerValue
+    line_pat_settings.name = _get_name_from_pattern_id(
+        id=view_override_graphic.ProjectionLinePatternId, pattern_list=line_patterns
+    )
+    # store line pattern details
+    line_pat.line_pattern_settings = line_pat_settings
+    # store projection line pattern details
+    projection_override.line_projection = line_pat
+
+    # projection pattern foreground
+    fore_pat = PatternForeground()
+    fore_pat.colour = to_colour(view_override_graphic.SurfaceForegroundPatternColor)
+    fore_pat.is_visible = view_override_graphic.IsSurfaceForegroundPatternVisible
+    # basic foreground pattern details
+    fore_pat_settings = FillPatternSettings()
+    fore_pat_settings.id = view_override_graphic.SurfaceForegroundPatternId.IntegerValue
+    fore_pat_settings.name = _get_name_from_pattern_id(
+        id=view_override_graphic.SurfaceForegroundPatternId, pattern_list=fill_patterns
+    )
+    # store foreground pattern settings details
+    fore_pat.fill_pattern_setting = fore_pat_settings
+    # store foreground pattern in override
+    projection_override.pattern_foreground = fore_pat
+
+    # projection pattern background
+    back_pat = PatternBackground()
+    back_pat.colour = to_colour(view_override_graphic.SurfaceBackgroundPatternColor)
+    back_pat.is_visible = view_override_graphic.IsSurfaceBackgroundPatternVisible
+    # basic background pattern details
+    back_pat_settings = FillPatternSettings()
+    back_pat_settings.id = view_override_graphic.SurfaceBackgroundPatternId.IntegerValue
+    back_pat_settings.name = _get_name_from_pattern_id(
+        id=view_override_graphic.SurfaceBackgroundPatternId, pattern_list=fill_patterns
+    )
+    # store foreground pattern settings details
+    back_pat.fill_pattern_setting = back_pat_settings
+    # store background pattern in override
+    projection_override.pattern_background = back_pat
+
+    return projection_override
+
+
+def get_cut_overrides(view_override_graphic, line_patterns, fill_patterns):
+    """
+    Retrieves cut override settings from an OverridesGraphicSettings object
+
+    :param view_override_graphic: An overrides graphic setting
+    :type view_override_graphic: Autodesk.Revit.DB.OverridesGraphicSettings
+    :param line_patterns: All line patterns in the model
+    :type line_patterns: [AutoDesk.Revit.LinePatternElement]
+    :param fill_patterns: All fill patterns in the model
+    :type fill_patterns: [Autodesk.Revit.DB.FillPatternElement]
+
+    :return: An overrides projections object instance.
+    :rtype: :class:`.OverrideCut`
+    """
+
+    # set up data storage class instance
+    cut_override = OverrideCut()
+
+    # start
+    # cut line pattern
+    line_pat = LineCut()
+    line_pat.colour = to_colour(view_override_graphic.CutLineColor)
+    line_pat.weight = view_override_graphic.CutLineWeight
+    # basic line pattern details
+    line_pat_settings = LinePatternSettings()
+    line_pat_settings.id = view_override_graphic.CutLinePatternId.IntegerValue
+    line_pat_settings.name = _get_name_from_pattern_id(
+        id=view_override_graphic.CutLinePatternId, pattern_list=line_patterns
+    )
+    # store line pattern details
+    line_pat.line_pattern_settings = line_pat_settings
+    # store projection line pattern details
+    cut_override.line_cut = line_pat
+
+    # cut pattern foreground
+    fore_pat = PatternForeground()
+    fore_pat.colour = to_colour(view_override_graphic.CutForegroundPatternColor)
+    fore_pat.is_visible = view_override_graphic.IsCutForegroundPatternVisible
+    # basic foreground pattern details
+    fore_pat_settings = FillPatternSettings()
+    fore_pat_settings.id = view_override_graphic.CutForegroundPatternId.IntegerValue
+    fore_pat_settings.name = _get_name_from_pattern_id(
+        id=view_override_graphic.CutForegroundPatternId, pattern_list=fill_patterns
+    )
+    # store foreground pattern settings details
+    fore_pat.fill_pattern_setting = fore_pat_settings
+    # store foreground pattern in override
+    cut_override.pattern_foreground = fore_pat
+
+    # cut pattern background
+    back_pat = PatternBackground()
+    back_pat.colour = to_colour(view_override_graphic.CutBackgroundPatternColor)
+    back_pat.is_visible = view_override_graphic.IsCutBackgroundPatternVisible
+    # basic background pattern details
+    back_pat_settings = FillPatternSettings()
+    back_pat_settings.id = view_override_graphic.CutBackgroundPatternId.IntegerValue
+    back_pat_settings.name = _get_name_from_pattern_id(
+        id=view_override_graphic.CutBackgroundPatternId, pattern_list=fill_patterns
+    )
+    # store foreground pattern settings details
+    back_pat.fill_pattern_setting = back_pat_settings
+    # store background pattern in override
+    cut_override.pattern_background = back_pat
+
+    return cut_override
+
+
+# ----------------------  by category overrides ----------------------
+
+
+def get_view_category_overrides(
+    view, categories_in_model, line_patterns, fill_patterns
+):
+    """
+    Returns the category overrides for all categories past in for a given view.
+
+    :param view: The view from which to retrieve the category overrides.
     :type view: Autodesk.Revit.DB.View
-    :return: A storage class which contains graphics settings
+    :param categories_in_model: All categories in the model.
+    :type categories_in_model: _type_
+    :param line_patterns: All line patterns in the model
+    :type line_patterns: [AutoDesk.Revit.LinePatternElement]
+    :param fill_patterns: All fill patterns in the model
+    :type fill_patterns: [Autodesk.Revit.DB.FillPatternElement]
+
+    :return: A list of all category overrides for a view.
+    :rtype: [:class:`.OverrideByCategory`]
+    """
+
+    overrides_data = []
+    for model_cat in categories_in_model:
+        # set up storage class
+        override = OverrideByCategory(
+            main_category_name=model_cat.category_name,
+            sub_category_name=model_cat.sub_category_name,
+            category_id=model_cat.id.IntegerValue,
+        )
+
+        # get the overrides by category
+        view_override = view.GetCategoryOverrides(model_cat.id)
+        # get general overrides settings
+        override.halftone = view_override.Halftone
+        override.transparency = view_override.Transparency
+
+        # get cut overrides for category
+        override.override_cut = get_cut_overrides(
+            view_override_graphic=view_override,
+            line_patterns=line_patterns,
+            fill_patterns=fill_patterns,
+        )
+
+        # get projection for category
+        override.override_projection = get_projection_overrides(
+            view_override_graphic=view_override,
+            line_patterns=line_patterns,
+            fill_patterns=fill_patterns,
+        )
+
+        # check if category is hidden
+        override.is_visible = view.GetCategoryHidden(model_cat.id)
+
+        # save overrides in list to be returned
+        overrides_data.append(override)
+
+    return overrides_data
+
+
+# ----------------------  by filter overrides ----------------------
+
+
+def get_view_filter_overrides(doc, view, line_patterns, fill_patterns):
+    """
+    Returns the filter overrides for all filter applied to a given view.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view: The view from which to retrieve the category overrides.
+    :type view: Autodesk.Revit.DB.View
+    :param line_patterns: All line patterns in the model
+    :type line_patterns: [AutoDesk.Revit.LinePatternElement]
+    :param fill_patterns: All fill patterns in the model
+    :type fill_patterns: [Autodesk.Revit.DB.FillPatternElement]
+
+    :return: A list of all filter overrides for a view.
+    :rtype: [:class:`.OverrideByFilter`]
+    """
+
+    overrides_data = []
+
+    # get all filters applied to a view
+    filter_ids_applied = view.GetFilters()
+
+    for filter_id in filter_ids_applied:
+        # get the actual filter element
+        filter = doc.GetElement(filter_id)
+        # set up storage class
+        override = OverrideByFilter(
+            filter_name=Element.Name.GetValue(filter),
+            filter_id=filter_id.IntegerValue,
+        )
+
+        # get the overrides by filter
+        view_override = view.GetFilterOverrides(filter_id)
+        # get general overrides settings
+        override.halftone = view_override.Halftone
+        override.transparency = view_override.Transparency
+
+        # get cut overrides for filter
+        override.override_cut = get_cut_overrides(
+            view_override_graphic=view_override,
+            line_patterns=line_patterns,
+            fill_patterns=fill_patterns,
+        )
+
+        # get projection for filter
+        override.override_projection = get_projection_overrides(
+            view_override_graphic=view_override,
+            line_patterns=line_patterns,
+            fill_patterns=fill_patterns,
+        )
+
+        # check if filter switches things off
+        override.is_visible = view.GetFilterVisibility(filter_id)
+
+        # check if filter is enabled
+        override.is_enabled = view.GetIsFilterEnabled(filter_id)
+
+        # save overrides in list to be returned
+        overrides_data.append(override)
+
+    return overrides_data
+
+def get_view_settings(doc, view):
+    """
+    retrieves the filter and category graphic overrides from a view
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view: _description_
+    :type view: _type_
+    :return: A ViewGraphicsSettings instance with retrieved setting.
     :rtype: :class:`.ViewGraphicsSettings`
     """
 
-    data_dic = {}
-
-    data_dic[OverrideByCategory.data_type] = _get_model_overrides(view)
-    data_dic[OverrideByFilter.data_type] = _get_filter_overrides(view)
-
-    return_value = ViewGraphicsSettings(
-        view_name=view.Name,
+    # set up class to store view graphic settings
+    view_data = ViewGraphicsSettings(
+        view_name=Element.Name.GetValue(view),
         view_id=view.Id.IntegerValue,
-        j=data_dic,
     )
 
-    return return_value
- 
+    # get all pattern element since they will be required in the override settings
+    # get all line pattern and fill patterns in model
+    line_pattern_elements = get_all_line_patterns(doc=doc)
+
+    # get all fill pattern elements in model
+    fill_pattern_elements = get_all_fill_pattern(doc=doc)
+
+    # retrieve all categories available in model
+    categories_in_model = get_categories_in_model(doc=doc)
+
+    # get category graphic overrides
+    category_overrides = get_view_category_overrides(
+        view=view,
+        categories_in_model=categories_in_model,
+        line_patterns=line_pattern_elements,
+        fill_patterns=fill_pattern_elements,
+    )
+    view_data.override_by_category = category_overrides
+
+    # get filter graphic overrides
+    filter_overrides = get_view_filter_overrides(
+        doc=doc,
+        view=view,
+        line_patterns=line_pattern_elements,
+        fill_patterns=fill_pattern_elements,
+    )
+    view_data.override_by_filter = filter_overrides
+
+    return view_data

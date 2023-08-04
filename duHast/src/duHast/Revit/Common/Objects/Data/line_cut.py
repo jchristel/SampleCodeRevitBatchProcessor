@@ -1,8 +1,14 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Revit fill patterns helper functions. 
+A base class used to store line category overrides.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Stores overrides of cut lines.
+
 """
+
+
 #
 # License:
 #
@@ -19,22 +25,27 @@ Revit fill patterns helper functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-from Autodesk.Revit.DB import FilteredElementCollector, FillPatternElement
 
-def get_all_fill_pattern(doc):
-    """
-    Gets all fill pattern elements in the model.
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :return: A filtered element collector of all fill pattern elements.
-    :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    """
+from duHast.Revit.Common.Objects.Data.line_graphic_base import LineGraphicBase
 
-    return FilteredElementCollector(doc).OfClass(FillPatternElement)
+
+class LineCut(LineGraphicBase):
+    data_type = "line_cut"
+
+    def __init__(self, j={}):
+        """
+        Class constructor.
+
+        :param j: A json formatted dictionary of this class, defaults to {}
+        :type j: dict, optional
+        """
+
+        # store data type  in base class
+        super(LineCut, self).__init__(data_type=self.data_type, j=j)

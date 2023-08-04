@@ -25,8 +25,8 @@ Stores colour values as rgb.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -36,10 +36,11 @@ import json
 
 from duHast.Utilities.Objects import base
 
+
 class ColourBase(base.Base):
     data_type = "colour"
-    
-    def __init__(self,j={},**kwargs):
+
+    def __init__(self, j={}, **kwargs):
         """
         Class constructor.
 
@@ -60,23 +61,35 @@ class ColourBase(base.Base):
                 raise ValueError(
                     "Argument supplied must be of type string or type dictionary"
                 )
-            
+
             # load overrides
             if "red" in j:
                 self.red = j["red"]
             else:
                 self.red = 0
-            
+
             if "green" in j:
                 self.green = j["green"]
             else:
                 self.green = 0
-            
+
             if "blue" in j:
                 self.blue = j["blue"]
             else:
                 self.blue = 0
         else:
             self.red = 0
-            self.green = 0 
+            self.green = 0
             self.blue = 0
+
+    def __eq__(self, other):
+        """
+        Custom compare is equal override
+
+        :param other: Another instance of colour class
+        :type other: :class:`.ColourBase`
+        :return: True if RGB values of other colour class instance equal the RGB values of this instance, otherwise False.
+        :rtype: Bool
+        """
+
+        return (self.red, self.green, self.blue) == (other.red, other.green, other.blue)

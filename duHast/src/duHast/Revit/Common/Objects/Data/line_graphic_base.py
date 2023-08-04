@@ -1,14 +1,14 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A base class used to store view (template) graphic settings .
+A base class used to store line graphic settings.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Stores:
+Stores line graphic settings:
 
-- model overrides
-- filter overrides
-
+- colour
+- pattern_id
+- weight
 
 """
 
@@ -39,22 +39,22 @@ Stores:
 import json
 
 from duHast.Utilities.Objects import base
+from duHast.Revit.Common.Objects.Data.colour_base import ColourBase
+from duHast.Revit.LinePattern.Objects.Data.line_pattern_settings import (
+    LinePatternSettings,
+)
 
-from duHast.Revit.Views.Objects.Data.override_by_category import OverrideByCategory
-from duHast.Revit.Views.Objects.Data.override_by_filter import OverrideByFilter
 
-
-class ViewGraphicsSettings(base.Base):
-    def __init__(self, view_name="", view_id=-1, j={}, **kwargs):
+class LineGraphicBase(base.Base):
+    def __init__(self, data_type="unknown", j={}, **kwargs):
         """
         Class constructor.
 
         """
 
-        super(ViewGraphicsSettings, self).__init__(**kwargs)
+        super(LineGraphicBase, self).__init__(**kwargs)
 
-        self.view_name = view_name
-        self.view_id = view_id
+        self.data_type = data_type
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -70,20 +70,43 @@ class ViewGraphicsSettings(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load settings
-            if OverrideByCategory.data_type in j:
-                for override in j[OverrideByCategory.data_type]:
-                    self.override_by_category.append(OverrideByCategory(override))
-            else:
-                self.override_by_category = []
+            # load overrides
 
-            if OverrideByFilter.data_type in j:
-                for override in j[OverrideByFilter.data_type]:
-                    self.override_by_filter.append(OverrideByFilter(override))
+            if ColourBase.data_type in j:
+                self.colour = ColourBase(j[ColourBase.data_type])
             else:
-                self.override_by_filter = []
+                self.colour = ColourBase()
 
+            if "line_pattern_settings" in j:
+                self.line_pattern_settings = LinePatternSettings(
+                    j["line_pattern_settings"]
+                )
+            else:
+                self.line_pattern_settings = LinePatternSettings()
+
+            if "weight" in j:
+                self.weight = j["weight"]
+            else:
+                self.weight = 1
         else:
-            self.override_by_category = []
-            self.override_by_filter = []
+            # set default values
+            self.colour = ColourBase()
+            self.line_pattern_settings = LinePatternSettings()
+            self.weight = 1
 
+    def __eq__(self, other):
+        """
+        Custom compare is equal override.
+        The comparison ignores the pattern_id value!
+
+        :param other: Another instance of line graphic base class
+        :type other: :class:`.LineGraphicBase`
+        :return: True if weight and colour values of other colour class instance equal the weight and colour values of this instance, otherwise False.
+        :rtype: Bool
+        """
+
+        return (self.weight, self.line_pattern_settings, self.colour) == (
+            other.weight,
+            other.line_pattern_settings,
+            other.colour,
+        )

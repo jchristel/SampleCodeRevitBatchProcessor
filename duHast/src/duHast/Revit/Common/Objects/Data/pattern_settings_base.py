@@ -1,14 +1,10 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A base class used to store view (template) graphic settings .
+A base class used to store pattern data.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Stores:
-
-- model overrides
-- filter overrides
-
+Stores pattern base data for line and fill pattern.
 
 """
 
@@ -40,21 +36,17 @@ import json
 
 from duHast.Utilities.Objects import base
 
-from duHast.Revit.Views.Objects.Data.override_by_category import OverrideByCategory
-from duHast.Revit.Views.Objects.Data.override_by_filter import OverrideByFilter
 
-
-class ViewGraphicsSettings(base.Base):
-    def __init__(self, view_name="", view_id=-1, j={}, **kwargs):
+class PatternSettingBase(base.Base):
+    def __init__(self, data_type="unknown", j={}, **kwargs):
         """
         Class constructor.
 
         """
 
-        super(ViewGraphicsSettings, self).__init__(**kwargs)
+        super(PatternSettingBase, self).__init__(**kwargs)
 
-        self.view_name = view_name
-        self.view_id = view_id
+        self.data_type = data_type
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -70,20 +62,29 @@ class ViewGraphicsSettings(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load settings
-            if OverrideByCategory.data_type in j:
-                for override in j[OverrideByCategory.data_type]:
-                    self.override_by_category.append(OverrideByCategory(override))
+            # load overrides
+            if "id" in j:
+                self.id = j["id"]
             else:
-                self.override_by_category = []
+                self.id = -1
 
-            if OverrideByFilter.data_type in j:
-                for override in j[OverrideByFilter.data_type]:
-                    self.override_by_filter.append(OverrideByFilter(override))
+            if "name" in j:
+                self.name = j["name"]
             else:
-                self.override_by_filter = []
+                self.name = "unknown pattern"
 
         else:
-            self.override_by_category = []
-            self.override_by_filter = []
+            self.id = -1
+            self.name = "unknown pattern"
 
+    def __eq__(self, other):
+        """
+        Custom compare is equal override (name comparison only!)
+
+        :param other: Another instance of pattern class
+        :type other: :class:`.PatternBase`
+        :return: True if name value of other colour class instance equal the name values of this instance, otherwise False.
+        :rtype: Bool
+        """
+
+        return (self.name) == (other.name)

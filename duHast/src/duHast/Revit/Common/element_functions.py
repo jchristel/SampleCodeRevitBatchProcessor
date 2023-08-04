@@ -1,7 +1,7 @@
 """
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Revit fill patterns helper functions. 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module contains a number of lists containing loadable family categories. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
 # License:
@@ -26,15 +26,27 @@ Revit fill patterns helper functions.
 #
 #
 
-from Autodesk.Revit.DB import FilteredElementCollector, FillPatternElement
+from Autodesk.Revit.DB import BuiltInParameter
 
-def get_all_fill_pattern(doc):
-    """
-    Gets all fill pattern elements in the model.
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :return: A filtered element collector of all fill pattern elements.
-    :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    """
-
-    return FilteredElementCollector(doc).OfClass(FillPatternElement)
+def get_room_element_is_in(element, phase_dict):
+	'''
+	Get the room an element is in
+	:param element: The element to check
+	:type element: FamilyInstance
+	:param phase_dict: The dictionary of phase name to phase element
+	:type phase_dict: dict
+	:return: The room the element is in
+	:rtype: Room
+	'''
+	el_phase = element.get_Parameter(BuiltInParameter.PHASE_CREATED)
+	if el_phase != None:
+		el_phase_name = el_phase.AsValueString()
+		try:
+			el_phase_elem = phase_dict[el_phase_name]
+		except:
+			return None
+		el_room = element.get_Room(el_phase_elem)
+		
+		return el_room
+	else:
+		return None

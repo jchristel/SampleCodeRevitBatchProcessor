@@ -80,7 +80,7 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
     revit_version = get_revit_version_number(doc)
     tag_instances = get_all_independent_tags(doc)
     for tag_instance in tag_instances:
-        row = []
+        row = {}
         try:
             if custom_element_filter != None:
                 if custom_element_filter.check_element(doc, tag_instance.Id):

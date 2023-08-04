@@ -1,14 +1,8 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A base class used to store category overrides.
+This module contains a number of helper functions relating to Revit links, CAD links and image links.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-Stores common overrides between categories and filters
-
 """
-
-
 #
 # License:
 #
@@ -32,23 +26,43 @@ Stores common overrides between categories and filters
 #
 #
 
-from duHast.Revit.Views.Objects.category_base import OverrideModelCategory
+def is_link_workset_visible(view, lnk_instance):
+	"""
+	Check if the workset of the link is visible in the view
+	:param view: The view to check
+	:type view: View
+	:param lnk_instance: The Revit link instance to check the workset visibility of
+	:type lnk_instance: RevitLinkInstance
+	:return: True if the workset of the link is visible in the view, False otherwise
+	:rtype: bool
+	"""
+	return view.IsWorksetVisible(lnk_instance.WorksetId)
 
+def is_link_hidden(view, lnk_instance):
+	"""
+	Check if the link is hidden in the view
+	:param view: The view to check
+	:type view: View
+	:param lnk_instance: The Revit link instance to check
+	:type lnk_instance: RevitLinkInstance
+	:return: True if the link is hidden in the view, False otherwise
+	:rtype: bool
+	"""
+	return lnk_instance.IsHidden(view)
 
-class OverrideByFilter(OverrideModelCategory):
-
-    data_type = "override_by_filter"
-    
-    def __init__(self,filter_name = "" , filter_id = -1, j={}):
-        """
-        Class constructor.
-
-        """
-
-        super(OverrideByFilter, self).__init__(j=j)
-
-        self.filter_name = filter_name
-        self.filter_id = filter_id
-
-
-        
+def is_link_visible(view_elem, lnk_inst):
+	"""
+	Check if the link is visible in the view. This is determined by:
+	 - The link is not hidden
+	 - The link workset is visible
+	 
+	:param view_elem: The view element to check
+	:type view_elem: View
+	:param lnk_inst: The Revit link instance to check
+	:type lnk_inst: RevitLinkInstance
+	:return: True if the link is visible in the view, False otherwise
+	:rtype: bool
+	"""
+	link_is_not_hidden = is_link_hidden(view_elem, lnk_inst) == False
+	link_workset_is_visible = is_link_workset_visible(view_elem, lnk_inst) == True
+	return link_is_not_hidden and link_workset_is_visible

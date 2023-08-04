@@ -1,14 +1,12 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A base class used to store category overrides.
+Helper functions for benchmarking:. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-Stores common overrides between categories and filters
+- two values
+- whether a text value starts or does not start with a given text value
 
 """
-
-
 #
 # License:
 #
@@ -32,26 +30,27 @@ Stores common overrides between categories and filters
 #
 #
 
-from duHast.Revit.Views.Objects.category_base import OverrideModelCategory
+import time 
 
+def measure_time(func):
+    '''
+    Decorator function to measure the time a function takes to execute
+    and then print it to the console.
+    '''
+    # Get the function name for the print statement
 
-class OverrideByCategory(OverrideModelCategory):
-
-    data_type = "override_by_category"
-    
-    def __init__(self,main_category_name = "" , sub_category_name = "" , category_id = -1, j={}):
-        """
-        Class constructor.
-
-        """
-
-        super(OverrideByCategory, self).__init__(j=j)
-
-        self.main_category_name=main_category_name
-        self.sub_category_name = sub_category_name
-        self.category_id = category_id
-
-    def update(self,override):
-        self.main_category_name = override.main_category_name
-        self.sub_category_name = override.sub_category_name
-        self.category_id= override.category_id
+    func_name = func.__name__
+    def wrapper(*args, **kwargs):
+        # Get the start time
+        start = time.time()
+        # Execute the function
+        result = func(*args, **kwargs)
+        # Get the end time
+        end = time.time()
+        # Calculate the elapsed time
+        elapsed = round(float(end - start), 5)
+        # Print the elapsed time
+        print('Elapsed time for {} is : {}'.format(func_name, elapsed))
+        # Return the result of the function
+        return result
+    return wrapper

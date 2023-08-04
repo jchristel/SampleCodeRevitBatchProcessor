@@ -35,7 +35,7 @@ Stores common overrides between categories and filters
 import json
 
 from duHast.Utilities.Objects import base
-from duHast.Revit.Common.Objects import (
+from duHast.Revit.Common.Objects.Data import (
     pattern_foreground,
     pattern_background,
     line_projection,
@@ -92,3 +92,19 @@ class OverrideProjection(base.Base):
             self.pattern_background = pattern_background.PatternBackground()
             self.pattern_foreground = pattern_foreground.PatternForeground()
             self.line_projection = line_projection.LineProjection()
+
+    def __eq__(self, other):
+        """
+        Custom compare is equal override.
+
+        :param other: Another instance of OverrideProjection class
+        :type other: :class:`.OverrideProjection`
+        :return: True if all properties of compared class instances are equal, otherwise False.
+        :rtype: Bool
+        """
+
+        return (self.pattern_background, self.pattern_foreground, self.line_projection) == (
+            other.pattern_background,
+            other.pattern_foreground,
+            other.line_projection,
+        )

@@ -1,8 +1,14 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Revit fill patterns helper functions. 
+A base class used to store category overrides.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Stores common overrides between categories and filters
+
 """
+
+
 #
 # License:
 #
@@ -19,22 +25,31 @@ Revit fill patterns helper functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-from Autodesk.Revit.DB import FilteredElementCollector, FillPatternElement
+import json
 
-def get_all_fill_pattern(doc):
-    """
-    Gets all fill pattern elements in the model.
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :return: A filtered element collector of all fill pattern elements.
-    :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    """
+from duHast.Revit.Views.Objects.Data.override_by_base import OverrideByBase
 
-    return FilteredElementCollector(doc).OfClass(FillPatternElement)
+class OverrideByCategory(OverrideByBase):
+    data_type = "override_by_category"
+
+    def __init__(
+        self, main_category_name="", sub_category_name="", category_id=-1, j={}
+    ):
+        """
+        Class constructor.
+
+        """
+
+        super(OverrideByCategory, self).__init__(data_type=self.data_type, j=j)
+
+        self.main_category_name = main_category_name
+        self.sub_category_name = sub_category_name
+        self.category_id = category_id
+

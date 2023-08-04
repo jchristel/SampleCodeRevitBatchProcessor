@@ -67,6 +67,49 @@ def get_edge_as_string(edge):
         returnValue = returnValue + "\n" + get_point_as_string(p)
     return returnValue
 
+def UV_pt_list_from_crv_list(curve_list):
+    """ 
+    Returns a list of UV points from a list of curves
+    :param curve_list: A list of curves
+    :param type: list
+    :return: A list of UV points
+    :rtype: list
+    """
+    pt_list = []
+
+    for crv in curve_list:
+        st_pt = crv.GetEndPoint(0)
+        pt_list.append((st_pt.X, st_pt.Y))
+
+    return pt_list
+
+def point_in_polygon(point, polygon):
+    """
+    Returns True if a point is inside a polygon, and False if it is not
+    :param point: The point to check
+    :type point: list, tuple, or set
+    :param polygon: The polygon to check
+    :type polygon: list, tuple, or set
+    :return: True if the point is inside the polygon, False if it is not
+    :rtype: bool
+    """
+
+    num_of_polygon_sides = len(polygon)
+    is_inside = False
+
+    pt_1_x, pt_1_y = polygon[0]
+    for i in range(num_of_polygon_sides+1):
+        pt_2_x, pt_2_y = polygon[i % num_of_polygon_sides]
+        if point[1] > min(pt_1_y, pt_2_y):
+            if point[1] <= max(pt_1_y, pt_2_y):
+                if point[0] <= max(pt_1_x, pt_2_x):
+                    if pt_1_y != pt_2_y:
+                        x_intersection = (point[1] - pt_1_y) * (pt_2_x - pt_1_x) / (pt_2_y - pt_1_y) + pt_1_x
+                    if pt_1_x == pt_2_x or point[0] <= x_intersection:
+                        is_inside = not is_inside
+        pt_1_x, pt_1_y = pt_2_x, pt_2_y
+
+    return is_inside
 
 # ---------------------------- math utility ----------------------------
 

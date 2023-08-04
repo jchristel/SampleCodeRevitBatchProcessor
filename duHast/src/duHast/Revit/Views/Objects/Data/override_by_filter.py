@@ -31,22 +31,24 @@ Stores common overrides between categories and filters
 #
 #
 #
-
 import json
 
-from duHast.Utilities.Objects import base
-from duHast.Revit.Views.Objects.override_projection import OverrideProjection
-from duHast.Revit.Views.Objects.override_cut import OverrideCut
+from duHast.Revit.Views.Objects.Data.override_by_base import OverrideByBase
 
 
-class OverrideModelCategory(base.Base):
-    def __init__(self, j={}, **kwargs):
+class OverrideByFilter(OverrideByBase):
+    data_type = "override_by_filter"
+
+    def __init__(self, filter_name="", filter_id=-1, j={}):
         """
         Class constructor.
 
         """
 
-        super(OverrideModelCategory, self).__init__(**kwargs)
+        super(OverrideByFilter, self).__init__(data_type=self.data_type, j=j)
+
+        self.filter_name = filter_name
+        self.filter_id = filter_id
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -62,30 +64,9 @@ class OverrideModelCategory(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load overrides
-            if "halftone" in j:
-                self.halftone = j["halftone"]
+            if "is_enabled" in j:
+                self.is_enabled = j["is_enabled"]
             else:
-                self.halftone = False
-
-            if "transparency" in j:
-                self.transparency = j["transparency"]
-            else:
-                self.transparency = 0
-
-            if OverrideProjection.data_type in j:
-                self.override_projection = OverrideProjection(
-                    j[OverrideProjection.data_type]
-                )
-            else:
-                self.override_projection = OverrideProjection()
-
-            if OverrideCut.data_type in j:
-                self.override_cut = OverrideCut(j[OverrideCut.data_type])
-            else:
-                self.override_cut = OverrideCut()
+                self.is_enabled = True
         else:
-            self.halftone = False
-            self.transparency = 0
-            self.override_projection = OverrideProjection()
-            self.override_cut = OverrideCut()
+            self.is_enabled = True

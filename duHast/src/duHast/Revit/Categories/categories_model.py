@@ -1,8 +1,9 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Revit fill patterns helper functions. 
+Revit category helper functions for project files.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+#
 #
 # License:
 #
@@ -24,17 +25,31 @@ Revit fill patterns helper functions.
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
-#
 
-from Autodesk.Revit.DB import FilteredElementCollector, FillPatternElement
+from collections import namedtuple
 
-def get_all_fill_pattern(doc):
+
+
+
+# tuples containing categories data
+category_data = namedtuple("category_data", "category_name sub_category_name id")
+
+def get_categories_in_model(doc):
     """
-    Gets all fill pattern elements in the model.
-    :param doc: Current Revit model document.
+    Returns all categories and subcategories in a model
+
+    :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
-    :return: A filtered element collector of all fill pattern elements.
-    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+
+    :return: List of named tuples of type category_data
+    :rtype: [category_data]
     """
 
-    return FilteredElementCollector(doc).OfClass(FillPatternElement)
+    cats = doc.Settings.Categories
+    categories = []
+    for main_category in cats:
+        categories.append(category_data(category_name=main_category.Name, sub_category_name=main_category.Name, id=main_category.Id))
+        for sub_cat in main_category.SubCategories:
+            categories.append(category_data(category_name=main_category.Name, sub_category_name=sub_cat.Name, id=sub_cat.Id))
+    
+    return categories

@@ -19,14 +19,15 @@ Delete elements from model.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-import Autodesk.Revit.DB as rdb
+
+from Autodesk.Revit.DB import Element, ElementId, Transaction
 
 from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities.Objects import result as res
@@ -68,7 +69,7 @@ def delete_by_element_ids(
     def action():
         action_return_value = res.Result()
         try:
-            doc.Delete(ids.ToList[rdb.ElementId]())
+            doc.Delete(ids.ToList[ElementId]())
             action_return_value.message = "Deleted {} {}".format(len(ids), element_name)
         except Exception as e:
             action_return_value.update_sep(
@@ -76,7 +77,7 @@ def delete_by_element_ids(
             )
         return action_return_value
 
-    transaction = rdb.Transaction(doc, transaction_name)
+    transaction = Transaction(doc, transaction_name)
     return_value = rTran.in_transaction(transaction, action)
     return return_value
 
@@ -111,7 +112,7 @@ def delete_by_element_ids_one_by_one(
         def action():
             action_return_value = res.Result()
             element = doc.GetElement(id)
-            n = rdb.Element.Name.GetValue(element)
+            n = Element.Name.GetValue(element)
             try:
                 doc.Delete(id)
                 action_return_value.message = "Deleted [{}] {}".format(id, n)
@@ -122,6 +123,6 @@ def delete_by_element_ids_one_by_one(
                 )
             return action_return_value
 
-        transaction = rdb.Transaction(doc, transaction_name)
+        transaction = Transaction(doc, transaction_name)
         return_value.update(rTran.in_transaction(transaction, action))
     return return_value

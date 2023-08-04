@@ -36,6 +36,7 @@ from System import Linq
 clr.ImportExtensions(Linq)
 
 # import everything from Autodesk Revit DataBase namespace (Revit API)
+from Autodesk.Revit.DB import ElementId #, ParameterType, StorageType
 import Autodesk.Revit.DB as rdb
 
 # utilities
@@ -460,7 +461,7 @@ def get_parameter_value_as_element_id(para):
     """
 
     # set return value default
-    parameter_value = rdb.ElementId.InvalidElementId
+    parameter_value = ElementId.InvalidElementId
 
     value_getter = {rdb.StorageType.ElementId: getter_element_id_as_element_id}
 
@@ -556,3 +557,20 @@ def get_parameter_value_by_name(
             parameter_value = parameter_value_getter(para)
             break
     return parameter_value
+
+def param_is_empty_or_null(param):
+	""" 
+	Checks if a parameter is empty or null
+	:param param: The parameter to check
+	:type param: Parameter
+	:return: True if the parameter is empty or null, False if it is not
+	:rtype: bool
+	"""
+
+	if param == None:
+		return True
+	else:
+		if param.AsString() == '' or param.AsString() == None:
+			return True
+		else:
+			return False

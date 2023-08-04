@@ -1,14 +1,10 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A base class used to store line graphic settings.
+A base class used to store pattern category overrides.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Stores line graphic settings:
-
-- colour
-- pattern_id
-- weight
+Stores line patterns.
 
 """
 
@@ -36,55 +32,19 @@ Stores line graphic settings:
 #
 #
 
-import json
 
-from duHast.Utilities.Objects import base
-from duHast.Revit.Common.Objects.colour_base import ColourBase
+from duHast.Revit.Common.Objects.Data.pattern_settings_base import PatternSettingBase
 
-class LineGraphicBase(base.Base):
-    def __init__(self,j={},**kwargs):
+class FillPatternSettings(PatternSettingBase):
+    data_type = "fill_pattern_setting"
+
+    def __init__(self, j={}):
         """
         Class constructor.
 
+        :param j: A json formatted dictionary of this class, defaults to {}
+        :type j: dict, optional
         """
 
-        super(LineGraphicBase, self).__init__(**kwargs)
-
-        # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
-            # check type of data that came in:
-            if type(j) == str:
-                # a string
-                j = json.loads(j)
-            elif type(j) == dict:
-                # no action required
-                pass
-            else:
-                raise ValueError(
-                    "Argument supplied must be of type string or type dictionary"
-                )
-            
-            # load overrides
-            
-            if ColourBase.data_type in j:
-                self.colour = ColourBase(
-                        j[ColourBase.data_type]
-                    )
-            else:
-                self.colour = ColourBase()
-            
-            if "pattern_id" in j:
-                self.pattern_id = j["pattern_id"]
-            else:
-                self.pattern_id = -1
-            
-            if "weight" in j:
-                self.weight = j["weight"]
-            else:
-                self.weight = 1
-        else:
-            # set default values
-            self.colour = ColourBase()
-            self.pattern_id = -1
-            self.weight = 1
-        
+        # store data type  in base class
+        super(FillPatternSettings, self).__init__(data_type=self.data_type, j=j)

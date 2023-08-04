@@ -1,8 +1,14 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Revit fill patterns helper functions. 
+A base class used to store pattern category overrides.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Stores line patterns.
+
 """
+
+
 #
 # License:
 #
@@ -26,15 +32,19 @@ Revit fill patterns helper functions.
 #
 #
 
-from Autodesk.Revit.DB import FilteredElementCollector, FillPatternElement
 
-def get_all_fill_pattern(doc):
-    """
-    Gets all fill pattern elements in the model.
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :return: A filtered element collector of all fill pattern elements.
-    :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    """
+from duHast.Revit.Common.Objects.Data.pattern_settings_base import PatternSettingBase
 
-    return FilteredElementCollector(doc).OfClass(FillPatternElement)
+class LinePatternSettings(PatternSettingBase):
+    data_type = "line_pattern_settings"
+
+    def __init__(self, j={}):
+        """
+        Class constructor.
+
+        :param j: A json formatted dictionary of this class, defaults to {}
+        :type j: dict, optional
+        """
+
+        # store data type  in base class
+        super(LinePatternSettings, self).__init__(data_type=self.data_type, j=j)

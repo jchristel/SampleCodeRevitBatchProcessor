@@ -35,19 +35,20 @@ Stores common overrides between categories and filters
 import json
 
 from duHast.Utilities.Objects import base
-from duHast.Revit.Common.Objects import pattern_foreground, pattern_background, line_cut
+from duHast.Revit.Views.Objects.Data.override_projection import OverrideProjection
+from duHast.Revit.Views.Objects.Data.override_cut import OverrideCut
 
 
-class OverrideCut(base.Base):
-    data_type = "override_cut"
-
-    def __init__(self, j={}, **kwargs):
+class OverrideByBase(base.Base):
+    def __init__(self, data_type="unknown", j={}, **kwargs):
         """
         Class constructor.
 
         """
 
-        super(OverrideCut, self).__init__(**kwargs)
+        super(OverrideByBase, self).__init__(**kwargs)
+
+        self.data_type = data_type
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -64,25 +65,59 @@ class OverrideCut(base.Base):
                 )
 
             # load overrides
-            if pattern_background.PatternBackground.data_type in j:
-                self.pattern_background = pattern_background.PatternBackground(
-                    j[pattern_background.PatternBackground.data_type]
+            if "halftone" in j:
+                self.halftone = j["halftone"]
+            else:
+                self.halftone = False
+
+            if "transparency" in j:
+                self.transparency = j["transparency"]
+            else:
+                self.transparency = 0
+
+            if "is_visible" in j:
+                self.is_visible = j["is_visible"]
+            else:
+                self.is_visible = True
+            
+            if OverrideProjection.data_type in j:
+                self.override_projection = OverrideProjection(
+                    j[OverrideProjection.data_type]
                 )
             else:
-                self.pattern_background = pattern_background.PatternBackground()
+                self.override_projection = OverrideProjection()
 
-            if pattern_foreground.PatternForeground.data_type in j:
-                self.pattern_foreground = pattern_foreground.PatternForeground(
-                    j[pattern_foreground.PatternForeground.data_type]
-                )
+            if OverrideCut.data_type in j:
+                self.override_cut = OverrideCut(j[OverrideCut.data_type])
             else:
-                self.pattern_foreground = pattern_foreground.PatternForeground()
-
-            if line_cut.LineCut.data_type in j:
-                self.line_cut = line_cut.LineCut(j[line_cut.LineCut.data_type])
-            else:
-                self.line_cut = line_cut.LineCut()
+                self.override_cut = OverrideCut()
         else:
-            self.pattern_background = pattern_background.PatternBackground()
-            self.pattern_foreground = pattern_foreground.PatternForeground()
-            self.line_cut = line_cut.LineCut()
+            self.halftone = False
+            self.transparency = 0
+            self.override_projection = OverrideProjection()
+            self.override_cut = OverrideCut()
+            self.is_visible = True
+
+    def __eq__(self, other):
+        """
+        Custom compare is equal override.
+
+        :param other: Another instance of OverrideByBase base class
+        :type other: :class:`.OverrideByBase`
+        :return: True if all properties of compared class instances are equal, otherwise False.
+        :rtype: Bool
+        """
+
+        return (
+            self.halftone,
+            self.transparency,
+            self.is_visible,
+            self.override_projection,
+            self.override_cut,
+        ) == (
+            other.halftone,
+            other.transparency,
+            other.is_visible,
+            other.override_projection,
+            other.override_cut,
+        )

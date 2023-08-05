@@ -71,7 +71,7 @@ def combine_files(
     """
 
     file_list = file_getter(folder_path, file_prefix, file_suffix, file_extension)
-    with open(folder_path + "\\" + out_put_file_name, "w") as result:
+    with open(os.path.join(folder_path , out_put_file_name), "w") as result:
         file_counter = 0
         for file_ in file_list:
             line_counter = 0
@@ -86,6 +86,48 @@ def combine_files(
 
             file_counter += 1
 
+def combine_files_basic(
+    folder_path,
+    file_prefix="",
+    file_suffix="",
+    file_extension=".txt",
+    out_put_file_name="result.txt",
+    file_getter=get_files_single_directory,
+):
+    """
+    Combines multiple text files into a single new file.
+    Assumes:
+
+    - files are text files
+
+    The new file will be saved into the same folder as the original files.
+
+    :param folder_path: Folder path from which to get files to be combined and to which the combined file will be saved.
+    :type folder_path: str
+    :param file_prefix: Filter: File name starts with this value
+    :type file_prefix: str
+    :param file_suffix: Filter: File name ends with this value.
+    :type file_suffix: str
+    :param file_extension: Filter: File needs to have this file extension
+    :type file_extension: str, format '.extension'
+    :param out_put_file_name: The file name of the combined file, defaults to 'result.txt'
+    :type out_put_file_name: str, optional
+    :param file_getter: Function returning list of files to be combined, defaults to GetFilesSingleFolder
+    :type file_getter: func(folder_path, file_prefix, file_suffix, file_extension), optional
+    """
+
+    file_list = file_getter(folder_path, file_prefix, file_suffix, file_extension)
+    with open(os.path.join(folder_path , out_put_file_name), "w") as f:
+        for file_ in file_list:
+            fp = open(file_, "r")
+            lines = fp.readlines()
+            fp.close()
+            for line in lines:
+                f.write(line)
+        f.close()
+
+
+            
 
 def append_to_file(source_file, append_file, ignore_first_row=False):
     """

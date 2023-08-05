@@ -50,7 +50,7 @@ import settings as settings # sets up all commonly used variables and path locat
 from duHast.Utilities.console_out import output_with_time_stamp as output
 from duHast.Utilities import batch_processor_log_utils as bpLogUtils
 from duHast.Utilities.files_io import file_exist, copy_file, file_delete, get_file_name_without_ext
-from duHast.Utilities.files_combine import combine_files, combine_files_csv_header_independent, append_to_file
+from duHast.Utilities.files_combine import combine_files, combine_files_csv_header_independent, append_to_file, combine_files_basic
 from duHast.Utilities.files_get import get_files_with_filter
 from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.date_stamps import FILE_DATE_STAMP_YYYY_MM_DD
@@ -63,19 +63,19 @@ from duHast.Revit.ModelHealth.Reporting import report_file_names as rFns
 
 # list of separate report file extensions and the combined file name
 FILE_DATA_TO_COMBINE = [
-    [settings.REPORT_EXTENSION_SHEETS_SHORT, settings.COMBINED_REPORT_NAME_SHEETS_SHORT, True],
-    [settings.REPORT_EXTENSION_SHEETS, settings.COMBINED_REPORT_NAME_SHEETS, False],
-    [settings.REPORT_EXTENSION_SHARED_PARAMETERS, settings.COMBINED_REPORT_NAME_SHARED_PARAMETERS, True],
-    [settings.REPORT_EXTENSION_GRIDS, settings.COMBINED_REPORT_NAME_GRIDS, True],
-    [settings.REPORT_EXTENSION_LEVELS, settings.COMBINED_REPORT_NAME_LEVELS, True],
-    [settings.REPORT_EXTENSION_WORKSETS, settings.COMBINED_REPORT_NAME_WORKSETS, True],
-    [settings.REPORT_EXTENSION_GEO_DATA, settings.COMBINED_REPORT_NAME_GEO_DATA, True],
-    [settings.REPORT_EXTENSION_FAMILIES, settings.COMBINED_REPORT_NAME_FAMILIES, True],
-    [settings.REPORT_EXTENSION_MARKED_VIEWS, settings.COMBINED_REPORT_NAME_MARKED_VIEWS, True],
-    [settings.REPORT_EXTENSION_WALL_TYPES, settings.COMBINED_REPORT_NAME_WALL_TYPES, True],
-    [settings.REPORT_EXTENSION_VIEWS, settings.COMBINED_REPORT_NAME_VIEWS, True],
-    [settings.REPORT_EXTENSION_CAD_LINKS, settings.COMBINED_REPORT_NAME_CAD_LINKS, True],
-    [settings.REPORT_EXTENSION_REVIT_LINKS, settings.COMBINED_REPORT_NAME_REVIT_LINKS, True],
+    [settings.REPORT_EXTENSION_SHEETS_SHORT, settings.COMBINED_REPORT_NAME_SHEETS_SHORT,  combine_files],
+    [settings.REPORT_EXTENSION_SHEETS, settings.COMBINED_REPORT_NAME_SHEETS, combine_files_csv_header_independent],
+    [settings.REPORT_EXTENSION_SHARED_PARAMETERS, settings.COMBINED_REPORT_NAME_SHARED_PARAMETERS, combine_files],
+    [settings.REPORT_EXTENSION_GRIDS, settings.COMBINED_REPORT_NAME_GRIDS, combine_files],
+    [settings.REPORT_EXTENSION_LEVELS, settings.COMBINED_REPORT_NAME_LEVELS, combine_files],
+    [settings.REPORT_EXTENSION_WORKSETS, settings.COMBINED_REPORT_NAME_WORKSETS, combine_files],
+    [settings.REPORT_EXTENSION_GEO_DATA, settings.COMBINED_REPORT_NAME_GEO_DATA, combine_files_basic],
+    [settings.REPORT_EXTENSION_FAMILIES, settings.COMBINED_REPORT_NAME_FAMILIES, combine_files],
+    [settings.REPORT_EXTENSION_MARKED_VIEWS, settings.COMBINED_REPORT_NAME_MARKED_VIEWS, combine_files],
+    [settings.REPORT_EXTENSION_WALL_TYPES, settings.COMBINED_REPORT_NAME_WALL_TYPES, combine_files],
+    [settings.REPORT_EXTENSION_VIEWS, settings.COMBINED_REPORT_NAME_VIEWS, combine_files],
+    [settings.REPORT_EXTENSION_CAD_LINKS, settings.COMBINED_REPORT_NAME_CAD_LINKS, combine_files],
+    [settings.REPORT_EXTENSION_REVIT_LINKS, settings.COMBINED_REPORT_NAME_REVIT_LINKS, combine_files],
 ]
 
 
@@ -163,23 +163,14 @@ def combine_data_files():
     '''
     for file_to_combine in FILE_DATA_TO_COMBINE:
         output('Combining {} report files.'.format(file_to_combine[0]))
-        if(file_to_combine[2] == True):
-            # combine files
-            combine_files(
-                settings.OUTPUT_FOLDER, 
-                '' , 
-                file_to_combine[0], 
-                settings.REPORT_FILE_NAME_EXTENSION,
-                file_to_combine[1]
-            )
-        else:
-            combine_files_csv_header_independent(
-                settings.OUTPUT_FOLDER, 
-                '' , 
-                file_to_combine[0], 
-                settings.REPORT_FILE_NAME_EXTENSION,
-                file_to_combine[1]
-            )
+        file_to_combine[2](
+            folder_path=settings.OUTPUT_FOLDER, 
+            file_prefix='' , 
+            file_suffix=file_to_combine[0], 
+            file_extension=settings.REPORT_FILE_NAME_EXTENSION,
+            out_put_file_name=file_to_combine[1]
+        )
+
 
 def copy_log_files():
     '''

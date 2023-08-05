@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 0.0.8 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
-    <link rel="next" title="duHast.Revit.Links package" href="duHast.Revit.Links.html" />
+    <link rel="next" title="duHast.Revit.LinePattern.Objects package" href="duHast.Revit.LinePattern.Objects.html" />
     <link rel="prev" title="duHast.Revit.Levels.Reporting package" href="duHast.Revit.Levels.Reporting.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
@@ -31,7 +31,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="duHast.Revit.Links.html" title="duHast.Revit.Links package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.LinePattern.Objects.html" title="duHast.Revit.LinePattern.Objects package" accesskey="N">next</a></div>
             <div class="headerButton"><a href="duHast.Revit.Levels.Reporting.html" title="duHast.Revit.Levels.Reporting package" accesskey="P">previous</a></div>
         </li>
     </ul>
@@ -88,6 +88,27 @@
             
   <section id="duhast-revit-linepattern-package">
 <h1>duHast.Revit.LinePattern package<a class="headerlink" href="#duhast-revit-linepattern-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.LinePattern.Objects.html">duHast.Revit.LinePattern.Objects package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.LinePattern.Objects.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.Objects.Data.html">duHast.Revit.LinePattern.Objects.Data package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.Objects.Data.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.Objects.Data.html#module-duHast.Revit.LinePattern.Objects.Data.fill_pattern_settings">duHast.Revit.LinePattern.Objects.Data.fill_pattern_settings module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.Objects.Data.html#module-duHast.Revit.LinePattern.Objects.Data.line_pattern_settings">duHast.Revit.LinePattern.Objects.Data.line_pattern_settings module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.Objects.Data.html#module-duHast.Revit.LinePattern.Objects.Data">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.LinePattern.Objects.html#module-duHast.Revit.LinePattern.Objects">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
@@ -102,8 +123,8 @@
 <dd><p>Gets all fill pattern elements in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
-:return: A list of all fill pattern elements.
-:rtype: list of Autodesk.Revit.DB.FillPatternElement</p>
+:return: A filtered element collector of all fill pattern elements.
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd></dl>
 
 </section>
@@ -359,10 +380,10 @@
 <dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of all line pattern elements in model.</p>
+<dd class="field-even"><p>filtered element collector of all line pattern elements in model.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of Autodesk.Revit.DB.LinePatternElement</p>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
 </dd></dl>

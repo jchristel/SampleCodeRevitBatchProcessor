@@ -53,6 +53,14 @@ duHast.Revit.Walls.stacked\_walls module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Walls.wall\_functions module
+-----------------------------------------
+
+.. automodule:: duHast.Revit.Walls.wall_functions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Walls.walls module
 -------------------------------
 

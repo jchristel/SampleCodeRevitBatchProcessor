@@ -98,6 +98,8 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#revit-geometry-extraction-helper-functions">Revit geometry extraction helper functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_point_as_string"><code class="docutils literal notranslate"><span class="pre">get_point_as_string()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_edge_as_string"><code class="docutils literal notranslate"><span class="pre">get_edge_as_string()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.UV_pt_list_from_crv_list"><code class="docutils literal notranslate"><span class="pre">UV_pt_list_from_crv_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.point_in_polygon"><code class="docutils literal notranslate"><span class="pre">point_in_polygon()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.is_close"><code class="docutils literal notranslate"><span class="pre">is_close()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.are_points_identical"><code class="docutils literal notranslate"><span class="pre">are_points_identical()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.check_duplicate_point"><code class="docutils literal notranslate"><span class="pre">check_duplicate_point()</span></code></a></li>
@@ -136,55 +138,20 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Common.Objects.html">duHast.Revit.Common.Objects package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.colour_base">duHast.Revit.Common.Objects.colour_base module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#a-base-class-used-to-store-colour-values">A base class used to store colour values.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.colour_base.ColourBase"><code class="docutils literal notranslate"><span class="pre">ColourBase</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.colour_base.ColourBase.data_type"><code class="docutils literal notranslate"><span class="pre">ColourBase.data_type</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.Data.html">duHast.Revit.Common.Objects.Data package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.Data.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.Data.html#module-duHast.Revit.Common.Objects.Data.colour_base">duHast.Revit.Common.Objects.Data.colour_base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.Data.html#module-duHast.Revit.Common.Objects.Data.line_cut">duHast.Revit.Common.Objects.Data.line_cut module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.Data.html#module-duHast.Revit.Common.Objects.Data.line_graphic_base">duHast.Revit.Common.Objects.Data.line_graphic_base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.Data.html#module-duHast.Revit.Common.Objects.Data.line_projection">duHast.Revit.Common.Objects.Data.line_projection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.Data.html#module-duHast.Revit.Common.Objects.Data.pattern_background">duHast.Revit.Common.Objects.Data.pattern_background module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.Data.html#module-duHast.Revit.Common.Objects.Data.pattern_foreground">duHast.Revit.Common.Objects.Data.pattern_foreground module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.Data.html#module-duHast.Revit.Common.Objects.Data.pattern_graphic_base">duHast.Revit.Common.Objects.Data.pattern_graphic_base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.Data.html#module-duHast.Revit.Common.Objects.Data.pattern_settings_base">duHast.Revit.Common.Objects.Data.pattern_settings_base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.Data.html#module-duHast.Revit.Common.Objects.Data">Module contents</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.line_cut">duHast.Revit.Common.Objects.line_cut module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#a-base-class-used-to-store-line-category-overrides">A base class used to store line category overrides.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.line_cut.LineCut"><code class="docutils literal notranslate"><span class="pre">LineCut</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.line_cut.LineCut.data_type"><code class="docutils literal notranslate"><span class="pre">LineCut.data_type</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.line_graphic_base">duHast.Revit.Common.Objects.line_graphic_base module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#a-base-class-used-to-store-line-graphic-settings">A base class used to store line graphic settings.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.line_graphic_base.LineGraphicBase"><code class="docutils literal notranslate"><span class="pre">LineGraphicBase</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.line_projection">duHast.Revit.Common.Objects.line_projection module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#id1">A base class used to store line category overrides.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.line_projection.LineProjection"><code class="docutils literal notranslate"><span class="pre">LineProjection</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.line_projection.LineProjection.data_type"><code class="docutils literal notranslate"><span class="pre">LineProjection.data_type</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.pattern_background">duHast.Revit.Common.Objects.pattern_background module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#a-base-class-used-to-store-pattern-category-overrides">A base class used to store pattern category overrides.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.pattern_background.PatternBackground"><code class="docutils literal notranslate"><span class="pre">PatternBackground</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.pattern_background.PatternBackground.data_type"><code class="docutils literal notranslate"><span class="pre">PatternBackground.data_type</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.pattern_foreground">duHast.Revit.Common.Objects.pattern_foreground module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#id2">A base class used to store pattern category overrides.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.pattern_foreground.PatternForeground"><code class="docutils literal notranslate"><span class="pre">PatternForeground</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.pattern_foreground.PatternForeground.data_type"><code class="docutils literal notranslate"><span class="pre">PatternForeground.data_type</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.pattern_graphic_base">duHast.Revit.Common.Objects.pattern_graphic_base module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#a-base-class-used-to-store-pattern-graphic-settings">A base class used to store pattern graphic settings.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.pattern_graphic_base.PatternGraphicBase"><code class="docutils literal notranslate"><span class="pre">PatternGraphicBase</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects">Module contents</a></li>
@@ -208,6 +175,16 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Reporting.html#module-duHast.Revit.Common.Reporting">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Common.Utility.html">duHast.Revit.Common.Utility package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Utility.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Utility.html#module-duHast.Revit.Common.Utility.revit_to_data_conversion">duHast.Revit.Common.Utility.revit_to_data_conversion module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Utility.html#a-number-of-functions-used-to-revit-elements-to-data-storage-classes">A number of functions used to revit elements to data storage classes.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Utility.html#duHast.Revit.Common.Utility.revit_to_data_conversion.to_colour"><code class="docutils literal notranslate"><span class="pre">to_colour()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Utility.html#module-duHast.Revit.Common.Utility">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -952,6 +929,24 @@ isPrimary:bool</p>
 <dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.element_functions">
+<span id="duhast-revit-common-element-functions-module"></span><h2>duHast.Revit.Common.element_functions module<a class="headerlink" href="#module-duHast.Revit.Common.element_functions" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-lists-containing-loadable-family-categories">
+<h3>This module contains a number of lists containing loadable family categories.<a class="headerlink" href="#this-module-contains-a-number-of-lists-containing-loadable-family-categories" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.element_functions.get_room_element_is_in">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.element_functions.</span></span><span class="sig-name descname"><span class="pre">get_room_element_is_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.element_functions.get_room_element_is_in" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the room an element is in
+:param element: The element to check
+:type element: FamilyInstance
+:param phase_dict: The dictionary of phase name to phase element
+:type phase_dict: dict
+:return: The room the element is in
+:rtype: Room</p>
 </dd></dl>
 
 </section>
@@ -1734,6 +1729,16 @@ Otherwise the actual parameter value as per value getter method.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.param_is_empty_or_null">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">param_is_empty_or_null</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.param_is_empty_or_null" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a parameter is empty or null
+:param param: The parameter to check
+:type param: Parameter
+:return: True if the parameter is empty or null, False if it is not
+:rtype: bool</p>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Common.parameter_grouping">
 <span id="duhast-revit-common-parameter-grouping-module"></span><h2>duHast.Revit.Common.parameter_grouping module<a class="headerlink" href="#module-duHast.Revit.Common.parameter_grouping" title="Permalink to this heading">¶</a></h2>
@@ -1865,6 +1870,23 @@ The function needs to accept these args: parameter, new parameter value as strin
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.phases.get_name_to_phase_dict">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.phases.</span></span><span class="sig-name descname"><span class="pre">get_name_to_phase_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.phases.get_name_to_phase_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary where key is the name and value is the phase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary where key is the name and value is the phase. Dictionary will be empty if no phases exist (family doc?)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dic{key str: value Autodesk.Revit.DB.Phase}</p>
 </dd>
 </dl>
 </dd></dl>

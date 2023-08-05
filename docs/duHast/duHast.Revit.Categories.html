@@ -387,8 +387,59 @@ value: dictionary : key sub cat name, value: subcategory</p>
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Categories.categories_model">
+<span id="duhast-revit-categories-categories-model-module"></span><h2>duHast.Revit.Categories.categories_model module<a class="headerlink" href="#module-duHast.Revit.Categories.categories_model" title="Permalink to this heading">¶</a></h2>
+<section id="revit-category-helper-functions-for-project-files">
+<h3>Revit category helper functions for project files.<a class="headerlink" href="#revit-category-helper-functions-for-project-files" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories_model.category_data">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories_model.</span></span><span class="sig-name descname"><span class="pre">category_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_category_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories_model.category_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<p>Create new instance of category_data(category_name, sub_category_name, id)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories_model.category_data.category_name">
+<span class="sig-name descname"><span class="pre">category_name</span></span><a class="headerlink" href="#duHast.Revit.Categories.categories_model.category_data.category_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories_model.category_data.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#duHast.Revit.Categories.categories_model.category_data.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories_model.category_data.sub_category_name">
+<span class="sig-name descname"><span class="pre">sub_category_name</span></span><a class="headerlink" href="#duHast.Revit.Categories.categories_model.category_data.sub_category_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories_model.get_categories_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories_model.</span></span><span class="sig-name descname"><span class="pre">get_categories_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories_model.get_categories_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all categories and subcategories in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of named tuples of type category_data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[<a class="reference internal" href="#duHast.Revit.Categories.categories_model.category_data" title="duHast.Revit.Categories.categories_model.category_data">category_data</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Categories.change_family_category">
 <span id="duhast-revit-categories-change-family-category-module"></span><h2>duHast.Revit.Categories.change_family_category module<a class="headerlink" href="#module-duHast.Revit.Categories.change_family_category" title="Permalink to this heading">¶</a></h2>
+<section id="revit-family-change-category-helper-functions">
+<h3>Revit family change category helper functions.<a class="headerlink" href="#revit-family-change-category-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Categories.change_family_category.change_family_category">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.change_family_category.</span></span><span class="sig-name descname"><span class="pre">change_family_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_category_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.change_family_category.change_family_category" title="Permalink to this definition">¶</a></dt>

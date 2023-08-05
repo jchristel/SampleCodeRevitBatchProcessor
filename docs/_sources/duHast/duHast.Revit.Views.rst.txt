@@ -46,6 +46,14 @@ duHast.Revit.Views.schedules module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Views.sheet\_functions module
+------------------------------------------
+
+.. automodule:: duHast.Revit.Views.sheet_functions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Views.sheets module
 --------------------------------
 

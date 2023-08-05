@@ -131,6 +131,28 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.UV_pt_list_from_crv_list">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">UV_pt_list_from_crv_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.UV_pt_list_from_crv_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of UV points from a list of curves
+:param curve_list: A list of curves
+:param type: list
+:return: A list of UV points
+:rtype: list</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.point_in_polygon">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">point_in_polygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polygon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.point_in_polygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if a point is inside a polygon, and False if it is not
+:param point: The point to check
+:type point: list, tuple, or set
+:param polygon: The polygon to check
+:type polygon: list, tuple, or set
+:return: True if the point is inside the polygon, False if it is not
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.is_close">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">is_close</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rel_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-09</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abs_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.is_close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compares two floats with a tolerance. Returns True if they are close enough, otherwise False</p>

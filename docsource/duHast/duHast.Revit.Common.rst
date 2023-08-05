@@ -10,6 +10,7 @@ Subpackages
    duHast.Revit.Common.Geometry
    duHast.Revit.Common.Objects
    duHast.Revit.Common.Reporting
+   duHast.Revit.Common.Utility
 
 Submodules
 ----------
@@ -66,6 +67,14 @@ duHast.Revit.Common.element\_filtering module
 ---------------------------------------------
 
 .. automodule:: duHast.Revit.Common.element_filtering
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Common.element\_functions module
+---------------------------------------------
+
+.. automodule:: duHast.Revit.Common.element_functions
    :members:
    :undoc-members:
    :show-inheritance:

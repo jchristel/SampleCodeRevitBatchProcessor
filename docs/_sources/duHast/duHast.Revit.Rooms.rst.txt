@@ -14,6 +14,14 @@ Subpackages
 Submodules
 ----------
 
+duHast.Revit.Rooms.room\_functions module
+-----------------------------------------
+
+.. automodule:: duHast.Revit.Rooms.room_functions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Rooms.room\_tags module
 ------------------------------------
 

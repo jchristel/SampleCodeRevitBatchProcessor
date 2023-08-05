@@ -93,19 +93,108 @@
 </section>
 <section id="module-duHast.Revit.Views.Utility.data_view">
 <span id="duhast-revit-views-utility-data-view-module"></span><h2>duHast.Revit.Views.Utility.data_view module<a class="headerlink" href="#module-duHast.Revit.Views.Utility.data_view" title="Permalink to this heading">¶</a></h2>
-<section id="category-override-data-storage-class">
-<h3>Category override data storage class.<a class="headerlink" href="#category-override-data-storage-class" title="Permalink to this heading">¶</a></h3>
+<section id="category-override-to-data-storage-class-helper-functions">
+<h3>Category override to data storage class helper functions.<a class="headerlink" href="#category-override-to-data-storage-class-helper-functions" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.data_view.convert_revit_view_to_data">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.data_view.</span></span><span class="sig-name descname"><span class="pre">convert_revit_view_to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.data_view.convert_revit_view_to_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convertes a Revit view element into an instance of class ViewGraphicsSettings</p>
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.data_view.get_projection_overrides">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.data_view.</span></span><span class="sig-name descname"><span class="pre">get_projection_overrides</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view_override_graphic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_patterns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_patterns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.data_view.get_projection_overrides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves projection override settings from an OverridesGraphicSettings object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – A Revit view instance.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>view_override_graphic</strong> (<em>Autodesk.Revit.DB.OverridesGraphicSettings</em>) – An overrides graphic setting</p></li>
+<li><p><strong>line_patterns</strong> (<em>[</em><em>AutoDesk.Revit.LinePatternElement</em><em>]</em>) – All line patterns in the model</p></li>
+<li><p><strong>fill_patterns</strong> (<em>[</em><em>Autodesk.Revit.DB.FillPatternElement</em><em>]</em>) – All fill patterns in the model</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A storage class which contains graphics settings</p>
+<dd class="field-even"><p>An overrides projections object instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#duHast.Revit.Views.Objects.Data.override_projection.OverrideProjection" title="duHast.Revit.Views.Objects.Data.override_projection.OverrideProjection"><code class="xref py py-class docutils literal notranslate"><span class="pre">OverrideProjection</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.data_view.get_cut_overrides">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.data_view.</span></span><span class="sig-name descname"><span class="pre">get_cut_overrides</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view_override_graphic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_patterns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_patterns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.data_view.get_cut_overrides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves cut override settings from an OverridesGraphicSettings object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>view_override_graphic</strong> (<em>Autodesk.Revit.DB.OverridesGraphicSettings</em>) – An overrides graphic setting</p></li>
+<li><p><strong>line_patterns</strong> (<em>[</em><em>AutoDesk.Revit.LinePatternElement</em><em>]</em>) – All line patterns in the model</p></li>
+<li><p><strong>fill_patterns</strong> (<em>[</em><em>Autodesk.Revit.DB.FillPatternElement</em><em>]</em>) – All fill patterns in the model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An overrides projections object instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#duHast.Revit.Views.Objects.Data.override_cut.OverrideCut" title="duHast.Revit.Views.Objects.Data.override_cut.OverrideCut"><code class="xref py py-class docutils literal notranslate"><span class="pre">OverrideCut</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.data_view.get_view_category_overrides">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.data_view.</span></span><span class="sig-name descname"><span class="pre">get_view_category_overrides</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories_in_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_patterns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_patterns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.data_view.get_view_category_overrides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the category overrides for all categories past in for a given view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view from which to retrieve the category overrides.</p></li>
+<li><p><strong>categories_in_model</strong> (<em>_type_</em>) – All categories in the model.</p></li>
+<li><p><strong>line_patterns</strong> (<em>[</em><em>AutoDesk.Revit.LinePatternElement</em><em>]</em>) – All line patterns in the model</p></li>
+<li><p><strong>fill_patterns</strong> (<em>[</em><em>Autodesk.Revit.DB.FillPatternElement</em><em>]</em>) – All fill patterns in the model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of all category overrides for a view.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[<a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#duHast.Revit.Views.Objects.Data.override_by_category.OverrideByCategory" title="duHast.Revit.Views.Objects.Data.override_by_category.OverrideByCategory"><code class="xref py py-class docutils literal notranslate"><span class="pre">OverrideByCategory</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.data_view.get_view_filter_overrides">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.data_view.</span></span><span class="sig-name descname"><span class="pre">get_view_filter_overrides</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_patterns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_patterns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.data_view.get_view_filter_overrides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the filter overrides for all filter applied to a given view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view from which to retrieve the category overrides.</p></li>
+<li><p><strong>line_patterns</strong> (<em>[</em><em>AutoDesk.Revit.LinePatternElement</em><em>]</em>) – All line patterns in the model</p></li>
+<li><p><strong>fill_patterns</strong> (<em>[</em><em>Autodesk.Revit.DB.FillPatternElement</em><em>]</em>) – All fill patterns in the model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of all filter overrides for a view.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[<a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#duHast.Revit.Views.Objects.Data.override_by_filter.OverrideByFilter" title="duHast.Revit.Views.Objects.Data.override_by_filter.OverrideByFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">OverrideByFilter</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.data_view.get_view_settings">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.data_view.</span></span><span class="sig-name descname"><span class="pre">get_view_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.data_view.get_view_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>retrieves the filter and category graphic overrides from a view</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>view</strong> (<em>_type_</em>) – _description_</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A ViewGraphicsSettings instance with retrieved setting.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Revit.Views.Objects.html#duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings" title="duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">ViewGraphicsSettings</span></code></a></p>

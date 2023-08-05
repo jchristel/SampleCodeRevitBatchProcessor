@@ -98,8 +98,9 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.geometry.get_room_boundary_loops">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_room_boundary_loops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.geometry.get_room_boundary_loops" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all boundary loops for a rooms.
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_room_boundary_loops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_room</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_boundary_option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.SpatialElementBoundaryOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.SpatialElementBoundaryLocation.Center</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.geometry.get_room_boundary_loops" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all boundary loops for a rooms. Default value set to the center
+boundary location.
 :param revit_room: The room.
 :type revit_room: Autodesk.Revit.DB.Architecture.Room
 :return: List of boundary loops defining the room.

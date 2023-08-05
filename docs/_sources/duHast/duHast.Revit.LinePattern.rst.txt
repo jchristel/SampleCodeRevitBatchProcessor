@@ -1,6 +1,14 @@
 duHast.Revit.LinePattern package
 ================================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Revit.LinePattern.Objects
+
 Submodules
 ----------
 

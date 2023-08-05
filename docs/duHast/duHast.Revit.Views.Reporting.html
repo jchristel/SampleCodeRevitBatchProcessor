@@ -18,7 +18,7 @@
     <link rel="top" title="Sample Code Revit Batch Processor 0.0.8 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Views package" href="duHast.Revit.Views.html" />
     <link rel="next" title="duHast.Revit.Views.Utility package" href="duHast.Revit.Views.Utility.html" />
-    <link rel="prev" title="duHast.Revit.Views.Objects package" href="duHast.Revit.Views.Objects.html" />
+    <link rel="prev" title="duHast.Revit.Views.Objects.Data package" href="duHast.Revit.Views.Objects.Data.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
@@ -32,7 +32,7 @@
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
             <div class="headerButton"><a href="duHast.Revit.Views.Utility.html" title="duHast.Revit.Views.Utility package" accesskey="N">next</a></div>
-            <div class="headerButton"><a href="duHast.Revit.Views.Objects.html" title="duHast.Revit.Views.Objects package" accesskey="P">previous</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Views.Objects.Data.html" title="duHast.Revit.Views.Objects.Data package" accesskey="P">previous</a></div>
         </li>
     </ul>
 </div>
@@ -342,10 +342,86 @@ Data gets filtered twice: property needs to exist in headers list as well as in 
 </dd></dl>
 
 </section>
-<section id="module-duHast.Revit.Views.Reporting.views_report">
-<span id="duhast-revit-views-reporting-views-report-module"></span><h2>duHast.Revit.Views.Reporting.views_report module<a class="headerlink" href="#module-duHast.Revit.Views.Reporting.views_report" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Revit.Views.Reporting.views_data_report">
+<span id="duhast-revit-views-reporting-views-data-report-module"></span><h2>duHast.Revit.Views.Reporting.views_data_report module<a class="headerlink" href="#module-duHast.Revit.Views.Reporting.views_data_report" title="Permalink to this heading">¶</a></h2>
 <section id="this-module-contains-the-revit-view-report-functionality">
 <h3>This module contains the Revit view report functionality.<a class="headerlink" href="#this-module-contains-the-revit-view-report-functionality" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Reporting.views_data_report.get_views_graphic_settings_data">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Reporting.views_data_report.</span></span><span class="sig-name descname"><span class="pre">get_views_graphic_settings_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Reporting.views_data_report.get_views_graphic_settings_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets view data graphic settings from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of ViewGraphicsSettings instances</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[<a class="reference internal" href="duHast.Revit.Views.Objects.html#duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings" title="duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">ViewGraphicsSettings</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Reporting.views_data_report.write_graphics_settings_report">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Reporting.views_data_report.</span></span><span class="sig-name descname"><span class="pre">write_graphics_settings_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Reporting.views_data_report.write_graphics_settings_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write view graphic settings to file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>revit_file_name</strong> (<em>str</em>) – The revit file name (without path or file extension)</p></li>
+<li><p><strong>file_path</strong> (<em>str</em>) – Fully qualified file path</p></li>
+<li><p><strong>data</strong> (<em>{str:Any}</em>) – json dictionary to be written to file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status False if file failed to write, otherwise True.</p></li>
+<li><p>result.message will contain file name of file written.</p></li>
+<li><p>result.result: empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+<li><p>result.result: will be an empty list</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Reporting.views_data_report.read_view_data_from_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Reporting.views_data_report.</span></span><span class="sig-name descname"><span class="pre">read_view_data_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Reporting.views_data_report.read_view_data_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a view data report file into a list of view graphic setting instances</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – Fully qualified file path of report file.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If data node is missing from file</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of settings if files was read successfully otherwise an exception will be raised.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="duHast.Revit.Views.Objects.html#duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings" title="duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">ViewGraphicsSettings</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.Reporting.views_report">
+<span id="duhast-revit-views-reporting-views-report-module"></span><h2>duHast.Revit.Views.Reporting.views_report module<a class="headerlink" href="#module-duHast.Revit.Views.Reporting.views_report" title="Permalink to this heading">¶</a></h2>
+<section id="id1">
+<h3>This module contains the Revit view report functionality.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Views.Reporting.views_report.VIEW_TYPES">

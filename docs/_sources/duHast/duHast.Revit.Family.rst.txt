@@ -21,6 +21,14 @@ duHast.Revit.Family.family\_element\_utils module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.family\_functions module
+--------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_functions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.family\_load\_option module
 -----------------------------------------------
 

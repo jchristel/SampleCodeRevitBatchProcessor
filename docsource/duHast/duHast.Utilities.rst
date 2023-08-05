@@ -20,6 +20,14 @@ duHast.Utilities.batch\_processor\_log\_utils module
    :undoc-members:
    :show-inheritance:
 
+duHast.Utilities.benchmarking module
+------------------------------------
+
+.. automodule:: duHast.Utilities.benchmarking
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Utilities.compare module
 -------------------------------
 

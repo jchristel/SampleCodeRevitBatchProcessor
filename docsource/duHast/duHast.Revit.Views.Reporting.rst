@@ -36,6 +36,14 @@ duHast.Revit.Views.Reporting.view\_property\_utils module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Views.Reporting.views\_data\_report module
+-------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Reporting.views_data_report
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Views.Reporting.views\_report module
 -------------------------------------------------
 

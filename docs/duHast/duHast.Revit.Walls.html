@@ -712,10 +712,28 @@ In the case that no wall instance using any of the types is placed this will ret
 </dd></dl>
 
 </section>
-<section id="module-duHast.Revit.Walls.walls">
-<span id="duhast-revit-walls-walls-module"></span><h2>duHast.Revit.Walls.walls module<a class="headerlink" href="#module-duHast.Revit.Walls.walls" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Revit.Walls.wall_functions">
+<span id="duhast-revit-walls-wall-functions-module"></span><h2>duHast.Revit.Walls.wall_functions module<a class="headerlink" href="#module-duHast.Revit.Walls.wall_functions" title="Permalink to this heading">¶</a></h2>
 <section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-walls">
 <h3>This module contains a number of helper functions relating to Revit walls.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-walls" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.wall_functions.get_walls_from_boundary_segments">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.wall_functions.</span></span><span class="sig-name descname"><span class="pre">get_walls_from_boundary_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bnd_seg_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.wall_functions.get_walls_from_boundary_segments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a flat list of walls from a list of room boundary segments.
+:param rvt_doc: Revit document
+:type rvt_doc: Autodesk.Revit.DB.Document
+:param bnd_seg_list: List of room boundary segments
+:type bnd_seg_list: list
+:return: List of wall elements
+:rtype: list</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Walls.walls">
+<span id="duhast-revit-walls-walls-module"></span><h2>duHast.Revit.Walls.walls module<a class="headerlink" href="#module-duHast.Revit.Walls.walls" title="Permalink to this heading">¶</a></h2>
+<section id="id1">
+<h3>This module contains a number of helper functions relating to Revit walls.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Walls.walls.BASIC_WALL_FAMILY_NAME">

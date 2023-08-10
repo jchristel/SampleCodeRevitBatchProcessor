@@ -37,6 +37,9 @@ from duHast.Revit.Common.Utility.revit_to_data_conversion import (
     VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE,
 )
 
+from duHast.Revit.LinePattern.line_patterns import build_patterns_dictionary_by_name
+from duHast.Revit.LinePattern.fill_patterns import pattern_ids_by_name
+
 
 def get_colour(data_colour):
     """
@@ -62,13 +65,43 @@ def get_colour(data_colour):
 
 
 def get_fill_pattern_id(doc, data_pattern):
-    # check whether a fill pattern with the given Id and name exists
-    return ElementId.InvalidId
+    """
+    Returns the first fill pattern id in model matching name provided, or None if none was found.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param data_pattern: A pattern settings base object instance
+    :type data_pattern: :class:`.PatternSettingBase`
+
+    :return: The pattern id if a match eas found or Invalid Element Id  (-1)
+    :rtype: Autodesk.Revit.DB.ElementId
+    """
+
+    all_patterns = pattern_ids_by_name(doc)
+    if data_pattern.name in all_patterns:
+        return all_patterns[data_pattern.name][0]
+    else:
+        return ElementId.InvalidId
 
 
 def get_line_pattern_id(doc, data_pattern):
-    # check whether a line pattern with the given Id and name exists
-    return ElementId.InvalidId
+    """
+    Returns the first line pattern id in model matching name provided, or None if none was found.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param data_pattern: A pattern settings base object instance
+    :type data_pattern: :class:`.PatternSettingBase`
+
+    :return: The pattern id if a match eas found or Invalid Element Id  (-1)
+    :rtype: Autodesk.Revit.DB.ElementId
+    """
+
+    all_patterns = build_patterns_dictionary_by_name(doc)
+    if data_pattern.name in all_patterns:
+        return all_patterns[data_pattern.name][0]
+    else:
+        return ElementId.InvalidId
 
 
 def convert_to_revit_graphic_override(doc, data_override):

@@ -53,3 +53,26 @@ class OverrideByCategory(OverrideByBase):
         self.sub_category_name = sub_category_name
         self.category_id = category_id
 
+        # check if any data was past in with constructor!
+        if j != None and len(j) > 0:
+            # check type of data that came in:
+            if type(j) == str:
+                # a string
+                j = json.loads(j)
+            elif type(j) == dict:
+                # no action required
+                pass
+            else:
+                raise ValueError(
+                    "Argument supplied must be of type string or type dictionary"
+                )
+
+            # load overrides
+            if "detail_level" in j:
+                self.detail_level = j["detail_level"]
+            else:
+                self.detail_level = -1
+        
+        else:
+            self.detail_level = -1
+

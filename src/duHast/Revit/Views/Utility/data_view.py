@@ -46,7 +46,7 @@ from duHast.Revit.LinePattern.Objects.Data.line_pattern_settings import (
 from duHast.Revit.LinePattern.Objects.Data.fill_pattern_settings import (
     FillPatternSettings,
 )
-from duHast.Revit.Common.Utility.revit_to_data_conversion import to_colour
+from duHast.Revit.Common.Utility.revit_to_data_conversion import to_colour, VIEW_DETAIL_LEVEL_NAME_MAPPING
 
 
 # ----------------------  utility ----------------------
@@ -261,6 +261,9 @@ def get_view_category_overrides(
         # check if category is hidden
         override.is_visible = view.GetCategoryHidden(model_cat.id)
 
+        # get the detail level as an integer
+        override.detail_level = VIEW_DETAIL_LEVEL_NAME_MAPPING[view_override.DetailLevel]
+
         # save overrides in list to be returned
         overrides_data.append(override)
 
@@ -331,6 +334,7 @@ def get_view_filter_overrides(doc, view, line_patterns, fill_patterns):
         overrides_data.append(override)
 
     return overrides_data
+
 
 def get_view_settings(doc, view):
     """

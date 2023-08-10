@@ -246,12 +246,13 @@ def build_patterns_dictionary_by_name(doc):
     """
 
     lp_dic = {}
-    lps = FilteredElementCollector(doc).OfClass(LinePatternElement)
+    lps = get_all_line_patterns(doc)
     for lp in lps:
-        if lp_dic.has_key(lp.GetLinePattern().Name):
-            lp_dic[lp.GetLinePattern().Name].append(lp.Id)
+        pattern_name = lp.GetFillPattern().Name
+        if pattern_name in lp_dic:
+            lp_dic[pattern_name].append(lp.Id)
         else:
-            lp_dic[lp.GetLinePattern().Name] = [lp.Id]
+            lp_dic[pattern_name] = [lp.Id]
     return lp_dic
 
 

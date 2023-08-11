@@ -31,7 +31,7 @@ import clr
 # used to convert integer to byte value
 import System
 
-from Autodesk.Revit.DB import Color, OverrideGraphicSettings, ElementId
+from Autodesk.Revit.DB import Color, ElementId, OverrideGraphicSettings, 
 
 from duHast.Revit.Common.Utility.revit_to_data_conversion import (
     VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE,
@@ -104,7 +104,7 @@ def get_line_pattern_id(doc, data_pattern):
         return ElementId.InvalidId
 
 
-def convert_to_revit_graphic_override(doc, data_override):
+def convert_to_revit_graphic_override(doc, data_override, is_filter_override = False):
     """
     Creates a Revit OverrideGraphicSettings instance from settings stored in an OverrideByCategory object.
 
@@ -112,6 +112,8 @@ def convert_to_revit_graphic_override(doc, data_override):
     :type doc: Autodesk.Revit.DB.Document
     :param data_override: An OverrideByCategory object
     :type data_override: :class:`.OverrideByCategory`
+    :param is_filter_override: Flag indicating an override for a filter (True), defaults to False
+    :type is_filter_override: bool, optional
     :return: An OverrideGraphicSettings instance
     :rtype: Autodesk.Revit.DB.OverrideGraphicSettings
     """
@@ -157,10 +159,14 @@ def convert_to_revit_graphic_override(doc, data_override):
     )
     # Sets the cut surface line weight.
     revit_override_setting.SetCutLineWeight = data_override.override_cut.line_cut.weight
-    # Sets the detail level.
-    revit_override_setting.SetDetailLevel = VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE[
-        data_override.detail_level
-    ]
+    
+    # detail override only exists on category overrides
+    if(is_filter_override == False):
+        # Sets the detail level.
+        revit_override_setting.SetDetailLevel = VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE[
+            data_override.detail_level
+        ]
+
     # Sets the halftone value.
     revit_override_setting.SetHalftone = data_override.halftone
     # Sets the projection surface line color.

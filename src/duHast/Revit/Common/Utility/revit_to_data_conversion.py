@@ -62,9 +62,10 @@ def to_colour (revit_colour):
 
     c = ColourBase()
     try:
-        c.red = revit_colour.Red
-        c.green = revit_colour.Green
-        c.blue = revit_colour.Blue
+        # converte byte values to integers!
+        c.red = int(revit_colour.Red)
+        c.green = int(revit_colour.Green)
+        c.blue = int(revit_colour.Blue)
     except Exception as e:
         c.red = -1
         c.green = -1

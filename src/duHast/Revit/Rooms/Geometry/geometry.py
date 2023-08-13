@@ -64,7 +64,7 @@ def get_points_from_room_boundaries(boundary_loops):
     :param boundary_loops: List of boundary loops defining the room.
     :type boundary_loops: List of lists of Autodesk.Revit.DB.BoundarySegment
     :return: A data geometry instance containing the points defining the boundary loop.
-    :rtype: :class:`.DataGeometry`
+    :rtype: :class:`.DataPolygon`
     """
 
     loop_counter = 0

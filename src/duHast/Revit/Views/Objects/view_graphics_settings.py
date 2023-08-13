@@ -87,3 +87,46 @@ class ViewGraphicsSettings(base.Base):
             self.override_by_category = []
             self.override_by_filter = []
 
+    def get_all_used_line_patterns(self):
+        """
+        Get all line patterns used in overrides
+
+        :return: Dictionary of line pattern names to line pattern objects
+        :rtype: {str: :class:`.LinePatternSettings`}
+        """
+
+        all_line_patterns = {}
+        
+        # check category overrides
+        for override_category in self.override_by_category:
+            line_pattern_override = override_category.get_all_used_line_patterns()
+            all_line_patterns.update(line_pattern_override)
+        
+        # check filter overrides
+        for override_filter in self.override_by_filter:
+            line_pattern_override = override_filter.get_all_used_line_patterns()
+            all_line_patterns.update(line_pattern_override)
+        return all_line_patterns
+
+    def get_all_used_fill_patterns(self):
+        """
+        Get all fill pattern used in overrides.
+
+        :return: Dictionary of line pattern names to line pattern objects
+        :rtype: {str: :class:`.FillPatternSettings`}
+
+        :return: _description_
+        :rtype: _type_
+        """
+        all_fill_patterns = {}
+        
+        # check category overrides
+        for override_category in self.override_by_category:
+            fill_pattern_override = override_category.get_all_used_fill_patterns()
+            all_fill_patterns.update(fill_pattern_override)
+        
+        # check filter overrides
+        for override_filter in self.override_by_filter:
+            fill_pattern_override = override_filter.get_all_used_fill_patterns()
+            all_fill_patterns.update(fill_pattern_override)
+        return all_fill_patterns

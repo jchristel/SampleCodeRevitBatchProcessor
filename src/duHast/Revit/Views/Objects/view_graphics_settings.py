@@ -53,8 +53,11 @@ class ViewGraphicsSettings(base.Base):
 
         super(ViewGraphicsSettings, self).__init__(**kwargs)
 
+        # set default values
         self.view_name = view_name
         self.view_id = view_id
+        self.override_by_category = []
+        self.override_by_filter = []
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -74,18 +77,16 @@ class ViewGraphicsSettings(base.Base):
             if OverrideByCategory.data_type in j:
                 for override in j[OverrideByCategory.data_type]:
                     self.override_by_category.append(OverrideByCategory(override))
-            else:
-                self.override_by_category = []
 
             if OverrideByFilter.data_type in j:
                 for override in j[OverrideByFilter.data_type]:
                     self.override_by_filter.append(OverrideByFilter(override))
-            else:
-                self.override_by_filter = []
 
-        else:
-            self.override_by_category = []
-            self.override_by_filter = []
+            if "view_name" in j:
+                self.view_name = j["view_name"]
+
+            if "view_id" in j:
+                self.view_id = j["view_id"]
 
     def get_all_used_line_patterns(self):
         """
@@ -96,12 +97,12 @@ class ViewGraphicsSettings(base.Base):
         """
 
         all_line_patterns = {}
-        
+
         # check category overrides
         for override_category in self.override_by_category:
             line_pattern_override = override_category.get_all_used_line_patterns()
             all_line_patterns.update(line_pattern_override)
-        
+
         # check filter overrides
         for override_filter in self.override_by_filter:
             line_pattern_override = override_filter.get_all_used_line_patterns()
@@ -119,12 +120,12 @@ class ViewGraphicsSettings(base.Base):
         :rtype: _type_
         """
         all_fill_patterns = {}
-        
+
         # check category overrides
         for override_category in self.override_by_category:
             fill_pattern_override = override_category.get_all_used_fill_patterns()
             all_fill_patterns.update(fill_pattern_override)
-        
+
         # check filter overrides
         for override_filter in self.override_by_filter:
             fill_pattern_override = override_filter.get_all_used_fill_patterns()

@@ -79,7 +79,7 @@ class OverrideByBase(base.Base):
                 self.is_visible = j["is_visible"]
             else:
                 self.is_visible = True
-            
+
             if OverrideProjection.data_type in j:
                 self.override_projection = OverrideProjection(
                     j[OverrideProjection.data_type]
@@ -121,3 +121,77 @@ class OverrideByBase(base.Base):
             other.override_projection,
             other.override_cut,
         )
+
+    def get_all_used_line_patterns(self):
+        """
+        Extract dictionary of line pattern names to line pattern objects
+
+        :return: Dictionary of line pattern names to line pattern objects
+        :rtype: {str: :class:`.LinePatternSettings`}
+        """
+
+        used_line_patterns = {}
+
+        # from projection
+        if (
+            self.override_projection.line_projection.line_pattern_settings.name
+            not in used_line_patterns
+        ):
+            used_line_patterns[
+                self.override_projection.line_projection.line_pattern_settings.name
+            ] = self.override_projection.line_projection.line_pattern_settings
+
+        # from cut
+        if (
+            self.override_cut.line_cut.line_pattern_settings.name
+            not in used_line_patterns
+        ):
+            used_line_patterns[
+                self.override_cut.line_cut.line_pattern_settings.name
+            ] = self.override_cut.line_cut.line_pattern_settings
+
+        return used_line_patterns
+
+    def get_all_used_fill_patterns(self):
+        """
+        Extract dictionary of fill pattern names to fill pattern objects
+
+        :return: Dictionary of fill pattern names to fill pattern objects
+        :rtype: {str: :class:`.FillPatternSettings`}
+        """
+        used_fill_patterns = {}
+        # from projection
+        if (
+            self.override_projection.pattern_background.fill_pattern_setting.name
+            not in used_fill_patterns
+        ):
+            used_fill_patterns[
+                self.override_projection.pattern_background.fill_pattern_setting.name
+            ] = self.override_projection.pattern_background.fill_pattern_setting
+
+        if (
+            self.override_projection.pattern_foreground.fill_pattern_setting
+            not in used_fill_patterns
+        ):
+            used_fill_patterns[
+                self.override_projection.pattern_foreground.fill_pattern_setting.name
+            ] = self.override_projection.pattern_foreground.fill_pattern_setting
+
+        # from cut
+        if (
+            self.override_cut.pattern_background.fill_pattern_setting.name
+            not in used_fill_patterns
+        ):
+            used_fill_patterns[
+                self.override_cut.pattern_background.fill_pattern_setting.name
+            ] = self.override_cut.pattern_background.fill_pattern_setting
+
+        if (
+            self.override_cut.pattern_foreground.fill_pattern_setting.name
+            not in used_fill_patterns
+        ):
+            used_fill_patterns[
+                self.override_cut.pattern_foreground.fill_pattern_setting.name
+            ] = self.override_cut.pattern_foreground.fill_pattern_setting
+
+        return used_fill_patterns

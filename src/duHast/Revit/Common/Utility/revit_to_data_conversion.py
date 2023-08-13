@@ -62,7 +62,7 @@ def to_colour (revit_colour):
 
     c = ColourBase()
     try:
-        # converte byte values to integers!
+        # convert byte values to integers!
         c.red = int(revit_colour.Red)
         c.green = int(revit_colour.Green)
         c.blue = int(revit_colour.Blue)

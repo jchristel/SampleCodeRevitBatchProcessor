@@ -59,7 +59,7 @@ from duHast.Utilities.files_combine import (
     combine_files,
     combine_files_csv_header_independent,
     append_to_file,
-    combine_files_basic,
+    combine_files_json,
 )
 from duHast.Utilities.files_get import get_files_with_filter
 from duHast.Utilities.files_csv import write_report_data_as_csv
@@ -106,7 +106,7 @@ FILE_DATA_TO_COMBINE = [
     [
         settings.REPORT_EXTENSION_GEO_DATA,
         settings.COMBINED_REPORT_NAME_GEO_DATA,
-        combine_files_basic,
+        combine_files_json,
     ],
     [
         settings.REPORT_EXTENSION_FAMILIES,

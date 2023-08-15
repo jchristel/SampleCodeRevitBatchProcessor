@@ -46,7 +46,10 @@ from duHast.Revit.LinePattern.Objects.Data.line_pattern_settings import (
 from duHast.Revit.LinePattern.Objects.Data.fill_pattern_settings import (
     FillPatternSettings,
 )
-from duHast.Revit.Common.Utility.revit_to_data_conversion import to_colour, VIEW_DETAIL_LEVEL_NAME_MAPPING
+from duHast.Revit.Common.Utility.revit_to_data_conversion import (
+    to_colour,
+    VIEW_DETAIL_LEVEL_NAME_MAPPING,
+)
 
 
 # ----------------------  utility ----------------------
@@ -97,10 +100,11 @@ def get_projection_overrides(view_override_graphic, line_patterns, fill_patterns
     line_pat.colour = to_colour(view_override_graphic.ProjectionLineColor)
     line_pat.weight = view_override_graphic.ProjectionLineWeight
     # basic line pattern details
-    line_pat_settings = LinePatternSettings()
-    line_pat_settings.id = view_override_graphic.ProjectionLinePatternId.IntegerValue
-    line_pat_settings.name = _get_name_from_pattern_id(
-        id=view_override_graphic.ProjectionLinePatternId, pattern_list=line_patterns
+    line_pat_settings = LinePatternSettings(
+        name=_get_name_from_pattern_id(
+            id=view_override_graphic.ProjectionLinePatternId, pattern_list=line_patterns
+        ),
+        id=view_override_graphic.ProjectionLinePatternId.IntegerValue,
     )
     # store line pattern details
     line_pat.line_pattern_settings = line_pat_settings
@@ -112,10 +116,12 @@ def get_projection_overrides(view_override_graphic, line_patterns, fill_patterns
     fore_pat.colour = to_colour(view_override_graphic.SurfaceForegroundPatternColor)
     fore_pat.is_visible = view_override_graphic.IsSurfaceForegroundPatternVisible
     # basic foreground pattern details
-    fore_pat_settings = FillPatternSettings()
-    fore_pat_settings.id = view_override_graphic.SurfaceForegroundPatternId.IntegerValue
-    fore_pat_settings.name = _get_name_from_pattern_id(
-        id=view_override_graphic.SurfaceForegroundPatternId, pattern_list=fill_patterns
+    fore_pat_settings = FillPatternSettings(
+        name=_get_name_from_pattern_id(
+            id=view_override_graphic.SurfaceForegroundPatternId,
+            pattern_list=fill_patterns,
+        ),
+        id=view_override_graphic.SurfaceForegroundPatternId.IntegerValue,
     )
     # store foreground pattern settings details
     fore_pat.fill_pattern_setting = fore_pat_settings
@@ -127,10 +133,12 @@ def get_projection_overrides(view_override_graphic, line_patterns, fill_patterns
     back_pat.colour = to_colour(view_override_graphic.SurfaceBackgroundPatternColor)
     back_pat.is_visible = view_override_graphic.IsSurfaceBackgroundPatternVisible
     # basic background pattern details
-    back_pat_settings = FillPatternSettings()
-    back_pat_settings.id = view_override_graphic.SurfaceBackgroundPatternId.IntegerValue
-    back_pat_settings.name = _get_name_from_pattern_id(
-        id=view_override_graphic.SurfaceBackgroundPatternId, pattern_list=fill_patterns
+    back_pat_settings = FillPatternSettings(
+        name=_get_name_from_pattern_id(
+            id=view_override_graphic.SurfaceBackgroundPatternId,
+            pattern_list=fill_patterns,
+        ),
+        id=view_override_graphic.SurfaceBackgroundPatternId.IntegerValue,
     )
     # store foreground pattern settings details
     back_pat.fill_pattern_setting = back_pat_settings
@@ -164,10 +172,11 @@ def get_cut_overrides(view_override_graphic, line_patterns, fill_patterns):
     line_pat.colour = to_colour(view_override_graphic.CutLineColor)
     line_pat.weight = view_override_graphic.CutLineWeight
     # basic line pattern details
-    line_pat_settings = LinePatternSettings()
-    line_pat_settings.id = view_override_graphic.CutLinePatternId.IntegerValue
-    line_pat_settings.name = _get_name_from_pattern_id(
-        id=view_override_graphic.CutLinePatternId, pattern_list=line_patterns
+    line_pat_settings = LinePatternSettings(
+        name=_get_name_from_pattern_id(
+            id=view_override_graphic.CutLinePatternId, pattern_list=line_patterns
+        ),
+        id=view_override_graphic.CutLinePatternId.IntegerValue,
     )
     # store line pattern details
     line_pat.line_pattern_settings = line_pat_settings
@@ -179,10 +188,11 @@ def get_cut_overrides(view_override_graphic, line_patterns, fill_patterns):
     fore_pat.colour = to_colour(view_override_graphic.CutForegroundPatternColor)
     fore_pat.is_visible = view_override_graphic.IsCutForegroundPatternVisible
     # basic foreground pattern details
-    fore_pat_settings = FillPatternSettings()
-    fore_pat_settings.id = view_override_graphic.CutForegroundPatternId.IntegerValue
-    fore_pat_settings.name = _get_name_from_pattern_id(
-        id=view_override_graphic.CutForegroundPatternId, pattern_list=fill_patterns
+    fore_pat_settings = FillPatternSettings(
+        name=_get_name_from_pattern_id(
+            id=view_override_graphic.CutForegroundPatternId, pattern_list=fill_patterns
+        ),
+        id=view_override_graphic.CutForegroundPatternId.IntegerValue,
     )
     # store foreground pattern settings details
     fore_pat.fill_pattern_setting = fore_pat_settings
@@ -194,10 +204,11 @@ def get_cut_overrides(view_override_graphic, line_patterns, fill_patterns):
     back_pat.colour = to_colour(view_override_graphic.CutBackgroundPatternColor)
     back_pat.is_visible = view_override_graphic.IsCutBackgroundPatternVisible
     # basic background pattern details
-    back_pat_settings = FillPatternSettings()
-    back_pat_settings.id = view_override_graphic.CutBackgroundPatternId.IntegerValue
-    back_pat_settings.name = _get_name_from_pattern_id(
-        id=view_override_graphic.CutBackgroundPatternId, pattern_list=fill_patterns
+    back_pat_settings = FillPatternSettings(
+        name=_get_name_from_pattern_id(
+            id=view_override_graphic.CutBackgroundPatternId, pattern_list=fill_patterns
+        ),
+        id=view_override_graphic.CutBackgroundPatternId.IntegerValue,
     )
     # store foreground pattern settings details
     back_pat.fill_pattern_setting = back_pat_settings
@@ -262,7 +273,9 @@ def get_view_category_overrides(
         override.is_visible = view.GetCategoryHidden(model_cat.id)
 
         # get the detail level as an integer
-        override.detail_level = VIEW_DETAIL_LEVEL_NAME_MAPPING[view_override.DetailLevel]
+        override.detail_level = VIEW_DETAIL_LEVEL_NAME_MAPPING[
+            view_override.DetailLevel
+        ]
 
         # save overrides in list to be returned
         overrides_data.append(override)

@@ -38,7 +38,9 @@ from duHast.Utilities.Objects import base
 
 
 class PatternSettingBase(base.Base):
-    def __init__(self, data_type="unknown", j={}, **kwargs):
+    def __init__(
+        self, name="unknown pattern", id=-1, data_type="unknown", j={}, **kwargs
+    ):
         """
         Class constructor.
 
@@ -47,6 +49,8 @@ class PatternSettingBase(base.Base):
         super(PatternSettingBase, self).__init__(**kwargs)
 
         self.data_type = data_type
+        self.name = name.encode("utf-8")  # utf 8 encoding just in case
+        self.id = id
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -72,10 +76,6 @@ class PatternSettingBase(base.Base):
                 self.name = j["name"]
             else:
                 self.name = "unknown pattern"
-
-        else:
-            self.id = -1
-            self.name = "unknown pattern"
 
     def __eq__(self, other):
         """

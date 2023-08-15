@@ -38,7 +38,7 @@ from duHast.Revit.Common.Objects.Data.pattern_settings_base import PatternSettin
 class FillPatternSettings(PatternSettingBase):
     data_type = "fill_pattern_setting"
 
-    def __init__(self, j={}):
+    def __init__(self, name="unknown pattern", id=-1,j={}):
         """
         Class constructor.
 
@@ -47,4 +47,4 @@ class FillPatternSettings(PatternSettingBase):
         """
 
         # store data type  in base class
-        super(FillPatternSettings, self).__init__(data_type=self.data_type, j=j)
+        super(FillPatternSettings, self).__init__(name=name, id=id, data_type=self.data_type, j=j)

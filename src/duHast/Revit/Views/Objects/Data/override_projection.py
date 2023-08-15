@@ -103,8 +103,24 @@ class OverrideProjection(base.Base):
         :rtype: Bool
         """
 
-        return (self.pattern_background, self.pattern_foreground, self.line_projection) == (
+        return isinstance(other, OverrideProjection) and (
+            self.pattern_background,
+            self.pattern_foreground,
+            self.line_projection,
+        ) == (
             other.pattern_background,
             other.pattern_foreground,
             other.line_projection,
+        )
+
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+        hash(
+            self.pattern_background,
+            self.pattern_foreground,
+            self.line_projection,
         )

@@ -87,4 +87,14 @@ class PatternSettingBase(base.Base):
         :rtype: Bool
         """
 
-        return (self.name) == (other.name)
+        return isinstance(other, PatternSettingBase) and (self.name) == (other.name)
+
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+        hash(
+            self.name,
+        )

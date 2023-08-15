@@ -104,8 +104,24 @@ class PatternGraphicBase(base.Base):
         :rtype: Bool
         """
 
-        return (self.is_visible, self.fill_pattern_setting, self.colour) == (
+        return isinstance(other, PatternGraphicBase) and (
+            self.is_visible,
+            self.fill_pattern_setting,
+            self.colour,
+        ) == (
             other.is_visible,
-            other.self.fill_pattern_setting,
+            other.fill_pattern_setting,
             other.colour,
+        )
+
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+        hash(
+            self.is_visible,
+            self.fill_pattern_setting,
+            self.colour,
         )

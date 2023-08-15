@@ -35,7 +35,11 @@ Stores common overrides between categories and filters
 import json
 
 from duHast.Utilities.Objects import base
-from duHast.Revit.Common.Objects.Data import pattern_foreground, pattern_background, line_cut
+from duHast.Revit.Common.Objects.Data import (
+    pattern_foreground,
+    pattern_background,
+    line_cut,
+)
 
 
 class OverrideCut(base.Base):
@@ -97,8 +101,24 @@ class OverrideCut(base.Base):
         :rtype: Bool
         """
 
-        return (self.pattern_background, self.pattern_foreground, self.line_cut) == (
+        return isinstance(other, OverrideCut) and (
+            self.pattern_background,
+            self.pattern_foreground,
+            self.line_cut,
+        ) == (
             other.pattern_background,
             other.pattern_foreground,
             other.line_cut,
+        )
+
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+        hash(
+            self.pattern_background,
+            self.pattern_foreground,
+            self.line_cut,
         )

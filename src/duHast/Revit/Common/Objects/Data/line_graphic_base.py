@@ -105,8 +105,24 @@ class LineGraphicBase(base.Base):
         :rtype: Bool
         """
 
-        return (self.weight, self.line_pattern_settings, self.colour) == (
+        return isinstance(other, LineGraphicBase) and (
+            self.weight,
+            self.line_pattern_settings,
+            self.colour,
+        ) == (
             other.weight,
             other.line_pattern_settings,
             other.colour,
+        )
+
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+        hash(
+            self.weight,
+            self.line_pattern_settings,
+            self.colour,
         )

@@ -92,4 +92,16 @@ class ColourBase(base.Base):
         :rtype: Bool
         """
 
-        return (self.red, self.green, self.blue) == (other.red, other.green, other.blue)
+        return isinstance(other, ColourBase) and (self.red, self.green, self.blue) == (
+            other.red,
+            other.green,
+            other.blue,
+        )
+
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+        hash(self.red, self.green, self.blue)

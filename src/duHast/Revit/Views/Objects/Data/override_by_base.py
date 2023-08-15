@@ -108,7 +108,7 @@ class OverrideByBase(base.Base):
         :rtype: Bool
         """
 
-        return (
+        return isinstance(other, OverrideByBase) and (
             self.halftone,
             self.transparency,
             self.is_visible,
@@ -120,6 +120,20 @@ class OverrideByBase(base.Base):
             other.is_visible,
             other.override_projection,
             other.override_cut,
+        )
+
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+        hash(
+            self.halftone,
+            self.transparency,
+            self.is_visible,
+            self.override_projection,
+            self.override_cut,
         )
 
     def get_all_used_line_patterns(self):

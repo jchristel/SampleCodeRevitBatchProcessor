@@ -70,6 +70,33 @@ class Base(object):
 
         return json.dumps(self, indent=None, default=lambda o: o.__dict__)
 
+
+    def string_to_utf(self, o):
+        '''
+        Used to convert any properties stored as string to utf-8 in to json conversion of all class properties...
+
+        :param o: _description_
+        :type o: _type_
+        :return: _description_
+        :rtype: _type_
+        '''
+
+        if isinstance(o, str):
+            return o.encode('utf-8').decode('utf-8')  # Encoding and decoding to ensure the type is str
+        return o.__dict__
+
+    def to_json_utf(self):
+        '''
+        Convert the instance of this class to json, any string properties are converted to utf-8
+
+        :return: A Json object.
+        :rtype: json
+        '''
+
+        return json.dumps(self, indent=None, default=self.string_to_utf, ensure_ascii=False)
+
+
+
     def _is_primitive(self, obj):
         """
         Checks whether object past in is a python primitive

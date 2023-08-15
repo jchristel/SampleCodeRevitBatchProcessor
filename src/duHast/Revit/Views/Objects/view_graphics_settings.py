@@ -54,7 +54,11 @@ class ViewGraphicsSettings(base.Base):
         super(ViewGraphicsSettings, self).__init__(**kwargs)
 
         # set default values
-        self.view_name = view_name.encode("utf-8") # utf 8 encoding just in case
+        if(view_name==None):
+            self.view_name = view_name
+        else:
+            self.view_name = view_name
+
         self.view_id = view_id
         self.override_by_category = []
         self.override_by_filter = []

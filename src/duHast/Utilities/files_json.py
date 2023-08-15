@@ -31,8 +31,21 @@ from duHast.Utilities.Objects import result as res
 import codecs
 import json
 
+def _custom_default(o):
+    '''
+    Encode string values to utf-8 for json formatted outputs
 
-def write_json_to_file(json_data, data_output_file_path):
+    :param o: The value to be encoded if of type string
+    :type o: var
+    :return: Encoded string or var
+    :rtype: str, var
+    '''
+
+    if isinstance(o, str):
+        return o.encode('utf-8').decode('utf-8')  # Encoding and decoding to ensure the type is str
+    return o.__dict__
+
+def write_json_to_file(json_data, data_output_file_path, enforce_utf8 = True):
     """
     Writes collected data to a new json formatted file.
 
@@ -40,6 +53,8 @@ def write_json_to_file(json_data, data_output_file_path):
     :type json_data: json object (dictionary)
     :param data_output_file_path: Fully qualified file path to json data file.
     :type data_output_file_path: str
+    :param enforce_utf8: Will encode any string value as utf-8, Default is true (recommended!!).
+    :type enforce_utf8: bool
     :return:
         Result class instance.
         - result.status. True if json data file was written successfully, otherwise False.
@@ -55,7 +70,12 @@ def write_json_to_file(json_data, data_output_file_path):
     result = res.Result()
 
     try:
-        json_object = json.dumps(json_data, indent=None, default=lambda o: o.__dict__)
+        json_object = None
+        # check if utf-8 is to be enforced
+        if(enforce_utf8):
+            json_object = json.dumps(json_data, indent=None, default=_custom_default, ensure_ascii=False)
+        else:
+            json_object = json.dumps(json_data, indent=None, default=lambda o: o.__dict__)
         with codecs.open(data_output_file_path, "w", encoding="utf-8") as f:
             f.write(json_object)
             f.close()

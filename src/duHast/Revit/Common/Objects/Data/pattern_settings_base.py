@@ -49,7 +49,10 @@ class PatternSettingBase(base.Base):
         super(PatternSettingBase, self).__init__(**kwargs)
 
         self.data_type = data_type
-        self.name = name.encode("utf-8")  # utf 8 encoding just in case
+        if(name == None):
+            self.name = name
+        else:
+            self.name = name
         self.id = id
 
         # check if any data was past in with constructor!

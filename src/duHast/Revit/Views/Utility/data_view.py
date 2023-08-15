@@ -26,7 +26,7 @@ Category override to data storage class helper functions.
 #
 #
 
-from Autodesk.Revit.DB import Element
+from Autodesk.Revit.DB import Element, ElementId
 
 from duHast.Revit.Views.Objects.view_graphics_settings import ViewGraphicsSettings
 from duHast.Revit.LinePattern.line_patterns import get_all_line_patterns
@@ -63,10 +63,12 @@ def _get_name_from_pattern_id(id, pattern_list):
     :type id: Autodesk.Revit.DB.ElementId
     :param pattern_list: A list of pattern elements
     :type pattern_list: [PatternElement] (Can be AutoDesk.Revit.LinePatternElement or Autodesk.Revit.DB.FillPatternElement)
-    :return: The pattern name if a match was found, otherwise None
-    :rtype: str
+    :return: The pattern name if a match was found, "No pattern override assigned." when no pattern was assigned otherwise None (should nt really happen!)
+    :rtype: str or None
     """
 
+    if (id == ElementId.InvalidElementId):
+        return "No pattern override assigned."
     for pat in pattern_list:
         if id == pat.Id:
             return Element.Name.GetValue(pat)

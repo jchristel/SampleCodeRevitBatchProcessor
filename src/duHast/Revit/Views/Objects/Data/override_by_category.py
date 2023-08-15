@@ -50,7 +50,7 @@ class OverrideByCategory(OverrideByBase):
         super(OverrideByCategory, self).__init__(data_type=self.data_type, j=j)
 
         self.main_category_name = main_category_name
-        self.sub_category_name = sub_category_name
+        self.sub_category_name = sub_category_name.encode("utf-8") # sub category names are better utf 8 encoded since user can create them
         self.category_id = category_id
 
         # check if any data was past in with constructor!

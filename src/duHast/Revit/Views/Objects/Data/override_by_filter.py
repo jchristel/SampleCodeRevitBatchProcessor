@@ -47,7 +47,7 @@ class OverrideByFilter(OverrideByBase):
 
         super(OverrideByFilter, self).__init__(data_type=self.data_type, j=j)
 
-        self.filter_name = filter_name
+        self.filter_name = filter_name.encode("utf-8") # just in case
         self.filter_id = filter_id
 
         # check if any data was past in with constructor!

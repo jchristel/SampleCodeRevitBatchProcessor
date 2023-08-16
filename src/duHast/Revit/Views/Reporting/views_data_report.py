@@ -35,6 +35,18 @@ PROP_FILE_NAME = "file_name"
 PROP_VIEW_DATA = "view_data"
 
 
+def get_views_graphics_settings_hash_data(doc, views):
+    # get settings objects
+    views_settings = [] = get_views_graphic_settings_data(doc, views)
+    # convert category overrides into hash table where:
+    # rows are categories / sub categories
+    # headers are template names
+
+    # convert filter overrides into hash table
+    # # rows are filters
+    # headers are template names
+
+
 def get_views_graphic_settings_data(doc, views):
     """
     Gets view data graphic settings from the model.
@@ -51,7 +63,10 @@ def get_views_graphic_settings_data(doc, views):
 
     # loop over past in views and retrieve settings
     for view in views:
-        view_setting = get_view_settings(doc=doc, view=view)
+        view_setting = get_view_settings(
+            doc=doc,
+            view=view,
+        )
         views_settings.append(view_setting)
 
     return views_settings
@@ -98,7 +113,7 @@ def read_view_data_from_file(file_path):
     :param file_path: Fully qualified file path of report file.
     :type file_path: str
     :raises ValueError: If data node is missing from file
-    
+
     :return: list of settings if files was read successfully otherwise an exception will be raised.
     :rtype: :class:`.ViewGraphicsSettings`
     """

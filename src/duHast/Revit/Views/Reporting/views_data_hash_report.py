@@ -28,9 +28,12 @@ This module contains the Revit view report functionality.
 
 import os
 
-from duHast.Revit.Views.Reporting.views_data_report import get_views_graphic_settings_data
+from duHast.Revit.Views.Reporting.views_data_report import (
+    get_views_graphic_settings_data,
+)
 from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.Objects import result as res
+
 
 def _get_hash_headers(views_settings):
     """
@@ -199,13 +202,11 @@ def _get_hashes_overrides_filters(headers, row_headers, views_settings):
     # column headers are view names
     # row headers are category names
     simple_table = _convert_hash_dic_to_table(
-        hash_dic=table_hash,
-        headers=headers,
-        row_headers=row_headers
+        hash_dic=table_hash, headers=headers, row_headers=row_headers
     )
-    
+
     return simple_table
-    
+
 
 def get_views_graphics_settings_hash_data(doc, views):
     """
@@ -240,7 +241,9 @@ def get_views_graphics_settings_hash_data(doc, views):
     return hash_table_categories, hash_table_filters
 
 
-def write_graphics_settings_hash_report(revit_file_name, directory_path, data_category, data_filter):
+def write_graphics_settings_hash_report(
+    revit_file_name, directory_path, data_category, data_filter
+):
     """
     _summary_
 
@@ -255,10 +258,14 @@ def write_graphics_settings_hash_report(revit_file_name, directory_path, data_ca
     :return: _description_
     :rtype: _type_
     """
-    
+
     result = res.Result()
-    file_path_category = os.path.join(directory_path, revit_file_name + "_category_hash.csv")
-    file_path_filter = os.path.join(directory_path,revit_file_name + "_filter_hash.csv")
+    file_path_category = os.path.join(
+        directory_path, revit_file_name + "_category_hash.csv"
+    )
+    file_path_filter = os.path.join(
+        directory_path, revit_file_name + "_filter_hash.csv"
+    )
     # write out files
     try:
         write_report_data_as_csv(
@@ -267,7 +274,8 @@ def write_graphics_settings_hash_report(revit_file_name, directory_path, data_ca
         result.update_sep(
             True, "Hash category data written to file: {}".format(file_path_category)
         )
-        write_report_data_as_csv(file_name=file_path_filter, header=[], data=data_filter
+        write_report_data_as_csv(
+            file_name=file_path_filter, header=[], data=data_filter
         )
         result.update_sep(
             True, "Hash filter data written to file: {}".format(file_path_filter)
@@ -277,4 +285,3 @@ def write_graphics_settings_hash_report(revit_file_name, directory_path, data_ca
             False, "Failed to write data to file with exception: {}".format(e)
         )
     return result
-

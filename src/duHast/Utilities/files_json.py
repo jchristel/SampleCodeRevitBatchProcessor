@@ -42,7 +42,9 @@ def _custom_default(o):
     '''
 
     if isinstance(o, str):
-        return o.encode('utf-8').decode('utf-8')  # Encoding and decoding to ensure the type is str
+        # only encode if required
+        if any(ord(char) > 127 for char in o):
+            return o.encode('utf-8').decode('utf-8')  # Encoding and decoding to ensure the type is str
     return o.__dict__
 
 def write_json_to_file(json_data, data_output_file_path, enforce_utf8 = True):

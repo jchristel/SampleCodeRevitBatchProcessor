@@ -108,7 +108,7 @@ class OverrideByBase(base.Base):
             other.override_projection,
             other.override_cut,
         )
-    
+
     def __eq__(self, other):
         """
         Custom compare is equal override.
@@ -142,24 +142,16 @@ class OverrideByBase(base.Base):
         Required due to custom __eq__ override present in this class
         """
         try:
-            # check if an override is present  or whether that the category is switched off altogether )
-            # If that is the case return a hash of all properties
-            if (
-                self.are_overrides_present or self.is_visible == False
-            ):
-                return hash(
-                    (
-                        self.halftone,
-                        self.transparency,
-                        self.is_visible,
-                        self.override_projection,
-                        self.override_cut,
-                        self.are_overrides_present
-                    )
+            return hash(
+                (
+                    self.halftone,
+                    self.transparency,
+                    self.is_visible,
+                    self.override_projection,
+                    self.override_cut,
+                    self.are_overrides_present,
                 )
-            else:
-                # return 0 indicating that the category is visible and no graphical override has been applied
-                return 0
+            )
         except Exception as e:
             raise ValueError(
                 "Exception {} occurred in {} with values: halftone:{}, transparency: {}, is visible: {}, override projection: {}, override cut: {}".format(
@@ -172,7 +164,6 @@ class OverrideByBase(base.Base):
                     self.override_cut,
                 )
             )
-
 
     def get_all_used_line_patterns(self):
         """

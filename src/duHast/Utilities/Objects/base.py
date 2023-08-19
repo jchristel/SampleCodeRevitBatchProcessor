@@ -60,6 +60,35 @@ class Base(object):
             ", ".join("{}={!r}".format(k, v) for k, v in self.__dict__.items()),
         )
 
+
+    def __eq__(self, other):
+        """
+        Custom compare is equal override 
+
+        :param other: Another instance of pattern class
+        :type other: :class:`.PatternBase`
+        :return: True if name value of other colour class instance equal the name values of this instance, otherwise False.
+        :rtype: Bool
+        """
+
+        return isinstance(other, self.__class__)
+
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+        try:
+            return hash(self.__class__)
+        except Exception as e:
+            raise ValueError(
+                "Exception {} occurred in {} with values: name:{}".format(
+                    e, self.data_type, self.name
+                )
+            )
+
+
     def to_json(self):
         """
         Convert the instance of this class to json.

@@ -135,25 +135,17 @@ class OverrideByCategory(OverrideByBase):
         """
 
         try:
-            # check if an override is present  or whether that the category is switched off altogether )
-            # If that is the case return a hash of all properties
-            if (
-                self.are_overrides_present or self.is_visible == False
-            ):
-                return hash(
-                    (
-                        self.halftone,
-                        self.transparency,
-                        self.detail_level,
-                        self.is_visible,
-                        self.override_projection,
-                        self.override_cut,
-                        self.are_overrides_present
-                    )
+            return hash(
+                (
+                    self.halftone,
+                    self.transparency,
+                    self.detail_level,
+                    self.is_visible,
+                    self.override_projection,
+                    self.override_cut,
+                    self.are_overrides_present,
                 )
-            else:
-                # return 0 indicating that the category is visible and no graphical override has been applied
-                return 0
+            )
         except Exception as e:
             raise ValueError(
                 "Exception {} occurred in {} with values: pattern background:{}, transparency: {}, is visible: {}, projection: {}, cut: {}, detail level: {}".format(

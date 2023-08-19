@@ -88,6 +88,7 @@ class OverrideByFilter(OverrideByBase):
             self.override_projection,
             self.override_cut,
             self.is_enabled,
+            self.are_overrides_present,
         ) == (
             other.halftone,
             other.transparency,
@@ -95,6 +96,7 @@ class OverrideByFilter(OverrideByBase):
             other.override_projection,
             other.override_cut,
             other.is_enabled,
+            other.are_overrides_present,
         )
 
     def __hash__(self):
@@ -104,26 +106,21 @@ class OverrideByFilter(OverrideByBase):
         Required due to custom __eq__ override present in this class
         """
         try:
-            # check if an override is present  or whether that the filter is enabled altogether )
-            # If that is the case return a hash of all properties
-            if self.are_overrides_present or (self.is_visible == False and self.is_enabled == True):
-                return hash(
-                    (
-                        self.halftone,
-                        self.transparency,
-                        self.is_visible,
-                        self.is_enabled,
-                        self.override_projection,
-                        self.override_cut,
-                        self.are_overrides_present,
-                    )
+            return hash(
+                (
+                    self.halftone,
+                    self.transparency,
+                    self.is_visible,
+                    self.is_enabled,
+                    self.override_projection,
+                    self.override_cut,
+                    self.are_overrides_present,
                 )
-            else:
-                # return 0 indicating that the category is visible and no filter override has been applied
-                return 0
+            )
+
         except Exception as e:
             raise ValueError(
-                "Exception {} occurred in {} with values: halftone:{}, transparency: {}, is visible: {}, override projection: {}, override cut: {},is enabled: {}".format(
+                "Exception {} occurred in {} with values: halftone:{}, transparency: {}, is visible: {}, override projection: {}, override cut: {},is enabled: {}, override is present: {}".format(
                     e,
                     self.data_type,
                     self.halftone,
@@ -132,5 +129,6 @@ class OverrideByFilter(OverrideByBase):
                     self.override_projection,
                     self.override_cut,
                     self.is_enabled,
+                    self.are_overrides_present,
                 )
             )

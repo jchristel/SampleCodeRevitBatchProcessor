@@ -89,10 +89,10 @@ def _convert_hash_dic_to_table(hash_dic, headers, row_headers):
     for row_header in row_headers:
         try:
             row = hash_dic[row_header]
-            row.insert[0, row_header]
+            row.insert(0, row_header)
             simple_table.append(row)
-        except:
-            pass
+        except Exception as e:
+            print('exception: {}'.format(e))
 
     return simple_table
 
@@ -114,7 +114,7 @@ def _get_hashes_overrides_categories(headers, row_headers, views_settings):
         )
         if matching_template == None:
             raise ValueError(
-                "Impossible!!! No match found for view {}".format(header_view_name)
+                "Impossible!!! No match found for view: [{}]".format(header_view_name)
             )
 
         # get category hashes
@@ -171,7 +171,7 @@ def _get_hashes_overrides_filters(headers, row_headers, views_settings):
         )
         if matching_template == None:
             raise ValueError(
-                "Impossible!!! No match found for view {}".format(header_view_name)
+                "Impossible!!! No match found for view [{}]".format(header_view_name)
             )
 
         # get category hashes
@@ -208,7 +208,7 @@ def _get_hashes_overrides_filters(headers, row_headers, views_settings):
     return simple_table
 
 
-def get_views_graphics_settings_hash_data(doc, views):
+def get_views_graphics_settings_hash_data(doc, views, views_settings=None):
     """
     _summary_
 
@@ -216,27 +216,34 @@ def get_views_graphics_settings_hash_data(doc, views):
     :type doc: _type_
     :param views: _description_
     :type views: _type_
+    :param views_settings: _description_, defaults to None
+    :type views_settings: _type_, optional
     :return: _description_
     :rtype: _type_
     """
 
-    # get settings objects
-    views_settings = get_views_graphic_settings_data(doc, views)
+    # check if any view settings where past in, if not get them
+    if views_settings == None:
+        # get settings objects
+        views_settings = get_views_graphic_settings_data(doc, views)
 
     # convert category overrides into hash table where:
     # rows are categories / sub categories
     # headers are template names
     headers = _get_hash_headers(views_settings)
-    rows = _get_hash_rows_categories(views_settings)
+    # copy headers list since the original headers list gets manipulated in get hashes overrides!
+    headers_filters = list(headers)
+
+    row_categories = _get_hash_rows_categories(views_settings)
     hash_table_categories = _get_hashes_overrides_categories(
-        headers, rows, views_settings
+        headers, row_categories, views_settings
     )
 
     # convert filter overrides into hash table
     # # rows are filters
     # headers are template names
-    rows = _get_hash_rows_filters(views_settings)
-    hash_table_filters = _get_hashes_overrides_filters(headers, rows, views_settings)
+    row_filters = _get_hash_rows_filters(views_settings)
+    hash_table_filters = _get_hashes_overrides_filters(headers_filters, row_filters, views_settings)
 
     return hash_table_categories, hash_table_filters
 

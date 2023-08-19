@@ -26,7 +26,7 @@ Category override to data storage class helper functions.
 #
 #
 
-from Autodesk.Revit.DB import Element, ElementId
+from Autodesk.Revit.DB import Element, ElementId, OverrideGraphicSettings
 
 from duHast.Revit.Views.Objects.view_graphics_settings import ViewGraphicsSettings
 from duHast.Revit.LinePattern.line_patterns import get_all_line_patterns
@@ -46,6 +46,7 @@ from duHast.Revit.LinePattern.Objects.Data.line_pattern_settings import (
 from duHast.Revit.LinePattern.Objects.Data.fill_pattern_settings import (
     FillPatternSettings,
 )
+from duHast.Revit.Common.Objects.Data.pattern_settings_base import PatternSettingBase
 from duHast.Revit.Common.Utility.revit_to_data_conversion import (
     to_colour,
     VIEW_DETAIL_LEVEL_NAME_MAPPING,
@@ -67,8 +68,8 @@ def _get_name_from_pattern_id(id, pattern_list):
     :rtype: str or None
     """
 
-    if (id == ElementId.InvalidElementId):
-        return "No pattern override assigned."
+    if id == ElementId.InvalidElementId:
+        return PatternSettingBase.NO_PATTERN
     for pat in pattern_list:
         if id == pat.Id:
             return Element.Name.GetValue(pat)
@@ -253,6 +254,7 @@ def get_view_category_overrides(
 
         # get the overrides by category
         view_override = view.GetCategoryOverrides(model_cat.id)
+
         # get general overrides settings
         override.halftone = view_override.Halftone
         override.transparency = view_override.Transparency
@@ -279,6 +281,14 @@ def get_view_category_overrides(
             view_override.DetailLevel
         ]
 
+        # check if any override has been applied by comparing the retrieved override
+        # with a default one
+        default_override = OverrideByCategory()
+        if(default_override.compare_overrides(override)):
+            override.are_overrides_present = False
+        else:
+            override.are_overrides_present = True
+        
         # save overrides in list to be returned
         overrides_data.append(override)
 

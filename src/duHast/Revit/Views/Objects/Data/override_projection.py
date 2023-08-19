@@ -119,8 +119,22 @@ class OverrideProjection(base.Base):
 
         Required due to custom __eq__ override present in this class
         """
-        hash(
-            self.pattern_background,
-            self.pattern_foreground,
-            self.line_projection,
-        )
+
+        try:
+            return hash(
+                (
+                    self.pattern_background,
+                    self.pattern_foreground,
+                    self.line_projection,
+                )
+            )
+        except Exception as e:
+            raise ValueError(
+                "Exception {} occurred in {} with values: pattern background:{}, pattern fore: {}, line projection: {}".format(
+                    e,
+                    self.data_type,
+                    self.pattern_background,
+                    self.pattern_foreground,
+                    self.line_projection,
+                )
+            )

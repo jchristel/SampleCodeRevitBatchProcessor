@@ -38,9 +38,9 @@ from duHast.Utilities.Objects import base
 
 
 class PatternSettingBase(base.Base):
-    def __init__(
-        self, name="unknown pattern", id=-1, data_type="unknown", j={}, **kwargs
-    ):
+    NO_PATTERN = "no pattern assigned"
+
+    def __init__(self, name=NO_PATTERN, id=-1, data_type="unknown", j={}, **kwargs):
         """
         Class constructor.
 
@@ -49,8 +49,8 @@ class PatternSettingBase(base.Base):
         super(PatternSettingBase, self).__init__(**kwargs)
 
         self.data_type = data_type
-        if(name == None):
-            self.name = name
+        if name == None:
+            self.name = PatternSettingBase.NO_PATTERN
         else:
             self.name = name
         self.id = id
@@ -72,13 +72,9 @@ class PatternSettingBase(base.Base):
             # load overrides
             if "id" in j:
                 self.id = j["id"]
-            else:
-                self.id = -1
 
             if "name" in j:
                 self.name = j["name"]
-            else:
-                self.name = "unknown pattern"
 
     def __eq__(self, other):
         """
@@ -98,6 +94,11 @@ class PatternSettingBase(base.Base):
 
         Required due to custom __eq__ override present in this class
         """
-        hash(
-            self.name,
-        )
+        try:
+            return hash((self.name))
+        except Exception as e:
+            raise ValueError(
+                "Exception {} occurred in {} with values: name:{}".format(
+                    e, self.data_type, self.name
+                )
+            )

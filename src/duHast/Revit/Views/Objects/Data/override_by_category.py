@@ -36,6 +36,7 @@ import json
 
 from duHast.Revit.Views.Objects.Data.override_by_base import OverrideByBase
 
+
 class OverrideByCategory(OverrideByBase):
     data_type = "override_by_category"
 
@@ -52,6 +53,7 @@ class OverrideByCategory(OverrideByBase):
         self.main_category_name = main_category_name
         self.sub_category_name = sub_category_name
         self.category_id = category_id
+        self.detail_level = -1
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -70,9 +72,98 @@ class OverrideByCategory(OverrideByBase):
             # load overrides
             if "detail_level" in j:
                 self.detail_level = j["detail_level"]
-            else:
-                self.detail_level = -1
-        
-        else:
-            self.detail_level = -1
 
+            if "are_overrides_present" in j:
+                self.are_overrides_present = j["are_overrides_present"]
+
+    def compare_overrides(self, other):
+        """
+        Ignores visibility property when comparing!
+
+        :param other: _description_
+        :type other: _type_
+        :return: _description_
+        :rtype: _type_
+        """
+        return isinstance(other, OverrideByCategory) and (
+            self.halftone,
+            self.transparency,
+            self.override_projection,
+            self.override_cut,
+            self.detail_level,
+        ) == (
+            other.halftone,
+            other.transparency,
+            other.override_projection,
+            other.override_cut,
+            self.detail_level,
+        )
+
+    def __eq__(self, other):
+        """
+        Custom compare is equal override.
+
+        :param other: Another instance of OverrideByBase base class
+        :type other: :class:`.OverrideByBase`
+        :return: True if all properties of compared class instances are equal, otherwise False.
+        :rtype: Bool
+        """
+
+        return isinstance(other, OverrideByCategory) and (
+            self.halftone,
+            self.transparency,
+            self.is_visible,
+            self.override_projection,
+            self.override_cut,
+            self.detail_level,
+            self.are_overrides_present,
+        ) == (
+            other.halftone,
+            other.transparency,
+            other.is_visible,
+            other.override_projection,
+            other.override_cut,
+            other.detail_level,
+            other.are_overrides_present,
+        )
+
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+
+        try:
+            # check if an override is present  or whether that the category is switched off altogether )
+            # If that is the case return a hash of all properties
+            if (
+                self.are_overrides_present or self.is_visible == False
+            ):
+                return hash(
+                    (
+                        self.halftone,
+                        self.transparency,
+                        self.detail_level,
+                        self.is_visible,
+                        self.override_projection,
+                        self.override_cut,
+                        self.are_overrides_present
+                    )
+                )
+            else:
+                # return 0 indicating that the category is visible and no graphical override has been applied
+                return 0
+        except Exception as e:
+            raise ValueError(
+                "Exception {} occurred in {} with values: pattern background:{}, transparency: {}, is visible: {}, projection: {}, cut: {}, detail level: {}".format(
+                    e,
+                    self.data_type,
+                    self.halftone,
+                    self.transparency,
+                    self.is_visible,
+                    self.override_projection,
+                    self.override_cut,
+                    self.detail_level,
+                )
+            )

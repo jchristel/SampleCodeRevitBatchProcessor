@@ -49,6 +49,12 @@ class OverrideByBase(base.Base):
         super(OverrideByBase, self).__init__(**kwargs)
 
         self.data_type = data_type
+        self.halftone = False
+        self.transparency = 0
+        self.override_projection = OverrideProjection()
+        self.override_cut = OverrideCut()
+        self.is_visible = True
+        self.are_overrides_present = False
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -67,37 +73,42 @@ class OverrideByBase(base.Base):
             # load overrides
             if "halftone" in j:
                 self.halftone = j["halftone"]
-            else:
-                self.halftone = False
 
             if "transparency" in j:
                 self.transparency = j["transparency"]
-            else:
-                self.transparency = 0
 
             if "is_visible" in j:
                 self.is_visible = j["is_visible"]
-            else:
-                self.is_visible = True
 
             if OverrideProjection.data_type in j:
                 self.override_projection = OverrideProjection(
                     j[OverrideProjection.data_type]
                 )
-            else:
-                self.override_projection = OverrideProjection()
 
             if OverrideCut.data_type in j:
                 self.override_cut = OverrideCut(j[OverrideCut.data_type])
-            else:
-                self.override_cut = OverrideCut()
-        else:
-            self.halftone = False
-            self.transparency = 0
-            self.override_projection = OverrideProjection()
-            self.override_cut = OverrideCut()
-            self.is_visible = True
 
+    def compare_overrides(self, other):
+        """
+        Ignores visibility property when comparing! (ignores is_visible and are_overrides_present)
+
+        :param other: An instance of OverrideByBase
+        :type other: :class:`.OverrideByBase`
+        :return: True if all graphical properties of compared class instances are equal, otherwise False.
+        :rtype: Bool
+        """
+        return isinstance(other, OverrideByBase) and (
+            self.halftone,
+            self.transparency,
+            self.override_projection,
+            self.override_cut,
+        ) == (
+            other.halftone,
+            other.transparency,
+            other.override_projection,
+            other.override_cut,
+        )
+    
     def __eq__(self, other):
         """
         Custom compare is equal override.
@@ -114,12 +125,14 @@ class OverrideByBase(base.Base):
             self.is_visible,
             self.override_projection,
             self.override_cut,
+            self.are_overrides_present,
         ) == (
             other.halftone,
             other.transparency,
             other.is_visible,
             other.override_projection,
             other.override_cut,
+            other.are_overrides_present,
         )
 
     def __hash__(self):
@@ -128,13 +141,38 @@ class OverrideByBase(base.Base):
 
         Required due to custom __eq__ override present in this class
         """
-        hash(
-            self.halftone,
-            self.transparency,
-            self.is_visible,
-            self.override_projection,
-            self.override_cut,
-        )
+        try:
+            # check if an override is present  or whether that the category is switched off altogether )
+            # If that is the case return a hash of all properties
+            if (
+                self.are_overrides_present or self.is_visible == False
+            ):
+                return hash(
+                    (
+                        self.halftone,
+                        self.transparency,
+                        self.is_visible,
+                        self.override_projection,
+                        self.override_cut,
+                        self.are_overrides_present
+                    )
+                )
+            else:
+                # return 0 indicating that the category is visible and no graphical override has been applied
+                return 0
+        except Exception as e:
+            raise ValueError(
+                "Exception {} occurred in {} with values: halftone:{}, transparency: {}, is visible: {}, override projection: {}, override cut: {}".format(
+                    e,
+                    self.data_type,
+                    self.halftone,
+                    self.transparency,
+                    self.is_visible,
+                    self.override_projection,
+                    self.override_cut,
+                )
+            )
+
 
     def get_all_used_line_patterns(self):
         """

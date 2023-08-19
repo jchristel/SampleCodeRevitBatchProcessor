@@ -66,21 +66,21 @@ class ColourBase(base.Base):
             if "red" in j:
                 self.red = j["red"]
             else:
-                self.red = 0
+                self.red = -1
 
             if "green" in j:
                 self.green = j["green"]
             else:
-                self.green = 0
+                self.green = -1
 
             if "blue" in j:
                 self.blue = j["blue"]
             else:
-                self.blue = 0
+                self.blue = -1
         else:
-            self.red = 0
-            self.green = 0
-            self.blue = 0
+            self.red = -1
+            self.green = -1
+            self.blue = -1
 
     def __eq__(self, other):
         """
@@ -104,4 +104,11 @@ class ColourBase(base.Base):
 
         Required due to custom __eq__ override present in this class
         """
-        hash(self.red, self.green, self.blue)
+        try:
+            return hash((self.red, self.green, self.blue))
+        except Exception as e:
+            raise ValueError(
+                "Exception {} occurred in {} with values: red:{}, green:{}, blue:{}".format(
+                    e, self.data_type, self.red, self.green, self.blue
+                )
+            )

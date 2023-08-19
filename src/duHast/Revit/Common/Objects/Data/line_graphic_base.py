@@ -87,12 +87,12 @@ class LineGraphicBase(base.Base):
             if "weight" in j:
                 self.weight = j["weight"]
             else:
-                self.weight = 1
+                self.weight = -1
         else:
             # set default values
             self.colour = ColourBase()
             self.line_pattern_settings = LinePatternSettings()
-            self.weight = 1
+            self.weight = -1
 
     def __eq__(self, other):
         """
@@ -121,8 +121,21 @@ class LineGraphicBase(base.Base):
 
         Required due to custom __eq__ override present in this class
         """
-        hash(
-            self.weight,
-            self.line_pattern_settings,
-            self.colour,
-        )
+        try:
+            return hash(
+                (
+                    self.weight,
+                    self.line_pattern_settings,
+                    self.colour,
+                )
+            )
+        except Exception as e:
+            raise ValueError(
+                "Exception {} occurred in {} with values: weight:{}, line_pattern_settings: {}, colour: {}".format(
+                    e,
+                    self.data_type,
+                    self.weight,
+                    self.line_pattern_settings,
+                    self.colour,
+                )
+            )

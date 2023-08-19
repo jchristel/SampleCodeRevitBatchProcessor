@@ -70,3 +70,67 @@ class OverrideByFilter(OverrideByBase):
                 self.is_enabled = True
         else:
             self.is_enabled = True
+
+    def __eq__(self, other):
+        """
+        Custom compare is equal override.
+
+        :param other: Another instance of OverrideByBase base class
+        :type other: :class:`.OverrideByBase`
+        :return: True if all properties of compared class instances are equal, otherwise False.
+        :rtype: Bool
+        """
+
+        return isinstance(other, OverrideByFilter) and (
+            self.halftone,
+            self.transparency,
+            self.is_visible,
+            self.override_projection,
+            self.override_cut,
+            self.is_enabled,
+        ) == (
+            other.halftone,
+            other.transparency,
+            other.is_visible,
+            other.override_projection,
+            other.override_cut,
+            other.is_enabled,
+        )
+
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+        try:
+            # check if an override is present  or whether that the filter is enabled altogether )
+            # If that is the case return a hash of all properties
+            if self.are_overrides_present or (self.is_visible == False and self.is_enabled == True):
+                return hash(
+                    (
+                        self.halftone,
+                        self.transparency,
+                        self.is_visible,
+                        self.is_enabled,
+                        self.override_projection,
+                        self.override_cut,
+                        self.are_overrides_present,
+                    )
+                )
+            else:
+                # return 0 indicating that the category is visible and no filter override has been applied
+                return 0
+        except Exception as e:
+            raise ValueError(
+                "Exception {} occurred in {} with values: halftone:{}, transparency: {}, is visible: {}, override projection: {}, override cut: {},is enabled: {}".format(
+                    e,
+                    self.data_type,
+                    self.halftone,
+                    self.transparency,
+                    self.is_visible,
+                    self.override_projection,
+                    self.override_cut,
+                    self.is_enabled,
+                )
+            )

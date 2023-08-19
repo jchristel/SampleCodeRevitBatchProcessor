@@ -120,8 +120,22 @@ class PatternGraphicBase(base.Base):
 
         Required due to custom __eq__ override present in this class
         """
-        hash(
-            self.is_visible,
-            self.fill_pattern_setting,
-            self.colour,
-        )
+        try:
+            return hash(
+                (
+                    self.is_visible,
+                    self.fill_pattern_setting,
+                    self.colour,
+                )
+            )
+
+        except Exception as e:
+            raise ValueError(
+                "Exception {} occurred in {} with values: is_visible:{}, fill_pattern_setting: {}, colour: {}".format(
+                    e,
+                    self.data_type,
+                    self.is_visible,
+                    self.fill_pattern_setting,
+                    self.colour,
+                )
+            )

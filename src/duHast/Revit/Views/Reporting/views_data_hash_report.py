@@ -34,8 +34,14 @@ from duHast.Revit.Views.Reporting.views_data_report import (
 from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.Objects import result as res
 
+# defines fixed hash values for ease of identification!
+# no override is present
 NO_OVERRIDE = 0
+# category is switched of or filtered elements are switched off 
 SWITCHED_OFF = 1
+# filter is not enabled
+FILTER_NOT_ENABLED = 2
+# filter or category does not exist in view or model
 DOES_NOT_EXIST = -1
 
 
@@ -140,18 +146,19 @@ def _get_hashes_overrides_categories(headers, row_headers, views_settings):
             hash_value = DOES_NOT_EXIST
             # get the actual hash value if a match was found
             if matching_category:
-                # check if an override is present or whether that the category is switched off altogether )
+                # check if an override is present and whether that the category is visible )
                 # If that is the case return a hash of all properties
-                if (
-                    matching_category.are_overrides_present
-                    or matching_category.is_visible == False
-                ):
-                    hash_value = hash(matching_category)
+                
+                if(matching_category.is_visible == False):
+                    # category is not visible
+                    hash_value = SWITCHED_OFF
+                elif(matching_category.are_overrides_present == False and matching_category.is_visible == True):
+                    # category is visible but no override is applied
+                    hash_value = NO_OVERRIDE
                 else:
-                    if matching_category.is_visible == False:
-                        hash_value = SWITCHED_OFF
-                    else:
-                        hash_value = NO_OVERRIDE
+                    # category is visible and an override is applied
+                    hash_value = hash(matching_category)
+                
             # add to table
             if row in table_hash:
                 table_hash[row].append(hash_value)
@@ -204,19 +211,20 @@ def _get_hashes_overrides_filters(headers, row_headers, views_settings):
             hash_value = DOES_NOT_EXIST
             # get the actual hash value if a match was found
             if matching_filter:
-                # check if an override is present or whether that the category is switched off altogether )
+                # check if an override is present and whether that the elements filtered are visible )
                 # If that is the case return a hash of all properties
-                if matching_filter.are_overrides_present or (
-                    matching_filter.is_visible == False
-                    and matching_filter.is_enabled == True
-                ):
-                    hash_value = hash(matching_filter)
+
+                if matching_filter.is_visible == False:
+                    # elements filtered are not visible
+                    hash_value = SWITCHED_OFF
+                elif(matching_filter.are_overrides_present == False and matching_filter.is_visible == True):
+                    # elements filtered are visible but no override is present
+                    hash_value = NO_OVERRIDE
+                elif(matching_filter.are_overrides_present == False and matching_filter.is_visible == True and matching_filter.is_enabled == False):
+                    hash_value = FILTER_NOT_ENABLED
                 else:
-                    if matching_filter.is_visible == False:
-                        hash_value = SWITCHED_OFF
-                    else:
-                        hash_value = NO_OVERRIDE
-                hash_value = hash(matching_filter)
+                    # elements filtered are visible and an override is present and the filter is enabled
+                    hash_value = hash(matching_filter)
 
             # add to table
             if row in table_hash:

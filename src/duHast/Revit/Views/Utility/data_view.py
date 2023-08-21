@@ -273,8 +273,8 @@ def get_view_category_overrides(
             fill_patterns=fill_patterns,
         )
 
-        # check if category is hidden
-        override.is_visible = view.GetCategoryHidden(model_cat.id)
+        # check if category is hidden ( need to inverse since I'm storing ( is visible) the exact opposite (is hidden) of what is returned)
+        override.is_visible = not (view.GetCategoryHidden(model_cat.id))
 
         # get the detail level as an integer
         override.detail_level = VIEW_DETAIL_LEVEL_NAME_MAPPING[
@@ -284,11 +284,11 @@ def get_view_category_overrides(
         # check if any override has been applied by comparing the retrieved override
         # with a default one
         default_override = OverrideByCategory()
-        if(default_override.compare_overrides(override)):
+        if default_override.compare_overrides(override):
             override.are_overrides_present = False
         else:
             override.are_overrides_present = True
-        
+
         # save overrides in list to be returned
         overrides_data.append(override)
 

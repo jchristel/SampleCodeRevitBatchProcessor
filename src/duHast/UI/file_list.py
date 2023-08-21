@@ -94,7 +94,7 @@ def get_revit_files_incl_sub_dirs(directory, file_extension):
     files = []
     # Get the list of all files in directory tree at given path
     list_of_files = list()
-    for (dirpath, dirnames, filenames) in os.walk(directory):
+    for dirpath, dirnames, filenames in os.walk(directory):
         list_of_files += [os.path.join(dirpath, file) for file in filenames]
     for f in list_of_files:
         # check for file extension match

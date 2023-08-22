@@ -29,10 +29,7 @@ This module contains the Revit view report functionality.
 from duHast.Revit.Views.Utility.data_view import get_view_settings
 from duHast.Revit.Views.Objects.view_graphics_settings import ViewGraphicsSettings
 from duHast.Utilities.files_json import write_json_to_file, read_json_data_from_file
-
-
-PROP_FILE_NAME = "file_name"
-PROP_VIEW_DATA = "view_data"
+from duHast.Revit.Views.Reporting.view_reports_json_props import PROP_FILE_NAME, PROP_VIEW_DATA
 
 
 def get_views_graphic_settings_data(doc, views):

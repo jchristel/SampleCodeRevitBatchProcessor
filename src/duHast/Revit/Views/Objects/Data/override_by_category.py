@@ -55,6 +55,7 @@ class OverrideByCategory(OverrideByBase):
         self.sub_category_name = sub_category_name
         self.category_id = category_id
         self.detail_level = -1
+        self.are_overrides_present = False
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -70,12 +71,19 @@ class OverrideByCategory(OverrideByBase):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load overrides
-            if "detail_level" in j:
+            # load values and throw exception if something is missing!
+            try:
+                self.main_category_name = j["main_category_name"]
+                self.sub_category_name = j["sub_category_name"]
+                self.category_id = j["category_id"]
                 self.detail_level = j["detail_level"]
-
-            if "are_overrides_present" in j:
                 self.are_overrides_present = j["are_overrides_present"]
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(
+                        OverrideByCategory.data_type, e
+                    )
+                )
 
     def compare_overrides(self, other):
         """

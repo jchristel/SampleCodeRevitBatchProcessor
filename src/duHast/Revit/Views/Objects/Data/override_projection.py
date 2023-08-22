@@ -89,7 +89,7 @@ class OverrideProjection(base.Base):
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(
-                        pattern_background.PatternBackground.data_type, e
+                        OverrideProjection.data_type, e
                     )
                 )
 

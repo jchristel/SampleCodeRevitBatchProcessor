@@ -75,18 +75,17 @@ class LineGraphicBase(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load overrides
-
-            if ColourBase.data_type in j:
+            # load values and throw exception if something is missing!
+            try:
                 self.colour = ColourBase(j=j[ColourBase.data_type])
-
-            if "line_pattern_settings" in j:
                 self.line_pattern_settings = LinePatternSettings(
                     j=j["line_pattern_settings"]
                 )
-
-            if "weight" in j:
                 self.weight = j["weight"]
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format("LineGraphicBase", e)
+                )
 
     def __eq__(self, other):
         """

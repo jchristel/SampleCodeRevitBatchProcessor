@@ -70,23 +70,21 @@ class OverrideByBase(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load overrides
-            if "halftone" in j:
+            # load values and throw exception if something is missing!
+            try:
                 self.halftone = j["halftone"]
-
-            if "transparency" in j:
                 self.transparency = j["transparency"]
-
-            if "is_visible" in j:
                 self.is_visible = j["is_visible"]
-
-            if OverrideProjection.data_type in j:
                 self.override_projection = OverrideProjection(
                     j=j[OverrideProjection.data_type]
                 )
-
-            if OverrideCut.data_type in j:
                 self.override_cut = OverrideCut(j=j[OverrideCut.data_type])
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(
+                        "OverrideByBase.data_type", e
+                    )
+                )
 
     def compare_overrides(self, other):
         """

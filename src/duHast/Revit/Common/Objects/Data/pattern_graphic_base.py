@@ -74,17 +74,18 @@ class PatternGraphicBase(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load overrides
-
-            if ColourBase.data_type in j:
+            # load values and throw exception if something is missing!
+            try:
                 self.colour = ColourBase(j=j[ColourBase.data_type])
-
-            if "is_visible" in j:
                 self.is_visible = j["is_visible"]
-
-            if "fill_pattern_setting" in j:
                 self.fill_pattern_setting = FillPatternSettings(
                     j=j["fill_pattern_setting"]
+                )
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(
+                        "PatternGraphicBase", e
+                    )
                 )
 
     def __eq__(self, other):

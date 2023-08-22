@@ -66,8 +66,15 @@ class OverrideByFilter(OverrideByBase):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            if "is_enabled" in j:
+            # load values and throw exception if something is missing!
+            try:
                 self.is_enabled = j["is_enabled"]
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(
+                        OverrideByFilter.data_type, e
+                    )
+                )
 
     def __eq__(self, other):
         """

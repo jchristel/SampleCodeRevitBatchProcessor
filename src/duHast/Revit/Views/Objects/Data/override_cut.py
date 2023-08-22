@@ -71,20 +71,24 @@ class OverrideCut(base.Base):
                 raise ValueError(
                     "Argument supplied must be of type string or type dictionary"
                 )
-
-            # load overrides
-            if pattern_background.PatternBackground.data_type in j:
+            
+            # load overrides and throw exception if something is missing!
+            try:
                 self.pattern_background = pattern_background.PatternBackground(
                     j=j[pattern_background.PatternBackground.data_type]
                 )
 
-            if pattern_foreground.PatternForeground.data_type in j:
                 self.pattern_foreground = pattern_foreground.PatternForeground(
                     j=j[pattern_foreground.PatternForeground.data_type]
                 )
 
-            if line_cut.LineCut.data_type in j:
                 self.line_cut = line_cut.LineCut(j=j[line_cut.LineCut.data_type])
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(
+                        OverrideCut.data_type, e
+                    )
+                )
 
     def __eq__(self, other):
         """

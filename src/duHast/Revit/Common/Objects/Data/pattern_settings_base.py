@@ -70,12 +70,16 @@ class PatternSettingBase(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load overrides
-            if "id" in j:
+            # load values and throw exception if something is missing!
+            try:
                 self.id = j["id"]
-
-            if "name" in j:
                 self.name = j["name"]
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(
+                        "PatternSettingBase", e
+                    )
+                )
 
     def __eq__(self, other):
         """

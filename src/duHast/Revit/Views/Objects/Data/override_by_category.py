@@ -50,6 +50,7 @@ class OverrideByCategory(OverrideByBase):
 
         super(OverrideByCategory, self).__init__(data_type=self.data_type, j=j)
 
+        # set defaults
         self.main_category_name = main_category_name
         self.sub_category_name = sub_category_name
         self.category_id = category_id

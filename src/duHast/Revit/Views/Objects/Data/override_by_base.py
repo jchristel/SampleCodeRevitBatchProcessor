@@ -82,11 +82,11 @@ class OverrideByBase(base.Base):
 
             if OverrideProjection.data_type in j:
                 self.override_projection = OverrideProjection(
-                    j[OverrideProjection.data_type]
+                    j=j[OverrideProjection.data_type]
                 )
 
             if OverrideCut.data_type in j:
-                self.override_cut = OverrideCut(j[OverrideCut.data_type])
+                self.override_cut = OverrideCut(j=j[OverrideCut.data_type])
 
     def compare_overrides(self, other):
         """

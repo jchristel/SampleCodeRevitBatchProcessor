@@ -48,6 +48,11 @@ class ColourBase(base.Base):
 
         super(ColourBase, self).__init__(**kwargs)
 
+        # set defaults
+        self.red = -1
+        self.green = -1
+        self.blue = -1
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
@@ -65,22 +70,12 @@ class ColourBase(base.Base):
             # load overrides
             if "red" in j:
                 self.red = j["red"]
-            else:
-                self.red = -1
 
             if "green" in j:
                 self.green = j["green"]
-            else:
-                self.green = -1
 
             if "blue" in j:
                 self.blue = j["blue"]
-            else:
-                self.blue = -1
-        else:
-            self.red = -1
-            self.green = -1
-            self.blue = -1
 
     def __eq__(self, other):
         """

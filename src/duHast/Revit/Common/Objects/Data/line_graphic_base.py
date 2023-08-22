@@ -56,6 +56,11 @@ class LineGraphicBase(base.Base):
 
         self.data_type = data_type
 
+        # set default values
+        self.colour = ColourBase()
+        self.line_pattern_settings = LinePatternSettings()
+        self.weight = -1
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
@@ -73,26 +78,15 @@ class LineGraphicBase(base.Base):
             # load overrides
 
             if ColourBase.data_type in j:
-                self.colour = ColourBase(j[ColourBase.data_type])
-            else:
-                self.colour = ColourBase()
+                self.colour = ColourBase(j=j[ColourBase.data_type])
 
             if "line_pattern_settings" in j:
                 self.line_pattern_settings = LinePatternSettings(
-                    j["line_pattern_settings"]
+                    j=j["line_pattern_settings"]
                 )
-            else:
-                self.line_pattern_settings = LinePatternSettings()
 
             if "weight" in j:
                 self.weight = j["weight"]
-            else:
-                self.weight = -1
-        else:
-            # set default values
-            self.colour = ColourBase()
-            self.line_pattern_settings = LinePatternSettings()
-            self.weight = -1
 
     def __eq__(self, other):
         """

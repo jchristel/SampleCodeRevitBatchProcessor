@@ -53,6 +53,11 @@ class OverrideCut(base.Base):
 
         super(OverrideCut, self).__init__(**kwargs)
 
+        # set defaults
+        self.pattern_background = pattern_background.PatternBackground()
+        self.pattern_foreground = pattern_foreground.PatternForeground()
+        self.line_cut = line_cut.LineCut()
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
@@ -70,26 +75,16 @@ class OverrideCut(base.Base):
             # load overrides
             if pattern_background.PatternBackground.data_type in j:
                 self.pattern_background = pattern_background.PatternBackground(
-                    j[pattern_background.PatternBackground.data_type]
+                    j=j[pattern_background.PatternBackground.data_type]
                 )
-            else:
-                self.pattern_background = pattern_background.PatternBackground()
 
             if pattern_foreground.PatternForeground.data_type in j:
                 self.pattern_foreground = pattern_foreground.PatternForeground(
-                    j[pattern_foreground.PatternForeground.data_type]
+                    j=j[pattern_foreground.PatternForeground.data_type]
                 )
-            else:
-                self.pattern_foreground = pattern_foreground.PatternForeground()
 
             if line_cut.LineCut.data_type in j:
-                self.line_cut = line_cut.LineCut(j[line_cut.LineCut.data_type])
-            else:
-                self.line_cut = line_cut.LineCut()
-        else:
-            self.pattern_background = pattern_background.PatternBackground()
-            self.pattern_foreground = pattern_foreground.PatternForeground()
-            self.line_cut = line_cut.LineCut()
+                self.line_cut = line_cut.LineCut(j=j[line_cut.LineCut.data_type])
 
     def __eq__(self, other):
         """

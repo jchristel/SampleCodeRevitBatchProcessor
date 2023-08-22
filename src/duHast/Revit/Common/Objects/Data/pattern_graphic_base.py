@@ -55,6 +55,11 @@ class PatternGraphicBase(base.Base):
 
         self.data_type = data_type
 
+        # set default values
+        self.colour = ColourBase()
+        self.fill_pattern_setting = FillPatternSettings()
+        self.is_visible = True
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
@@ -72,26 +77,15 @@ class PatternGraphicBase(base.Base):
             # load overrides
 
             if ColourBase.data_type in j:
-                self.colour = ColourBase(j[ColourBase.data_type])
-            else:
-                self.colour = ColourBase()
+                self.colour = ColourBase(j=j[ColourBase.data_type])
 
             if "is_visible" in j:
                 self.is_visible = j["is_visible"]
-            else:
-                self.is_visible = True
 
             if "fill_pattern_setting" in j:
                 self.fill_pattern_setting = FillPatternSettings(
-                    j["fill_pattern_setting"]
+                    j=j["fill_pattern_setting"]
                 )
-            else:
-                self.fill_pattern_setting = FillPatternSettings()
-        else:
-            # set default values
-            self.colour = ColourBase()
-            self.fill_pattern_setting = FillPatternSettings()
-            self.is_visible = True
 
     def __eq__(self, other):
         """

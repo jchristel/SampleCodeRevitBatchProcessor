@@ -53,6 +53,11 @@ class OverrideProjection(base.Base):
 
         super(OverrideProjection, self).__init__(**kwargs)
 
+        # set defaults
+        self.pattern_background = pattern_background.PatternBackground()
+        self.pattern_foreground = pattern_foreground.PatternForeground()
+        self.line_projection = line_projection.LineProjection()
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
@@ -70,28 +75,18 @@ class OverrideProjection(base.Base):
             # load overrides
             if pattern_background.PatternBackground.data_type in j:
                 self.pattern_background = pattern_background.PatternBackground(
-                    j[pattern_background.PatternBackground.data_type]
+                    j=j[pattern_background.PatternBackground.data_type]
                 )
-            else:
-                self.pattern_background = pattern_background.PatternBackground()
 
             if pattern_foreground.PatternForeground.data_type in j:
                 self.pattern_foreground = pattern_foreground.PatternForeground(
-                    j[pattern_foreground.PatternForeground.data_type]
+                    j=j[pattern_foreground.PatternForeground.data_type]
                 )
-            else:
-                self.pattern_foreground = pattern_foreground.PatternForeground()
 
             if line_projection.LineProjection.data_type in j:
                 self.line_projection = line_projection.LineProjection(
-                    j[line_projection.LineProjection.data_type]
+                    j=j[line_projection.LineProjection.data_type]
                 )
-            else:
-                self.line_projection = line_projection.LineProjection()
-        else:
-            self.pattern_background = pattern_background.PatternBackground()
-            self.pattern_foreground = pattern_foreground.PatternForeground()
-            self.line_projection = line_projection.LineProjection()
 
     def __eq__(self, other):
         """

@@ -48,6 +48,7 @@ class PatternSettingBase(base.Base):
 
         super(PatternSettingBase, self).__init__(**kwargs)
 
+        # set defaults
         self.data_type = data_type
         if name == None:
             self.name = PatternSettingBase.NO_PATTERN

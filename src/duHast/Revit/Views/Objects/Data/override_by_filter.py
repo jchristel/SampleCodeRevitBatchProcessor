@@ -47,8 +47,10 @@ class OverrideByFilter(OverrideByBase):
 
         super(OverrideByFilter, self).__init__(data_type=self.data_type, j=j)
 
+        # set defaults
         self.filter_name = filter_name
         self.filter_id = filter_id
+        self.is_enabled = True
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -66,10 +68,6 @@ class OverrideByFilter(OverrideByBase):
 
             if "is_enabled" in j:
                 self.is_enabled = j["is_enabled"]
-            else:
-                self.is_enabled = True
-        else:
-            self.is_enabled = True
 
     def __eq__(self, other):
         """

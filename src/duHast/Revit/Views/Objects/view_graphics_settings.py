@@ -54,11 +54,7 @@ class ViewGraphicsSettings(base.Base):
         super(ViewGraphicsSettings, self).__init__(**kwargs)
 
         # set default values
-        if(view_name==None):
-            self.view_name = view_name
-        else:
-            self.view_name = view_name
-
+        self.view_name = view_name
         self.view_id = view_id
         self.override_by_category = []
         self.override_by_filter = []
@@ -80,11 +76,11 @@ class ViewGraphicsSettings(base.Base):
             # load settings
             if OverrideByCategory.data_type in j:
                 for override in j[OverrideByCategory.data_type]:
-                    self.override_by_category.append(OverrideByCategory(override))
+                    self.override_by_category.append(OverrideByCategory(j=override))
 
             if OverrideByFilter.data_type in j:
                 for override in j[OverrideByFilter.data_type]:
-                    self.override_by_filter.append(OverrideByFilter(override))
+                    self.override_by_filter.append(OverrideByFilter(j=override))
 
             if "view_name" in j:
                 self.view_name = j["view_name"]

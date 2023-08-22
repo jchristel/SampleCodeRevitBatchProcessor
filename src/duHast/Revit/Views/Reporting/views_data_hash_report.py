@@ -34,6 +34,9 @@ from duHast.Revit.Views.Reporting.views_data_report import (
 from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.Objects import result as res
 
+from duHast.Revit.Views.Reporting.view_reports_json_props import PROP_FILE_NAME, PROP_VIEW_DATA
+from duHast.Utilities.files_json import write_json_to_file
+
 # defines fixed hash values for ease of identification!
 # no override is present
 NO_OVERRIDE = 0
@@ -284,7 +287,7 @@ def get_views_graphics_settings_hash_data(doc, views, views_settings=None):
     return hash_table_categories, hash_table_filters
 
 
-def write_graphics_settings_hash_report(
+def write_graphics_settings_hash_csv_report(
     revit_file_name, directory_path, data_category, data_filter
 ):
     """
@@ -322,6 +325,51 @@ def write_graphics_settings_hash_report(
         )
         result.update_sep(
             True, "Hash filter data written to file: {}".format(file_path_filter)
+        )
+    except Exception as e:
+        result.update_sep(
+            False, "Failed to write data to file with exception: {}".format(e)
+        )
+    return result
+
+def write_graphics_settings_hash_json_report(
+    revit_file_name, directory_path, data_category, data_filter
+):
+    '''
+    _summary_
+
+    :param revit_file_name: _description_
+    :type revit_file_name: _type_
+    :param directory_path: _description_
+    :type directory_path: _type_
+    :param data_category: _description_
+    :type data_category: _type_
+    :param data_filter: _description_
+    :type data_filter: _type_
+    :return: _description_
+    :rtype: _type_
+    '''
+
+    result = res.Result()
+    file_path_category = os.path.join(
+        directory_path, revit_file_name + "_category_hash.json"
+    )
+    file_path_filter = os.path.join(
+        directory_path, revit_file_name + "_filter_hash.json"
+    )
+
+    json_data_category = {PROP_FILE_NAME: revit_file_name, PROP_VIEW_DATA: data_category}
+    json_data_filter = {PROP_FILE_NAME: revit_file_name, PROP_VIEW_DATA: data_filter}
+
+    # write out files
+    try:
+        result_category = write_json_to_file(json_data=json_data_category, data_output_file_path=file_path_category)
+        result.update_sep(
+            result_category.status, "Hash category data written to json file: {}".format(file_path_category)
+        )
+        result_filter = write_json_to_file(json_data=json_data_filter, data_output_file_path=file_path_filter)
+        result.update_sep(
+            result_filter.status, "Hash filter data written to json file: {}".format(file_path_filter)
         )
     except Exception as e:
         result.update_sep(

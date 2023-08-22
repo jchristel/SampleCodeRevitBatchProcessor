@@ -78,11 +78,9 @@ class OverrideProjection(base.Base):
                 self.pattern_background = pattern_background.PatternBackground(
                     j=j[pattern_background.PatternBackground.data_type]
                 )
-
                 self.pattern_foreground = pattern_foreground.PatternForeground(
                     j=j[pattern_foreground.PatternForeground.data_type]
                 )
-
                 self.line_projection = line_projection.LineProjection(
                     j=j[line_projection.LineProjection.data_type]
                 )

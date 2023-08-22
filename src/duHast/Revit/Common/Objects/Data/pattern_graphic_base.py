@@ -57,8 +57,8 @@ class PatternGraphicBase(base.Base):
 
         # set default values
         self.colour = ColourBase()
-        self.fill_pattern_setting = FillPatternSettings()
         self.is_visible = True
+        self.fill_pattern_setting = FillPatternSettings()
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:

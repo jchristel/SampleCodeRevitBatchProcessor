@@ -51,9 +51,9 @@ class OverrideByBase(base.Base):
         self.data_type = data_type
         self.halftone = False
         self.transparency = 0
+        self.is_visible = True
         self.override_projection = OverrideProjection()
         self.override_cut = OverrideCut()
-        self.is_visible = True
         self.are_overrides_present = False
 
         # check if any data was past in with constructor!
@@ -79,6 +79,7 @@ class OverrideByBase(base.Base):
                     j=j[OverrideProjection.data_type]
                 )
                 self.override_cut = OverrideCut(j=j[OverrideCut.data_type])
+                self.are_overrides_present = j["are_overrides_present"]
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(

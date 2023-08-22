@@ -69,6 +69,8 @@ class OverrideByFilter(OverrideByBase):
             # load values and throw exception if something is missing!
             try:
                 self.is_enabled = j["is_enabled"]
+                self.filter_name = j["filter_name"]
+                self.filter_id = j["filter_id"]
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(

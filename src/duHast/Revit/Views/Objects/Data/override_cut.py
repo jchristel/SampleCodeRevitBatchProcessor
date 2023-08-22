@@ -77,11 +77,9 @@ class OverrideCut(base.Base):
                 self.pattern_background = pattern_background.PatternBackground(
                     j=j[pattern_background.PatternBackground.data_type]
                 )
-
                 self.pattern_foreground = pattern_foreground.PatternForeground(
                     j=j[pattern_foreground.PatternForeground.data_type]
                 )
-
                 self.line_cut = line_cut.LineCut(j=j[line_cut.LineCut.data_type])
             except Exception as e:
                 raise ValueError(

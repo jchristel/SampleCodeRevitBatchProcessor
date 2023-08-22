@@ -72,20 +72,25 @@ class OverrideProjection(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load overrides
-            if pattern_background.PatternBackground.data_type in j:
+            # load overrides and throw exception if something is missing!
+            try:
+                
                 self.pattern_background = pattern_background.PatternBackground(
                     j=j[pattern_background.PatternBackground.data_type]
                 )
 
-            if pattern_foreground.PatternForeground.data_type in j:
                 self.pattern_foreground = pattern_foreground.PatternForeground(
                     j=j[pattern_foreground.PatternForeground.data_type]
                 )
 
-            if line_projection.LineProjection.data_type in j:
                 self.line_projection = line_projection.LineProjection(
                     j=j[line_projection.LineProjection.data_type]
+                )
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(
+                        pattern_background.PatternBackground.data_type, e
+                    )
                 )
 
     def __eq__(self, other):

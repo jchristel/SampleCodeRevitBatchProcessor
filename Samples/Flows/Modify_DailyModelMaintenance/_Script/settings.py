@@ -72,6 +72,8 @@ NO_OF_TASK_LIST_FILES = 3
 # file extension of files to be processed
 FILE_EXTENSION_OF_FILES_TO_PROCESS = ".rvt"
 
+# flag indicating whether this is a cloud based project
+IS_CLOUD_PROJECT = False
 
 #: the project directory
 PROJECT_DIRECTORY = r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\Flows\Modify_DailyModelMaintenance\_sampleFiles"

@@ -68,6 +68,7 @@ from utils.check_tag_locations import check_ffe_tags_locations
 from duHast.Utilities.console_out import output
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Revit.Common.file_io import sync_file
+from duHast.Revit.BIM360.bim_360 import get_bim_360_path, convert_bim_360_file_path
 
 
 clr.AddReference("System.Core")
@@ -91,6 +92,12 @@ if not debug_:
 else:
     # get default revit file name
     revitFilePath_ = DEBUG_REVIT_FILE_NAME
+
+
+# update to cope with cloud based file path
+if(settings.IS_CLOUD_PROJECT):
+    cloudPath = get_bim_360_path(doc)
+    revitFilePath_ = convert_bim_360_file_path(cloudPath)
 
 # -------------
 # my code here:

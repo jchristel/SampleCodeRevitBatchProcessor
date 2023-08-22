@@ -408,3 +408,27 @@ def get_view_settings(doc, view):
     view_data.override_by_filter = filter_overrides
 
     return view_data
+
+def get_views_graphic_settings_data(doc, views):
+    """
+    Gets view data graphic settings from the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param views: Views of which to report graphical overrides on. (View must support graphical overrides, otherwise an exception will be thrown!)
+    :type views: [Autodesk.Revit.DB.View]
+    :return: list of ViewGraphicsSettings instances
+    :rtype: [:class:`.ViewGraphicsSettings`]
+    """
+
+    views_settings = []
+
+    # loop over past in views and retrieve settings
+    for view in views:
+        view_setting = get_view_settings(
+            doc=doc,
+            view=view,
+        )
+        views_settings.append(view_setting)
+
+    return views_settings

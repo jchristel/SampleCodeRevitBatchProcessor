@@ -28,9 +28,6 @@ This module contains the Revit view report functionality.
 
 import os
 
-from duHast.Revit.Views.Reporting.views_data_report import (
-    get_views_graphic_settings_data,
-)
 from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.Objects import result as res
 
@@ -245,7 +242,7 @@ def _get_hashes_overrides_filters(headers, row_headers, views_settings):
     return simple_table
 
 
-def get_views_graphics_settings_hash_data(doc, views, views_settings=None):
+def get_views_graphics_settings_hash_data( views_settings):
     """
     _summary_
 
@@ -258,11 +255,6 @@ def get_views_graphics_settings_hash_data(doc, views, views_settings=None):
     :return: _description_
     :rtype: _type_
     """
-
-    # check if any view settings where past in, if not get them
-    if views_settings == None:
-        # get settings objects
-        views_settings = get_views_graphic_settings_data(doc, views)
 
     # convert category overrides into hash table where:
     # rows are categories / sub categories

@@ -6,9 +6,9 @@ Module executed as a pre process script within the batch processor environment.
 This module is only run as a pre process on the first batch processor session (OneA) started in step one!
 
 
-- populates task list files for revit batch processor
 - writes marker files to identify log files used in this process
 - writes revit work sharing marker files identifying Revit work sharing monitor sessions running
+- creates a model out folder on the file system
 """
 
 #!/usr/bin/python

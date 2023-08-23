@@ -46,6 +46,7 @@ from duHast.Revit.Common import file_io as rFileIO
 from duHast.Revit.Revisions import revisions as rRev
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.console_out import output
+from duHast.Revit.BIM360.bim_360 import get_bim_360_path, convert_bim_360_file_path
 
 # required in lambda expressions!
 clr.AddReference("System.Core")
@@ -62,6 +63,10 @@ clr.AddReference("RevitAPIUI")
 doc = revit_script_util.GetScriptDocument()
 REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 
+# update to cope with cloud based file path
+if(settings.IS_CLOUD_PROJECT):
+    cloudPath = get_bim_360_path(doc)
+    REVIT_FILE_PATH = convert_bim_360_file_path(cloudPath)
 
 # -------------
 # my code here:

@@ -65,3 +65,6 @@ DEBUG_REVIT_FILE_NAME = r"C:\temp\Test_Files.rvt"
 
 #: splash sceen sheet name
 SPLASH_SCREEN_SHEET_NAME = "SPLASH SCREEN"
+
+# flag indicating whether this is a cloud based project
+IS_CLOUD_PROJECT = False

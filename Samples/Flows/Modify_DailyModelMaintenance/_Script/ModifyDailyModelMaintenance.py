@@ -157,11 +157,20 @@ def output_modules(message):
 # execute all actions
 t = Timer()
 for action in ACTIONS:
-    t.start()
-    flag = action(doc, revitFilePath_, output_modules)
-    output(flag.message, revit_script_util.Output)  # TODO: add spacer characters?
-    output("status: [{}]".format(flag.status, t.stop()), revit_script_util.Output)
-    output("-", revit_script_util.Output)
+    try:
+        t.start()
+        flag = action(doc, revitFilePath_, output_modules)
+        output(flag.message, revit_script_util.Output)  # TODO: add spacer characters?
+        output("status: [{}]".format(flag.status, t.stop()), revit_script_util.Output)
+        output("-", revit_script_util.Output)
+    except Exception as e:
+        output(
+            "Failed to execute action: {} with exception {}".format(action, e),
+            revit_script_util.Output,
+        )
+    finally:
+        if t.is_running():
+            t.stop()
 
 # sync changes back to central
 if debug_ == False:

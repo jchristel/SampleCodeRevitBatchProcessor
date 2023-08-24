@@ -28,6 +28,7 @@ Revit API utility functions to get parameter values.
 #
 
 import System
+from System import Type
 import clr
 
 clr.AddReference("System.Core")
@@ -46,6 +47,22 @@ from duHast.Utilities import unit_conversion as unitConversion
 # type checker
 # from typing import List, Callable
 
+
+def has_property(obj, property_name):
+    '''
+    Reflection to work out whether a property on a .net object exists (in case it has been removed)
+
+    :param obj: A .net object 
+    :type obj: var
+    :param property_name: The property name to check for
+    :type property_name: str
+    :return: None if the property does not exist
+    :rtype: _type_
+    '''
+
+    obj_type = obj.GetType()
+    prop_info = obj_type.GetProperty(property_name)
+    return prop_info is not None
 
 # ----------------------------------------parameters-----------------------------------------------
 
@@ -157,25 +174,51 @@ def getter_double_as_double_converted_to_metric(para):
     """
 
     parameter_value = None
-    if para.AsValueString() != None and para.AsValueString() != "":
-        if para.Definition.ParameterType == rdb.ParameterType.Length:
-            parameter_value = unitConversion.convert_imperial_feet_to_metric_mm(
-                para.AsDouble()
-            )
-        elif para.Definition.ParameterType == rdb.ParameterType.Area:
-            parameter_value = (
-                unitConversion.convert_imperial_square_feet_to_metric_square_metre(
+
+    # in revit 2023 Definition.ParameterType is obsolete...check for it:
+    if has_property(obj = para.Definition, property_name="ParameterType"):
+        if para.AsValueString() != None and para.AsValueString() != "":
+            if para.Definition.ParameterType == rdb.ParameterType.Length:
+                parameter_value = unitConversion.convert_imperial_feet_to_metric_mm(
                     para.AsDouble()
                 )
-            )
-        elif para.Definition.ParameterType == rdb.ParameterType.Volume:
-            parameter_value = (
-                unitConversion.convert_imperial_cubic_feet_to_metric_cubic_metre(
+            elif para.Definition.ParameterType == rdb.ParameterType.Area:
+                parameter_value = (
+                    unitConversion.convert_imperial_square_feet_to_metric_square_metre(
+                        para.AsDouble()
+                    )
+                )
+            elif para.Definition.ParameterType == rdb.ParameterType.Volume:
+                parameter_value = (
+                    unitConversion.convert_imperial_cubic_feet_to_metric_cubic_metre(
+                        para.AsDouble()
+                    )
+                )
+            else:
+                parameter_value = para.AsDouble()
+    else:
+        # assume this is revit 2023 onwards
+        data_type = para.Definition.GetDataType()
+        if para.AsValueString() != None and para.AsValueString() != "":
+            if data_type == rdb.SpecTypeId.Length:
+                parameter_value = unitConversion.convert_imperial_feet_to_metric_mm(
                     para.AsDouble()
                 )
-            )
-        else:
-            parameter_value = para.AsDouble()
+            elif data_type == rdb.SpecTypeId.Area:
+                parameter_value = (
+                    unitConversion.convert_imperial_square_feet_to_metric_square_metre(
+                        para.AsDouble()
+                    )
+                )
+            elif data_type == rdb.SpecTypeId.Volume:
+                parameter_value = (
+                    unitConversion.convert_imperial_cubic_feet_to_metric_cubic_metre(
+                        para.AsDouble()
+                    )
+                )
+            else:
+                parameter_value = para.AsDouble()
+
     return parameter_value
 
 

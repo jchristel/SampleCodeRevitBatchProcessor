@@ -216,10 +216,12 @@ def get_file_size(doc):
         # get the path from the document
         # this will fail if not a file based doc or the document is detached
         revit_file_path = doc.PathName
-        # check if bim 360 file
-        if revit_file_path.StartsWith("BIM 360"):
+        try:
+            # test if this is a cloud model
+            path = doc.GetCloudModelPath()
             size = b360.get_model_file_size(doc)
-        else:
+        except :
+            # local file server model
             if fileIO.file_exist(revit_file_path):
                 # get file size in MB
                 size = fileIO.get_file_size(revit_file_path)

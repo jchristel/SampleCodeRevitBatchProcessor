@@ -109,9 +109,10 @@ def get_model_file_size(doc):
     """
 
     file_size = -1
-    path = doc.GetCloudModelPath()
-    full_path = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
-    if full_path.StartsWith("BIM 360"):
+    
+    try:
+        #path = doc.GetCloudModelPath()
+        #full_path = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
         # get user environment
         host_name = util.get_local_app_data_path()
         # build path to local cache files
@@ -131,4 +132,6 @@ def get_model_file_size(doc):
                 if file.Contains("CentralCache") == False:
                     file_size = fileIO.get_file_size(file)
                     break
+    except Exception as e:
+        pass
     return file_size

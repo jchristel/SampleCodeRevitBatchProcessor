@@ -106,6 +106,72 @@ def _convert_hash_dic_to_table(hash_dic, headers, row_headers):
 
     return simple_table
 
+def _get_hash_for_category_overrides(headers, row_headers, views_settings):
+    # loop over header and get the respective view override setting
+    # loop over rows and get the hash of the row value
+    # return the hash table
+    table_hash = {}
+    for header_view_name in headers:
+        # find the view (template)
+        matching_template = next(
+            (
+                instance
+                for instance in views_settings
+                if instance.view_name == header_view_name
+            ),
+            None,
+        )
+        if matching_template == None:
+            raise ValueError(
+                "Impossible!!! No match found for view: [{}]".format(header_view_name)
+            )
+
+        # get category hashes
+        for row in row_headers:
+            # split to get main and sub category name
+            name_parts = row.split(" :: ", 1)
+            # Find a matching instance based on the two properties using a lambda expression and filter function
+            matching_category = next(
+                (
+                    instance
+                    for instance in matching_template.override_by_category
+                    if instance.main_category_name == name_parts[0]
+                    and instance.sub_category_name == name_parts[1]
+                ),
+                None,
+            )
+
+            # set a default value
+            hash_value = DOES_NOT_EXIST
+            # get the actual hash value if a match was found
+            if matching_category:
+                # check if an override is present and whether that the category is visible )
+                # If that is the case return a hash of all properties
+                
+                if(matching_category.is_visible == False):
+                    # category is not visible
+                    hash_value = SWITCHED_OFF
+                elif(matching_category.are_overrides_present == False and matching_category.is_visible == True):
+                    # category is visible but no override is applied
+                    hash_value = NO_OVERRIDE
+                else:
+                    # category is visible and an override is applied
+                    hash_value = hash(matching_category)
+                
+            # add to table
+            if row in table_hash:
+                table_hash[row].append(hash_value)
+            else:
+                table_hash[row] = [hash_value]
+
+    # convert into a simplified table where:
+    # column headers are view names
+    # row headers are category names
+    simple_table = []
+    for key, value in table_hash.items():
+        simple_table.append(value)
+    
+    return simple_table
 
 def _get_hashes_overrides_categories(headers, row_headers, views_settings):
     # loop over header and get the respective view override setting

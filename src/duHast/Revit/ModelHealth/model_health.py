@@ -235,8 +235,8 @@ def get_file_size(doc):
             if fileIO.file_exist(revit_file_path):
                 # get file size in MB
                 size = fileIO.get_file_size(revit_file_path)
-    except:
-        pass
+    except Exception as e:
+        raise ValueError  ("Failed to get file size with: {}".format(e))
     return size
 
 

@@ -48,6 +48,14 @@ PARAM_ACTIONS_FILENAME_NO_OF_SHEETS = "_NumberOfSheets"
 PARAM_ACTIONS_FILENAME_NO_OF_VIEWS = "_NumberOfViews"
 #: report file name suffix : views not placed
 PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED = "_NumberOfViewsNotPlaced"
+#: report file name suffix : view filters
+PARAM_ACTIONS_FILENAME_NO_OF_VIEW_FILTERS = "_NumberOfViewFilters"
+#: report file name suffix : view filters unused
+PARAM_ACTIONS_FILENAME_NO_OF_VIEW_FILTERS_UNUSED = "_NumberOfViewFiltersUnused"
+#: report file name suffix : view templates
+PARAM_ACTIONS_FILENAME_NO_OF_VIEW_TEMPLATES = "_NumberOfViewTemplates"
+#: report file name suffix : view template unused
+PARAM_ACTIONS_FILENAME_NO_OF_VIEW_TEMPLATES_UNUSED = "_NumberOfViewTemplatesUnused"
 #: report file name suffix : line styles
 PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES = "_NumberOfLineStyles"
 #: report file name suffix : line patterns
@@ -101,6 +109,10 @@ PARAM_ACTIONS_FILENAMES = {
     PARAM_ACTIONS_FILENAME_NO_OF_SHEETS,
     PARAM_ACTIONS_FILENAME_NO_OF_VIEWS,
     PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED,
+    PARAM_ACTIONS_FILENAME_NO_OF_VIEW_FILTERS,
+    PARAM_ACTIONS_FILENAME_NO_OF_VIEW_FILTERS_UNUSED,
+    PARAM_ACTIONS_FILENAME_NO_OF_VIEW_TEMPLATES,
+    PARAM_ACTIONS_FILENAME_NO_OF_VIEW_TEMPLATES_UNUSED,
     PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES,
     PARAM_ACTIONS_FILENAME_NO_OF_LINE_PATTERNS,
     PARAM_ACTIONS_FILENAME_NO_OF_FILL_PATTERNS,

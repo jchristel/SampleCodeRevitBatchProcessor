@@ -39,16 +39,38 @@ from System import Linq
 clr.ImportExtensions(Linq)
 import System
 
-from duHast.Revit.BIM360 import bim_360 as b360
 
-# from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.Revit.ModelHealth.Reporting.Properties.view import (
+    get_number_of_sheets,
+    get_number_of_unused_view_filters,
+    get_number_of_unplaced_views,
+    get_number_of_unused_view_templates,
+    get_number_of_view_filters,
+    get_number_of_view_templates,
+    get_number_of_views,
+)
+
+from duHast.Revit.ModelHealth.Reporting.Properties.rooms import (
+    get_number_of_not_enclosed_rooms,
+    get_number_of_redundant_rooms,
+    get_number_of_rooms,
+    get_number_of_unplaced_rooms,
+)
+
+
+from duHast.Revit.ModelHealth.Reporting.Properties.constants import (
+    FAILED_TO_RETRIEVE_VALUE,
+    MODEL_HEALTH_TRACKER_FAMILY,
+)
+
+
+from duHast.Revit.BIM360 import bim_360 as b360
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities import date_stamps as dateStamp, files_io as fileIO
 from duHast.Revit.Common import design_set_options as rDoS
 from duHast.Revit.Warnings import warnings as rWarn
 from duHast.Revit.Common import worksets as rWork
-from duHast.Revit.Views import sheets as rViewSheets
-from duHast.Revit.Views import views as rViews
+
 from duHast.Revit.LinePattern import line_patterns as rLinePat
 from duHast.Revit.LinePattern import fill_patterns as rFill
 from duHast.Revit.LinePattern import line_styles as rLineStyle
@@ -67,11 +89,6 @@ from System.Collections.Generic import List
 from collections import namedtuple
 
 # constants
-
-#: A revit family displaying the health metrics retrieved by this code.
-MODEL_HEALTH_TRACKER_FAMILY = "Symbol_GraphicModelHealth_ANN"
-#: Default value if unable to retrieve a health metric value from model
-FAILED_TO_RETRIEVE_VALUE = -1
 
 
 def _cast_parameter_value(p_value):
@@ -117,9 +134,11 @@ def get_instances_of_model_health(doc):
     # define rule with a placeholder
     rule = None
     # ge the rule depending on Revit version
-    if(revit_version<=2022):
+    if revit_version <= 2022:
         # use case sensitive flag
-        rule = rdb.FilterStringRule(provider, evaluator, MODEL_HEALTH_TRACKER_FAMILY, True)
+        rule = rdb.FilterStringRule(
+            provider, evaluator, MODEL_HEALTH_TRACKER_FAMILY, True
+        )
     else:
         # case sensitive flag has been removed in Revit 2023 onwards
         rule = rdb.FilterStringRule(provider, evaluator, MODEL_HEALTH_TRACKER_FAMILY)
@@ -132,6 +151,7 @@ def get_instances_of_model_health(doc):
         .WherePasses(filter)
         .ToList()
     )
+
 
 def get_parameters_of_instance(fam_instance, doc):
     """
@@ -230,13 +250,13 @@ def get_file_size(doc):
             # test if this is a cloud model
             path = doc.GetCloudModelPath()
             size = b360.get_model_file_size(doc)
-        except :
+        except:
             # local file server model
             if fileIO.file_exist(revit_file_path):
                 # get file size in MB
                 size = fileIO.get_file_size(revit_file_path)
     except Exception as e:
-        raise ValueError  ("Failed to get file size with: {}".format(e))
+        raise ValueError("Failed to get file size with: {}".format(e))
     return size
 
 
@@ -290,77 +310,6 @@ def get_number_of_design_options(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rDoS.get_design_options(doc).ToList())
-    except:
-        pass
-    return number
-
-
-# --------------------------------------------- VIEWS ---------------------------------------------
-
-
-def get_number_of_sheets(doc):
-    """
-    Gets the number of sheets in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of sheets in model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rViewSheets.get_all_sheets(doc).ToList())
-    except:
-        pass
-    return number
-
-
-def _view_filter(view):
-    """
-    generic view filter allowing all views to be selected
-
-    :param view: not used!
-    :type view: Autodesk.Revit.DB.View
-
-    :return: returns always True
-    :rtype: bool
-    """
-    return True
-
-
-def get_number_of_views(doc):
-    """
-    Gets the number of views in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of views in model. On exception it will return -1
-    :rtype: int
-    """
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rViews.get_views_in_model(doc, _view_filter))
-    except:
-        pass
-    return number
-
-
-def get_number_of_unplaced_views(doc):
-    """
-    Gets the number of unplaced views in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of unplaced views in model. On exception it will return -1
-    :rtype: int
-    """
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rViews.get_views_not_on_sheet(doc))
     except:
         pass
     return number
@@ -647,85 +596,6 @@ def get_number_of_unplaced_model_groups(doc):
     return number
 
 
-# ---------------------------------------------  Rooms  ---------------------------------------------
-
-
-def get_number_of_rooms(doc):
-    """
-    Gets the number of rooms in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of rooms in the model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rRooms.get_all_rooms(doc))
-    except:
-        pass
-    return number
-
-
-def get_number_of_unplaced_rooms(doc):
-    """
-    Gets the number of unplaced rooms in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of unplaced rooms in the model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rRooms.get_unplaced_rooms(doc))
-    except:
-        pass
-    return number
-
-
-def get_number_of_redundant_rooms(doc):
-    """
-    Gets the number of redundant rooms in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of redundant rooms in the model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rRooms.get_redundant_rooms(doc))
-    except:
-        pass
-    return number
-
-
-def get_number_of_not_enclosed_rooms(doc):
-    """
-    Gets the not enclosed number of rooms in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of not enclosed rooms in the model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rRooms.get_not_enclosed_rooms(doc))
-    except:
-        pass
-    return number
-
-
 # ---------------------------------------------  Detail Items  ---------------------------------------------
 
 
@@ -779,6 +649,20 @@ PARAM_ACTIONS = {
     ),
     "ValueViewsNotPlaced": health_data_action(
         get_number_of_unplaced_views, rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED
+    ),
+    "ValueViewFilters": health_data_action(
+        get_number_of_view_filters, rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEW_FILTERS
+    ),
+    "ValueViewFiltersUnused": health_data_action(
+        get_number_of_unused_view_filters,
+        rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEW_FILTERS,
+    ),
+    "ValueViewTemplates": health_data_action(
+        get_number_of_view_templates, rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEW_TEMPLATES
+    ),
+    "ValueViewTemplatesUnused": health_data_action(
+        get_number_of_unused_view_templates,
+        rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEW_TEMPLATES_UNUSED,
     ),
     "ValueLineStyles": health_data_action(
         get_number_of_line_styles, rFns.PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES
@@ -872,8 +756,11 @@ def update_model_health_tracer_family(doc, revit_file_path):
     instances = get_instances_of_model_health(doc)
     if len(instances) > 0:
         for instance in instances:
-            update_flag = get_parameters_of_instance(instance, doc)
-            result_value.update(update_flag)
+            try:
+                update_flag = get_parameters_of_instance(instance, doc)
+                result_value.update(update_flag)
+            except Exception as e:
+                result_value.update_sep(False, "{}".format(e))
     else:
         result_value.update_sep(
             False,

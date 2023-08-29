@@ -129,7 +129,8 @@ def get_instances_of_model_health(doc):
     provider = rdb.ParameterValueProvider(
         rdb.ElementId(rdb.BuiltInParameter.ELEM_FAMILY_PARAM)
     )
-
+    evaluator = rdb.FilterStringEquals()
+    
     revit_version = get_revit_version_number(doc=doc)
     # define rule with a placeholder
     rule = None
@@ -143,7 +144,6 @@ def get_instances_of_model_health(doc):
         # case sensitive flag has been removed in Revit 2023 onwards
         rule = rdb.FilterStringRule(provider, evaluator, MODEL_HEALTH_TRACKER_FAMILY)
 
-    evaluator = rdb.FilterStringEquals()
     filter = rdb.ElementParameterFilter(rule)
     return (
         rdb.FilteredElementCollector(doc)

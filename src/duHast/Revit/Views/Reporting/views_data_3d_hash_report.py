@@ -44,17 +44,44 @@ from duHast.Revit.Views.Reporting.Objects.json_conversion_storage import (
 )
 
 
-def _load_json_data(files):
+def _load_json_data(files, progress_call_back=None):
+    '''
+    _summary_
+
+    :param files: _description_
+    :type files: _type_
+    :param progress_call_back: _description_, defaults to None
+    :type progress_call_back: _type_, optional
+    :return: _description_
+    :rtype: _type_
+    '''
+
     json_data = {}
+    counter = 0
     for file_path in files:
         file_name = get_file_name_without_ext(file_path=file_path)
         json_single_data = read_view_data_from_file(file_path=file_path)
         json_data[file_name] = json_single_data
+        counter = counter + 1
+        if progress_call_back is not None:
+            progress_call_back(counter, len(files))
     return json_data
 
 
-def _get_hash_table_data_by_file(view_settings):
+def _get_hash_table_data_by_file(view_settings, progress_call_back=None):
+    '''
+    _summary_
+
+    :param view_settings: _description_
+    :type view_settings: _type_
+    :param progress_call_back: _description_, defaults to None
+    :type progress_call_back: _type_, optional
+    :return: _description_
+    :rtype: _type_
+    '''
+
     dic_tables_by_file = {}
+    counter = 0
     for key, vt_setting in view_settings.items():
         column_headers = _get_hash_headers(vt_setting)
         row_headers = _get_hash_rows_categories(vt_setting)
@@ -66,20 +93,21 @@ def _get_hash_table_data_by_file(view_settings):
         storage.row_headers = row_headers
         storage.hash_table = hash_table
         dic_tables_by_file[key] = storage
+        counter = counter + 1
+        if progress_call_back is not None:
+            progress_call_back(counter, len(view_settings))
 
     return dic_tables_by_file
 
 
 def _merge_column_headers(view_settings):
-    """_summary_
+    '''
+    _summary_
 
-    Args:
-        view_settings (_type_): _description_
-        index (_type_): 0 is column header, 1 is row header
+    :param view_settings: _description_
+    :type view_settings: _type_
+    '''
 
-    Returns:
-        _type_: _description_
-    """
     data = []
     for key, vt_setting in view_settings.items():
         data = sorted(list(set(data) | set(vt_setting.column_headers)))
@@ -89,15 +117,13 @@ def _merge_column_headers(view_settings):
 
 
 def _merge_row_headers(view_settings):
-    """_summary_
+    '''
+    _summary_
 
-    Args:
-        view_settings (_type_): _description_
-        index (_type_): 0 is column header, 1 is row header
+    :param view_settings: _description_
+    :type view_settings: _type_
+    '''
 
-    Returns:
-        _type_: _description_
-    """
     data = []
     for key, vt_setting in view_settings.items():
         data = sorted(list(set(data) | set(vt_setting.row_headers)))
@@ -106,10 +132,24 @@ def _merge_row_headers(view_settings):
         vt_setting.merged_row_headers = data
 
 
+# ---------------------------- padded default array -------------------------
+
+
 def _get_padded_default_array(
     merged_row_headers,
     merged_column_headers,
 ):
+    '''
+    _summary_
+
+    :param merged_row_headers: _description_
+    :type merged_row_headers: _type_
+    :param merged_column_headers: _description_
+    :type merged_column_headers: _type_
+    :return: _description_
+    :rtype: _type_
+    '''
+
     # Create a new padded 2D array
     padded_array = [
         [-1 for entry in merged_column_headers] for entry in merged_row_headers
@@ -117,7 +157,98 @@ def _get_padded_default_array(
     return padded_array
 
 
+def _assign_padded_default_array(hash_data_by_file, progress_call_back=None):
+    '''
+    _summary_
+
+    :param hash_data_by_file: _description_
+    :type hash_data_by_file: bool
+    :param progress_call_back: _description_, defaults to None
+    :type progress_call_back: _type_, optional
+    :return: _description_
+    :rtype: _type_
+    '''
+
+    result = res.Result()
+    call_back_progress_counter = 0
+    # build default hash tables where all values are -1
+    for key, hash_by_file in hash_data_by_file.items():
+        padded_array = _get_padded_default_array(
+            merged_column_headers=hash_by_file.merged_column_headers,
+            merged_row_headers=hash_by_file.merged_row_headers,
+        )
+        hash_data_by_file[key].padded_default_hash_table = padded_array
+        result.append_message(
+            "{}: Created padded default value array of size {} by {}".format(
+                key, len(padded_array), len(padded_array[0])
+            )
+        )
+        call_back_progress_counter = call_back_progress_counter + 1
+        if progress_call_back is not None:
+            progress_call_back(call_back_progress_counter, len(hash_data_by_file))
+    result.result.append(hash_data_by_file)
+    return result
+
+
+# ---------------------------- row indices ---------------------------------
+
+
+def _assign_row_indices_pointer(hash_data_by_file, progress_call_back=None):
+    '''
+    _summary_
+
+    :param hash_data_by_file: _description_
+    :type hash_data_by_file: bool
+    :param progress_call_back: _description_, defaults to None
+    :type progress_call_back: _type_, optional
+    :return: _description_
+    :rtype: _type_
+    '''
+
+    result = res.Result()
+    call_back_progress_counter = 0
+    # build row and column indices list for mapping of value hash table entries to default hash table
+    for key, hash_by_file in hash_data_by_file.items():
+        # Find the indices for row and column headers in the merged headers
+        row_indices_all = [
+            hash_by_file.merged_row_headers.index(row)
+            for row in hash_by_file.row_headers
+        ]
+        column_indices_all = [
+            hash_by_file.merged_column_headers.index(col)
+            for col in hash_by_file.column_headers
+        ]
+
+        hash_data_by_file[key].row_indices = row_indices_all
+        hash_data_by_file[key].column_indices = column_indices_all
+        result.append_message(
+            "{}: Created row: {} and column: {} indices mapper.".format(
+                key, len(row_indices_all), len(column_indices_all)
+            )
+        )
+        call_back_progress_counter = call_back_progress_counter + 1
+        if progress_call_back is not None:
+            progress_call_back(call_back_progress_counter, len(hash_data_by_file))
+    result.result.append(hash_data_by_file)
+    return result
+
+
 def _update_default_array_values(row_indices, col_indices, default_array, value_array):
+    '''
+    _summary_
+
+    :param row_indices: _description_
+    :type row_indices: _type_
+    :param col_indices: _description_
+    :type col_indices: _type_
+    :param default_array: _description_
+    :type default_array: _type_
+    :param value_array: _description_
+    :type value_array: _type_
+    :return: _description_
+    :rtype: _type_
+    '''
+
     # Fill in the values from array_model_a
     for i, row_index in enumerate(row_indices):
         for j, col_index in enumerate(col_indices):
@@ -125,26 +256,157 @@ def _update_default_array_values(row_indices, col_indices, default_array, value_
     return default_array
 
 
-def convert_vt_data_to_3d_flattened(directory_path):
+def _assign_default_array_values(hash_data_by_file, progress_call_back=None):
+    '''
+    _summary_
+
+    :param hash_data_by_file: _description_
+    :type hash_data_by_file: bool
+    :param progress_call_back: _description_, defaults to None
+    :type progress_call_back: _type_, optional
+    :return: _description_
+    :rtype: _type_
+    '''
+
+    result = res.Result()
+    call_back_progress_counter = 0
+    # update the default hash table for each file with values from the value hash table from the same file
+    for key, hash_by_file in hash_data_by_file.items():
+        updated_array = _update_default_array_values(
+            row_indices=hash_by_file.row_indices,
+            col_indices=hash_by_file.column_indices,
+            default_array=hash_by_file.padded_default_hash_table,
+            value_array=hash_by_file.hash_table,
+        )
+        hash_by_file.padded_value_hash_table = updated_array
+        result.append_message(
+            "{}: Updated padded default value array with values of size {} by {}".format(
+                key, len(updated_array), len(updated_array[0])
+            )
+        )
+        call_back_progress_counter = call_back_progress_counter + 1
+        if progress_call_back is not None:
+            progress_call_back(call_back_progress_counter, len(hash_data_by_file))
+    result.result.append(hash_data_by_file)
+    return result
+
+
+def _built_threeD_array(hash_data_by_file):
+    '''
+    _summary_
+
+    :param hash_data_by_file: _description_
+    :type hash_data_by_file: bool
+    :return: _description_
+    :rtype: _type_
+    '''
+
+    result = res.Result()
+    array_3d = []
+    z_value = 0
+    x_value = 0
+    y_value = 0
+    for key, hash_by_file in hash_data_by_file.items():
+        array_3d.append(hash_by_file.padded_value_hash_table)
+        x_value = len(hash_by_file.padded_value_hash_table)
+        y_value = len(hash_by_file.padded_value_hash_table[0])
+        z_value = z_value + 1
+
+    result.append_message(
+        "Built 3D array of size: number of files: {} , by number of categories: {} , by number of view templates: {}".format(
+            z_value, x_value, y_value
+        )
+    )
+
+    result.result.append(array_3d)
+    return result
+
+
+def _flatten_threeD_array(
+    array_3d, sample_storage, model_names, hash_data_by_file, progress_call_back=None
+):
+    '''
+    _summary_
+
+    :param array_3d: _description_
+    :type array_3d: _type_
+    :param sample_storage: _description_
+    :type sample_storage: _type_
+    :param model_names: _description_
+    :type model_names: _type_
+    :param hash_data_by_file: _description_
+    :type hash_data_by_file: bool
+    :param progress_call_back: _description_, defaults to None
+    :type progress_call_back: _type_, optional
+    :return: _description_
+    :rtype: _type_
+    '''
+
+    result = res.Result()
+    call_back_progress_counter = 0
+    # flatten 3D hash data for power bi
+    flattened_data = []
+    for model_name, layer in enumerate(array_3d):
+        for category, row in enumerate(layer):
+            for view_template, hash_value in enumerate(row):
+                flattened_data.append(
+                    {
+                        "view_template": sample_storage.merged_column_headers[
+                            view_template
+                        ],
+                        "category": sample_storage.merged_row_headers[category],
+                        "model_name": model_names[model_name],
+                        "hash_value": hash_value,
+                    }
+                )
+        call_back_progress_counter = call_back_progress_counter + 1
+        if progress_call_back is not None:
+            progress_call_back(call_back_progress_counter, len(hash_data_by_file))
+
+    result.result.append(flattened_data)
+    return result
+
+
+def convert_vt_data_to_3d_flattened(json_files, progress_call_back=None):
+    '''
+    _summary_
+
+    :param json_files: _description_
+    :type json_files: _type_
+    :param progress_call_back: _description_, defaults to None
+    :type progress_call_back: _type_, optional
+    :raises ValueError: _description_
+    :raises ValueError: _description_
+    :raises ValueError: _description_
+    :raises ValueError: _description_
+    :raises ValueError: _description_
+    :return: _description_
+    :rtype: _type_
+    '''
+
     result = res.Result()
     try:
         # get all files containing view template files in a given directory
-        json_files = get_files_single_directory(
-            folder_path=directory_path,
-            file_prefix="",
-            file_suffix="VT_Overrides",
-            file_extension=".csv",
-        )
-        result.append_message("Found {} files: {}".format(len(json_files), json_files))
+        # json_files = get_files_single_directory(
+        #    folder_path=directory_path,
+        #    file_prefix="",
+        #   file_suffix="VT_Overrides",
+        #   file_extension=".csv",
+        # )
+        # result.append_message("Found {} files: {}".format(len(json_files), json_files))
 
         # load json data from all files found
-        json_data_loaded = _load_json_data(json_files)
+        json_data_loaded = _load_json_data(
+            files=json_files, progress_call_back=progress_call_back
+        )
         result.append_message(
             "Loaded json data from {} files.".format(len(json_data_loaded))
         )
 
         # get hash tables, row and column data, key is the file name
-        hash_data_by_file = _get_hash_table_data_by_file(json_data_loaded)
+        hash_data_by_file = _get_hash_table_data_by_file(
+            json_data_loaded, progress_call_back=progress_call_back
+        )
 
         # merge row and column headers into unique value lists and store them in each storage instance
         _merge_column_headers(view_settings=hash_data_by_file)
@@ -156,69 +418,95 @@ def convert_vt_data_to_3d_flattened(directory_path):
                 )
             )
 
-        # build default hash tables where all values are -1
-        for key, hash_by_file in hash_data_by_file.items():
-            padded_array = _get_padded_default_array(
-                merged_column_headers=hash_by_file.merged_column_headers, merged_row_headers=hash_by_file.merged_row_headers
+        # assign padded default hash table
+        assign_padded_default_hash_table_status = _assign_padded_default_array(
+            hash_data_by_file=hash_data_by_file, progress_call_back=progress_call_back
+        )
+        result.update(assign_padded_default_hash_table_status)
+        # check if all is ok
+        if assign_padded_default_hash_table_status.status:
+            # get the updated storage items
+            hash_data_by_file = assign_padded_default_hash_table_status.result[0]
+            # get row and column indices mapping to padded hash table from value table
+            row_indices_status = _assign_row_indices_pointer(
+                hash_data_by_file, progress_call_back=progress_call_back
             )
-            hash_data_by_file[key].padded_default_hash_table = padded_array
-            result.append_message("{}: Created padded default value array of size {} by {}".format(key, len(padded_array), len(padded_array[0])))
-        
-        # build row and column indices list for mapping of value hash table entries to default hash table
-        for key, hash_by_file in hash_data_by_file.items():
-            # Find the indices for row and column headers in the merged headers
-            row_indices_all = [hash_by_file.merged_row_headers.index(row) for row in hash_by_file.row_headers]
-            column_indices_all = [hash_by_file.merged_column_headers.index(col) for col in hash_by_file.column_headers]
-            
-            hash_data_by_file[key].row_indices=row_indices_all
-            hash_data_by_file[key].column_indices=column_indices_all
-            result.append_message("{}: Created row: {} and column: {} indices mapper.".format(key, len(row_indices_all), len(column_indices_all)))
-        
-        # update the default hash table for each file with values from the value hash table from the same file
-        for key, hash_by_file in hash_data_by_file.items():
-            updated_array = _update_default_array_values(
-                row_indices=hash_by_file.row_indices, 
-                col_indices=hash_by_file.column_indices, 
-                default_array=hash_by_file.padded_default_hash_table, 
-                value_array=hash_by_file.hash_table
-            )
-            hash_by_file.padded_value_hash_table = updated_array
-            result.append_message("{}: Updated padded default value array with values of size {} by {}".format(key, len(updated_array), len(updated_array[0])))
-        
-        # build an 3D array from padded hash value tables
-        array_3d = []
-        z_value = 0
-        x_value = 0
-        y_value = 0
-        for key, hash_by_file in hash_data_by_file.items():
-            array_3d.append(hash_by_file.padded_value_hash_table)
-            x_value = len(hash_by_file.padded_value_hash_table)
-            y_value = len(hash_by_file.padded_value_hash_table[0])
-            z_value = z_value + 1
-        result.append_message("Built 3D array of size: number of files: {} , by number of categories: {} , by number of view templates: {}".format(z_value,x_value,y_value))
-        
-        # Get an arbitrary key-value pair using the dictionary's iterator
-        # since all storage instance store the same merged rows and column headers lists
-        first_key, first_value = next(iter(hash_data_by_file.items()))
-        
-        # built a list of model names from the keys of the hash data dictionary
-        model_names = list(hash_data_by_file.keys())
-        
-        # flatten 3D hash data for power bi
-        flattened_data=[]
-        for model_name, layer in enumerate(array_3d):
-            for category, row in enumerate(layer):
-                for view_template, hash_value in enumerate(row):
-                    flattened_data.append(
-                        {
-                            "view_template": first_value.merged_column_headers[view_template],
-                            "category": first_value.merged_row_headers[category],
-                            "model_name": model_names[model_name],
-                            "hash_value": hash_value,
-                        }
+            result.update(row_indices_status)
+            # check if all is ok
+            if row_indices_status.status:
+                # get the updated storage items
+                hash_data_by_file = row_indices_status.result[0]
+                # update the padded hash table of default values with values from the actual hash table mapped to columns and rows
+                assign_default_array_values_status = _assign_default_array_values(
+                    hash_data_by_file, progress_call_back=progress_call_back
+                )
+                result.update(assign_default_array_values_status)
+                # check if all is ok
+                if assign_default_array_values_status.status:
+                    # get the updated storage items
+                    hash_data_by_file = assign_default_array_values_status.result[0]
+
+                    # build an 3D array from padded hash value tables
+                    array_3d_status = _built_threeD_array(hash_data_by_file)
+                    # check if all is ok
+                    if array_3d_status.status:
+                        # get the 3D array
+                        array_3d = array_3d_status.result[0]
+
+                        # Get an arbitrary key-value pair using the dictionary's iterator
+                        # since all storage instance store the same merged rows and column headers lists
+                        first_key, first_value = next(iter(hash_data_by_file.items()))
+
+                        # built a list of model names from the keys of the hash data dictionary
+                        model_names = list(hash_data_by_file.keys())
+
+                        # flatten the 3D array for power bi 
+                        flatten_array_status = _flatten_threeD_array(
+                            array_3d=array_3d,
+                            sample_storage=first_value,
+                            model_names=model_names,
+                            hash_data_by_file=hash_data_by_file,
+                            progress_call_back=progress_call_back,
+                        )
+                        result.update(flatten_array_status)
+                        # check if all is ok
+                        if flatten_array_status.status:
+                            # get the flattened 3D array
+                            result.result = [flatten_array_status.result[0]]
+                        else:
+                            raise ValueError(
+                                "Failed to flatten 3D array: {}".format(
+                                    flatten_array_status.message
+                                )
+                            )
+
+                    else:
+                        raise ValueError(
+                            "Failed to build 3D array: {}".format(
+                                array_3d_status.message
+                            )
+                        )
+                else:
+                    raise ValueError(
+                        "Failed to update values in default hash table with values from source table: {}".format(
+                            assign_default_array_values_status.message
+                        )
                     )
-        result.append_message("Flattened array: {} entries.".format(len(flattened_data)))
-        result.result.append(flattened_data)
+            else:
+                raise ValueError(
+                    "Failed to assign row and column indices: {}".format(
+                        row_indices_status.message
+                    )
+                )
+        else:
+            raise ValueError(
+                "Failed to assign padded default hash table: {}".format(
+                    assign_padded_default_hash_table_status.message
+                )
+            )
     except Exception as e:
-        result.update_sep(status=False, message="Failed to build flattened 3D array with: {}".format(e))
+        result.update_sep(
+            status=False,
+            message="Failed to build flattened 3D array with: {}".format(e),
+        )
     return result

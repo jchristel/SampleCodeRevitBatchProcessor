@@ -655,7 +655,7 @@ PARAM_ACTIONS = {
     ),
     "ValueViewFiltersUnused": health_data_action(
         get_number_of_unused_view_filters,
-        rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEW_FILTERS,
+        rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEW_FILTERS_UNUSED,
     ),
     "ValueViewTemplates": health_data_action(
         get_number_of_view_templates, rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEW_TEMPLATES

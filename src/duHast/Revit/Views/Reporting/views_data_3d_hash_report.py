@@ -45,7 +45,7 @@ from duHast.Revit.Views.Reporting.Objects.json_conversion_storage import (
 
 
 def _load_json_data(files, progress_call_back=None):
-    '''
+    """
     _summary_
 
     :param files: _description_
@@ -54,7 +54,7 @@ def _load_json_data(files, progress_call_back=None):
     :type progress_call_back: _type_, optional
     :return: _description_
     :rtype: _type_
-    '''
+    """
 
     json_data = {}
     counter = 0
@@ -69,7 +69,7 @@ def _load_json_data(files, progress_call_back=None):
 
 
 def _get_hash_table_data_by_file(view_settings, progress_call_back=None):
-    '''
+    """
     _summary_
 
     :param view_settings: _description_
@@ -78,7 +78,7 @@ def _get_hash_table_data_by_file(view_settings, progress_call_back=None):
     :type progress_call_back: _type_, optional
     :return: _description_
     :rtype: _type_
-    '''
+    """
 
     dic_tables_by_file = {}
     counter = 0
@@ -100,13 +100,73 @@ def _get_hash_table_data_by_file(view_settings, progress_call_back=None):
     return dic_tables_by_file
 
 
+def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
+    """
+    _summary_
+
+    :param hash_data_by_file: _description_
+    :type hash_data_by_file: bool
+    :return: _description_
+    :rtype: _type_
+    """
+
+    hash_mapper = []
+    try:
+        # build a unique list of all hash values
+        for key, hash_data in hash_data_by_file.items():
+            for entry in hash_data.hash_table:
+                hash_mapper = sorted(list(set(hash_mapper) | set(entry)))
+    
+        # note 0, 1, -1 are special values and can not need to be changed!!
+        # remove them from the sorted list and then re-insert them at the beginning
+        if -1 in hash_mapper:
+            index = hash_mapper.index(-1)
+            hash_mapper.pop(index)
+        if 0 in hash_mapper:
+            index = hash_mapper.index(0)
+            hash_mapper.pop(index)
+        if 1 in hash_mapper:
+            index = hash_mapper.index(1)
+            hash_mapper.pop(index)
+
+        hash_mapper.insert(0, -1)
+        hash_mapper.insert(0, 0)
+        hash_mapper.insert(0, 1)
+
+        # loop over current hash values and replace with index of value in mapper list
+        # preserve -1, 0, 1 values
+
+        call_back_progress_counter = 0
+        for key,hash_data in hash_data_by_file.items():
+            mapped_hash_table = []
+            print (hash_data.hash_table)
+            for row in hash_data.hash_table:
+                new_row = []
+                for entry in row:
+                    if entry > 1 or entry < -1:
+                        mapped_index = hash_mapper.index(entry)
+                        new_row.append(mapped_index)
+                    else:
+                        new_row.append(entry)
+                mapped_hash_table.append(new_row)
+
+            hash_data.hash_table = mapped_hash_table
+            print ("after\n", hash_data.hash_table)
+            call_back_progress_counter = call_back_progress_counter + 1
+            if progress_call_back is not None:
+                progress_call_back(call_back_progress_counter, len(hash_data_by_file))
+    except Exception as e:
+        raise ValueError ("Failed to map values to range: {}".format(e))
+    return hash_data_by_file
+
+
 def _merge_column_headers(view_settings):
-    '''
+    """
     _summary_
 
     :param view_settings: _description_
     :type view_settings: _type_
-    '''
+    """
 
     data = []
     for key, vt_setting in view_settings.items():
@@ -117,12 +177,12 @@ def _merge_column_headers(view_settings):
 
 
 def _merge_row_headers(view_settings):
-    '''
+    """
     _summary_
 
     :param view_settings: _description_
     :type view_settings: _type_
-    '''
+    """
 
     data = []
     for key, vt_setting in view_settings.items():
@@ -139,7 +199,7 @@ def _get_padded_default_array(
     merged_row_headers,
     merged_column_headers,
 ):
-    '''
+    """
     _summary_
 
     :param merged_row_headers: _description_
@@ -148,7 +208,7 @@ def _get_padded_default_array(
     :type merged_column_headers: _type_
     :return: _description_
     :rtype: _type_
-    '''
+    """
 
     # Create a new padded 2D array
     padded_array = [
@@ -158,7 +218,7 @@ def _get_padded_default_array(
 
 
 def _assign_padded_default_array(hash_data_by_file, progress_call_back=None):
-    '''
+    """
     _summary_
 
     :param hash_data_by_file: _description_
@@ -167,7 +227,7 @@ def _assign_padded_default_array(hash_data_by_file, progress_call_back=None):
     :type progress_call_back: _type_, optional
     :return: _description_
     :rtype: _type_
-    '''
+    """
 
     result = res.Result()
     call_back_progress_counter = 0
@@ -194,7 +254,7 @@ def _assign_padded_default_array(hash_data_by_file, progress_call_back=None):
 
 
 def _assign_row_indices_pointer(hash_data_by_file, progress_call_back=None):
-    '''
+    """
     _summary_
 
     :param hash_data_by_file: _description_
@@ -203,7 +263,7 @@ def _assign_row_indices_pointer(hash_data_by_file, progress_call_back=None):
     :type progress_call_back: _type_, optional
     :return: _description_
     :rtype: _type_
-    '''
+    """
 
     result = res.Result()
     call_back_progress_counter = 0
@@ -234,7 +294,7 @@ def _assign_row_indices_pointer(hash_data_by_file, progress_call_back=None):
 
 
 def _update_default_array_values(row_indices, col_indices, default_array, value_array):
-    '''
+    """
     _summary_
 
     :param row_indices: _description_
@@ -247,7 +307,7 @@ def _update_default_array_values(row_indices, col_indices, default_array, value_
     :type value_array: _type_
     :return: _description_
     :rtype: _type_
-    '''
+    """
 
     # Fill in the values from array_model_a
     for i, row_index in enumerate(row_indices):
@@ -257,7 +317,7 @@ def _update_default_array_values(row_indices, col_indices, default_array, value_
 
 
 def _assign_default_array_values(hash_data_by_file, progress_call_back=None):
-    '''
+    """
     _summary_
 
     :param hash_data_by_file: _description_
@@ -266,7 +326,7 @@ def _assign_default_array_values(hash_data_by_file, progress_call_back=None):
     :type progress_call_back: _type_, optional
     :return: _description_
     :rtype: _type_
-    '''
+    """
 
     result = res.Result()
     call_back_progress_counter = 0
@@ -292,14 +352,14 @@ def _assign_default_array_values(hash_data_by_file, progress_call_back=None):
 
 
 def _built_threeD_array(hash_data_by_file):
-    '''
+    """
     _summary_
 
     :param hash_data_by_file: _description_
     :type hash_data_by_file: bool
     :return: _description_
     :rtype: _type_
-    '''
+    """
 
     result = res.Result()
     array_3d = []
@@ -325,7 +385,7 @@ def _built_threeD_array(hash_data_by_file):
 def _flatten_threeD_array(
     array_3d, sample_storage, model_names, hash_data_by_file, progress_call_back=None
 ):
-    '''
+    """
     _summary_
 
     :param array_3d: _description_
@@ -340,7 +400,7 @@ def _flatten_threeD_array(
     :type progress_call_back: _type_, optional
     :return: _description_
     :rtype: _type_
-    '''
+    """
 
     result = res.Result()
     call_back_progress_counter = 0
@@ -368,7 +428,7 @@ def _flatten_threeD_array(
 
 
 def convert_vt_data_to_3d_flattened(json_files, progress_call_back=None):
-    '''
+    """
     _summary_
 
     :param json_files: _description_
@@ -382,7 +442,7 @@ def convert_vt_data_to_3d_flattened(json_files, progress_call_back=None):
     :raises ValueError: _description_
     :return: _description_
     :rtype: _type_
-    '''
+    """
 
     result = res.Result()
     try:
@@ -407,6 +467,9 @@ def convert_vt_data_to_3d_flattened(json_files, progress_call_back=None):
         hash_data_by_file = _get_hash_table_data_by_file(
             json_data_loaded, progress_call_back=progress_call_back
         )
+
+        # map hash values to a range
+        hash_data_by_file = _map_hash_values_to_range(hash_data_by_file)
 
         # merge row and column headers into unique value lists and store them in each storage instance
         _merge_column_headers(view_settings=hash_data_by_file)
@@ -460,7 +523,7 @@ def convert_vt_data_to_3d_flattened(json_files, progress_call_back=None):
                         # built a list of model names from the keys of the hash data dictionary
                         model_names = list(hash_data_by_file.keys())
 
-                        # flatten the 3D array for power bi 
+                        # flatten the 3D array for power bi
                         flatten_array_status = _flatten_threeD_array(
                             array_3d=array_3d,
                             sample_storage=first_value,

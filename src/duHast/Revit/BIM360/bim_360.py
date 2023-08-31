@@ -133,5 +133,5 @@ def get_model_file_size(doc):
                     file_size = fileIO.get_file_size(file)
                     break
     except Exception as e:
-        pass
+        raise ValueError("Failed to get cloud model file size: {}".format (e))
     return file_size

@@ -107,7 +107,7 @@ def _get_category_hash_table_data_by_file(view_settings, progress_call_back=None
 def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
     """
     Hash values returned from view templates have a really large range. This function maps them to their index in a sorted list.
-    Note -1,0,1 are left unchanged. 
+    Note -1,0,1 are left unchanged.
     Hash table will be updated with mapped values.
 
     :param hash_data_by_file: A dictionary where key is the file name without extension and value is an instance of a custom storage object
@@ -124,7 +124,7 @@ def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
         for key, hash_data in hash_data_by_file.items():
             for entry in hash_data.hash_table:
                 hash_mapper = sorted(list(set(hash_mapper) | set(entry)))
-    
+
         # note 0, 1, -1 are special values and can not need to be changed!!
         # remove them from the sorted list and then re-insert them at the beginning
         if -1 in hash_mapper:
@@ -145,7 +145,7 @@ def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
         # preserve -1, 0, 1 values
 
         call_back_progress_counter = 0
-        for key,hash_data in hash_data_by_file.items():
+        for key, hash_data in hash_data_by_file.items():
             mapped_hash_table = []
             for row in hash_data.hash_table:
                 new_row = []
@@ -162,40 +162,61 @@ def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
             if progress_call_back is not None:
                 progress_call_back(call_back_progress_counter, len(hash_data_by_file))
     except Exception as e:
-        raise ValueError ("Failed to map values to range: {}".format(e))
+        raise ValueError("Failed to map values to range: {}".format(e))
     return hash_data_by_file
 
 
-def _merge_column_headers(view_settings):
+def _merge_column_headers(hash_data_by_file):
     """
-    _summary_
+    Builds a unique list of column headers ( view template names )
 
-    :param view_settings: _description_
-    :type view_settings: _type_
-    """
-
-    data = []
-    for key, vt_setting in view_settings.items():
-        data = sorted(list(set(data) | set(vt_setting.column_headers)))
-
-    for key, vt_setting in view_settings.items():
-        vt_setting.merged_column_headers = data
-
-
-def _merge_row_headers(view_settings):
-    """
-    _summary_
-
-    :param view_settings: _description_
-    :type view_settings: _type_
+    :param hash_data_by_file: A dictionary where key is the file name without extension and value is an instance of a custom storage object
+    :type hash_data_by_file: {str: [:class:`.JSONThreeDStorage`]}
+    :return: Passed in dictionary with updated merged column list.
+    :rtype: {str: [:class:`.JSONThreeDStorage`]}
     """
 
-    data = []
-    for key, vt_setting in view_settings.items():
-        data = sorted(list(set(data) | set(vt_setting.row_headers)))
+    try:
+        data = []
+        # build list with unique entries
+        for key, vt_setting in hash_data_by_file.items():
+            data = sorted(list(set(data) | set(vt_setting.column_headers)))
 
-    for key, vt_setting in view_settings.items():
-        vt_setting.merged_row_headers = data
+        # this list is common for all files...update them
+        for key, vt_setting in hash_data_by_file.items():
+            vt_setting.merged_column_headers = data
+
+        return hash_data_by_file
+
+    except Exception as e:
+        raise ValueError(
+            "Failed to merge column headers (view template names): {}".format(e)
+        )
+
+
+def _merge_row_headers(hash_data_by_file):
+    """
+    Builds a unique list of row headers ( object categories names )
+
+    :param hash_data_by_file: A dictionary where key is the file name without extension and value is an instance of a custom storage object
+    :type hash_data_by_file: {str: [:class:`.JSONThreeDStorage`]}
+    :return: Passed in dictionary with updated merged row list.
+    :rtype: {str: [:class:`.JSONThreeDStorage`]}
+    """
+
+    try:
+        data = []
+        # build list with unique entries
+        for key, vt_setting in hash_data_by_file.items():
+            data = sorted(list(set(data) | set(vt_setting.row_headers)))
+
+        # this list is common for all files...update them
+        for key, vt_setting in hash_data_by_file.items():
+            vt_setting.merged_row_headers = data    
+    except Exception as e:
+        raise ValueError(
+            "Failed to merge row headers (object category names): {}".format(e)
+        )
 
 
 # ---------------------------- padded default array -------------------------
@@ -206,14 +227,15 @@ def _get_padded_default_array(
     merged_column_headers,
 ):
     """
-    _summary_
+    Builds an 2d array where column number equals the number of unique view templates (merged column header)
+    and row number equals number of unique object category names. All values are set to -1.
 
-    :param merged_row_headers: _description_
-    :type merged_row_headers: _type_
-    :param merged_column_headers: _description_
-    :type merged_column_headers: _type_
-    :return: _description_
-    :rtype: _type_
+    :param merged_row_headers: A list containing row headers
+    :type merged_row_headers: [str]
+    :param merged_column_headers: A list containing column headers
+    :type merged_column_headers: [str]
+    :return: A 2D array where all values are -1.
+    :rtype: [[],[],...]
     """
 
     # Create a new padded 2D array
@@ -478,8 +500,9 @@ def convert_vt_data_to_3d_flattened(json_files, progress_call_back=None):
         hash_data_by_file = _map_hash_values_to_range(hash_data_by_file)
 
         # merge row and column headers into unique value lists and store them in each storage instance
-        _merge_column_headers(view_settings=hash_data_by_file)
-        _merge_row_headers(view_settings=hash_data_by_file)
+        hash_data_by_file = _merge_column_headers(hash_data_by_file=hash_data_by_file)
+        hash_data_by_file =_merge_row_headers(hash_data_by_file=hash_data_by_file)
+
         for key, entry in hash_data_by_file.items():
             result.append_message(
                 "{}: number of merged column headers: {} and merged row headers: {}".format(

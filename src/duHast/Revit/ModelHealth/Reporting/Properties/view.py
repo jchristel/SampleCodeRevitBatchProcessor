@@ -33,10 +33,10 @@ and or data can be exported to text files which can be used to visualize key met
 import clr
 
 
-# import System
-# clr.AddReference("System.Core")
-# from System import Linq
-# clr.ImportExtensions(Linq)
+import System
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
 
 
 from duHast.Revit.ModelHealth.Reporting.Properties.constants import (

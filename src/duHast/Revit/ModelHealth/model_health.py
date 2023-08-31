@@ -32,12 +32,11 @@ and or data can be exported to text files which can be used to visualize key met
 
 import clr
 import os
-
+import System
 clr.AddReference("System.Core")
 from System import Linq
-
 clr.ImportExtensions(Linq)
-import System
+
 
 
 from duHast.Revit.ModelHealth.Reporting.Properties.view import (
@@ -360,7 +359,7 @@ def get_number_of_line_patterns(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rLinePat.get_all_line_patterns(doc))
+        number = len(rLinePat.get_all_line_patterns(doc).ToList())
     except Exception as e:
         raise ValueError ("Failed to get number of line patterns: {}".format(e))
     return number
@@ -379,7 +378,7 @@ def get_number_of_fill_patterns(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rFill.get_all_fill_pattern(doc))
+        number = len(rFill.get_all_fill_pattern(doc).ToList())
     except Exception as e:
         raise ValueError ("Failed to get number of fill patterns: {}".format(e))
     return number

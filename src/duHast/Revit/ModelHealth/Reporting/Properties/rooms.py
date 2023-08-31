@@ -68,8 +68,8 @@ def get_number_of_rooms(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(get_all_rooms(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError("Failed to get number of rooms: {}".format(e))
     return number
 
 
@@ -87,8 +87,8 @@ def get_number_of_unplaced_rooms(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(get_unplaced_rooms(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError("Failed to get number of unplaced rooms: {}".format(e))
     return number
 
 
@@ -106,8 +106,8 @@ def get_number_of_redundant_rooms(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(get_redundant_rooms(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError("Failed to get number of redundant rooms: {}".format(e))
     return number
 
 
@@ -125,6 +125,6 @@ def get_number_of_not_enclosed_rooms(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(get_not_enclosed_rooms(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError("Failed to get number of rooms not enclosed: {}".format(e))
     return number

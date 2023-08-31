@@ -67,8 +67,8 @@ def get_number_of_sheets(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(get_all_sheets(doc).ToList())
-    except:
-        pass
+    except Exception as e:
+        raise ValueError("Failed to get number of sheets: {}".format(e))
     return number
 
 
@@ -98,8 +98,8 @@ def get_number_of_views(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(get_views_in_model(doc, _view_filter))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError("Failed to get number of views: {}".format(e))
     return number
 
 
@@ -116,8 +116,8 @@ def get_number_of_unplaced_views(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(get_views_not_on_sheet(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError("Failed to get number of unplaced views: {}".format(e))
     return number
 
 
@@ -134,8 +134,8 @@ def get_number_of_view_templates(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(get_view_templates_ids(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError("Failed to get number of view templates: {}".format(e))
     return number
 
 
@@ -152,8 +152,8 @@ def get_number_of_unused_view_templates(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(get_all_unused_view_template_ids(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError("Failed to get number of unused view templates: {}".format(e))
     return number
 
 
@@ -170,8 +170,8 @@ def get_number_of_view_filters(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(get_all_filters(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError("Failed to get number of view filters: {}".format(e))
     return number
 
 
@@ -188,6 +188,6 @@ def get_number_of_unused_view_filters(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(get_all_unused_view_filters(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError("Failed to get number of unused view filters: {}".format(e))
     return number

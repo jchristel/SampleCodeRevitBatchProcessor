@@ -130,7 +130,7 @@ def get_instances_of_model_health(doc):
         rdb.ElementId(rdb.BuiltInParameter.ELEM_FAMILY_PARAM)
     )
     evaluator = rdb.FilterStringEquals()
-    
+
     revit_version = get_revit_version_number(doc=doc)
     # define rule with a placeholder
     rule = None
@@ -178,16 +178,24 @@ def get_parameters_of_instance(fam_instance, doc):
         if p.IsReadOnly == False:
             # check an action to update this parameter value exists
             if PARAM_ACTIONS.ContainsKey(p.Definition.Name):
-                parameter_value = PARAM_ACTIONS[p.Definition.Name].get_data(doc)
-                if parameter_value != FAILED_TO_RETRIEVE_VALUE:
-                    flag = rParaSet.set_parameter_value(
-                        p, _cast_parameter_value(parameter_value), doc
-                    )
-                    result_value.update(flag)
-                    flag_update = True
-                else:
+                try:
+                    parameter_value = PARAM_ACTIONS[p.Definition.Name].get_data(doc)
+                    if parameter_value != FAILED_TO_RETRIEVE_VALUE:
+                        flag = rParaSet.set_parameter_value(
+                            p, _cast_parameter_value(parameter_value), doc
+                        )
+                        result_value.update(flag)
+                        flag_update = True
+                    else:
+                        result_value.update_sep(
+                            False, "Failed to get value for " + p.Definition.Name
+                        )
+                except Exception as e:
                     result_value.update_sep(
-                        False, "Failed to get value for " + p.Definition.Name
+                        False,
+                        "Failed to update {} with exception: {}".format(
+                            p.Definition.Name, e
+                        ),
                     )
     if flag_update == False:
         result_value.message = "No family parameters where updated"
@@ -255,6 +263,8 @@ def get_file_size(doc):
             if fileIO.file_exist(revit_file_path):
                 # get file size in MB
                 size = fileIO.get_file_size(revit_file_path)
+            else:
+                raise ValueError("File not found: {}".format(revit_file_path))
     except Exception as e:
         raise ValueError("Failed to get file size with: {}".format(e))
     return size
@@ -274,8 +284,8 @@ def get_number_of_warnings(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rWarn.get_warnings(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of warnings: {}".format(e))
     return number
 
 
@@ -292,8 +302,8 @@ def get_number_of_design_sets(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rDoS.get_design_sets(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of design sets: {}".format(e))
     return number
 
 
@@ -310,8 +320,8 @@ def get_number_of_design_options(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rDoS.get_design_options(doc).ToList())
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of design options: {}".format(e))
     return number
 
 
@@ -332,8 +342,8 @@ def get_number_of_line_styles(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rLineStyle.get_all_line_style_ids(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of line styles: {}".format(e))
     return number
 
 
@@ -351,8 +361,8 @@ def get_number_of_line_patterns(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rLinePat.get_all_line_patterns(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of line patterns: {}".format(e))
     return number
 
 
@@ -371,7 +381,7 @@ def get_number_of_fill_patterns(doc):
     try:
         number = len(rFill.get_all_fill_pattern(doc))
     except Exception as e:
-        pass
+        raise ValueError ("Failed to get number of fill patterns: {}".format(e))
     return number
 
 
@@ -392,8 +402,8 @@ def get_number_of_cad_imports(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rCadLink.get_cad_type_imports_only(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of cad imports: {}".format(e))
     return number
 
 
@@ -411,8 +421,8 @@ def get_number_of_cad_links_to_model(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rCadLink.get_all_cad_link_type_in_model_only(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of cad links to model: {}".format(e))
     return number
 
 
@@ -430,8 +440,8 @@ def get_number_of_cad_links_to_view(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rCadLink.get_all_cad_link_type_by_view_only(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of cad links to views: {}".format(e))
     return number
 
 
@@ -452,8 +462,8 @@ def get_number_of_image_imports(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rImageLink.get_all_image_link_type_imported_in_model(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of image imports: {}".format(e))
     return number
 
 
@@ -471,8 +481,8 @@ def get_number_of_image_links(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rImageLink.get_all_image_link_type_linked_in_model(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of image links: {}".format(e))
     return number
 
 
@@ -493,8 +503,8 @@ def get_number_of_families(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rFams.get_all_loadable_families(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of families: {}".format(e))
     return number
 
 
@@ -512,8 +522,8 @@ def get_number_of_in_place_families(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rFams.get_all_in_place_families(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of in place families: {}".format(e))
     return number
 
 
@@ -534,8 +544,8 @@ def get_number_of_detail_groups(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rGrp.get_detail_groups(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of detail groups: {}".format(e))
     return number
 
 
@@ -553,8 +563,8 @@ def get_number_of_model_groups(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rGrp.get_model_groups(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of model groups: {}".format(e))
     return number
 
 
@@ -572,8 +582,8 @@ def get_number_of_unplaced_detail_groups(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rGrp.get_unplaced_detail_groups(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of unplaced detail groups: {}".format(e))
     return number
 
 
@@ -591,8 +601,8 @@ def get_number_of_unplaced_model_groups(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rGrp.get_unplaced_model_groups(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of unplaced model groups: {}".format(e))
     return number
 
 
@@ -612,8 +622,8 @@ def get_number_of_filled_regions(doc):
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rDetItems.get_filled_regions_in_model(doc))
-    except:
-        pass
+    except Exception as e:
+        raise ValueError ("Failed to get number of filled regions: {}".format(e))
     return number
 
 

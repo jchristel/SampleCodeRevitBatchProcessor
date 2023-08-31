@@ -46,14 +46,14 @@ from duHast.Revit.Views.Reporting.Objects.json_conversion_storage import (
 
 def _load_json_data(files, progress_call_back=None):
     """
-    _summary_
+    Reads view template data from files into a dictionary.
 
-    :param files: _description_
-    :type files: _type_
-    :param progress_call_back: _description_, defaults to None
-    :type progress_call_back: _type_, optional
-    :return: _description_
-    :rtype: _type_
+    :param files: List of fully qualified file path to json files containing view template data.
+    :type files: [str]
+    :param progress_call_back: A call back function accepting as arguments the number of the current file processed and the number of overall files to be processed, defaults to None
+    :type progress_call_back: func(counter, overall_counter), optional
+    :return: A dictionary where key is the file name without extension and value is a list of view settings
+    :rtype: {str: [:class:`.ViewGraphicsSettings`]}
     """
 
     json_data = {}
@@ -68,16 +68,20 @@ def _load_json_data(files, progress_call_back=None):
     return json_data
 
 
-def _get_hash_table_data_by_file(view_settings, progress_call_back=None):
+def _get_category_hash_table_data_by_file(view_settings, progress_call_back=None):
     """
-    _summary_
+    Returns a dictionary of partly populated JSONThreeDStorage objects.
 
-    :param view_settings: _description_
-    :type view_settings: _type_
-    :param progress_call_back: _description_, defaults to None
-    :type progress_call_back: _type_, optional
-    :return: _description_
-    :rtype: _type_
+    - column headers ( template names)
+    - row headers ( category names)
+    - hash table ( category overwrites )
+
+    :param view_settings: A dictionary where key is the file name without extension and value is a list of view settings
+    :type view_settings: {str: [:class:`.ViewGraphicsSettings`]}
+    :param progress_call_back: A call back function accepting as arguments the number of the current file processed and the number of overall files to be processed, defaults to None
+    :type progress_call_back: func(counter, overall_counter), optional
+    :return: A dictionary where key is the file name without extension and value is an instance of a custom storage object
+    :rtype: {str: [:class:`.JSONThreeDStorage`]}
     """
 
     dic_tables_by_file = {}
@@ -102,12 +106,16 @@ def _get_hash_table_data_by_file(view_settings, progress_call_back=None):
 
 def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
     """
-    _summary_
+    Hash values returned from view templates have a really large range. This function maps them to their index in a sorted list.
+    Note -1,0,1 are left unchanged. 
+    Hash table will be updated with mapped values.
 
-    :param hash_data_by_file: _description_
-    :type hash_data_by_file: bool
-    :return: _description_
-    :rtype: _type_
+    :param hash_data_by_file: A dictionary where key is the file name without extension and value is an instance of a custom storage object
+    :type hash_data_by_file: {str: [:class:`.JSONThreeDStorage`]}
+    :param progress_call_back: A call back function accepting as arguments the number of the current file processed and the number of overall files to be processed, defaults to None
+    :type progress_call_back: func(counter, overall_counter), optional
+    :return: Passed in dictionary with updated hash tables.
+    :rtype: {str: [:class:`.JSONThreeDStorage`]}
     """
 
     hash_mapper = []
@@ -139,7 +147,6 @@ def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
         call_back_progress_counter = 0
         for key,hash_data in hash_data_by_file.items():
             mapped_hash_table = []
-            print (hash_data.hash_table)
             for row in hash_data.hash_table:
                 new_row = []
                 for entry in row:
@@ -151,7 +158,6 @@ def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
                 mapped_hash_table.append(new_row)
 
             hash_data.hash_table = mapped_hash_table
-            print ("after\n", hash_data.hash_table)
             call_back_progress_counter = call_back_progress_counter + 1
             if progress_call_back is not None:
                 progress_call_back(call_back_progress_counter, len(hash_data_by_file))
@@ -464,7 +470,7 @@ def convert_vt_data_to_3d_flattened(json_files, progress_call_back=None):
         )
 
         # get hash tables, row and column data, key is the file name
-        hash_data_by_file = _get_hash_table_data_by_file(
+        hash_data_by_file = _get_category_hash_table_data_by_file(
             json_data_loaded, progress_call_back=progress_call_back
         )
 

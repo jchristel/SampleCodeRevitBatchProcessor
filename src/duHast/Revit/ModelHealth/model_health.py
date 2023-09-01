@@ -808,7 +808,12 @@ def write_model_health_report(doc, revit_file_path, output_directory):
     result_value = res.Result()
     # get values and write them out
     for key, value in PARAM_ACTIONS.items():
-        parameter_value = PARAM_ACTIONS[key].get_data(doc)
+        # parameter value get may throw an exception
+        # record -1 in that case!
+        try:
+            parameter_value = PARAM_ACTIONS[key].get_data(doc)
+        except Exception as e:
+            parameter_value = FAILED_TO_RETRIEVE_VALUE
         file_name = (
             dateStamp.get_file_date_stamp()
             + revit_file_name

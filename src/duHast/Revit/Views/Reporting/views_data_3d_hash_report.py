@@ -212,7 +212,7 @@ def _merge_row_headers(hash_data_by_file):
 
         # this list is common for all files...update them
         for key, vt_setting in hash_data_by_file.items():
-            vt_setting.merged_row_headers = data    
+            vt_setting.merged_row_headers = data
     except Exception as e:
         raise ValueError(
             "Failed to merge row headers (object category names): {}".format(e)
@@ -247,34 +247,42 @@ def _get_padded_default_array(
 
 def _assign_padded_default_array(hash_data_by_file, progress_call_back=None):
     """
-    _summary_
+    Assigns a padded 2D array to storage class property
 
-    :param hash_data_by_file: _description_
-    :type hash_data_by_file: bool
-    :param progress_call_back: _description_, defaults to None
-    :type progress_call_back: _type_, optional
-    :return: _description_
-    :rtype: _type_
+    :param hash_data_by_file: A dictionary where key is the file name without extension and value is an instance of a custom storage object
+    :type hash_data_by_file: {str: [:class:`.JSONThreeDStorage`]}
+    :param progress_call_back: A call back function accepting as arguments the number of the current file processed and the number of overall files to be processed, defaults to None
+    :type progress_call_back: func(counter, overall_counter), optional
+    :return:
+        Result class instance.
+        - .result = True if padded array was successfully assigned. Otherwise False.
+        - .message will contain array size.
+    :rtype: :class:`.Result`
     """
 
     result = res.Result()
-    call_back_progress_counter = 0
-    # build default hash tables where all values are -1
-    for key, hash_by_file in hash_data_by_file.items():
-        padded_array = _get_padded_default_array(
-            merged_column_headers=hash_by_file.merged_column_headers,
-            merged_row_headers=hash_by_file.merged_row_headers,
-        )
-        hash_data_by_file[key].padded_default_hash_table = padded_array
-        result.append_message(
-            "{}: Created padded default value array of size {} by {}".format(
-                key, len(padded_array), len(padded_array[0])
+    try:
+        call_back_progress_counter = 0
+        # build default hash tables where all values are -1
+        for key, hash_by_file in hash_data_by_file.items():
+            padded_array = _get_padded_default_array(
+                merged_column_headers=hash_by_file.merged_column_headers,
+                merged_row_headers=hash_by_file.merged_row_headers,
             )
+            hash_data_by_file[key].padded_default_hash_table = padded_array
+            result.append_message(
+                "{}: Created padded default value array of size {} by {}".format(
+                    key, len(padded_array), len(padded_array[0])
+                )
+            )
+            call_back_progress_counter = call_back_progress_counter + 1
+            if progress_call_back is not None:
+                progress_call_back(call_back_progress_counter, len(hash_data_by_file))
+        result.result.append(hash_data_by_file)
+    except Exception as e:
+        result.update_sep(
+            False, "Failed to assigned padded default array with: {}".format(e)
         )
-        call_back_progress_counter = call_back_progress_counter + 1
-        if progress_call_back is not None:
-            progress_call_back(call_back_progress_counter, len(hash_data_by_file))
-    result.result.append(hash_data_by_file)
     return result
 
 
@@ -283,58 +291,66 @@ def _assign_padded_default_array(hash_data_by_file, progress_call_back=None):
 
 def _assign_row_indices_pointer(hash_data_by_file, progress_call_back=None):
     """
-    _summary_
+    Creates row and index pointers per file which map the file specific rows and column to the overall padded array rows and columns.
 
-    :param hash_data_by_file: _description_
-    :type hash_data_by_file: bool
-    :param progress_call_back: _description_, defaults to None
-    :type progress_call_back: _type_, optional
-    :return: _description_
-    :rtype: _type_
+    :param hash_data_by_file: A dictionary where key is the file name without extension and value is an instance of a custom storage object
+    :type hash_data_by_file: {str: [:class:`.JSONThreeDStorage`]}
+    :param progress_call_back: A call back function accepting as arguments the number of the current file processed and the number of overall files to be processed, defaults to None
+    :type progress_call_back: func(counter, overall_counter), optional
+    :return:
+        Result class instance.
+        - .result = True if row and column index pointers where successfully assigned. Otherwise False.
+        - .message will contain array size.
+    :rtype: :class:`.Result`
     """
 
     result = res.Result()
-    call_back_progress_counter = 0
-    # build row and column indices list for mapping of value hash table entries to default hash table
-    for key, hash_by_file in hash_data_by_file.items():
-        # Find the indices for row and column headers in the merged headers
-        row_indices_all = [
-            hash_by_file.merged_row_headers.index(row)
-            for row in hash_by_file.row_headers
-        ]
-        column_indices_all = [
-            hash_by_file.merged_column_headers.index(col)
-            for col in hash_by_file.column_headers
-        ]
+    try:
+        call_back_progress_counter = 0
+        # build row and column indices list for mapping of value hash table entries to default hash table
+        for key, hash_by_file in hash_data_by_file.items():
+            # Find the indices for row and column headers in the merged headers
+            row_indices_all = [
+                hash_by_file.merged_row_headers.index(row)
+                for row in hash_by_file.row_headers
+            ]
+            column_indices_all = [
+                hash_by_file.merged_column_headers.index(col)
+                for col in hash_by_file.column_headers
+            ]
 
-        hash_data_by_file[key].row_indices = row_indices_all
-        hash_data_by_file[key].column_indices = column_indices_all
-        result.append_message(
-            "{}: Created row: {} and column: {} indices mapper.".format(
-                key, len(row_indices_all), len(column_indices_all)
+            hash_data_by_file[key].row_indices = row_indices_all
+            hash_data_by_file[key].column_indices = column_indices_all
+            result.append_message(
+                "{}: Created row: {} and column: {} indices mapper.".format(
+                    key, len(row_indices_all), len(column_indices_all)
+                )
             )
+            call_back_progress_counter = call_back_progress_counter + 1
+            if progress_call_back is not None:
+                progress_call_back(call_back_progress_counter, len(hash_data_by_file))
+        result.result.append(hash_data_by_file)
+    except Exception as e:
+        result.update_sep(
+            False, "Failed to assigned row and column index pointers with: {}".format(e)
         )
-        call_back_progress_counter = call_back_progress_counter + 1
-        if progress_call_back is not None:
-            progress_call_back(call_back_progress_counter, len(hash_data_by_file))
-    result.result.append(hash_data_by_file)
     return result
 
 
 def _update_default_array_values(row_indices, col_indices, default_array, value_array):
     """
-    _summary_
+    Updates the default padded arrays with hash values from file specific array using row and column index pointers.
 
-    :param row_indices: _description_
-    :type row_indices: _type_
-    :param col_indices: _description_
-    :type col_indices: _type_
-    :param default_array: _description_
-    :type default_array: _type_
-    :param value_array: _description_
-    :type value_array: _type_
-    :return: _description_
-    :rtype: _type_
+    :param row_indices: Row index mapper from file specific array to default array.
+    :type row_indices: [int]
+    :param col_indices: _Column index mapper from file specific array to default array.
+    :type col_indices: [int]
+    :param default_array: The default 2D array
+    :type default_array: [[int],[int],]
+    :param value_array: The file specific 2D array
+    :type value_array: [[int],[int],]
+    :return: Default array updated with file specific array values.
+    :rtype: [[int],[int],]
     """
 
     # Fill in the values from array_model_a
@@ -346,67 +362,84 @@ def _update_default_array_values(row_indices, col_indices, default_array, value_
 
 def _assign_default_array_values(hash_data_by_file, progress_call_back=None):
     """
-    _summary_
+    Assigns file specific array values to default arrays by file.
 
-    :param hash_data_by_file: _description_
-    :type hash_data_by_file: bool
-    :param progress_call_back: _description_, defaults to None
-    :type progress_call_back: _type_, optional
-    :return: _description_
-    :rtype: _type_
+    :param hash_data_by_file: A dictionary where key is the file name without extension and value is an instance of a custom storage object
+    :type hash_data_by_file: {str: [:class:`.JSONThreeDStorage`]}
+    :param progress_call_back: A call back function accepting as arguments the number of the current file processed and the number of overall files to be processed, defaults to None
+    :type progress_call_back: func(counter, overall_counter), optional
+    :return:
+        Result class instance.
+        - .result = True if default arrays where successfully updated with values from file specific arrays. Otherwise False.
+        - .message will contain array size.
+    :rtype: :class:`.Result`
     """
 
     result = res.Result()
-    call_back_progress_counter = 0
-    # update the default hash table for each file with values from the value hash table from the same file
-    for key, hash_by_file in hash_data_by_file.items():
-        updated_array = _update_default_array_values(
-            row_indices=hash_by_file.row_indices,
-            col_indices=hash_by_file.column_indices,
-            default_array=hash_by_file.padded_default_hash_table,
-            value_array=hash_by_file.hash_table,
-        )
-        hash_by_file.padded_value_hash_table = updated_array
-        result.append_message(
-            "{}: Updated padded default value array with values of size {} by {}".format(
-                key, len(updated_array), len(updated_array[0])
+    try:
+        call_back_progress_counter = 0
+        # update the default hash table for each file with values from the value hash table from the same file
+        for key, hash_by_file in hash_data_by_file.items():
+            updated_array = _update_default_array_values(
+                row_indices=hash_by_file.row_indices,
+                col_indices=hash_by_file.column_indices,
+                default_array=hash_by_file.padded_default_hash_table,
+                value_array=hash_by_file.hash_table,
             )
+            hash_by_file.padded_value_hash_table = updated_array
+            result.append_message(
+                "{}: Updated padded default value array with values of size {} by {}".format(
+                    key, len(updated_array), len(updated_array[0])
+                )
+            )
+            call_back_progress_counter = call_back_progress_counter + 1
+            if progress_call_back is not None:
+                progress_call_back(call_back_progress_counter, len(hash_data_by_file))
+        result.result.append(hash_data_by_file)
+    except Exception as e:
+        result.update_sep(
+            False,
+            "Failed to assigned file specific array values to default array: {}".format(
+                e
+            ),
         )
-        call_back_progress_counter = call_back_progress_counter + 1
-        if progress_call_back is not None:
-            progress_call_back(call_back_progress_counter, len(hash_data_by_file))
-    result.result.append(hash_data_by_file)
     return result
 
 
 def _built_threeD_array(hash_data_by_file):
     """
-    _summary_
+    Combine 2D default hash arrays from all files into single 3D hash array.
 
-    :param hash_data_by_file: _description_
-    :type hash_data_by_file: bool
-    :return: _description_
-    :rtype: _type_
+    :param hash_data_by_file: A dictionary where key is the file name without extension and value is an instance of a custom storage object
+    :type hash_data_by_file: {str: [:class:`.JSONThreeDStorage`]}
+    :return:
+        Result class instance.
+        - .result = True if 3D array was successfully created. Otherwise False.
+        - .message will contain array size.
+        -. result will contain the 3D array as first value in list
+    :rtype: :class:`.Result`
     """
 
     result = res.Result()
-    array_3d = []
-    z_value = 0
-    x_value = 0
-    y_value = 0
-    for key, hash_by_file in hash_data_by_file.items():
-        array_3d.append(hash_by_file.padded_value_hash_table)
-        x_value = len(hash_by_file.padded_value_hash_table)
-        y_value = len(hash_by_file.padded_value_hash_table[0])
-        z_value = z_value + 1
+    try:
+        array_3d = []
+        z_value = 0
+        x_value = 0
+        y_value = 0
+        for key, hash_by_file in hash_data_by_file.items():
+            array_3d.append(hash_by_file.padded_value_hash_table)
+            x_value = len(hash_by_file.padded_value_hash_table)
+            y_value = len(hash_by_file.padded_value_hash_table[0])
+            z_value = z_value + 1
 
-    result.append_message(
-        "Built 3D array of size: number of files: {} , by number of categories: {} , by number of view templates: {}".format(
-            z_value, x_value, y_value
+        result.append_message(
+            "Built 3D array of size: number of files: {} , by number of categories: {} , by number of view templates: {}".format(
+                z_value, x_value, y_value
+            )
         )
-    )
-
-    result.result.append(array_3d)
+        result.result.append(array_3d)
+    except Exception as e:
+        result.update_sep(False, "Failed to build 3D array: {}".format(e))
     return result
 
 
@@ -414,76 +447,73 @@ def _flatten_threeD_array(
     array_3d, sample_storage, model_names, hash_data_by_file, progress_call_back=None
 ):
     """
-    _summary_
+    Flattens the 3D array build from hash tables from each file into a json structure easily read by power bi.
 
-    :param array_3d: _description_
-    :type array_3d: _type_
-    :param sample_storage: _description_
-    :type sample_storage: _type_
-    :param model_names: _description_
-    :type model_names: _type_
-    :param hash_data_by_file: _description_
-    :type hash_data_by_file: bool
-    :param progress_call_back: _description_, defaults to None
-    :type progress_call_back: _type_, optional
-    :return: _description_
-    :rtype: _type_
+    :param array_3d: A 3D array.
+    :type array_3d: [[[]]]
+    :param sample_storage: Storage instance used to map view template names and category names using merged lists.
+    :type sample_storage: :class:`.JSONThreeDStorage`
+    :param model_names: List of all model names of which view template data is included in 3D hash array.
+    :type model_names: [str]
+    :param hash_data_by_file: A dictionary where key is the file name without extension and value is an instance of a custom storage object
+    :type hash_data_by_file: {str: [:class:`.JSONThreeDStorage`]}
+    :param progress_call_back: A call back function accepting as arguments the number of the current file processed and the number of overall files to be processed, defaults to None
+    :type progress_call_back: func(counter, overall_counter), optional
+    :return:
+        Result class instance.
+        - .result = True if 3D array was successfully created. Otherwise False.
+        - .message will contain array size.
+        -. result will contain the flatten array as first value in list
+    :rtype: :class:`.Result`
     """
 
     result = res.Result()
-    call_back_progress_counter = 0
-    # flatten 3D hash data for power bi
-    flattened_data = []
-    for model_name, layer in enumerate(array_3d):
-        for category, row in enumerate(layer):
-            for view_template, hash_value in enumerate(row):
-                flattened_data.append(
-                    {
-                        "view_template": sample_storage.merged_column_headers[
-                            view_template
-                        ],
-                        "category": sample_storage.merged_row_headers[category],
-                        "model_name": model_names[model_name],
-                        "hash_value": hash_value,
-                    }
-                )
-        call_back_progress_counter = call_back_progress_counter + 1
-        if progress_call_back is not None:
-            progress_call_back(call_back_progress_counter, len(hash_data_by_file))
-
-    result.result.append(flattened_data)
+    try:
+        call_back_progress_counter = 0
+        # flatten 3D hash data for power bi
+        flattened_data = []
+        for model_name, layer in enumerate(array_3d):
+            for category, row in enumerate(layer):
+                for view_template, hash_value in enumerate(row):
+                    flattened_data.append(
+                        {
+                            "view_template": sample_storage.merged_column_headers[
+                                view_template
+                            ],
+                            "category": sample_storage.merged_row_headers[category],
+                            "model_name": model_names[model_name],
+                            "hash_value": hash_value,
+                        }
+                    )
+            call_back_progress_counter = call_back_progress_counter + 1
+            if progress_call_back is not None:
+                progress_call_back(call_back_progress_counter, len(hash_data_by_file))
+        result.result.append(flattened_data)
+    except Exception as e:
+        result.update_sep(False, "Failed to flatten 3D array: {}".format(e))
     return result
 
 
 def convert_vt_data_to_3d_flattened(json_files, progress_call_back=None):
     """
-    _summary_
+    Converts view template graphic overrides data stored in files into flattened json formatted hash table array for import to power bi.
 
-    :param json_files: _description_
-    :type json_files: _type_
-    :param progress_call_back: _description_, defaults to None
-    :type progress_call_back: _type_, optional
-    :raises ValueError: _description_
-    :raises ValueError: _description_
-    :raises ValueError: _description_
-    :raises ValueError: _description_
-    :raises ValueError: _description_
-    :return: _description_
-    :rtype: _type_
+    :param json_files: List of files containing view template data of Revit project files. ( One json file per Revit project file)
+    :type json_files: [str]
+    :param progress_call_back: A call back function accepting as arguments the number of the current file processed and the number of overall files to be processed, defaults to None
+    :type progress_call_back: func(counter, overall_counter), optional
+
+    :return:
+        Result class instance.
+        - .result = True if flattened array was successfully created. Otherwise False.
+        - .message will contain array size.
+        -. result will contain the flatten array as first value in list
+    :rtype: :class:`.Result`
     """
 
     result = res.Result()
     try:
-        # get all files containing view template files in a given directory
-        # json_files = get_files_single_directory(
-        #    folder_path=directory_path,
-        #    file_prefix="",
-        #   file_suffix="VT_Overrides",
-        #   file_extension=".csv",
-        # )
-        # result.append_message("Found {} files: {}".format(len(json_files), json_files))
-
-        # load json data from all files found
+        # load json data from all files
         json_data_loaded = _load_json_data(
             files=json_files, progress_call_back=progress_call_back
         )
@@ -501,7 +531,7 @@ def convert_vt_data_to_3d_flattened(json_files, progress_call_back=None):
 
         # merge row and column headers into unique value lists and store them in each storage instance
         hash_data_by_file = _merge_column_headers(hash_data_by_file=hash_data_by_file)
-        hash_data_by_file =_merge_row_headers(hash_data_by_file=hash_data_by_file)
+        hash_data_by_file = _merge_row_headers(hash_data_by_file=hash_data_by_file)
 
         for key, entry in hash_data_by_file.items():
             result.append_message(

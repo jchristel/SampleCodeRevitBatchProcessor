@@ -248,7 +248,7 @@ def build_patterns_dictionary_by_name(doc):
     lp_dic = {}
     lps = get_all_line_patterns(doc)
     for lp in lps:
-        pattern_name = lp.GetFillPattern().Name
+        pattern_name = lp.GetLinePattern().Name
         if pattern_name in lp_dic:
             lp_dic[pattern_name].append(lp.Id)
         else:

@@ -196,10 +196,10 @@ def get_files_from_directory_walker(path, filter):
     :rtype: list of str
     """
 
-    file_list = glob.glob(os.path.join(path, "*" + filter + "*.*"), recursive=True)
-    # files_found = []
-    # for root, dirs, files in os.walk(path):
-    #    for name in files:
-    #        if (filter in name) :
-    #            files_found.append(os.path.join(root, name))
+    #file_list = glob.glob(os.path.join(path, "*" + filter + "*.*"), recursive=True)
+    file_list = []
+    for root, dirs, files in os.walk(path):
+        for name in files:
+            if (filter in name) :
+                file_list.append(os.path.join(root, name))
     return file_list

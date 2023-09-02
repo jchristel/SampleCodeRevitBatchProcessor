@@ -213,6 +213,9 @@ def _merge_row_headers(hash_data_by_file):
         # this list is common for all files...update them
         for key, vt_setting in hash_data_by_file.items():
             vt_setting.merged_row_headers = data
+
+        return hash_data_by_file
+
     except Exception as e:
         raise ValueError(
             "Failed to merge row headers (object category names): {}".format(e)

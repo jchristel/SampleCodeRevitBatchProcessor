@@ -34,8 +34,10 @@ import clr
 
 
 import System
+
 clr.AddReference("System.Core")
 from System import Linq
+
 clr.ImportExtensions(Linq)
 
 
@@ -169,7 +171,7 @@ def get_number_of_view_filters(doc):
     """
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(get_all_filters(doc))
+        number = len(get_all_filters(doc).ToList())
     except Exception as e:
         raise ValueError("Failed to get number of view filters: {}".format(e))
     return number

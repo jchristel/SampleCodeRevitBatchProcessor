@@ -41,12 +41,23 @@ class JSONThreeDStorage(base.Base):
 
         super(JSONThreeDStorage, self).__init__()
         
+        # column headers stay the same between category and filter overrides since they represent the view template
+        # row headers vary between category and filter overrides:
+        #   - category overrides: they represent category sub category names
+        #   - filter overrides: represent filter names
+
         self.column_headers = []
         self.row_headers = []
+        self.row_headers_filters = []
         self.hash_table = []
+        self.hash_table_filters = []
         self.padded_default_hash_table = []
+        self.padded_default_hash_table_filters = []
         self.merged_column_headers=[]
         self.merged_row_headers = []
+        self.merged_row_headers_filters = []
         self.column_indices = []
         self.row_indices=[]
+        self.row_indices_filters=[]
         self.padded_value_hash_table = []
+        self.padded_value_hash_table_filters = []

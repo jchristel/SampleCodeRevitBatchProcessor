@@ -35,7 +35,9 @@ from duHast.Utilities.files_get import (
 from duHast.Revit.Views.Reporting.views_data_hash_report import (
     _get_hash_headers,
     _get_hash_rows_categories,
+    _get_hash_rows_filters,
     _get_hash_for_category_overrides,
+    _get_hash_for_filter_overrides,
 )
 from duHast.Revit.Views.Reporting.view_reports_json_props import PROP_FILE_NAME
 
@@ -89,13 +91,21 @@ def _get_category_hash_table_data_by_file(view_settings, progress_call_back=None
     for key, vt_setting in view_settings.items():
         column_headers = _get_hash_headers(vt_setting)
         row_headers = _get_hash_rows_categories(vt_setting)
-        hash_table = _get_hash_for_category_overrides(
+        row_headers_filters = _get_hash_rows_filters(vt_setting)
+        hash_table_category_overrides = _get_hash_for_category_overrides(
             headers=column_headers, row_headers=row_headers, views_settings=vt_setting
+        )
+        hash_table_filter_overrides = _get_hash_for_filter_overrides(
+            headers=column_headers,
+            row_headers=row_headers_filters,
+            views_settings=vt_setting,
         )
         storage = JSONThreeDStorage()
         storage.column_headers = column_headers
         storage.row_headers = row_headers
-        storage.hash_table = hash_table
+        storage.row_headers_filters = row_headers_filters
+        storage.hash_table = hash_table_category_overrides
+        storage.hash_table_filters = hash_table_filter_overrides
         dic_tables_by_file[key] = storage
         counter = counter + 1
         if progress_call_back is not None:
@@ -108,7 +118,7 @@ def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
     """
     Hash values returned from view templates have a really large range. This function maps them to their index in a sorted list.
     Note -1,0,1 are left unchanged.
-    Hash table will be updated with mapped values.
+    Hash tables for category and filter overrides will be updated with mapped values.
 
     :param hash_data_by_file: A dictionary where key is the file name without extension and value is an instance of a custom storage object
     :type hash_data_by_file: {str: [:class:`.JSONThreeDStorage`]}
@@ -118,46 +128,83 @@ def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
     :rtype: {str: [:class:`.JSONThreeDStorage`]}
     """
 
-    hash_mapper = []
+    hash_mapper_categories = []
+    hash_mapper_filters = []
     try:
         # build a unique list of all hash values
         for key, hash_data in hash_data_by_file.items():
             for entry in hash_data.hash_table:
-                hash_mapper = sorted(list(set(hash_mapper) | set(entry)))
+                hash_mapper_categories = sorted(
+                    list(set(hash_mapper_categories) | set(entry))
+                )
+            for entry in hash_data.hash_table_filters:
+                hash_mapper_filters = sorted(
+                    list(set(hash_mapper_filters) | set(entry))
+                )
 
         # note 0, 1, -1 are special values and can not need to be changed!!
         # remove them from the sorted list and then re-insert them at the beginning
-        if -1 in hash_mapper:
-            index = hash_mapper.index(-1)
-            hash_mapper.pop(index)
-        if 0 in hash_mapper:
-            index = hash_mapper.index(0)
-            hash_mapper.pop(index)
-        if 1 in hash_mapper:
-            index = hash_mapper.index(1)
-            hash_mapper.pop(index)
+        if -1 in hash_mapper_categories:
+            index = hash_mapper_categories.index(-1)
+            hash_mapper_categories.pop(index)
+        if 0 in hash_mapper_categories:
+            index = hash_mapper_categories.index(0)
+            hash_mapper_categories.pop(index)
+        if 1 in hash_mapper_categories:
+            index = hash_mapper_categories.index(1)
+            hash_mapper_categories.pop(index)
 
-        hash_mapper.insert(0, -1)
-        hash_mapper.insert(0, 0)
-        hash_mapper.insert(0, 1)
+        hash_mapper_categories.insert(0, -1)
+        hash_mapper_categories.insert(0, 0)
+        hash_mapper_categories.insert(0, 1)
+
+        if -1 in hash_mapper_filters:
+            index = hash_mapper_filters.index(-1)
+            hash_mapper_filters.pop(index)
+        if 0 in hash_mapper_filters:
+            index = hash_mapper_filters.index(0)
+            hash_mapper_filters.pop(index)
+        if 1 in hash_mapper_filters:
+            index = hash_mapper_filters.index(1)
+            hash_mapper_filters.pop(index)
+
+        hash_mapper_filters.insert(0, -1)
+        hash_mapper_filters.insert(0, 0)
+        hash_mapper_filters.insert(0, 1)
 
         # loop over current hash values and replace with index of value in mapper list
         # preserve -1, 0, 1 values
 
         call_back_progress_counter = 0
         for key, hash_data in hash_data_by_file.items():
-            mapped_hash_table = []
+            # update categories hash table
+            mapped_hash_table_categories = []
             for row in hash_data.hash_table:
                 new_row = []
                 for entry in row:
                     if entry > 1 or entry < -1:
-                        mapped_index = hash_mapper.index(entry)
+                        mapped_index = hash_mapper_categories.index(entry)
                         new_row.append(mapped_index)
                     else:
                         new_row.append(entry)
-                mapped_hash_table.append(new_row)
+                mapped_hash_table_categories.append(new_row)
+            # overwrite existing hash table
+            hash_data.hash_table = mapped_hash_table_categories
 
-            hash_data.hash_table = mapped_hash_table
+            # update filters hash table
+            mapped_hash_table_filters = []
+            for row in hash_data.hash_table_filters:
+                new_row = []
+                for entry in row:
+                    if entry > 1 or entry < -1:
+                        mapped_index = mapped_hash_table_filters.index(entry)
+                        new_row.append(mapped_index)
+                    else:
+                        new_row.append(entry)
+                mapped_hash_table_filters.append(new_row)
+            # overwrite existing hash table
+            hash_data.hash_table_filters = mapped_hash_table_filters
+            # update call back
             call_back_progress_counter = call_back_progress_counter + 1
             if progress_call_back is not None:
                 progress_call_back(call_back_progress_counter, len(hash_data_by_file))
@@ -169,6 +216,7 @@ def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
 def _merge_column_headers(hash_data_by_file):
     """
     Builds a unique list of column headers ( view template names )
+    This list is the same for filter and category overrides.
 
     :param hash_data_by_file: A dictionary where key is the file name without extension and value is an instance of a custom storage object
     :type hash_data_by_file: {str: [:class:`.JSONThreeDStorage`]}
@@ -196,7 +244,7 @@ def _merge_column_headers(hash_data_by_file):
 
 def _merge_row_headers(hash_data_by_file):
     """
-    Builds a unique list of row headers ( object categories names )
+    Builds a unique list of row headers for  object categories names and filter names.
 
     :param hash_data_by_file: A dictionary where key is the file name without extension and value is an instance of a custom storage object
     :type hash_data_by_file: {str: [:class:`.JSONThreeDStorage`]}
@@ -205,14 +253,24 @@ def _merge_row_headers(hash_data_by_file):
     """
 
     try:
-        data = []
-        # build list with unique entries
+        data_category_names = []
+        data_filter_names = []
+        # build list with unique entries for category names
         for key, vt_setting in hash_data_by_file.items():
-            data = sorted(list(set(data) | set(vt_setting.row_headers)))
+            data_category_names = sorted(
+                list(set(data_category_names) | set(vt_setting.row_headers))
+            )
 
-        # this list is common for all files...update them
+        # build list with unique entries for filter names
         for key, vt_setting in hash_data_by_file.items():
-            vt_setting.merged_row_headers = data
+            data_filter_names = sorted(
+                list(set(data_filter_names) | set(vt_setting.row_headers_filters))
+            )
+
+        # these lists are common for all files...update them
+        for key, vt_setting in hash_data_by_file.items():
+            vt_setting.merged_row_headers = data_category_names
+            vt_setting.merged_row_headers_filters = data_filter_names
 
         return hash_data_by_file
 
@@ -266,16 +324,26 @@ def _assign_padded_default_array(hash_data_by_file, progress_call_back=None):
     result = res.Result()
     try:
         call_back_progress_counter = 0
-        # build default hash tables where all values are -1
+        # build default hash tables where all values are -1 for categories and filters
         for key, hash_by_file in hash_data_by_file.items():
-            padded_array = _get_padded_default_array(
+            padded_array_categories = _get_padded_default_array(
                 merged_column_headers=hash_by_file.merged_column_headers,
                 merged_row_headers=hash_by_file.merged_row_headers,
             )
-            hash_data_by_file[key].padded_default_hash_table = padded_array
+            padded_array_filters = _get_padded_default_array(
+                merged_column_headers=hash_data_by_file.merged_column_headers,
+                merged_row_headers=hash_by_file.merged_row_headers_filters,
+            )
+            hash_data_by_file[key].padded_default_hash_table = padded_array_categories
+            hash_by_file[key].padded_default_hash_table_filters = padded_array_filters
             result.append_message(
-                "{}: Created padded default value array of size {} by {}".format(
-                    key, len(padded_array), len(padded_array[0])
+                "{}: Created padded categories default value array of size {} by {}".format(
+                    key, len(padded_array_categories), len(padded_array_categories[0])
+                )
+            )
+            result.append_message(
+                "{}: Created padded filters default value array of size {} by {}".format(
+                    key, len(padded_array_filters), len(padded_array_filters[0])
                 )
             )
             call_back_progress_counter = call_back_progress_counter + 1
@@ -313,20 +381,29 @@ def _assign_row_indices_pointer(hash_data_by_file, progress_call_back=None):
         # build row and column indices list for mapping of value hash table entries to default hash table
         for key, hash_by_file in hash_data_by_file.items():
             # Find the indices for row and column headers in the merged headers
-            row_indices_all = [
+            row_indices_categories_all = [
                 hash_by_file.merged_row_headers.index(row)
                 for row in hash_by_file.row_headers
             ]
+            row_indices_filters_all = [
+                hash_by_file.merged_row_headers_filters.index(row)
+                for row in hash_by_file.row_headers_filters
+            ]
+            # column header indices are the same for filters and categories
             column_indices_all = [
                 hash_by_file.merged_column_headers.index(col)
                 for col in hash_by_file.column_headers
             ]
 
-            hash_data_by_file[key].row_indices = row_indices_all
+            hash_data_by_file[key].row_indices = row_indices_categories_all
+            hash_data_by_file[key].row_indices_filters = row_indices_filters_all
             hash_data_by_file[key].column_indices = column_indices_all
             result.append_message(
-                "{}: Created row: {} and column: {} indices mapper.".format(
-                    key, len(row_indices_all), len(column_indices_all)
+                "{}: Created categories row: {} , filters row {} and column: {} indices mapper.".format(
+                    key,
+                    len(row_indices_categories_all),
+                    len(row_indices_filters_all),
+                    len(column_indices_all),
                 )
             )
             call_back_progress_counter = call_back_progress_counter + 1
@@ -365,7 +442,7 @@ def _update_default_array_values(row_indices, col_indices, default_array, value_
 
 def _assign_default_array_values(hash_data_by_file, progress_call_back=None):
     """
-    Assigns file specific array values to default arrays by file.
+    Assigns file specific array values to default arrays for categories and filters by file.
 
     :param hash_data_by_file: A dictionary where key is the file name without extension and value is an instance of a custom storage object
     :type hash_data_by_file: {str: [:class:`.JSONThreeDStorage`]}
@@ -383,18 +460,39 @@ def _assign_default_array_values(hash_data_by_file, progress_call_back=None):
         call_back_progress_counter = 0
         # update the default hash table for each file with values from the value hash table from the same file
         for key, hash_by_file in hash_data_by_file.items():
-            updated_array = _update_default_array_values(
+            updated_array_categories = _update_default_array_values(
                 row_indices=hash_by_file.row_indices,
                 col_indices=hash_by_file.column_indices,
                 default_array=hash_by_file.padded_default_hash_table,
                 value_array=hash_by_file.hash_table,
             )
-            hash_by_file.padded_value_hash_table = updated_array
+
+            updated_array_filters = _update_default_array_values(
+                row_indices=hash_by_file.row_indices_filters,
+                col_indices=hash_by_file.column_indices,
+                default_array=hash_by_file.padded_default_hash_table_filters,
+                value_array=hash_by_file.hash_table_filters,
+            )
+
+            hash_by_file.padded_value_hash_table = updated_array_categories
+            hash_by_file.padded_value_hash_table_filters = updated_array_filters
+
             result.append_message(
-                "{}: Updated padded default value array with values of size {} by {}".format(
-                    key, len(updated_array), len(updated_array[0])
+                "{}: Updated padded category default value array with values of size {} by {}".format(
+                    key,
+                    len(updated_array_categories),
+                    len(updated_array_categories[0]),
                 )
             )
+
+            result.append_message(
+                "{}: Updated padded filter default value array with values of size {} by {}".format(
+                    key,
+                    len(updated_array_filters),
+                    len(updated_array_filters[0]),
+                )
+            )
+
             call_back_progress_counter = call_back_progress_counter + 1
             if progress_call_back is not None:
                 progress_call_back(call_back_progress_counter, len(hash_data_by_file))
@@ -419,34 +517,54 @@ def _built_threeD_array(hash_data_by_file):
         Result class instance.
         - .result = True if 3D array was successfully created. Otherwise False.
         - .message will contain array size.
-        -. result will contain the 3D array as first value in list
+        -. result will contain the 3D array for categories as first value in list and the 3D array for filters as the second value in list
     :rtype: :class:`.Result`
     """
 
     result = res.Result()
     try:
-        array_3d = []
-        z_value = 0
-        x_value = 0
-        y_value = 0
+        array_3d_categories = []
+
+        z_value_categories = 0
+        x_value_categories = 0
+        y_value_categories = 0
+
+        array_3d_filters = []
+        z_value_filters = 0
+        x_value_filters = 0
+        y_value_filters = 0
+
         for key, hash_by_file in hash_data_by_file.items():
-            array_3d.append(hash_by_file.padded_value_hash_table)
-            x_value = len(hash_by_file.padded_value_hash_table)
-            y_value = len(hash_by_file.padded_value_hash_table[0])
-            z_value = z_value + 1
+            # categories
+            array_3d_categories.append(hash_by_file.padded_value_hash_table)
+            x_value_categories = len(hash_by_file.padded_value_hash_table)
+            y_value_categories = len(hash_by_file.padded_value_hash_table[0])
+            z_value_categories = z_value_categories + 1
+            # filters
+            array_3d_filters.append(hash_by_file.padded_value_hash_table_filters)
+            x_value_filters = len(hash_by_file.padded_value_hash_table_filters)
+            y_value_filters = len(hash_by_file.padded_value_hash_table_filters[0])
+            z_value_filters = z_value_filters + 1
 
         result.append_message(
-            "Built 3D array of size: number of files: {} , by number of categories: {} , by number of view templates: {}".format(
-                z_value, x_value, y_value
+            "Built 3D category array of size: number of files: {} , by number of categories: {} , by number of view templates: {}".format(
+                z_value_categories, x_value_categories, y_value_categories
             )
         )
-        result.result.append(array_3d)
+        result.append_message(
+            "Built 3D filter array of size: number of files: {} , by number of filters: {} , by number of view templates: {}".format(
+                z_value_filters, x_value_filters, y_value_filters
+            )
+        )
+
+        result.result.append(array_3d_categories)
+        result.result.append(array_3d_filters)
     except Exception as e:
         result.update_sep(False, "Failed to build 3D array: {}".format(e))
     return result
 
 
-def _flatten_threeD_array(
+def _flatten_category_threeD_array(
     array_3d, sample_storage, model_names, hash_data_by_file, progress_call_back=None
 ):
     """
@@ -484,6 +602,57 @@ def _flatten_threeD_array(
                                 view_template
                             ],
                             "category": sample_storage.merged_row_headers[category],
+                            "model_name": model_names[model_name],
+                            "hash_value": hash_value,
+                        }
+                    )
+            call_back_progress_counter = call_back_progress_counter + 1
+            if progress_call_back is not None:
+                progress_call_back(call_back_progress_counter, len(hash_data_by_file))
+        result.result.append(flattened_data)
+    except Exception as e:
+        result.update_sep(False, "Failed to flatten 3D array: {}".format(e))
+    return result
+
+
+def _flatten_filter_threeD_array(
+    array_3d, sample_storage, model_names, hash_data_by_file, progress_call_back=None
+):
+    """
+    Flattens the 3D array build from hash tables from each file into a json structure easily read by power bi.
+
+    :param array_3d: A 3D array.
+    :type array_3d: [[[]]]
+    :param sample_storage: Storage instance used to map view template names and category names using merged lists.
+    :type sample_storage: :class:`.JSONThreeDStorage`
+    :param model_names: List of all model names of which view template data is included in 3D hash array.
+    :type model_names: [str]
+    :param hash_data_by_file: A dictionary where key is the file name without extension and value is an instance of a custom storage object
+    :type hash_data_by_file: {str: [:class:`.JSONThreeDStorage`]}
+    :param progress_call_back: A call back function accepting as arguments the number of the current file processed and the number of overall files to be processed, defaults to None
+    :type progress_call_back: func(counter, overall_counter), optional
+    :return:
+        Result class instance.
+        - .result = True if 3D array was successfully created. Otherwise False.
+        - .message will contain array size.
+        -. result will contain the flatten array as first value in list
+    :rtype: :class:`.Result`
+    """
+
+    result = res.Result()
+    try:
+        call_back_progress_counter = 0
+        # flatten 3D hash data for power bi
+        flattened_data = []
+        for model_name, layer in enumerate(array_3d):
+            for filter, row in enumerate(layer):
+                for view_template, hash_value in enumerate(row):
+                    flattened_data.append(
+                        {
+                            "view_template": sample_storage.merged_column_headers[
+                                view_template
+                            ],
+                            "filter": sample_storage.merged_row_headers_filters[filter],
                             "model_name": model_names[model_name],
                             "hash_value": hash_value,
                         }
@@ -576,7 +745,8 @@ def convert_vt_data_to_3d_flattened(json_files, progress_call_back=None):
                     # check if all is ok
                     if array_3d_status.status:
                         # get the 3D array
-                        array_3d = array_3d_status.result[0]
+                        array_3d_categories = array_3d_status.result[0]
+                        array_3d_filters = array_3d_status.result[1]
 
                         # Get an arbitrary key-value pair using the dictionary's iterator
                         # since all storage instance store the same merged rows and column headers lists
@@ -585,29 +755,46 @@ def convert_vt_data_to_3d_flattened(json_files, progress_call_back=None):
                         # built a list of model names from the keys of the hash data dictionary
                         model_names = list(hash_data_by_file.keys())
 
-                        # flatten the 3D array for power bi
-                        flatten_array_status = _flatten_threeD_array(
-                            array_3d=array_3d,
+                        # flatten the category 3D array for power bi
+                        flatten_category_array_status = _flatten_category_threeD_array(
+                            array_3d=array_3d_categories,
                             sample_storage=first_value,
                             model_names=model_names,
                             hash_data_by_file=hash_data_by_file,
                             progress_call_back=progress_call_back,
                         )
-                        result.update(flatten_array_status)
+                        result.update(flatten_category_array_status)
+
+                        # flatten the filter 3D array for power bi
+                        flatten_filter_array_status = _flatten_filter_threeD_array(
+                            array_3d=array_3d_filters,
+                            sample_storage=first_value,
+                            model_names=model_names,
+                            hash_data_by_file=hash_data_by_file,
+                            progress_call_back=progress_call_back,
+                        )
+                        result.update(flatten_filter_array_status)
+
                         # check if all is ok
-                        if flatten_array_status.status:
-                            # get the flattened 3D array
-                            result.result = [flatten_array_status.result[0]]
+                        if (
+                            flatten_category_array_status.status
+                            and flatten_filter_array_status.status
+                        ):
+                            # get the flattened 3D arrays
+                            result.result = [
+                                flatten_category_array_status.result[0],
+                                flatten_filter_array_status.result[0],
+                            ]
                         else:
                             raise ValueError(
-                                "Failed to flatten 3D array: {}".format(
-                                    flatten_array_status.message
+                                "Failed to flatten 3D arrays: {} and {}".format(
+                                    flatten_category_array_status.message,
+                                    flatten_filter_array_status.message,
                                 )
                             )
-
                     else:
                         raise ValueError(
-                            "Failed to build 3D array: {}".format(
+                            "Failed to build 3D arrays: {}".format(
                                 array_3d_status.message
                             )
                         )

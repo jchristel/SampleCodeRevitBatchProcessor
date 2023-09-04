@@ -331,11 +331,11 @@ def _assign_padded_default_array(hash_data_by_file, progress_call_back=None):
                 merged_row_headers=hash_by_file.merged_row_headers,
             )
             padded_array_filters = _get_padded_default_array(
-                merged_column_headers=hash_data_by_file.merged_column_headers,
+                merged_column_headers=hash_by_file.merged_column_headers,
                 merged_row_headers=hash_by_file.merged_row_headers_filters,
             )
             hash_data_by_file[key].padded_default_hash_table = padded_array_categories
-            hash_by_file[key].padded_default_hash_table_filters = padded_array_filters
+            hash_data_by_file[key].padded_default_hash_table_filters = padded_array_filters
             result.append_message(
                 "{}: Created padded categories default value array of size {} by {}".format(
                     key, len(padded_array_categories), len(padded_array_categories[0])
@@ -707,8 +707,8 @@ def convert_vt_data_to_3d_flattened(json_files, progress_call_back=None):
 
         for key, entry in hash_data_by_file.items():
             result.append_message(
-                "{}: number of merged column headers: {} and merged row headers: {}".format(
-                    key, len(entry.merged_column_headers), len(entry.merged_row_headers)
+                "{}: number of merged column headers: {} , merged category row headers: {} and number of merged filter row headers: {}".format(
+                    key, len(entry.merged_column_headers), len(entry.merged_row_headers), len(entry.merged_row_headers_filters)
                 )
             )
 

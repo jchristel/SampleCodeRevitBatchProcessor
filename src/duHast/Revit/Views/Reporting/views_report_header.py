@@ -27,7 +27,7 @@ This module contains the header row for any Revit sheet and views reports.
 #
 
 #: header used in views report
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import FilteredElementCollector, ViewPlan, ViewSheet, ViewSchedule
 
 #: header used in views report
 REPORT_VIEWS_HEADER = ["HOSTFILE", "Id" ,"CREATED BY"]
@@ -52,7 +52,7 @@ def get_sheets_report_headers(doc):
     :rtype: list str
     """
 
-    collector_views = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet)
+    collector_views = FilteredElementCollector(doc).OfClass(ViewSheet)
     # copy headers list
     headers = REPORT_SHEETS_HEADER[:]
     for v in collector_views:
@@ -77,7 +77,7 @@ def get_schedules_report_headers(doc):
     :rtype: list str
     """
 
-    collector_views = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSchedule)
+    collector_views = FilteredElementCollector(doc).OfClass(ViewSchedule)
     # copy headers list
     headers = REPORT_SCHEDULES_HEADER[:]
     for v in collector_views:
@@ -104,7 +104,7 @@ def get_views_report_headers(doc):
     :rtype: list str
     """
 
-    collector_views = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewPlan)
+    collector_views = FilteredElementCollector(doc).OfClass(ViewPlan)
     # copy headers list
     headers = REPORT_VIEWS_HEADER[:]
     for v in collector_views:

@@ -26,7 +26,7 @@ This module contains the Revit view schedule report functionality.
 #
 #
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import ViewType
 
 from duHast.Revit.Views.Reporting.views_report_header import (
     REPORT_SCHEDULES_HEADER,
@@ -41,9 +41,9 @@ from duHast.Revit.Views.Reporting.view_property_utils import convert_view_data_t
 
 #: list of schedule types to be reported on.
 SCHEDULE_TYPES = [
-    rdb.ViewType.Schedule,
-    rdb.ViewType.ColumnSchedule,
-    rdb.ViewType.PanelSchedule,
+    ViewType.Schedule,
+    ViewType.ColumnSchedule,
+    ViewType.PanelSchedule,
 ]
 
 

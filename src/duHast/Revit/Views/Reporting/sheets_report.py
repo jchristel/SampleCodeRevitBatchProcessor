@@ -26,7 +26,8 @@ This module contains the Revit sheet report functionality.
 #
 #
 
-import Autodesk.Revit.DB as rdb
+
+from Autodesk.Revit.DB import FilteredElementCollector, ViewSheet
 
 from duHast.Revit.Views.Reporting.views_report_header import (
     REPORT_SHEETS_HEADER,
@@ -51,7 +52,7 @@ def get_sheet_report_data(doc, host_name):
     :rtype: list of list of str
     """
 
-    collector_views = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet)
+    collector_views = FilteredElementCollector(doc).OfClass(ViewSheet)
     views = []
     for v in collector_views:
         # get all parameters attached to sheet

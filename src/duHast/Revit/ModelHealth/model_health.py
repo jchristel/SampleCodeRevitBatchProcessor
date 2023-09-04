@@ -33,10 +33,11 @@ and or data can be exported to text files which can be used to visualize key met
 import clr
 import os
 import System
+
 clr.AddReference("System.Core")
 from System import Linq
-clr.ImportExtensions(Linq)
 
+clr.ImportExtensions(Linq)
 
 
 from duHast.Revit.ModelHealth.Reporting.Properties.view import (
@@ -56,38 +57,56 @@ from duHast.Revit.ModelHealth.Reporting.Properties.rooms import (
     get_number_of_unplaced_rooms,
 )
 
-
 from duHast.Revit.ModelHealth.Reporting.Properties.constants import (
     FAILED_TO_RETRIEVE_VALUE,
     MODEL_HEALTH_TRACKER_FAMILY,
+)
+
+from duHast.Revit.ModelHealth.Reporting.Properties.design_set_options import (
+    get_number_of_design_options,
+    get_number_of_design_sets,
+)
+
+from duHast.Revit.ModelHealth.Reporting.Properties.line_styles_types import (
+    get_number_of_line_styles,
+    get_number_of_fill_patterns,
+    get_number_of_line_patterns,
+)
+
+from duHast.Revit.ModelHealth.Reporting.Properties.links_cad import (
+    get_number_of_cad_imports,
+    get_number_of_cad_links_to_model,
+    get_number_of_cad_links_to_view,
+)
+
+from duHast.Revit.ModelHealth.Reporting.Properties.groups import (
+    get_number_of_detail_groups,
+    get_number_of_model_groups,
+    get_number_of_unplaced_detail_groups,
+    get_number_of_unplaced_model_groups,
 )
 
 
 from duHast.Revit.BIM360 import bim_360 as b360
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities import date_stamps as dateStamp, files_io as fileIO
-from duHast.Revit.Common import design_set_options as rDoS
 from duHast.Revit.Warnings import warnings as rWarn
 from duHast.Revit.Common import worksets as rWork
 
-from duHast.Revit.LinePattern import line_patterns as rLinePat
-from duHast.Revit.LinePattern import fill_patterns as rFill
-from duHast.Revit.LinePattern import line_styles as rLineStyle
-from duHast.Revit.Links import cad_links as rCadLink
+
 from duHast.Revit.Links import image_links as rImageLink
 from duHast.Revit.ModelHealth.Reporting import report_file_names as rFns
 from duHast.Revit.Family import family_utils as rFams
 from duHast.Revit.Common import groups as rGrp
-from duHast.Revit.Rooms import rooms as rRooms
+
 from duHast.Revit.DetailItems import detail_items as rDetItems
 from duHast.Revit.Common import parameter_set_utils as rParaSet
 from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Revit.Common.revit_version import get_revit_version_number
+
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
 from collections import namedtuple
-
-# constants
 
 
 def _cast_parameter_value(p_value):
@@ -284,163 +303,7 @@ def get_number_of_warnings(doc):
     try:
         number = len(rWarn.get_warnings(doc))
     except Exception as e:
-        raise ValueError ("Failed to get number of warnings: {}".format(e))
-    return number
-
-
-def get_number_of_design_sets(doc):
-    """
-    Gets the number of design sets in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of design sets in model. On exception it will return -1
-    :rtype: int
-    """
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rDoS.get_design_sets(doc))
-    except Exception as e:
-        raise ValueError ("Failed to get number of design sets: {}".format(e))
-    return number
-
-
-def get_number_of_design_options(doc):
-    """
-    Gets the number of design options in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of design option in model. On exception it will return -1
-    :rtype: int
-    """
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rDoS.get_design_options(doc).ToList())
-    except Exception as e:
-        raise ValueError ("Failed to get number of design options: {}".format(e))
-    return number
-
-
-# --------------------------------------------- LINE STYLES / TYPES  ---------------------------------------------
-
-
-def get_number_of_line_styles(doc):
-    """
-    Gets the number of line styles in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of line styles in model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rLineStyle.get_all_line_style_ids(doc))
-    except Exception as e:
-        raise ValueError ("Failed to get number of line styles: {}".format(e))
-    return number
-
-
-def get_number_of_line_patterns(doc):
-    """
-    Gets the number of line patterns in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of line patterns in model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rLinePat.get_all_line_patterns(doc).ToList())
-    except Exception as e:
-        raise ValueError ("Failed to get number of line patterns: {}".format(e))
-    return number
-
-
-def get_number_of_fill_patterns(doc):
-    """
-    Gets the number of fill pattern in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of fill pattern in model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rFill.get_all_fill_pattern(doc).ToList())
-    except Exception as e:
-        raise ValueError ("Failed to get number of fill patterns: {}".format(e))
-    return number
-
-
-# --------------------------------------------- CAD links  ---------------------------------------------
-
-
-def get_number_of_cad_imports(doc):
-    """
-    Gets the number of CAD imports in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of CAD imports in model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rCadLink.get_cad_type_imports_only(doc))
-    except Exception as e:
-        raise ValueError ("Failed to get number of cad imports: {}".format(e))
-    return number
-
-
-def get_number_of_cad_links_to_model(doc):
-    """
-    Gets the number of CAD links by model in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of CAD links by model in model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rCadLink.get_all_cad_link_type_in_model_only(doc))
-    except Exception as e:
-        raise ValueError ("Failed to get number of cad links to model: {}".format(e))
-    return number
-
-
-def get_number_of_cad_links_to_view(doc):
-    """
-    Gets the number of CAD links by view in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of CAD links by view in model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rCadLink.get_all_cad_link_type_by_view_only(doc))
-    except Exception as e:
-        raise ValueError ("Failed to get number of cad links to views: {}".format(e))
+        raise ValueError("Failed to get number of warnings: {}".format(e))
     return number
 
 
@@ -462,7 +325,7 @@ def get_number_of_image_imports(doc):
     try:
         number = len(rImageLink.get_all_image_link_type_imported_in_model(doc))
     except Exception as e:
-        raise ValueError ("Failed to get number of image imports: {}".format(e))
+        raise ValueError("Failed to get number of image imports: {}".format(e))
     return number
 
 
@@ -481,7 +344,7 @@ def get_number_of_image_links(doc):
     try:
         number = len(rImageLink.get_all_image_link_type_linked_in_model(doc))
     except Exception as e:
-        raise ValueError ("Failed to get number of image links: {}".format(e))
+        raise ValueError("Failed to get number of image links: {}".format(e))
     return number
 
 
@@ -503,7 +366,7 @@ def get_number_of_families(doc):
     try:
         number = len(rFams.get_all_loadable_families(doc))
     except Exception as e:
-        raise ValueError ("Failed to get number of families: {}".format(e))
+        raise ValueError("Failed to get number of families: {}".format(e))
     return number
 
 
@@ -522,86 +385,7 @@ def get_number_of_in_place_families(doc):
     try:
         number = len(rFams.get_all_in_place_families(doc))
     except Exception as e:
-        raise ValueError ("Failed to get number of in place families: {}".format(e))
-    return number
-
-
-# ---------------------------------------------  Groups  ---------------------------------------------
-
-
-def get_number_of_detail_groups(doc):
-    """
-    Gets the number of detail group definitions the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of detail group definitions in the model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rGrp.get_detail_groups(doc))
-    except Exception as e:
-        raise ValueError ("Failed to get number of detail groups: {}".format(e))
-    return number
-
-
-def get_number_of_model_groups(doc):
-    """
-    Gets the number of model group definitions in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of model group definitions in the model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rGrp.get_model_groups(doc))
-    except Exception as e:
-        raise ValueError ("Failed to get number of model groups: {}".format(e))
-    return number
-
-
-def get_number_of_unplaced_detail_groups(doc):
-    """
-    Gets the number of unplaced detail group definitions in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of unplaced detail group definitions in the model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rGrp.get_unplaced_detail_groups(doc))
-    except Exception as e:
-        raise ValueError ("Failed to get number of unplaced detail groups: {}".format(e))
-    return number
-
-
-def get_number_of_unplaced_model_groups(doc):
-    """
-    Gets the number of unplaced model group definitions in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of unplaced model group definitions in the model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rGrp.get_unplaced_model_groups(doc))
-    except Exception as e:
-        raise ValueError ("Failed to get number of unplaced model groups: {}".format(e))
+        raise ValueError("Failed to get number of in place families: {}".format(e))
     return number
 
 
@@ -622,7 +406,7 @@ def get_number_of_filled_regions(doc):
     try:
         number = len(rDetItems.get_filled_regions_in_model(doc))
     except Exception as e:
-        raise ValueError ("Failed to get number of filled regions: {}".format(e))
+        raise ValueError("Failed to get number of filled regions: {}".format(e))
     return number
 
 

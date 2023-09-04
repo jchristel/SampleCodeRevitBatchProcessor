@@ -30,17 +30,16 @@ A base class used to store processing steps during conversion of view template s
 
 from duHast.Utilities.Objects import base
 
-class JSONThreeDStorage(base.Base):
 
+class JSONThreeDStorage(base.Base):
     def __init__(self):
-        
         """
         Class constructor.
 
         """
 
         super(JSONThreeDStorage, self).__init__()
-        
+
         # column headers stay the same between category and filter overrides since they represent the view template
         # row headers vary between category and filter overrides:
         #   - category overrides: they represent category sub category names
@@ -53,11 +52,11 @@ class JSONThreeDStorage(base.Base):
         self.hash_table_filters = []
         self.padded_default_hash_table = []
         self.padded_default_hash_table_filters = []
-        self.merged_column_headers=[]
+        self.merged_column_headers = []
         self.merged_row_headers = []
         self.merged_row_headers_filters = []
         self.column_indices = []
-        self.row_indices=[]
-        self.row_indices_filters=[]
+        self.row_indices = []
+        self.row_indices_filters = []
         self.padded_value_hash_table = []
         self.padded_value_hash_table_filters = []

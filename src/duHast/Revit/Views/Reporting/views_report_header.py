@@ -30,7 +30,7 @@ This module contains the header row for any Revit sheet and views reports.
 import Autodesk.Revit.DB as rdb
 
 #: header used in views report
-REPORT_VIEWS_HEADER = ["HOSTFILE", "Id"]
+REPORT_VIEWS_HEADER = ["HOSTFILE", "Id" ,"CREATED BY"]
 
 #: header used in sheets report
 REPORT_SHEETS_HEADER = ["HOSTFILE", "Id"]

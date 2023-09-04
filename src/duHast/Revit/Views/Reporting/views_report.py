@@ -76,9 +76,11 @@ def get_views_report_data(doc, host_name):
         for v in collector_views:
             # get all parameters attached to sheet
             paras = v.GetOrderedParameters()
+            info = rdb.GetWorksharingTooltipInfo(doc,v.Id)
             data = {
                 REPORT_VIEWS_HEADER[0]: host_name,
                 REPORT_VIEWS_HEADER[1]: str(v.Id),
+                REPORT_VIEWS_HEADER[2]: info.Creator,
             }
             for para in paras:
                 # get values as utf-8 encoded strings

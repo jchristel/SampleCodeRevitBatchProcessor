@@ -30,13 +30,13 @@ This module contains the header row for any Revit sheet and views reports.
 from Autodesk.Revit.DB import FilteredElementCollector, ViewPlan, ViewSheet, ViewSchedule
 
 #: header used in views report
-REPORT_VIEWS_HEADER = ["HOSTFILE", "Id" ,"CREATED BY"]
+REPORT_VIEWS_HEADER = ["HOSTFILE", "Id" ,"CREATED BY", "LAST CHANGED BY","OWNER"]
 
 #: header used in sheets report
-REPORT_SHEETS_HEADER = ["HOSTFILE", "Id"]
+REPORT_SHEETS_HEADER = ["HOSTFILE", "Id" ,"CREATED BY", "LAST CHANGED BY","OWNER"]
 
 #: header used in schedules report
-REPORT_SCHEDULES_HEADER = ["HOSTFILE", "Id"]
+REPORT_SCHEDULES_HEADER = ["HOSTFILE", "Id" ,"CREATED BY", "LAST CHANGED BY","OWNER"]
 
 
 def get_sheets_report_headers(doc):

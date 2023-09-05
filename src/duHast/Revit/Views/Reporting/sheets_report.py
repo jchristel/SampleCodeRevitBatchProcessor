@@ -19,15 +19,15 @@ This module contains the Revit sheet report functionality.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
 
-from Autodesk.Revit.DB import FilteredElementCollector, ViewSheet
+from Autodesk.Revit.DB import FilteredElementCollector, ViewSheet, WorksharingUtils
 
 from duHast.Revit.Views.Reporting.views_report_header import (
     REPORT_SHEETS_HEADER,
@@ -57,9 +57,20 @@ def get_sheet_report_data(doc, host_name):
     for v in collector_views:
         # get all parameters attached to sheet
         paras = v.GetOrderedParameters()
+        info = WorksharingUtils.GetWorksharingTooltipInfo(doc, v.Id)
+        # check values and substitute any empty strings
+        owner = info.Owner
+        last_changed_by = (info.LastChangedBy,)
+        if info.Owner == "":
+            owner = "not applicable"
+        if info.LastChangedBy == "":
+            last_changed_by = "not applicable"
         data = {
             REPORT_SHEETS_HEADER[0]: host_name,
             REPORT_SHEETS_HEADER[1]: str(v.Id),
+            REPORT_SHEETS_HEADER[2]: info.Creator,
+            REPORT_SHEETS_HEADER[3]: last_changed_by,
+            REPORT_SHEETS_HEADER[4]: owner,
         }
         for para in paras:
             # get values as utf-8 encoded strings

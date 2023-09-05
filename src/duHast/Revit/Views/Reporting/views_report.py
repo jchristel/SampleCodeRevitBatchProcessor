@@ -26,7 +26,7 @@ This module contains the Revit view report functionality.
 #
 #
 
-from Autodesk.Revit.DB import ViewType, GetWorksharingTooltipInfo
+from Autodesk.Revit.DB import ViewType, WorksharingUtils
 
 from duHast.Revit.Views.Reporting.views_report_header import (
     REPORT_VIEWS_HEADER,
@@ -76,11 +76,20 @@ def get_views_report_data(doc, host_name):
         for v in collector_views:
             # get all parameters attached to sheet
             paras = v.GetOrderedParameters()
-            info = GetWorksharingTooltipInfo(doc,v.Id)
+            info = WorksharingUtils.GetWorksharingTooltipInfo(doc,v.Id)
+            # check values and substitute any empty strings
+            owner = info.Owner
+            last_changed_by = info.LastChangedBy,
+            if(info.Owner == ""):
+                owner = "not applicable"
+            if(info.LastChangedBy==""):
+                last_changed_by = "not applicable"
             data = {
                 REPORT_VIEWS_HEADER[0]: host_name,
                 REPORT_VIEWS_HEADER[1]: str(v.Id),
                 REPORT_VIEWS_HEADER[2]: info.Creator,
+                REPORT_VIEWS_HEADER[3]: last_changed_by,
+                REPORT_VIEWS_HEADER[4]: owner,
             }
             for para in paras:
                 # get values as utf-8 encoded strings

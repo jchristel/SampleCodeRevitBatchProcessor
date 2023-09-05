@@ -1,9 +1,9 @@
 import pandas as pd
 
-json_file_path = "/Users/janchristel/Documents/GitHub/SampleCodeRevitBatchProcessor/test/Data/Jupyter/FILE_ONE_VT_Overrides.csv"
+json_file_path = "/Users/janchristel/Documents/GitHub/SampleCodeRevitBatchProcessor/test/Data/Jupyter/VT_Overrides.json"
 df = pd.read_json(json_file_path)
 
-parquet_output_path = "/Users/janchristel/Documents/GitHub/SampleCodeRevitBatchProcessor/test/Data/Jupyter/FILE_ONE_VT_Overrides.parquet"
+parquet_output_path = "/Users/janchristel/Documents/GitHub/SampleCodeRevitBatchProcessor/test/Data/Jupyter/VT_Overrides.parquet"
 df.to_parquet(parquet_output_path, engine="fastparquet")
 
 

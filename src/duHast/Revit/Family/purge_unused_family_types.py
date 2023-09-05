@@ -19,14 +19,14 @@ This module contains a number of helper functions relating to purging Revit fami
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
-from duHast.Revit.Common import purge_utils as rPurgeUtils
-from duHast.Utilities import utility as util
+from duHast.Revit.Common.purge_utils import has_dependent_elements
+from duHast.Utilities.utility import remove_items_from_list
 from duHast.Revit.Family.family_utils import (
     get_family_symbols_ids,
     get_symbols_from_type,
@@ -84,7 +84,7 @@ def get_unused_in_place_ids_for_purge(doc, unused_type_getter):
     for key, value in families.items():
         if family_all_types_in_use(value, unused_type_ids):
             unused_family_ids.append(key)
-            unused_type_ids = util.remove_items_from_list(unused_type_ids, value)
+            unused_type_ids = remove_items_from_list(unused_type_ids, value)
     # check whether entire families can be purged and if so add their ids to list to be returned
     if len(unused_family_ids) > 0:
         unused_ids = unused_family_ids + unused_type_ids
@@ -121,7 +121,7 @@ def get_used_unused_type_ids(doc, type_id_getter, use_type=0, exclude_shared_fam
     ids = []
     for type_id in all_type_ids:
         type = doc.GetElement(type_id)
-        has_dependents = rPurgeUtils.has_dependent_elements(doc, type)
+        has_dependents = has_dependent_elements(doc, type)
         if has_dependents == use_type:
             ids.append(type_id)
     return ids

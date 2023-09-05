@@ -20,18 +20,27 @@ This module contains a number of helper functions relating to dimensions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import (
+    BuiltInParameter,
+    ElementId,
+    FilteredElementCollector,
+    DimensionType,
+    Dimension,
+)
 
-from duHast.Revit.Common import parameter_get_utils as rParaGet
-from duHast.Revit.Common import common as com
-from duHast.Revit.Annotation import arrow_heads as rArrow
+from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value
+from duHast.Revit.Common.common import get_ids_from_element_collector
+from duHast.Revit.Annotation.arrow_heads import (
+    get_arrow_head_ids_from_type,
+    ARROWHEAD_PARAS_DIM,
+)
 
 
 def get_dim_types(doc):
@@ -43,7 +52,7 @@ def get_dim_types(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of DimensionType
     """
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.DimensionType)
+    return FilteredElementCollector(doc).OfClass(DimensionType)
 
 
 def get_dim_type_ids(doc):
@@ -56,8 +65,8 @@ def get_dim_type_ids(doc):
     """
 
     ids = []
-    col = rdb.FilteredElementCollector(doc).OfClass(rdb.DimensionType)
-    ids = com.get_ids_from_element_collector(col)
+    col = FilteredElementCollector(doc).OfClass(DimensionType)
+    ids = get_ids_from_element_collector(col)
     return ids
 
 
@@ -70,7 +79,7 @@ def get_all_dimension_elements(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of Dimension
     """
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.Dimension)
+    return FilteredElementCollector(doc).OfClass(Dimension)
 
 
 def get_symbol_ids_from_dim_types(doc):
@@ -85,10 +94,10 @@ def get_symbol_ids_from_dim_types(doc):
     ids = []
     dim_ts = get_dim_types(doc)
     for t in dim_ts:
-        id = rParaGet.get_built_in_parameter_value(
-            t, rdb.BuiltInParameter.DIM_STYLE_CENTERLINE_SYMBOL
+        id = get_built_in_parameter_value(
+            t, BuiltInParameter.DIM_STYLE_CENTERLINE_SYMBOL
         )
-        if id not in ids and id != rdb.ElementId.InvalidElementId and id != None:
+        if id not in ids and id != ElementId.InvalidElementId and id != None:
             ids.append(id)
     return ids
 
@@ -102,7 +111,5 @@ def get_dim_type_arrow_head_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    used_ids = rArrow.get_arrow_head_ids_from_type(
-        doc, get_dim_types, rArrow.ARROWHEAD_PARAS_DIM
-    )
+    used_ids = get_arrow_head_ids_from_type(doc, get_dim_types, ARROWHEAD_PARAS_DIM)
     return used_ids

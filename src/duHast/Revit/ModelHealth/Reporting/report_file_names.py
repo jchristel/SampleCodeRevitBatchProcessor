@@ -52,6 +52,14 @@ PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED = "_NumberOfViewsNotPlaced"
 PARAM_ACTIONS_FILENAME_NO_OF_VIEW_FILTERS = "_NumberOfViewFilters"
 #: report file name suffix : view filters unused
 PARAM_ACTIONS_FILENAME_NO_OF_VIEW_FILTERS_UNUSED = "_NumberOfViewFiltersUnused"
+#: report file name suffix : text styles
+PARAM_ACTIONS_FILENAME_NO_OF_TEXT_STYLES = "_NumberOfTextStyles"
+#: report file name suffix : view filters unused
+PARAM_ACTIONS_FILENAME_NO_OF_TEXT_STYLES_UNUSED = "_NumberOfTextStylesUnused"
+#: report file name suffix : text styles
+PARAM_ACTIONS_FILENAME_NO_OF_DIMENSION_STYLES = "_NumberOfDimStyles"
+#: report file name suffix : view filters unused
+PARAM_ACTIONS_FILENAME_NO_OF_DIMENSION_STYLES_UNUSED = "_NumberOfDimStylesUnused"
 #: report file name suffix : view templates
 PARAM_ACTIONS_FILENAME_NO_OF_VIEW_TEMPLATES = "_NumberOfViewTemplates"
 #: report file name suffix : view template unused

@@ -86,6 +86,13 @@ from duHast.Revit.ModelHealth.Reporting.Properties.groups import (
     get_number_of_unplaced_model_groups,
 )
 
+from duHast.Revit.ModelHealth.Reporting.Properties.annotations import (
+    get_number_of_dimension_types,
+    get_number_of_unused_dimension_types,
+    get_number_of_text_types,
+    get_number_of_unused_text_types,
+)
+
 
 from duHast.Revit.BIM360 import bim_360 as b360
 from duHast.Utilities.Objects import result as res
@@ -519,6 +526,20 @@ PARAM_ACTIONS = {
     ),
     "ValueFilledRegions": health_data_action(
         get_number_of_filled_regions, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS
+    ),
+    "ValueDimensionStyles": health_data_action(
+        get_number_of_dimension_types, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DIMENSION_STYLES
+    ),
+    "ValueDimensionStylesUnused": health_data_action(
+        get_number_of_unused_dimension_types,
+        rFns.PARAM_ACTIONS_FILENAME_NO_OF_DIMENSION_STYLES_UNUSED,
+    ),
+    "ValueTextStyles": health_data_action(
+        get_number_of_text_types, rFns.PARAM_ACTIONS_FILENAME_NO_OF_TEXT_STYLES
+    ),
+    "ValueTextStylesUnused": health_data_action(
+        get_number_of_unused_text_types,
+        rFns.PARAM_ACTIONS_FILENAME_NO_OF_TEXT_STYLES_UNUSED,
     ),
     "ValueDateLastUpdated": health_data_action(
         get_current_date, rFns.PARAM_ACTIONS_FILENAME_DATE_LAST_UPDATED

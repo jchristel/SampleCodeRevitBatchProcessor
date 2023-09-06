@@ -4,8 +4,12 @@ A class used to return status, messages and objects back to a caller.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-A class used to return the value if any, a message and the status of a method (true if everything is ok or false if something went wrong).
+A class used to store and manipulate the results of a process or operation.
 
+    Attributes:
+        message (str): The message associated with the result.
+        status (bool): The status of the result.
+        result (list): The result of the process or operation.
 """
 
 
@@ -36,6 +40,7 @@ from duHast.Utilities.Objects import base
 
 
 class Result(base.Base):
+    
     def __init__(self):
         """
         Class constructor.

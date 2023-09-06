@@ -42,18 +42,24 @@ class TimerError(Exception):
 
 
 class Timer(base.Base):
+    """
+    A class that provides functionality to measure the elapsed time between starting and stopping the timer.
+    """
+
     def __init__(self):
+        """
+        Initializes a new instance of the Timer class.
+        """
         self._stop_watch = None
 
         super(Timer, self).__init__()
 
     def start(self):
         """
-        Start a new timer
+        Starts a new timer.
 
-        :raises TimerError: When timer is running already.
+        :raises TimerError: When the timer is already running.
         """
-
         if self._stop_watch is not None:
             raise TimerError("Timer is running. Use .stop() to stop it")
 
@@ -62,14 +68,12 @@ class Timer(base.Base):
 
     def stop(self):
         """
-        Stop the timer, and report the elapsed time.
+        Stops the timer and returns the elapsed time.
 
-        :raises TimerError: When timer is not running yet.
+        :raises TimerError: When the timer is not running yet.
         :return: The elapsed time since the timer has started.
-
         :rtype: str
         """
-
         if self._stop_watch is None:
             raise TimerError("Timer is not running. Use .start() to start it")
         self._stop_watch.Stop()
@@ -89,10 +93,12 @@ class Timer(base.Base):
 
     def is_running(self):
         """
-        Check whether the stop watch running.
-        """
+        Checks whether the timer is running.
 
-        if (self._stop_watch is None):
+        :return: True if the timer is running, False otherwise.
+        :rtype: bool
+        """
+        if self._stop_watch is None:
             return False
         else:
             return True

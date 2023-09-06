@@ -36,6 +36,60 @@ This class provides some utility functions to all child classes:
 import json
 
 
+"""
+The `Base` class is a parent class that provides common functionalities and methods for its subclasses. It includes a constructor, a debug output method, a comparison method, a hash method, a method to convert the instance to JSON, a method to convert string properties to UTF-8 in JSON conversion, a method to check if an object is a Python primitive, and a method to convert the class to a dictionary.
+
+Example Usage:
+    # Creating a subclass of Base
+    class MyClass(Base):
+        def __init__(self, name):
+            super(MyClass, self).__init__()
+            self.name = name
+
+    # Creating an instance of MyClass
+    obj = MyClass("example")
+
+    # Printing the debug output
+    print(obj)
+
+    # Comparing two instances
+    obj1 = MyClass("example")
+    obj2 = MyClass("example")
+    print(obj1 == obj2)
+
+    # Converting the instance to JSON
+    json_data = obj.to_json()
+
+    # Converting the instance to JSON with UTF-8 string properties
+    json_data_utf = obj.to_json_utf()
+
+    # Converting the instance to a dictionary
+    dict_data = obj.class_to_dict()
+
+Main functionalities:
+- The `Base` class allows for multi-inheritance in its subclasses.
+- It provides a debug output method that returns a string representation of the class properties.
+- It provides a comparison method that checks if two instances are of the same class.
+- It provides a hash method required for the custom comparison method.
+- It provides a method to convert the instance to JSON.
+- It provides a method to convert string properties to UTF-8 in JSON conversion.
+- It provides a method to check if an object is a Python primitive.
+- It provides a method to convert the class to a dictionary.
+
+Methods:
+- `__init__(self, **kwargs)`: The class constructor that forwards all unused arguments to the super class.
+- `__repr__(self)`: Enables detailed debug output of all class properties.
+- `__eq__(self, other)`: Custom compare is equal override.
+- `__hash__(self)`: Custom hash override.
+- `to_json(self)`: Convert the instance of this class to JSON.
+- `string_to_utf(self, o)`: Convert any properties stored as string to UTF-8 in JSON conversion.
+- `to_json_utf(self)`: Convert the instance of this class to JSON with UTF-8 string properties.
+- `_is_primitive(self, obj)`: Checks whether an object is a Python primitive.
+- `class_to_dict(self)`: Returns all class properties and their values as a dictionary.
+
+Fields:
+- No specific fields are defined in the `Base` class.
+"""
 class Base(object):
     def __init__(self, **kwargs):
         """

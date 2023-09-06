@@ -56,10 +56,14 @@ PARAM_ACTIONS_FILENAME_NO_OF_VIEW_FILTERS_UNUSED = "_NumberOfViewFiltersUnused"
 PARAM_ACTIONS_FILENAME_NO_OF_TEXT_STYLES = "_NumberOfTextStyles"
 #: report file name suffix : view filters unused
 PARAM_ACTIONS_FILENAME_NO_OF_TEXT_STYLES_UNUSED = "_NumberOfTextStylesUnused"
-#: report file name suffix : text styles
+#: report file name suffix : dimension styles
 PARAM_ACTIONS_FILENAME_NO_OF_DIMENSION_STYLES = "_NumberOfDimStyles"
-#: report file name suffix : view filters unused
+#: report file name suffix : dimension unused
 PARAM_ACTIONS_FILENAME_NO_OF_DIMENSION_STYLES_UNUSED = "_NumberOfDimStylesUnused"
+#: report file name suffix : arrow head styles
+PARAM_ACTIONS_FILENAME_NO_OF_ARROW_HEAD_STYLES = "_NumberOfArrowHeadStyles"
+#: report file name suffix : arrow head styles unused
+PARAM_ACTIONS_FILENAME_NO_OF_ARROW_HEAD_STYLES_UNUSED = "_NumberOfArrowHeadStylesUnused"
 #: report file name suffix : view templates
 PARAM_ACTIONS_FILENAME_NO_OF_VIEW_TEMPLATES = "_NumberOfViewTemplates"
 #: report file name suffix : view template unused
@@ -141,4 +145,10 @@ PARAM_ACTIONS_FILENAMES = {
     PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT,
     PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS,
     PARAM_ACTIONS_FILENAME_DATE_LAST_UPDATED,
+    PARAM_ACTIONS_FILENAME_NO_OF_ARROW_HEAD_STYLES,
+    PARAM_ACTIONS_FILENAME_NO_OF_ARROW_HEAD_STYLES_UNUSED,
+    PARAM_ACTIONS_FILENAME_NO_OF_TEXT_STYLES,
+    PARAM_ACTIONS_FILENAME_NO_OF_TEXT_STYLES_UNUSED,
+    PARAM_ACTIONS_FILENAME_NO_OF_DIMENSION_STYLES,
+    PARAM_ACTIONS_FILENAME_NO_OF_ARROW_HEAD_STYLES_UNUSED
 }

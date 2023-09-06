@@ -91,6 +91,8 @@ from duHast.Revit.ModelHealth.Reporting.Properties.annotations import (
     get_number_of_unused_dimension_types,
     get_number_of_text_types,
     get_number_of_unused_text_types,
+    get_number_of_arrow_head_types,
+    get_number_of_unused_arrow_head_types,
 )
 
 
@@ -540,6 +542,13 @@ PARAM_ACTIONS = {
     "ValueTextStylesUnused": health_data_action(
         get_number_of_unused_text_types,
         rFns.PARAM_ACTIONS_FILENAME_NO_OF_TEXT_STYLES_UNUSED,
+    ),
+    "ValueArrowHeadStyles": health_data_action(
+        get_number_of_arrow_head_types, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ARROW_HEAD_STYLES
+    ),
+    "ValueArrowHeadStylesUnused": health_data_action(
+        get_number_of_unused_arrow_head_types,
+        rFns.PARAM_ACTIONS_FILENAME_NO_OF_ARROW_HEAD_STYLES_UNUSED,
     ),
     "ValueDateLastUpdated": health_data_action(
         get_current_date, rFns.PARAM_ACTIONS_FILENAME_DATE_LAST_UPDATED

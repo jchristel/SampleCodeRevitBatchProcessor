@@ -29,10 +29,9 @@ This module contains the Revit view template data to 3D hash report functionalit
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Views.Reporting.views_data_report import read_view_data_from_file
 from duHast.Utilities.files_get import (
-    get_files_single_directory,
     get_file_name_without_ext,
 )
-from duHast.Revit.Views.Reporting.views_data_hash_report import (
+from duHast.Revit.Views.Reporting.views_data_3d_hash_report_utilities import (
     _get_hash_headers,
     _get_hash_rows_categories,
     _get_hash_rows_filters,

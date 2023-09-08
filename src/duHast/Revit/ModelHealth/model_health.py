@@ -39,6 +39,29 @@ from System import Linq
 
 clr.ImportExtensions(Linq)
 
+from System.Collections.Generic import List
+from collections import namedtuple
+
+from Autodesk.Revit.DB import (
+    ParameterValueProvider,
+    BuiltInParameter,
+    ElementId,
+    ElementParameterFilter,
+    FamilyInstance,
+    FilteredElementCollector,
+    FilterStringEquals,
+    FilterStringRule,
+)
+
+from duHast.Utilities.Objects import result as res
+from duHast.Revit.ModelHealth.Reporting import report_file_names as rFns
+from duHast.Utilities.files_io import get_file_name_without_ext
+from duHast.Utilities.date_stamps import (
+    get_file_date_stamp,
+    get_date_stamp,
+    FILE_DATE_STAMP_YYYYMMDD_SPACE,
+    TIME_STAMP_HHMMSEC_COLON,
+)
 
 from duHast.Revit.ModelHealth.Reporting.Properties.view import (
     get_number_of_sheets,
@@ -95,27 +118,31 @@ from duHast.Revit.ModelHealth.Reporting.Properties.annotations import (
     get_number_of_unused_arrow_head_types,
 )
 
+from duHast.Revit.ModelHealth.Reporting.Properties.links_images import (
+    get_number_of_image_imports,
+    get_number_of_image_links,
+)
 
-from duHast.Revit.BIM360 import bim_360 as b360
-from duHast.Utilities.Objects import result as res
-from duHast.Utilities import date_stamps as dateStamp, files_io as fileIO
-from duHast.Revit.Warnings import warnings as rWarn
-from duHast.Revit.Common import worksets as rWork
+from duHast.Revit.ModelHealth.Reporting.Properties.general import (
+    get_number_of_warnings,
+    get_current_date,
+    get_workset_number,
+    get_current_file_size,
+)
+
+from duHast.Revit.ModelHealth.Reporting.Properties.families import (
+    get_number_of_families,
+    get_number_of_in_place_families,
+)
+
+from duHast.Revit.ModelHealth.Reporting.Properties.detail_items import (
+    get_number_of_filled_regions,
+)
 
 
-from duHast.Revit.Links import image_links as rImageLink
-from duHast.Revit.ModelHealth.Reporting import report_file_names as rFns
-from duHast.Revit.Family import family_utils as rFams
-from duHast.Revit.Common import groups as rGrp
-
-from duHast.Revit.DetailItems import detail_items as rDetItems
-from duHast.Revit.Common import parameter_set_utils as rParaSet
+from duHast.Revit.Common.parameter_set_utils import set_parameter_value
 from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Revit.Common.revit_version import get_revit_version_number
-
-import Autodesk.Revit.DB as rdb
-from System.Collections.Generic import List
-from collections import namedtuple
 
 
 def _cast_parameter_value(p_value):
@@ -153,10 +180,8 @@ def get_instances_of_model_health(doc):
     :rtype: list of Autodesk.Revit.DB.FamilyInstance
     """
 
-    provider = rdb.ParameterValueProvider(
-        rdb.ElementId(rdb.BuiltInParameter.ELEM_FAMILY_PARAM)
-    )
-    evaluator = rdb.FilterStringEquals()
+    provider = ParameterValueProvider(ElementId(BuiltInParameter.ELEM_FAMILY_PARAM))
+    evaluator = FilterStringEquals()
 
     revit_version = get_revit_version_number(doc=doc)
     # define rule with a placeholder
@@ -164,17 +189,15 @@ def get_instances_of_model_health(doc):
     # ge the rule depending on Revit version
     if revit_version <= 2022:
         # use case sensitive flag
-        rule = rdb.FilterStringRule(
-            provider, evaluator, MODEL_HEALTH_TRACKER_FAMILY, True
-        )
+        rule = FilterStringRule(provider, evaluator, MODEL_HEALTH_TRACKER_FAMILY, True)
     else:
         # case sensitive flag has been removed in Revit 2023 onwards
-        rule = rdb.FilterStringRule(provider, evaluator, MODEL_HEALTH_TRACKER_FAMILY)
+        rule = FilterStringRule(provider, evaluator, MODEL_HEALTH_TRACKER_FAMILY)
 
-    filter = rdb.ElementParameterFilter(rule)
+    filter = ElementParameterFilter(rule)
     return (
-        rdb.FilteredElementCollector(doc)
-        .OfClass(rdb.FamilyInstance)
+        FilteredElementCollector(doc)
+        .OfClass(FamilyInstance)
         .WherePasses(filter)
         .ToList()
     )
@@ -208,7 +231,7 @@ def get_parameters_of_instance(fam_instance, doc):
                 try:
                     parameter_value = PARAM_ACTIONS[p.Definition.Name].get_data(doc)
                     if parameter_value != FAILED_TO_RETRIEVE_VALUE:
-                        flag = rParaSet.set_parameter_value(
+                        flag = set_parameter_value(
                             p, _cast_parameter_value(parameter_value), doc
                         )
                         result_value.update(flag)
@@ -231,195 +254,6 @@ def get_parameters_of_instance(fam_instance, doc):
 
 
 # ----------------------------------------------
-# model properties
-# ----------------------------------------------
-
-# --------------------------------------------- GENERAL ---------------------------------------------
-
-
-def get_current_date(doc):
-    """
-    Get the current date
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: The current date in format YYYY_MM_DD.
-    :rtype: str
-
-    """
-    return dateStamp.get_file_date_stamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD)
-
-
-def get_workset_number(doc):
-    """
-    Gets the number of worksets in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: The number of worksets in a model.
-    :rtype: int
-    """
-
-    return len(rWork.get_worksets(doc))
-
-
-def get_file_size(doc):
-    """
-    Gets the file size in MB.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: File size in MB. On exception it will return -1
-    :rtype: int
-    """
-
-    size = FAILED_TO_RETRIEVE_VALUE
-    try:
-        # get the path from the document
-        # this will fail if not a file based doc or the document is detached
-        revit_file_path = doc.PathName
-        try:
-            # test if this is a cloud model
-            path = doc.GetCloudModelPath()
-            size = b360.get_model_file_size(doc)
-        except:
-            # local file server model
-            if fileIO.file_exist(revit_file_path):
-                # get file size in MB
-                size = fileIO.get_file_size(revit_file_path)
-            else:
-                raise ValueError("File not found: {}".format(revit_file_path))
-    except Exception as e:
-        raise ValueError("Failed to get file size with: {}".format(e))
-    return size
-
-
-def get_number_of_warnings(doc):
-    """
-    Gets the number of warnings in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of warnings in model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rWarn.get_warnings(doc))
-    except Exception as e:
-        raise ValueError("Failed to get number of warnings: {}".format(e))
-    return number
-
-
-# ---------------------------------------------  images  ---------------------------------------------
-
-
-def get_number_of_image_imports(doc):
-    """
-    Gets the number of image imports in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of image imports in model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rImageLink.get_all_image_link_type_imported_in_model(doc))
-    except Exception as e:
-        raise ValueError("Failed to get number of image imports: {}".format(e))
-    return number
-
-
-def get_number_of_image_links(doc):
-    """
-    Gets the number of image links in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of image links in model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rImageLink.get_all_image_link_type_linked_in_model(doc))
-    except Exception as e:
-        raise ValueError("Failed to get number of image links: {}".format(e))
-    return number
-
-
-# ---------------------------------------------  Families  ---------------------------------------------
-
-
-def get_number_of_families(doc):
-    """
-    Gets the number of families loaded into the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of families loaded into model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rFams.get_all_loadable_families(doc))
-    except Exception as e:
-        raise ValueError("Failed to get number of families: {}".format(e))
-    return number
-
-
-def get_number_of_in_place_families(doc):
-    """
-    Gets the number of in-place families the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of in-place in the model. On exception it will return -1
-    :rtype: int
-    """
-
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rFams.get_all_in_place_families(doc))
-    except Exception as e:
-        raise ValueError("Failed to get number of in place families: {}".format(e))
-    return number
-
-
-# ---------------------------------------------  Detail Items  ---------------------------------------------
-
-
-def get_number_of_filled_regions(doc):
-    """
-    Gets the number of filled region instances in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: Number of filled region instances in the model. On exception it will return -1
-    :rtype: int
-    """
-    number = FAILED_TO_RETRIEVE_VALUE
-    try:
-        number = len(rDetItems.get_filled_regions_in_model(doc))
-    except Exception as e:
-        raise ValueError("Failed to get number of filled regions: {}".format(e))
-    return number
-
-
-# ----------------------------------------------
 # main
 # ----------------------------------------------
 
@@ -432,7 +266,7 @@ PARAM_ACTIONS = {
         get_workset_number, rFns.PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS
     ),
     "ValueFileSize": health_data_action(
-        get_file_size, rFns.PARAM_ACTIONS_FILENAME_FILE_SIZE
+        get_current_file_size, rFns.PARAM_ACTIONS_FILENAME_FILE_SIZE
     ),
     "ValueWarnings": health_data_action(
         get_number_of_warnings, rFns.PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS
@@ -530,7 +364,8 @@ PARAM_ACTIONS = {
         get_number_of_filled_regions, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS
     ),
     "ValueDimensionStyles": health_data_action(
-        get_number_of_dimension_types, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DIMENSION_STYLES
+        get_number_of_dimension_types,
+        rFns.PARAM_ACTIONS_FILENAME_NO_OF_DIMENSION_STYLES,
     ),
     "ValueDimensionStylesUnused": health_data_action(
         get_number_of_unused_dimension_types,
@@ -544,7 +379,8 @@ PARAM_ACTIONS = {
         rFns.PARAM_ACTIONS_FILENAME_NO_OF_TEXT_STYLES_UNUSED,
     ),
     "ValueArrowHeadStyles": health_data_action(
-        get_number_of_arrow_head_types, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ARROW_HEAD_STYLES
+        get_number_of_arrow_head_types,
+        rFns.PARAM_ACTIONS_FILENAME_NO_OF_ARROW_HEAD_STYLES,
     ),
     "ValueArrowHeadStylesUnused": health_data_action(
         get_number_of_unused_arrow_head_types,
@@ -574,7 +410,7 @@ def update_model_health_tracer_family(doc, revit_file_path):
     :rtype: :class:`.Result`
     """
 
-    revit_file_name = fileIO.get_file_name_without_ext(revit_file_path)
+    revit_file_name = get_file_name_without_ext(revit_file_path)
     result_value = res.Result()
     instances = get_instances_of_model_health(doc)
     if len(instances) > 0:
@@ -618,7 +454,7 @@ def write_model_health_report(doc, revit_file_path, output_directory):
     :rtype: :class:`.Result`
     """
 
-    revit_file_name = fileIO.get_file_name_without_ext(revit_file_path)
+    revit_file_name = get_file_name_without_ext(revit_file_path)
     result_value = res.Result()
     # get values and write them out
     for key, value in PARAM_ACTIONS.items():
@@ -629,7 +465,7 @@ def write_model_health_report(doc, revit_file_path, output_directory):
         except Exception as e:
             parameter_value = FAILED_TO_RETRIEVE_VALUE
         file_name = (
-            dateStamp.get_file_date_stamp()
+            get_file_date_stamp()
             + revit_file_name
             + PARAM_ACTIONS[key].report_file_name
             + ".temp"
@@ -643,10 +479,8 @@ def write_model_health_report(doc, revit_file_path, output_directory):
                     [
                         revit_file_name,
                         key,
-                        dateStamp.get_date_stamp(
-                            dateStamp.FILE_DATE_STAMP_YYYYMMDD_SPACE
-                        ),
-                        dateStamp.get_date_stamp(dateStamp.TIME_STAMP_HHMMSEC_COLON),
+                        get_date_stamp(FILE_DATE_STAMP_YYYYMMDD_SPACE),
+                        get_date_stamp(TIME_STAMP_HHMMSEC_COLON),
                         _cast_parameter_value(parameter_value),
                     ]
                 ],

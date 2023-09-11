@@ -30,14 +30,7 @@ import clr
 import System
 
 # -------------------------------------------- common variables --------------------
-#: header used in reports
-REPORT_WARNINGS_HEADER = [
-    "HOSTFILE",
-    "ID",
-    "NAME",
-    "WARNING TYPE",
-    "NUMBER OF WARNINGS",
-]
+
 
 # --------------------------------------------- utility functions ------------------
 

@@ -98,20 +98,20 @@ def convert_warnings_data_to_list(warnings_data, headers):
     for key,value in warnings_data.items():
         number_elements_affected = 0
         dummy = None
-        for warning_data in value:
-            number_elements_affected = number_elements_affected + len(warning_data.element_ids)
-            dummy = warning_data
-        data.append(dummy.file_name, dummy.id, len(warning_data[key]), dummy.description, number_elements_affected)
+        for warning_data_instance in value:
+            number_elements_affected = number_elements_affected + len(warning_data_instance.element_ids)
+            dummy = warning_data_instance
+        # build a list with entries:
+        # file name, warning GUID, number of warnings belonging to warnings GUID, warnings description, number of elements involved overall
+        data.append([dummy.file_name, dummy.id, len(warnings_data[key]), dummy.description, number_elements_affected])
     return data
 
-def write_warnings_data(doc, file_name, current_file_name):
+def write_warnings_data(file_name, data):
     """
     Writes to file all warnings properties.
 
     file type: csv
 
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
     :param file_name: The fully qualified file path of the report file.
     :type file_name: str
     :param current_file_name: The current revit file name which will be appended to data in the report.
@@ -125,7 +125,6 @@ def write_warnings_data(doc, file_name, current_file_name):
 
     return_value = res.Result()
     try:
-        data = get_warnings_report_data(doc=doc, revit_file_name= current_file_name)
         data_converted = convert_warnings_data_to_list(data, REPORT_WARNINGS_HEADER)
         write_report_data_as_csv(file_name, REPORT_WARNINGS_HEADER, data_converted)
         return_value.update_sep(

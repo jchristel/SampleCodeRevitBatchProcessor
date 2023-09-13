@@ -34,14 +34,28 @@ from duHast.Utilities.Objects import result as res
 
 def check_curve_is_within_curve(curve_one, curve_two):
     """
-    checks whether one curve ( can be an arc or a line) is completely within the other
-    returns:
-
-    - Curve One if curves are identical,
-    - the curve which is completely within the other curve
-    - None if neither of the above applies
+    Checks whether one curve is completely within another curve.
+    
+    Args:
+        curve_one: The first curve to compare (can be an arc or a line).
+        curve_two: The second curve to compare (can be an arc or a line).
+    
+    Returns:
+        The curve that is completely within the other curve, or None if the curves are overlapping.
+        
+    Example Usage:
+        curve_one = ...
+        curve_two = ...
+        result = check_curve_is_within_curve(curve_one, curve_two)
+        print(result)
+        
+        Output:
+        - If the curves are identical, it will return curve_one.
+        - If curve_two is completely within curve_one, it will return curve_two.
+        - If curve_one is completely within curve_two, it will return curve_one.
+        - If the curves are overlapping, it will return None.
     """
-
+    
     curve_one_end_zero_point = curve_one.curve.GetEndPoint(0)
     curve_one_end_one_point = curve_one.curve.GetEndPoint(1)
     curve_two_end_zero_point = curve_two.curve.GetEndPoint(0)
@@ -89,7 +103,7 @@ def check_curve_is_within_curve(curve_one, curve_two):
         return None
 
 
-def calculate_shortened_curve_geometry(curve_one, curve_two):
+def calculate_lengthened_curve_geometry(curve_one, curve_two):
     """
     Two options when lines are overlapping:
 
@@ -153,17 +167,15 @@ def calculate_shortened_curve_geometry(curve_one, curve_two):
     )
 
     # determine the start and end point of the longer curve
-    # TODO: trying to avoid to flip start at end point!
-    new_point = None
-    start_point = None
-    end_point = None
+    point_zero = None
+    point_one = None
     # check which point of the shorter curve is not on the longer curve ( new end point )
     if is_shorter_curve_end_zero_in_longer_curve:
         # one end of shorter curve is outside the longer curve
-        end_point = shorter_curve.curve.GetEndPoint(1)
+        point_one = shorter_curve.curve.GetEndPoint(1)
     elif is_shorter_curve_end_one_in_longer_curve:
         # zero end of shorter curve is outside the longer curve
-        end_point = shorter_curve.curve.GetEndPoint(0)
+        point_one = shorter_curve.curve.GetEndPoint(0)
     else:
         raise ValueError(
             "Neither end point of {} is on {}".format(shorter_curve.id, longer_curve.id)
@@ -172,21 +184,45 @@ def calculate_shortened_curve_geometry(curve_one, curve_two):
     # check which point of the longer curve is not on the shorter curve ( new start point )
     if is_longer_curve_end_zero_in_shorter_curve:
         # point at end 1 is not one shorter curve
-        start_point = longer_curve.curve.GetEndPoint(1)
+        point_zero = longer_curve.curve.GetEndPoint(1)
     elif is_longer_curve_end_one_in_shorter_curve:
         # point at end 0 is not one shorter curve
-        start_point = longer_curve.curve.GetEndPoint(0)
+        point_zero = longer_curve.curve.GetEndPoint(0)
     else:
         raise ValueError(
             "Neither end point of {} is on {}".format(longer_curve.id, shorter_curve.id)
         )
 
+    new_point_zero = None
+    new_point_one = None
+    # trying to avoid to flip start at end point of the line, since this may cause the rooms to moveI(!?)
+    if( longer_curve.curve.GetEndPoint(0).IsAlmostEqualTo(point_zero)):
+        # assign the same end point for 0 index
+        new_point_zero = longer_curve.curve.GetEndPoint(0)
+        # assign a new end point for 1 index
+        new_point_one = point_one
+    elif(longer_curve.curve.GetEndPoint(0).IsAlmostEqualTo(point_one)):
+        # assign the same end point for 0 index
+        new_point_zero = longer_curve.curve.GetEndPoint(0)
+        # assign a new end point for 1 index
+        new_point_one = point_zero
+    elif(longer_curve.curve.GetEndPoint(1).IsAlmostEqualTo(point_zero)):
+        # assign a new end point for 0 index
+        new_point_zero = point_one
+        # assign the same end point for 1 index
+        new_point_one = longer_curve.curve.GetEndPoint(1)
+    else:
+        # assign a new end point for 0 index
+        new_point_zero = point_zero
+        # assign the same end point for 1 index
+        new_point_one = longer_curve.curve.GetEndPoint(1)
+
     # create a new curve depending on whether this is an arc or a line
     if type(longer_curve.curve) == Line:
-        longer_curve.new_curve = Line.CreateBound(start_point, end_point)
+        longer_curve.new_curve = Line.CreateBound(new_point_zero, new_point_one)
     elif type(longer_curve.curve) == Arc:
         longer_curve.new_curve = Arc.Create(
-            start_point, end_point, longer_curve.curve.Centre
+            new_point_zero, new_point_one, longer_curve.curve.Centre
         )
     else:
         raise ValueError(
@@ -197,6 +233,17 @@ def calculate_shortened_curve_geometry(curve_one, curve_two):
 
 
 def modify_model_line_action(existing_curve, new_curve, override_joins=True):
+    """
+    Modify the geometry of an existing curve by setting it to a new curve.
+
+    Args:
+        existing_curve (object): The existing curve that needs to be modified.
+        new_curve (object): The new curve that will replace the existing curve.
+        override_joins (bool, optional): Flag to indicate whether to override the joins between adjoining model lines. Defaults to True.
+
+    Returns:
+        object: An instance of the Result class that contains information about the success or failure of the geometry modification.
+    """
     return_value = res.Result()
     try:
         # make sure to set this to True, otherwise adjoining model lines will move with end points

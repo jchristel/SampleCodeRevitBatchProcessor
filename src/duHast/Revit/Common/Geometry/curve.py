@@ -110,7 +110,8 @@ def calculate_lengthened_curve_geometry(curve_one, curve_two):
     - extend the longer line to the end of the shorter line not overlapping and delete the shorter line or
     - shorten shorter line to move the endpoint currently overlapping to the end point of the longer line, therefore removing the overlap
 
-    First option will room separation lines
+    First option will shorten number of room separation lines in model. However when multiple lines overlap a single long line this 
+    code will delete a shorter overlapping line still required!
 
     returns two values: first one is the curve to change in length, second one is the curve to delete!
     """
@@ -230,6 +231,137 @@ def calculate_lengthened_curve_geometry(curve_one, curve_two):
         )
 
     return longer_curve, shorter_curve
+
+
+def calculate_shortened_curve_geometry(curve_one, curve_two):
+    """
+    Two options when lines are overlapping:
+
+    - extend the longer line to the end of the shorter line not overlapping and delete the shorter line or
+    - shorten shorter line to move the endpoint currently overlapping to the end point of the longer line, therefore removing the overlap
+
+    This is an attempt on option 2
+
+    returns the curve of which to change the length!
+    """
+    # which curve is the longer curve?
+    # assume default
+    longer_curve = curve_two
+    shorter_curve = curve_one
+    # check default was correct?
+    if curve_one.curve.ApproximateLength > curve_two.curve.ApproximateLength:
+        longer_curve = curve_one
+        shorter_curve = curve_two
+
+    # find the endpoint of the shorter line which is not within the longer line
+    shorter_curve_end_zero = shorter_curve.curve.GetEndPoint(0)
+    shorter_curve_end_one = shorter_curve.curve.GetEndPoint(1)
+
+    # measure distance to other curve. Due to precision issues these
+    # values are rounded. A distance of 0 indicates point is on curve
+    distance_shorter_curve_end_zero_to_longer_curve = round(
+        longer_curve.curve.Distance(shorter_curve_end_zero), 4
+    )
+    distance_shorter_end_one_to_longer_curve = round(
+        longer_curve.curve.Distance(shorter_curve_end_one), 4
+    )
+
+    # check which end of the shorter curve is outside the longer curve
+    is_shorter_curve_end_zero_in_longer_curve = is_close(
+        distance_shorter_curve_end_zero_to_longer_curve, 0.000, 0.000
+    )
+    is_shorter_curve_end_one_in_longer_curve = is_close(
+        distance_shorter_end_one_to_longer_curve, 0.000, 0.000
+    )
+
+    # check which end of the longer curve is outside the shorter curve ( that end will stay unchanged )
+    # find the endpoint of the shorter line which is not within the longer line
+    longer_curve_end_zero = longer_curve.curve.GetEndPoint(0)
+    longer_curve_end_one = longer_curve.curve.GetEndPoint(1)
+
+    # measure distance to other curve. Due to precision issues these
+    # values are rounded. A distance of 0 indicates point is on curve
+    distance_longer_curve_end_zero_to_shorter_curve = round(
+        shorter_curve.curve.Distance(longer_curve_end_zero), 4
+    )
+    distance_longer_curve_end_one_to_shorter_curve = round(
+        shorter_curve.curve.Distance(longer_curve_end_one), 4
+    )
+
+    # check which end of the longer curve is outside the shorter curve
+    is_longer_curve_end_zero_in_shorter_curve = is_close(
+        distance_longer_curve_end_zero_to_shorter_curve, 0.000, 0.000
+    )
+    is_longer_curve_end_one_in_shorter_curve = is_close(
+        distance_longer_curve_end_one_to_shorter_curve, 0.000, 0.000
+    )
+
+    # determine the start and end point of the shorter curve
+    point_zero = None
+    point_one = None
+    # check which point of the longer curve is on the shorter curve ( new end point )
+    if is_longer_curve_end_zero_in_shorter_curve:
+        # one end of longer curve is on the shorter curve
+        point_one = longer_curve.curve.GetEndPoint(0)
+    elif is_longer_curve_end_one_in_shorter_curve:
+        # zero end of longer curve is on the shorter curve
+        point_one = longer_curve.curve.GetEndPoint(1)
+    else:
+        raise ValueError(
+            "Neither end point of {} is on {}".format(shorter_curve.id, longer_curve.id)
+        )
+
+    # check which point of the shorter curve is not on the longer curve ( start point to keep)
+    if is_shorter_curve_end_zero_in_longer_curve:
+        # point at end 0 is not one longer curve
+        point_zero = shorter_curve.curve.GetEndPoint(0)
+    elif is_shorter_curve_end_one_in_longer_curve:
+        # point at end 0 is not one longer curve
+        point_zero = shorter_curve.curve.GetEndPoint(1)
+    else:
+        raise ValueError(
+            "Neither end point of {} is on {}".format(longer_curve.id, shorter_curve.id)
+        )
+
+    new_point_zero = None
+    new_point_one = None
+    # trying to avoid to flip start at end point of the line, since this may cause the rooms to moveI(!?)
+    if( shorter_curve.curve.GetEndPoint(0).IsAlmostEqualTo(point_zero)):
+        # assign the same end point for 0 index
+        new_point_zero = shorter_curve.curve.GetEndPoint(0)
+        # assign a new end point for 1 index
+        new_point_one = point_one
+    elif(shorter_curve.curve.GetEndPoint(0).IsAlmostEqualTo(point_one)):
+        # assign the same end point for 0 index
+        new_point_zero = shorter_curve.curve.GetEndPoint(0)
+        # assign a new end point for 1 index
+        new_point_one = point_zero
+    elif(shorter_curve.curve.GetEndPoint(1).IsAlmostEqualTo(point_zero)):
+        # assign a new end point for 0 index
+        new_point_zero = point_one
+        # assign the same end point for 1 index
+        new_point_one = shorter_curve.curve.GetEndPoint(1)
+    else:
+        # assign a new end point for 0 index
+        new_point_zero = point_zero
+        # assign the same end point for 1 index
+        new_point_one = shorter_curve.curve.GetEndPoint(1)
+
+    # create a new curve depending on whether this is an arc or a line
+    if type(shorter_curve.curve) == Line:
+        shorter_curve.new_curve = Line.CreateBound(new_point_zero, new_point_one)
+    elif type(shorter_curve.curve) == Arc:
+        shorter_curve.new_curve = Arc.Create(
+            new_point_zero, new_point_one, shorter_curve.curve.Centre
+        )
+    else:
+        raise ValueError(
+            "Curve type {} is not supported.".format(type(longer_curve.curve))
+        )
+
+    return shorter_curve
+
+
 
 
 def modify_model_line_action(existing_curve, new_curve, override_joins=True):

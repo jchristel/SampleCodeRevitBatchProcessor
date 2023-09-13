@@ -32,7 +32,7 @@ from duHast.Revit.Common.Geometry.geometry import is_close
 from duHast.Utilities.Objects import result as res
 
 
-def check_curve_is_within_curve(curve_one, curve_two):
+def is_curve_is_within_curve(curve_one, curve_two):
     """
     Checks whether one curve is completely within another curve.
     

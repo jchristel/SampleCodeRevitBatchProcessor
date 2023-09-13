@@ -31,21 +31,48 @@ A class used to store Revit warnings information.
 from duHast.Utilities.Objects import base
 
 class RevitWarning(base.Base):
-    def __init__(self, file_name = "", id="", description="", element_ids = [], **kwargs):
-        """
-        Class constructor.
+    """
+    A class representing a warning in a Revit file.
 
+    Inherits from the base.Base class.
+
+    Attributes:
+        file_name (str): The name of the Revit file associated with the warning.
+        id (str): The ID of the warning.
+        description (str): The description of the warning.
+        element_ids (list): A list of element IDs associated with the warning.
+    """
+
+    def __init__(self, file_name="", id="", description="", element_ids=[], **kwargs):
+        """
+        Initializes a RevitWarning object.
+
+        Args:
+            file_name (str, optional): The name of the Revit file associated with the warning. Defaults to "".
+            id (str, optional): The ID of the warning. Defaults to "".
+            description (str, optional): The description of the warning. Defaults to "".
+            element_ids (list, optional): A list of element IDs associated with the warning. Defaults to [].
+            **kwargs: Additional keyword arguments to be passed to the base.Base class constructor.
         """
 
         super(RevitWarning, self).__init__(**kwargs)
 
-        # set default values
         self.file_name = file_name
         self.id = id
         self.description = description
         self.element_ids = element_ids
     
     def class_to_csv(self, headers):
+        """
+        Converts the warning object to a CSV list based on the provided headers.
+
+        Args:
+            headers (list): A list of headers for the CSV list.
+
+        Returns:
+            list: The warning object converted to a CSV list.
+        """
+
         if isinstance(self, object):
             csv_list = []
             for prop in headers:

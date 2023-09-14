@@ -138,10 +138,10 @@ def calculate_lengthened_curve_geometry(curve_one, curve_two):
     )
 
     # check which end of the shorter curve is outside the longer curve
-    is_shorter_curve_end_zero_in_longer_curve = is_close(
+    is_shorter_curve_end_zero_on_longer_curve = is_close(
         distance_shorter_curve_end_zero_to_longer_curve, 0.000, 0.000
     )
-    is_shorter_curve_end_one_in_longer_curve = is_close(
+    is_shorter_curve_end_one_on_longer_curve = is_close(
         distance_shorter_end_one_to_longer_curve, 0.000, 0.000
     )
 
@@ -160,10 +160,10 @@ def calculate_lengthened_curve_geometry(curve_one, curve_two):
     )
 
     # check which end of the longer curve is outside the shorter curve
-    is_longer_curve_end_zero_in_shorter_curve = is_close(
+    is_longer_curve_end_zero_on_shorter_curve = is_close(
         distance_longer_curve_end_zero_to_shorter_curve, 0.000, 0.000
     )
-    is_longer_curve_end_one_in_shorter_curve = is_close(
+    is_longer_curve_end_one_on_shorter_curve = is_close(
         distance_longer_curve_end_one_to_shorter_curve, 0.000, 0.000
     )
 
@@ -171,10 +171,10 @@ def calculate_lengthened_curve_geometry(curve_one, curve_two):
     point_zero = None
     point_one = None
     # check which point of the shorter curve is not on the longer curve ( new end point )
-    if is_shorter_curve_end_zero_in_longer_curve:
+    if is_shorter_curve_end_zero_on_longer_curve:
         # one end of shorter curve is outside the longer curve
         point_one = shorter_curve.curve.GetEndPoint(1)
-    elif is_shorter_curve_end_one_in_longer_curve:
+    elif is_shorter_curve_end_one_on_longer_curve:
         # zero end of shorter curve is outside the longer curve
         point_one = shorter_curve.curve.GetEndPoint(0)
     else:
@@ -183,10 +183,10 @@ def calculate_lengthened_curve_geometry(curve_one, curve_two):
         )
 
     # check which point of the longer curve is not on the shorter curve ( new start point )
-    if is_longer_curve_end_zero_in_shorter_curve:
+    if is_longer_curve_end_zero_on_shorter_curve:
         # point at end 1 is not one shorter curve
         point_zero = longer_curve.curve.GetEndPoint(1)
-    elif is_longer_curve_end_one_in_shorter_curve:
+    elif is_longer_curve_end_one_on_shorter_curve:
         # point at end 0 is not one shorter curve
         point_zero = longer_curve.curve.GetEndPoint(0)
     else:
@@ -267,10 +267,10 @@ def calculate_shortened_curve_geometry(curve_one, curve_two):
     )
 
     # check which end of the shorter curve is outside the longer curve
-    is_shorter_curve_end_zero_in_longer_curve = is_close(
+    is_shorter_curve_end_zero_on_longer_curve = is_close(
         distance_shorter_curve_end_zero_to_longer_curve, 0.000, 0.000
     )
-    is_shorter_curve_end_one_in_longer_curve = is_close(
+    is_shorter_curve_end_one_on_longer_curve = is_close(
         distance_shorter_end_one_to_longer_curve, 0.000, 0.000
     )
 
@@ -289,10 +289,10 @@ def calculate_shortened_curve_geometry(curve_one, curve_two):
     )
 
     # check which end of the longer curve is outside the shorter curve
-    is_longer_curve_end_zero_in_shorter_curve = is_close(
+    is_longer_curve_end_zero_on_shorter_curve = is_close(
         distance_longer_curve_end_zero_to_shorter_curve, 0.000, 0.000
     )
-    is_longer_curve_end_one_in_shorter_curve = is_close(
+    is_longer_curve_end_one_on_shorter_curve = is_close(
         distance_longer_curve_end_one_to_shorter_curve, 0.000, 0.000
     )
 
@@ -300,10 +300,10 @@ def calculate_shortened_curve_geometry(curve_one, curve_two):
     point_zero = None
     point_one = None
     # check which point of the longer curve is on the shorter curve ( new end point )
-    if is_longer_curve_end_zero_in_shorter_curve:
+    if is_longer_curve_end_zero_on_shorter_curve:
         # one end of longer curve is on the shorter curve
         point_one = longer_curve.curve.GetEndPoint(0)
-    elif is_longer_curve_end_one_in_shorter_curve:
+    elif is_longer_curve_end_one_on_shorter_curve:
         # zero end of longer curve is on the shorter curve
         point_one = longer_curve.curve.GetEndPoint(1)
     else:
@@ -312,12 +312,12 @@ def calculate_shortened_curve_geometry(curve_one, curve_two):
         )
 
     # check which point of the shorter curve is not on the longer curve ( start point to keep)
-    if is_shorter_curve_end_zero_in_longer_curve:
+    if is_shorter_curve_end_zero_on_longer_curve:
+        # point at end 1 is not one longer curve
+        point_zero = shorter_curve.curve.GetEndPoint(1)
+    elif is_shorter_curve_end_one_on_longer_curve:
         # point at end 0 is not one longer curve
         point_zero = shorter_curve.curve.GetEndPoint(0)
-    elif is_shorter_curve_end_one_in_longer_curve:
-        # point at end 0 is not one longer curve
-        point_zero = shorter_curve.curve.GetEndPoint(1)
     else:
         raise ValueError(
             "Neither end point of {} is on {}".format(longer_curve.id, shorter_curve.id)

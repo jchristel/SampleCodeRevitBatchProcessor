@@ -127,5 +127,5 @@ class RevitWarningsSolver(base.Base):
                 )
                 return_value.update(result_solver)
         except Exception as e:
-            print(str(e))
+            return_value.update_sep(False, "Failed to apply solver with exception: {}".format(e))
         return return_value

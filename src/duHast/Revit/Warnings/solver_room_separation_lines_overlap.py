@@ -30,7 +30,7 @@ Currently address' room separation lines overlapping with other room separation 
 
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.Objects import base
-from duHast.Revit.Warnings.Utility.warnings_util import (
+from duHast.Revit.Warnings.Utility.curves_util import (
     get_curves_from_failure_messages,
     check_curves_overlaps,
     delete_curves,

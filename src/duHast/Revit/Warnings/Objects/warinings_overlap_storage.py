@@ -34,7 +34,7 @@ A  class used to store information on separation line overlap warnings.
 from duHast.Utilities.Objects import base
 
 class RevitWarningOverlap(base.Base):
-    def __init__(self, id="", element=None, curve=None, **kwargs):
+    def __init__(self, id="", element=None, curve=None, group_id=-1,**kwargs):
         """
         Class constructor.
 
@@ -46,4 +46,5 @@ class RevitWarningOverlap(base.Base):
         self.id = id
         self.element = element
         self.curve = curve
+        self.group_id = group_id
         self.new_curve = None

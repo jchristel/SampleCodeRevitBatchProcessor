@@ -1,4 +1,4 @@
-from duHast.Revit.Warnings.Objects.warinings_overlap_storage import RevitWarningOverlap
+from duHast.Revit.Warnings.Objects.warnings_overlap_storage import RevitWarningOverlap
 from duHast.Revit.Warnings.warnings import get_warnings_by_guid
 from duHast.Revit.Common.Geometry.curve import (
     is_curve_is_within_curve,
@@ -9,7 +9,7 @@ from duHast.Revit.Common.delete import delete_by_element_ids
 from duHast.Revit.Common.transaction import in_transaction
 from duHast.Utilities.Objects import result as res
 
-from Autodesk.Revit.DB import Transaction
+from Autodesk.Revit.DB import Document, Transaction
 
 
 def get_curves_from_failure_messages(doc, failure_messages):
@@ -21,8 +21,13 @@ def get_curves_from_failure_messages(doc, failure_messages):
     :param failure_messages: List of failure messages relating to separation lines overlap
     :type failure_messages: [Autodesk.Revit.DB.FailureMessage]
     :return: List of RevitWarningOverlap instances.
-    :rtype: [:class:RevitWarningOverlap]
+    :rtype: [:class:`RevitWarningOverlap`]
     """
+
+    if not isinstance(doc, Document):
+        raise TypeError("doc must be an instance of Autodesk.Revit.DB.Document")
+    if not isinstance(failure_messages, list):
+        raise TypeError("failure_messages must be a list")
 
     revit_warnings_overlap_storage = []
     for f_message in failure_messages:
@@ -46,12 +51,27 @@ def get_curves_from_failure_messages(doc, failure_messages):
 
 def check_curves_overlaps(curves):
     """
-    loop over curves per exception and determine which one can be deleted because
-    its either completely within of of the other curves listed in the revit warning, or is identical to one of the other curves listed in the revit warning
+    Check a list of curve sets for overlaps or duplicates.
 
-    Returns a list of RevitWarningOverlap instance which contain separation lines which can be deleted.
-    ( Note there might be multiple instances of the same separation line! )
+
+    :param curves: A list of curve sets, where each set contains two curves.
+    :type  curves: [:class: `RevitWarningOverlap`]
+
+    Returns:
+        list: A list of curves that can be deleted because they are either completely within another curve or identical to another curve.
+
+    Raises:
+        ValueError: If a curve set does not have a length of 2.
+
+    Example:
+        curves = [[curve1, curve2], [curve3, curve4], ...]
+        result = check_curves_overlaps(curves)
+        print(result)
     """
+
+    if not isinstance(check_curves_overlaps, list):
+        raise TypeError("check_curves_overlaps must be a list")
+
     curves_to_delete = []
     # a curve set should always contain 2 curves
     for curve_set in curves:
@@ -70,12 +90,22 @@ def check_curves_overlaps(curves):
 def identify_curve_in_set_to_amend(curve_set):
     """
     Returns two lists:
-    First one contains separation lines to change the geometry of
-    second one contains separation lines to delete
+    First one contains curves to change the geometry of
+    Second one contains curves to delete
+
+    :param curve_set: A set of curves that needs to be analyzed and identified for amendment
+    :type curve_set: [:class: `RevitWarningOverlap`]
+    :return: A tuple containing two lists - curves_to_amend and curves_to_delete
+    :rtype: tuple
+    :raises ValueError: If the length of curve_set is not equal to 2
     """
+
+    if not isinstance(curve_set, list):
+        raise TypeError("curve_set must be a list")
 
     curves_to_delete = []
     curves_to_amend = []
+
     if len(curve_set) == 2:
         if curve_set[0].group_id == curve_set[1].group_id:
             curve_to_change, curve_to_delete = calculate_lengthened_curve_geometry(
@@ -89,17 +119,34 @@ def identify_curve_in_set_to_amend(curve_set):
             return None, None
     else:
         raise ValueError("Curve set does not have a length of 2")
+
     return curves_to_amend, curves_to_delete
 
 
 def delete_curves(doc, curves_to_delete):
+    """
+    Deletes curves in a Revit model.
+
+    :param doc: The Revit model document.
+    :type doc:  (Autodesk.Revit.DB.Document)
+    :param curves_to_delete: List of curves to be deleted.
+    :type curves_to_delete: [:class: `RevitWarningOverlap`]
+
+    Returns:
+        res.Result: A res.Result object that contains the status of the deletion operation.
+    """
+
+    if not isinstance(doc, Document):
+        raise TypeError("doc must be an instance of Autodesk.Revit.DB.Document")
+    if not isinstance(curves_to_delete, list):
+        raise TypeError("curves_to_delete must be a list")
+
     return_value = res.Result()
     # get unique ids for deletion
     if len(curves_to_delete) > 0:
-        ids = []
-        for c in curves_to_delete:
-            if c and c.id not in ids:
-                ids.append(c.id)
+        ids = [
+            c.id for c in curves_to_delete if c and c.id is not None and c.id not in ids
+        ]
 
         # bombs away...
         result_delete = delete_by_element_ids(
@@ -117,6 +164,25 @@ def delete_curves(doc, curves_to_delete):
 
 
 def modify_separation_lines(doc, curves, transaction_manager=in_transaction):
+    """
+    Modify the geometry of separation lines in a Revit model.
+
+    :param doc: The Revit model document.
+    :type doc:  (Autodesk.Revit.DB.Document)
+    :param curves: List of curves to be deleted.
+    :type curves: [:class: `RevitWarningOverlap`]
+    :param  transaction_manager:  An optional transaction manager function used to perform the modifications.
+    :type  transaction_manager: (function, optional)
+
+    Returns:
+        res.Result: A `res.Result` object that contains the status of the modifications performed for each curve.
+    """
+
+    if not isinstance(doc, Document):
+        raise TypeError("doc must be an instance of Autodesk.Revit.DB.Document")
+    if not isinstance(curves, list):
+        raise TypeError("curves must be a list")
+
     return_value = res.Result()
     for curve in curves:
         if curve:
@@ -149,14 +215,30 @@ def modify_separation_lines(doc, curves, transaction_manager=in_transaction):
 
 
 def modify_curves_by_lengthening(doc, guid, transaction_manager):
+    """
+    Modifies curves in a Revit model by lengthening them.
+
+    :param doc: The Revit model document.
+    :type doc:  (Autodesk.Revit.DB.Document)
+    :param guid: The GUID used to filter the failure messages.
+    :type guid: (Autodesk.Revit.DB.Guid):
+    :param transaction_manager: The transaction manager used to perform the modifications.
+    :type transaction_manager: (function)
+
+    Returns:
+        res.Result: A `res.Result` object that contains the status of the modifications performed.
+    """
+
+    if not isinstance(doc, Document):
+        raise TypeError("doc must be an instance of Autodesk.Revit.DB.Document")
+
     return_value = res.Result()
     # maximum number of loops
     max_loop = len(get_warnings_by_guid(doc, guid=guid))
     return_value.append_message("Found {} warnings...".format(max_loop))
-    ignore_these_curves = {}
+    ignore_these_curves = []
     counter = 0
-    loop_flag = True
-    while loop_flag:
+    for i in range(max_loop):
         # start again, this time to change curve geometry
         failure_messages = get_warnings_by_guid(doc, guid=guid)
         return_value.append_message(
@@ -164,19 +246,17 @@ def modify_curves_by_lengthening(doc, guid, transaction_manager):
                 len(failure_messages), counter
             )
         )
-        # check if anything is left
+        # check if anything is left to process
         if len(failure_messages) == len(ignore_these_curves):
             return_value.append_message("Finished processing warnings.")
-            loop_flag = False
+            break
         else:
             # get next curve sets from failure message
             warning_curve_sets = get_curves_from_failure_messages(doc, failure_messages)
             for failure_set in warning_curve_sets:
                 # check if needs to be ignored ( already tried to process before )
-                if (
-                    hash(failure_set[0]) + hash(failure_set[1])
-                    not in ignore_these_curves
-                ):
+                curve_identifier = (failure_set[0].id, failure_set[1].id)
+                if curve_identifier not in ignore_these_curves:
                     (
                         curves_to_change,
                         curves_to_delete,
@@ -188,9 +268,7 @@ def modify_curves_by_lengthening(doc, guid, transaction_manager):
                             )
                         )
                         # make sure to flag this set as not to be processed again
-                        ignore_these_curves[
-                            hash(failure_set[0]) + hash(failure_set[1])
-                        ] = failure_set
+                        ignore_these_curves.append(curve_identifier)
                     else:
                         # check if any curves to change came back
                         if curves_to_change:
@@ -213,8 +291,4 @@ def modify_curves_by_lengthening(doc, guid, transaction_manager):
                             return_value.update(status_delete)
                 # get out of loop and start again by getting the current set of warnings from the model
                 break
-        counter = counter + 1
-        if max_loop == counter:
-            return_value.append_message("Reached maximum loop counter.")
-            loop_flag = False
     return return_value

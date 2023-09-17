@@ -37,7 +37,7 @@ from duHast.Revit.Warnings.Utility.curves_util import (
     modify_curves_by_lengthening,
     modify_curves_by_shortening,
 )
-from Revit.Common.transaction import in_transaction
+from duHast.Revit.Common.transaction import in_transaction
 
 
 class RevitWarningsSolverRoomSepLinesOverlap(base.Base):

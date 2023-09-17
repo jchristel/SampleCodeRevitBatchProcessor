@@ -69,8 +69,8 @@ def check_curves_overlaps(curves):
         print(result)
     """
 
-    if not isinstance(check_curves_overlaps, list):
-        raise TypeError("check_curves_overlaps must be a list")
+    if not isinstance(curves, list):
+        raise TypeError("curves must be a list")
 
     curves_to_delete = []
     # a curve set should always contain 2 curves
@@ -80,7 +80,7 @@ def check_curves_overlaps(curves):
             # alternatively the curve to be deleted is in the main model (group id of -1). The other curve can be in a group.
             curve_to_delete = is_curve_is_within_curve(curve_set[0], curve_set[1])
             if curve_to_delete:
-                if curve_set[0].group_id == curve_set[1].group_id or curves_to_delete.group_id == -1:
+                if curve_set[0].group_id == curve_set[1].group_id or curve_to_delete.group_id == -1:
                     curves_to_delete.append(curve_to_delete)
             '''
             if curve_set[0].group_id == curve_set[1].group_id:
@@ -152,6 +152,9 @@ def delete_curves(doc, curves_to_delete):
     return_value = res.Result()
     # get unique ids for deletion
     if len(curves_to_delete) > 0:
+        # need to declare ids first ....
+        ids = []
+        # populate ids
         ids = [
             c.id for c in curves_to_delete if c and c.id is not None and c.id not in ids
         ]
@@ -246,13 +249,12 @@ def modify_curves_by_lengthening(doc, guid, transaction_manager):
     if max_loop is not None and max_loop > 0:
         return_value.append_message("Found {} warnings...".format(max_loop))
         ignore_these_curves = []
-        counter = 0
         for i in range(max_loop):
             # start again, this time to change curve geometry
             failure_messages = get_warnings_by_guid(doc, guid=guid)
             return_value.append_message(
                 "Found {} failure messages in loop {}.".format(
-                    len(failure_messages), counter
+                    len(failure_messages), i
                 )
             )
             # check if anything is left to process
@@ -274,7 +276,7 @@ def modify_curves_by_lengthening(doc, guid, transaction_manager):
                         ) = _identify_curve_in_set_to_amend_lengthening(failure_set)
                         if curves_to_change == None and curves_to_delete == None:
                             return_value.append_message(
-                                "Neither curve {} {} in exception set could be amended...".format(
+                                "Neither curve {} , {} in exception set could be amended...".format(
                                     failure_set[0].id, failure_set[1].id
                                 )
                             )

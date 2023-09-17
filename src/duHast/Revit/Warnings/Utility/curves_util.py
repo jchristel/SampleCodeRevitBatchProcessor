@@ -87,7 +87,7 @@ def check_curves_overlaps(curves):
     return curves_to_delete
 
 
-def identify_curve_in_set_to_amend(curve_set):
+def _identify_curve_in_set_to_amend_lengthening(curve_set):
     """
     Returns two lists:
     First one contains curves to change the geometry of
@@ -163,7 +163,7 @@ def delete_curves(doc, curves_to_delete):
     return return_value
 
 
-def modify_separation_lines(doc, curves, transaction_manager=in_transaction):
+def _modify_separation_lines(doc, curves, transaction_manager=in_transaction):
     """
     Modify the geometry of separation lines in a Revit model.
 
@@ -235,60 +235,128 @@ def modify_curves_by_lengthening(doc, guid, transaction_manager):
     return_value = res.Result()
     # maximum number of loops
     max_loop = len(get_warnings_by_guid(doc, guid=guid))
-    return_value.append_message("Found {} warnings...".format(max_loop))
-    ignore_these_curves = []
-    counter = 0
-    for i in range(max_loop):
-        # start again, this time to change curve geometry
-        failure_messages = get_warnings_by_guid(doc, guid=guid)
-        return_value.append_message(
-            "Found {} failure messages in loop {}.".format(
-                len(failure_messages), counter
+    if max_loop is not None and max_loop > 0:
+        return_value.append_message("Found {} warnings...".format(max_loop))
+        ignore_these_curves = []
+        counter = 0
+        for i in range(max_loop):
+            # start again, this time to change curve geometry
+            failure_messages = get_warnings_by_guid(doc, guid=guid)
+            return_value.append_message(
+                "Found {} failure messages in loop {}.".format(
+                    len(failure_messages), counter
+                )
             )
-        )
-        # check if anything is left to process
-        if len(failure_messages) == len(ignore_these_curves):
-            return_value.append_message("Finished processing warnings.")
-            break
-        else:
-            # get next curve sets from failure message
-            warning_curve_sets = get_curves_from_failure_messages(doc, failure_messages)
-            for failure_set in warning_curve_sets:
-                # check if needs to be ignored ( already tried to process before )
-                curve_identifier = (failure_set[0].id, failure_set[1].id)
-                if curve_identifier not in ignore_these_curves:
-                    (
-                        curves_to_change,
-                        curves_to_delete,
-                    ) = identify_curve_in_set_to_amend(failure_set)
-                    if curves_to_change == None and curves_to_delete == None:
-                        return_value.append_message(
-                            "Neither curve {} {} in exception set could be amended...".format(
-                                failure_set[0].id, failure_set[1].id
-                            )
-                        )
-                        # make sure to flag this set as not to be processed again
-                        ignore_these_curves.append(curve_identifier)
-                    else:
-                        # check if any curves to change came back
-                        if curves_to_change:
+            # check if anything is left to process
+            if len(failure_messages) == len(ignore_these_curves):
+                return_value.append_message("Finished processing warnings.")
+                break
+            else:
+                # get next curve sets from failure message
+                warning_curve_sets = get_curves_from_failure_messages(
+                    doc, failure_messages
+                )
+                for failure_set in warning_curve_sets:
+                    # check if needs to be ignored ( already tried to process before )
+                    curve_identifier = (failure_set[0].id, failure_set[1].id)
+                    if curve_identifier not in ignore_these_curves:
+                        (
+                            curves_to_change,
+                            curves_to_delete,
+                        ) = _identify_curve_in_set_to_amend_lengthening(failure_set)
+                        if curves_to_change == None and curves_to_delete == None:
                             return_value.append_message(
-                                "Found a curve: {} to amend".format(
-                                    curves_to_change[0].id
+                                "Neither curve {} {} in exception set could be amended...".format(
+                                    failure_set[0].id, failure_set[1].id
                                 )
                             )
-                            # amend curves first....
-                            status_update = modify_separation_lines(
-                                doc=doc,
-                                curves=curves_to_change,
-                                transaction_manager=transaction_manager,
-                            )
-                            return_value.update(status_update)
-                        # check if anything needs deleting
-                        if curves_to_delete:
-                            # delete the now overlapping curves
-                            status_delete = delete_curves(doc, curves_to_delete)
-                            return_value.update(status_delete)
-                # get out of loop and start again by getting the current set of warnings from the model
-                break
+                            # make sure to flag this set as not to be processed again
+                            ignore_these_curves.append(curve_identifier)
+                        else:
+                            # check if any curves to change came back
+                            if curves_to_change:
+                                return_value.append_message(
+                                    "Found a curve: {} to amend".format(
+                                        curves_to_change[0].id
+                                    )
+                                )
+                                # amend curves first....
+                                status_update = _modify_separation_lines(
+                                    doc=doc,
+                                    curves=curves_to_change,
+                                    transaction_manager=transaction_manager,
+                                )
+                                return_value.update(status_update)
+                            # check if anything needs deleting
+                            if curves_to_delete:
+                                # delete the now overlapping curves
+                                status_delete = delete_curves(doc, curves_to_delete)
+                                return_value.update(status_delete)
+                    # get out of loop and start again by getting the current set of warnings from the model
+                    break
+    else:
+        return_value.append_message(
+            "No overlap warnings with guid: {} in model.".format(guid)
+        )
+    return return_value
+
+
+def _identify_curves_to_amend_short(curves):
+    """
+    Returns one lists  contains separation lines to change the geometry of
+    """
+    curves_to_amend = []
+    for curve_set in curves:
+        if len(curve_set) == 2:
+            if curve_set[0].group_id == curve_set[1].group_id:
+                curve_to_change = calculate_shortened_curve_geometry(
+                    curve_set[0], curve_set[1]
+                )
+                if curve_to_change:
+                    curves_to_amend.append(curve_to_change)
+            else:
+                curves_to_amend.append(None)
+        else:
+            raise ValueError("Curve set does not have a length of 2")
+    return curves_to_amend
+
+
+def modify_curves_by_shortening(doc, guid, transaction_manager):
+    """
+    Modifies curves in a Revit model by lengthening them.
+
+    :param doc: The Revit model document.
+    :type doc:  (Autodesk.Revit.DB.Document)
+    :param guid: The GUID used to filter the failure messages.
+    :type guid: (Autodesk.Revit.DB.Guid):
+    :param transaction_manager: The transaction manager used to perform the modifications.
+    :type transaction_manager: (function)
+
+    Returns:
+        res.Result: A `res.Result` object that contains the status of the modifications performed.
+    """
+
+    if not isinstance(doc, Document):
+        raise TypeError("doc must be an instance of Autodesk.Revit.DB.Document")
+
+    return_value = res.Result()
+    # start again, this time to change curve geometry
+    failure_messages = get_warnings_by_guid(doc, guid=guid)
+    if failure_messages is not None and len(failure_messages) > 0:
+        return_value.append_message(
+            "Found {} warnings...".format(len(failure_messages))
+        )
+        lines_ex = get_curves_from_failure_messages(doc, failure_messages)
+        curves_to_change = _identify_curves_to_amend_short(lines_ex)
+        # amend curves first....
+        status_update = _modify_separation_lines(
+            doc=doc,
+            curves=curves_to_change,
+            transaction_manager=transaction_manager,
+        )
+        return_value.update(status_update)
+    else:
+        return_value.append_message(
+            "No overlap warnings with guid: {} in model.".format(guid)
+        )
     return return_value

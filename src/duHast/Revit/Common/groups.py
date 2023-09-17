@@ -42,6 +42,7 @@ import Autodesk.Revit.DB as rdb
 
 # --------------------------------------------- utility functions ------------------
 
+
 # doc   current document
 def get_model_groups(doc):
     """
@@ -59,6 +60,44 @@ def get_model_groups(doc):
         .WhereElementIsElementType()
         .ToList()
     )
+
+
+def get_model_group_instances(doc):
+    """
+    Get all model group instances in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: collector of model group instances
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    """
+    col = (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_IOSModelGroups)
+        .WhereElementIsNotElementType()
+    )
+    return col
+
+
+def get_model_group_instances_by_type(doc):
+    """
+    Get all model group instances in the model grouped by their type id.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: Dictionary of model group instances by type id
+    :rtype: {ElementId:[Autodesk.Revit.DB.Group]}
+    """
+
+    model_groups_by_type_id = {}
+    model_group_instances = get_model_group_instances(doc=doc)
+    for instance in model_group_instances:
+        type_id = instance.GetTypeId()
+        if type_id in model_groups_by_type_id:
+            model_groups_by_type_id[type_id].append(instance)
+        else:
+            model_groups_by_type_id[type_id] = [instance]
+    return model_groups_by_type_id
 
 
 def get_detail_groups(doc):

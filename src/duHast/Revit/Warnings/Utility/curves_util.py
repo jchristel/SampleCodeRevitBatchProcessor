@@ -76,12 +76,20 @@ def check_curves_overlaps(curves):
     # a curve set should always contain 2 curves
     for curve_set in curves:
         if len(curve_set) == 2:
+            # Both curves need to be either in the main model ( group id of -1) or in the same group
+            # alternatively the curve to be deleted is in the main model (group id of -1). The other curve can be in a group.
+            curve_to_delete = is_curve_is_within_curve(curve_set[0], curve_set[1])
+            if curve_to_delete:
+                if curve_set[0].group_id == curve_set[1].group_id or curves_to_delete.group_id == -1:
+                    curves_to_delete.append(curve_to_delete)
+            '''
             if curve_set[0].group_id == curve_set[1].group_id:
                 curve_to_delete = is_curve_is_within_curve(curve_set[0], curve_set[1])
                 if curve_to_delete:
                     curves_to_delete.append(curve_to_delete)
             else:
                 curves_to_delete.append(None)
+            '''
         else:
             raise ValueError("Curve set does not have a length of 2")
     return curves_to_delete

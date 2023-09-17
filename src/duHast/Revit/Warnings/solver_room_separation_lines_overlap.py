@@ -41,7 +41,9 @@ from duHast.Revit.Common.transaction import in_transaction
 
 
 class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
-    def __init__(self, solve_by_lengthening_curves = True, transaction_manager=in_transaction):
+    def __init__(
+        self, solve_by_lengthening_curves=True, transaction_manager=in_transaction
+    ):
         """
         Class constructor.
         """
@@ -51,7 +53,6 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
         self.filter_name = "Room separation lines overlap."
         self.solve_by_lengthening_curves = solve_by_lengthening_curves
         self.transaction_manager = transaction_manager
-
 
     # --------------------------- room tag not in room ---------------------------
     #: guid identifying this specific warning
@@ -87,21 +88,25 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
             curves_to_delete = check_curves_overlaps(curve_storage_sets)
             # delete those curves
             delete_curves_status = delete_curves(
-                doc=doc, curves_to_delete=curves_to_delete
+                doc=doc, curves_to_delete=curves_to_delete, curve_descriptor="room"
             )
             return_value.update(delete_curves_status)
-            if(self.solve_by_lengthening_curves):
-                # attempt to modify overlapping curves by lengthening the longer curve to 
+            if self.solve_by_lengthening_curves:
+                # attempt to modify overlapping curves by lengthening the longer curve to
                 # the length of the shorter curve and thereby completely overlapping the shorter curve
                 modify_curves_status = modify_curves_by_lengthening(
-                    doc=doc, guid=self.GUID, transaction_manager=self.transaction_manager
+                    doc=doc,
+                    guid=self.GUID,
+                    transaction_manager=self.transaction_manager,
                 )
                 return_value.update(modify_curves_status)
             else:
-                # attempt to modify overlapping curves by shortening the longer curve to 
+                # attempt to modify overlapping curves by shortening the longer curve to
                 # the point of overlap with the shorter curve
                 modify_curves_status = modify_curves_by_shortening(
-                    doc=doc, guid=self.GUID, transaction_manager=self.transaction_manager
+                    doc=doc,
+                    guid=self.GUID,
+                    transaction_manager=self.transaction_manager,
                 )
                 return_value.update(modify_curves_status)
 

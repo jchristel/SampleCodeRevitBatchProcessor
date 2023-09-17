@@ -1,9 +1,9 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Room separation lines solver class.
+area separation lines solver class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Currently address' room separation lines overlapping with other room separation lines only.
+Currently address' area separation lines overlapping with other area separation lines only.
 """
 #
 # License:
@@ -40,28 +40,28 @@ from duHast.Revit.Warnings.Utility.curves_util import (
 from duHast.Revit.Common.transaction import in_transaction
 
 
-class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
+class RevitWarningsSolverAreaSepLinesOverlap(base.Base):
     def __init__(self, solve_by_lengthening_curves = True, transaction_manager=in_transaction):
         """
         Class constructor.
         """
 
         # ini super class to allow multi inheritance in children!
-        super(RevitWarningsSolverRoomSepLinesOverlap, self).__init__()
-        self.filter_name = "Room separation lines overlap."
+        super(RevitWarningsSolverAreaSepLinesOverlap, self).__init__()
+        self.filter_name = "Area separation lines overlap."
         self.solve_by_lengthening_curves = solve_by_lengthening_curves
         self.transaction_manager = transaction_manager
 
 
-    # --------------------------- room tag not in room ---------------------------
+    # --------------------------- area separation lines ---------------------------
     #: guid identifying this specific warning
     GUID = "6891f0e6-5858-4e2f-bb34-801e0b87f60d"
 
     def solve_warnings(self, doc, warnings):
         """
-        Solver addressing overlapping room separation lines.
+        Solver addressing overlapping area separation lines.
 
-        - will ignore room separation lines overlapping when in different groups.
+        - will ignore area separation lines overlapping when in different group instances.
 
         :param doc: Current Revit model document.
         :type doc: Autodesk.Revit.DB.Document
@@ -71,8 +71,8 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
         :return:
             Result class instance.
 
-            - .result = True if all room separation lines could be deleted / modified without an exception. Otherwise False.
-            - .message will be 'moved tag to room xyz'
+            - .result = True if all area separation lines could be deleted / modified without an exception. Otherwise False.
+            - .message will be 'moved tag to area xyz'
 
         :rtype: :class:`.Result`
         """
@@ -87,7 +87,7 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
             curves_to_delete = check_curves_overlaps(curve_storage_sets)
             # delete those curves
             delete_curves_status = delete_curves(
-                doc=doc, curves_to_delete=curves_to_delete
+                doc=doc, curves_to_delete=curves_to_delete, curve_descriptor="area"
             )
             return_value.update(delete_curves_status)
             if(self.solve_by_lengthening_curves):
@@ -108,6 +108,6 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
             return return_value
         else:
             return_value.update_sep(
-                True, "No warnings of type: room separation lines overlap in model."
+                True, "No warnings of type: area separation lines overlap in model."
             )
         return return_value

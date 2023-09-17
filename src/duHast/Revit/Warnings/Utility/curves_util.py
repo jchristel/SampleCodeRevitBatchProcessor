@@ -80,16 +80,19 @@ def check_curves_overlaps(curves):
             # alternatively the curve to be deleted is in the main model (group id of -1). The other curve can be in a group.
             curve_to_delete = is_curve_is_within_curve(curve_set[0], curve_set[1])
             if curve_to_delete:
-                if curve_set[0].group_id == curve_set[1].group_id or curve_to_delete.group_id == -1:
+                if (
+                    curve_set[0].group_id == curve_set[1].group_id
+                    or curve_to_delete.group_id == -1
+                ):
                     curves_to_delete.append(curve_to_delete)
-            '''
+            """
             if curve_set[0].group_id == curve_set[1].group_id:
                 curve_to_delete = is_curve_is_within_curve(curve_set[0], curve_set[1])
                 if curve_to_delete:
                     curves_to_delete.append(curve_to_delete)
             else:
                 curves_to_delete.append(None)
-            '''
+            """
         else:
             raise ValueError("Curve set does not have a length of 2")
     return curves_to_delete
@@ -131,7 +134,7 @@ def _identify_curve_in_set_to_amend_lengthening(curve_set):
     return curves_to_amend, curves_to_delete
 
 
-def delete_curves(doc, curves_to_delete):
+def delete_curves(doc, curves_to_delete, curve_descriptor):
     """
     Deletes curves in a Revit model.
 
@@ -139,6 +142,8 @@ def delete_curves(doc, curves_to_delete):
     :type doc:  (Autodesk.Revit.DB.Document)
     :param curves_to_delete: List of curves to be deleted.
     :type curves_to_delete: [:class: `RevitWarningOverlap`]
+    :param curve_descriptor: line type descriptor
+    :type curve_descriptor: str
 
     Returns:
         res.Result: A res.Result object that contains the status of the deletion operation.
@@ -163,10 +168,10 @@ def delete_curves(doc, curves_to_delete):
         result_delete = delete_by_element_ids(
             doc=doc,
             ids=ids,
-            transaction_name="delete overlapping room separation lines".format(
-                len(ids)
+            transaction_name="delete overlapping {} separation lines {}".format(
+                curve_descriptor, len(ids)
             ),
-            element_name="room separation line(s)",
+            element_name="{} separation line(s)".format(curve_descriptor),
         )
         return_value.update(result_delete)
     else:
@@ -253,9 +258,7 @@ def modify_curves_by_lengthening(doc, guid, transaction_manager):
             # start again, this time to change curve geometry
             failure_messages = get_warnings_by_guid(doc, guid=guid)
             return_value.append_message(
-                "Found {} failure messages in loop {}.".format(
-                    len(failure_messages), i
-                )
+                "Found {} failure messages in loop {}.".format(len(failure_messages), i)
             )
             # check if anything is left to process
             if len(failure_messages) == len(ignore_these_curves):

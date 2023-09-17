@@ -5,11 +5,35 @@ from duHast.Revit.Common.Geometry.curve import (
     calculate_lengthened_curve_geometry,
     calculate_shortened_curve_geometry,
 )
+from duHast.Revit.Common.groups import get_model_group_instances_by_type
 from duHast.Revit.Common.delete import delete_by_element_ids
 from duHast.Revit.Common.transaction import in_transaction
 from duHast.Utilities.Objects import result as res
 
 from Autodesk.Revit.DB import Document, Transaction
+
+
+def _get_group_instances(doc, group_instance_id, groups_by_type_id):
+    """
+    Returns the number of group instances of the same type as past in group instance in the model
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param group_instance_id: The group instance id.
+    :type group_instance_id: Autodesk.Revit.DB.ElementId
+    :param groups_by_type_id: Dictionary containing group instances in model by their type id.
+    :type groups_by_type_id: {Autodesk.Revit.DB.ElementId:[Autodesk.Revit.DB.Group]}
+    :return: number of group instances of the same type in model
+    :rtype: int
+    """
+
+    # check how many groups of the same type are in the model
+    group_instance = doc.GetElement(group_instance_id)
+    group_type_id = group_instance.GetTypeId()
+    number_of_groups_instances = 0
+    if group_type_id in groups_by_type_id:
+        number_of_groups_instances = len(groups_by_type_id[group_type_id])
+    return number_of_groups_instances
 
 
 def get_curves_from_failure_messages(doc, failure_messages):
@@ -30,6 +54,9 @@ def get_curves_from_failure_messages(doc, failure_messages):
         raise TypeError("failure_messages must be a list")
 
     revit_warnings_overlap_storage = []
+    # get all groups by type ids to verify how many instances of a group are placed in a model
+    # if only one instance the group can be modified. If there are multiple instances group modification is not currently possible.
+    groups_by_type_id = get_model_group_instances_by_type(doc=doc)
     for f_message in failure_messages:
         ids = f_message.GetFailingElements()
         if len(ids) > 2:
@@ -41,8 +68,15 @@ def get_curves_from_failure_messages(doc, failure_messages):
             room_sep_line = doc.GetElement(id)
             curve = room_sep_line.GeometryCurve
             group_id = room_sep_line.GroupId.IntegerValue
+            number_of_groups_instances = _get_group_instances(
+                doc=doc, group_instance_id=group_id, groups_by_type_id=groups_by_type_id
+            )
             dummy = RevitWarningOverlap(
-                id=id, element=room_sep_line, curve=curve, group_id=group_id
+                id=id,
+                element=room_sep_line,
+                curve=curve,
+                group_id=group_id,
+                group_instances=number_of_groups_instances,
             )
             lines_by_exception.append(dummy)
         revit_warnings_overlap_storage.append(lines_by_exception)

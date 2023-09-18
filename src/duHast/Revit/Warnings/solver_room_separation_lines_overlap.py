@@ -42,7 +42,11 @@ from duHast.Revit.Common.transaction import in_transaction
 
 class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
     def __init__(
-        self, solve_by_lengthening_curves=True, transaction_manager=in_transaction
+        self,
+        solve_by_lengthening_curves=True,
+        group_id=-1,
+        transaction_manager=in_transaction,
+        callback=None,
     ):
         """
         Class constructor.
@@ -53,6 +57,8 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
         self.filter_name = "Room separation lines overlap."
         self.solve_by_lengthening_curves = solve_by_lengthening_curves
         self.transaction_manager = transaction_manager
+        self.group_id = group_id
+        self.callback = callback
 
     # --------------------------- room tag not in room ---------------------------
     #: guid identifying this specific warning
@@ -82,10 +88,12 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
         if len(warnings) > 0:
             # extract model lines and geometry from failure messages
             curve_storage_sets = get_curves_from_failure_messages(
-                doc=doc, failure_messages=warnings
+                doc=doc, failure_messages=warnings, group_id_to_match=self.group_id
             )
             # get curves which are completely within other curves
-            curves_to_delete = check_curves_overlaps(curve_storage_sets)
+            curves_to_delete = check_curves_overlaps(
+                curves=curve_storage_sets, group_id=self.group_id
+            )
             # delete those curves
             delete_curves_status = delete_curves(
                 doc=doc, curves_to_delete=curves_to_delete, curve_descriptor="room"
@@ -97,7 +105,9 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
                 modify_curves_status = modify_curves_by_lengthening(
                     doc=doc,
                     guid=self.GUID,
+                    group_id_to_match=self.group_id,
                     transaction_manager=self.transaction_manager,
+                    callback=self.callback
                 )
                 return_value.update(modify_curves_status)
             else:
@@ -106,7 +116,9 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
                 modify_curves_status = modify_curves_by_shortening(
                     doc=doc,
                     guid=self.GUID,
+                    group_id_to_match=self.group_id,
                     transaction_manager=self.transaction_manager,
+                    callback=self.callback,
                 )
                 return_value.update(modify_curves_status)
 

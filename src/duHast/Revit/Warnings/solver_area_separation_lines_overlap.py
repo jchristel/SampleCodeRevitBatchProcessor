@@ -41,6 +41,21 @@ from duHast.Revit.Common.transaction import in_transaction
 
 
 class RevitWarningsSolverAreaSepLinesOverlap(base.Base):
+    """
+    A solver that addresses overlapping area separation lines in a Revit model.
+    It can delete or modify these lines to resolve the overlap issue.
+
+    Example Usage:
+    solver = RevitWarningsSolverAreaSepLinesOverlap()
+    result = solver.solve_warnings(doc, warnings)
+    print(result.status)
+    print(result.message)
+
+    Main functionalities:
+    - Solving overlapping area separation lines by deleting or modifying them.
+    - Ignoring area separation lines that overlap when they are in group instances.
+    """
+
     def __init__(
         self,
         solve_by_lengthening_curves=True,
@@ -50,6 +65,15 @@ class RevitWarningsSolverAreaSepLinesOverlap(base.Base):
     ):
         """
         Class constructor.
+
+        :param solve_by_lengthening_curves: Whether to solve the overlapping curves by lengthening or shortening. Defaults to True.
+        :type solve_by_lengthening_curves: bool, optional
+        :param group_id: The group ID that the curves need to belong to for processing. Defaults to -1.
+        :type group_id: int, optional
+        :param transaction_manager: The transaction manager function used to perform the modifications. Defaults to in_transaction.
+        :type transaction_manager: function, optional
+        :param callback: An optional callback function.
+        :type callback: function, optional
         """
 
         # ini super class to allow multi inheritance in children!
@@ -88,7 +112,7 @@ class RevitWarningsSolverAreaSepLinesOverlap(base.Base):
         if len(warnings) > 0:
             # extract model lines and geometry from failure messages
             curve_storage_sets = get_curves_from_failure_messages(
-                doc=doc, failure_messages=warnings, group_id_to_match=self.group_id
+                doc=doc, failure_messages=warnings, group_id=self.group_id
             )
             # get curves which are completely within other curves
             curves_to_delete = check_curves_overlaps(
@@ -105,7 +129,7 @@ class RevitWarningsSolverAreaSepLinesOverlap(base.Base):
                 modify_curves_status = modify_curves_by_lengthening(
                     doc=doc,
                     guid=self.GUID,
-                    group_id_to_match=self.group_id,
+                    group_id=self.group_id,
                     transaction_manager=self.transaction_manager,
                     callback=self.callback
                 )

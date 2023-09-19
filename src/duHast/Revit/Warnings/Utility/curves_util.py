@@ -12,6 +12,7 @@ from duHast.Utilities.Objects import result as res
 
 from Autodesk.Revit.DB import (
     BuiltInCategory,
+    Category,
     Document,
     ElementId,
     Transaction,
@@ -51,7 +52,7 @@ def get_curves_from_failure_messages(doc, failure_messages, group_id):
             for id in ids:
                 sep_line = doc.GetElement(id)
                 cat = sep_line.Category
-                if cat.Name == "<Area Boundary>" or cat.Name == "<Room Separation>":
+                if cat == Category.GetCategory(doc, BuiltInCategory.OST_AreaPolylines) or cat.Name == Category.GetCategory(doc, BuiltInCategory.OST_RoomPolylines):
                     curve = sep_line.GeometryCurve
                     group_id_curve = sep_line.GroupId.IntegerValue
                     if group_id_curve != group_id:

@@ -19,8 +19,8 @@ Room tag not in room warnings solver class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -28,14 +28,19 @@ Room tag not in room warnings solver class.
 
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Rooms.room_tags import move_tag_to_room
+from duHast.Revit.Common.transaction import in_transaction
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+# import Autodesk.Revit.DB as rdb
 from duHast.Utilities.Objects import base
 
 
 class RevitWarningsSolverRoomTagToRoom(base.Base):
-    def __init__(self):
+    def __init__(
+        self,
+        transaction_manager=in_transaction,
+        callback=None,
+    ):
         """
         Empty constructor this solver does not take any further arguments.
         """
@@ -43,6 +48,8 @@ class RevitWarningsSolverRoomTagToRoom(base.Base):
         # ini super class to allow multi inheritance in children!
         super(RevitWarningsSolverRoomTagToRoom, self).__init__()
         self.filter_name = "Room tag outside of room."
+        self.transaction_manager = transaction_manager
+        self.callback = callback
 
     # --------------------------- room tag not in room ---------------------------
     #: guid identifying this specific warning
@@ -68,11 +75,20 @@ class RevitWarningsSolverRoomTagToRoom(base.Base):
 
         return_value = res.Result()
         if len(warnings) > 0:
+            # report progress to call back if required
+            counter = 0
+            if self.callback:
+                self.callback(counter, len(warnings))
             for warning in warnings:
                 element_ids = warning.GetFailingElements()
                 for el_id in element_ids:
-                    result = move_tag_to_room(doc, el_id)
+                    result = move_tag_to_room(
+                        doc=doc,
+                        tag_id=el_id,
+                        transaction_manager=self.transaction_manager,
+                    )
                     return_value.update(result)
+                counter = counter + 1
         else:
             return_value.update_sep(
                 True, "No warnings of type: room tag outside of room in model."

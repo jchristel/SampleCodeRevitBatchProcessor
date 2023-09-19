@@ -52,7 +52,11 @@ def get_curves_from_failure_messages(doc, failure_messages, group_id):
             for id in ids:
                 sep_line = doc.GetElement(id)
                 cat = sep_line.Category
-                if cat == Category.GetCategory(doc, BuiltInCategory.OST_AreaPolylines) or cat.Name == Category.GetCategory(doc, BuiltInCategory.OST_RoomPolylines):
+                if cat == Category.GetCategory(
+                    doc, BuiltInCategory.OST_AreaSchemeLines
+                ) or cat.Name == Category.GetCategory(
+                    doc, BuiltInCategory.OST_RoomSeparationLines
+                ):
                     curve = sep_line.GeometryCurve
                     group_id_curve = sep_line.GroupId.IntegerValue
                     if group_id_curve != group_id:
@@ -410,7 +414,7 @@ def _identify_curves_to_amend_short(curve_set, group_id):
         raise TypeError("curve_set must be a list")
     if not isinstance(group_id, int):
         raise TypeError("group_id must be an instance of integer")
-    
+
     curves_to_amend = []
     if len(curve_set) == 2:
         if curve_set[0].group_id == curve_set[1].group_id:

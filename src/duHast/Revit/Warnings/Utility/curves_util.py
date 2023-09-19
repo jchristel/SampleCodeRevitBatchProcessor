@@ -485,7 +485,7 @@ def modify_curves_by_shortening(doc, guid, transaction_manager, group_id, callba
                 if curve_identifier not in ignore_these_curves:
                     # get geometry calcs
                     curves_to_change = _identify_curves_to_amend_short(
-                        curves=failure_set, group_id=group_id
+                        curve_set=failure_set, group_id=group_id
                     )
                     # check if None values ( cant change curves ) came back
                     if curves_to_change == None:

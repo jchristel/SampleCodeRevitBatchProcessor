@@ -140,6 +140,7 @@ class RevitWarningsSolverAreaSepLinesOverlap(base.Base):
                 modify_curves_status = modify_curves_by_shortening(
                     doc=doc,
                     guid=self.GUID,
+                    group_id=self.group_id,
                     transaction_manager=self.transaction_manager,
                     callback=self.callback,
                 )

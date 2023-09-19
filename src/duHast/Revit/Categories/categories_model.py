@@ -20,19 +20,20 @@ Revit category helper functions for project files.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 
 from collections import namedtuple
 
-
+from Autodesk.Revit.DB import Category
 
 
 # tuples containing categories data
 category_data = namedtuple("category_data", "category_name sub_category_name id")
+
 
 def get_categories_in_model(doc):
     """
@@ -48,8 +49,35 @@ def get_categories_in_model(doc):
     cats = doc.Settings.Categories
     categories = []
     for main_category in cats:
-        categories.append(category_data(category_name=main_category.Name, sub_category_name=main_category.Name, id=main_category.Id))
+        categories.append(
+            category_data(
+                category_name=main_category.Name,
+                sub_category_name=main_category.Name,
+                id=main_category.Id,
+            )
+        )
         for sub_cat in main_category.SubCategories:
-            categories.append(category_data(category_name=main_category.Name, sub_category_name=sub_cat.Name, id=sub_cat.Id))
-    
+            categories.append(
+                category_data(
+                    category_name=main_category.Name,
+                    sub_category_name=sub_cat.Name,
+                    id=sub_cat.Id,
+                )
+            )
+
     return categories
+
+
+def get_category_from_builtInCategory(doc, built_in_category):
+    """
+    Returns a category based on the buil in category enum value.
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param built_in_category: The built in category
+    :type built_in_category: Autodesk.Revit.DB.BuiltInCategory
+    :return: A category
+    :rtype: Autodesk.Revit.DB.Category
+    """
+    
+    return Category.GetCategory(doc, built_in_category)

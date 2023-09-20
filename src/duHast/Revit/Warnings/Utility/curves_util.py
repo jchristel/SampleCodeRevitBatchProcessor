@@ -52,20 +52,36 @@ def get_curves_from_failure_messages(doc, failure_messages, group_id):
             for id in ids:
                 sep_line = doc.GetElement(id)
                 cat = sep_line.Category
-                if cat.Name == Category.GetCategory(
-                    doc, BuiltInCategory.OST_AreaSchemeLines
-                ).Name or cat.Name == Category.GetCategory(
-                    doc, BuiltInCategory.OST_RoomSeparationLines
-                ).Name:
+                if (
+                    cat.Name
+                    == Category.GetCategory(
+                        doc, BuiltInCategory.OST_AreaSchemeLines
+                    ).Name
+                    or cat.Name
+                    == Category.GetCategory(
+                        doc, BuiltInCategory.OST_RoomSeparationLines
+                    ).Name
+                ):
                     curve = sep_line.GeometryCurve
                     group_id_curve = sep_line.GroupId.IntegerValue
                     if group_id_curve != group_id:
                         are_matching_group_id = False
+
+                    design_option_id = -1
+                    if sep_line.DesignOption:
+                        design_option_id = sep_line.DesignOption.Id
+
+                    created_phase_id = sep_line.CreatedPhaseId
+                    demolished_phase_id = sep_line.DemolishedPhaseId
+
                     dummy = RevitWarningOverlap(
                         id=id,
                         element=sep_line,
                         curve=curve,
                         group_id=group_id_curve,
+                        design_option_id=design_option_id,
+                        created_phase_id=created_phase_id,
+                        demolished_phase_id=demolished_phase_id,
                     )
                     lines_by_exception.append(dummy)
 
@@ -113,8 +129,14 @@ def check_curves_overlaps(curves, group_id):
 
             curve_to_delete = is_curve_is_within_curve(curve_set[0], curve_set[1])
             # can anything be deleted?
+            # need to be in main model, same design option, same phase created and demoed
             if curve_to_delete:
-                if curve_to_delete.group_id == group_id:
+                if (
+                    curve_to_delete.group_id == group_id
+                    and curve_set[0].design_option_id == curve_set[1].design_option_id
+                    and curve_set[0].phase_created_id == curve_set[1].phase_created_id
+                    and curve_set[0].phase_demolished_id == curve_set[1].phase_demolished_id
+                ):
                     # check if the curve to be deleted is in the main model
                     curves_to_delete.append(curve_to_delete)
         else:
@@ -152,11 +174,15 @@ def _identify_curve_in_set_to_amend_lengthening(curve_set, group_id):
         )
 
         # check whether changes can be executed
+        # need to be in main model, same design option, same phase created and demoed
         if (
             curve_to_delete
             and curve_to_change
             and curve_to_delete.group_id == group_id
             and curve_to_change.group_id == group_id
+            and curve_set[0].design_option_id == curve_set[1].design_option_id
+            and curve_set[0].phase_created_id == curve_set[1].phase_created_id
+            and curve_set[0].phase_demolished_id == curve_set[1].phase_demolished_id
         ):
             # check if the curve to be deleted is in the main model, that there us a curve to lengthen and its also in main model
             curves_to_delete.append(curve_to_delete)
@@ -417,12 +443,19 @@ def _identify_curves_to_amend_short(curve_set, group_id):
 
     curves_to_amend = []
     if len(curve_set) == 2:
-        if curve_set[0].group_id == curve_set[1].group_id:
-            curve_to_change = calculate_shortened_curve_geometry(
+        curve_to_change = calculate_shortened_curve_geometry(
                 curve_set[0], curve_set[1]
-            )
-            if curve_to_change:
-                curves_to_amend.append(curve_to_change)
+        )
+        # check whether changes can be executed
+        # need to be in main model, same design option, same phase created and demoed
+        if (
+            curve_to_change 
+            and curve_set[0].group_id == curve_set[1].group_id
+            and curve_set[0].design_option_id == curve_set[1].design_option_id
+            and curve_set[0].phase_created_id == curve_set[1].phase_created_id
+            and curve_set[0].phase_demolished_id == curve_set[1].phase_demolished_id
+        ):
+            curves_to_amend.append(curve_to_change)
         else:
             curves_to_amend.append(None)
     else:

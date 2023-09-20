@@ -128,10 +128,13 @@ class RevitWarningsSolver(base.Base):
                 warnings = get_warnings_by_guid(
                     doc, self.AVAILABLE_SOLVERS[solver].GUID
                 )
-                result_solver = self.AVAILABLE_SOLVERS[solver].solve_warnings(
-                    doc, warnings
-                )
-                return_value.update(result_solver)
+                try:
+                    result_solver = self.AVAILABLE_SOLVERS[solver].solve_warnings(
+                        doc, warnings
+                    )
+                    return_value.update(result_solver)
+                except Exception as e:
+                    return_value.update_sep(False, "Failed to apply solver for warnings guid {} with exception: {}".format(self.AVAILABLE_SOLVERS[solver].GUID, e))
         except Exception as e:
-            return_value.update_sep(False, "Failed to apply solver with exception: {}".format(e))
+            return_value.update_sep(False, "Failed to apply all solvers with exception: {}".format(e))
         return return_value

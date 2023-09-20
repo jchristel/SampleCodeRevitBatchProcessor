@@ -36,7 +36,16 @@ from duHast.Utilities.Objects import base
 
 class RevitWarningOverlap(base.Base):
     def __init__(
-        self, id="", element=None, curve=None, group_id=-1, group_instances=0, **kwargs
+        self,
+        id="",
+        element=None,
+        curve=None,
+        group_id=-1,
+        group_instances=0,
+        design_option_id=-1,
+        created_phase_id=-1,
+        demolished_phase_id=-1,
+        **kwargs
     ):
         """
         Class constructor.
@@ -52,3 +61,6 @@ class RevitWarningOverlap(base.Base):
         self.group_id = group_id
         self.group_instances = group_instances
         self.new_curve = None
+        self.design_option_id = design_option_id
+        self.phase_created_id = created_phase_id
+        self.phase_demolished_id = demolished_phase_id

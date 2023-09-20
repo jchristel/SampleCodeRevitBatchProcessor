@@ -29,6 +29,8 @@ This module contains the header row for any Revit warnings reports.
 #: header used in reports
 REPORT_WARNINGS_HEADER = [
     "HOSTFILE",
+    "DATE", 
+    "TIME",
     "WARNING ID",
     "NUMBER OF WARNINGS",
     "WARNING DESCRIPTION",

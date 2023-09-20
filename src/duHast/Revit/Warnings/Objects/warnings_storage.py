@@ -29,6 +29,11 @@ A class used to store Revit warnings information.
 #
 
 from duHast.Utilities.Objects import base
+from duHast.Utilities.date_stamps import (
+    get_date_stamp,
+    FILE_DATE_STAMP_YYYYMMDD_SPACE,
+    TIME_STAMP_HHMMSEC_COLON,
+)
 
 class RevitWarning(base.Base):
     """
@@ -61,6 +66,9 @@ class RevitWarning(base.Base):
         self.id = id
         self.description = description
         self.element_ids = element_ids
+        self.date = get_date_stamp(FILE_DATE_STAMP_YYYYMMDD_SPACE),
+        self.time = get_date_stamp(TIME_STAMP_HHMMSEC_COLON)
+    
     
     def class_to_csv(self, headers):
         """

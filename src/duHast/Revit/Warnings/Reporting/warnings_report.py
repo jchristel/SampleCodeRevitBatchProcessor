@@ -29,8 +29,11 @@ This module contains a Revit warnings properties report function.
 from duHast.Revit.Warnings.warnings import get_warnings
 from duHast.Revit.Warnings.Objects.warnings_storage import RevitWarning
 from duHast.Utilities.Objects import result as res
-from duHast.Revit.Warnings.Reporting.warnings_report_header import REPORT_WARNINGS_HEADER
+from duHast.Revit.Warnings.Reporting.warnings_report_header import (
+    REPORT_WARNINGS_HEADER,
+)
 from duHast.Utilities.files_csv import write_report_data_as_csv
+
 
 def get_warnings_report_data(doc, revit_file_name):
     """
@@ -70,7 +73,7 @@ def get_warnings_report_data(doc, revit_file_name):
         except Exception as e:
             # store the exception
             warning_exception = ResourceWarning(
-                file_name = revit_file_name,
+                file_name=revit_file_name,
                 id=-1,
                 description="failed to retrieve warning with exception: {}".format(e),
                 element_ids=[],
@@ -82,29 +85,41 @@ def get_warnings_report_data(doc, revit_file_name):
 
     return data
 
-def convert_warnings_data_to_list(warnings_data, headers):
+
+def convert_warnings_data_to_list(warnings_data):
     """
     Converts a list of dictionaries of view properties names and values to a list of properties only.
 
     :param view_data: List of dictionaries representing view properties
     :type view_data: [{}]
-    :param headers: list of properties
-    :type headers: [str]
     :return: A list of lists of view property values.
     :rtype: [[str]]
     """
 
     data = []
-    for key,value in warnings_data.items():
+    for key, value in warnings_data.items():
         number_elements_affected = 0
         dummy = None
         for warning_data_instance in value:
-            number_elements_affected = number_elements_affected + len(warning_data_instance.element_ids)
+            number_elements_affected = number_elements_affected + len(
+                warning_data_instance.element_ids
+            )
             dummy = warning_data_instance
         # build a list with entries:
         # file name, warning GUID, number of warnings belonging to warnings GUID, warnings description, number of elements involved overall
-        data.append([dummy.file_name, dummy.id, len(warnings_data[key]), dummy.description, number_elements_affected])
+        data.append(
+            [
+                dummy.file_name,
+                dummy.date,
+                dummy.time,
+                dummy.id,
+                len(warnings_data[key]),
+                dummy.description,
+                number_elements_affected,
+            ]
+        )
     return data
+
 
 def write_warnings_data(file_name, data):
     """

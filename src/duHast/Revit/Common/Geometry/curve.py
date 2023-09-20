@@ -184,7 +184,7 @@ def calculate_lengthened_curve_geometry(curve_one, curve_two):
             point_one = shorter_curve.curve.GetEndPoint(0)
         else:
             raise ValueError(
-                "Neither end point of {} is on {}\n ".format(
+                "Neither end point of shorter curve {} is on longer curve {}".format(
                     shorter_curve.id, longer_curve.id
                 )
             )
@@ -198,7 +198,7 @@ def calculate_lengthened_curve_geometry(curve_one, curve_two):
             point_zero = longer_curve.curve.GetEndPoint(0)
         else:
             raise ValueError(
-                "Neither end point of {} is on {}".format(
+                "Neither end point of longer curve {} is on shorter curve {}".format(
                     longer_curve.id, shorter_curve.id
                 )
             )

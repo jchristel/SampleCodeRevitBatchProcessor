@@ -55,6 +55,7 @@ class OverrideByCategory(OverrideByBase):
         self.sub_category_name = sub_category_name
         self.category_id = category_id
         self.detail_level = -1
+        self.are_overrides_present = False
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -76,6 +77,7 @@ class OverrideByCategory(OverrideByBase):
                 self.sub_category_name = j["sub_category_name"]
                 self.category_id = j["category_id"]
                 self.detail_level = j["detail_level"]
+                self.are_overrides_present = j["are_overrides_present"]
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(

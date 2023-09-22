@@ -32,8 +32,17 @@ A  class used to store view category overrides settings from Revit.
 
 from duHast.Utilities.Objects import base
 
+
 class RevitCategoryOverride(base.Base):
-    def __init__(self, main_category_name="", sub_category_name="", category_id = -1, revit_override = None, is_category_hidden = False, **kwargs):
+    def __init__(
+        self,
+        main_category_name="",
+        sub_category_name="",
+        category_id=-1,
+        revit_override=None,
+        is_category_hidden=False,
+        **kwargs
+    ):
         """
         Class constructor.
 
@@ -45,5 +54,5 @@ class RevitCategoryOverride(base.Base):
         self.main_category_name = main_category_name
         self.sub_category_name = sub_category_name
         self.category_id = category_id
-        self.revit_override =revit_override
+        self.revit_override = revit_override
         self.is_category_hidden = is_category_hidden

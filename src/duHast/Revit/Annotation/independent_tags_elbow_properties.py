@@ -27,7 +27,8 @@ A number of functions around Revit independent tags elbow properties.
 #
 
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import LeaderEndCondition
+
 from duHast.Revit.Common.revit_version import get_revit_version_number
 from duHast.Revit.Common.Geometry.geometry import get_point_as_doubles
 
@@ -84,7 +85,7 @@ def get_elbow_properties_2021(tag, points_as_double):
                 elbow_properties[ELBOW_LOCATION] = get_point_as_doubles(tag.LeaderElbow)
             else:
                 elbow_properties[ELBOW_LOCATION] = tag.LeaderElbow
-            if tag.LeaderEndCondition == rdb.LeaderEndCondition.Free:
+            if tag.LeaderEndCondition == LeaderEndCondition.Free:
                 if points_as_double:
                     elbow_properties[LEADER_END] = get_point_as_doubles(tag.LeaderEnd)
                 else:
@@ -130,7 +131,7 @@ def get_elbow_properties_2022(tag, points_as_double):
                     )
                 else:
                     elbow_properties[ELBOW_LOCATION] = tag.GetLeaderElbow(tag_ref)
-                if tag.LeaderEndCondition == rdb.LeaderEndCondition.Free:
+                if tag.LeaderEndCondition == LeaderEndCondition.Free:
                     if points_as_double:
                         elbow_properties[LEADER_END] = get_point_as_doubles(
                             tag.GetLeaderEnd(tag_ref)

@@ -30,11 +30,11 @@ import clr
 import System
 
 # import common library modules
-from duHast.Revit.Annotation import arrow_heads as rArrow
+from duHast.Revit.Annotation.arrow_heads import get_arrow_head_ids_from_type, ARROWHEAD_PARAS_TEXT
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
-import Autodesk.Revit.DB.Architecture as rdbA
+from Autodesk.Revit.DB import AnnotationSymbolType, AreaTagType, FamilySymbol, FilteredElementCollector
+from Autodesk.Revit.DB.Architecture import RoomTagType
 
 # ----------------------------------------------
 
@@ -51,12 +51,12 @@ def get_all_anno_symbol_types(doc):
     """
 
     types = []
-    col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol)
+    col = FilteredElementCollector(doc).OfClass(FamilySymbol)
     for c in col:
         if (
-            c.GetType() == rdb.AnnotationSymbolType
-            or c.GetType == rdb.AreaTagType
-            or c.GetType() == rdbA.RoomTagType
+            c.GetType() == AnnotationSymbolType
+            or c.GetType == AreaTagType
+            or c.GetType() == RoomTagType
         ):
             types.append(c)
     return types
@@ -73,7 +73,7 @@ def get_anno_symbol_arrow_head_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    used_ids = rArrow.get_arrow_head_ids_from_type(
-        doc, get_all_anno_symbol_types, rArrow.ARROWHEAD_PARAS_TEXT
+    used_ids = get_arrow_head_ids_from_type(
+        doc, get_all_anno_symbol_types, ARROWHEAD_PARAS_TEXT
     )
     return used_ids

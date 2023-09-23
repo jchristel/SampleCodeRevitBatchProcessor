@@ -19,15 +19,15 @@ A number of functions around Revit independent tags elements tagged properties.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import ElementId
 from duHast.Revit.Common.revit_version import get_revit_version_number
 
 HOST_ELEMENT_ID = "host_element_id"
@@ -82,17 +82,17 @@ def get_tagged_elements_2021(tag):
     try:
         id = tag.TaggedElementId
         id_data = {}
-        if id.HostElementId != rdb.ElementId.InvalidElementId:
+        if id.HostElementId != ElementId.InvalidElementId:
             id_data[HOST_ELEMENT_ID] = id.HostElementId
-            id_data[LINK_ELEMENT_ID] = rdb.ElementId.InvalidElementId
-            id_data[LINK_INSTANCE_ID] = rdb.ElementId.InvalidElementId
-        elif id.LinkedElementId != rdb.ElementId.InvalidElementId:
-            id_data[HOST_ELEMENT_ID] = rdb.ElementId.InvalidElementId
+            id_data[LINK_ELEMENT_ID] = ElementId.InvalidElementId
+            id_data[LINK_INSTANCE_ID] = ElementId.InvalidElementId
+        elif id.LinkedElementId != ElementId.InvalidElementId:
+            id_data[HOST_ELEMENT_ID] = ElementId.InvalidElementId
             id_data[LINK_ELEMENT_ID] = id.LinkedElementId
-            id_data[LINK_INSTANCE_ID] = rdb.ElementId.InvalidElementId
+            id_data[LINK_INSTANCE_ID] = ElementId.InvalidElementId
         else:
-            id_data[HOST_ELEMENT_ID] = rdb.ElementId.InvalidElementId
-            id_data[LINK_ELEMENT_ID] = rdb.ElementId.InvalidElementId
+            id_data[HOST_ELEMENT_ID] = ElementId.InvalidElementId
+            id_data[LINK_ELEMENT_ID] = ElementId.InvalidElementId
             id_data[LINK_INSTANCE_ID] = id.LinkInstanceId
         data.append(id_data)
     except:
@@ -125,17 +125,17 @@ def get_tagged_elements_2022(tag):
         for id in ids:
             id_data = {}
             try:
-                if id.HostElementId != rdb.ElementId.InvalidElementId:
+                if id.HostElementId != ElementId.InvalidElementId:
                     id_data[HOST_ELEMENT_ID] = id.HostElementId
-                    id_data[LINK_ELEMENT_ID] = rdb.ElementId.InvalidElementId
-                    id_data[LINK_INSTANCE_ID] = rdb.ElementId.InvalidElementId
-                elif id.LinkedElementId != rdb.ElementId.InvalidElementId:
-                    id_data[HOST_ELEMENT_ID] = rdb.ElementId.InvalidElementId
+                    id_data[LINK_ELEMENT_ID] = ElementId.InvalidElementId
+                    id_data[LINK_INSTANCE_ID] = ElementId.InvalidElementId
+                elif id.LinkedElementId != ElementId.InvalidElementId:
+                    id_data[HOST_ELEMENT_ID] = ElementId.InvalidElementId
                     id_data[LINK_ELEMENT_ID] = id.LinkedElementId
-                    id_data[LINK_INSTANCE_ID] = rdb.ElementId.InvalidElementId
+                    id_data[LINK_INSTANCE_ID] = ElementId.InvalidElementId
                 else:
-                    id_data[HOST_ELEMENT_ID] = rdb.ElementId.InvalidElementId
-                    id_data[LINK_ELEMENT_ID] = rdb.ElementId.InvalidElementId
+                    id_data[HOST_ELEMENT_ID] = ElementId.InvalidElementId
+                    id_data[LINK_ELEMENT_ID] = ElementId.InvalidElementId
                     id_data[LINK_INSTANCE_ID] = id.LinkInstanceId
             except:
                 id_data[HOST_ELEMENT_ID] = None
@@ -143,5 +143,5 @@ def get_tagged_elements_2022(tag):
                 id_data[LINK_INSTANCE_ID] = None
             data.append(id_data)
     except:
-        data.append(rdb.ElementId.InvalidElementId)
+        data.append(ElementId.InvalidElementId)
     return data

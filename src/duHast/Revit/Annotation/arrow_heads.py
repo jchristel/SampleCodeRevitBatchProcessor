@@ -30,9 +30,9 @@ A number of functions around Revit Arrow heads.
 # --------------------------------------------- Arrow heads  ------------------
 
 #: list of built in parameters attached to dimensions containing arrow head ids
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import BuiltInParameter, ElementType, ElementId, FilteredElementCollector
 
-from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value
 
 #:  list of built in parameters attached to
 #:
@@ -42,28 +42,28 @@ from duHast.Revit.Common import parameter_get_utils as rParaGet
 #:
 #: containing arrow head ids
 ARROWHEAD_PARAS_DIM = [
-    rdb.BuiltInParameter.DIM_STYLE_CENTERLINE_TICK_MARK,
-    rdb.BuiltInParameter.DIM_STYLE_INTERIOR_TICK_MARK,
-    rdb.BuiltInParameter.DIM_STYLE_LEADER_TICK_MARK,
-    rdb.BuiltInParameter.DIM_LEADER_ARROWHEAD,
-    rdb.BuiltInParameter.WITNS_LINE_TICK_MARK,
+    BuiltInParameter.DIM_STYLE_CENTERLINE_TICK_MARK,
+    BuiltInParameter.DIM_STYLE_INTERIOR_TICK_MARK,
+    BuiltInParameter.DIM_STYLE_LEADER_TICK_MARK,
+    BuiltInParameter.DIM_LEADER_ARROWHEAD,
+    BuiltInParameter.WITNS_LINE_TICK_MARK,
 ]
 
 
 #: parameter containing the arrowhead id in text types
-ARROWHEAD_PARAS_TEXT = [rdb.BuiltInParameter.LEADER_ARROWHEAD]
+ARROWHEAD_PARAS_TEXT = [BuiltInParameter.LEADER_ARROWHEAD]
 
 
 #: list of built in parameters attached to spot dims containing arrow head ids
 #: and symbols used
 ARROWHEAD_PARAS_SPOT_DIMS = [
-    rdb.BuiltInParameter.SPOT_ELEV_LEADER_ARROWHEAD,
-    rdb.BuiltInParameter.SPOT_ELEV_SYMBOL,
+    BuiltInParameter.SPOT_ELEV_LEADER_ARROWHEAD,
+    BuiltInParameter.SPOT_ELEV_SYMBOL,
 ]
 
 
 #: list of built in parameters attached to stair path types containing arrow head ids
-ARROWHEAD_PARAS_STAIRS_PATH = [rdb.BuiltInParameter.ARROWHEAD_TYPE]
+ARROWHEAD_PARAS_STAIRS_PATH = [BuiltInParameter.ARROWHEAD_TYPE]
 
 
 def get_arrow_head_ids_from_type(doc, type_getter, parameter_list):
@@ -83,10 +83,10 @@ def get_arrow_head_ids_from_type(doc, type_getter, parameter_list):
     types = type_getter(doc)
     for t in types:
         for p_int in parameter_list:
-            id = rParaGet.get_built_in_parameter_value(t, p_int)
+            id = get_built_in_parameter_value(t, p_int)
             if (
                 id not in used_ids
-                and id != rdb.ElementId.InvalidElementId
+                and id != ElementId.InvalidElementId
                 and id != None
             ):
                 used_ids.append(id)
@@ -106,7 +106,7 @@ def get_arrow_types_in_model(doc):
 
     types = []
     similar_types = []
-    col = rdb.FilteredElementCollector(doc).OfClass(rdb.ElementType)
+    col = FilteredElementCollector(doc).OfClass(ElementType)
     for c in col:
         if c.FamilyName == "Arrowhead":
             similar_types = c.GetSimilarTypes()

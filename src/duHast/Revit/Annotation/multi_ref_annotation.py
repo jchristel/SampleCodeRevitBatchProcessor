@@ -20,15 +20,23 @@ This module contains a number of helper functions relating to multi reference an
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-import Autodesk.Revit.DB as rdb
-from duHast.Revit.Common import common as com
+
+from Autodesk.Revit.DB import (
+    FilteredElementCollector,
+    MultiReferenceAnnotationType,
+    MultiReferenceAnnotation,
+)
+from duHast.Revit.Common.common import (
+    get_ids_from_element_collector,
+    get_similar_type_families_by_type,
+)
 
 
 def get_all_multi_ref_annotation_types(doc):
@@ -40,7 +48,7 @@ def get_all_multi_ref_annotation_types(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of MultiReferenceAnnotationType
     """
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotationType)
+    return FilteredElementCollector(doc).OfClass(MultiReferenceAnnotationType)
 
 
 def get_all_multi_ref_annotation_type_ids(doc):
@@ -53,8 +61,8 @@ def get_all_multi_ref_annotation_type_ids(doc):
     """
 
     ids = []
-    col = rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotationType)
-    ids = com.get_ids_from_element_collector(col)
+    col = FilteredElementCollector(doc).OfClass(MultiReferenceAnnotationType)
+    ids = get_ids_from_element_collector(col)
     return ids
 
 
@@ -67,7 +75,7 @@ def get_all_multi_ref_annotation_elements(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of MultiReferenceAnnotation
     """
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotation)
+    return FilteredElementCollector(doc).OfClass(MultiReferenceAnnotation)
 
 
 def get_all_similar_multi_reference_anno_types(doc):
@@ -79,7 +87,7 @@ def get_all_similar_multi_reference_anno_types(doc):
     :rtype: List [[Autodesk.Revit.DB.ElementType, Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...],]
     """
 
-    multi_reference_anno_types = com.get_similar_type_families_by_type(
+    multi_reference_anno_types = get_similar_type_families_by_type(
         doc, get_all_multi_ref_annotation_types
     )
     return multi_reference_anno_types

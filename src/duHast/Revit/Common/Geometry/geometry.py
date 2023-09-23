@@ -33,8 +33,7 @@ from System import Linq
 
 clr.ImportExtensions(Linq)
 
-import Autodesk.Revit.DB as rdb
-
+from Autodesk.Revit.DB  import UV, PlanarFace
 
 # ---------------------------- debug ----------------------------
 def get_point_as_string(point):
@@ -201,7 +200,7 @@ def flatten_xyz_point(point):
     :rtype:  Autodesk.Revit.DB.UV
     """
 
-    return rdb.UV(point.X, point.Y)
+    return UV(point.X, point.Y)
 
 
 def flatten_xyz_point_list(polygon):
@@ -715,7 +714,7 @@ def get_unique_horizontal_faces(faces):
     faces_horizontal = []
     for f in faces:
         # non planar faces are ignored for the moment...
-        if type(f) is rdb.PlanarFace:
+        if type(f) is PlanarFace:
             if f.FaceNormal.Z != 0.0:
                 faces_horizontal.append(f)
 

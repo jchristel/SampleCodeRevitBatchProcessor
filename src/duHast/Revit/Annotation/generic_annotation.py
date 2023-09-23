@@ -29,8 +29,7 @@ Revit generic annotation helper functions.
 import clr
 import System
 
-from duHast.Revit.Common import parameter_get_utils as rParaGet
-
+from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value
 # import Autodesk
 from Autodesk.Revit.DB import (
     BuiltInCategory,
@@ -80,7 +79,7 @@ def get_all_generic_annotation_type_ids_by_category(doc):
         parameter_match = False
         # get the family object to check whether it is a shared family
         fam = c.Family
-        id = rParaGet.get_built_in_parameter_value(fam, BuiltInParameter.FAMILY_SHARED)
+        id = get_built_in_parameter_value(fam, BuiltInParameter.FAMILY_SHARED)
         if id != None:
             parameter_match = True
             if id == "No" and c.Id not in ids:

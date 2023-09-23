@@ -19,15 +19,15 @@ A number of functions around Revit independent tags.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import ElementId, Transaction, XYZ
 from collections import namedtuple
 
 from duHast.Utilities.Objects import result as res
@@ -97,7 +97,7 @@ def update_tag_location(doc, tag_data):
         return action_return_value
 
     # set up an transaction
-    transaction = rdb.Transaction(doc, "Moving tags: {}".format(len(tag_data)))
+    transaction = Transaction(doc, "Moving tags: {}".format(len(tag_data)))
     # execute transaction in transaction wrapper method
     result_moving_tags = in_transaction(transaction, action)
     return result_moving_tags
@@ -139,11 +139,11 @@ def update_tag_locations_from_report(doc, report_file_path, distance_threshold=5
         id_data = tag_data[TAG_ID]
         try:
             # get the actual tag element in model
-            tag_in_model = doc.GetElement(rdb.ElementId(id_data))
+            tag_in_model = doc.GetElement(ElementId(id_data))
             # in case tag no longer exists
             if tag_in_model != None:
                 head_location_data = tag_data[TAG_HEAD_LOCATION]
-                head_location_data_as_xyz = rdb.XYZ(
+                head_location_data_as_xyz = XYZ(
                     head_location_data[0], head_location_data[1], head_location_data[2]
                 )
                 # check distance to current location

@@ -21,8 +21,8 @@ Common Revit API utility functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -41,7 +41,11 @@ clr.ImportExtensions(Linq)
 # class used for stats reporting
 
 # import everything from Autodesk Revit DataBase namespace (Revit API)
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import (
+    BuiltInParameter,
+    BuiltInCategory,
+    FilteredElementCollector,
+)
 import os.path as path
 
 # utilities
@@ -67,7 +71,7 @@ def get_element_mark(e):
 
     mark = ""
     try:
-        para_mark = e.get_Parameter(rdb.BuiltInParameter.ALL_MODEL_MARK)
+        para_mark = e.get_Parameter(BuiltInParameter.ALL_MODEL_MARK)
         mark = "" if para_mark == None else para_mark.AsString()
     except Exception as e:
         mark = "Failed with exception: " + str(e)
@@ -93,12 +97,10 @@ def get_legend_components_in_model(doc, type_ids):
 
     ids = []
     # get all legend components in the model to check against list past in
-    col = rdb.FilteredElementCollector(doc).OfCategory(
-        rdb.BuiltInCategory.OST_LegendComponents
-    )
+    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_LegendComponents)
     for c in col:
         id = rParaGet.get_built_in_parameter_value(
-            c, rdb.BuiltInParameter.LEGEND_COMPONENT, rParaGet.get_parameter_value
+            c, BuiltInParameter.LEGEND_COMPONENT, rParaGet.get_parameter_value
         )
         if id in type_ids and id not in ids:
             ids.append(id)

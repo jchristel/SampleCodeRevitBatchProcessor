@@ -39,6 +39,7 @@ from duHast.Revit.Common import worksets as rWork
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import Element
 
 
 def value_in_name(value, element):
@@ -54,7 +55,7 @@ def value_in_name(value, element):
     :rtype: bool
     """
 
-    return value in rdb.Element.Name.GetValue(element)
+    return value in Element.Name.GetValue(element)
 
 
 def value_equals_workset_name(value, element):
@@ -86,7 +87,7 @@ def value_in_family_name(value, element):
     :rtype: bool
     """
 
-    return value in rdb.Element.Name.GetValue(element.Symbol.Family)
+    return value in Element.Name.GetValue(element.Symbol.Family)
 
 
 def value_in_element_type_family_name(value, element):

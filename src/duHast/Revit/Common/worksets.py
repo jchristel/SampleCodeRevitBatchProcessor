@@ -45,6 +45,17 @@ from duHast.Utilities import files_tab as filesTab
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import (
+    BuiltInParameter,
+    Element,
+    ElementId,
+    ElementWorksetFilter,
+    FilteredElementCollector,
+    FilteredWorksetCollector,
+    Transaction,
+    WorksetKind,
+    WorksetDefaultVisibilitySettings,
+)
 
 # --------------------------------------------- utility functions ------------------
 
@@ -62,8 +73,8 @@ def get_workset_id_by_name(doc, workset_name):
     :rtype: Autodesk.Revit.DB.ElementId
     """
 
-    id = rdb.ElementId.InvalidElementId
-    for p in rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset):
+    id = ElementId.InvalidElementId
+    for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
         if p.Name == workset_name:
             id = p.Id
             break
@@ -84,7 +95,7 @@ def get_workset_name_by_id(doc, id_integer):
     """
 
     name = "unknown"
-    for p in rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset):
+    for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
         if p.Id.IntegerValue == id_integer:
             name = p.Name
             break
@@ -103,7 +114,7 @@ def get_workset_ids(doc):
     """
 
     id = []
-    for p in rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset):
+    for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
         id.append(p.Id)
     return id
 
@@ -121,9 +132,7 @@ def get_worksets(doc):
     :rtype: list of Autodesk.Revit.DB.Workset
     """
 
-    worksets = (
-        rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset).ToList()
-    )
+    worksets = FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset).ToList()
     return worksets
 
 
@@ -138,7 +147,7 @@ def get_worksets_from_collector(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    collector = rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset)
+    collector = FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset)
     return collector
 
 
@@ -159,8 +168,8 @@ def open_worksets_with_elements_hack(doc):
     workset_ids = get_workset_ids(doc)
     # loop over workset and open if anything is on them
     for w_id in workset_ids:
-        workset = rdb.ElementWorksetFilter(w_id)
-        elem_ids = rdb.FilteredElementCollector(doc).WherePasses(workset).ToElementIds()
+        workset = ElementWorksetFilter(w_id)
+        elem_ids = FilteredElementCollector(doc).WherePasses(workset).ToElementIds()
         if len(elem_ids) > 0:
             # this will force Revit to open the workset containing this element
             rdb.uidoc.ShowElements(elem_ids.First())
@@ -199,18 +208,18 @@ def modify_element_workset(doc, default_workset_name, collector, element_type_na
     counter_success = 0
     counter_failure = 0
     # check if invalid id came back..workset no longer exists..
-    if default_id != rdb.ElementId.InvalidElementId:
+    if default_id != ElementId.InvalidElementId:
         # get all elements in collector and check their workset
         for p in collector:
             if p.WorksetId != default_id:
                 # get the element name
                 element_name = "Unknown Element Name"
                 try:
-                    element_name = rdb.Element.Name.GetValue(p)
+                    element_name = Element.Name.GetValue(p)
                 except Exception:
                     pass
                 # move element to new workset
-                transaction = rdb.Transaction(
+                transaction = Transaction(
                     doc, "Changing workset: ".format(element_name)
                 )
                 tranny_status = rTran.in_transaction(
@@ -252,7 +261,7 @@ def get_action_change_element_workset(el, default_id):
     def action():
         action_return_value = res.Result()
         try:
-            ws_param = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+            ws_param = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
             ws_param.Set(default_id.IntegerValue)
             action_return_value.message = "Changed element workset."
         except Exception as e:
@@ -279,13 +288,13 @@ def is_element_on_workset_by_id(doc, el, workset_id):
 
     flag = True
     try:
-        ws_param = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+        ws_param = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
         current_workset_name = rParaGet.get_parameter_value(ws_param)
         compare_to_workset_name = get_workset_name_by_id(doc, workset_id.IntegerValue)
         if compare_to_workset_name != current_workset_name:
             flag = False
     except Exception as e:
-        print(e)
+        print("is_element_on_workset_by_id: {}".format(e))
         flag = False
     return flag
 
@@ -305,12 +314,12 @@ def is_element_on_workset_by_name(el, workset_name):
 
     flag = True
     try:
-        ws_param = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+        ws_param = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
         current_workset_name = rParaGet.get_parameter_value(ws_param)
         if workset_name != current_workset_name:
             flag = False
     except Exception as e:
-        print("IsElementOnWorksetByName: " + str(e))
+        print("IsElementOnWorksetByName: {}".format(e))
         flag = False
     return flag
 
@@ -327,7 +336,7 @@ def get_element_workset_name(el):
 
     work_setname = "invalid workset"
     try:
-        ws_param = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+        ws_param = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
         work_setname = rParaGet.get_parameter_value(ws_param)
     except Exception as e:
         print("GetElementWorksetName: " + str(e))
@@ -387,7 +396,7 @@ def update_workset_default_visibility_from_report(doc, report_path, revit_file_p
 
                     def action():
                         action_return_value = res.Result()
-                        default_visibility = rdb.WorksetDefaultVisibilitySettings.GetWorksetDefaultVisibilitySettings(
+                        default_visibility = WorksetDefaultVisibilitySettings.GetWorksetDefaultVisibilitySettings(
                             doc
                         )
                         try:
@@ -407,7 +416,7 @@ def update_workset_default_visibility_from_report(doc, report_path, revit_file_p
                         return action_return_value
 
                     # move element to new workset
-                    transaction = rdb.Transaction(
+                    transaction = Transaction(
                         doc,
                         "{}: Changing default workset visibility".format(workset.Name),
                     )

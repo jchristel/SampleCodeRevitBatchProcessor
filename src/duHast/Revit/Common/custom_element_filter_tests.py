@@ -38,7 +38,6 @@ test expects:
 from duHast.Revit.Common import worksets as rWork
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
 from Autodesk.Revit.DB import Element
 
 
@@ -119,7 +118,7 @@ def value_is_family_name(value, element):
     :rtype: bool
     """
 
-    return value == rdb.Element.Name.GetValue(element.Symbol.Family)
+    return value == Element.Name.GetValue(element.Symbol.Family)
 
 
 def value_is_element_type_family_name(value, element):

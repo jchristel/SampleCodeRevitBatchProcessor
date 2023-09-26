@@ -19,8 +19,8 @@ This module contains a number of helper functions relating to Revit views.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -29,8 +29,9 @@ import clr
 import System
 
 # import common library modules
-# from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.Revit.Common import transaction as rTran
+from duHast.Revit.Views.Objects.filter_override_storage import RevitFilterOverride
+from duHast.Revit.Views.filters import get_all_filters
+from duHast.Revit.Common.transaction import in_transaction
 from duHast.Revit.Views import filters as rView
 
 # from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
@@ -39,9 +40,209 @@ from duHast.Utilities.Objects import result as res
 # from duHast.Utilities import Utility as util
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import Transaction
 
 # --------------------------- view filters --------------------------------
+
+
+def get_filters_from_model(doc):
+    filters_dic = {}
+
+    # get all filters in the model
+    filters_in_model = get_all_filters(doc)
+    for f in filters_in_model:
+        filters_dic["{}".format(f.Name)] = RevitFilterOverride(
+            filter_name=f.Name,
+            filter_id=f.Id,
+            filter_override=None,
+            is_filter_enabled=True,
+            is_filter_visible=False,
+        )
+
+    return filters_dic
+
+
+def update_filter_override_from_view(view, filter_storage_instance):
+    """
+    Populates the category_override and is_category_hidden field of a 'category_storage' instance based on the view past in.
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view: The view from which the category override is to be used.
+    :type view: Autodesk.Revit.DB.View
+    :param category_storage_instance: An instances of a named tuple: category_storage
+    :type category_storage_instance: category_storage
+
+    :return: An instances of a named tuple: category_storage where category_overrides field (a list) and is_category_hidden (also a list) has been updated with a category override.
+    :rtype: category_storage
+    """
+
+    filter_storage_instance.filter_override = view.GetFilterOverrides(filter_storage_instance.filter_id)
+    filter_storage_instance.is_filter_visible = view.GetFilterVisibility(filter_storage_instance.filter_id)
+    filter_storage_instance.is_filter_enabled = view.GetIsFilterEnabled(filter_storage_instance.filter_id)
+
+    return filter_storage_instance
+
+
+def get_filter_overrides_from_view(view, filter_storage_instances):
+    """
+    Populates the category_override and is_category_hidden fields of a list of 'category_storage' instances based on the view past in.
+
+    :param view: The view from which the category override is to be used.
+    :type view: Autodesk.Revit.DB.View
+    :param category_storage_instances: An list of instances of a named tuple: category_storage
+    :type category_storage_instances: [category_storage]
+
+    :return: A list of instances of a named tuple: category_storage where category_overrides field (a list) and is_category_hidden (also a list) has been updated with a category override.
+    :rtype: [category_storage]
+    """
+
+    updated_filter_storage_instances = []
+    for filter_storage_instance in filter_storage_instances:
+        updated_filter_instance = update_filter_override_from_view(
+            view, filter_storage_instance
+        )
+        updated_filter_storage_instances.append(updated_filter_instance)
+    return updated_filter_storage_instances
+
+
+def apply_filter_override_to_view(doc, view, filter_storage_instances):
+    """
+    Applies graphic override(s) to a single view
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view: The view on which the category override is to be used.
+    :type view: Autodesk.Revit.DB.View
+    :param category_storage_instances: A list of instances of a named tuple: category_storage
+    :type category_storage_instances: [category_storage]
+
+    return:
+        Result class instance.
+
+        - Apply override status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain message 'Successfully set category override...' for each override applied.
+        - result.result will be an empty list
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+        - result.result will be an empty list.
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+    for filter_storage_instance in filter_storage_instances:
+
+        def action():
+            action_return_value = res.Result()
+            try:
+                view.SetFilterOverrides(
+                    filter_storage_instance.filter_id,
+                    filter_storage_instance.filter_override,
+                )
+                action_return_value.update_sep(
+                    True,
+                    "Successfully set filter override {} in view {} ".format(
+                        filter_storage_instance.filter_name,
+                        view.Name,
+                    ),
+                )
+                # filter visibility
+                view.SetFilterVisibility(
+                    filter_storage_instance.filter_id,
+                    filter_storage_instance.is_filter_visible,
+                )
+                action_return_value.update_sep(
+                    True,
+                    "Successfully set filter visibility status {} in view {} to: {}".format(
+                        filter_storage_instance.filter_name,
+                        view.Name,
+                        filter_storage_instance.is_filter_visible,
+                    ),
+                )
+
+
+                # filter enabled
+                view.SetIsFilterEnabled(
+                    filter_storage_instance.filter_id,
+                    filter_storage_instance.is_filter_enabled,
+                )
+                action_return_value.update_sep(
+                    True,
+                    "Successfully set filter enabled status {} in view {} to: {}".format(
+                        filter_storage_instance.filter_name,
+                        view.Name,
+                        filter_storage_instance.is_filter_enabled,
+                    ),
+                )
+
+            except Exception as e:
+                action_return_value.update_sep(
+                    False,
+                    "Failed to apply filter: {} to view: {} with exception: {}".format(
+                        filter_storage_instance.filter_name,
+                        view.Name,
+                        e,
+                    ),
+                )
+            return action_return_value
+
+        transaction = Transaction(
+            doc,
+            "Updating filter override {}".format(
+                filter_storage_instance.filter_name,
+            ),
+        )
+        update_category_override = in_transaction(transaction, action)
+        return_value.update(update_category_override)
+
+    return return_value
+
+
+def view_has_filter(view, filter_to_check_id):
+    filter_is_applied = False
+    filters_applied_to_view_as_ids = view.GetFilters()
+    if filter_to_check_id in filters_applied_to_view_as_ids:
+        filter_is_applied = True
+    return filter_is_applied
+
+
+def add_filter_to_view(doc, filter, view):
+    return_value = res.Result()
+
+    def action():
+        action_return_value = res.Result()
+        try:
+            view.AddFilter(filter.id)
+            return_value.append_message(
+                "Filter: {} added to view: {} successfully.".format(
+                    filter.Name, view.Name
+                )
+            )
+        except Exception as e:
+            action_return_value.update_sep(
+                False,
+                "Failed to apply filter: {} to view: {} with exception: {}".format(
+                    filter.Name,
+                    view.Name,
+                    e,
+                ),
+            )
+        return action_return_value
+
+    transaction = Transaction(
+        doc,
+        "Adding filter: {} to view: {}".format(
+            filter.Name,
+            view.Name,
+        ),
+    )
+    add_filter_status = in_transaction(transaction, action)
+    return_value.update(add_filter_status)
+    return return_value
 
 
 def remove_filter_from_view(doc, filter, view):
@@ -94,11 +295,11 @@ def remove_filter_from_view(doc, filter, view):
                     )
                 return action_return_value
 
-            transaction = rdb.Transaction(
+            transaction = Transaction(
                 doc, "Removing filter: {}".format(filter.Name)
             )
             # execute the transaction
-            return_value = rTran.in_transaction(transaction, action)
+            return_value = in_transaction(transaction, action)
         else:
             return_value.update_sep(
                 True,

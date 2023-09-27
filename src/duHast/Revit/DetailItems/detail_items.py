@@ -19,8 +19,8 @@ This module contains a number of functions around Revit detail items.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -40,8 +40,13 @@ from duHast.Revit.DetailItems.Utility import (
 )
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
-
+from Autodesk.Revit.DB import (
+    BuiltInCategory,
+    BuiltInParameter,
+    ElementId,
+    FilledRegion,
+    FilteredElementCollector,
+)
 
 #: class name Autodesk.Revit.DB.ElementType
 ELEMENT_TYPE = "Autodesk.Revit.DB.ElementType"
@@ -69,7 +74,7 @@ def get_filled_regions_in_model(doc):
     :rtype: list Autodesk.Revit.DB.FilledRegion
     """
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.FilledRegion).ToList()
+    return FilteredElementCollector(doc).OfClass(FilledRegion).ToList()
 
 
 def get_all_filled_region_type_ids_available(doc):
@@ -113,8 +118,8 @@ def get_all_detail_types_by_category(doc):
     """
 
     collector = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_DetailComponents)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_DetailComponents)
         .WhereElementIsElementType()
     )
     return collector
@@ -183,8 +188,8 @@ def get_detail_symbols_used_in_repeating_details(doc, ids_repeat_det):
     for id_r in ids_repeat_det:
         repeat_detail = doc.GetElement(id_r)
         id = rParaGet.get_built_in_parameter_value(
-            repeat_detail, rdb.BuiltInParameter.REPEATING_DETAIL_ELEMENT
+            repeat_detail, BuiltInParameter.REPEATING_DETAIL_ELEMENT
         )
-        if id not in ids and id != rdb.ElementId.InvalidElementId and id != None:
+        if id not in ids and id != ElementId.InvalidElementId and id != None:
             ids.append(id)
     return ids

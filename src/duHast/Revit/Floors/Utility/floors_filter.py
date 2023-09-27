@@ -27,7 +27,8 @@ This module contains a Revit floors utility functions.
 #
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import BuiltInCategory, FilteredElementCollector, FloorType
+
 
 # doc:   current model document
 def _get_all_floor_types_by_category(doc):
@@ -48,8 +49,8 @@ def _get_all_floor_types_by_category(doc):
     """
 
     collector = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_Floors)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_Floors)
         .WhereElementIsElementType()
     )
     return collector
@@ -72,5 +73,5 @@ def _get_floor_types_by_class(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.FloorType)
+    collector = FilteredElementCollector(doc).OfClass(FloorType)
     return collector

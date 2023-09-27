@@ -184,7 +184,7 @@ def calculate_lengthened_curve_geometry(curve_one, curve_two):
             point_one = shorter_curve.curve.GetEndPoint(0)
         else:
             raise ValueError(
-                "Neither end point of shorter curve {} is on longer curve {}. That is impossible since that would mean curves are not overlapping...at all.\nDistance longer shorter curve end point zero to longer curve: {}\nDistance shorter curve end point one to longer curve: {}".format(
+                "Neither end point of shorter curve {} is on longer curve {}. That is impossible since that would mean curves are not overlapping...at all.\nDistance shorter curve end point zero to longer curve: {}\nDistance shorter curve end point one to longer curve: {}".format(
                     shorter_curve.id,
                     longer_curve.id,
                     distance_shorter_curve_end_zero_to_longer_curve,
@@ -201,11 +201,13 @@ def calculate_lengthened_curve_geometry(curve_one, curve_two):
             point_zero = longer_curve.curve.GetEndPoint(0)
         else:
             raise ValueError(
-                "Neither end point of longer curve {} is on shorter curve {}.\n This indicates the longer curve is completely overlapping the shorter curve. \nDistance longer curve end point zero to shorter curve: {}\nDistance longer curve end point one to shorter curve: {}".format(
+                "Neither end point of longer curve {} is on shorter curve {}.\n This indicates the longer curve is completely overlapping the shorter curve. \nDistance longer curve end point zero to shorter curve: {}\nDistance longer curve end point one to shorter curve: {}\nDistance shorter curve end point zero to longer curve: {}\nDistance shorter curve end point one to longer curve: {}".format(
                     longer_curve.id,
                     shorter_curve.id,
                     distance_longer_curve_end_zero_to_shorter_curve,
                     distance_longer_curve_end_one_to_shorter_curve,
+                    distance_shorter_curve_end_zero_to_longer_curve,
+                    distance_shorter_end_one_to_longer_curve,
                 )
             )
 

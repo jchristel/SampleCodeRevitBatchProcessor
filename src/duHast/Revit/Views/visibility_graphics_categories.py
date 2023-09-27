@@ -1,7 +1,36 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module contains a number of helper functions relating to Revit category overrides in views. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""
+#
+# License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# BSD License
+# Copyright 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+#
+#
+#
+
 from duHast.Revit.Views.Objects.category_override_storage import RevitCategoryOverride
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common.transaction import in_transaction
 from Autodesk.Revit.DB import Transaction
+
 
 def get_categories_and_subcategories_from_model(doc):
     """
@@ -29,9 +58,10 @@ def get_categories_and_subcategories_from_model(doc):
         ] = RevitCategoryOverride(
             main_category_name=main_category.Name,
             sub_category_name=main_category.Name,
+            category=main_category,
             category_id=main_category.Id,
-            category_override=[],
-            is_category_hidden=[],
+            category_override=None,
+            is_category_hidden=False,
         )
         # loop over the sub categories
         for sub_cat in main_category.SubCategories:
@@ -40,9 +70,10 @@ def get_categories_and_subcategories_from_model(doc):
             ] = RevitCategoryOverride(
                 main_category_name=main_category.Name,
                 sub_category_name=sub_cat.Name,
-                category_id=[sub_cat.Id],
-                category_override=[],
-                is_category_hidden=[],
+                category=sub_cat,
+                category_id=sub_cat.Id,
+                category_override=None,
+                is_category_hidden=False,
             )
 
     return categories_dic
@@ -52,21 +83,22 @@ def update_category_override_from_view(view, category_storage_instance):
     """
     Populates the category_override and is_category_hidden field of a 'category_storage' instance based on the view past in.
 
-    :param doc: The current model document.
-    :type doc: Autodesk.Revit.DB.Document
     :param view: The view from which the category override is to be used.
     :type view: Autodesk.Revit.DB.View
-    :param category_storage_instance: An instances of a named tuple: category_storage
-    :type category_storage_instance: category_storage
+    :param category_storage_instance: An instances of revit category storage containing no view specific information.
+    :type category_storage_instance: :class:`.RevitCategoryOverride`
 
-    :return: An instances of a named tuple: category_storage where category_overrides field (a list) and is_category_hidden (also a list) has been updated with a category override.
-    :rtype: category_storage
+    :return: An updated instances of revit category storage now containing the override, category visibility flags.
+    :rtype: :class:`.RevitCategoryOverride`
     """
 
-    overrides_by_view = view.GetCategoryOverrides(category_storage_instance.category_id)
-    category_storage_instance.category_override = overrides_by_view
-    is_category_hidden = view.GetCategoryHidden(category_storage_instance.category_id)
-    category_storage_instance.is_category_hidden = is_category_hidden
+    category_storage_instance.category_override = view.GetCategoryOverrides(
+        category_storage_instance.category_id
+    )
+    category_storage_instance.is_category_hidden = view.GetCategoryHidden(
+        category_storage_instance.category_id
+    )
+
     return category_storage_instance
 
 
@@ -76,11 +108,11 @@ def get_category_overrides_from_view(view, category_storage_instances):
 
     :param view: The view from which the category override is to be used.
     :type view: Autodesk.Revit.DB.View
-    :param category_storage_instances: An list of instances of a named tuple: category_storage
-    :type category_storage_instances: [category_storage]
+    :param category_storage_instances: A list of instances of class 'RevitCategoryOverride'
+    :type category_storage_instances: [:class:`.RevitCategoryOverride`]
 
-    :return: A list of instances of a named tuple: category_storage where category_overrides field (a list) and is_category_hidden (also a list) has been updated with a category override.
-    :rtype: [category_storage]
+    :return: A list of instances of revit category storage now containing the override, category visibility flags.
+    :rtype: [:class:`.RevitCategoryOverride`]
     """
 
     updated_category_storage_instances = []
@@ -100,8 +132,8 @@ def apply_graphic_override_to_view(doc, view, category_storage_instances):
     :type doc: Autodesk.Revit.DB.Document
     :param view: The view on which the category override is to be used.
     :type view: Autodesk.Revit.DB.View
-    :param category_storage_instances: A list of instances of a named tuple: category_storage
-    :type category_storage_instances: [category_storage]
+    :param category_storage_instances: A list of instances of class 'RevitCategoryOverride'
+    :type category_storage_instances: [:class:`.RevitCategoryOverride`]
 
     return:
         Result class instance.

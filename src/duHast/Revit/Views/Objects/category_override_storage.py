@@ -38,6 +38,7 @@ class RevitCategoryOverride(base.Base):
         self,
         main_category_name="",
         sub_category_name="",
+        category=None,
         category_id=-1,
         revit_override=None,
         is_category_hidden=False,
@@ -53,6 +54,7 @@ class RevitCategoryOverride(base.Base):
         # set default values
         self.main_category_name = main_category_name
         self.sub_category_name = sub_category_name
+        self.category=category
         self.category_id = category_id
         self.revit_override = revit_override
         self.is_category_hidden = is_category_hidden

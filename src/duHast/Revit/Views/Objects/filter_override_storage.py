@@ -38,6 +38,7 @@ class RevitFilterOverride(base.Base):
         self,
         filter_name="",
         filter_id=-1,
+        filter = None,
         revit_override=None,
         is_filter_visible=True,
         is_filter_enabled=True,
@@ -53,6 +54,7 @@ class RevitFilterOverride(base.Base):
         # set default values
         self.filter_name = filter_name
         self.filter_id = filter_id
+        self.filter = filter
         self.revit_override = revit_override
         self.is_filter_visible = is_filter_visible
         self.is_filter_enabled = is_filter_enabled

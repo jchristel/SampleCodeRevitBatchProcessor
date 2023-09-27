@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains a number of helper functions relating to Revit views. 
+This module contains a number of helper functions relating to Revit filter overrides in views. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -32,12 +32,10 @@ import System
 from duHast.Revit.Views.Objects.filter_override_storage import RevitFilterOverride
 from duHast.Revit.Views.filters import get_all_filters
 from duHast.Revit.Common.transaction import in_transaction
-from duHast.Revit.Views import filters as rView
+from duHast.Revit.Views.filters import VIEW_TYPE_WHICH_CAN_HAVE_FILTERS
 
 # from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities.Objects import result as res
-
-# from duHast.Utilities import Utility as util
 
 # import Autodesk
 from Autodesk.Revit.DB import Transaction
@@ -46,6 +44,15 @@ from Autodesk.Revit.DB import Transaction
 
 
 def get_filters_from_model(doc):
+    """
+    Retrieves all filters in a Revit model and stores them in a dictionary.
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary containing the filters in the model as RevitFilterOverride objects. The keys of the dictionary are the filter names.
+    :rtype: {str: :class:`.RevitFilterOverride`}
+    """
     filters_dic = {}
 
     # get all filters in the model
@@ -53,6 +60,7 @@ def get_filters_from_model(doc):
     for f in filters_in_model:
         filters_dic["{}".format(f.Name)] = RevitFilterOverride(
             filter_name=f.Name,
+            filter=f,
             filter_id=f.Id,
             filter_override=None,
             is_filter_enabled=True,
@@ -64,22 +72,26 @@ def get_filters_from_model(doc):
 
 def update_filter_override_from_view(view, filter_storage_instance):
     """
-    Populates the category_override and is_category_hidden field of a 'category_storage' instance based on the view past in.
+    Populates the filter_override and is_filter_visible and is_filter_enabled field of a 'RevitFilterOverride' instance based on the view past in.
 
-    :param doc: The current model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :param view: The view from which the category override is to be used.
+    :param view: The view from which the filter override is to be used.
     :type view: Autodesk.Revit.DB.View
-    :param category_storage_instance: An instances of a named tuple: category_storage
-    :type category_storage_instance: category_storage
+    :param filter_storage_instance: An instances of revit filter storage containing no view specific information.
+    :type filter_storage_instance: :class:`.RevitFilterOverride`
 
-    :return: An instances of a named tuple: category_storage where category_overrides field (a list) and is_category_hidden (also a list) has been updated with a category override.
-    :rtype: category_storage
+    :return: An updated instances of revit filter storage now containing the override, filter visibility and filter enabled flags.
+    :rtype: :class:`.RevitFilterOverride`
     """
 
-    filter_storage_instance.filter_override = view.GetFilterOverrides(filter_storage_instance.filter_id)
-    filter_storage_instance.is_filter_visible = view.GetFilterVisibility(filter_storage_instance.filter_id)
-    filter_storage_instance.is_filter_enabled = view.GetIsFilterEnabled(filter_storage_instance.filter_id)
+    filter_storage_instance.filter_override = view.GetFilterOverrides(
+        filter_storage_instance.filter_id
+    )
+    filter_storage_instance.is_filter_visible = view.GetFilterVisibility(
+        filter_storage_instance.filter_id
+    )
+    filter_storage_instance.is_filter_enabled = view.GetIsFilterEnabled(
+        filter_storage_instance.filter_id
+    )
 
     return filter_storage_instance
 
@@ -90,11 +102,11 @@ def get_filter_overrides_from_view(view, filter_storage_instances):
 
     :param view: The view from which the category override is to be used.
     :type view: Autodesk.Revit.DB.View
-    :param category_storage_instances: An list of instances of a named tuple: category_storage
-    :type category_storage_instances: [category_storage]
+    :param filter_storage_instances: A list of instances of class 'RevitFilterOverride'
+    :type filter_storage_instances: [:class:`.RevitFilterOverride`]
 
-    :return: A list of instances of a named tuple: category_storage where category_overrides field (a list) and is_category_hidden (also a list) has been updated with a category override.
-    :rtype: [category_storage]
+    :return: A list of instances of class 'RevitFilterOverride' where the override, filter visibility and filter enabled flags have been updated dependent on the view.
+    :rtype: [:class:`.RevitFilterOverride`]
     """
 
     updated_filter_storage_instances = []
@@ -108,16 +120,16 @@ def get_filter_overrides_from_view(view, filter_storage_instances):
 
 def apply_filter_override_to_view(doc, view, filter_storage_instances):
     """
-    Applies graphic override(s) to a single view
+    Applies filter override(s) to a single view
 
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
     :param view: The view on which the category override is to be used.
     :type view: Autodesk.Revit.DB.View
-    :param category_storage_instances: A list of instances of a named tuple: category_storage
-    :type category_storage_instances: [category_storage]
+    :param filter_storage_instances: A list of storage class instances.
+    :type filter_storage_instances: [:class:`.RevitFilterOverride`]
 
-    return:
+    :return:
         Result class instance.
 
         - Apply override status returned in result.status. False if an exception occurred, otherwise True.
@@ -164,7 +176,6 @@ def apply_filter_override_to_view(doc, view, filter_storage_instances):
                     ),
                 )
 
-
                 # filter enabled
                 view.SetIsFilterEnabled(
                     filter_storage_instance.filter_id,
@@ -203,6 +214,17 @@ def apply_filter_override_to_view(doc, view, filter_storage_instances):
 
 
 def view_has_filter(view, filter_to_check_id):
+    """
+    Checks if a specific filter is applied to a given view.
+
+    :param view: The view object to check for applied filters.
+    :type view: Autodesk.Revit.DB.View
+    :param filter_to_check_id: The ID of the filter to check if it is applied.
+    :type filter_to_check_id: Autodesk.Revit.DB.ElementId
+
+    :return: A boolean value indicating whether the specified filter is applied to the view.
+    :rtype: bool
+    """
     filter_is_applied = False
     filters_applied_to_view_as_ids = view.GetFilters()
     if filter_to_check_id in filters_applied_to_view_as_ids:
@@ -211,6 +233,19 @@ def view_has_filter(view, filter_to_check_id):
 
 
 def add_filter_to_view(doc, filter, view):
+    """
+    Adds a filter to a view in Autodesk Revit.
+
+    :param doc: The current model document in Autodesk Revit.
+    :type doc: Autodesk.Revit.DB.Document
+    :param filter: The filter to be added to the view.
+    :type filter: Autodesk.Revit.DB.ParameterFilterElement
+    :param view: The view to which the filter will be added.
+    :type view: Autodesk.Revit.DB.View
+
+    :return: An instance of the Result class that contains the result of the filter addition. The result attribute is True if the filter was added successfully, otherwise False. The message attribute contains additional information about the result.
+    :rtype: :class:`.Result`
+    """
     return_value = res.Result()
 
     def action():
@@ -272,7 +307,7 @@ def remove_filter_from_view(doc, filter, view):
     """
 
     return_value = res.Result()
-    if view.ViewType in rView.VIEW_TYPE_WHICH_CAN_HAVE_FILTERS:
+    if view.ViewType in VIEW_TYPE_WHICH_CAN_HAVE_FILTERS:
         filters_applied = view.GetFilters()
         if filter.Id in filters_applied:
 
@@ -295,9 +330,7 @@ def remove_filter_from_view(doc, filter, view):
                     )
                 return action_return_value
 
-            transaction = Transaction(
-                doc, "Removing filter: {}".format(filter.Name)
-            )
+            transaction = Transaction(doc, "Removing filter: {}".format(filter.Name))
             # execute the transaction
             return_value = in_transaction(transaction, action)
         else:

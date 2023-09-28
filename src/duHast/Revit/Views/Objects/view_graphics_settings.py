@@ -88,6 +88,69 @@ class ViewGraphicsSettings(base.Base):
             if "view_id" in j:
                 self.view_id = j["view_id"]
 
+    def get_differing_category_overrides(self, other_view_graphic_settings):
+        """
+        Returns all category overrides of this category of categories  which exist in both set of settings but have different overrides applied.
+
+        :param other_view_graphic_settings: _description_
+        :type other_view_graphic_settings: _type_
+        :raises TypeError: _description_
+        """
+
+        if not isinstance(other_view_graphic_settings, ViewGraphicsSettings):
+            raise TypeError(
+                "other_view_graphic_settings must be an instance of ViewGraphicsSettings"
+            )
+
+        difference = []
+
+        # check category overrides
+        for source_override_category in self.override_by_category:
+            for (
+                other_override_category
+            ) in other_view_graphic_settings.override_by_category:
+                if (
+                    source_override_category.main_category_name
+                    == other_override_category.main_category_name
+                    and source_override_category.sub_category_name
+                    == other_override_category.sub_category_name
+                ):
+                    if source_override_category != other_override_category:
+                        difference.append(source_override_category)
+                    break
+
+        return difference
+
+    def get_differing_filter_overrides(self, other_view_graphic_settings):
+        """
+        Returns all filter overrides which exist exist in both set of settings but have different overrides applied.
+
+        :param other_view_graphic_settings: _description_
+        :type other_view_graphic_settings: _type_
+        :raises TypeError: _description_
+        """
+
+        if not isinstance(other_view_graphic_settings, ViewGraphicsSettings):
+            raise TypeError(
+                "other_view_graphic_settings must be an instance of ViewGraphicsSettings"
+            )
+
+        difference = []
+
+        # check filter overrides
+        for source_override_category in self.override_by_filter:
+            for (
+                other_override_category
+            ) in other_view_graphic_settings.override_by_filter:
+                if (
+                    source_override_category.filter_name
+                    == other_override_category.filter_name
+                ):
+                    if source_override_category != other_override_category:
+                        difference.append(source_override_category)
+                    break
+        return difference
+
     def get_all_used_line_patterns(self):
         """
         Get all line patterns used in overrides

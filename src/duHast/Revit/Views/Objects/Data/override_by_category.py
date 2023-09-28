@@ -136,6 +136,11 @@ class OverrideByCategory(OverrideByBase):
             other.are_overrides_present,
         )
 
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)
+    
+
     def __hash__(self):
         """
         Custom hash override
@@ -148,16 +153,16 @@ class OverrideByCategory(OverrideByBase):
                 (
                     self.halftone,
                     self.transparency,
-                    self.detail_level,
                     self.is_visible,
                     self.override_projection,
                     self.override_cut,
+                    self.detail_level,
                     self.are_overrides_present,
                 )
             )
         except Exception as e:
             raise ValueError(
-                "Exception {} occurred in {} with values: pattern background:{}, transparency: {}, is visible: {}, projection: {}, cut: {}, detail level: {}".format(
+                "Exception {} occurred in {} with values: halftone:{}, transparency: {}, is visible: {}, projection: {}, cut: {}, detail level: {}, are overrides present: {}".format(
                     e,
                     self.data_type,
                     self.halftone,
@@ -166,5 +171,6 @@ class OverrideByCategory(OverrideByBase):
                     self.override_projection,
                     self.override_cut,
                     self.detail_level,
+                    self.are_overrides_present
                 )
             )

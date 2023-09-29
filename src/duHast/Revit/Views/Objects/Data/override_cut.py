@@ -71,7 +71,7 @@ class OverrideCut(base.Base):
                 raise ValueError(
                     "Argument supplied must be of type string or type dictionary"
                 )
-            
+
             # load overrides and throw exception if something is missing!
             try:
                 self.pattern_background = pattern_background.PatternBackground(
@@ -107,6 +107,10 @@ class OverrideCut(base.Base):
             other.pattern_foreground,
             other.line_cut,
         )
+
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)
 
     def __hash__(self):
         """

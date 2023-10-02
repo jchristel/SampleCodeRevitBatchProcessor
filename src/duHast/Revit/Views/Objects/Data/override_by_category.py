@@ -139,7 +139,6 @@ class OverrideByCategory(OverrideByBase):
     # python 2.7 needs custom implementation of not equal
     def __ne__(self, other):
         return not self.__eq__(other=other)
-    
 
     def __hash__(self):
         """
@@ -171,6 +170,6 @@ class OverrideByCategory(OverrideByBase):
                     self.override_projection,
                     self.override_cut,
                     self.detail_level,
-                    self.are_overrides_present
+                    self.are_overrides_present,
                 )
             )

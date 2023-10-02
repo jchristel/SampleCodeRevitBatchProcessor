@@ -73,20 +73,18 @@ class ViewGraphicsSettings(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load settings
-            if OverrideByCategory.data_type in j:
+            # load values and throw exception if something is missing!
+            try:
                 for override in j[OverrideByCategory.data_type]:
                     self.override_by_category.append(OverrideByCategory(j=override))
-
-            if OverrideByFilter.data_type in j:
                 for override in j[OverrideByFilter.data_type]:
                     self.override_by_filter.append(OverrideByFilter(j=override))
-
-            if "view_name" in j:
                 self.view_name = j["view_name"]
-
-            if "view_id" in j:
                 self.view_id = j["view_id"]
+            except Exception as e:
+                raise ValueError(
+                    "Node ViewGraphicsSettings failed to initialise with: {}".format(e)
+                )
 
     def get_differing_category_overrides(self, other_view_graphic_settings):
         """

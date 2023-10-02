@@ -245,7 +245,7 @@ $exit_code = start-PythonInSaveEnclave -flow_directory $flow_dir -python_file_pa
 .NOTES
 General notes
 #>
-function start-PythonInSaveEnclave {
+function start-PythonInSecureEnclave {
     param (
         [Parameter(Mandatory = $true)]
         [string]$flow_directory,

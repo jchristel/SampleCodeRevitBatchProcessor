@@ -159,7 +159,7 @@ def apply_graphic_override_to_view(doc, view, category_storage_instances):
             try:
                 view.SetCategoryOverrides(
                     category_storage_instance.category_id,
-                    category_storage_instance.category_override,
+                    category_storage_instance.revit_override,
                 )
                 action_return_value.update_sep(
                     True,

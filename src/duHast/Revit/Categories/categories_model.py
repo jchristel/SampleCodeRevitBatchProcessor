@@ -81,3 +81,18 @@ def get_category_from_builtInCategory(doc, built_in_category):
     """
     
     return Category.GetCategory(doc, built_in_category)
+
+def get_category_by_names (doc, main_category_name, sub_category_name = None):
+
+    return_value = None
+    cats = doc.Settings.Categories
+    for main_category in cats:
+        if main_category.Name == main_category_name:
+            if sub_category_name == None:
+                return main_category
+            else:
+                for sub_cat in main_category.SubCategories:
+                    if sub_cat.Name == sub_category_name:
+                        return sub_cat
+    return return_value
+            

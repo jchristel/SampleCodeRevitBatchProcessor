@@ -82,14 +82,14 @@ def get_category_from_builtInCategory(doc, built_in_category):
     
     return Category.GetCategory(doc, built_in_category)
 
-def get_category_by_names(doc, main_category_name, sub_category_name=None):
+def get_category_by_names(doc, main_category_name, sub_category_name):
     """
     Retrieves a category object from a document based on the given main category name and optional sub category name.
 
     Args:
         doc (document object): The document object from which to retrieve the category.
         main_category_name (str): The name of the main category to search for.
-        sub_category_name (str, optional): The name of the sub category to search for within the main category.
+        sub_category_name (str): The name of the sub category to search for within the main category.
 
     Returns:
         category object: The retrieved category object if a match is found.
@@ -99,7 +99,7 @@ def get_category_by_names(doc, main_category_name, sub_category_name=None):
     cats = doc.Settings.Categories
     for main_category in cats:
         if main_category.Name == main_category_name:
-            if sub_category_name == None:
+            if sub_category_name == main_category_name:
                 return main_category
             else:
                 for sub_cat in main_category.SubCategories:

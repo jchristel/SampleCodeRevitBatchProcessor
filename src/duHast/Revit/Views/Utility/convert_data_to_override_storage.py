@@ -28,6 +28,7 @@ Data Category override to storage object helper functions.
 
 from duHast.Revit.Views.Objects.category_override_storage import RevitCategoryOverride
 from duHast.Revit.Categories.categories_model import get_category_by_names
+from duHast.Revit.Views.Utility.convert_data_to_revit_override import convert_to_revit_graphic_override
 
 
 def convert_to_category_override_storage(doc, category_data_instance):
@@ -48,13 +49,16 @@ def convert_to_category_override_storage(doc, category_data_instance):
         main_category_name=category_data_instance.category_name,
         sub_category_name=category_data_instance.sub_category_name,
     )
+    # get the revit override 
+    revit_override = convert_to_revit_graphic_override(doc=doc, is_filter_override=False)
+
     if category_in_model:
         return_value = RevitCategoryOverride(
             main_category_name=category_data_instance.category_name,
             sub_category_name=category_data_instance.sub_category_name,
             category=category_in_model,
             category_id=category_in_model.Id,
-            revit_override=None,
+            revit_override=revit_override,
             is_category_hidden=category_data_instance.is_visible,
         )
     return return_value

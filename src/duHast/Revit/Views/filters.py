@@ -30,6 +30,8 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.Revit.Views.templates import get_template_ids_which_can_have_filters
 from duHast.Revit.Common import common as com
+from duHast.Utilities.Objects import result as res
+from duHast.Revit.Common.transaction import in_transaction
 
 
 VIEW_TYPE_WHICH_CAN_HAVE_FILTERS = [
@@ -76,6 +78,14 @@ def get_all_filter_ids(doc):
     return ids
 
 
+def get_filter_by_name(doc, filter_name):
+    filters = get_all_filters(doc=doc)
+    for filter in filters:
+        if(rdb.Element.Name.GetValue(filter) == filter_name):
+            return filter
+    return None
+
+
 def get_filter_ids_from_view_by_filter(view, unique_list):
     """
     Returns past in list of filter id's plus new unique filter id's from view (if not already in list past in)
@@ -95,6 +105,12 @@ def get_filter_ids_from_view_by_filter(view, unique_list):
                 unique_list.append(j)
     return unique_list
 
+def is_filter_applied_to_view(view, filter):
+    filter_is_applied = False
+    filters_applied_to_view_as_ids = view.GetFilters()
+    if(filter.Id in filters_applied_to_view_as_ids):
+        filter_is_applied = True
+    return filter_is_applied
 
 def get_filters_from_templates(doc):
     """
@@ -165,3 +181,39 @@ def get_all_unused_view_filters(doc):
         if available_f.Id not in all_used_view_filters:
             un_used_view_filter_ids.append(available_f.Id)
     return un_used_view_filter_ids
+
+
+def apply_filter_to_view(doc, view, filter):
+    return_value = res.Result()
+    if( not is_filter_applied_to_view(view=view, filter=filter)):
+            # need to add filter
+            return_value.append_message ("Filter: {} need to be applied to view: {}".format(filter.Name, view.Name))
+            def action():
+                action_return_value = res.Result()
+                try:
+                    view.AddFilter(filter.Id)
+                    return_value.append_message ("Filter: {} added to view: {} successfully.".format(filter.Name, view.Name))
+                except Exception as e:
+                    action_return_value.update_sep(
+                        False,
+                        "Failed to apply filter: {} to view: {} with exception: {}".format(
+                            filter.Name,
+                            view.Name,
+                            e,
+                        ),
+                    )
+                return action_return_value
+            
+            transaction = rdb.Transaction(
+                doc,
+                "Adding filter: {} to view: {}".format(
+                    filter.Name,
+                    view.Name,
+                ),
+            )
+            add_filter_status = in_transaction(transaction, action)
+            return_value.update(add_filter_status)
+    else:
+            return_value.append_message ("Filter: {} already applied to view: {}".format(filter.Name, view.Name))
+    
+    return return_value

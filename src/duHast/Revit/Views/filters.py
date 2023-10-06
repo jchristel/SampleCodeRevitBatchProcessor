@@ -26,7 +26,14 @@ This module contains a number of helper functions relating to Revit view filters
 #
 #
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import (
+    Element,
+    FilteredElementCollector,
+    ParameterFilterElement,
+    Transaction,
+    View,
+    ViewType,
+)
 
 from duHast.Revit.Views.templates import get_template_ids_which_can_have_filters
 from duHast.Revit.Common import common as com
@@ -35,17 +42,17 @@ from duHast.Revit.Common.transaction import in_transaction
 
 
 VIEW_TYPE_WHICH_CAN_HAVE_FILTERS = [
-    rdb.ViewType.FloorPlan,
-    rdb.ViewType.CeilingPlan,
-    rdb.ViewType.Elevation,
-    rdb.ViewType.ThreeD,
-    rdb.ViewType.EngineeringPlan,
-    rdb.ViewType.AreaPlan,
-    rdb.ViewType.Section,
-    rdb.ViewType.Detail,
-    rdb.ViewType.Walkthrough,
-    rdb.ViewType.DraftingView,
-    rdb.ViewType.Legend,
+    ViewType.FloorPlan,
+    ViewType.CeilingPlan,
+    ViewType.Elevation,
+    ViewType.ThreeD,
+    ViewType.EngineeringPlan,
+    ViewType.AreaPlan,
+    ViewType.Section,
+    ViewType.Detail,
+    ViewType.Walkthrough,
+    ViewType.DraftingView,
+    ViewType.Legend,
 ]
 
 
@@ -58,7 +65,7 @@ def get_all_filters(doc):
     :return: A filtered Element collector containing Autodesk.Revit.DB.ParameterFilterElement
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
-    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ParameterFilterElement)
+    collector = FilteredElementCollector(doc).OfClass(ParameterFilterElement)
     return collector
 
 
@@ -79,9 +86,20 @@ def get_all_filter_ids(doc):
 
 
 def get_filter_by_name(doc, filter_name):
+    """
+    Retrieves a filter by its name from the current Revit model document.
+
+    Args:
+        doc (Revit Document): The current Revit model document.
+        filter_name (str): The name of the filter to be retrieved.
+
+    Returns:
+        Filter: The filter with the specified name, if found.
+        None: If no filter with the specified name is found.
+    """
     filters = get_all_filters(doc=doc)
     for filter in filters:
-        if(rdb.Element.Name.GetValue(filter) == filter_name):
+        if Element.Name.GetValue(filter) == filter_name:
             return filter
     return None
 
@@ -105,12 +123,14 @@ def get_filter_ids_from_view_by_filter(view, unique_list):
                 unique_list.append(j)
     return unique_list
 
+
 def is_filter_applied_to_view(view, filter):
     filter_is_applied = False
     filters_applied_to_view_as_ids = view.GetFilters()
-    if(filter.Id in filters_applied_to_view_as_ids):
+    if filter.Id in filters_applied_to_view_as_ids:
         filter_is_applied = True
     return filter_is_applied
+
 
 def get_filters_from_templates(doc):
     """
@@ -145,7 +165,7 @@ def get_filter_ids_from_views_without_template(doc, filter_by_type):
     """
 
     filters_in_use = []
-    col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
+    col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
         # cant filter out templates or templates which do not control filters to be more precise
         # views The parameter:
@@ -184,36 +204,58 @@ def get_all_unused_view_filters(doc):
 
 
 def apply_filter_to_view(doc, view, filter):
+    """
+    Applies a filter to a view in Autodesk Revit.
+
+    Args:
+        doc (Autodesk.Revit.DB.Document): The document object representing the Revit model.
+        view (Autodesk.Revit.DB.View): The view object to which the filter should be applied.
+        filter (Autodesk.Revit.DB.Filter): The filter object that should be applied to the view.
+
+    Returns:
+        duHast.Utilities.Objects.result.Result: The result object containing the outcome of applying the filter to the view. The `result` attribute of the result object indicates whether the filter was applied successfully or not. The `messages` attribute of the result object contains any additional messages related to the application of the filter.
+    """
+
     return_value = res.Result()
-    if( not is_filter_applied_to_view(view=view, filter=filter)):
-            # need to add filter
-            return_value.append_message ("Filter: {} need to be applied to view: {}".format(filter.Name, view.Name))
-            def action():
-                action_return_value = res.Result()
-                try:
-                    view.AddFilter(filter.Id)
-                    return_value.append_message ("Filter: {} added to view: {} successfully.".format(filter.Name, view.Name))
-                except Exception as e:
-                    action_return_value.update_sep(
-                        False,
-                        "Failed to apply filter: {} to view: {} with exception: {}".format(
-                            filter.Name,
-                            view.Name,
-                            e,
-                        ),
+
+    if not is_filter_applied_to_view(view=view, filter=filter):
+        # need to add filter
+        return_value.append_message(
+            "Filter: {} needs to be applied to view: {}".format(filter.Name, view.Name)
+        )
+
+        def action():
+            action_return_value = res.Result()
+            try:
+                view.AddFilter(filter.Id)
+                return_value.append_message(
+                    "Filter: {} added to view: {} successfully.".format(
+                        filter.Name, view.Name
                     )
-                return action_return_value
-            
-            transaction = rdb.Transaction(
-                doc,
-                "Adding filter: {} to view: {}".format(
-                    filter.Name,
-                    view.Name,
-                ),
-            )
-            add_filter_status = in_transaction(transaction, action)
-            return_value.update(add_filter_status)
+                )
+            except Exception as e:
+                action_return_value.update_sep(
+                    False,
+                    "Failed to apply filter: {} to view: {} with exception: {}".format(
+                        filter.Name,
+                        view.Name,
+                        e,
+                    ),
+                )
+            return action_return_value
+
+        transaction = Transaction(
+            doc,
+            "Adding filter: {} to view: {}".format(
+                filter.Name,
+                view.Name,
+            ),
+        )
+        add_filter_status = in_transaction(transaction, action)
+        return_value.update(add_filter_status)
     else:
-            return_value.append_message ("Filter: {} already applied to view: {}".format(filter.Name, view.Name))
-    
+        return_value.append_message(
+            "Filter: {} already applied to view: {}".format(filter.Name, view.Name)
+        )
+
     return return_value

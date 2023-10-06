@@ -27,7 +27,9 @@ Data Category override to storage object helper functions.
 #
 
 from duHast.Revit.Views.Objects.category_override_storage import RevitCategoryOverride
+from duHast.Revit.Views.Objects.filter_override_storage import RevitFilterOverride
 from duHast.Revit.Categories.categories_model import get_category_by_names
+from duHast.Revit.Views.filters import get_filter_by_name
 from duHast.Revit.Views.Utility.convert_data_to_revit_override import (
     convert_to_revit_graphic_override,
 )
@@ -89,7 +91,38 @@ def convert_to_category_override_storage_objects(doc, category_data_objects):
     return return_value
 
 
-def update_category_override_storage_objects_with_revit_overrides(
-    category_data_objects, overrides_by_category
-):
-    pass
+def convert_to_filter_override_storage(doc, filter_data_instance):
+    return_value = None
+    # get the filter
+    filter_in_model = get_filter_by_name(
+        doc=doc,
+        filter_name=filter_data_instance.filter_name
+    )
+
+    # get the revit override
+    revit_override = convert_to_revit_graphic_override(
+        doc=doc, data_override=filter_data_instance, is_filter_override=True
+    )
+
+    if filter_in_model:
+        return_value = RevitFilterOverride(
+            filter_name=filter_data_instance.filter_name,
+            filter_id=filter_in_model.Id,
+            filter=filter_in_model,
+            revit_override=revit_override,
+            is_filter_visible=filter_data_instance.is_visible,
+            is_filter_enabled=filter_data_instance.is_enabled,
+        )
+    
+    return return_value
+
+def convert_to_filter_override_storage_objects(doc, filter_data_objects):
+    
+    return_value = []
+    for filter_instance in filter_data_objects:
+        converted = convert_to_filter_override_storage(
+            doc=doc, category_data_instance=filter_instance
+        )
+        if converted:
+            return_value.append(converted)
+    return return_value

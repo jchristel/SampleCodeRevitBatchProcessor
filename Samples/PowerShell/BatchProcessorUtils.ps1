@@ -75,9 +75,16 @@ function Write-ToLogAndConsole {
     }
 
     # get the current dated formatted
-    $now = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    $now = Get-Date -Format "yy-MM-dd HH_mm_ss"
     $Message = $now + ' : ' + $Message
-    $Message | Tee-Object -FilePath $log_file_path -Append
+
+    # Display the message to the console
+    Write-Host $Message
+
+    # Append the message to the log file
+    $Message | Out-File -Append -FilePath $log_file_path
+
+    #$Message | Tee-Object -FilePath $log_file_path -Append
 }
 
 <#
@@ -296,12 +303,12 @@ function start-PythonInSecureEnclave {
         # Display script full file name
         Write-ToLogAndConsole -Message "Script to execute file name: $script_file_path"
 
-        # create a temp script directory
-        New-Item -ItemType Directory -Path $temp_dir_script
+        # create a temp script directory ( added out -null to avoid having the path showing up in the return value!)
+        New-Item -ItemType Directory -Path $temp_dir_script  | Out-Null
         if ($?) {
             Write-ToLogAndConsole -Message "Created temp script directory: $temp_dir_script"
-            # create a temp output folder
-            New-Item -ItemType Directory -Path $temp_dir_out
+            # create a temp output folder ( added out -null to avoid having the path showing up in the return value!)
+            New-Item -ItemType Directory -Path $temp_dir_out  | Out-Null
             if ($?) {
                 Write-ToLogAndConsole -Message "Created temp out directory: $temp_dir_out"
                 # copy scipt files
@@ -377,9 +384,9 @@ function start-PythonInSecureEnclave {
 
     # check if temp directory need to be deleted after aborted command
     if ($process_result -eq 2) {
-        Write-ToLogAndConsole -Message "Cleaning up after abort."
-        # delete temp directory
-        Remove-Item -LiteralPath $temp_dir -Force -Recurse
+        Write-ToLogAndConsole -Message "Cleaning up after abort: $process_result"
+        # delete temp directory ( added out -null to avoid having the path showing up in the return value!)
+        Remove-Item -LiteralPath $temp_dir -Force -Recurse | Out-Null
         if ($?) {
             Write-ToLogAndConsole -Message "Deleted temp directory: $temp_dir"
         }
@@ -389,7 +396,8 @@ function start-PythonInSecureEnclave {
         }
     }
 
-    return $process_result
+    Write-ToLogAndConsole -Message "exiting with: $process_result"
+    return [int]$process_result
 }
 
 # global settings...

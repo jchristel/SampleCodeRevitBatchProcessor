@@ -153,7 +153,7 @@ def apply_filter_override_to_view(doc, view, filter_storage_instances):
             try:
                 view.SetFilterOverrides(
                     filter_storage_instance.filter_id,
-                    filter_storage_instance.filter_override,
+                    filter_storage_instance.revit_override,
                 )
                 action_return_value.update_sep(
                     True,
@@ -193,7 +193,7 @@ def apply_filter_override_to_view(doc, view, filter_storage_instances):
             except Exception as e:
                 action_return_value.update_sep(
                     False,
-                    "Failed to apply filter: {} to view: {} with exception: {}".format(
+                    "Failed to set filter override : {} to view: {} with exception: {}".format(
                         filter_storage_instance.filter_name,
                         view.Name,
                         e,

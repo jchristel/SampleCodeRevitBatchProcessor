@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data Category override to storage object helper functions.
+Data category and filter override instances to storage object helper functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -92,11 +92,20 @@ def convert_to_category_override_storage_objects(doc, category_data_objects):
 
 
 def convert_to_filter_override_storage(doc, filter_data_instance):
+    """
+    Converts a filter data instance into a `RevitFilterOverride` object.
+
+    Args:
+        doc (Revit Document): The current Revit model document.
+        filter_data_instance (FilterDataInstance): The filter data instance to be converted.
+
+    Returns:
+        RevitFilterOverride: The converted filter override object, or None if the filter does not exist in the model.
+    """
     return_value = None
     # get the filter
     filter_in_model = get_filter_by_name(
-        doc=doc,
-        filter_name=filter_data_instance.filter_name
+        doc=doc, filter_name=filter_data_instance.filter_name
     )
 
     # get the revit override
@@ -113,11 +122,21 @@ def convert_to_filter_override_storage(doc, filter_data_instance):
             is_filter_visible=filter_data_instance.is_visible,
             is_filter_enabled=filter_data_instance.is_enabled,
         )
-    
+
     return return_value
 
+
 def convert_to_filter_override_storage_objects(doc, filter_data_objects):
-    
+    """
+    Converts a list of filter data objects into a list of RevitFilterOverride objects.
+
+    Args:
+        doc (Revit Document): The current Revit model document.
+        filter_data_objects (list): A list of filter data objects to be converted.
+
+    Returns:
+        list: A list of RevitFilterOverride objects that represent the converted filter data objects.
+    """
     return_value = []
     for filter_instance in filter_data_objects:
         converted = convert_to_filter_override_storage(

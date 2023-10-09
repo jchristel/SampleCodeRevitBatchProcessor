@@ -125,6 +125,16 @@ def get_filter_ids_from_view_by_filter(view, unique_list):
 
 
 def is_filter_applied_to_view(view, filter):
+    """
+    Checks if a filter is already applied to a view in Autodesk Revit.
+
+    Args:
+        view (Autodesk.Revit.DB.View): The view object to check if the filter is applied.
+        filter (Autodesk.Revit.DB.Filter): The filter object to check if it is applied to the view.
+
+    Returns:
+        bool: True if the filter is applied to the view, False otherwise.
+    """
     filter_is_applied = False
     filters_applied_to_view_as_ids = view.GetFilters()
     if filter.Id in filters_applied_to_view_as_ids:

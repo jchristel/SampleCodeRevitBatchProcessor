@@ -355,6 +355,14 @@ def get_view_filter_overrides(doc, view, line_patterns, fill_patterns):
         # check if filter is enabled
         override.is_enabled = view.GetIsFilterEnabled(filter_id)
 
+        # check if any override has been applied by comparing the retrieved override
+        # with a default one
+        default_override = OverrideByFilter()
+        if default_override.compare_overrides(override):
+            override.are_overrides_present = False
+        else:
+            override.are_overrides_present = True
+
         # save overrides in list to be returned
         overrides_data.append(override)
 

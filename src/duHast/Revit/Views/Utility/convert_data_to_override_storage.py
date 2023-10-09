@@ -121,7 +121,7 @@ def convert_to_filter_override_storage_objects(doc, filter_data_objects):
     return_value = []
     for filter_instance in filter_data_objects:
         converted = convert_to_filter_override_storage(
-            doc=doc, category_data_instance=filter_instance
+            doc=doc, filter_data_instance=filter_instance
         )
         if converted:
             return_value.append(converted)

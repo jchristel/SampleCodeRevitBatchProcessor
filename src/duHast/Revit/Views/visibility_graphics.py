@@ -39,7 +39,18 @@ from duHast.Revit.LinePattern.fill_patterns import pattern_ids_by_name
 
 from Autodesk.Revit.DB import Element
 
+
 def import_graphic_overrides(file_path, call_back):
+    """
+    Reads JSON data from a file and converts it into a dictionary of ViewGraphicsSettings objects.
+
+    Args:
+        file_path (str): The fully qualified file path of the JSON file.
+        call_back (function): A callback function to update the progress of the data import.
+
+    Returns:
+        dict: A dictionary of ViewGraphicsSettings objects, where the view name is the key and the ViewGraphicsSettings object is the value.
+    """
     return_value = res.Result()
     view_overrides_data = {}
     json_data = read_json_data_from_file(file_path)
@@ -68,17 +79,19 @@ def import_graphic_overrides(file_path, call_back):
 
 def _check_pattern_in_model(pattern_from_model, pattern_data):
     """
-    _summary_
+    Check whether the line or fill patterns used in the given pattern data exist in the Revit model.
 
-    :param pattern_from_model: dictionary where key is the pattern name.
-    :type pattern_from_model: _type_
-    :param pattern_data: _description_
-    :type pattern_data: _type_
-    :return: _description_
-    :rtype: _type_
+    Args:
+        pattern_from_model (dict): A dictionary containing the line or fill patterns in the Revit model.
+        pattern_data (dict): A dictionary containing the line or fill patterns to be checked.
+
+    Returns:
+        Result: A Result object containing the results of the pattern check.
     """
+
     return_value = res.Result()
     no_match = []
+
     for key, value in pattern_data.items():
         # ignore any pattern with -1 as id...its the default for no pattern assigned
         if value.id != -1:
@@ -91,14 +104,23 @@ def _check_pattern_in_model(pattern_from_model, pattern_data):
                 return_value.update_sep(True, "{}......exists in model.".format(key))
         else:
             return_value.update_sep(True, "{}......ignored -1".format(key))
+
     if not return_value.status:
         return_value.result.append(no_match)
+
     return return_value
 
 
 def check_line_patterns_are_in_model(doc, line_pattern_data):
     """
-    Check if all used patterns are in the model
+    Check whether the line patterns used in the `line_pattern_data` exist in the Revit model.
+
+    Args:
+        doc (Revit Document): The Revit document object.
+        line_pattern_data (dictionary): A dictionary containing line pattern data.
+
+    Returns:
+        Result: A Result object containing the results of the line pattern check.
     """
     return_value = res.Result()
     all_line_pattern_in_model = build_patterns_dictionary_by_name(doc=doc)
@@ -113,7 +135,14 @@ def check_line_patterns_are_in_model(doc, line_pattern_data):
 
 def check_fill_patterns_are_in_model(doc, fill_pattern_data):
     """
-    Check if all used patterns are in the model
+    Check whether all fill patterns used in the fill_pattern_data exist in the Revit model.
+
+    Args:
+        doc (Revit Document): The Revit document object.
+        fill_pattern_data (dict): A dictionary containing fill pattern data.
+
+    Returns:
+        Result: A Result object containing the results of the fill pattern check.
     """
     return_value = res.Result()
     all_fill_pattern_in_model = pattern_ids_by_name(doc=doc)
@@ -127,6 +156,16 @@ def check_fill_patterns_are_in_model(doc, fill_pattern_data):
 
 
 def check_all_line_and_fill_pattern_in_model(doc, view_overrides_data):
+    """
+    Check whether all line patterns and fill patterns used in the view_overrides_data exist in the model.
+
+    Args:
+        doc (Revit Document): The Revit document object.
+        view_overrides_data (dict): A dictionary containing view overrides data.
+
+    Returns:
+        Result: A Result object containing the results of the line pattern and fill pattern checks.
+    """
     return_value = res.Result()
     for key, view_override in view_overrides_data.items():
         # check whether all line patterns and fill pattern exist in model
@@ -145,12 +184,23 @@ def check_all_line_and_fill_pattern_in_model(doc, view_overrides_data):
         )
     return return_value
 
+
 def get_matching_templates(doc, view_overrides_data):
+    """
+    Returns a list of view templates from the model that match the view names specified in the view overrides data.
+
+    Args:
+        doc (Autodesk.Revit.DB.Document): The Revit model document.
+        view_overrides_data (dict): A dictionary containing view overrides data. The keys are unique identifiers for each view, and the values are dictionaries containing the view name and other overrides.
+
+    Returns:
+        list: A list of view templates from the model that match the view names specified in the view overrides data.
+    """
     matching_templates = []
     view_templates_in_model = get_view_templates(doc)
     for key, view_override in view_overrides_data.items():
         for template in view_templates_in_model:
-            if(Element.Name.GetValue(template) == view_override.view_name):
+            if Element.Name.GetValue(template) == view_override.view_name:
                 matching_templates.append(template)
                 break
 
@@ -170,14 +220,18 @@ def apply_overrides_from_file(doc, file_path):
                 doc=doc, view_overrides_data=view_overrides_data
             )
             return_value.update(pattern_status)
-            if(pattern_status.status):
+            if pattern_status.status:
                 # find matching templates
-                matching_templates = get_matching_templates(doc=doc, view_overrides_data=view_overrides_data)
-                if(len(matching_templates)>0):
+                matching_templates = get_matching_templates(
+                    doc=doc, view_overrides_data=view_overrides_data
+                )
+                if len(matching_templates) > 0:
                     pass
                     # apply overrides
                 else:
-                    return_value.append_message("No matching view templates found in file.")
+                    return_value.append_message(
+                        "No matching view templates found in file."
+                    )
             else:
                 pass
                 # build list of missing patterns and raise error

@@ -30,9 +30,19 @@ from duHast.Utilities.Objects import result as res
 
 from duHast.Utilities.files_json import read_json_data_from_file
 
-from duHast.Revit.Views.Reporting.views_data_report import PROP_VIEW_DATA
+from duHast.Revit.Views.filters import apply_filter_to_view
 from duHast.Revit.Views.Objects.view_graphics_settings import ViewGraphicsSettings
+from duHast.Revit.Views.Reporting.views_data_report import PROP_VIEW_DATA
 from duHast.Revit.Views.templates import get_view_templates
+from duHast.Revit.Views.Utility.convert_revit_override_to_data import get_view_settings
+from duHast.Revit.Views.Utility.convert_data_to_override_storage import (
+    convert_to_category_override_storage_objects,
+    convert_to_filter_override_storage_objects,
+)
+from duHast.Revit.Views.visibility_graphics_filters import apply_filter_override_to_view
+from duHast.Revit.Views.visibility_graphics_categories import (
+    apply_graphic_override_to_view,
+)
 
 from duHast.Revit.LinePattern.line_patterns import build_patterns_dictionary_by_name
 from duHast.Revit.LinePattern.fill_patterns import pattern_ids_by_name
@@ -52,6 +62,7 @@ def import_graphic_overrides(file_path, call_back):
         dict: A dictionary of ViewGraphicsSettings objects, where the view name is the key and the ViewGraphicsSettings object is the value.
     """
     return_value = res.Result()
+    # print("ini: {}".format(return_value))
     view_overrides_data = {}
     json_data = read_json_data_from_file(file_path)
     counter = 1
@@ -59,8 +70,7 @@ def import_graphic_overrides(file_path, call_back):
         for json_override in json_data[PROP_VIEW_DATA]:
             view_override = ViewGraphicsSettings(j=json_override)
             view_overrides_data[view_override.view_name] = view_override
-            return_value.append_message
-            (
+            return_value.append_message(
                 "reading template: {} :: {} of {}".format(
                     view_override.view_name, counter, len(json_data[PROP_VIEW_DATA])
                 )
@@ -73,8 +83,8 @@ def import_graphic_overrides(file_path, call_back):
         return_value.update_sep(
             False, "File {} contains no view data.".format(file_path)
         )
-    return_value.result = view_overrides_data
-    return view_overrides_data
+    return_value.result.append(view_overrides_data)
+    return return_value
 
 
 def _check_pattern_in_model(pattern_from_model, pattern_data):
@@ -168,6 +178,11 @@ def check_all_line_and_fill_pattern_in_model(doc, view_overrides_data):
     """
     return_value = res.Result()
     for key, view_override in view_overrides_data.items():
+        return_value.append_message(
+            "Checking fill patterns from template: {} from file against patterns from model.".format(
+                view_override.view_name
+            )
+        )
         # check whether all line patterns and fill pattern exist in model
         return_value.update(
             check_line_patterns_are_in_model(
@@ -175,7 +190,11 @@ def check_all_line_and_fill_pattern_in_model(doc, view_overrides_data):
                 line_pattern_data=view_override.get_all_used_line_patterns(),
             )
         )
-
+        return_value.append_message(
+            "Checking line patterns from template: {} from file against fill patterns from model.".format(
+                view_override.view_name
+            )
+        )
         return_value.update(
             check_fill_patterns_are_in_model(
                 doc=doc,
@@ -186,35 +205,119 @@ def check_all_line_and_fill_pattern_in_model(doc, view_overrides_data):
 
 
 def get_matching_templates(doc, view_overrides_data):
-    """
-    Returns a list of view templates from the model that match the view names specified in the view overrides data.
-
-    Args:
-        doc (Autodesk.Revit.DB.Document): The Revit model document.
-        view_overrides_data (dict): A dictionary containing view overrides data. The keys are unique identifiers for each view, and the values are dictionaries containing the view name and other overrides.
-
-    Returns:
-        list: A list of view templates from the model that match the view names specified in the view overrides data.
-    """
-    matching_templates = []
+    matching_templates = {}
     view_templates_in_model = get_view_templates(doc)
     for key, view_override in view_overrides_data.items():
         for template in view_templates_in_model:
             if Element.Name.GetValue(template) == view_override.view_name:
-                matching_templates.append(template)
+                matching_templates[view_override.view_name] = (template, view_override)
                 break
 
     return matching_templates
+
+
+def _add_filters_to_view(doc, view, filter_data):
+    return_value = res.Result()
+    filters_exist_in_view = []
+    for filter in filter_data:
+        status_filter = apply_filter_to_view(doc=doc, view=view, filter=filter.filter)
+        return_value.update(status_filter)
+        if status_filter.status:
+            filters_exist_in_view.append(filter)
+    return_value.result.append(filters_exist_in_view)
+    return return_value
+
+
+def apply_override_to_view(doc, view, view_override):
+    return_value = res.Result()
+    return_value.append_message("Modifying view: {}".format(view.Name))
+    target_view_data = get_view_settings(doc=doc, view=view)
+    # find overrides requiring updates
+    category_overrides_to_update = view_override.get_differing_category_overrides(
+        other_view_graphic_settings=target_view_data
+    )
+    # if import has different filters to target update existing filter overrides only
+    filter_overrides_to_update = view_override.get_differing_filter_overrides(
+        other_view_graphic_settings=target_view_data
+    )
+    # update target template
+    # category overrides
+    if len(category_overrides_to_update) > 0:
+        return_value.append_message(
+            "Found category overrides to update: {}".format(
+                len(category_overrides_to_update)
+            )
+        )
+        # convert to override storage objects for ease of applying to view
+        category_overrides_to_apply = convert_to_category_override_storage_objects(
+            doc=doc, category_data_objects=category_overrides_to_update
+        )
+        # apply overrides to view
+        result_apply_cat_overrides = apply_graphic_override_to_view(
+            doc=doc,
+            view=view,
+            category_storage_instances=category_overrides_to_apply,
+        )
+        return_value.update(result_apply_cat_overrides)
+    else:
+        return_value.append_message("No category overrides needed updating")
+
+    # filter overrides
+    if len(filter_overrides_to_update) > 0:
+        return_value.append_message(
+            "Found filter overrides to update: {}".format(
+                len(filter_overrides_to_update)
+            )
+        )
+
+        # convert filter override to filter override storage object
+        filter_overrides_to_apply = convert_to_filter_override_storage_objects(
+            doc=doc, filter_data_objects=filter_overrides_to_update
+        )
+        # check if filter is applied to template if not add them in
+        # this is not required since the filters to apply check only returns filters which are
+        # applied to the source (from disk) and destination (in model) views
+        filter_overrides_to_apply_status = _add_filters_to_view(
+            doc=doc,
+            view=view,
+            filter_data=filter_overrides_to_apply,
+        )
+        return_value.update_sep(
+            filter_overrides_to_apply_status.status,
+            filter_overrides_to_apply_status.message,
+        )
+        if filter_overrides_to_apply_status.status:
+            # apply filter override
+            result_apply_filter_overrides = apply_filter_override_to_view(
+                doc=doc,
+                view=view,
+                filter_storage_instances=filter_overrides_to_apply_status.result[0],
+            )
+            return_value.update(result_apply_filter_overrides)
+    else:
+        return_value.append_message("No filter overrides needed updating")
+    return return_value
+
+
+def apply_overrides_to_views(doc, view_data):
+    return_value = res.Result()
+    for key, value in view_data.items():
+        status_apply = apply_override_to_view(doc, value[0], value[1])
+        return_value.update(status_apply)
+    return return_value
 
 
 def apply_overrides_from_file(doc, file_path):
     return_value = res.Result()
     try:
         # load data from file
-        view_overrides_data_status = import_graphic_overrides(file_path=file_path)
+        view_overrides_data_status = import_graphic_overrides(
+            file_path=file_path, call_back=None
+        )
+        return_value.update(view_overrides_data_status)
         # check if any data was retrieved
         if view_overrides_data_status.status:
-            view_overrides_data = view_overrides_data_status.result
+            view_overrides_data = view_overrides_data_status.result[0]
             # check whether all line patterns and fill pattern exist in model
             pattern_status = check_all_line_and_fill_pattern_in_model(
                 doc=doc, view_overrides_data=view_overrides_data
@@ -226,15 +329,25 @@ def apply_overrides_from_file(doc, file_path):
                     doc=doc, view_overrides_data=view_overrides_data
                 )
                 if len(matching_templates) > 0:
-                    pass
-                    # apply overrides
+                    apply_overrides = apply_overrides_to_views(
+                        doc=doc, view_data=matching_templates
+                    )
+                    return_value.update(apply_overrides)
                 else:
                     return_value.append_message(
                         "No matching view templates found in file."
                     )
             else:
-                pass
+                # Flatten the list of lists into a single list
+                flattened_list = [
+                    item for sublist in pattern_status.result for item in sublist
+                ]
                 # build list of missing patterns and raise error
+                raise ValueError(
+                    "Aborted: The following patterns are missing from the file: {}".format(
+                        ",".join(flattened_list)
+                    )
+                )
         else:
             raise ValueError(view_overrides_data_status.message)
 

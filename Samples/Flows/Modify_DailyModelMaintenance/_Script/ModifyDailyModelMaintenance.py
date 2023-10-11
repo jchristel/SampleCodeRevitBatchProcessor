@@ -129,6 +129,8 @@ ACTIONS = [
     rep.report_wall_types,
     rep.report_cad_link_data,
     rep.report_revit_link_data,
+    rep.report_template_overrides,
+    rep.report_warning_types,
     modify_element_worksets_with_filters,
     update_workset_default_visibility,
     solve_warnings,
@@ -157,11 +159,11 @@ def output_modules(message):
 # execute all actions
 t = Timer()
 for action in ACTIONS:
+    t.start()
     try:
-        t.start()
         flag = action(doc, revitFilePath_, output_modules)
         output(flag.message, revit_script_util.Output)  # TODO: add spacer characters?
-        output("status: [{}]".format(flag.status, t.stop()), revit_script_util.Output)
+        output("status: {} [{}]".format(t.stop(), flag.status), revit_script_util.Output)
         output("-", revit_script_util.Output)
     except Exception as e:
         output(
@@ -172,19 +174,17 @@ for action in ACTIONS:
         if t.is_running():
             t.stop()
 
-# sync changes back to central
-if debug_ == False:
-    # ------------------------------------- syncing -------------------------------------
+# ------------------------------------- syncing -------------------------------------
 
-    # finally sync model and get rid of old file data (compress model)
-    output(
-        "Syncing to Central with compact central file option enabled: start",
-        revit_script_util.Output,
-    )
-    syncing_ = sync_file(doc, True)
-    output(
-        "Syncing to Central: finished [{}]".format(syncing_.status),
-        revit_script_util.Output,
-    )
+# finally sync model and get rid of old file data (compress model)
+output(
+    "Syncing to Central with compact central file option enabled: start",
+    revit_script_util.Output,
+)
+syncing_ = sync_file(doc, True)
+output(
+    "Syncing to Central: finished [{}]".format(syncing_.status),
+    revit_script_util.Output,
+)
 
 output("Modifying Revit File.... finished ", revit_script_util.Output)

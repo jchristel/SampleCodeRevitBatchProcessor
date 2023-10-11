@@ -13,6 +13,28 @@ Module containing reporting functions.
 
 """
 
+# License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# BSD License
+# Copyright 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+#
+#
+#
+
 # required for .ToList() on FilteredElementCollector
 import clr, os
 
@@ -56,8 +78,18 @@ from duHast.Revit.Common.Reporting.worksets_report_utils import get_workset_repo
 from duHast.Revit.Common.Reporting.worksets_report_header import REPORT_WORKSETS_HEADER
 
 from duHast.Revit.Views.Reporting.views_report import write_view_data_by_property_names
+from duHast.Revit.Views.Reporting.views_data_report import (
+    write_graphics_settings_report,
+)
+from duHast.Revit.Views.Utility.convert_revit_override_to_data import get_views_graphic_settings_data
+from duHast.Revit.Views.templates import get_view_templates
 from duHast.Revit.Walls.Reporting.walls_report import get_wall_report_data
 from duHast.Revit.Walls.Reporting.walls_report_header import REPORT_WALLS_HEADER
+
+from duHast.Revit.Warnings.Reporting.warnings_report import (
+    get_warnings_report_data,
+    write_warnings_data,
+)
 
 # tag reporting imports
 from duHast.Revit.Annotation.Reporting.tags_independent_report import (
@@ -732,5 +764,130 @@ def report_ffe_tags(doc, revit_file_path, output):
     except Exception as e:
         return_value.update_sep(
             False, "Failed to write tag instance data with exception: {}".format(e)
+        )
+    return return_value
+
+def report_template_overrides(doc, revit_file_path, output):
+    """
+    Reports category and filter overrides to all templates which support that.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revit_file_path: The current model document file path
+    :type revit_file_path: str
+    :param output: A function piping messages to designated target.
+    :type output: func(message)
+
+    :return:
+        Result class instance.
+
+        - result.status False if an exception occurred, otherwise True.
+        - result.message will contain processing messages.
+        - result.result empty list
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+        - result.result will be an empty list
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+    output("Reporting template data...start")
+
+    revit_file_name = get_file_name_without_ext(revit_file_path)
+    # check if document requires view templates to be exported
+    export_vt = False
+    for name in settings.VIEW_TEMPLATE_FILE_LIST:
+        if revit_file_name in name:
+            export_vt = True
+            break
+
+    if export_vt:
+        file_name = os.path.join(
+            settings.OUTPUT_FOLDER,
+            revit_file_name
+            + settings.REPORT_EXTENSION_VIEW_TEMPLATE_OVERRIDES
+            + settings.REPORT_FILE_NAME_EXTENSION,
+        )
+
+        # get view templates which allow for graphical overrides
+        view_templates_in_model = get_view_templates(doc)
+        view_template_filtered = []
+        for vt in view_templates_in_model:
+            if vt.AreGraphicsOverridesAllowed():
+                view_template_filtered.append(vt)
+
+        # get view template data
+        data = get_views_graphic_settings_data(doc, view_template_filtered)
+
+        # write data to file
+        try:
+            write_json_file_result = write_graphics_settings_report(
+                revit_file_name=revit_file_name,
+                file_path=file_name,
+                data=data,
+            )
+            return_value.update(write_json_file_result)
+        except Exception as e:
+            return_value.update_sep(
+                False, "Failed to write view template data with exception: {}".format(e)
+            )
+    else:
+        return_value.update_sep(
+            True,
+            "Document: {} is not marked for view template reporting".format(
+                revit_file_name
+            ),
+        )
+
+    return return_value
+
+
+def report_warning_types(doc, revit_file_path, output):
+    """
+    Reports all warning types in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revit_file_path: The current model document file path
+    :type revit_file_path: str
+    :param output: A function piping messages to designated target.
+    :type output: func(message)
+
+    :return:
+        Result class instance.
+
+        - result.status False if an exception occurred, otherwise True.
+        - result.message will contain processing messages.
+        - result.result empty list
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+        - result.result will be an empty list
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+    output("Reporting warning types...start")
+    file_name = os.path.join(
+        settings.OUTPUT_FOLDER,
+        get_file_name_without_ext(revit_file_path)
+        + settings.REPORT_EXTENSION_WARNING_TYPES
+        + settings.REPORT_FILE_NAME_EXTENSION,
+    )
+    # get wall report headers
+    data = get_warnings_report_data(doc, get_file_name_without_ext(revit_file_path))
+    try:
+        write_data = write_warnings_data(file_name, data)
+        return_value.update(write_data)
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to write warning type data with exception: {}".format(e)
         )
     return return_value

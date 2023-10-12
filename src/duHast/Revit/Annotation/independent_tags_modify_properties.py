@@ -78,8 +78,12 @@ def update_tag_location(doc, tag_data):
                     move_data.tag.Location.Move(
                         move_data.new_location - move_data.old_location
                     )
+                    owner_view = doc.GetElement(move_data.tag.OwnerViewId)
                     action_return_value.update_sep(
-                        True, "Moved tag: {}".format(move_data.tag.Id)
+                        True,
+                        "Moved tag: {} on view: {} [view id: {}]".format(
+                            move_data.tag.Id, owner_view.Name, owner_view.Id
+                        ),
                     )
                     action_return_value.result.append(move_data.tag)
                 except Exception as e:

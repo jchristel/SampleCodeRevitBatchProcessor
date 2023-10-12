@@ -178,31 +178,36 @@ def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
         for key, hash_data in hash_data_by_file.items():
             # update categories hash table
             mapped_hash_table_categories = []
-            for row in hash_data.hash_table:
-                new_row = []
-                for entry in row:
-                    if entry > 1 or entry < -1:
-                        mapped_index = hash_mapper_categories.index(entry)
-                        new_row.append(mapped_index)
-                    else:
-                        new_row.append(entry)
-                mapped_hash_table_categories.append(new_row)
-            # overwrite existing hash table
-            hash_data.hash_table = mapped_hash_table_categories
-
+            try:
+                for row in hash_data.hash_table:
+                    new_row = []
+                    for entry in row:
+                        if entry > 1 or entry < -1:
+                            mapped_index = hash_mapper_categories.index(entry)
+                            new_row.append(mapped_index)
+                        else:
+                            new_row.append(entry)
+                    mapped_hash_table_categories.append(new_row)
+                # overwrite existing hash table
+                hash_data.hash_table = mapped_hash_table_categories
+            except Exception as e:
+                raise ValueError ("Failed to match category hash: {}".format(e))
             # update filters hash table
             mapped_hash_table_filters = []
-            for row in hash_data.hash_table_filters:
-                new_row = []
-                for entry in row:
-                    if entry > 1 or entry < -1:
-                        mapped_index = mapped_hash_table_filters.index(entry)
-                        new_row.append(mapped_index)
-                    else:
-                        new_row.append(entry)
-                mapped_hash_table_filters.append(new_row)
-            # overwrite existing hash table
-            hash_data.hash_table_filters = mapped_hash_table_filters
+            try:
+                for row in hash_data.hash_table_filters:
+                    new_row = []
+                    for entry in row:
+                        if entry > 1 or entry < -1:
+                            mapped_index = hash_mapper_filters.index(entry)
+                            new_row.append(mapped_index)
+                        else:
+                            new_row.append(entry)
+                    mapped_hash_table_filters.append(new_row)
+                # overwrite existing hash table
+                hash_data.hash_table_filters = mapped_hash_table_filters
+            except Exception as e:
+                raise ValueError ("Failed to match filter hash: {}".format(e))
             # update call back
             call_back_progress_counter = call_back_progress_counter + 1
             if progress_call_back is not None:

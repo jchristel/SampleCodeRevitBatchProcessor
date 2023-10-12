@@ -205,6 +205,16 @@ def check_all_line_and_fill_pattern_in_model(doc, view_overrides_data):
 
 
 def get_matching_templates(doc, view_overrides_data):
+    """
+    Returns a dictionary containing the view templates that match the view names specified in the view_overrides_data dictionary.
+
+    Args:
+        doc (Autodesk.Revit.DB.Document): The current Revit model document.
+        view_overrides_data (dict): A dictionary containing view override data. The keys are view names and the values are objects of type ViewOverrideData.
+
+    Returns:
+        dict: A dictionary containing the view templates that match the view names specified in the view_overrides_data dictionary. The keys are view names and the values are tuples containing the view template and the corresponding view override data.
+    """
     matching_templates = {}
     view_templates_in_model = get_view_templates(doc)
     for key, view_override in view_overrides_data.items():
@@ -217,6 +227,20 @@ def get_matching_templates(doc, view_overrides_data):
 
 
 def _add_filters_to_view(doc, view, filter_data):
+    """
+    Adds filters to a view in Autodesk Revit.
+
+    Args:
+        doc (Autodesk.Revit.DB.Document): The document object representing the Revit model.
+        view (Autodesk.Revit.DB.View): The view object to which the filters should be added.
+        filter_data (list): A list of filter objects that should be added to the view.
+
+    Returns:
+        duHast.Utilities.Objects.result.Result: The result object containing the outcome of adding the filters to the view. 
+        The `status` attribute of the result object indicates whether the filters were added successfully or not. 
+        The `message` attribute of the result object contains any additional messages related to the application of the filters. 
+        The `result` attribute of the result object is a list of filters that were successfully added to the view.
+    """
     return_value = res.Result()
     filters_exist_in_view = []
     for filter in filter_data:
@@ -229,6 +253,17 @@ def _add_filters_to_view(doc, view, filter_data):
 
 
 def apply_override_to_view(doc, view, view_override):
+    """
+    Apply graphic and filter overrides to a Revit view.
+
+    Args:
+        doc (Revit Document): The current Revit document.
+        view (Revit View): The view to apply the overrides to.
+        view_override (ViewOverride): An object containing the desired graphic and filter overrides.
+
+    Returns:
+        Result: A result object containing the status of the override application, any error messages, and additional information.
+    """
     return_value = res.Result()
     return_value.append_message("Modifying view: {}".format(view.Name))
     target_view_data = get_view_settings(doc=doc, view=view)
@@ -300,6 +335,16 @@ def apply_override_to_view(doc, view, view_override):
 
 
 def apply_overrides_to_views(doc, view_data):
+    """
+    Applies graphic and filter overrides to multiple views in a Revit document.
+
+    Args:
+        doc (Revit Document): The current Revit document.
+        view_data (dict): A dictionary where the keys are the names of the views and the values are lists containing the Revit view object and the view override object.
+
+    Returns:
+        Result: A result object containing the status of the override application, any error messages, and additional information.
+    """
     return_value = res.Result()
     for key, value in view_data.items():
         status_apply = apply_override_to_view(doc, value[0], value[1])
@@ -308,6 +353,23 @@ def apply_overrides_to_views(doc, view_data):
 
 
 def apply_overrides_from_file(doc, file_path):
+    """
+    Applies graphic and filter overrides to multiple views in a Revit document based on data imported from a JSON file.
+
+    Args:
+        doc (Revit Document): The current Revit document.
+        file_path (str): The fully qualified file path of the JSON file containing the view override data.
+
+    Returns:
+        Result: A result object containing the status of the override application, any error messages, and additional information.
+
+    Example Usage:
+        result = apply_overrides_from_file(doc, file_path)
+        if result.status:
+            print("Overrides applied successfully.")
+        else:
+            print("Failed to apply overrides:", result.message)
+    """
     return_value = res.Result()
     try:
         # load data from file

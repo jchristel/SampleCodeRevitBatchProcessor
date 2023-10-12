@@ -3,13 +3,39 @@
 A class used to return status, messages and objects back to a caller.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The `Result` class is a subclass of the `base.Base` class and is used to store and manipulate the results of a process. It has fields for `message`, `status`, and `result`, and provides methods to update these fields.
 
-A class used to store and manipulate the results of a process or operation.
+Example Usage:
+    result = Result()  # Create a new instance of the Result class
+    result.append_message("An error occurred")  # Append a new message to the existing message
+    result.update_status(False)  # Update the status to False
+    result.update_sep(True, "Process completed successfully")  # Update the status and append a new message
+    print(result)  # Print the result object
 
-    Attributes:
-        message (str): The message associated with the result.
-        status (bool): The status of the result.
-        result (list): The result of the process or operation.
+Methods:
+    __init__(self):
+        Initializes the Result object with default values for `message`, `status`, and `result`
+
+    __repr__(self):
+        Returns a string representation of the Result object, including the formatted message, status, and result
+
+    append_message(self, message):
+        Appends a new line and new message string to the existing message
+
+    update(self, otherResult):
+        Updates the Result object using another Result object, updating the message, status, and result
+
+    update_sep(self, status, message):
+        Updates the status and message properties of the Result object
+
+    update_status(self, status):
+        Updates the status property of the Result object
+
+Fields:
+    message: A string representing the message of the result
+    status: A boolean representing the status of the result
+    result: A list to store the result items
+   
 """
 
 
@@ -81,10 +107,11 @@ class Result(base.Base):
             if self.message == "-":
                 self.message = "{}".format(message)
             else:
-                self.message =  "{}\n{}".format(self.message, message)
+                self.message = "{}\n{}".format(self.message, message)
         except Exception as e:
-            self.message = "{} \nAn exception in result class occurred!!! {}".format(self.message, e)
-            
+            self.message = "{} \nAn exception in result class occurred!!! {}".format(
+                self.message, e
+            )
 
     def update(self, otherResult):
         """
@@ -99,9 +126,7 @@ class Result(base.Base):
         """
 
         if not isinstance(otherResult, Result):
-            raise TypeError(
-                "otherResult must be an instance of Result"
-            )
+            raise TypeError("otherResult must be an instance of Result")
 
         try:
             # check if default message string, if so do not update
@@ -109,7 +134,7 @@ class Result(base.Base):
                 self.append_message(otherResult.message)
             self.status = self.status & otherResult.status
             # check if result property that was passed in has values
-            if otherResult.result is not None and len(otherResult.result) > 0:
+            if any(otherResult.result):
                 for item in otherResult.result:
                     self.result.append(item)
         except Exception as e:
@@ -130,10 +155,8 @@ class Result(base.Base):
         """
 
         if not isinstance(status, bool):
-            raise TypeError(
-                "status must be an instance of boolean"
-            )
-        
+            raise TypeError("status must be an instance of boolean")
+
         try:
             self.append_message(message)
             # self.message = self.message + '\n' + message

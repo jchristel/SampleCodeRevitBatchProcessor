@@ -32,7 +32,7 @@ A number of functions around Revit Arrow heads.
 #: list of built in parameters attached to dimensions containing arrow head ids
 from Autodesk.Revit.DB import BuiltInParameter, ElementType, ElementId, FilteredElementCollector
 
-from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value
+from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value, get_parameter_value_as_element_id
 
 #:  list of built in parameters attached to
 #:
@@ -83,7 +83,7 @@ def get_arrow_head_ids_from_type(doc, type_getter, parameter_list):
     types = type_getter(doc)
     for t in types:
         for p_int in parameter_list:
-            id = get_built_in_parameter_value(t, p_int)
+            id = get_built_in_parameter_value(t, p_int, get_parameter_value_as_element_id)
             if (
                 id not in used_ids
                 and id != ElementId.InvalidElementId

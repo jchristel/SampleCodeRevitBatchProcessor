@@ -135,8 +135,8 @@ def check_line_patterns_are_in_model(doc, line_pattern_data):
     """
     return_value = res.Result()
     all_line_pattern_in_model = build_patterns_dictionary_by_name(doc=doc)
-    # append solid linne pattern as it is  a special case inn the api
-    all_line_pattern_in_model[PatternSettingBase.SOLID_PATTERN]= LinePatternElement.GetSolidPatternId()
+    # append solid line pattern as it is  a special case inn the api
+    all_line_pattern_in_model[PatternSettingBase.SOLID_PATTERN]= [LinePatternElement.GetSolidPatternId()]
     # check line pattern in model against line pattern in data
     return_value.update(
         _check_pattern_in_model(

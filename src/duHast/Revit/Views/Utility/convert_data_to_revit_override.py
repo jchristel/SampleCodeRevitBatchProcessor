@@ -31,7 +31,7 @@ import clr
 # used to convert integer to byte value
 import System
 
-from Autodesk.Revit.DB import Color, ElementId, OverrideGraphicSettings
+from Autodesk.Revit.DB import Color, ElementId, LinePatternElement, OverrideGraphicSettings
 
 from duHast.Revit.Common.Utility.revit_to_data_conversion import (
     VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE,
@@ -39,7 +39,7 @@ from duHast.Revit.Common.Utility.revit_to_data_conversion import (
 
 from duHast.Revit.LinePattern.line_patterns import build_patterns_dictionary_by_name
 from duHast.Revit.LinePattern.fill_patterns import pattern_ids_by_name
-
+from duHast.Revit.Common.Objects.Data.pattern_settings_base import PatternSettingBase
 
 def get_colour(data_colour):
     """
@@ -101,6 +101,8 @@ def get_line_pattern_id(doc, data_pattern):
     all_patterns = build_patterns_dictionary_by_name(doc)
     if data_pattern.name in all_patterns:
         return all_patterns[data_pattern.name][0]
+    elif data_pattern.name == PatternSettingBase.SOLID_PATTERN:
+        return LinePatternElement.GetSolidPatternId()
     else:
         return ElementId.InvalidElementId
 

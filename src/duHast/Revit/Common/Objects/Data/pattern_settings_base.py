@@ -39,7 +39,7 @@ from duHast.Utilities.Objects import base
 
 class PatternSettingBase(base.Base):
     NO_PATTERN = "no pattern assigned"
-
+    SOLID_PATTERN = "SOLID"
     def __init__(self, name=NO_PATTERN, id=-1, data_type="unknown", j={}, **kwargs):
         """
         Class constructor.

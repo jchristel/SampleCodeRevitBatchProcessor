@@ -33,7 +33,10 @@ from Autodesk.Revit.DB import (
     FilteredElementCollector,
     IndependentTag,
 )
-from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value
+from duHast.Revit.Common.parameter_get_utils import (
+    get_built_in_parameter_value,
+    get_parameter_value_as_element_id,
+)
 
 # from duHast.Revit.Common.revit_version import get_revit_version_number
 
@@ -65,7 +68,9 @@ def get_independent_tag_type_arrow_head_ids(doc):
         t_type_id = t.GetTypeId()
         t_type_element = doc.GetElement(t_type_id)
         id = get_built_in_parameter_value(
-            t_type_element, BuiltInParameter.LEADER_ARROWHEAD
+            t_type_element,
+            BuiltInParameter.LEADER_ARROWHEAD,
+            get_parameter_value_as_element_id,
         )
         if id not in used_ids and id != ElementId.InvalidElementId and id != None:
             used_ids.append(id)

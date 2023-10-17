@@ -65,7 +65,7 @@ def convert_to_category_override_storage(doc, category_data_instance):
             category=category_in_model,
             category_id=category_in_model.Id,
             revit_override=revit_override,
-            is_category_hidden=category_data_instance.is_visible,
+            is_category_hidden=not category_data_instance.is_visible, #need to be inverted :(((
         )
     return return_value
 

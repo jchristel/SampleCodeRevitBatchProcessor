@@ -178,8 +178,6 @@ def convert_to_revit_graphic_override(doc, data_override, is_filter_override=Fal
                 revit_override_setting.SetDetailLevel(
                     VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE[data_override.detail_level]
                 )
-                raise ValueError("set view detail to {}".format(data_override.detail_level))
-
         # Sets the halftone value.
         revit_override_setting.SetHalftone(data_override.halftone)
 

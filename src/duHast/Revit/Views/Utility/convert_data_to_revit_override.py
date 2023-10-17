@@ -34,7 +34,7 @@ import System
 from Autodesk.Revit.DB import Color, ElementId, LinePatternElement, OverrideGraphicSettings
 
 from duHast.Revit.Common.Utility.revit_to_data_conversion import (
-    VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE,
+    VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE,VIEW_DETAIL_LEVEL_NAME_MAPPING,
 )
 
 from duHast.Revit.LinePattern.line_patterns import build_patterns_dictionary_by_name
@@ -173,10 +173,12 @@ def convert_to_revit_graphic_override(doc, data_override, is_filter_override=Fal
 
         # detail override only exists on category overrides
         if is_filter_override == False:
-            # Sets the detail level.
-            revit_override_setting.SetDetailLevel(
-                VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE[data_override.detail_level]
-            )
+            # Sets the detail level if required
+            if(data_override.detail_level != -1):
+                revit_override_setting.SetDetailLevel(
+                    VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE[data_override.detail_level]
+                )
+                raise ValueError("set view detail to {}".format(data_override.detail_level))
 
         # Sets the halftone value.
         revit_override_setting.SetHalftone(data_override.halftone)

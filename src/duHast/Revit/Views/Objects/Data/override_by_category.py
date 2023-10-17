@@ -104,7 +104,7 @@ class OverrideByCategory(OverrideByBase):
             other.transparency,
             other.override_projection,
             other.override_cut,
-            self.detail_level,
+            other.detail_level,
         )
 
     def __eq__(self, other):

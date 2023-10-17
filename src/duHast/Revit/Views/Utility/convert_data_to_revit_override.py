@@ -123,9 +123,6 @@ def convert_to_revit_graphic_override(doc, data_override, is_filter_override=Fal
 
     # set up a new revit api override settings instance
     revit_override_setting = OverrideGraphicSettings()
-
-    # Sets the halftone value.
-    revit_override_setting.SetHalftone(data_override.halftone)
     
     # set values based on data override if one is present
     if data_override.are_overrides_present:
@@ -181,7 +178,9 @@ def convert_to_revit_graphic_override(doc, data_override, is_filter_override=Fal
                 VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE[data_override.detail_level]
             )
 
-        
+        # Sets the halftone value.
+        revit_override_setting.SetHalftone(data_override.halftone)
+
         # Sets the projection surface line color.
         revit_override_setting.SetProjectionLineColor(
             get_colour(data_override.override_projection.line_projection.colour)

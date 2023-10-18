@@ -26,14 +26,10 @@ Revit areas helper functions.
 #
 #
 
-from duHast.Revit.Levels.levels import get_levels_in_model
 
 from Autodesk.Revit.DB import (
     BuiltInCategory,
-    CurveElement,
-    ElementClassFilter,
     FilteredElementCollector,
-    ModelLine,
 )
 
 
@@ -61,31 +57,3 @@ def get_area_scheme_by_name(doc, area_scheme_name):
             if area_scheme.Name == area_scheme_name:
                 return area_scheme
     return return_value
-
-
-def get_area_lines_by_area_scheme_name(doc, scheme_name):
-    return_value = []
-    area_scheme = get_area_scheme_by_name(doc=doc, area_scheme_name=scheme_name)
-    if area_scheme:
-        filter = ElementClassFilter(CurveElement)
-        dependent_element_ids = area_scheme.GetDependentElements(filter)
-        for id in dependent_element_ids:
-            element = doc.GetElement(id)
-            return_value.append(element)
-    return return_value
-
-
-def sort_area_line_by_level_name(doc, area_lines):
-    levels = get_levels_in_model(doc)
-    # build level id to level name dictionary
-    level_names_by_id = {}
-    for l in levels:
-        level_names_by_id[l.Id]=l.Name
-    # build level name to area lines dictionary
-    area_lines_by_Level_name = {}
-    for area_line in area_lines:
-        if level_names_by_id[area_line.LevelId] in area_lines_by_Level_name:
-            area_lines_by_Level_name[level_names_by_id[area_line.LevelId]].append(area_line)
-        else:
-            area_lines_by_Level_name[level_names_by_id[area_line.LevelId]]=[area_line]
-    return area_lines_by_Level_name

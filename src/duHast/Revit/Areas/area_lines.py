@@ -34,13 +34,16 @@ from System import Linq
 
 clr.ImportExtensions(Linq)
 
-from duHast.Revit.Levels.levels import get_levels_in_model
+from duHast.Revit.Levels.levels import get_levels_in_model, get_level_elevation_by_name
+from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value
 from duHast.Revit.Common.transaction import in_transaction
+from duHast.Revit.Common.Geometry.curve import translate_curves_in_elevation
 from duHast.Utilities.Objects import result as res
 
 from duHast.Revit.Areas.areas import get_area_scheme_by_name
 
 from Autodesk.Revit.DB import (
+    BuiltInParameter,
     CurveElement,
     ElementId,
     ElementClassFilter,
@@ -131,26 +134,115 @@ def delete_area_lines_by_level_name(
     return return_value
 
 
+def create_new_area_outlines(doc, curves, view, transaction_manager=in_transaction):
+    return_value = res.Result()
+
+    def action():
+        action_return_value = res.Result()
+        try:
+            for t in curves:
+                doc.Create.NewAreaBoundaryLine(view.SketchPlane, t, view)
+            action_return_value.append_message(
+                "Created new area separation line(s) in view {}".format(view.Name)
+            )
+        except Exception as e:
+            action_return_value.update_sep(
+                False,
+                "Failed to create area separation line(s) in view {} with exception: {}".format(
+                    view.Name, e
+                ),
+            )
+        return action_return_value
+
+    tranny = Transaction(
+        doc, "Creating new area separation line(s) in view ".format(view.Name)
+    )
+    result_create = transaction_manager(tranny, action, doc)
+    return_value.update(result_create)
+    return return_value
+
+
 def copy_area_lines_to_level_name(
-    doc, level_name, area_lines, transaction_manager=in_transaction
+    doc, view, area_lines, transaction_manager=in_transaction
 ):
     return_value = res.Result()
     try:
         # sort area lines by level
-        lines_by_level_name = sort_area_line_by_level_name(doc=doc, area_lines=area_lines)
+        lines_by_level_name = sort_area_line_by_level_name(
+            doc=doc, area_lines=area_lines
+        )
+        level_name = get_built_in_parameter_value(
+            view, BuiltInParameter.PLAN_VIEW_LEVEL
+        )
         # make sure only one level was returned and its not the level to be copied to!
-        if(len(lines_by_level_name)!= 1):
-            raise ValueError ("Source area lines must all be on the same level. Found {} levels instead.".format(len(lines_by_level_name)))
-        elif(level_name in lines_by_level_name):
-            raise ValueError("Source {} and destination {} level are identical!".format(level_name))
+        if len(lines_by_level_name) != 1:
+            raise ValueError(
+                "Source area lines must all be on the same level. Found {} levels instead.".format(
+                    len(lines_by_level_name)
+                )
+            )
+        elif level_name in lines_by_level_name:
+            raise ValueError(
+                "Source {} and destination {} level are identical!".format(level_name)
+            )
         else:
+            # get curve geometry from model lines
+            curves = [m_line.GeometryCurve for m_line in area_lines]
+            # check if we got curves
+            if any(curves):
+                # get source elevation (the elevations the area lines are on)
+                source_elevation = get_level_elevation_by_name(
+                    doc=doc, level_name=lines_by_level_name.iterkeys().next()
+                )
+                # check if we got a source elevation
+                if source_elevation != None:
+                    # get target elevation
+                    target_elevation = get_level_elevation_by_name(
+                        doc=doc, level_name=level_name
+                    )
+                    # check if we got a target elevation
+                    if target_elevation != None:
+                        # translate curves from source level to target levels
+                        translate_result = translate_curves_in_elevation(
+                            doc=doc,
+                            original_curves=curves,
+                            source_elevation=source_elevation,
+                            target_elevation=target_elevation,
+                        )
 
-            pass
+                        # check if we got translated curves...
+                        if translate_result.status:
+                            # this is an Autodesk.Revit.DB.CurveArray
+                            curve_array = translate_result.result[0]
+                            create_result = create_new_area_outlines(
+                                doc=doc,
+                                curves=curve_array,
+                                view=view,
+                                transaction_manager=transaction_manager,
+                            )
+                            return_value.update(create_result)
+                        else:
+                            raise ValueError(translate_result.message)
+                    else:
+                        raise ValueError(
+                            "Failed to get an elevation for level: {}".format(
+                                level_name
+                            )
+                        )
+                else:
+                    raise ValueError(
+                        "Failed to get an elevation for level: {}".format(
+                            lines_by_level_name.iterkeys().next()
+                        )
+                    )
+            else:
+                raise ValueError("Failed to get curves from area lines.")
+
     except Exception as e:
         return_value.update_sep(
-                    False,
-                    "Failed to copy {} area separation line(s) to level {} with exception: {}".format(
-                        len(area_lines), level_name, e
-                    ),
-                )
+            False,
+            "Failed to copy {} area separation line(s) to level {} with exception: {}".format(
+                len(area_lines), level_name, e
+            ),
+        )
     return return_value

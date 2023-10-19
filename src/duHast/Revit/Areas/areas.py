@@ -29,7 +29,9 @@ Revit areas helper functions.
 
 from Autodesk.Revit.DB import (
     BuiltInCategory,
+    ElementClassFilter,
     FilteredElementCollector,
+    ViewPlan
 )
 
 
@@ -56,4 +58,15 @@ def get_area_scheme_by_name(doc, area_scheme_name):
         for area_scheme in area_schemes:
             if area_scheme.Name == area_scheme_name:
                 return area_scheme
+    return return_value
+
+def get_views_by_area_scheme_name(doc, area_scheme_name):
+    return_value = []
+    area_scheme = get_area_scheme_by_name(doc, area_scheme_name)
+    if area_scheme:
+        filter = ElementClassFilter(ViewPlan)
+        dependent_element_ids = area_scheme.GetDependentElements(filter)
+        for id in dependent_element_ids:
+            element = doc.GetElement(id)
+            return_value.append(element)
     return return_value

@@ -52,6 +52,16 @@ from Autodesk.Revit.DB import (
 
 
 def get_area_lines_by_area_scheme_name(doc, scheme_name):
+    """
+    Returns a list of Revit model lines that are associated with a specific area scheme.
+
+    Args:
+        doc (Revit Document): The Revit document object.
+        scheme_name (str): The name of the area scheme.
+
+    Returns:
+        list: A list of Revit elements representing the area lines associated with the specified area scheme.
+    """
     return_value = []
     area_scheme = get_area_scheme_by_name(doc=doc, area_scheme_name=scheme_name)
     if area_scheme:
@@ -64,6 +74,16 @@ def get_area_lines_by_area_scheme_name(doc, scheme_name):
 
 
 def sort_area_line_by_level_name(doc, area_lines):
+    """
+    Sorts the area lines based on their associated level names and returns a dictionary where the keys are the level names and the values are lists of area lines.
+
+    Args:
+        doc (Document): The current model document.
+        area_lines (list): A list of area lines.
+
+    Returns:
+        dict: A dictionary where the keys are the level names and the values are lists of area lines.
+    """
     levels = get_levels_in_model(doc)
     # build level id to level name dictionary
     level_names_by_id = {}
@@ -84,6 +104,21 @@ def sort_area_line_by_level_name(doc, area_lines):
 def delete_area_lines_by_level_name(
     doc, level_name, area_lines, transaction_manager=in_transaction
 ):
+    """
+    Deletes area lines in a Revit model based on their associated level name.
+
+    Args:
+        doc (Document): The current model document.
+        level_name (str): The name of the level to delete area lines from.
+        area_lines (list): A list of area lines to be deleted.
+        transaction_manager (function, optional): A function that manages the transaction. Defaults to `in_transaction`.
+
+    Returns:
+        Result: A `Result` class instance containing the following attributes:
+            - status (bool): True if the delete operation was successful, False otherwise.
+            - message (str): A message indicating the status of the delete operation.
+            - result (list): A list of remaining area lines after the delete operation.
+    """
     return_value = res.Result()
     area_lines_return = area_lines
     # sort area lines by level
@@ -135,6 +170,18 @@ def delete_area_lines_by_level_name(
 
 
 def create_new_area_outlines(doc, curves, view, transaction_manager=in_transaction):
+    """
+    Create new area separation lines in a specified view in Autodesk Revit.
+
+    Args:
+        doc (Revit Document): The Revit document in which the area separation lines will be created.
+        curves (list): A list of curves representing the area separation lines.
+        view (Revit View): The view in which the area separation lines will be created.
+        transaction_manager (function, optional): A transaction manager function that wraps the creation of area separation lines in a Revit transaction. Default is `in_transaction`.
+
+    Returns:
+        Result: A `Result` object that contains the status of the transaction and any error or success messages.
+    """
     return_value = res.Result()
 
     def action():
@@ -165,6 +212,18 @@ def create_new_area_outlines(doc, curves, view, transaction_manager=in_transacti
 def copy_area_lines_to_level_name(
     doc, view, area_lines, transaction_manager=in_transaction
 ):
+    """
+    Copy area separation lines from one level to another in Autodesk Revit.
+
+    Args:
+        doc (Revit Document): The Revit document in which the area separation lines exist.
+        view (Revit View): The view in which the area separation lines will be created.
+        area_lines (list): A list of area separation lines to be copied.
+        transaction_manager (function, optional): A transaction manager function that wraps the creation of area separation lines in a Revit transaction. Default is `in_transaction`.
+
+    Returns:
+        Result: A `Result` object that contains the status of the transaction and any error or success messages.
+    """
     return_value = res.Result()
     try:
         # sort area lines by level

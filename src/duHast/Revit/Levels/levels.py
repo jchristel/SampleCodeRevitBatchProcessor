@@ -81,6 +81,14 @@ def get_levels_list_ascending(doc):
     return collector
 
 
+def get_level_elevation_by_name(doc, level_name):
+    level_elevation = None
+    levels = get_levels_in_model(doc=doc)
+    for level in levels:
+        if(level.Name == level_name):
+            return level.Elevation
+    return level_elevation
+
 # ------------------------------------------------- filters --------------------------------------------------------------------
 
 

@@ -26,7 +26,7 @@ Revit curve helper functions
 #
 #
 
-from Autodesk.Revit.DB import Arc, Line
+from Autodesk.Revit.DB import Arc, Line, Transform, XYZ
 
 from duHast.Revit.Common.Geometry.geometry import is_close
 from duHast.Utilities.Objects import result as res
@@ -427,6 +427,37 @@ def modify_model_line_action(existing_curve, new_curve, override_joins=True):
             False,
             "Failed to change geometry of element {} with exception: {}".format(
                 existing_curve.Id, e
+            ),
+        )
+    return return_value
+
+
+def translate_curves_in_elevation(
+    doc, original_curves, source_elevation, target_elevation
+):
+    return_value = res.Result()
+    try:
+        new_curves = doc.Application.Create.NewCurveArray()
+        # work out Z translation vector
+        z = target_elevation - source_elevation
+        return_value.append_message(
+            "new level RL: {} old level RL: {} translation z: {}".format(
+                target_elevation, source_elevation, z
+            )
+        )
+        # vector of translation
+        vector_translation = XYZ(0, 0, z)
+        # transformation
+        tf = Transform.CreateTranslation(vector_translation)
+        for sgs in original_curves:
+            new_curves.Append(sgs.CreateTransformed(tf))
+        return_value.append_message("Created {} mew curve(s)".format(new_curves.Size))
+        return_value.result=[new_curves]
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to translate curves from elevation {} to elevation: {} with exception: {}".format(
+                source_elevation, target_elevation, e
             ),
         )
     return return_value

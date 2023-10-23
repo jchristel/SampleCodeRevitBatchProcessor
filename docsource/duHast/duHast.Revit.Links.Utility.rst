@@ -12,6 +12,14 @@ duHast.Revit.Links.Utility.link\_path module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Links.Utility.link\_visibility module
+--------------------------------------------------
+
+.. automodule:: duHast.Revit.Links.Utility.link_visibility
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

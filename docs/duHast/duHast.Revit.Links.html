@@ -125,6 +125,13 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Links.Utility.html#duHast.Revit.Links.Utility.link_path.get_link_path"><code class="docutils literal notranslate"><span class="pre">get_link_path()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Links.Utility.html#module-duHast.Revit.Links.Utility.link_visibility">duHast.Revit.Links.Utility.link_visibility module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Links.Utility.html#this-module-contains-a-number-of-helper-functions-relating-to-revit-links-cad-links-and-image-links">This module contains a number of helper functions relating to Revit links, CAD links and image links.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Links.Utility.html#duHast.Revit.Links.Utility.link_visibility.is_link_workset_visible"><code class="docutils literal notranslate"><span class="pre">is_link_workset_visible()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Links.Utility.html#duHast.Revit.Links.Utility.link_visibility.is_link_hidden"><code class="docutils literal notranslate"><span class="pre">is_link_hidden()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Links.Utility.html#duHast.Revit.Links.Utility.link_visibility.is_link_visible"><code class="docutils literal notranslate"><span class="pre">is_link_visible()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Links.Utility.html#module-duHast.Revit.Links.Utility">Module contents</a></li>
 </ul>
 </li>
@@ -351,66 +358,10 @@ Filters by category.
 </dd></dl>
 
 </section>
-<section id="module-duHast.Revit.Links.link_functions">
-<span id="duhast-revit-links-link-functions-module"></span><h2>duHast.Revit.Links.link_functions module<a class="headerlink" href="#module-duHast.Revit.Links.link_functions" title="Permalink to this heading">¶</a></h2>
-<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-links-cad-links-and-image-links">
-<h3>This module contains a number of helper functions relating to Revit links, CAD links and image links.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-links-cad-links-and-image-links" title="Permalink to this heading">¶</a></h3>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Links.link_functions.is_link_workset_visible">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.link_functions.</span></span><span class="sig-name descname"><span class="pre">is_link_workset_visible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lnk_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.link_functions.is_link_workset_visible" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the workset of the link is visible in the view
-:param view: The view to check
-:type view: View
-:param lnk_instance: The Revit link instance to check the workset visibility of
-:type lnk_instance: RevitLinkInstance
-:return: True if the workset of the link is visible in the view, False otherwise
-:rtype: bool</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Links.link_functions.is_link_hidden">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.link_functions.</span></span><span class="sig-name descname"><span class="pre">is_link_hidden</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lnk_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.link_functions.is_link_hidden" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the link is hidden in the view
-:param view: The view to check
-:type view: View
-:param lnk_instance: The Revit link instance to check
-:type lnk_instance: RevitLinkInstance
-:return: True if the link is hidden in the view, False otherwise
-:rtype: bool</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Links.link_functions.is_link_visible">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.link_functions.</span></span><span class="sig-name descname"><span class="pre">is_link_visible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view_elem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lnk_inst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.link_functions.is_link_visible" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Check if the link is visible in the view. This is determined by:</dt><dd><ul class="simple">
-<li><p>The link is not hidden</p></li>
-<li><p>The link workset is visible</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>view_elem</strong> (<em>View</em>) – The view element to check</p></li>
-<li><p><strong>lnk_inst</strong> (<em>RevitLinkInstance</em>) – The Revit link instance to check</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if the link is visible in the view, False otherwise</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
 <section id="module-duHast.Revit.Links.links">
 <span id="duhast-revit-links-links-module"></span><h2>duHast.Revit.Links.links module<a class="headerlink" href="#module-duHast.Revit.Links.links" title="Permalink to this heading">¶</a></h2>
-<section id="id1">
-<h3>This module contains a number of helper functions relating to Revit links, CAD links and image links.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-links-cad-links-and-image-links">
+<h3>This module contains a number of helper functions relating to Revit links, CAD links and image links.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-links-cad-links-and-image-links" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.links.get_all_revit_link_instances">

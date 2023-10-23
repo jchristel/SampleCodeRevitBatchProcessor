@@ -4,6 +4,14 @@ duHast.Revit.Common.Geometry package
 Submodules
 ----------
 
+duHast.Revit.Common.Geometry.curve module
+-----------------------------------------
+
+.. automodule:: duHast.Revit.Common.Geometry.curve
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Common.Geometry.geometry module
 --------------------------------------------
 

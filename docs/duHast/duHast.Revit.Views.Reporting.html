@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 0.0.9 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Views package" href="duHast.Revit.Views.html" />
-    <link rel="next" title="duHast.Revit.Views.Utility package" href="duHast.Revit.Views.Utility.html" />
+    <link rel="next" title="duHast.Revit.Views.Reporting.Objects package" href="duHast.Revit.Views.Reporting.Objects.html" />
     <link rel="prev" title="duHast.Revit.Views.Objects.Data package" href="duHast.Revit.Views.Objects.Data.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
@@ -31,7 +31,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="duHast.Revit.Views.Utility.html" title="duHast.Revit.Views.Utility package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Views.Reporting.Objects.html" title="duHast.Revit.Views.Reporting.Objects package" accesskey="N">next</a></div>
             <div class="headerButton"><a href="duHast.Revit.Views.Objects.Data.html" title="duHast.Revit.Views.Objects.Data package" accesskey="P">previous</a></div>
         </li>
     </ul>
@@ -88,6 +88,23 @@
             
   <section id="duhast-revit-views-reporting-package">
 <h1>duHast.Revit.Views.Reporting package<a class="headerlink" href="#duhast-revit-views-reporting-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Views.Reporting.Objects.html">duHast.Revit.Views.Reporting.Objects package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Reporting.Objects.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Reporting.Objects.html#module-duHast.Revit.Views.Reporting.Objects.json_conversion_storage">duHast.Revit.Views.Reporting.Objects.json_conversion_storage module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Reporting.Objects.html#a-base-class-used-to-store-processing-steps-during-conversion-of-view-template-settings-to-3d-json-arrays">A base class used to store processing steps during conversion of view template settings to 3D json arrays .</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Reporting.Objects.html#duHast.Revit.Views.Reporting.Objects.json_conversion_storage.JSONThreeDStorage"><code class="docutils literal notranslate"><span class="pre">JSONThreeDStorage</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Reporting.Objects.html#module-duHast.Revit.Views.Reporting.Objects">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
@@ -342,28 +359,52 @@ Data gets filtered twice: property needs to exist in headers list as well as in 
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Views.Reporting.view_reports_json_props">
+<span id="duhast-revit-views-reporting-view-reports-json-props-module"></span><h2>duHast.Revit.Views.Reporting.view_reports_json_props module<a class="headerlink" href="#module-duHast.Revit.Views.Reporting.view_reports_json_props" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-node-names-for-view-reports-in-json-format">
+<h3>This module contains node names for view reports in json format.<a class="headerlink" href="#this-module-contains-node-names-for-view-reports-in-json-format" title="Permalink to this heading">¶</a></h3>
+</section>
+</section>
+<section id="module-duHast.Revit.Views.Reporting.views_data_3d_hash_report">
+<span id="duhast-revit-views-reporting-views-data-3d-hash-report-module"></span><h2>duHast.Revit.Views.Reporting.views_data_3d_hash_report module<a class="headerlink" href="#module-duHast.Revit.Views.Reporting.views_data_3d_hash_report" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-the-revit-view-template-data-to-3d-hash-report-functionality">
+<h3>This module contains the Revit view template data to 3D hash report functionality.<a class="headerlink" href="#this-module-contains-the-revit-view-template-data-to-3d-hash-report-functionality" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Reporting.views_data_3d_hash_report.convert_vt_data_to_3d_flattened">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Reporting.views_data_3d_hash_report.</span></span><span class="sig-name descname"><span class="pre">convert_vt_data_to_3d_flattened</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_call_back</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Reporting.views_data_3d_hash_report.convert_vt_data_to_3d_flattened" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts view template graphic overrides data stored in files into flattened json formatted hash table array for import to power bi.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>json_files</strong> (<em>[</em><em>str</em><em>]</em>) – List of files containing view template data of Revit project files. ( One json file per Revit project file)</p></li>
+<li><p><strong>progress_call_back</strong> (<em>func</em><em>(</em><em>counter</em><em>, </em><em>overall_counter</em><em>)</em><em>, </em><em>optional</em>) – A call back function accepting as arguments the number of the current file processed and the number of overall files to be processed, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- .result = True if flattened array was successfully created. Otherwise False.
+- .message will contain array size.
+-. result will contain the flatten array as first value in list</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.Reporting.views_data_3d_hash_report_utilities">
+<span id="duhast-revit-views-reporting-views-data-3d-hash-report-utilities-module"></span><h2>duHast.Revit.Views.Reporting.views_data_3d_hash_report_utilities module<a class="headerlink" href="#module-duHast.Revit.Views.Reporting.views_data_3d_hash_report_utilities" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-utility-functions-hash-tables-from-view-settings">
+<h3>This module contains utility functions - hash tables from view settings.<a class="headerlink" href="#this-module-contains-utility-functions-hash-tables-from-view-settings" title="Permalink to this heading">¶</a></h3>
+</section>
+</section>
 <section id="module-duHast.Revit.Views.Reporting.views_data_report">
 <span id="duhast-revit-views-reporting-views-data-report-module"></span><h2>duHast.Revit.Views.Reporting.views_data_report module<a class="headerlink" href="#module-duHast.Revit.Views.Reporting.views_data_report" title="Permalink to this heading">¶</a></h2>
 <section id="this-module-contains-the-revit-view-report-functionality">
 <h3>This module contains the Revit view report functionality.<a class="headerlink" href="#this-module-contains-the-revit-view-report-functionality" title="Permalink to this heading">¶</a></h3>
 </section>
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Views.Reporting.views_data_report.get_views_graphic_settings_data">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Reporting.views_data_report.</span></span><span class="sig-name descname"><span class="pre">get_views_graphic_settings_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Reporting.views_data_report.get_views_graphic_settings_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets view data graphic settings from the model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>list of ViewGraphicsSettings instances</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>[<a class="reference internal" href="duHast.Revit.Views.Objects.html#duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings" title="duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">ViewGraphicsSettings</span></code></a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.Reporting.views_data_report.write_graphics_settings_report">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Reporting.views_data_report.</span></span><span class="sig-name descname"><span class="pre">write_graphics_settings_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Reporting.views_data_report.write_graphics_settings_report" title="Permalink to this definition">¶</a></dt>
@@ -531,19 +572,19 @@ The data returned is filtered by property list past in.</p>
 </section>
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Views.Reporting.views_report_header.REPORT_VIEWS_HEADER">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Reporting.views_report_header.</span></span><span class="sig-name descname"><span class="pre">REPORT_VIEWS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'Id']</span></em><a class="headerlink" href="#duHast.Revit.Views.Reporting.views_report_header.REPORT_VIEWS_HEADER" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Reporting.views_report_header.</span></span><span class="sig-name descname"><span class="pre">REPORT_VIEWS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'Id',</span> <span class="pre">'CREATED</span> <span class="pre">BY',</span> <span class="pre">'LAST</span> <span class="pre">CHANGED</span> <span class="pre">BY',</span> <span class="pre">'OWNER']</span></em><a class="headerlink" href="#duHast.Revit.Views.Reporting.views_report_header.REPORT_VIEWS_HEADER" title="Permalink to this definition">¶</a></dt>
 <dd><p>header used in views report</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Views.Reporting.views_report_header.REPORT_SHEETS_HEADER">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Reporting.views_report_header.</span></span><span class="sig-name descname"><span class="pre">REPORT_SHEETS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'Id']</span></em><a class="headerlink" href="#duHast.Revit.Views.Reporting.views_report_header.REPORT_SHEETS_HEADER" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Reporting.views_report_header.</span></span><span class="sig-name descname"><span class="pre">REPORT_SHEETS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'Id',</span> <span class="pre">'CREATED</span> <span class="pre">BY',</span> <span class="pre">'LAST</span> <span class="pre">CHANGED</span> <span class="pre">BY',</span> <span class="pre">'OWNER']</span></em><a class="headerlink" href="#duHast.Revit.Views.Reporting.views_report_header.REPORT_SHEETS_HEADER" title="Permalink to this definition">¶</a></dt>
 <dd><p>header used in sheets report</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Views.Reporting.views_report_header.REPORT_SCHEDULES_HEADER">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Reporting.views_report_header.</span></span><span class="sig-name descname"><span class="pre">REPORT_SCHEDULES_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'Id']</span></em><a class="headerlink" href="#duHast.Revit.Views.Reporting.views_report_header.REPORT_SCHEDULES_HEADER" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Reporting.views_report_header.</span></span><span class="sig-name descname"><span class="pre">REPORT_SCHEDULES_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'Id',</span> <span class="pre">'CREATED</span> <span class="pre">BY',</span> <span class="pre">'LAST</span> <span class="pre">CHANGED</span> <span class="pre">BY',</span> <span class="pre">'OWNER']</span></em><a class="headerlink" href="#duHast.Revit.Views.Reporting.views_report_header.REPORT_SCHEDULES_HEADER" title="Permalink to this definition">¶</a></dt>
 <dd><p>header used in schedules report</p>
 </dd></dl>
 

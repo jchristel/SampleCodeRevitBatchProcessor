@@ -102,6 +102,51 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Objects.Data.override_by_base.</span></span><span class="sig-name descname"><span class="pre">OverrideByBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unknown'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.Data.override_by_base.OverrideByBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
 <p>Class constructor.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Objects.Data.override_by_base.OverrideByBase.compare_overrides">
+<span class="sig-name descname"><span class="pre">compare_overrides</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.Data.override_by_base.OverrideByBase.compare_overrides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ignores visibility property when comparing! (ignores is_visible and are_overrides_present)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#duHast.Revit.Views.Objects.Data.override_by_base.OverrideByBase" title="duHast.Revit.Views.Objects.Data.override_by_base.OverrideByBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">OverrideByBase</span></code></a>) – An instance of OverrideByBase</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all graphical properties of compared class instances are equal, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Objects.Data.override_by_base.OverrideByBase.get_all_used_line_patterns">
+<span class="sig-name descname"><span class="pre">get_all_used_line_patterns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.Data.override_by_base.OverrideByBase.get_all_used_line_patterns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract dictionary of line pattern names to line pattern objects</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary of line pattern names to line pattern objects</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>{str: <a class="reference internal" href="duHast.Revit.LinePattern.Objects.Data.html#duHast.Revit.LinePattern.Objects.Data.line_pattern_settings.LinePatternSettings" title="duHast.Revit.LinePattern.Objects.Data.line_pattern_settings.LinePatternSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinePatternSettings</span></code></a>}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Objects.Data.override_by_base.OverrideByBase.get_all_used_fill_patterns">
+<span class="sig-name descname"><span class="pre">get_all_used_fill_patterns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.Data.override_by_base.OverrideByBase.get_all_used_fill_patterns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract dictionary of fill pattern names to fill pattern objects</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary of fill pattern names to fill pattern objects</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>{str: <a class="reference internal" href="duHast.Revit.LinePattern.Objects.Data.html#duHast.Revit.LinePattern.Objects.Data.fill_pattern_settings.FillPatternSettings" title="duHast.Revit.LinePattern.Objects.Data.fill_pattern_settings.FillPatternSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">FillPatternSettings</span></code></a>}</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -120,6 +165,23 @@
 <dt class="sig sig-object py" id="duHast.Revit.Views.Objects.Data.override_by_category.OverrideByCategory.data_type">
 <span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'override_by_category'</span></em><a class="headerlink" href="#duHast.Revit.Views.Objects.Data.override_by_category.OverrideByCategory.data_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Objects.Data.override_by_category.OverrideByCategory.compare_overrides">
+<span class="sig-name descname"><span class="pre">compare_overrides</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.Data.override_by_category.OverrideByCategory.compare_overrides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ignores visibility property when comparing!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

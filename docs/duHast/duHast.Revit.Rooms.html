@@ -325,12 +325,14 @@ False: Check if the location crosshair is in the view crop box
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.room_tags.move_tag_to_room">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_tags.</span></span><span class="sig-name descname"><span class="pre">move_tag_to_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_tags.move_tag_to_room" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_tags.</span></span><span class="sig-name descname"><span class="pre">move_tag_to_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_tags.move_tag_to_room" title="Permalink to this definition">¶</a></dt>
 <dd><p>Moves a room tag to the associated rooms location point.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
 :param tag_id: The element id of the tag to be moved to the room.
 :type tag_id: Autodesk.Revit.DB.ElementId
+:param transaction_manager: The transaction manager used to perform the modifications.
+:type transaction_manager: (function)
 :return:</p>
 <blockquote>
 <div><p>Result class instance.

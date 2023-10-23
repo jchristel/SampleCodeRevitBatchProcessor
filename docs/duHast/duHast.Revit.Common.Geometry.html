@@ -91,6 +91,79 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
+<section id="module-duHast.Revit.Common.Geometry.curve">
+<span id="duhast-revit-common-geometry-curve-module"></span><h2>duHast.Revit.Common.Geometry.curve module<a class="headerlink" href="#module-duHast.Revit.Common.Geometry.curve" title="Permalink to this heading">¶</a></h2>
+<section id="revit-curve-helper-functions">
+<h3>Revit curve helper functions<a class="headerlink" href="#revit-curve-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve.is_curve_is_within_curve">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve.</span></span><span class="sig-name descname"><span class="pre">is_curve_is_within_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve_one</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_two</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve.is_curve_is_within_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether one curve is completely within another curve.</p>
+<dl>
+<dt>Args:</dt><dd><p>curve_one: The first curve to compare (can be an arc or a line).
+curve_two: The second curve to compare (can be an arc or a line).</p>
+</dd>
+<dt>Returns:</dt><dd><p>The curve that is completely within the other curve, or None if the curves are overlapping.</p>
+</dd>
+<dt>Example Usage:</dt><dd><p>curve_one = …
+curve_two = …
+result = check_curve_is_within_curve(curve_one, curve_two)
+print(result)</p>
+<p>Output:
+- If the curves are identical, it will return curve_one.
+- If curve_two is completely within curve_one, it will return curve_two.
+- If curve_one is completely within curve_two, it will return curve_one.
+- If the curves are overlapping, it will return None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve.calculate_lengthened_curve_geometry">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve.</span></span><span class="sig-name descname"><span class="pre">calculate_lengthened_curve_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve_one</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_two</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve.calculate_lengthened_curve_geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two options when lines are overlapping:</p>
+<ul class="simple">
+<li><p>extend the longer line to the end of the shorter line not overlapping and delete the shorter line or</p></li>
+<li><p>shorten shorter line to move the endpoint currently overlapping to the end point of the longer line, therefore removing the overlap</p></li>
+</ul>
+<p>First option will shorten number of room separation lines in model. However when multiple lines overlap a single long line this
+code will delete a shorter overlapping line still required!</p>
+<p>returns two values: first one is the curve to change in length, second one is the curve to delete!</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve.calculate_shortened_curve_geometry">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve.</span></span><span class="sig-name descname"><span class="pre">calculate_shortened_curve_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve_one</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_two</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve.calculate_shortened_curve_geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two options when lines are overlapping:</p>
+<ul class="simple">
+<li><p>extend the longer line to the end of the shorter line not overlapping and delete the shorter line or</p></li>
+<li><p>shorten shorter line to move the endpoint currently overlapping to the end point of the longer line, therefore removing the overlap</p></li>
+</ul>
+<p>This is an attempt on option 2</p>
+<p>returns the curve of which to change the length!</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve.modify_model_line_action">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve.</span></span><span class="sig-name descname"><span class="pre">modify_model_line_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">existing_curve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_curve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override_joins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve.modify_model_line_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify the geometry of an existing curve by setting it to a new curve.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>existing_curve (object): The existing curve that needs to be modified.
+new_curve (object): The new curve that will replace the existing curve.
+override_joins (bool, optional): Flag to indicate whether to override the joins between adjoining model lines. Defaults to True.</p>
+</dd>
+<dt>Returns:</dt><dd><p>object: An instance of the Result class that contains information about the success or failure of the geometry modification.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve.translate_curves_in_elevation">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve.</span></span><span class="sig-name descname"><span class="pre">translate_curves_in_elevation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_curves</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_elevation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_elevation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve.translate_curves_in_elevation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Common.Geometry.geometry">
 <span id="duhast-revit-common-geometry-geometry-module"></span><h2>duHast.Revit.Common.Geometry.geometry module<a class="headerlink" href="#module-duHast.Revit.Common.Geometry.geometry" title="Permalink to this heading">¶</a></h2>
 <section id="revit-geometry-extraction-helper-functions">

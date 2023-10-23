@@ -94,6 +94,15 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Common.Geometry.html">duHast.Revit.Common.Geometry package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#module-duHast.Revit.Common.Geometry.curve">duHast.Revit.Common.Geometry.curve module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#revit-curve-helper-functions">Revit curve helper functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.is_curve_is_within_curve"><code class="docutils literal notranslate"><span class="pre">is_curve_is_within_curve()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.calculate_lengthened_curve_geometry"><code class="docutils literal notranslate"><span class="pre">calculate_lengthened_curve_geometry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.calculate_shortened_curve_geometry"><code class="docutils literal notranslate"><span class="pre">calculate_shortened_curve_geometry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.modify_model_line_action"><code class="docutils literal notranslate"><span class="pre">modify_model_line_action()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.translate_curves_in_elevation"><code class="docutils literal notranslate"><span class="pre">translate_curves_in_elevation()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#module-duHast.Revit.Common.Geometry.geometry">duHast.Revit.Common.Geometry.geometry module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#revit-geometry-extraction-helper-functions">Revit geometry extraction helper functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.geometry.get_point_as_string"><code class="docutils literal notranslate"><span class="pre">get_point_as_string()</span></code></a></li>
@@ -179,6 +188,16 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Common.Utility.html">duHast.Revit.Common.Utility package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Utility.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Utility.html#module-duHast.Revit.Common.Utility.element_copying">duHast.Revit.Common.Utility.element_copying module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Utility.html#this-module-contains-a-number-of-functions-for-copying-elements">This module contains a number of functions for copying elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Utility.html#duHast.Revit.Common.Utility.element_copying.copy_elements_from_target_doc"><code class="docutils literal notranslate"><span class="pre">copy_elements_from_target_doc()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Utility.html#module-duHast.Revit.Common.Utility.element_spatial_utils">duHast.Revit.Common.Utility.element_spatial_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Utility.html#this-module-contains-a-number-of-utilities-for-an-elements-spatial-properties">This module contains a number of utilities for an elements spatial properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Utility.html#duHast.Revit.Common.Utility.element_spatial_utils.get_room_element_is_in"><code class="docutils literal notranslate"><span class="pre">get_room_element_is_in()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Utility.html#module-duHast.Revit.Common.Utility.revit_to_data_conversion">duHast.Revit.Common.Utility.revit_to_data_conversion module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Utility.html#a-number-of-functions-used-to-revit-elements-to-data-storage-classes">A number of functions used to revit elements to data storage classes.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Utility.html#duHast.Revit.Common.Utility.revit_to_data_conversion.to_colour"><code class="docutils literal notranslate"><span class="pre">to_colour()</span></code></a></li>
@@ -932,24 +951,6 @@ isPrimary:bool</p>
 </dd></dl>
 
 </section>
-<section id="module-duHast.Revit.Common.element_functions">
-<span id="duhast-revit-common-element-functions-module"></span><h2>duHast.Revit.Common.element_functions module<a class="headerlink" href="#module-duHast.Revit.Common.element_functions" title="Permalink to this heading">¶</a></h2>
-<section id="this-module-contains-a-number-of-lists-containing-loadable-family-categories">
-<h3>This module contains a number of lists containing loadable family categories.<a class="headerlink" href="#this-module-contains-a-number-of-lists-containing-loadable-family-categories" title="Permalink to this heading">¶</a></h3>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Common.element_functions.get_room_element_is_in">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.element_functions.</span></span><span class="sig-name descname"><span class="pre">get_room_element_is_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.element_functions.get_room_element_is_in" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the room an element is in
-:param element: The element to check
-:type element: FamilyInstance
-:param phase_dict: The dictionary of phase name to phase element
-:type phase_dict: dict
-:return: The room the element is in
-:rtype: Room</p>
-</dd></dl>
-
-</section>
 <section id="module-duHast.Revit.Common.file_io">
 <span id="duhast-revit-common-file-io-module"></span><h2>duHast.Revit.Common.file_io module<a class="headerlink" href="#module-duHast.Revit.Common.file_io" title="Permalink to this heading">¶</a></h2>
 <section id="revit-file-operations-utility-functions">
@@ -1125,6 +1126,40 @@ On exception:
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_model_group_instances">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_model_group_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_model_group_instances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all model group instances in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>collector of model group instances</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_model_group_instances_by_type">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_model_group_instances_by_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_model_group_instances_by_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all model group instances in the model grouped by their type id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of model group instances by type id</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{ElementId:[Autodesk.Revit.DB.Group]}</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1346,6 +1381,26 @@ On exception:
 <section id="revit-api-utility-functions-to-get-parameter-values">
 <h3>Revit API utility functions to get parameter values.<a class="headerlink" href="#revit-api-utility-functions-to-get-parameter-values" title="Permalink to this heading">¶</a></h3>
 </section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.has_property">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">has_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.has_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reflection to work out whether a property on a .net object exists (in case it has been removed)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>var</em>) – A .net object</p></li>
+<li><p><strong>property_name</strong> (<em>str</em>) – The property name to check for</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None if the property does not exist</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.parameter_get_utils.check_parameter_value">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_get_utils.</span></span><span class="sig-name descname"><span class="pre">check_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">para_condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_value</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#duHast.Revit.Common.parameter_get_utils.check_parameter_value" title="Permalink to this definition">¶</a></dt>

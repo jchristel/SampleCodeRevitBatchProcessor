@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    duHast.Revit.Annotation
+   duHast.Revit.Areas
    duHast.Revit.BIM360
    duHast.Revit.BuildingPads
    duHast.Revit.Categories

@@ -98,6 +98,8 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#base-class-for-objects">Base class for objects.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base"><code class="docutils literal notranslate"><span class="pre">Base</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base.to_json"><code class="docutils literal notranslate"><span class="pre">Base.to_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base.string_to_utf"><code class="docutils literal notranslate"><span class="pre">Base.string_to_utf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base.to_json_utf"><code class="docutils literal notranslate"><span class="pre">Base.to_json_utf()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base.class_to_dict"><code class="docutils literal notranslate"><span class="pre">Base.class_to_dict()</span></code></a></li>
 </ul>
 </li>
@@ -993,6 +995,29 @@ File need to use &lt;,&gt; character as column separator. (.CSV)</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_combine.combine_files_json">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension='.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_put_file_name='result.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_getter=&lt;function</span> <span class="pre">get_files_single_directory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combines multiple json formatted text files into a single json list formatted file, where each file is a list entry.
+Assumes:</p>
+<ul class="simple">
+<li><p>each file can contain a single line json formatted string</p></li>
+</ul>
+<p>The new file will be saved into the same folder as the original files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – Folder path from which to get files to be combined and to which the combined file will be saved.</p></li>
+<li><p><strong>file_prefix</strong> (<em>str</em>) – Filter: File name starts with this value</p></li>
+<li><p><strong>file_suffix</strong> (<em>str</em>) – Filter: File name ends with this value.</p></li>
+<li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>format '.extension'</em>) – Filter: File needs to have this file extension</p></li>
+<li><p><strong>out_put_file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The file name of the combined file, defaults to ‘result.txt’</p></li>
+<li><p><strong>file_getter</strong> (<em>func</em><em>(</em><em>folder_path</em><em>, </em><em>file_prefix</em><em>, </em><em>file_suffix</em><em>, </em><em>file_extension</em><em>)</em><em>, </em><em>optional</em>) – Function returning list of files to be combined, defaults to GetFilesSingleFolder</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Utilities.files_csv">
 <span id="duhast-utilities-files-csv-module"></span><h2>duHast.Utilities.files_csv module<a class="headerlink" href="#module-duHast.Utilities.files_csv" title="Permalink to this heading">¶</a></h2>
@@ -1421,13 +1446,14 @@ value: lit of str</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_json.write_json_to_file">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_json.</span></span><span class="sig-name descname"><span class="pre">write_json_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_output_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_json.write_json_to_file" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_json.</span></span><span class="sig-name descname"><span class="pre">write_json_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_output_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforce_utf8</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_json.write_json_to_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes collected data to a new json formatted file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>json_data</strong> (<em>json object</em><em> (</em><em>dictionary</em><em>)</em>) – A dictionary to be written to file.</p></li>
 <li><p><strong>data_output_file_path</strong> (<em>str</em>) – Fully qualified file path to json data file.</p></li>
+<li><p><strong>enforce_utf8</strong> (<em>bool</em>) – Will encode any string value as utf-8, Default is true (recommended!!).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

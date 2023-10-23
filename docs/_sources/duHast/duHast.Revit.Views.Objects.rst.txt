@@ -12,6 +12,22 @@ Subpackages
 Submodules
 ----------
 
+duHast.Revit.Views.Objects.category\_override\_storage module
+-------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Objects.category_override_storage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.Objects.filter\_override\_storage module
+-----------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Objects.filter_override_storage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Views.Objects.view\_graphics\_settings module
 ----------------------------------------------------------
 

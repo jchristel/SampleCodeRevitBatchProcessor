@@ -41,32 +41,35 @@ from duHast.Revit.Family.family_element_utils import (
 
 def set_ref_planes_to_not_a_reference(doc):
     """
-    This will set any reference plane with reference type 'weak' within a family to reference type 'not a reference'.
+    This function sets any reference plane with reference type 'weak' within a family to reference type 'not a reference'.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :return:
-        Result class instance.
-        - result.status: (bool) True if at least one reference plane type was successfully changed otherwise False
-        - result.message: one row entry per reference plane requiring reference type change
-        - result.result: not used
+
+    :return: Result class instance.
+        - `result.status` (bool): True if at least one reference plane type was successfully changed; otherwise, False.
+        - `result.message` (str): One row entry per reference plane requiring reference type change.
+        - `result.result` (not used).
+
     :rtype: :class:`.Result`
     """
 
-    """    
-    Revit API reference types and their int value:
-    ('ref name ', 'Left', ' reference type as int ', 0, ' reference type as string ', 'Left')
-    ('ref name ', 'Center (Left/Right)', ' reference type as int ', 1, ' reference type as string ', 'Center (Left/Right)')
-    ('ref name ', 'Right', ' reference type as int ', 2, ' reference type as string ', 'Right')
-    ('ref name ', 'Front', ' reference type as int ', 3, ' reference type as string ', 'Front')
-    ('ref name ', 'Reference Plane', ' reference type as int ', 4, ' reference type as string ', 'Center (Front/Back)')
-    ('ref name ', 'Back', ' reference type as int ', 5, ' reference type as string ', 'Back')
-    ('ref name ', 'Reference Plane', ' reference type as int ', 6, ' reference type as string ', 'Bottom')
-    ('ref name ', 'Reference Plane', ' reference type as int ', 7, ' reference type as string ', 'Center (Elevation)')
-    ('ref name ', 'Top', ' reference type as int ', 8, ' reference type as string ', 'Top')
-    ('ref name ', 'Reference Plane', ' reference type as int ', 12, ' reference type as string ', 'Not a Reference')
-    ('ref name ', 'Reference Plane', ' reference type as int ', 13, ' reference type as string ', 'Strong Reference')
-    ('ref name ', 'Reference Plane', ' reference type as int ', 14, ' reference type as string ', 'Weak Reference')
     """
+    Revit API reference types and their integer values:
+    - ('ref name', 'Left', 'reference type as int', 0, 'reference type as string', 'Left')
+    - ('ref name', 'Center (Left/Right)', 'reference type as int', 1, 'reference type as string', 'Center (Left/Right)')
+    - ('ref name', 'Right', 'reference type as int', 2, 'reference type as string', 'Right')
+    - ('ref name', 'Front', 'reference type as int', 3, 'reference type as string', 'Front')
+    - ('ref name', 'Reference Plane', 'reference type as int', 4, 'reference type as string', 'Center (Front/Back)')
+    - ('ref name', 'Back', 'reference type as int', 5, 'reference type as string', 'Back')
+    - ('ref name', 'Reference Plane', 'reference type as int', 6, 'reference type as string', 'Bottom')
+    - ('ref name', 'Reference Plane', 'reference type as int', 7, 'reference type as string', 'Center (Elevation)')
+    - ('ref name', 'Top', 'reference type as int', 8, 'reference type as string', 'Top')
+    - ('ref name', 'Reference Plane', 'reference type as int', 12, 'reference type as string', 'Not a Reference')
+    - ('ref name', 'Reference Plane', 'reference type as int', 13, 'reference type as string', 'Strong Reference')
+    - ('ref name', 'Reference Plane', 'reference type as int', 14, 'reference type as string', 'Weak Reference')
+    """
+
 
     result = res.Result()
     result.update_sep(True, "Changing reference status of reference planes...")
@@ -95,26 +98,29 @@ def set_ref_planes_to_not_a_reference(doc):
 
 def set_symbolic_and_model_lines_to_not_a_reference(doc):
     """
-    This will set any model or symbolic curve in a family with reference type 'weak' to reference type 'not a reference'.
+    This function sets any model or symbolic curve in a family with reference type 'weak' to reference type 'not a reference'.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :return:
-        Result class instance.
-        - result.status: (bool) True if at least one curve reference type was successfully changed otherwise False
-        - result.message: one row entry per curve element requiring reference type change
-        - result.result: not used
+
+    :return: Result class instance.
+        - `result.status` (bool): True if at least one curve reference type was successfully changed; otherwise, False.
+        - `result.message` (str): One row entry per curve element requiring reference type change.
+        - `result.result` (not used).
+
     :rtype: :class:`.Result`
     """
 
     """
-    Revit API
-    ('ref name ', 'Model Lines', ' reference type as int ', 0, ' reference type as string ', 'Not a Reference')
-    ('ref name ', 'Model Lines', ' reference type as int ', 1, ' reference type as string ', 'Weak Reference')
-    ('ref name ', 'Model Lines', ' reference type as int ', 2, ' reference type as string ', 'Strong Reference')
-    ('ref name ', 'Symbolic Lines', ' reference type as int ', 0, ' reference type as string ', 'Not a Reference')
-    ('ref name ', 'Symbolic Lines', ' reference type as int ', 1, ' reference type as string ', 'Weak Reference')
-    ('ref name ', 'Symbolic Lines', ' reference type as int ', 2, ' reference type as string ', 'Strong Reference')
+    Revit API reference types and their integer values:
+    - ('ref name', 'Model Lines', 'reference type as int', 0, 'reference type as string', 'Not a Reference')
+    - ('ref name', 'Model Lines', 'reference type as int', 1, 'reference type as string', 'Weak Reference')
+    - ('ref name', 'Model Lines', 'reference type as int', 2, 'reference type as string', 'Strong Reference')
+    - ('ref name', 'Symbolic Lines', 'reference type as int', 0, 'reference type as string', 'Not a Reference')
+    - ('ref name', 'Symbolic Lines', 'reference type as int', 1, 'reference type as string', 'Weak Reference')
+    - ('ref name', 'Symbolic Lines', 'reference type as int', 2, 'reference type as string', 'Strong Reference')
     """
+
 
     result = res.Result()
     result.update_sep(True, "Changing reference status of model and symbolic curves...")

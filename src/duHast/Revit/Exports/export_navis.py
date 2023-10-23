@@ -118,7 +118,8 @@ def setup_nwc_default_export_option_shared_by_view():
 
 def export_to_nwc(doc, nwc_export_option, directory_path, file_name):
     """
-    Function exporting either entire model or view to NWC
+    Exports either the entire model or a view to NWC (Navisworks Cache) format.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param nwc_export_option: A Navisworks .nwc export option.
@@ -127,13 +128,15 @@ def export_to_nwc(doc, nwc_export_option, directory_path, file_name):
     :type directory_path: str
     :param file_name: The file name under which the export is being saved.
     :type file_name: str
-    :return:
-        Result class instance.
-        - Export status returned in result.status. False if an exception occurred, otherwise True.
-        - result.message will contain the fully qualified file path of the exported file.
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain the exception message.
+
+    :return: Result class instance.
+        - `result.status` (bool): False if an exception occurred, otherwise True (export status).
+        - `result.message` (str): Contains the fully qualified file path of the exported file.
+
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Contains the exception message.
+
     :rtype: :class:`.Result`
     """
 
@@ -157,22 +160,25 @@ def export_to_nwc(doc, nwc_export_option, directory_path, file_name):
 
 def export_model_to_nwc(doc, nwc_export_option, directory_path, file_name):
     """
-    Function exporting the entire model to NWC.
+    Exports the entire Revit model to NWC (Navisworks Cache) format.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param nwc_export_option: A Navisworks .nwc export option.
     :type nwc_export_option: Autodesk.Revit.DB.NavisworksExportOptions
-    :param directory_path: The directory path to where the export is being saved.
+    :param directory_path: The directory path where the export is being saved.
     :type directory_path: str
     :param file_name: The file name under which the export is being saved.
     :type file_name: str
-    :return:
-        Result class instance.
-        - Export status returned in result.status. False if an exception occurred, otherwise True.
-        - result.message will contain the fully qualified file path of the exported file.
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain the exception message.
+
+    :return: Result class instance.
+        - `result.status` (bool): False if an exception occurred, otherwise True (export status).
+        - `result.message` (str): Contains the fully qualified file path of the exported file.
+
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Contains the exception message.
+
     :rtype: :class:`.Result`
     """
 
@@ -192,24 +198,27 @@ def export_3d_views_to_nwc(
     do_something_with_view_name=None,
 ):
     """
-    Function exporting 3D views matching a filter (view starts with) to NWC.
+    Exports 3D views matching a filter (view starts with) to NWC (Navisworks Cache) format.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param view_filter: String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)
+    :param view_filter: String the view name is to start with if it is to be exported. (Both view name and string are set to lowercase for comparison)
     :type view_filter: str
     :param nwc_export_option: A Navisworks .nwc export option.
     :type nwc_export_option: Autodesk.Revit.DB.NavisworksExportOptions
-    :param directory_path: The directory path to where the export is being saved.
+    :param directory_path: The directory path where the export is being saved.
     :type directory_path: str
-    :param do_something_with_view_name: A function which takes as an argument the view name and does something with it. The modified view name is afterwards used as the actual file name, defaults to None which uses the view name unchanged as the export file name.
-    :type do_something_with_view_name: function , optional
-    :return:
-        Result class instance.
-        - Export status returned in result.status. False if an exception occurred, otherwise True.
-        - result.message will contain the fully qualified file path of the exported file.
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain the exception message.
+    :param do_something_with_view_name: A function that takes the view name as an argument and processes it. The modified view name is then used as the actual file name, defaults to None, which uses the view name unchanged as the export file name.
+    :type do_something_with_view_name: function, optional
+
+    :return: Result class instance.
+        - `result.status` (bool): False if an exception occurred, otherwise True (export status).
+        - `result.message` (str): Contains the fully qualified file path of the exported file.
+
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Contains the exception message.
+
     :rtype: :class:`.Result`
     """
 

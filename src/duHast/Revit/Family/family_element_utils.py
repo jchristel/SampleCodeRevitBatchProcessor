@@ -51,14 +51,13 @@ def get_all_generic_forms_in_family(doc):
 
 def get_all_curve_based_elements_in_family(doc):
     """
-    Filters all curve based elements in family.
-    These are:
-        - Symbolic Lines
-        - Model Lines
+    Filters all curve-based elements in a family, including symbolic lines and model lines.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+
     :return: A list of Autodesk.Revit.DB.CurveElement.
-    :rtype: list Autodesk.Revit.DB.CurveElement
+    :rtype: list of Autodesk.Revit.DB.CurveElement
     """
 
     elements = []

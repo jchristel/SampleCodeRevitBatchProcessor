@@ -65,14 +65,12 @@ def modify_grid_worksets_by_type_name(doc, worksetRules):
     Workset modifier method. Moves grids matching type condition to a particular workset
     
     defaultWorksetTypeRules_ = [
-        ['model name',[
-            [ModifyGridWorkSetsByTypeName,[
+        ['model name', [
+            [ModifyGridWorkSetsByTypeName, [
                 ['workset name', util.ConDoesNotEqual, 'grid type name'],
                 ['workset name', util.ConDoesEqual, 'grid type name']
-                ]
-            ]
-            ]
-        ]
+            ]]
+        ]]
     ]
     
     :param doc: _description_
@@ -108,14 +106,12 @@ def modify_grid_worksets_by_type_name(doc, worksetRules):
 def modify_grid_worksets_by_parameter_value(doc, worksetRules):
     """
     Workset modifier method. Moves grids matching parameter condition to a particular workset
-    #defaultWorksetRulesNames_ = [
-        ['model name',[
-            [ModifyGridWorkSetsByParameterValue,[
-                ['workset name', util.ConTwoStartWithOne, 'Name' ,'name starts with value']
-                ]
-            ]
-            ]
-        ]
+    defaultWorksetRulesNames_ = [
+        ['model name', [
+            [ModifyGridWorkSetsByParameterValue, [
+                ['workset name', util.ConTwoStartWithOne, 'Name', 'name starts with value']
+            ]]
+        ]]
     ]
     :param doc: _description_
     :type doc: _type_
@@ -150,13 +146,11 @@ def modify_grids_worksets(doc, revitFileName, worksetRules):
     Modifies worksets of grids as per workset rules
     rules format:
     defaultWorksetRulesAll_ = [
-        ['model name',[
-            [ModifyGridWorkSetsDefault,[
-                ['default workset name'] # there should only be one per model
-                ]
-            ]
-            ]
-        ]
+        ['model name', [
+            [ModifyGridWorkSetsDefault, [
+                ['default workset name']  # There should only be one per model
+            ]]
+        ]]
     ]
     :param doc: _description_
     :type doc: _type_

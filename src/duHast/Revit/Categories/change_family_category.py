@@ -35,23 +35,24 @@ from duHast.Utilities.Objects import result as res
 def change_family_category(doc, new_category_name):
     """
     Changes the current family category to the new one specified.
-    Revit's default behavior when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories\
-        to the new family category.
-    This function will also re-create any user created subcategories under the new category and assign elements to it to match the subcategory they where on before\
-         the category change.
+
+    Revit's default behavior when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories to the new family category. This function will also re-create any user-created subcategories under the new category and assign elements to them to match the subcategory they were on before the category change.
+
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param new_category_name: The new family category
+    :param new_category_name: The new family category.
     :type new_category_name: str
-    :return: 
-        Result class instance.
-        - result.status. True if all custom subcategories where re-created under the new family category and elements where moved to those subcategories, otherwise False.
-        - result.message will confirm successful creation of subcategories and element move.
-        - result.result empty list
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain generic exception message.
-        - result.result will be empty
+
+    :return: Result class instance.
+        - `result.status` (bool): True if all custom subcategories were re-created under the new family category and elements were moved to those subcategories, otherwise False.
+        - `result.message` (str): Confirmation of successful creation of subcategories and element move.
+        - `result.result` (list): Empty list.
+
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Generic exception message.
+        - `result.result` (list): Empty.
+
     :rtype: :class:`.Result`
     """
 

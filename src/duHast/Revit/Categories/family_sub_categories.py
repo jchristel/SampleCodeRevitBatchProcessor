@@ -215,30 +215,34 @@ def create_new_category_and_transfer_properties(doc, new_cat_name, existing_cat_
 def rename_sub_category(doc, old_sub_cat_name, new_sub_cat_name):
     """
     Renames a family custom subcategory.
-    Note: Only subcategory directly belonging to the family category will be checked for a match.
-    - Revit API does currently not allow to change a subcategory name. This method instead:
-        - duplicates the old subcategory with the new name
-        - moves all elements belonging to the old subcategory to the new subcategory
-        - deletes the old subcategory
+
+    Note: Only subcategories directly belonging to the family category will be checked for a match.
+
+    - The Revit API currently does not allow changing a subcategory name. This method instead:
+    - Duplicates the old subcategory with the new name.
+    - Moves all elements belonging to the old subcategory to the new subcategory.
+    - Deletes the old subcategory.
     - If the new subcategory already exists in the file:
-        - moves all elements belonging to the old subcategory to the new subcategory
-        - deletes the old subcategory
+    - Moves all elements belonging to the old subcategory to the new subcategory.
+    - Deletes the old subcategory.
 
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param old_sub_cat_name: The subcategory name to be re-named
+    :param old_sub_cat_name: The subcategory name to be renamed.
     :type old_sub_cat_name: str
     :param new_sub_cat_name: The new subcategory name.
     :type new_sub_cat_name: str
-    :return:
-        Result class instance.
-        - result.status. True if subcategory was renamed successfully , otherwise False.
-        - result.message will contain rename process messages.
-        - result.result empty list
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain generic exception message.
-        - result.result will be empty
+
+    :return: Result class instance.
+        - `result.status` (bool): True if the subcategory was renamed successfully, otherwise False.
+        - `result.message` (str): Rename process messages.
+        - `result.result` (list): Empty list.
+
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Generic exception message.
+        - `result.result` (list): Empty.
+
     :rtype: :class:`.Result`
     """
 

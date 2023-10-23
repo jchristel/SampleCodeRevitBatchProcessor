@@ -35,20 +35,22 @@ from duHast.Revit.Grids import grids as rGrid
 
 def modify_grid_worksets_default(doc, worksetRules):
     """
-    Workset modifier method. Moves all grids to one workset
-    rules format:
-    ['Model name',[
-           [workset modifier method,
-               [worksetName]
-               ]
-           ]
-    :param doc: _description_
-    :type doc: _type_
-    :param worksetRules: _description_
-    :type worksetRules: _type_
-    :return: returns a result object
-    :rtype: _type_
+    Workset modifier method. Moves all grids to one workset.
+
+    Rules format:
+
+    ['Model name', [[workset modifier method,[worksetName]]]]
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :param worksetRules: The workset rules in the specified format.
+    :type worksetRules: List
+
+    :return: A result object.
+    :rtype: Type
     """
+
     gridsResults = res.Result()
     collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
     for rule in worksetRules:
@@ -62,24 +64,22 @@ def modify_grid_worksets_default(doc, worksetRules):
 
 def modify_grid_worksets_by_type_name(doc, worksetRules):
     """
-    Workset modifier method. Moves grids matching type condition to a particular workset
-    
-    defaultWorksetTypeRules_ = [
-        ['model name', [
-            [ModifyGridWorkSetsByTypeName, [
-                ['workset name', util.ConDoesNotEqual, 'grid type name'],
-                ['workset name', util.ConDoesEqual, 'grid type name']
-            ]]
-        ]]
-    ]
-    
-    :param doc: _description_
-    :type doc: _type_
-    :param worksetRules: _description_
-    :type worksetRules: _type_
-    :return: returns a result object
-    :rtype: _type_
+    Workset modifier method. Moves grids matching a type condition to a particular workset.
+
+    Default workset type rules example:
+
+    [['model name', [[ModifyGridWorkSetsByTypeName, [['workset name', util.ConDoesNotEqual, 'grid type name'],['workset name', util.ConDoesEqual, 'grid type name']]]]]]
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :param worksetRules: The workset rules in the specified format.
+    :type worksetRules: List
+
+    :return: A result object.
+    :rtype: Type
     """
+
 
     gridsResults = res.Result()
     # loop over grid type filter and address one at the time
@@ -106,17 +106,16 @@ def modify_grid_worksets_by_type_name(doc, worksetRules):
 def modify_grid_worksets_by_parameter_value(doc, worksetRules):
     """
     Workset modifier method. Moves grids matching parameter condition to a particular workset
-    defaultWorksetRulesNames_ = [
-        ['model name', [
-            [ModifyGridWorkSetsByParameterValue, [
-                ['workset name', util.ConTwoStartWithOne, 'Name', 'name starts with value']
-            ]]
-        ]]
-    ]
+    
+    Default workset type rules example: 
+    
+    [['model name', [[ModifyGridWorkSetsByParameterValue, [['workset name', util.ConTwoStartWithOne, 'Name', 'name starts with value']]]]]]
+
     :param doc: _description_
     :type doc: _type_
     :param worksetRules: _description_
     :type worksetRules: _type_
+
     :return: returns a result object
     :rtype: _type_
     """
@@ -143,21 +142,19 @@ def modify_grid_worksets_by_parameter_value(doc, worksetRules):
 
 def modify_grids_worksets(doc, revitFileName, worksetRules):
     """
-    Modifies worksets of grids as per workset rules
-    rules format:
-    defaultWorksetRulesAll_ = [
-        ['model name', [
-            [ModifyGridWorkSetsDefault, [
-                ['default workset name']  # There should only be one per model
-            ]]
-        ]]
-    ]
+    Modifies worksets of grids as per workset rules format.
+    
+    Default workset type rules example: 
+      
+    [['model name', [[ModifyGridWorkSetsDefault, [['default workset name']  # There should only be one per model]]]]]
+
     :param doc: _description_
     :type doc: _type_
     :param revitFileName: _description_
     :type revitFileName: _type_
     :param worksetRules: _description_
     :type worksetRules: _type_
+
     :return: returns a result object
     :rtype: _type_
     """

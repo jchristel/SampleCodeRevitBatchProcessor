@@ -42,26 +42,24 @@ import Autodesk.Revit.DB as rdb
 
 def purge_unused(doc, processor):
     """
-    This will delete all line patterns which are not used by any element in the family or nested families.
+    This will delete all line patterns that are not used by any element in the family or nested families.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param processor: An LinePatternProcessor object containing all line pattern information of the family document and any nested families.
-    :type processor: :class:`.LinePatternProcessor'
+    :param processor: A LinePatternProcessor object containing all line pattern information of the family document and any nested families.
+    :type processor: :class:`.LinePatternProcessor`
 
-    :return:
-        Result class instance.
+    :return: Result class instance.
+        - `result.status` (bool): True if all unused line patterns were deleted successfully or none needed to be deleted. Otherwise, False.
+        - `result.message` (str): Property updated in the format: "Found unused line pattern: line pattern Name [subcategory Id]"
 
-        - True if all unused line patterns where deleted successfully or none needed to be deleted. Otherwise False.
-        - Result.message property updated in format: Found unused line pattern: line pattern Name [subcategory Id]
-
-        On exception:
-
-        - status (bool) will be False.
-        - message will contain the exception message.
+    On exception:
+        - `result.status` (bool) will be False.
+        - `result.message` (str) will contain the exception message.
 
     :rtype: :class:`.Result`
     """
+
 
     # from processor instance get all root line pattern entries where usage counter == 0.
     # delete those line patterns by id

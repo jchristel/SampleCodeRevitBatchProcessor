@@ -58,8 +58,9 @@ class RevitWarning(base.Base):
             id (str, optional): The ID of the warning. Defaults to "".
             description (str, optional): The description of the warning. Defaults to "".
             element_ids (list, optional): A list of element IDs associated with the warning. Defaults to [].
-            **kwargs: Additional keyword arguments to be passed to the base.Base class constructor.
+            `**kwargs` (optional): Additional keyword arguments to be passed to the base.Base class constructor.
         """
+
 
         super(RevitWarning, self).__init__(**kwargs)
 

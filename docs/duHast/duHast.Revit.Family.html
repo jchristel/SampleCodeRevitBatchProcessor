@@ -358,14 +358,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_element_utils.get_all_curve_based_elements_in_family">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_element_utils.</span></span><span class="sig-name descname"><span class="pre">get_all_curve_based_elements_in_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_element_utils.get_all_curve_based_elements_in_family" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filters all curve based elements in family.
-These are:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Symbolic Lines</p></li>
-<li><p>Model Lines</p></li>
-</ul>
-</div></blockquote>
+<dd><p>Filters all curve-based elements in a family, including symbolic lines and model lines.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -374,7 +367,7 @@ These are:</p>
 <dd class="field-even"><p>A list of Autodesk.Revit.DB.CurveElement.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list Autodesk.Revit.DB.CurveElement</p>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.CurveElement</p>
 </dd>
 </dl>
 </dd></dl>
@@ -501,17 +494,17 @@ These are:</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_reference_elements.set_ref_planes_to_not_a_reference">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_reference_elements.</span></span><span class="sig-name descname"><span class="pre">set_ref_planes_to_not_a_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reference_elements.set_ref_planes_to_not_a_reference" title="Permalink to this definition">¶</a></dt>
-<dd><p>This will set any reference plane with reference type ‘weak’ within a family to reference type ‘not a reference’.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- result.status: (bool) True if at least one reference plane type was successfully changed otherwise False
-- result.message: one row entry per reference plane requiring reference type change
-- result.result: not used</p>
-</div></blockquote>
+<dd><p>This function sets any reference plane with reference type ‘weak’ within a family to reference type ‘not a reference’.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result.status</cite> (bool): True if at least one reference plane type was successfully changed; otherwise, False.
+- <cite>result.message</cite> (str): One row entry per reference plane requiring reference type change.
+- <cite>result.result</cite> (not used).</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
@@ -521,17 +514,17 @@ These are:</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_reference_elements.set_symbolic_and_model_lines_to_not_a_reference">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_reference_elements.</span></span><span class="sig-name descname"><span class="pre">set_symbolic_and_model_lines_to_not_a_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reference_elements.set_symbolic_and_model_lines_to_not_a_reference" title="Permalink to this definition">¶</a></dt>
-<dd><p>This will set any model or symbolic curve in a family with reference type ‘weak’ to reference type ‘not a reference’.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- result.status: (bool) True if at least one curve reference type was successfully changed otherwise False
-- result.message: one row entry per curve element requiring reference type change
-- result.result: not used</p>
-</div></blockquote>
+<dd><p>This function sets any model or symbolic curve in a family with reference type ‘weak’ to reference type ‘not a reference’.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result.status</cite> (bool): True if at least one curve reference type was successfully changed; otherwise, False.
+- <cite>result.message</cite> (str): One row entry per curve element requiring reference type change.
+- <cite>result.result</cite> (not used).</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
@@ -998,23 +991,21 @@ Check is done by comparing entries of fam_type_ids with used_type_ids.
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.purge_unused_family_types.get_unused_in_place_ids_for_purge">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.purge_unused_family_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_in_place_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unused_type_getter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.purge_unused_family_types.get_unused_in_place_ids_for_purge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filters symbol(type) ids and family ids (when not a single type of given family is in use) of families.
-The returned list of ids can be just unused family symbols or entire families if none of their symbols are in use.
-in terms of purging its faster to delete an entire family definition rather then deleting it’s symbols first and then the
-definition.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param unused_type_getter:</p>
-<blockquote>
-<div><p>A function returning ids of unused symbols (family types) as a list.
-It requires as argument the current model document only.</p>
-</div></blockquote>
+<dd><p>Filters symbol (type) IDs and family IDs of families.</p>
+<p>The returned list of IDs can be either unused family symbols or entire families if none of their symbols are in use. 
+In terms of purging, it’s faster to delete an entire family definition rather than deleting its symbols first and then the definition.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of Element Ids representing the family symbols and or family id’s matching filter.</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>unused_type_getter</strong> (<em>function</em><em> (</em><em>doc</em><em>) </em><em>-&gt; list</em><em> of </em><em>Autodesk.Revit.DB.ElementId</em>) – A function returning IDs of unused symbols (family types) as a list. It requires the current model document as an argument.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list Autodesk.Revit.DB.ElementId</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of Element IDs representing the family symbols and/or family IDs matching the filter.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1022,22 +1013,20 @@ It requires as argument the current model document only.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.purge_unused_family_types.get_used_unused_type_ids">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.purge_unused_family_types.</span></span><span class="sig-name descname"><span class="pre">get_used_unused_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_id_getter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_shared_fam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.purge_unused_family_types.get_used_unused_type_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filters types obtained by past in type_id_getter method and depending on use_type past in returns either the used or unused symbols of a family
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param type_id_getter:</p>
-<blockquote>
-<div><p>A function returning ids of symbols (family types) as a list, requires as argument:
-the current model doc,
-ICollection of built in categories,
-bool: exclude shared families</p>
-</div></blockquote>
+<dd><p>Filters types obtained by passing in the <cite>type_id_getter</cite> method and, depending on <cite>use_type</cite>, returns either the used or unused symbols of a family.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_type</strong> (<em>int</em>) – 0, no dependent elements (not used); 1: has dependent elements(is in use)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>type_id_getter</strong> (<em>function</em><em> (</em><em>doc</em><em>, </em><em>ICollection</em><em>, </em><em>bool</em><em>) </em><em>-&gt; list</em><em> of </em><em>Autodesk.Revit.DB.ElementId</em>) – A function returning IDs of symbols (family types) as a list. It requires the following arguments:
+- The current model document.
+- ICollection of built-in categories.
+- A boolean: exclude shared families.</p></li>
+<li><p><strong>use_type</strong> (<em>int</em>) – 0 for no dependent elements (not used); 1 for has dependent elements (is in use).</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of Element Ids representing the family symbols matching filter.</p>
+<dd class="field-even"><p>A list of Element IDs representing the family symbols matching the filter.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>

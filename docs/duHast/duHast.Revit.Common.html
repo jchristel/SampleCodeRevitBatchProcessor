@@ -670,22 +670,21 @@ If element names does contain any of the test values, the function will return F
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.delete.delete_by_element_ids">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.delete.</span></span><span class="sig-name descname"><span class="pre">delete_by_element_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.delete.delete_by_element_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deleting elements in list all at once.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param ids: List containing ids of all elements to be deleted.
-:type ids: list of Autodesk.Revit.DB.ElementId
-:param transaction_name: The transaction name used for the deletion.
-:type transaction_name: str
-:param element_name: The element name added to deletion status message.
-:type element_name: str
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- .result = True if successfully deleted all elements. Otherwise False.
-- .message will contain deletion status</p>
-</div></blockquote>
+<dd><p>Deletes elements in a list all at once.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>ids</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ElementId</em>) – List containing IDs of all elements to be deleted.</p></li>
+<li><p><strong>transaction_name</strong> (<em>str</em>) – The transaction name used for the deletion.</p></li>
+<li><p><strong>element_name</strong> (<em>str</em>) – The element name added to the deletion status message.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result</cite> (bool): True if all elements were successfully deleted, otherwise False.
+- <cite>message</cite> (str): Deletion status.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
@@ -695,23 +694,22 @@ If element names does contain any of the test values, the function will return F
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.delete.delete_by_element_ids_one_by_one">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.delete.</span></span><span class="sig-name descname"><span class="pre">delete_by_element_ids_one_by_one</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.delete.delete_by_element_ids_one_by_one" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deleting elements in list one at the time.
-Each element gets deleted in its own transaction. If the deletion fails the transaction is rolled back.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param ids: List containing ids of all elements to be deleted.
-:type ids: list of Autodesk.Revit.DB.ElementId
-:param transaction_name: The transaction name used for the deletion.
-:type transaction_name: str
-:param element_name: The name of the element (?) Not used!!
-:type element_name: str
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- .result = True if successfully deleted all elements. Otherwise False.
-- .message will contain each id and its deletion status</p>
-</div></blockquote>
+<dd><p>Deletes elements in a list one at a time.</p>
+<p>Each element is deleted in its own transaction. If the deletion fails, the transaction is rolled back.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>ids</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ElementId</em>) – List containing IDs of all elements to be deleted.</p></li>
+<li><p><strong>transaction_name</strong> (<em>str</em>) – The transaction name used for the deletion.</p></li>
+<li><p><strong>element_name</strong> (<em>str</em>) – The name of the element (not used).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result</cite> (bool): True if all elements were successfully deleted, otherwise False.
+- <cite>message</cite> (str): Contains each ID and its deletion status.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>

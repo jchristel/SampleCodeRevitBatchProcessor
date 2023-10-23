@@ -345,7 +345,16 @@ graphic style projection name</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.elements_by_category_utils.sort_geometry_elements_by_category">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.elements_by_category_utils.</span></span><span class="sig-name descname"><span class="pre">sort_geometry_elements_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_dic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.elements_by_category_utils.sort_geometry_elements_by_category" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Sorts geometry elements by their category in a Revit family document.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>elements (list): A list of geometry elements to be sorted.
+element_dic (dict): A dictionary where the sorted elements will be stored.
+doc (Revit Document): The current Revit family document.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: A dictionary where the keys are category ids and the values are lists of element ids. The geometry elements are sorted by their category.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.elements_by_category_utils.get_elements_by_category">
@@ -362,26 +371,31 @@ graphic style projection name</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.elements_by_category_utils.move_elements_to_category">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.elements_by_category_utils.</span></span><span class="sig-name descname"><span class="pre">move_elements_to_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_category_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_cat_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.elements_by_category_utils.move_elements_to_category" title="Permalink to this definition">¶</a></dt>
-<dd><p>Moves elements provided in dictionary to another category specified by name.
-:param doc: Current Revit family document.
-:type doc: Autodesk.Revit.DB.Document
-:param elements: Dictionary of elements, key are graphic style names.
-:type elements: {Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}
-:param to_category_name: The name of the subcategory elements are to be moved to.
-:type to_category_name: str
-:param destination_cat_ids: Dictionary of ids of graphic style, key are graphic style names
-:type destination_cat_ids: dictionary {str: Autodesk.Revit.DB.ElementId}
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- result.status. True if all elements where moved to destination subcategories, otherwise False.
-- result.message will contain the name of the destination subcategory by element.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message.
-- result.result will be empty</p>
-</div></blockquote>
+<dd><p>Moves elements provided in a dictionary to another category specified by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>elements</strong> (<em>{Autodesk.Revit.DB.Category:</em><em> [</em><em>Autodesk.Revit.DB.ElementId</em><em>]</em><em>}</em>) – Dictionary of elements, where keys are graphic style names.</p></li>
+<li><p><strong>to_category_name</strong> (<em>str</em>) – The name of the subcategory elements are to be moved to.</p></li>
+<li><p><strong>destination_cat_ids</strong> (<em>dictionary {str: Autodesk.Revit.DB.ElementId}</em>) – Dictionary of IDs of graphic styles, where keys are graphic style names.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result.status</cite> (bool): True if all elements were moved to destination subcategories, otherwise False.
+- <cite>result.message</cite> (str): Contains the name of the destination subcategory by element.
+- <cite>result.result</cite> (empty list)</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains a generic exception message.</p></li>
+<li><p><cite>result.result</cite> (empty list)</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -392,24 +406,30 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Categories.Utility.elements_by_category_utils.move_elements_from_sub_category_to_sub_category">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.Utility.elements_by_category_utils.</span></span><span class="sig-name descname"><span class="pre">move_elements_from_sub_category_to_sub_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_category_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_category_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Utility.elements_by_category_utils.move_elements_from_sub_category_to_sub_category" title="Permalink to this definition">¶</a></dt>
-<dd><p>Moves elements from one subcategory to another one identified by their names.
-:param doc: Current Revit family document.
-:type doc: Autodesk.Revit.DB.Document
-:param from_category_name: The source subcategory name.
-:type from_category_name: str
-:param to_category_name: The destination subcategory name.
-:type to_category_name: str
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- result.status. True if all elements from source subcategory where moved to destination subcategory, otherwise False.
-- result.message will contain the name of the destination subcategory by element.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message.
-- result.result will be empty</p>
-</div></blockquote>
+<dd><p>Moves elements from one subcategory to another one identified by their names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>from_category_name</strong> (<em>str</em>) – The source subcategory name.</p></li>
+<li><p><strong>to_category_name</strong> (<em>str</em>) – The destination subcategory name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result.status</cite> (bool): True if all elements from the source subcategory were moved to the destination subcategory, otherwise False.
+- <cite>result.message</cite> (str): Contains the name of the destination subcategory by element.
+- <cite>result.result</cite> (empty list)</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains a generic exception message.</p></li>
+<li><p><cite>result.result</cite> (empty list)</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>

@@ -588,16 +588,16 @@ rules format:
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_worksets.</span></span><span class="sig-name descname"><span class="pre">modify_grid_worksets_by_type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_type_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Workset modifier method. Moves grids matching type condition to a particular workset</p>
 <dl>
-<dt><a href="#id1"><span class="problematic" id="id2">defaultWorksetTypeRules_</span></a> = [</dt><dd><dl class="simple">
-<dt>[‘model name’,[</dt><dd><dl class="simple">
-<dt>[ModifyGridWorkSetsByTypeName,[</dt><dd><p>[‘workset name’, util.ConDoesNotEqual, ‘grid type name’],
-[‘workset name’, util.ConDoesEqual, ‘grid type name’]
-]</p>
+<dt><a href="#id1"><span class="problematic" id="id2">defaultWorksetTypeRules_</span></a> = [</dt><dd><dl>
+<dt>[‘model name’, [</dt><dd><dl class="simple">
+<dt>[ModifyGridWorkSetsByTypeName, [</dt><dd><p>[‘workset name’, util.ConDoesNotEqual, ‘grid type name’],
+[‘workset name’, util.ConDoesEqual, ‘grid type name’]</p>
 </dd>
 </dl>
+<p>]]</p>
 </dd>
 </dl>
-<p>]</p>
+<p>]]</p>
 </dd>
 </dl>
 <p>]</p>
@@ -621,17 +621,17 @@ rules format:
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_parameter_value">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_worksets.</span></span><span class="sig-name descname"><span class="pre">modify_grid_worksets_by_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_parameter_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Workset modifier method. Moves grids matching parameter condition to a particular workset
-#defaultWorksetRulesNames_ = [</p>
+<a href="#id3"><span class="problematic" id="id4">defaultWorksetRulesNames_</span></a> = [</p>
 <blockquote>
-<div><dl class="simple">
-<dt>[‘model name’,[</dt><dd><dl class="simple">
-<dt>[ModifyGridWorkSetsByParameterValue,[</dt><dd><p>[‘workset name’, util.ConTwoStartWithOne, ‘Name’ ,’name starts with value’]
-]</p>
+<div><dl>
+<dt>[‘model name’, [</dt><dd><dl class="simple">
+<dt>[ModifyGridWorkSetsByParameterValue, [</dt><dd><p>[‘workset name’, util.ConTwoStartWithOne, ‘Name’, ‘name starts with value’]</p>
 </dd>
 </dl>
+<p>]]</p>
 </dd>
 </dl>
-<p>]</p>
+<p>]]</p>
 </div></blockquote>
 <p>]
 :param doc: _description_
@@ -647,17 +647,17 @@ rules format:
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_worksets.</span></span><span class="sig-name descname"><span class="pre">modify_grids_worksets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_worksets.modify_grids_worksets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modifies worksets of grids as per workset rules
 rules format:
-<a href="#id3"><span class="problematic" id="id4">defaultWorksetRulesAll_</span></a> = [</p>
+<a href="#id5"><span class="problematic" id="id6">defaultWorksetRulesAll_</span></a> = [</p>
 <blockquote>
-<div><dl class="simple">
-<dt>[‘model name’,[</dt><dd><dl class="simple">
-<dt>[ModifyGridWorkSetsDefault,[</dt><dd><p>[‘default workset name’] # there should only be one per model
-]</p>
+<div><dl>
+<dt>[‘model name’, [</dt><dd><dl class="simple">
+<dt>[ModifyGridWorkSetsDefault, [</dt><dd><p>[‘default workset name’]  # There should only be one per model</p>
 </dd>
 </dl>
+<p>]]</p>
 </dd>
 </dl>
-<p>]</p>
+<p>]]</p>
 </div></blockquote>
 <p>]
 :param doc: _description_

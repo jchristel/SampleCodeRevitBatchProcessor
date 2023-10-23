@@ -271,20 +271,20 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.delete.delete_views">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.delete.</span></span><span class="sig-name descname"><span class="pre">delete_views</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_rules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collector_views</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.delete.delete_views" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes views based on view rules supplied.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param view_rules: Rules used to check whether a view should be deleted. Rules are based on parameters attached to view and their values.
-:type view_rules: array in format [[parameter name, condition test method, value to test against]]
-:param collector_views: A filtered element collector containing views.
-:type collector_views: Autodesk.Revit.DB.FilteredElementCollector
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- .result = True if all views where deleted. Otherwise False.
-- .message will contain deletion status.</p>
-</div></blockquote>
+<dd><p>Deletes views based on view rules supplied.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>view_rules</strong> (<em>list</em><em> of </em><em>lists</em><em>, </em><em>where each inner list has the format</em><em> [</em><em>parameter name</em><em>, </em><em>condition test method</em><em>, </em><em>value to test against</em><em>]</em>) – Rules used to check whether a view should be deleted. Rules are based on parameters attached to views and their values.</p></li>
+<li><p><strong>collector_views</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – A filtered element collector containing views.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result</cite> (bool): True if all views were deleted, otherwise False.
+- <cite>message</cite> (str): Deletion status.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
@@ -294,18 +294,19 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.delete.delete_views_not_on_sheets">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.delete.</span></span><span class="sig-name descname"><span class="pre">delete_views_not_on_sheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.delete.delete_views_not_on_sheets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes all views not placed on sheets includes schedules and legends matching filter.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param filter: Function checking whether view should be deleted.
-:type filter: func(view) returns a bool
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- .result = True if all views where deleted. Otherwise False.
-- .message will contain deletion status.</p>
-</div></blockquote>
+<dd><p>Deletes all views not placed on sheets, including schedules and legends matching the given filter.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>filter</strong> (<em>function</em><em>(</em><em>view</em><em>) </em><em>-&gt; bool</em>) – A function that checks whether a view should be deleted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result</cite> (bool): True if all views were deleted, otherwise False.
+- <cite>message</cite> (str): Deletion status.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
@@ -315,16 +316,16 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.delete.delete_unused_elevation_view_markers">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.delete.</span></span><span class="sig-name descname"><span class="pre">delete_unused_elevation_view_markers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.delete.delete_unused_elevation_view_markers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes all unused elevation markers. (no Elevation is created by the marker)
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- .result = True if all unused elevation markers where deleted. Otherwise False.
-- .message will contain deletion status.</p>
-</div></blockquote>
+<dd><p>Deletes all unused elevation markers (no elevation is created by the marker).</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result</cite> (bool): True if all unused elevation markers were deleted, otherwise False.
+- <cite>message</cite> (str): Deletion status.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
@@ -884,20 +885,22 @@ view reference types and view continuation types in the model.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.sheets.get_sheet_rev_by_sheet_number">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.sheets.</span></span><span class="sig-name descname"><span class="pre">get_sheet_rev_by_sheet_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet_number</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.sheets.get_sheet_rev_by_sheet_number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the revision of a sheet identified by its number. Default value is ‘-‘.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param sheet_number # type: The number of the sheet of which the revision is to be returned.
-:type sheet_number # type: str
-:raise: Any exception will need to be managed by the function caller.
-:return:</p>
-<blockquote>
-<div><p>The sheets current revision value.
-If no matching sheet is found, ‘-’ is returned.</p>
-</div></blockquote>
+<dd><p>Returns the revision of a sheet identified by its number. Default value is ‘-‘.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>sheet_number</strong> (<em>str</em>) – The number of the sheet of which the revision is to be returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sheet’s current revision value. If no matching sheet is found, ‘-’ is returned.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -905,21 +908,23 @@ If no matching sheet is found, ‘-’ is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.sheets.get_sheet_rev_by_sheet_name">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.sheets.</span></span><span class="sig-name descname"><span class="pre">get_sheet_rev_by_sheet_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.sheets.get_sheet_rev_by_sheet_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the revision of a sheet identified by its name. Default value is ‘-‘.
-Since multiple sheets can have the same name it will return the revision of the first sheet matching the name.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param sheet_name # type: The name of the sheet of which the revision is to be returned.
-:type sheet_name # type: str
-:raise: Any exception will need to be managed by the function caller.
-:return:</p>
-<blockquote>
-<div><p>The sheets current revision value.
-If no matching sheet is found, ‘-’ is returned.</p>
-</div></blockquote>
+<dd><p>Returns the revision of a sheet identified by its name. Default value is ‘-‘.</p>
+<p>Since multiple sheets can have the same name, it will return the revision of the first sheet matching the name.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>sheet_name</strong> (<em>str</em>) – The name of the sheet of which the revision is to be returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sheet’s current revision value. If no matching sheet is found, ‘-’ is returned.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1341,23 +1346,28 @@ view_data (dict): A dictionary where the keys are the names of the views and the
 <dt class="sig sig-object py" id="duHast.Revit.Views.visibility_graphics.apply_overrides_from_file">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.visibility_graphics.</span></span><span class="sig-name descname"><span class="pre">apply_overrides_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.visibility_graphics.apply_overrides_from_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies graphic and filter overrides to multiple views in a Revit document based on data imported from a JSON file.</p>
-<dl>
-<dt>Args:</dt><dd><p>doc (Revit Document): The current Revit document.
-file_path (str): The fully qualified file path of the JSON file containing the view override data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Revit Document</em>) – The current Revit document.</p></li>
+<li><p><strong>file_path</strong> (<em>str</em>) – The fully qualified file path of the JSON file containing the view override data.</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>Result: A result object containing the status of the override application, any error messages, and additional information.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A result object containing the status of the override application, any error messages, and additional information.</p>
 </dd>
-<dt>Example Usage:</dt><dd><p>result = apply_overrides_from_file(doc, file_path)
-if result.status:</p>
-<blockquote>
-<div><p>print(“Overrides applied successfully.”)</p>
-</div></blockquote>
-<dl class="simple">
-<dt>else:</dt><dd><p>print(“Failed to apply overrides:”, result.message)</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
 </dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
 </dl>
-</dd>
-</dl>
+<p>Example Usage:
+&gt;&gt;&gt; result = apply_overrides_from_file(doc, file_path)
+&gt;&gt;&gt; if result.status:
+…     print(“Overrides applied successfully.”)
+&gt;&gt;&gt; else:
+…     print(“Failed to apply overrides:”, result.message)</p>
 </dd></dl>
 
 </section>

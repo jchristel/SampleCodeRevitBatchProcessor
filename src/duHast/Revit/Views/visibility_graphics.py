@@ -348,6 +348,7 @@ def apply_overrides_to_views(doc, view_data):
     Returns:
         Result: A result object containing the status of the override application, any error messages, and additional information.
     """
+
     return_value = res.Result()
     for key, value in view_data.items():
         status_apply = apply_override_to_view(doc, value[0], value[1])
@@ -359,20 +360,24 @@ def apply_overrides_from_file(doc, file_path):
     """
     Applies graphic and filter overrides to multiple views in a Revit document based on data imported from a JSON file.
 
-    Args:
-        doc (Revit Document): The current Revit document.
-        file_path (str): The fully qualified file path of the JSON file containing the view override data.
+    :param doc: The current Revit document.
+    :type doc: Revit Document
+    :param file_path: The fully qualified file path of the JSON file containing the view override data.
+    :type file_path: str
 
-    Returns:
-        Result: A result object containing the status of the override application, any error messages, and additional information.
+    :returns: A result object containing the status of the override application, any error messages, and additional information.
+    :rtype: Result
+
+    :example:
 
     Example Usage:
-        result = apply_overrides_from_file(doc, file_path)
-        if result.status:
-            print("Overrides applied successfully.")
-        else:
-            print("Failed to apply overrides:", result.message)
+    >>> result = apply_overrides_from_file(doc, file_path)
+    >>> if result.status:
+    ...     print("Overrides applied successfully.")
+    >>> else:
+    ...     print("Failed to apply overrides:", result.message)
     """
+
     return_value = res.Result()
     try:
         # load data from file

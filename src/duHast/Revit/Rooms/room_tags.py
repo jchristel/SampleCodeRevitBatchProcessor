@@ -34,19 +34,23 @@ from duHast.Utilities.Objects import result as res
 def move_tag_to_room(doc, tag_id, transaction_manager=in_transaction):
     """
     Moves a room tag to the associated rooms location point.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param tag_id: The element id of the tag to be moved to the room.
     :type tag_id: Autodesk.Revit.DB.ElementId
     :param transaction_manager: The transaction manager used to perform the modifications.
     :type transaction_manager: (function)
-    :return:
-        Result class instance.
+    :return: Result class instance.
+
         - Tag moving status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the name and number of the room.
+
         On exception (handled by optimizer itself!):
+
         - result.status (bool) will be False.
         - result.message will contain the name and number of the room and the exception message.
+        
     :rtype: :class:`.Result`
     """
 

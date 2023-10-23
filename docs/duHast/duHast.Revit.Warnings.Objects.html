@@ -106,22 +106,23 @@
 </section>
 <section id="module-duHast.Revit.Warnings.Objects.warnings_storage">
 <span id="duhast-revit-warnings-objects-warnings-storage-module"></span><h2>duHast.Revit.Warnings.Objects.warnings_storage module<a class="headerlink" href="#module-duHast.Revit.Warnings.Objects.warnings_storage" title="Permalink to this heading">¶</a></h2>
-<section id="a-class-used-to-store-revit-warnings-information">
-<h3>A class used to store Revit warnings information.<a class="headerlink" href="#a-class-used-to-store-revit-warnings-information" title="Permalink to this heading">¶</a></h3>
-</section>
+<p>A class used to store Revit warnings information.</p>
+<p>This class represents Revit warnings and provides attributes to store information about them, such as the filename, warning ID, description, and associated element IDs.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.Warnings.Objects.warnings_storage.RevitWarning">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Warnings.Objects.warnings_storage.</span></span><span class="sig-name descname"><span class="pre">RevitWarning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Warnings.Objects.warnings_storage.RevitWarning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
-<p>A class representing a warning in a Revit file.</p>
-<p>Inherits from the base.Base class.</p>
+<p>A class representing a warning in a Revit file. This class inherits from the base.Base class.</p>
 <dl class="simple">
-<dt>Attributes:</dt><dd><p>file_name (str): The name of the Revit file associated with the warning.
-id (str): The ID of the warning.
-description (str): The description of the warning.
-element_ids (list): A list of element IDs associated with the warning.</p>
+<dt>Attributes:</dt><dd><ul class="simple">
+<li><p>file_name (str): The name of the Revit file associated with the warning.</p></li>
+<li><p>id (str): The ID of the warning.</p></li>
+<li><p>description (str): The description of the warning.</p></li>
+<li><p>element_ids (list of str): A list of element IDs associated with the warning.</p></li>
+</ul>
 </dd>
 </dl>
+<p>This class is used to store information about warnings that occur in a Revit file, such as the filename, warning ID, description, and associated element IDs.</p>
 <p>Initializes a RevitWarning object.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>file_name (str, optional): The name of the Revit file associated with the warning. Defaults to “”.

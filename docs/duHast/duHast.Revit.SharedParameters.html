@@ -588,21 +588,24 @@ On exception (handled by optimizer itself!):
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters_delete.delete_shared_parameter_by_name">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters_delete.</span></span><span class="sig-name descname"><span class="pre">delete_shared_parameter_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shared_parameter_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters_delete.delete_shared_parameter_by_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes a single shared parameter based on a name provided.
-param doc: Current Revit model document.
+<dd><p>Deletes a single shared parameter based on a name provided.</p>
+<p>param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
 :param shared_parameter_name: The name of the shared parameter.
 :type shared_parameter_name: str
-:return:</p>
+:return: Result class instance.</p>
 <blockquote>
-<div><p>Result class instance.
-- Parameter delete status returned in result.status. False if an exception occurred, otherwise True.
-- result.message will contain the name of the shared parameter.
-- result.status will be an empty list.
-On exception (handled by optimizer itself!):
-- result.status (bool) will be False.
-- result.message will contain generic exception message.
-- result.status will be an empty list</p>
+<div><ul class="simple">
+<li><p>Parameter delete status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the name of the shared parameter.</p></li>
+<li><p>result.status will be an empty list.</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+<li><p>result.status will be an empty list</p></li>
+</ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -614,23 +617,29 @@ On exception (handled by optimizer itself!):
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters_delete.delete_shared_parameter_by_guid">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters_delete.</span></span><span class="sig-name descname"><span class="pre">delete_shared_parameter_by_guid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters_delete.delete_shared_parameter_by_guid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes a single shared parameter based on a guid provided.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param guid: A shared parameter GUID as string.
-:type guid: str
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- Parameter delete status returned in result.status. False if an exception occurred, otherwise True.
-- result.message will contain the name of the shared parameter.
-- result.status will be an empty list.
-On exception (handled by optimizer itself!):
-- result.status (bool) will be False.
-- result.message will contain generic exception message.
-- result.status will be an empty list</p>
-</div></blockquote>
+<dd><p>Deletes a single shared parameter based on a guid provided.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>guid</strong> (<em>str</em>) – A shared parameter GUID as string.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Parameter delete status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the name of the shared parameter.</p></li>
+<li><p>result.status will be an empty list.</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+<li><p>result.status will be an empty list</p></li>
+</ul>
+</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
@@ -640,21 +649,27 @@ On exception (handled by optimizer itself!):
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameters_delete.delete_shared_parameters">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameters_delete.</span></span><span class="sig-name descname"><span class="pre">delete_shared_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_gui_ds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameters_delete.delete_shared_parameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes shared parameters by GUID from document.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param parameter_gui_ds: List of shared parameter GUIDs as string.
-:type parameter_gui_ds: list str
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- Parameter deletion status returned in result.status. False if an exception occurred, otherwise True.
-- result.message will contain the name of the shared parameter deleted.
-On exception (handled by optimizer itself!):
-- result.status (bool) will be False.
-- result.message will contain generic exception message.</p>
-</div></blockquote>
+<dd><p>Deletes shared parameters by GUID from document.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>parameter_gui_ds</strong> (<em>list str</em>) – List of shared parameter GUIDs as string.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Parameter deletion status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the name of the shared parameter deleted.</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+</ul>
+</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>

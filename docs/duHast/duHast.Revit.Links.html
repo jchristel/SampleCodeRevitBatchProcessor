@@ -215,11 +215,12 @@ Filters by class and check whether the element is an external file reference (Tr
 <dd><p>Deletes all CAD links in a model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
-:return:</p>
+:return: Result class instance.</p>
 <blockquote>
-<div><p>Result class instance.
-- .result = True if all CAD links got deleted. Otherwise False.
-- .message will contain status of deletion.</p>
+<div><ul class="simple">
+<li><p>.result = True if all CAD links got deleted. Otherwise False.</p></li>
+<li><p>.message will contain status of deletion.</p></li>
+</ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -231,22 +232,24 @@ Filters by class and check whether the element is an external file reference (Tr
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.reload_cad_links">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.cad_links.</span></span><span class="sig-name descname"><span class="pre">reload_cad_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_locations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_name_formatted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_link_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.reload_cad_links" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reloads CAD links from a given file location based on the original link type name (starts with comparison)
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param link_locations: A list of directories where CAD files can be located.
-:type link_locations: list str
-:param host_name_formatted: Not used yet
-:type host_name_formatted: TBC
-:param do_something_with_link_name: A function which amends the link name prior search for a match in folders.        I.e. can be used to truncate the link name i.e. the revision details of a link
-:type do_something_with_link_name: func(str) -&gt; str
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- .result = True if all CAD links got reloaded successfully. Otherwise False.
-- .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p>
-</div></blockquote>
+<dd><p>Reloads CAD links from a given file location based on the original link type name (starts with comparison)</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>link_locations</strong> (<em>list str</em>) – A list of directories where CAD files can be located.</p></li>
+<li><p><strong>host_name_formatted</strong> (<em>TBC</em>) – Not used yet</p></li>
+<li><p><strong>do_something_with_link_name</strong> (<em>func</em><em>(</em><em>str</em><em>) </em><em>-&gt; str</em>) – A function which amends the link name prior search for a match in folders.        I.e. can be used to truncate the link name i.e. the revision details of a link</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all CAD links got reloaded successfully. Otherwise False.</p></li>
+<li><p>.message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p></li>
+</ul>
+</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>

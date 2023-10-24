@@ -89,6 +89,8 @@ def sort_area_line_by_level_name(doc, area_lines):
     level_names_by_id = {}
     for l in levels:
         level_names_by_id[l.Id] = l.Name
+    # add edge case: line is not associated with a level ( maybe in a group?)
+    level_names_by_id[ElementId.InvalidElementId] = 'This curve has no level associated'
     # build level name to area lines dictionary
     area_lines_by_Level_name = {}
     for area_line in area_lines:
@@ -300,8 +302,8 @@ def copy_area_lines_to_level_name(
     except Exception as e:
         return_value.update_sep(
             False,
-            "Failed to copy {} area separation line(s) to level {} with exception: {}".format(
-                len(area_lines), level_name, e
+            "Failed to copy {} area separation line(s) to level(s) with exception: {}".format(
+                len(area_lines),e
             ),
         )
     return return_value

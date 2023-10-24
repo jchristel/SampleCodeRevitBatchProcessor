@@ -1,7 +1,7 @@
 """
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 A class used to store Revit warnings information.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This class represents Revit warnings and provides attributes to store information about them, such as the filename, warning ID, description, and associated element IDs.
 """
 
 
@@ -37,16 +37,17 @@ from duHast.Utilities.date_stamps import (
 
 class RevitWarning(base.Base):
     """
-    A class representing a warning in a Revit file.
-
-    Inherits from the base.Base class.
+    A class representing a warning in a Revit file. This class inherits from the base.Base class.
 
     Attributes:
-        file_name (str): The name of the Revit file associated with the warning.
-        id (str): The ID of the warning.
-        description (str): The description of the warning.
-        element_ids (list): A list of element IDs associated with the warning.
+        - file_name (str): The name of the Revit file associated with the warning.
+        - id (str): The ID of the warning.
+        - description (str): The description of the warning.
+        - element_ids (list of str): A list of element IDs associated with the warning.
+        
+    This class is used to store information about warnings that occur in a Revit file, such as the filename, warning ID, description, and associated element IDs.
     """
+
 
     def __init__(self, file_name="", id="", description="", element_ids=[], **kwargs):
         """
@@ -57,8 +58,9 @@ class RevitWarning(base.Base):
             id (str, optional): The ID of the warning. Defaults to "".
             description (str, optional): The description of the warning. Defaults to "".
             element_ids (list, optional): A list of element IDs associated with the warning. Defaults to [].
-            **kwargs: Additional keyword arguments to be passed to the base.Base class constructor.
+            `**kwargs` (optional): Additional keyword arguments to be passed to the base.Base class constructor.
         """
+
 
         super(RevitWarning, self).__init__(**kwargs)
 

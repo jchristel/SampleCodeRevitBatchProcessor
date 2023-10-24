@@ -42,26 +42,23 @@ import Autodesk.Revit.DB as rdb
 
 def purge_unused_sub_categories(doc, processor):
     """
-    This will delete all subcategories which are user created ( id greater then 0) and are not used by any element in the family or nested families.
+This function deletes all user-created subcategories (with IDs greater than 0) that are not used by any element in the family or nested families.
 
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :param processor: An CategoryProcessor object containing all subcategory information of the family document and any nested families.
-    :type processor: :class:`.CategoryProcessor'
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param processor: A CategoryProcessor object containing all subcategory information of the family document and any nested families.
+:type processor: :class:`.CategoryProcessor`
 
-    :return:
-        Result class instance.
+:return: Result class instance.
+    - `result.status` (bool): True if all unused subcategories were deleted successfully or none needed to be deleted, otherwise False.
+    - `result.message` (str): Property updated in the format: "Found unused subcategory: family category Name : subcategory Name [subcategory Id]"
 
-        - True if all unused subcategories where deleted successfully or none needed to be deleted. Otherwise False.
-        - Result.message property updated in format: Found unused sub category: family category Name : subcategory Name [subcategory Id]
+On exception:
+    - `status` (bool): False.
+    - `message` (str): Contains the exception message.
 
-        On exception:
-
-        - status (bool) will be False.
-        - message will contain the exception message.
-
-    :rtype: :class:`.Result`
-    """
+:rtype: :class:`.Result`
+"""
 
     # from processor instance get all root category entries where usage counter == 0 and subCategoryId > 0 (pointing to a custom sub category and not a built in one).
     # delete those subcategories by id

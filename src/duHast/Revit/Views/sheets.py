@@ -88,14 +88,14 @@ def get_all_sheets(doc):
 def get_sheet_rev_by_sheet_number(doc, sheet_number):  # type # type: str
     """
     Returns the revision of a sheet identified by its number. Default value is '-'.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param sheet_number # type: The number of the sheet of which the revision is to be returned.
-    :type sheet_number # type: str
+    :param sheet_number: The number of the sheet of which the revision is to be returned.
+    :type sheet_number: str
     :raise: Any exception will need to be managed by the function caller.
-    :return:
-        The sheets current revision value.
-        If no matching sheet is found, '-' is returned.
+
+    :return: The sheet's current revision value. If no matching sheet is found, '-' is returned.
     :rtype: str
     """
 
@@ -116,15 +116,16 @@ def get_sheet_rev_by_sheet_number(doc, sheet_number):  # type # type: str
 def get_sheet_rev_by_sheet_name(doc, sheet_name):  # type # type: str
     """
     Returns the revision of a sheet identified by its name. Default value is '-'.
-    Since multiple sheets can have the same name it will return the revision of the first sheet matching the name.
+
+    Since multiple sheets can have the same name, it will return the revision of the first sheet matching the name.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param sheet_name # type: The name of the sheet of which the revision is to be returned.
-    :type sheet_name # type: str
+    :param sheet_name: The name of the sheet of which the revision is to be returned.
+    :type sheet_name: str
     :raise: Any exception will need to be managed by the function caller.
-    :return:
-        The sheets current revision value.
-        If no matching sheet is found, '-' is returned.
+
+    :return: The sheet's current revision value. If no matching sheet is found, '-' is returned.
     :rtype: str
     """
 

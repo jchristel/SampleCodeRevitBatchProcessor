@@ -46,14 +46,6 @@ duHast.Revit.Views.schedules module
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Views.sheet\_functions module
-------------------------------------------
-
-.. automodule:: duHast.Revit.Views.sheet_functions
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 duHast.Revit.Views.sheets module
 --------------------------------
 
@@ -86,10 +78,26 @@ duHast.Revit.Views.views\_purge\_unused module
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Views.visibility\_graphics\_utils module
------------------------------------------------------
+duHast.Revit.Views.visibility\_graphics module
+----------------------------------------------
 
-.. automodule:: duHast.Revit.Views.visibility_graphics_utils
+.. automodule:: duHast.Revit.Views.visibility_graphics
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.visibility\_graphics\_categories module
+----------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.visibility_graphics_categories
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.visibility\_graphics\_filters module
+-------------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.visibility_graphics_filters
    :members:
    :undoc-members:
    :show-inheritance:

@@ -240,24 +240,29 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_ifc.export_3d_views_to_ifc_default">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_ifc.</span></span><span class="sig-name descname"><span class="pre">export_3d_views_to_ifc_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.export_3d_views_to_ifc_default" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exports 3D views matching a filter (view starts with) to IFC using the default built in exporter.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param view_filter: String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)
-:type view_filter: str
-:param ifc_export_option: The IFC export option.
-:type ifc_export_option: Autodesk.Revit.DB.IFCExportOptions
-:param directory_path: The directory path to where the export is being saved.
-:type directory_path: str
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- Export status returned in result.status. False if an exception occurred, otherwise True.
-- result.message will contain the fully qualified file path of the exported file.
-On exception:
-- result.status (bool) will be False.
-- result.message will contain the exception message.</p>
-</div></blockquote>
+<dd><p>Exports 3D views matching a filter (view starts with) to IFC using the default built-in exporter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>view_filter</strong> (<em>str</em>) – String the view name is to start with if it is to be exported. (Both view name and string are set to lowercase for comparison)</p></li>
+<li><p><strong>ifc_export_option</strong> (<em>Autodesk.Revit.DB.IFCExportOptions</em>) – The IFC export option.</p></li>
+<li><p><strong>directory_path</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result.status</cite> (bool): False if an exception occurred, otherwise True (export status).
+- <cite>result.message</cite> (str): Contains the fully qualified file path of the exported file.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains the exception message.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -283,29 +288,32 @@ By model export will assign Autodesk.Revit.DB.ElementId.InvalidElementId instead
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_ifc.export_3d_views_to_ifc">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_ifc.</span></span><span class="sig-name descname"><span class="pre">export_3d_views_to_ifc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_export_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_coordinates_system</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_view_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.export_3d_views_to_ifc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function exporting 3D views matching a filter (view starts with) to IFC using 3rd party exporter.
-By default the file name of the export will be same as the name of the view exported.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param view_filter: String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)
-:type view_filter: str
-:param ifc_export_config: The IFC export configuration.
-:type ifc_export_config: BIM.IFC.Export.UI.IFCExportConfiguration
-:param directory_path: The directory path to where the export is being saved.
-:type directory_path: str
-:param ifc_coordinates_system: Describes the coordinate options used for the export, defaults to IFCCoords.SharedCoordinates
-:type ifc_coordinates_system: SampleCodeBatchProcessor.RevitExport.IFCCoords, optional
-:param do_something_with_view_name: A function which takes as an argument the view name and does something with it. The modified view name is afterwards used as the actual file name, defaults to None which uses the view name unchanged as the export file name.
-:type do_something_with_view_name: function , optional
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- Export status returned in result.status. False if an exception occurred, otherwise True.
-- result.message will contain the fully qualified file path of the exported file.
-On exception:
-- result.status (bool) will be False.
-- result.message will contain the exception message.</p>
-</div></blockquote>
+<dd><p>Exports 3D views matching a filter (view starts with) to IFC using a 3rd party exporter.</p>
+<p>By default, the file name of the export will be the same as the name of the view being exported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>view_filter</strong> (<em>str</em>) – String the view name is to start with if it is to be exported. (Both view name and string are set to lowercase for comparison)</p></li>
+<li><p><strong>ifc_export_config</strong> (<em>BIM.IFC.Export.UI.IFCExportConfiguration</em>) – The IFC export configuration.</p></li>
+<li><p><strong>directory_path</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
+<li><p><strong>ifc_coordinates_system</strong> (<em>SampleCodeBatchProcessor.RevitExport.IFCCoords</em><em>, </em><em>optional</em>) – Describes the coordinate options used for the export, defaults to IFCCoords.SharedCoordinates.</p></li>
+<li><p><strong>do_something_with_view_name</strong> (<em>function</em><em>, </em><em>optional</em>) – A function that takes the view name as an argument and processes it. The modified view name is then used as the actual file name, defaults to None, which uses the view name unchanged as the export file name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result.status</cite> (bool): False if an exception occurred, otherwise True (export status).
+- <cite>result.message</cite> (str): Contains the fully qualified file path of the exported file.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains the exception message.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -420,24 +428,29 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_navis.export_to_nwc">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_navis.</span></span><span class="sig-name descname"><span class="pre">export_to_nwc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.export_to_nwc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function exporting either entire model or view to NWC
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param nwc_export_option: A Navisworks .nwc export option.
-:type nwc_export_option: Autodesk.Revit.DB.NavisworksExportOptions
-:param directory_path: The directory path to where the export is being saved.
-:type directory_path: str
-:param file_name: The file name under which the export is being saved.
-:type file_name: str
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- Export status returned in result.status. False if an exception occurred, otherwise True.
-- result.message will contain the fully qualified file path of the exported file.
-On exception:
-- result.status (bool) will be False.
-- result.message will contain the exception message.</p>
-</div></blockquote>
+<dd><p>Exports either the entire model or a view to NWC (Navisworks Cache) format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>nwc_export_option</strong> (<em>Autodesk.Revit.DB.NavisworksExportOptions</em>) – A Navisworks .nwc export option.</p></li>
+<li><p><strong>directory_path</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
+<li><p><strong>file_name</strong> (<em>str</em>) – The file name under which the export is being saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result.status</cite> (bool): False if an exception occurred, otherwise True (export status).
+- <cite>result.message</cite> (str): Contains the fully qualified file path of the exported file.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains the exception message.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -448,24 +461,29 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_navis.export_model_to_nwc">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_navis.</span></span><span class="sig-name descname"><span class="pre">export_model_to_nwc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.export_model_to_nwc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function exporting the entire model to NWC.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param nwc_export_option: A Navisworks .nwc export option.
-:type nwc_export_option: Autodesk.Revit.DB.NavisworksExportOptions
-:param directory_path: The directory path to where the export is being saved.
-:type directory_path: str
-:param file_name: The file name under which the export is being saved.
-:type file_name: str
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- Export status returned in result.status. False if an exception occurred, otherwise True.
-- result.message will contain the fully qualified file path of the exported file.
-On exception:
-- result.status (bool) will be False.
-- result.message will contain the exception message.</p>
-</div></blockquote>
+<dd><p>Exports the entire Revit model to NWC (Navisworks Cache) format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>nwc_export_option</strong> (<em>Autodesk.Revit.DB.NavisworksExportOptions</em>) – A Navisworks .nwc export option.</p></li>
+<li><p><strong>directory_path</strong> (<em>str</em>) – The directory path where the export is being saved.</p></li>
+<li><p><strong>file_name</strong> (<em>str</em>) – The file name under which the export is being saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result.status</cite> (bool): False if an exception occurred, otherwise True (export status).
+- <cite>result.message</cite> (str): Contains the fully qualified file path of the exported file.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains the exception message.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -476,26 +494,30 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_navis.export_3d_views_to_nwc">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_navis.</span></span><span class="sig-name descname"><span class="pre">export_3d_views_to_nwc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_view_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.export_3d_views_to_nwc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function exporting 3D views matching a filter (view starts with) to NWC.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param view_filter: String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)
-:type view_filter: str
-:param nwc_export_option: A Navisworks .nwc export option.
-:type nwc_export_option: Autodesk.Revit.DB.NavisworksExportOptions
-:param directory_path: The directory path to where the export is being saved.
-:type directory_path: str
-:param do_something_with_view_name: A function which takes as an argument the view name and does something with it. The modified view name is afterwards used as the actual file name, defaults to None which uses the view name unchanged as the export file name.
-:type do_something_with_view_name: function , optional
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- Export status returned in result.status. False if an exception occurred, otherwise True.
-- result.message will contain the fully qualified file path of the exported file.
-On exception:
-- result.status (bool) will be False.
-- result.message will contain the exception message.</p>
-</div></blockquote>
+<dd><p>Exports 3D views matching a filter (view starts with) to NWC (Navisworks Cache) format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>view_filter</strong> (<em>str</em>) – String the view name is to start with if it is to be exported. (Both view name and string are set to lowercase for comparison)</p></li>
+<li><p><strong>nwc_export_option</strong> (<em>Autodesk.Revit.DB.NavisworksExportOptions</em>) – A Navisworks .nwc export option.</p></li>
+<li><p><strong>directory_path</strong> (<em>str</em>) – The directory path where the export is being saved.</p></li>
+<li><p><strong>do_something_with_view_name</strong> (<em>function</em><em>, </em><em>optional</em>) – A function that takes the view name as an argument and processes it. The modified view name is then used as the actual file name, defaults to None, which uses the view name unchanged as the export file name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result.status</cite> (bool): False if an exception occurred, otherwise True (export status).
+- <cite>result.message</cite> (str): Contains the fully qualified file path of the exported file.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains the exception message.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>

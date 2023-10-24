@@ -19,8 +19,8 @@ This module contains a number of functions around exporting from Revit to nwc fi
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -131,22 +131,25 @@ def export_to_ifc(doc, ifc_export_option, directory_path, file_name):
 
 def export_3d_views_to_ifc_default(doc, view_filter, ifc_export_option, directory_path):
     """
-    Exports 3D views matching a filter (view starts with) to IFC using the default built in exporter.
+    Exports 3D views matching a filter (view starts with) to IFC using the default built-in exporter.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param view_filter: String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)
+    :param view_filter: String the view name is to start with if it is to be exported. (Both view name and string are set to lowercase for comparison)
     :type view_filter: str
     :param ifc_export_option: The IFC export option.
     :type ifc_export_option: Autodesk.Revit.DB.IFCExportOptions
     :param directory_path: The directory path to where the export is being saved.
     :type directory_path: str
-    :return:
-        Result class instance.
-        - Export status returned in result.status. False if an exception occurred, otherwise True.
-        - result.message will contain the fully qualified file path of the exported file.
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain the exception message.
+
+    :return: Result class instance.
+        - `result.status` (bool): False if an exception occurred, otherwise True (export status).
+        - `result.message` (str): Contains the fully qualified file path of the exported file.
+
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Contains the exception message.
+
     :rtype: :class:`.Result`
     """
 
@@ -217,27 +220,31 @@ def export_3d_views_to_ifc(
     do_something_with_view_name=None,
 ):
     """
-    Function exporting 3D views matching a filter (view starts with) to IFC using 3rd party exporter.
-    By default the file name of the export will be same as the name of the view exported.
+    Exports 3D views matching a filter (view starts with) to IFC using a 3rd party exporter.
+
+    By default, the file name of the export will be the same as the name of the view being exported.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param view_filter: String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)
+    :param view_filter: String the view name is to start with if it is to be exported. (Both view name and string are set to lowercase for comparison)
     :type view_filter: str
     :param ifc_export_config: The IFC export configuration.
     :type ifc_export_config: BIM.IFC.Export.UI.IFCExportConfiguration
     :param directory_path: The directory path to where the export is being saved.
     :type directory_path: str
-    :param ifc_coordinates_system: Describes the coordinate options used for the export, defaults to IFCCoords.SharedCoordinates
+    :param ifc_coordinates_system: Describes the coordinate options used for the export, defaults to IFCCoords.SharedCoordinates.
     :type ifc_coordinates_system: SampleCodeBatchProcessor.RevitExport.IFCCoords, optional
-    :param do_something_with_view_name: A function which takes as an argument the view name and does something with it. The modified view name is afterwards used as the actual file name, defaults to None which uses the view name unchanged as the export file name.
-    :type do_something_with_view_name: function , optional
-    :return:
-        Result class instance.
-        - Export status returned in result.status. False if an exception occurred, otherwise True.
-        - result.message will contain the fully qualified file path of the exported file.
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain the exception message.
+    :param do_something_with_view_name: A function that takes the view name as an argument and processes it. The modified view name is then used as the actual file name, defaults to None, which uses the view name unchanged as the export file name.
+    :type do_something_with_view_name: function, optional
+
+    :return: Result class instance.
+        - `result.status` (bool): False if an exception occurred, otherwise True (export status).
+        - `result.message` (str): Contains the fully qualified file path of the exported file.
+
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Contains the exception message.
+
     :rtype: :class:`.Result`
     """
 

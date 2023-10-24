@@ -159,24 +159,32 @@ def show_head_end(doc, level, view, end_identifier, show_head):
 
 def hide_both_heads(doc, levels, view):
     """
-    Hides both heads of levels in given view.
+    Hides both heads of levels in the given view.
+
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param level: The level of which a heads visibility is to be toggled.
+
+    :param level: The level of which a head's visibility is to be toggled.
     :type level: Autodesk.Revit.DB.Level
-    :param view: The view in which a level heads visibility is to be toggled.
+
+    :param view: The view in which a level head's visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
-    :return:
-        Result class instance.
-        - result.status. True if all levels head(s) visibility was switched off successfully, otherwise False.
-        - result.message will contain the name(s) of the level(s) where a head visibility was set.
-        - result.result empty list
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain generic exception message including the level name.
-        - result.result will be empty
+
+    :return: Result class instance.
+
+        - `result.status` (bool): True if all levels' head(s) visibility was switched off successfully, otherwise False.
+        - `result.message` (str): Contains the name(s) of the level(s) where a head visibility was set.
+        - `result.result` (list): Empty list.
+
+    On exception:
+
+        - `result.status` (bool) will be False.
+        - `result.message` (str) will contain a generic exception message including the level name.
+        - `result.result` (list) will be empty.
+
     :rtype: :class:`.Result`
-    """
+"""
+
 
     return_value = res.Result()
     for l in levels:
@@ -189,21 +197,25 @@ def hide_both_heads(doc, levels, view):
 def show_head_zero_end(doc, levels, view):
     """
     Turns on level heads at zero end in specified view.
+
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
     :param level: The levels of which a heads visibility is to be toggled.
     :type level: [Autodesk.Revit.DB.Level]
     :param view: The view in which a level heads visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
-    :return:
-        Result class instance.
+    :return: Result class instance.
+
         - result.status. True if all levels head(s) visibility at zero end was set to visible successfully, otherwise False.
         - result.message will contain the name(s) of the level(s) where a head visibility was set.
         - result.result empty list
+
         On exception:
+
         - result.status (bool) will be False.
         - result.message will contain generic exception message including the level name.
         - result.result will be empty
+
     :rtype: :class:`.Result`
     """
 
@@ -217,21 +229,25 @@ def show_head_zero_end(doc, levels, view):
 def show_head_one_end(doc, levels, view):
     """
     Turns on level heads at One end in specified view.
+
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
     :param level: The levels of which a heads visibility is to be toggled.
     :type level: [Autodesk.Revit.DB.Level]
     :param view: The view in which a level heads visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
-    :return:
-        Result class instance.
+    :return: Result class instance.
+
         - result.status. True if all levels head(s) visibility at one end was set to visible successfully, otherwise False.
         - result.message will contain the name(s) of the level(s) where a head visibility was set.
         - result.result empty list
+
         On exception:
+
         - result.status (bool) will be False.
         - result.message will contain generic exception message including the level name.
         - result.result will be empty
+
     :rtype: :class:`.Result`
     """
 
@@ -245,6 +261,7 @@ def show_head_one_end(doc, levels, view):
 def toggle_head_end(doc, level, view, end_identifier):
     """
     Toggles level head visibility on specified end for given level in given views.
+
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
     :param level: The level of which a heads visibility is to be toggled.
@@ -253,15 +270,18 @@ def toggle_head_end(doc, level, view, end_identifier):
     :type view: Autodesk.Revit.DB.View
     :param end_identifier: The end of the level to be modified.
     :type view: Autodesk.Revit.DB.DatumEnds
-    :return:
-        Result class instance.
+    :return: Result class instance.
+
         - result.status. True if all levels head(s) visibility was changed successfully, otherwise False.
         - result.message will contain the name(s) of the level(s) where a head visibility was changed.
         - result.result empty list
+
         On exception:
+
         - result.status (bool) will be False.
         - result.message will contain generic exception message including the level name.
         - result.result will be empty
+
     :rtype: :class:`.Result`
     """
 
@@ -304,21 +324,25 @@ def toggle_head_end(doc, level, view, end_identifier):
 def toggle_head_one_end(doc, levels, view):
     """
     Toggles level head visibility on one end for given levels
+
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
     :param levels: The levels of which a heads visibility at one end is to be toggled.
     :type levels: [Autodesk.Revit.DB.Level]
     :param view: The view in which a level heads visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
-    :return:
-        Result class instance.
+    :return: Result class instance.
+
         - result.status. True if all levels head(s) visibility at one end was changed successfully, otherwise False.
         - result.message will contain the name(s) of the level(s) where a head visibility was changed.
         - result.result empty list
+
         On exception:
+
         - result.status (bool) will be False.
         - result.message will contain generic exception message including the level name.
         - result.result will be empty
+
     :rtype: :class:`.Result`
     """
 
@@ -331,21 +355,25 @@ def toggle_head_one_end(doc, levels, view):
 def toggle_head_zero_end(doc, levels, view):
     """
     Toggles level head visibility on zero end for given levels
+
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
     :param levels: The levels of which a head visibility at zero end is to be toggled.
     :type levels: [Autodesk.Revit.DB.Level]
     :param view: The view in which a level heads visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
-    :return:
-        Result class instance.
+    :return: Result class instance.
+
         - result.status. True if all level head(s) visibility at one end was changed successfully, otherwise False.
         - result.message will contain the name(s) of the level(s) where a head visibility was changed.
         - result.result empty list
+
         On exception:
+
         - result.status (bool) will be False.
         - result.message will contain generic exception message including the level name.
         - result.result will be empty
+        
     :rtype: :class:`.Result`
     """
 

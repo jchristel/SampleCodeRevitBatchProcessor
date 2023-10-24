@@ -40,19 +40,23 @@ from duHast.Revit.Common import delete as rDel
 def delete_shared_parameter_by_name(doc, shared_parameter_name):
     """
     Deletes a single shared parameter based on a name provided.
+
     param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param shared_parameter_name: The name of the shared parameter.
     :type shared_parameter_name: str
-    :return:
-        Result class instance.
+    :return: Result class instance.
+
         - Parameter delete status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the name of the shared parameter.
         - result.status will be an empty list.
+        
         On exception (handled by optimizer itself!):
+
         - result.status (bool) will be False.
         - result.message will contain generic exception message.
         - result.status will be an empty list
+
     :rtype: :class:`.Result`
     """
 
@@ -83,19 +87,23 @@ def delete_shared_parameter_by_name(doc, shared_parameter_name):
 def delete_shared_parameter_by_guid(doc, guid):
     """
     Deletes a single shared parameter based on a guid provided.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param guid: A shared parameter GUID as string.
     :type guid: str
-    :return:
-        Result class instance.
+    :return: Result class instance.
+
         - Parameter delete status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the name of the shared parameter.
         - result.status will be an empty list.
+
         On exception (handled by optimizer itself!):
+
         - result.status (bool) will be False.
         - result.message will contain generic exception message.
         - result.status will be an empty list
+
     :rtype: :class:`.Result`
     """
 
@@ -123,17 +131,21 @@ def delete_shared_parameter_by_guid(doc, guid):
 def delete_shared_parameters(doc, parameter_gui_ds):
     """
     Deletes shared parameters by GUID from document.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param parameter_gui_ds: List of shared parameter GUIDs as string.
     :type parameter_gui_ds: list str
-    :return:
-        Result class instance.
+    :return: Result class instance.
+
         - Parameter deletion status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the name of the shared parameter deleted.
+
         On exception (handled by optimizer itself!):
+
         - result.status (bool) will be False.
         - result.message will contain generic exception message.
+        
     :rtype: :class:`.Result`
     """
 

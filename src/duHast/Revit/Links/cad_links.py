@@ -143,10 +143,11 @@ def delete_cad_links(doc):
     Deletes all CAD links in a model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :return:
-        Result class instance.
+    :return: Result class instance.
+
         - .result = True if all CAD links got deleted. Otherwise False.
         - .message will contain status of deletion.
+
     :rtype: :class:`.Result`
     """
 
@@ -166,6 +167,7 @@ def reload_cad_links(
 ):
     """
     Reloads CAD links from a given file location based on the original link type name (starts with comparison)
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param link_locations: A list of directories where CAD files can be located.
@@ -175,10 +177,11 @@ def reload_cad_links(
     :param do_something_with_link_name: A function which amends the link name prior search for a match in folders.\
         I.e. can be used to truncate the link name i.e. the revision details of a link
     :type do_something_with_link_name: func(str) -> str
-    :return: 
-        Result class instance.
+    :return: Result class instance.
+
         - .result = True if all CAD links got reloaded successfully. Otherwise False.
         - .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
+    
     :rtype: :class:`.Result`
     """
 

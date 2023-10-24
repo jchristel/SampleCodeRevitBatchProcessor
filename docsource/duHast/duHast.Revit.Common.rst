@@ -71,14 +71,6 @@ duHast.Revit.Common.element\_filtering module
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Common.element\_functions module
----------------------------------------------
-
-.. automodule:: duHast.Revit.Common.element_functions
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 duHast.Revit.Common.file\_io module
 -----------------------------------
 

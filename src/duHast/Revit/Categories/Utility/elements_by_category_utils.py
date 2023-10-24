@@ -72,6 +72,18 @@ def sort_elements_by_category(elements, element_dic):
 
 
 def sort_geometry_elements_by_category(elements, element_dic, doc):
+    """
+    Sorts geometry elements by their category in a Revit family document.
+
+    Args:
+        elements (list): A list of geometry elements to be sorted.
+        element_dic (dict): A dictionary where the sorted elements will be stored.
+        doc (Revit Document): The current Revit family document.
+
+    Returns:
+        dict: A dictionary where the keys are category ids and the values are lists of element ids. The geometry elements are sorted by their category.
+    """
+    
     counter = 0
     for el in elements:
         counter = counter + 1
@@ -158,24 +170,27 @@ def get_elements_by_category(doc, cat):
 
 def move_elements_to_category(doc, elements, to_category_name, destination_cat_ids):
     """
-    Moves elements provided in dictionary to another category specified by name.
+    Moves elements provided in a dictionary to another category specified by name.
+
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param elements: Dictionary of elements, key are graphic style names.
+    :param elements: Dictionary of elements, where keys are graphic style names.
     :type elements: {Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}
     :param to_category_name: The name of the subcategory elements are to be moved to.
     :type to_category_name: str
-    :param destination_cat_ids: Dictionary of ids of graphic style, key are graphic style names
+    :param destination_cat_ids: Dictionary of IDs of graphic styles, where keys are graphic style names.
     :type destination_cat_ids: dictionary {str: Autodesk.Revit.DB.ElementId}
-    :return:
-        Result class instance.
-        - result.status. True if all elements where moved to destination subcategories, otherwise False.
-        - result.message will contain the name of the destination subcategory by element.
-        - result.result empty list
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain generic exception message.
-        - result.result will be empty
+
+    :return: Result class instance.
+        - `result.status` (bool): True if all elements were moved to destination subcategories, otherwise False.
+        - `result.message` (str): Contains the name of the destination subcategory by element.
+        - `result.result` (empty list)
+
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Contains a generic exception message.
+        - `result.result` (empty list)
+
     :rtype: :class:`.Result`
     """
 
@@ -222,21 +237,24 @@ def move_elements_from_sub_category_to_sub_category(
 ):
     """
     Moves elements from one subcategory to another one identified by their names.
+
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
     :param from_category_name: The source subcategory name.
     :type from_category_name: str
     :param to_category_name: The destination subcategory name.
     :type to_category_name: str
-    :return:
-        Result class instance.
-        - result.status. True if all elements from source subcategory where moved to destination subcategory, otherwise False.
-        - result.message will contain the name of the destination subcategory by element.
-        - result.result empty list
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain generic exception message.
-        - result.result will be empty
+
+    :return: Result class instance.
+        - `result.status` (bool): True if all elements from the source subcategory were moved to the destination subcategory, otherwise False.
+        - `result.message` (str): Contains the name of the destination subcategory by element.
+        - `result.result` (empty list)
+
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Contains a generic exception message.
+        - `result.result` (empty list)
+
     :rtype: :class:`.Result`
     """
 

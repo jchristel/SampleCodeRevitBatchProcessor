@@ -37,16 +37,17 @@ from duHast.Revit.Views.views import get_views_not_on_sheet
 def delete_views(doc, view_rules, collector_views):
     """
     Deletes views based on view rules supplied.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param view_rules: Rules used to check whether a view should be deleted. Rules are based on parameters attached to view and their values.
-    :type view_rules: array in format [[parameter name, condition test method, value to test against]]
+    :param view_rules: Rules used to check whether a view should be deleted. Rules are based on parameters attached to views and their values.
+    :type view_rules: list of lists, where each inner list has the format [parameter name, condition test method, value to test against]
     :param collector_views: A filtered element collector containing views.
     :type collector_views: Autodesk.Revit.DB.FilteredElementCollector
-    :return:
-        Result class instance.
-        - .result = True if all views where deleted. Otherwise False.
-        - .message will contain deletion status.
+
+    :return: Result class instance.
+        - `result` (bool): True if all views were deleted, otherwise False.
+        - `message` (str): Deletion status.
     :rtype: :class:`.Result`
     """
 
@@ -86,15 +87,16 @@ def delete_views(doc, view_rules, collector_views):
 
 def delete_views_not_on_sheets(doc, filter):
     """
-    Deletes all views not placed on sheets includes schedules and legends matching filter.
+    Deletes all views not placed on sheets, including schedules and legends matching the given filter.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param filter: Function checking whether view should be deleted.
-    :type filter: func(view) returns a bool
-    :return:
-        Result class instance.
-        - .result = True if all views where deleted. Otherwise False.
-        - .message will contain deletion status.
+    :param filter: A function that checks whether a view should be deleted.
+    :type filter: function(view) -> bool
+
+    :return: Result class instance.
+        - `result` (bool): True if all views were deleted, otherwise False.
+        - `message` (str): Deletion status.
     :rtype: :class:`.Result`
     """
 
@@ -122,13 +124,14 @@ def delete_views_not_on_sheets(doc, filter):
 
 def delete_unused_elevation_view_markers(doc):
     """
-    Deletes all unused elevation markers. (no Elevation is created by the marker)
+    Deletes all unused elevation markers (no elevation is created by the marker).
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :return:
-        Result class instance.
-        - .result = True if all unused elevation markers where deleted. Otherwise False.
-        - .message will contain deletion status.
+
+    :return: Result class instance.
+        - `result` (bool): True if all unused elevation markers were deleted, otherwise False.
+        - `message` (str): Deletion status.
     :rtype: :class:`.Result`
     """
 

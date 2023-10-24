@@ -37,14 +37,6 @@ duHast.Revit.Links.image\_links module
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Links.link\_functions module
------------------------------------------
-
-.. automodule:: duHast.Revit.Links.link_functions
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 duHast.Revit.Links.links module
 -------------------------------
 

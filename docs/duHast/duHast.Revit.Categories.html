@@ -434,6 +434,41 @@ value: dictionary : key sub cat name, value: subcategory</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories_model.get_category_from_builtInCategory">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories_model.</span></span><span class="sig-name descname"><span class="pre">get_category_from_builtInCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories_model.get_category_from_builtInCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a category based on the buil in category enum value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>built_in_category</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – The built in category</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A category</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.Category</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories_model.get_category_by_names">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories_model.</span></span><span class="sig-name descname"><span class="pre">get_category_by_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_category_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_category_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories_model.get_category_by_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves a category object from a document based on the given main category name and optional sub category name.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>doc (document object): The document object from which to retrieve the category.
+main_category_name (str): The name of the main category to search for.
+sub_category_name (str): The name of the sub category to search for within the main category.</p>
+</dd>
+<dt>Returns:</dt><dd><p>category object: The retrieved category object if a match is found.
+None: If no match is found.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Categories.change_family_category">
 <span id="duhast-revit-categories-change-family-category-module"></span><h2>duHast.Revit.Categories.change_family_category module<a class="headerlink" href="#module-duHast.Revit.Categories.change_family_category" title="Permalink to this heading">¶</a></h2>
@@ -443,24 +478,30 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Categories.change_family_category.change_family_category">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.change_family_category.</span></span><span class="sig-name descname"><span class="pre">change_family_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_category_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.change_family_category.change_family_category" title="Permalink to this definition">¶</a></dt>
-<dd><p>Changes the current family category to the new one specified.
-Revit’s default behavior when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories        to the new family category.
-This function will also re-create any user created subcategories under the new category and assign elements to it to match the subcategory they where on before         the category change.
-:param doc: Current Revit family document.
-:type doc: Autodesk.Revit.DB.Document
-:param new_category_name: The new family category
-:type new_category_name: str
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- result.status. True if all custom subcategories where re-created under the new family category and elements where moved to those subcategories, otherwise False.
-- result.message will confirm successful creation of subcategories and element move.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message.
-- result.result will be empty</p>
-</div></blockquote>
+<dd><p>Changes the current family category to the new one specified.</p>
+<p>Revit’s default behavior when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories to the new family category. This function will also re-create any user-created subcategories under the new category and assign elements to them to match the subcategory they were on before the category change.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>new_category_name</strong> (<em>str</em>) – The new family category.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result class instance.
+- <cite>result.status</cite> (bool): True if all custom subcategories were re-created under the new family category and elements were moved to those subcategories, otherwise False.
+- <cite>result.message</cite> (str): Confirmation of successful creation of subcategories and element move.
+- <cite>result.result</cite> (list): Empty list.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Generic exception message.</p></li>
+<li><p><cite>result.result</cite> (list): Empty.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -555,44 +596,41 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Categories.family_sub_categories.rename_sub_category">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.family_sub_categories.</span></span><span class="sig-name descname"><span class="pre">rename_sub_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_sub_cat_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_sub_cat_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.family_sub_categories.rename_sub_category" title="Permalink to this definition">¶</a></dt>
-<dd><p>Renames a family custom subcategory.
-Note: Only subcategory directly belonging to the family category will be checked for a match.
-- Revit API does currently not allow to change a subcategory name. This method instead:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>duplicates the old subcategory with the new name</p></li>
-<li><p>moves all elements belonging to the old subcategory to the new subcategory</p></li>
-<li><p>deletes the old subcategory</p></li>
-</ul>
-</div></blockquote>
+<dd><p>Renames a family custom subcategory.</p>
+<p>Note: Only subcategories directly belonging to the family category will be checked for a match.</p>
 <ul class="simple">
-<li><dl class="simple">
-<dt>If the new subcategory already exists in the file:</dt><dd><ul>
-<li><p>moves all elements belonging to the old subcategory to the new subcategory</p></li>
-<li><p>deletes the old subcategory</p></li>
-</ul>
-</dd>
-</dl>
-</li>
+<li><p>The Revit API currently does not allow changing a subcategory name. This method instead:</p></li>
+<li><p>Duplicates the old subcategory with the new name.</p></li>
+<li><p>Moves all elements belonging to the old subcategory to the new subcategory.</p></li>
+<li><p>Deletes the old subcategory.</p></li>
+<li><p>If the new subcategory already exists in the file:</p></li>
+<li><p>Moves all elements belonging to the old subcategory to the new subcategory.</p></li>
+<li><p>Deletes the old subcategory.</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
-<li><p><strong>old_sub_cat_name</strong> (<em>str</em>) – The subcategory name to be re-named</p></li>
+<li><p><strong>old_sub_cat_name</strong> (<em>str</em>) – The subcategory name to be renamed.</p></li>
 <li><p><strong>new_sub_cat_name</strong> (<em>str</em>) – The new subcategory name.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Result class instance.
-- result.status. True if subcategory was renamed successfully , otherwise False.
-- result.message will contain rename process messages.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message.
-- result.result will be empty</p>
+- <cite>result.status</cite> (bool): True if the subcategory was renamed successfully, otherwise False.
+- <cite>result.message</cite> (str): Rename process messages.
+- <cite>result.result</cite> (list): Empty list.</p>
 </dd>
+</dl>
+<dl class="simple">
+<dt>On exception:</dt><dd><ul class="simple">
+<li><p><cite>result.status</cite> (bool): False.</p></li>
+<li><p><cite>result.message</cite> (str): Generic exception message.</p></li>
+<li><p><cite>result.result</cite> (list): Empty.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>

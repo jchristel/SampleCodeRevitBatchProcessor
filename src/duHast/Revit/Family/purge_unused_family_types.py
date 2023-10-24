@@ -59,19 +59,21 @@ def family_all_types_in_use(fam_type_ids, used_type_ids):
 
 def get_unused_in_place_ids_for_purge(doc, unused_type_getter):
     """
-    Filters symbol(type) ids and family ids (when not a single type of given family is in use) of families.
-    The returned list of ids can be just unused family symbols or entire families if none of their symbols are in use.
-    in terms of purging its faster to delete an entire family definition rather then deleting it's symbols first and then the
-    definition.
+    Filters symbol (type) IDs and family IDs of families.
+
+    The returned list of IDs can be either unused family symbols or entire families if none of their symbols are in use. 
+    In terms of purging, it's faster to delete an entire family definition rather than deleting its symbols first and then the definition.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param unused_type_getter:
-        A function returning ids of unused symbols (family types) as a list.
-        It requires as argument the current model document only.
-    :type unused_type_getter: function (doc) -> list Autodesk.Revit.DB.ElementId
-    :return: A list of Element Ids representing the family symbols and or family id's matching filter.
-    :rtype: list Autodesk.Revit.DB.ElementId
+
+    :param unused_type_getter: A function returning IDs of unused symbols (family types) as a list. It requires the current model document as an argument.
+    :type unused_type_getter: function (doc) -> list of Autodesk.Revit.DB.ElementId
+
+    :return: A list of Element IDs representing the family symbols and/or family IDs matching the filter.
+    :rtype: list of Autodesk.Revit.DB.ElementId
     """
+
 
     unused_ids = []
     unused_family_ids = []
@@ -95,20 +97,24 @@ def get_unused_in_place_ids_for_purge(doc, unused_type_getter):
 
 def get_used_unused_type_ids(doc, type_id_getter, use_type=0, exclude_shared_fam=True):
     """
-    Filters types obtained by past in type_id_getter method and depending on use_type past in returns either the used or unused symbols of a family
+    Filters types obtained by passing in the `type_id_getter` method and, depending on `use_type`, returns either the used or unused symbols of a family.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param type_id_getter:
-        A function returning ids of symbols (family types) as a list, requires as argument:
-        the current model doc,
-        ICollection of built in categories,
-        bool: exclude shared families
-    :type type_id_getter: function (doc, ICollection, bool) -> list[Autodesk.Revit.DB.ElementId]
-    :param use_type: 0, no dependent elements (not used); 1: has dependent elements(is in use)
+
+    :param type_id_getter: A function returning IDs of symbols (family types) as a list. It requires the following arguments:
+        - The current model document.
+        - ICollection of built-in categories.
+        - A boolean: exclude shared families.
+    :type type_id_getter: function (doc, ICollection, bool) -> list of Autodesk.Revit.DB.ElementId
+
+    :param use_type: 0 for no dependent elements (not used); 1 for has dependent elements (is in use).
     :type use_type: int
-    :return: A list of Element Ids representing the family symbols matching filter.
+
+    :return: A list of Element IDs representing the family symbols matching the filter.
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
+
 
     # get all types elements available
     all_loadable_three_d_type_ids = type_id_getter(

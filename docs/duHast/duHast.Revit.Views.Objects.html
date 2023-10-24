@@ -96,13 +96,19 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#module-duHast.Revit.Views.Objects.Data.override_by_base">duHast.Revit.Views.Objects.Data.override_by_base module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#a-base-class-used-to-store-category-overrides">A base class used to store category overrides.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#duHast.Revit.Views.Objects.Data.override_by_base.OverrideByBase"><code class="docutils literal notranslate"><span class="pre">OverrideByBase</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#duHast.Revit.Views.Objects.Data.override_by_base.OverrideByBase"><code class="docutils literal notranslate"><span class="pre">OverrideByBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#duHast.Revit.Views.Objects.Data.override_by_base.OverrideByBase.compare_overrides"><code class="docutils literal notranslate"><span class="pre">OverrideByBase.compare_overrides()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#duHast.Revit.Views.Objects.Data.override_by_base.OverrideByBase.get_all_used_line_patterns"><code class="docutils literal notranslate"><span class="pre">OverrideByBase.get_all_used_line_patterns()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#duHast.Revit.Views.Objects.Data.override_by_base.OverrideByBase.get_all_used_fill_patterns"><code class="docutils literal notranslate"><span class="pre">OverrideByBase.get_all_used_fill_patterns()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#module-duHast.Revit.Views.Objects.Data.override_by_category">duHast.Revit.Views.Objects.Data.override_by_category module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#id1">A base class used to store category overrides.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#duHast.Revit.Views.Objects.Data.override_by_category.OverrideByCategory"><code class="docutils literal notranslate"><span class="pre">OverrideByCategory</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#duHast.Revit.Views.Objects.Data.override_by_category.OverrideByCategory.data_type"><code class="docutils literal notranslate"><span class="pre">OverrideByCategory.data_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.Objects.Data.html#duHast.Revit.Views.Objects.Data.override_by_category.OverrideByCategory.compare_overrides"><code class="docutils literal notranslate"><span class="pre">OverrideByCategory.compare_overrides()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -140,6 +146,32 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
+<section id="module-duHast.Revit.Views.Objects.category_override_storage">
+<span id="duhast-revit-views-objects-category-override-storage-module"></span><h2>duHast.Revit.Views.Objects.category_override_storage module<a class="headerlink" href="#module-duHast.Revit.Views.Objects.category_override_storage" title="Permalink to this heading">¶</a></h2>
+<section id="a-class-used-to-store-view-category-overrides-settings-from-revit">
+<h3>A  class used to store view category overrides settings from Revit.<a class="headerlink" href="#a-class-used-to-store-view-category-overrides-settings-from-revit" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Objects.category_override_storage.RevitCategoryOverride">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Objects.category_override_storage.</span></span><span class="sig-name descname"><span class="pre">RevitCategoryOverride</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_category_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_category_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_override</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_category_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.category_override_storage.RevitCategoryOverride" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Class constructor.</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.Objects.filter_override_storage">
+<span id="duhast-revit-views-objects-filter-override-storage-module"></span><h2>duHast.Revit.Views.Objects.filter_override_storage module<a class="headerlink" href="#module-duHast.Revit.Views.Objects.filter_override_storage" title="Permalink to this heading">¶</a></h2>
+<section id="a-class-used-to-store-view-filter-overrides-settings-from-revit">
+<h3>A  class used to store view filter overrides settings from Revit.<a class="headerlink" href="#a-class-used-to-store-view-filter-overrides-settings-from-revit" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Objects.filter_override_storage.RevitFilterOverride">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Objects.filter_override_storage.</span></span><span class="sig-name descname"><span class="pre">RevitFilterOverride</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_override</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_filter_visible</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_filter_enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.filter_override_storage.RevitFilterOverride" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Class constructor.</p>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Views.Objects.view_graphics_settings">
 <span id="duhast-revit-views-objects-view-graphics-settings-module"></span><h2>duHast.Revit.Views.Objects.view_graphics_settings module<a class="headerlink" href="#module-duHast.Revit.Views.Objects.view_graphics_settings" title="Permalink to this heading">¶</a></h2>
 <section id="a-base-class-used-to-store-view-template-graphic-settings">
@@ -155,6 +187,68 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Objects.view_graphics_settings.</span></span><span class="sig-name descname"><span class="pre">ViewGraphicsSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
 <p>Class constructor.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings.get_differing_category_overrides">
+<span class="sig-name descname"><span class="pre">get_differing_category_overrides</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other_view_graphic_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings.get_differing_category_overrides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all category overrides of this category of categories  which exist in both set of settings but have different overrides applied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other_view_graphic_settings</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – _description_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings.get_differing_filter_overrides">
+<span class="sig-name descname"><span class="pre">get_differing_filter_overrides</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other_view_graphic_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings.get_differing_filter_overrides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all filter overrides which exist exist in both set of settings but have different overrides applied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other_view_graphic_settings</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – _description_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings.get_all_used_line_patterns">
+<span class="sig-name descname"><span class="pre">get_all_used_line_patterns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings.get_all_used_line_patterns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all line patterns used in overrides</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary of line pattern names to line pattern objects</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>{str: <a class="reference internal" href="duHast.Revit.LinePattern.Objects.Data.html#duHast.Revit.LinePattern.Objects.Data.line_pattern_settings.LinePatternSettings" title="duHast.Revit.LinePattern.Objects.Data.line_pattern_settings.LinePatternSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinePatternSettings</span></code></a>}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings.get_all_used_fill_patterns">
+<span class="sig-name descname"><span class="pre">get_all_used_fill_patterns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Objects.view_graphics_settings.ViewGraphicsSettings.get_all_used_fill_patterns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all fill pattern used in overrides.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary of line pattern names to line pattern objects</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>{str: <a class="reference internal" href="duHast.Revit.LinePattern.Objects.Data.html#duHast.Revit.LinePattern.Objects.Data.fill_pattern_settings.FillPatternSettings" title="duHast.Revit.LinePattern.Objects.Data.fill_pattern_settings.FillPatternSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">FillPatternSettings</span></code></a>}</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>_description_</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>

@@ -48,19 +48,20 @@ def delete_by_element_ids(
     element_name,  # type: str
 ):
     """
-    Deleting elements in list all at once.
+    Deletes elements in a list all at once.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param ids: List containing ids of all elements to be deleted.
+    :param ids: List containing IDs of all elements to be deleted.
     :type ids: list of Autodesk.Revit.DB.ElementId
     :param transaction_name: The transaction name used for the deletion.
     :type transaction_name: str
-    :param element_name: The element name added to deletion status message.
+    :param element_name: The element name added to the deletion status message.
     :type element_name: str
-    :return:
-        Result class instance.
-        - .result = True if successfully deleted all elements. Otherwise False.
-        - .message will contain deletion status
+
+    :return: Result class instance.
+        - `result` (bool): True if all elements were successfully deleted, otherwise False.
+        - `message` (str): Deletion status.
     :rtype: :class:`.Result`
     """
 
@@ -89,21 +90,24 @@ def delete_by_element_ids_one_by_one(
     element_name,  # type: str
 ):
     """
-    Deleting elements in list one at the time.
-    Each element gets deleted in its own transaction. If the deletion fails the transaction is rolled back.
+    Deletes elements in a list one at a time.
+
+    Each element is deleted in its own transaction. If the deletion fails, the transaction is rolled back.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param ids: List containing ids of all elements to be deleted.
+    :param ids: List containing IDs of all elements to be deleted.
     :type ids: list of Autodesk.Revit.DB.ElementId
     :param transaction_name: The transaction name used for the deletion.
     :type transaction_name: str
-    :param element_name: The name of the element (?) Not used!!
+    :param element_name: The name of the element (not used).
     :type element_name: str
-    :return:
-        Result class instance.
-        - .result = True if successfully deleted all elements. Otherwise False.
-        - .message will contain each id and its deletion status
+
+    :return: Result class instance.
+        - `result` (bool): True if all elements were successfully deleted, otherwise False.
+        - `message` (str): Contains each ID and its deletion status.
     :rtype: :class:`.Result`
+
     """
 
     return_value = res.Result()

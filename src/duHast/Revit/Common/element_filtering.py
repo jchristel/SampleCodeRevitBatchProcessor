@@ -28,8 +28,7 @@ Varies Element filter / check functions.
 #
 
 
-import Autodesk.Revit.DB as rdb
-
+from Autodesk.Revit.DB import Element
 
 def is_element_of_built_in_category(doc, element_id, builtin_categories):
     """
@@ -99,7 +98,7 @@ def is_family_name_from_instance(
     el = doc.GetElement(element_id)
     flag = True
     try:
-        if rdb.Element.Name.GetValue(el.Symbol.Family) != family_name:
+        if Element.Name.GetValue(el.Symbol.Family) != family_name:
             flag = False
     except Exception:
         flag = False
@@ -128,7 +127,7 @@ def is_family_name_from_instance_contains(
     el = doc.GetElement(element_id)
     flag = True
     try:
-        if contains_value not in rdb.Element.Name.GetValue(el.Symbol.Family):
+        if contains_value not in Element.Name.GetValue(el.Symbol.Family):
             flag = False
     except Exception:
         flag = False
@@ -157,7 +156,7 @@ def is_family_name_from_instance_does_not_contains(
     el = doc.GetElement(element_id)
     flag = True
     try:
-        if contains_value in rdb.Element.Name.GetValue(el.Symbol.Family):
+        if contains_value in Element.Name.GetValue(el.Symbol.Family):
             flag = False
     except Exception:
         flag = False
@@ -186,7 +185,7 @@ def is_symbol_name_from_instance_contains(
     el = doc.GetElement(element_id)
     flag = True
     try:
-        if contains_value not in rdb.Element.Name.GetValue(el.Symbol):
+        if contains_value not in Element.Name.GetValue(el.Symbol):
             flag = False
     except Exception:
         flag = False
@@ -216,7 +215,7 @@ def is_symbol_name_from_instance_does_not_contains(
     el = doc.GetElement(element_id)
     flag = True
     try:
-        if contains_value in rdb.Element.Name.GetValue(el.Symbol):
+        if contains_value in Element.Name.GetValue(el.Symbol):
             flag = False
     except Exception:
         flag = False

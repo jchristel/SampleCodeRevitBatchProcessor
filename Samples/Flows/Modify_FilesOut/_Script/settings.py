@@ -80,6 +80,9 @@ WSM_MARKER_DIRECTORY = LOG_MARKER_DIRECTORY
 # directory containing revit batch processor task files
 TASK_LIST_DIRECTORY = FLOW_DIRECTORY + r"\__TaskList"
 
+# flag indicating whether this is a cloud based project
+IS_CLOUD_PROJECT = False
+
 # number of task files to be used / created
 NO_OF_TASK_LIST_FILES = 3
 # file extension of files to be processed

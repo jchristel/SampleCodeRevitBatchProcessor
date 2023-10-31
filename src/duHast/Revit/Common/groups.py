@@ -38,9 +38,10 @@ import System
 from duHast.Revit.Common import common as com
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import BuiltInCategory, FilteredElementCollector
 
 # --------------------------------------------- utility functions ------------------
+
 
 # doc   current document
 def get_model_groups(doc):
@@ -54,11 +55,49 @@ def get_model_groups(doc):
     """
 
     return (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_IOSModelGroups)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_IOSModelGroups)
         .WhereElementIsElementType()
         .ToList()
     )
+
+
+def get_model_group_instances(doc):
+    """
+    Get all model group instances in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: collector of model group instances
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    """
+    col = (
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_IOSModelGroups)
+        .WhereElementIsNotElementType()
+    )
+    return col
+
+
+def get_model_group_instances_by_type(doc):
+    """
+    Get all model group instances in the model grouped by their type id.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: Dictionary of model group instances by type id
+    :rtype: {ElementId:[Autodesk.Revit.DB.Group]}
+    """
+
+    model_groups_by_type_id = {}
+    model_group_instances = get_model_group_instances(doc=doc)
+    for instance in model_group_instances:
+        type_id = instance.GetTypeId()
+        if type_id in model_groups_by_type_id:
+            model_groups_by_type_id[type_id].append(instance)
+        else:
+            model_groups_by_type_id[type_id] = [instance]
+    return model_groups_by_type_id
 
 
 def get_detail_groups(doc):
@@ -72,8 +111,8 @@ def get_detail_groups(doc):
     """
 
     return (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_IOSDetailGroups)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_IOSDetailGroups)
         .WhereElementIsElementType()
         .ToList()
     )
@@ -90,8 +129,8 @@ def get_nested_detail_groups(doc):
     """
 
     return (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_IOSAttachedDetailGroups)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_IOSAttachedDetailGroups)
         .WhereElementIsElementType()
         .ToList()
     )
@@ -109,8 +148,8 @@ def get_model_group_ids(doc):
 
     ids = []
     col = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_IOSModelGroups)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_IOSModelGroups)
         .WhereElementIsElementType()
     )
     ids = com.get_ids_from_element_collector(col)
@@ -131,8 +170,8 @@ def get_detail_group_ids(doc):
 
     ids = []
     col = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_IOSDetailGroups)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_IOSDetailGroups)
         .WhereElementIsElementType()
     )
     ids = com.get_ids_from_element_collector(col)
@@ -152,8 +191,8 @@ def get_nested_detail_group_ids(doc):
 
     ids = []
     col = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_IOSAttachedDetailGroups)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_IOSAttachedDetailGroups)
         .WhereElementIsElementType()
     )
     ids = com.get_ids_from_element_collector(col)
@@ -175,14 +214,14 @@ def get_unplaced_groups(doc, group_category):
 
     def getter_types(doc):
         return (
-            rdb.FilteredElementCollector(doc)
+            FilteredElementCollector(doc)
             .OfCategory(group_category)
             .WhereElementIsElementType()
         )
 
     def getter_instances(doc):
         return (
-            rdb.FilteredElementCollector(doc)
+            FilteredElementCollector(doc)
             .OfCategory(group_category)
             .WhereElementIsNotElementType()
         )
@@ -203,7 +242,7 @@ def get_unplaced_detail_groups(doc):
     :rtype: list
     """
 
-    return get_unplaced_groups(doc, rdb.BuiltInCategory.OST_IOSDetailGroups)
+    return get_unplaced_groups(doc, BuiltInCategory.OST_IOSDetailGroups)
 
 
 def get_unplaced_detail_group_ids(doc):
@@ -219,7 +258,7 @@ def get_unplaced_detail_group_ids(doc):
     :rtype: List of Autodesk.Revit.DB.ElementId
     """
 
-    unplaced_groups = get_unplaced_groups(doc, rdb.BuiltInCategory.OST_IOSDetailGroups)
+    unplaced_groups = get_unplaced_groups(doc, BuiltInCategory.OST_IOSDetailGroups)
     ids = []
     for unplaced in unplaced_groups:
         ids.append(unplaced.Id)
@@ -237,7 +276,7 @@ def get_unplaced_nested_detail_groups(doc):
     :rtype: list
     """
 
-    return get_unplaced_groups(doc, rdb.BuiltInCategory.OST_IOSAttachedDetailGroups)
+    return get_unplaced_groups(doc, BuiltInCategory.OST_IOSAttachedDetailGroups)
 
 
 def get_unplaced_nested_detail_group_ids(doc):
@@ -253,7 +292,7 @@ def get_unplaced_nested_detail_group_ids(doc):
     """
 
     unplaced_groups = get_unplaced_groups(
-        doc, rdb.BuiltInCategory.OST_IOSAttachedDetailGroups
+        doc, BuiltInCategory.OST_IOSAttachedDetailGroups
     )
     ids = []
     for unplaced in unplaced_groups:
@@ -271,7 +310,7 @@ def get_unplaced_model_groups(doc):
     :rtype: list
     """
 
-    return get_unplaced_groups(doc, rdb.BuiltInCategory.OST_IOSModelGroups)
+    return get_unplaced_groups(doc, BuiltInCategory.OST_IOSModelGroups)
 
 
 def get_unplaced_model_group_ids(doc):
@@ -284,7 +323,7 @@ def get_unplaced_model_group_ids(doc):
     :rtype: List of Autodesk.Revit.DB.ElementId
     """
 
-    unplaced_groups = get_unplaced_groups(doc, rdb.BuiltInCategory.OST_IOSModelGroups)
+    unplaced_groups = get_unplaced_groups(doc, BuiltInCategory.OST_IOSModelGroups)
     ids = []
     for unplaced in unplaced_groups:
         ids.append(unplaced.Id)

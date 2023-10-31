@@ -19,18 +19,21 @@ This module contains a number of helper functions relating to purging Revit buil
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-from duHast.Revit.Common import purge_utils as rPurgeUtils
+from duHast.Revit.Common.purge_utils import get_used_unused_type_ids
 from duHast.Revit.BuildingPads.Utility import (
     RevitBuildingPadTypeSorting as rBuildingPadSort,
 )
-from duHast.Revit.BuildingPads import building_pads as rBuildingPads
+from duHast.Revit.BuildingPads.building_pads import (
+    get_all_building_pad_type_ids_in_model_by_category,
+    get_all_building_pad_type_ids_in_model_by_class,
+)
 
 #: Built in family name for pad
 BASIC_BUILDING_PAD_FAMILY_NAME = "Pad"
@@ -50,8 +53,8 @@ def get_used_building_pad_type_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rPurgeUtils.get_used_unused_type_ids(
-        doc, rBuildingPads.get_all_building_pad_type_ids_in_model_by_category, 1
+    ids = get_used_unused_type_ids(
+        doc, get_all_building_pad_type_ids_in_model_by_category, 1
     )
     return ids
 
@@ -90,8 +93,8 @@ def get_unused_non_in_place_building_pad_type_ids_to_purge(doc):
     """
 
     # get unused type ids
-    ids = rPurgeUtils.get_used_unused_type_ids(
-        doc, rBuildingPads.get_all_building_pad_type_ids_in_model_by_class, 0
+    ids = get_used_unused_type_ids(
+        doc, get_all_building_pad_type_ids_in_model_by_class, 0
     )
     # make sure there is at least on BuildingPad type per system family left in model
     building_pad_types = rBuildingPadSort.sort_building_pad_types_by_family_name(doc)

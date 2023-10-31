@@ -20,17 +20,20 @@ This module contains a number of helper functions relating to stair path annotat
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-import Autodesk.Revit.DB as rdb
-import Autodesk.Revit.DB.Architecture as rdbA
+from Autodesk.Revit.DB import FilteredElementCollector
+from Autodesk.Revit.DB.Architecture import StairsPathType
 
-from duHast.Revit.Annotation import arrow_heads as rArrow
+from duHast.Revit.Annotation.arrow_heads import (
+    get_arrow_head_ids_from_type,
+    ARROWHEAD_PARAS_STAIRS_PATH,
+)
 
 
 def get_all_stair_path_types(doc):
@@ -42,7 +45,7 @@ def get_all_stair_path_types(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of stair path types
     """
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsPathType)
+    return FilteredElementCollector(doc).OfClass(StairsPathType)
 
 
 def get_stairs_path_arrow_head_ids(doc):
@@ -54,7 +57,7 @@ def get_stairs_path_arrow_head_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    used_ids = rArrow.get_arrow_head_ids_from_type(
-        doc, get_all_stair_path_types, rArrow.ARROWHEAD_PARAS_STAIRS_PATH
+    used_ids = get_arrow_head_ids_from_type(
+        doc, get_all_stair_path_types, ARROWHEAD_PARAS_STAIRS_PATH
     )
     return used_ids

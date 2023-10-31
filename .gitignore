@@ -187,15 +187,15 @@ x64/
 .DS_Store
 
 #Sphinx
-/docsource/build
+/docsource/duHast
 /docs/doctrees
 docs/.buildinfo
 docs/.doctrees
 #Sphinx build output
-/docsource/C*
 docs/_build/
 
 # test processing logs
 /test/_rbp_flow/_Script/logs/*.log
 /test/_rbp_flow/_LogMarker/*.plist
 /test/_rbp_flow/_Output/*.csv
+*.pbix

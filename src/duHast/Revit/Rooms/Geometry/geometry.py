@@ -38,6 +38,7 @@ def get_room_boundary_loops(revit_room,
     """
     Returns all boundary loops for a rooms. Default value set to the center
     boundary location.
+
     :param revit_room: The room.
     :type revit_room: Autodesk.Revit.DB.Architecture.Room
     :return: List of boundary loops defining the room.
@@ -61,10 +62,11 @@ def get_points_from_room_boundaries(boundary_loops):
     - List of Lists because a room can be made up of multiple loops (holes in rooms!)
     - First nested list represents the outer boundary of a room
     - All loops are implicitly closed ( last point is not the first point again!)
+    
     :param boundary_loops: List of boundary loops defining the room.
     :type boundary_loops: List of lists of Autodesk.Revit.DB.BoundarySegment
     :return: A data geometry instance containing the points defining the boundary loop.
-    :rtype: :class:`.DataGeometry`
+    :rtype: :class:`.DataPolygon`
     """
 
     loop_counter = 0

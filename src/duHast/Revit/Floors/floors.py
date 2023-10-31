@@ -19,8 +19,8 @@ Revit floors helper functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -33,7 +33,13 @@ from duHast.Revit.Common import common as com
 from duHast.Revit.Family import family_utils as rFam
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import (
+    BuiltInCategory,
+    ElementCategoryFilter,
+    FilteredElementCollector,
+    FamilyInstance,
+    Floor,
+)
 
 from duHast.Revit.Floors.Utility import floors_filter as rFloorFilter
 
@@ -109,8 +115,8 @@ def get_all_floor_instances_in_model_by_category(doc):
     """
 
     return (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_Floors)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_Floors)
         .WhereElementIsNotElementType()
     )
 
@@ -128,11 +134,7 @@ def get_all_floor_instances_in_model_by_class(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    return (
-        rdb.FilteredElementCollector(doc)
-        .OfClass(rdb.Floor)
-        .WhereElementIsNotElementType()
-    )
+    return FilteredElementCollector(doc).OfClass(Floor).WhereElementIsNotElementType()
 
 
 def get_all_floor_type_ids_in_model_by_category(doc):
@@ -187,12 +189,8 @@ def get_in_place_floor_family_instances(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Floors)
-    return (
-        rdb.FilteredElementCollector(doc)
-        .OfClass(rdb.FamilyInstance)
-        .WherePasses(filter)
-    )
+    filter = ElementCategoryFilter(BuiltInCategory.OST_Floors)
+    return FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(filter)
 
 
 def get_all_in_place_floor_type_ids_in_model(doc):
@@ -207,6 +205,6 @@ def get_all_in_place_floor_type_ids_in_model(doc):
     """
 
     ids = rFam.get_all_in_place_type_ids_in_model_of_category(
-        doc, rdb.BuiltInCategory.OST_Floors
+        doc, BuiltInCategory.OST_Floors
     )
     return ids

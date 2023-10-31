@@ -325,22 +325,29 @@ False: Check if the location crosshair is in the view crop box
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.room_tags.move_tag_to_room">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_tags.</span></span><span class="sig-name descname"><span class="pre">move_tag_to_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_tags.move_tag_to_room" title="Permalink to this definition">¶</a></dt>
-<dd><p>Moves a room tag to the associated rooms location point.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param tag_id: The element id of the tag to be moved to the room.
-:type tag_id: Autodesk.Revit.DB.ElementId
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- Tag moving status returned in result.status. False if an exception occurred, otherwise True.
-- result.message will contain the name and number of the room.
-On exception (handled by optimizer itself!):
-- result.status (bool) will be False.
-- result.message will contain the name and number of the room and the exception message.</p>
-</div></blockquote>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_tags.</span></span><span class="sig-name descname"><span class="pre">move_tag_to_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_tags.move_tag_to_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves a room tag to the associated rooms location point.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>tag_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The element id of the tag to be moved to the room.</p></li>
+<li><p><strong>transaction_manager</strong> (<em>(</em><em>function</em><em>)</em>) – The transaction manager used to perform the modifications.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Tag moving status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the name and number of the room.</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the name and number of the room and the exception message.</p></li>
+</ul>
+</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>

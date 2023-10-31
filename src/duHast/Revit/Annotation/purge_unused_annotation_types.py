@@ -27,22 +27,50 @@ This module contains a number of helper functions relating to purging annotation
 #
 #
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import (
+    BuiltInParameter,
+    ElementId,
+    FilteredElementCollector,
+    ViewSchedule,
+)
 
-
-from duHast.Revit.Annotation import generic_annotation as rGenericAnno
-from duHast.Revit.Family import purge_unused_family_types as rFamPurge
-from duHast.Revit.Common import parameter_get_utils as rParaGet
-from duHast.Revit.Common import common as com
-from duHast.Revit.Annotation import annotation as rAnno
-from duHast.Revit.Annotation import dimensions as rDim
-from duHast.Revit.Annotation import multi_ref_annotation as rMultiRefAnno
-from duHast.Revit.Annotation import text as rText
-from duHast.Revit.Annotation import arrow_heads as rArrow
-from duHast.Revit.Annotation import independent_tags as rIndyTags
-from duHast.Revit.Annotation import spot_dimensions as rSpots
-from duHast.Revit.Annotation import stair_path as rStairPath
-from duHast.Revit.Common import purge_utils as rPurgeUtils
+from duHast.Revit.Annotation.generic_annotation import (
+    get_all_generic_annotation_type_ids_by_category,
+)
+from duHast.Revit.Family.purge_unused_family_types import (
+    get_unused_in_place_ids_for_purge,
+)
+from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value
+from duHast.Revit.Common.common import get_unused_type_ids_in_model
+from duHast.Revit.Annotation.annotation import get_anno_symbol_arrow_head_ids
+from duHast.Revit.Annotation.dimensions import (
+    get_all_dimension_elements,
+    get_dim_type_arrow_head_ids,
+    get_dim_types,
+    get_symbol_ids_from_dim_types,
+)
+from duHast.Revit.Annotation.multi_ref_annotation import (
+    get_all_multi_ref_annotation_elements,
+    get_all_similar_multi_reference_anno_types,
+    get_all_multi_ref_annotation_types,
+)
+from duHast.Revit.Annotation.text import (
+    get_all_text_annotation_elements,
+    get_text_type_arrow_head_ids,
+    get_all_text_types,
+)
+from duHast.Revit.Annotation.arrow_heads import get_arrow_type_ids_in_model
+from duHast.Revit.Annotation.independent_tags import (
+    get_independent_tag_type_arrow_head_ids,
+)
+from duHast.Revit.Annotation.spot_dimensions import (
+    get_spot_type_arrow_head_ids,
+    get_all_spot_elevation_symbol_ids_in_model,
+    get_all_spot_dim_types,
+    get_symbol_ids_from_spot_types,
+)
+from duHast.Revit.Annotation.stair_path import get_stairs_path_arrow_head_ids
+from duHast.Revit.Common.purge_utils import get_used_unused_type_ids
 
 
 # ------------------ used annotation types  ------------------
@@ -59,12 +87,12 @@ def get_used_text_type_ids_in_model(doc):
     """
 
     text_type_ids_used = []
-    col = rText.get_all_text_annotation_elements(doc)
+    col = get_all_text_annotation_elements(doc)
     for t in col:
         if t.GetTypeId() not in text_type_ids_used:
             text_type_ids_used.append(t.GetTypeId())
     # get all schedules and check their appearance text properties!
-    col = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSchedule)
+    col = FilteredElementCollector(doc).OfClass(ViewSchedule)
     for c in col:
         if c.BodyTextTypeId not in text_type_ids_used:
             text_type_ids_used.append(c.BodyTextTypeId)
@@ -86,7 +114,7 @@ def get_used_dim_type_ids_in_model(doc):
     """
 
     dim_type_ids_used = []
-    col = rDim.get_all_dimension_elements(doc)
+    col = get_all_dimension_elements(doc)
     for v in col:
         if v.GetTypeId() not in dim_type_ids_used:
             dim_type_ids_used.append(v.GetTypeId())
@@ -124,7 +152,7 @@ def get_used_multi_ref_dim_type_ids_in_model(doc):
     """
 
     dim_type_ids_used = []
-    col = rMultiRefAnno.get_all_multi_ref_annotation_elements(doc)
+    col = get_all_multi_ref_annotation_elements(doc)
     for v in col:
         if v.GetTypeId() not in dim_type_ids_used:
             dim_type_ids_used.append(v.GetTypeId())
@@ -142,12 +170,12 @@ def get_all_used_arrow_head_type_ids_in_model(doc):
     """
 
     used_ids = []
-    used_ids = used_ids + rDim.get_dim_type_arrow_head_ids(doc)
-    used_ids = used_ids + rText.get_text_type_arrow_head_ids(doc)
-    used_ids = used_ids + rIndyTags.get_independent_tag_type_arrow_head_ids(doc)
-    used_ids = used_ids + rSpots.get_spot_type_arrow_head_ids(doc)
-    used_ids = used_ids + rAnno.get_anno_symbol_arrow_head_ids(doc)
-    used_ids = used_ids + rStairPath.get_stairs_path_arrow_head_ids(doc)
+    used_ids = used_ids + get_dim_type_arrow_head_ids(doc)
+    used_ids = used_ids + get_text_type_arrow_head_ids(doc)
+    used_ids = used_ids + get_independent_tag_type_arrow_head_ids(doc)
+    used_ids = used_ids + get_spot_type_arrow_head_ids(doc)
+    used_ids = used_ids + get_anno_symbol_arrow_head_ids(doc)
+    used_ids = used_ids + get_stairs_path_arrow_head_ids(doc)
     filtered_ids = []
     for u in used_ids:
         if u not in filtered_ids:
@@ -168,8 +196,8 @@ def get_all_unused_text_type_ids_in_model(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    filtered_unused_text_type_ids = com.get_unused_type_ids_in_model(
-        doc, rText.get_all_text_types, get_used_text_type_ids_in_model
+    filtered_unused_text_type_ids = get_unused_type_ids_in_model(
+        doc, get_all_text_types, get_used_text_type_ids_in_model
     )
     return filtered_unused_text_type_ids
 
@@ -185,13 +213,11 @@ def get_all_unused_dim_type_ids_in_model(doc):
     """
 
     # get unused dimension type ids
-    filtered_unused_dim_type_ids = com.get_unused_type_ids_in_model(
-        doc, rDim.get_dim_types, get_used_dim_type_ids_in_model
+    filtered_unused_dim_type_ids = get_unused_type_ids_in_model(
+        doc, get_dim_types, get_used_dim_type_ids_in_model
     )
     # get all multi ref dimension types in model
-    multi_reference_anno_types = (
-        rMultiRefAnno.get_all_similar_multi_reference_anno_types(doc)
-    )
+    multi_reference_anno_types = get_all_similar_multi_reference_anno_types(doc)
     # get all dim styles used in multi refs
     used_dim_styles_in_multi_refs = get_used_dim_styles_from_multi_ref(
         doc, multi_reference_anno_types
@@ -213,9 +239,9 @@ def get_all_unused_multi_ref_dim_type_ids_in_model(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    return com.get_unused_type_ids_in_model(
+    return get_unused_type_ids_in_model(
         doc,
-        rMultiRefAnno.get_all_multi_ref_annotation_types,
+        get_all_multi_ref_annotation_types,
         get_used_multi_ref_dim_type_ids_in_model,
     )
 
@@ -231,7 +257,7 @@ def get_all_unused_arrow_type_ids_in_model(doc):
 
     unused_ids = []
     used_ids = get_all_used_arrow_head_type_ids_in_model(doc)
-    available_ids = rArrow.get_arrow_type_ids_in_model(doc)
+    available_ids = get_arrow_type_ids_in_model(doc)
     for a_id in available_ids:
         if a_id not in used_ids:
             unused_ids.append(a_id)
@@ -249,13 +275,11 @@ def get_unused_symbol_ids_from_spot_types(doc):
 
     ids = []
     ids_used = []
-    ids_available = rSpots.get_all_spot_elevation_symbol_ids_in_model(doc)
-    dim_ts = rSpots.get_all_spot_dim_types(doc)
+    ids_available = get_all_spot_elevation_symbol_ids_in_model(doc)
+    dim_ts = get_all_spot_dim_types(doc)
     for t in dim_ts:
-        id = rParaGet.get_built_in_parameter_value(
-            t, rdb.BuiltInParameter.SPOT_ELEV_SYMBOL
-        )
-        if id not in ids_used and id != rdb.ElementId.InvalidElementId and id != None:
+        id = get_built_in_parameter_value(t, BuiltInParameter.SPOT_ELEV_SYMBOL)
+        if id not in ids_used and id != ElementId.InvalidElementId and id != None:
             ids_used.append(id)
 
     # get unused ids
@@ -275,9 +299,7 @@ def get_unused_symbol_ids_from_spot_types_to_purge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rFamPurge.get_unused_in_place_ids_for_purge(
-        doc, get_unused_symbol_ids_from_spot_types
-    )
+    ids = get_unused_in_place_ids_for_purge(doc, get_unused_symbol_ids_from_spot_types)
     return ids
 
 
@@ -292,12 +314,12 @@ def get_used_generic_annotation_type_ids(doc):
 
     ids = []
     # get ids from symbols used in dim types
-    ids_dim_types = rDim.get_symbol_ids_from_dim_types(doc)
+    ids_dim_types = get_symbol_ids_from_dim_types(doc)
     # get ids from symbols used in spots
-    ids_spots = rSpots.get_symbol_ids_from_spot_types(doc)
+    ids_spots = get_symbol_ids_from_spot_types(doc)
     # get detail types used in model
-    ids_used_in_model = rPurgeUtils.get_used_unused_type_ids(
-        doc, rGenericAnno.get_all_generic_annotation_type_ids_by_category, 1
+    ids_used_in_model = get_used_unused_type_ids(
+        doc, get_all_generic_annotation_type_ids_by_category, 1
     )
     # build overall list
     for id in ids_used_in_model:
@@ -322,7 +344,7 @@ def get_unused_generic_annotation_type_ids(doc):
 
     ids = []
     ids_used = get_used_generic_annotation_type_ids(doc)
-    ids_all = rGenericAnno.get_all_generic_annotation_type_ids_by_category(doc)
+    ids_all = get_all_generic_annotation_type_ids_by_category(doc)
     for id in ids_all:
         if id not in ids_used:
             ids.append(id)
@@ -338,7 +360,5 @@ def get_unused_generic_annotation_ids_for_purge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rFamPurge.get_unused_in_place_ids_for_purge(
-        doc, get_unused_generic_annotation_type_ids
-    )
+    ids = get_unused_in_place_ids_for_purge(doc, get_unused_generic_annotation_type_ids)
     return ids

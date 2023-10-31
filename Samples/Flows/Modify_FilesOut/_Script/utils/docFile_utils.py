@@ -98,7 +98,7 @@ def build_default_file_list(
     match = False
     # read current files
     file_list = read_current_file(revision_data_file_path)
-    if file_list is not None and len(file_list) > 0:
+    if any(file_list):
         # loop over file data objects and search for match
         return_value.append_message("looking for match:".format(revit_file_name))
         for file_data in file_list:

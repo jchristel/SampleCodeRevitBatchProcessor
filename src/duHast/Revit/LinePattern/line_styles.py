@@ -40,14 +40,16 @@ from duHast.Revit.Common import delete as rDel
 def delete_line_styles_starts_with(doc, starts_with):
     """
     Deletes all line styles where the name starts with provided string
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param starts_with: Filter: style name needs to start with this string to be deleted.
     :type starts_with: str
-    :return:
-        Result class instance.
+    :return: Result class instance.
+
         - .result = True if all views where deleted. Otherwise False.
         - .message will contain deletion status.
+        
     :rtype: :class:`.Result`
     """
 

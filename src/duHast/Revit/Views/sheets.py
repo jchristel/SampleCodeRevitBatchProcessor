@@ -19,8 +19,8 @@ This module contains a number of helper functions relating to Revit view sheets.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -30,12 +30,13 @@ import clr
 
 import Autodesk.Revit.DB as rdb
 from duHast.Utilities import utility as util
-
+from duHast.Revit.Views.Utility.sheet_parameters import get_sheet_number
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 
 # required in lambda expressions!
 clr.AddReference("System.Core")
 import System
+
 clr.ImportExtensions(System.Linq)
 
 
@@ -85,17 +86,16 @@ def get_all_sheets(doc):
 
 
 def get_sheet_rev_by_sheet_number(doc, sheet_number):  # type # type: str
-
     """
     Returns the revision of a sheet identified by its number. Default value is '-'.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param sheet_number # type: The number of the sheet of which the revision is to be returned.
-    :type sheet_number # type: str
+    :param sheet_number: The number of the sheet of which the revision is to be returned.
+    :type sheet_number: str
     :raise: Any exception will need to be managed by the function caller.
-    :return:
-        The sheets current revision value.
-        If no matching sheet is found, '-' is returned.
+
+    :return: The sheet's current revision value. If no matching sheet is found, '-' is returned.
     :rtype: str
     """
 
@@ -114,18 +114,18 @@ def get_sheet_rev_by_sheet_number(doc, sheet_number):  # type # type: str
 
 
 def get_sheet_rev_by_sheet_name(doc, sheet_name):  # type # type: str
-
     """
     Returns the revision of a sheet identified by its name. Default value is '-'.
-    Since multiple sheets can have the same name it will return the revision of the first sheet matching the name.
+
+    Since multiple sheets can have the same name, it will return the revision of the first sheet matching the name.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param sheet_name # type: The name of the sheet of which the revision is to be returned.
-    :type sheet_name # type: str
+    :param sheet_name: The name of the sheet of which the revision is to be returned.
+    :type sheet_name: str
     :raise: Any exception will need to be managed by the function caller.
-    :return:
-        The sheets current revision value.
-        If no matching sheet is found, '-' is returned.
+
+    :return: The sheet's current revision value. If no matching sheet is found, '-' is returned.
     :rtype: str
     """
 
@@ -141,3 +141,21 @@ def get_sheet_rev_by_sheet_name(doc, sheet_name):  # type # type: str
         rev_p = sheet.get_Parameter(rdb.BuiltInParameter.SHEET_CURRENT_REVISION)
         rev_value = util.pad_single_digit_numeric_string(rev_p.AsString())
     return rev_value
+
+
+def get_sheet_num_to_elem_dict(rvt_doc):
+    """
+    Get a dictionary of sheet numbers and sheets
+    :param rvt_doc: The Revit document to get the sheets from
+    :type rvt_doc: Document
+    :return: A dictionary of sheet numbers and sheets
+    :rtype: dict
+    """
+    num_elem_dict = {}
+    all_sheets = get_all_sheets(rvt_doc)
+
+    for sheet in all_sheets:
+        sht_num = get_sheet_number(sheet)
+        num_elem_dict[sht_num] = sheet
+
+    return num_elem_dict

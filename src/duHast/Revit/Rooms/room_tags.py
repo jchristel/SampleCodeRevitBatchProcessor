@@ -19,32 +19,38 @@ This module contains a number of helper functions relating to Revit rooms tags.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-import Autodesk.Revit.DB as rdb
-from duHast.Revit.Common import transaction as rTran
+from Autodesk.Revit.DB import Element, Transaction
+from duHast.Revit.Common.transaction import in_transaction
 from duHast.Utilities.Objects import result as res
 
 
-def move_tag_to_room(doc, tag_id):
+def move_tag_to_room(doc, tag_id, transaction_manager=in_transaction):
     """
     Moves a room tag to the associated rooms location point.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param tag_id: The element id of the tag to be moved to the room.
     :type tag_id: Autodesk.Revit.DB.ElementId
-    :return:
-        Result class instance.
+    :param transaction_manager: The transaction manager used to perform the modifications.
+    :type transaction_manager: (function)
+    :return: Result class instance.
+
         - Tag moving status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the name and number of the room.
+
         On exception (handled by optimizer itself!):
+
         - result.status (bool) will be False.
         - result.message will contain the name and number of the room and the exception message.
+        
     :rtype: :class:`.Result`
     """
 
@@ -52,7 +58,7 @@ def move_tag_to_room(doc, tag_id):
     rt = doc.GetElement(tag_id)
     room_tag_point = rt.Location.Point
     room_location_point = rt.Room.Location.Point
-    room_data = str(rt.Room.Number) + " " + str(rdb.Element.Name.GetValue(rt.Room))
+    room_data = "{} {}".format(rt.Room.Number, Element.Name.GetValue(rt.Room))
     translation = room_location_point - room_tag_point
 
     def action():
@@ -69,6 +75,6 @@ def move_tag_to_room(doc, tag_id):
             )
         return action_return_value
 
-    transaction = rdb.Transaction(doc, "Moving room tag to room : {}".format(room_data))
-    return_value.update(rTran.in_transaction(transaction, action))
+    transaction = Transaction(doc, "Moving room tag to room : {}".format(room_data))
+    return_value.update(transaction_manager(transaction, action))
     return return_value

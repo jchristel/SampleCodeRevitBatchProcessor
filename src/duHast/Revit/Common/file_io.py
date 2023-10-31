@@ -27,7 +27,15 @@ Revit file operations utility functions.
 #
 
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import (
+    RelinquishOptions,
+    TransactWithCentralOptions,
+    SaveAsOptions,
+    SimpleWorksetConfiguration,
+    SynchronizeWithCentralOptions,
+    WorksharingUtils,
+    WorksharingSaveAsOptions,
+)
 
 from duHast.Utilities import files_io as fileIO
 from duHast.Utilities.Objects import result as res
@@ -52,9 +60,9 @@ def sync_file(
 
     return_value = res.Result()
     # set up sync settings
-    ro = rdb.RelinquishOptions(True)
-    transaction_options = rdb.TransactWithCentralOptions()
-    sync = rdb.SynchronizeWithCentralOptions()
+    ro = RelinquishOptions(True)
+    transaction_options = TransactWithCentralOptions()
+    sync = SynchronizeWithCentralOptions()
     sync.Comment = "Synchronized by Revit Batch Processor"
     sync.Compact = compact_central_file
     sync.SetRelinquishOptions(ro)
@@ -64,7 +72,7 @@ def sync_file(
         doc.Save()
         doc.SynchronizeWithCentral(transaction_options, sync)
         # relinquish all
-        rdb.WorksharingUtils.RelinquishOwnership(doc, ro, transaction_options)
+        WorksharingUtils.RelinquishOwnership(doc, ro, transaction_options)
         return_value.message = "Successfully synched file."
     except Exception as e:
         return_value.update_sep(False, "Failed with exception: {}".format(e))
@@ -95,12 +103,12 @@ def saves_as_workshared_file(
 
     return_value = res.Result()
     try:
-        worksharing_save_as_option = rdb.WorksharingSaveAsOptions()
+        worksharing_save_as_option = WorksharingSaveAsOptions()
         worksharing_save_as_option.OpenWorksetsDefault = (
-            rdb.SimpleWorksetConfiguration.AskUserToSpecify
+            SimpleWorksetConfiguration.AskUserToSpecify
         )
         worksharing_save_as_option.SaveAsCentral = True
-        save_option = rdb.SaveAsOptions()
+        save_option = SaveAsOptions()
         save_option.OverwriteExistingFile = True
         save_option.SetWorksharingOptions(worksharing_save_as_option)
         save_option.MaximumBackups = 5
@@ -120,7 +128,6 @@ def save_as_family(
     file_extension=".rfa",
     compact_file=False,
 ):
-
     """
     Saves a family file under new name in given location.
 
@@ -164,7 +171,7 @@ def save_as_family(
         )
     try:
         # setup save as option
-        so = rdb.SaveAsOptions()
+        so = SaveAsOptions()
         so.OverwriteExistingFile = True
         so.MaximumBackups = 5
         so.SetWorksharingOptions(None)
@@ -182,7 +189,6 @@ def save_as_family(
 def save_as(
     doc, target_directory_path, current_full_file_name, name_data, file_extension=".rvt"
 ):
-
     """
     Saves a project file under new name in given location.
 
@@ -260,7 +266,7 @@ def save_file(
 
     return_value = res.Result()
     try:
-        save_options = rdb.SaveOptions()
+        save_options = SaveOptions()
         save_options.Compact = compact_file
         doc.Save(save_options)
         return_value.update_sep(True, "Saved revit file!")

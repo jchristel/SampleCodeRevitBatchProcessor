@@ -121,6 +121,37 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.base.Base.string_to_utf">
+<span class="sig-name descname"><span class="pre">string_to_utf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.base.Base.string_to_utf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to convert any properties stored as string to utf-8 in to json conversion of all class properties…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>o</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.base.Base.to_json_utf">
+<span class="sig-name descname"><span class="pre">to_json_utf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.base.Base.to_json_utf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the instance of this class to json, any string properties are converted to utf-8</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A Json object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>json</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="duHast.Utilities.Objects.base.Base.class_to_dict">
 <span class="sig-name descname"><span class="pre">class_to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.base.Base.class_to_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all class properties and their values as a dictionary</p>
@@ -141,7 +172,34 @@
 <span id="duhast-utilities-objects-result-module"></span><h2>duHast.Utilities.Objects.result module<a class="headerlink" href="#module-duHast.Utilities.Objects.result" title="Permalink to this heading">¶</a></h2>
 <section id="a-class-used-to-return-status-messages-and-objects-back-to-a-caller">
 <h3>A class used to return status, messages and objects back to a caller.<a class="headerlink" href="#a-class-used-to-return-status-messages-and-objects-back-to-a-caller" title="Permalink to this heading">¶</a></h3>
-<p>A class used to return the value if any, a message and the status of a method (true if everything is ok or false if something went wrong).</p>
+<p>The <cite>Result</cite> class is a subclass of the <cite>base.Base</cite> class and is used to store and manipulate the results of a process. It has fields for <cite>message</cite>, <cite>status</cite>, and <cite>result</cite>, and provides methods to update these fields.</p>
+<dl class="simple">
+<dt>Example Usage:</dt><dd><p>result = Result()  # Create a new instance of the Result class
+result.append_message(“An error occurred”)  # Append a new message to the existing message
+result.update_status(False)  # Update the status to False
+result.update_sep(True, “Process completed successfully”)  # Update the status and append a new message
+print(result)  # Print the result object</p>
+</dd>
+<dt>Methods:</dt><dd><dl class="simple">
+<dt>__init__(self):</dt><dd><p>Initializes the Result object with default values for <cite>message</cite>, <cite>status</cite>, and <cite>result</cite></p>
+</dd>
+<dt>__repr__(self):</dt><dd><p>Returns a string representation of the Result object, including the formatted message, status, and result</p>
+</dd>
+<dt>append_message(self, message):</dt><dd><p>Appends a new line and new message string to the existing message</p>
+</dd>
+<dt>update(self, otherResult):</dt><dd><p>Updates the Result object using another Result object, updating the message, status, and result</p>
+</dd>
+<dt>update_sep(self, status, message):</dt><dd><p>Updates the status and message properties of the Result object</p>
+</dd>
+<dt>update_status(self, status):</dt><dd><p>Updates the status property of the Result object</p>
+</dd>
+</dl>
+</dd>
+<dt>Fields:</dt><dd><p>message: A string representing the message of the result
+status: A boolean representing the status of the result
+result: A list to store the result items</p>
+</dd>
+</dl>
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Utilities.Objects.result.Result">
@@ -244,14 +302,27 @@
 <dt class="sig sig-object py" id="duHast.Utilities.Objects.timer.Timer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Utilities.Objects.timer.</span></span><span class="sig-name descname"><span class="pre">Timer</span></span><a class="headerlink" href="#duHast.Utilities.Objects.timer.Timer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
-<p>Class constructor</p>
+<p>A class that provides functionality to measure the elapsed time between starting and stopping the timer.</p>
+<p>Example Usage:
+<code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">timer</span> <span class="pre">=</span> <span class="pre">Timer()</span>&#160; <span class="pre">#</span> <span class="pre">Create</span> <span class="pre">a</span> <span class="pre">new</span> <span class="pre">instance</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">Timer</span> <span class="pre">class</span>
+<span class="pre">timer.start()</span>&#160; <span class="pre">#</span> <span class="pre">Start</span> <span class="pre">the</span> <span class="pre">timer</span>
+<span class="pre">#</span> <span class="pre">Perform</span> <span class="pre">some</span> <span class="pre">operations</span>
+<span class="pre">timer.stop()</span>&#160; <span class="pre">#</span> <span class="pre">Stop</span> <span class="pre">the</span> <span class="pre">timer</span> <span class="pre">and</span> <span class="pre">get</span> <span class="pre">the</span> <span class="pre">elapsed</span> <span class="pre">time</span>
+<span class="pre">`</span></code></p>
+<p>Methods:
+- __init__(): Initializes a new instance of the Timer class.
+- start(): Starts a new timer.
+- stop(): Stops the timer and returns the elapsed time.
+- is_running(): Checks whether the timer is running.</p>
+<p>Initializes a new instance of the Timer class.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Utilities.Objects.timer.Timer.start">
 <span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.timer.Timer.start" title="Permalink to this definition">¶</a></dt>
-<dd><p>Start a new timer</p>
+<dd><p>Starts a new timer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#duHast.Utilities.Objects.timer.TimerError" title="duHast.Utilities.Objects.timer.TimerError"><strong>TimerError</strong></a> – When timer is running already.</p>
+<dd class="field-odd"><p><a class="reference internal" href="#duHast.Utilities.Objects.timer.TimerError" title="duHast.Utilities.Objects.timer.TimerError"><strong>TimerError</strong></a> – When the timer is already running.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -259,10 +330,10 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Utilities.Objects.timer.Timer.stop">
 <span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.timer.Timer.stop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stop the timer, and report the elapsed time.</p>
+<dd><p>Stops the timer and returns the elapsed time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#duHast.Utilities.Objects.timer.TimerError" title="duHast.Utilities.Objects.timer.TimerError"><strong>TimerError</strong></a> – When timer is not running yet.</p>
+<dd class="field-odd"><p><a class="reference internal" href="#duHast.Utilities.Objects.timer.TimerError" title="duHast.Utilities.Objects.timer.TimerError"><strong>TimerError</strong></a> – When the timer is not running yet.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The elapsed time since the timer has started.</p>
@@ -276,7 +347,15 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Utilities.Objects.timer.Timer.is_running">
 <span class="sig-name descname"><span class="pre">is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.timer.Timer.is_running" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check whether the stop watch running.</p>
+<dd><p>Checks whether the timer is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the timer is running, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

@@ -154,6 +154,11 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Levels.levels.get_level_elevation_by_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels.</span></span><span class="sig-name descname"><span class="pre">get_level_elevation_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_level_elevation_by_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels.get_all_level_heads_by_category">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels.</span></span><span class="sig-name descname"><span class="pre">get_all_level_heads_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_all_level_heads_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a filtered element collector of all level head types in the model.</p>
@@ -292,23 +297,32 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels_appearance.hide_both_heads">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels_appearance.</span></span><span class="sig-name descname"><span class="pre">hide_both_heads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.hide_both_heads" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hides both heads of levels in given view.
-:param doc: The current model document.
-:type doc: Autodesk.Revit.DB.Document
-:param level: The level of which a heads visibility is to be toggled.
-:type level: Autodesk.Revit.DB.Level
-:param view: The view in which a level heads visibility is to be toggled.
-:type view: Autodesk.Revit.DB.View
-:return:</p>
+<dd><p>Hides both heads of levels in the given view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>level</strong> (<em>Autodesk.Revit.DB.Level</em>) – The level of which a head’s visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a level head’s visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p><cite>result.status</cite> (bool): True if all levels’ head(s) visibility was switched off successfully, otherwise False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains the name(s) of the level(s) where a head visibility was set.</p></li>
+<li><p><cite>result.result</cite> (list): Empty list.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p>On exception:</p>
 <blockquote>
-<div><p>Result class instance.
-- result.status. True if all levels head(s) visibility was switched off successfully, otherwise False.
-- result.message will contain the name(s) of the level(s) where a head visibility was set.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message including the level name.
-- result.result will be empty</p>
+<div><ul class="simple">
+<li><p><cite>result.status</cite> (bool) will be False.</p></li>
+<li><p><cite>result.message</cite> (str) will contain a generic exception message including the level name.</p></li>
+<li><p><cite>result.result</cite> (list) will be empty.</p></li>
+</ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -320,25 +334,30 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels_appearance.show_head_zero_end">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels_appearance.</span></span><span class="sig-name descname"><span class="pre">show_head_zero_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.show_head_zero_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>Turns on level heads at zero end in specified view.
-:param doc: The current model document.
-:type doc: Autodesk.Revit.DB.Document
-:param level: The levels of which a heads visibility is to be toggled.
-:type level: [Autodesk.Revit.DB.Level]
-:param view: The view in which a level heads visibility is to be toggled.
-:type view: Autodesk.Revit.DB.View
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- result.status. True if all levels head(s) visibility at zero end was set to visible successfully, otherwise False.
-- result.message will contain the name(s) of the level(s) where a head visibility was set.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message including the level name.
-- result.result will be empty</p>
-</div></blockquote>
+<dd><p>Turns on level heads at zero end in specified view.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>level</strong> (<em>[</em><em>Autodesk.Revit.DB.Level</em><em>]</em>) – The levels of which a heads visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a level heads visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all levels head(s) visibility at zero end was set to visible successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the level(s) where a head visibility was set.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the level name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
@@ -348,25 +367,30 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels_appearance.show_head_one_end">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels_appearance.</span></span><span class="sig-name descname"><span class="pre">show_head_one_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.show_head_one_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>Turns on level heads at One end in specified view.
-:param doc: The current model document.
-:type doc: Autodesk.Revit.DB.Document
-:param level: The levels of which a heads visibility is to be toggled.
-:type level: [Autodesk.Revit.DB.Level]
-:param view: The view in which a level heads visibility is to be toggled.
-:type view: Autodesk.Revit.DB.View
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- result.status. True if all levels head(s) visibility at one end was set to visible successfully, otherwise False.
-- result.message will contain the name(s) of the level(s) where a head visibility was set.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message including the level name.
-- result.result will be empty</p>
-</div></blockquote>
+<dd><p>Turns on level heads at One end in specified view.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>level</strong> (<em>[</em><em>Autodesk.Revit.DB.Level</em><em>]</em>) – The levels of which a heads visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a level heads visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all levels head(s) visibility at one end was set to visible successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the level(s) where a head visibility was set.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the level name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
@@ -376,27 +400,31 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels_appearance.toggle_head_end">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels_appearance.</span></span><span class="sig-name descname"><span class="pre">toggle_head_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.toggle_head_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>Toggles level head visibility on specified end for given level in given views.
-:param doc: The current model document.
-:type doc: Autodesk.Revit.DB.Document
-:param level: The level of which a heads visibility is to be toggled.
-:type level: Autodesk.Revit.DB.Level
-:param view: The view in which a level heads visibility is to be toggled.
-:type view: Autodesk.Revit.DB.View
-:param end_identifier: The end of the level to be modified.
-:type view: Autodesk.Revit.DB.DatumEnds
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- result.status. True if all levels head(s) visibility was changed successfully, otherwise False.
-- result.message will contain the name(s) of the level(s) where a head visibility was changed.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message including the level name.
-- result.result will be empty</p>
-</div></blockquote>
+<dd><p>Toggles level head visibility on specified end for given level in given views.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>level</strong> (<em>Autodesk.Revit.DB.Level</em>) – The level of which a heads visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.DatumEnds</em>) – The view in which a level heads visibility is to be toggled.</p></li>
+<li><p><strong>end_identifier</strong> – The end of the level to be modified.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all levels head(s) visibility was changed successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the level(s) where a head visibility was changed.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the level name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
@@ -406,25 +434,30 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels_appearance.toggle_head_one_end">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels_appearance.</span></span><span class="sig-name descname"><span class="pre">toggle_head_one_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.toggle_head_one_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>Toggles level head visibility on one end for given levels
-:param doc: The current model document.
-:type doc: Autodesk.Revit.DB.Document
-:param levels: The levels of which a heads visibility at one end is to be toggled.
-:type levels: [Autodesk.Revit.DB.Level]
-:param view: The view in which a level heads visibility is to be toggled.
-:type view: Autodesk.Revit.DB.View
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- result.status. True if all levels head(s) visibility at one end was changed successfully, otherwise False.
-- result.message will contain the name(s) of the level(s) where a head visibility was changed.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message including the level name.
-- result.result will be empty</p>
-</div></blockquote>
+<dd><p>Toggles level head visibility on one end for given levels</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>levels</strong> (<em>[</em><em>Autodesk.Revit.DB.Level</em><em>]</em>) – The levels of which a heads visibility at one end is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a level heads visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all levels head(s) visibility at one end was changed successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the level(s) where a head visibility was changed.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the level name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
@@ -434,25 +467,30 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels_appearance.toggle_head_zero_end">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels_appearance.</span></span><span class="sig-name descname"><span class="pre">toggle_head_zero_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.toggle_head_zero_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>Toggles level head visibility on zero end for given levels
-:param doc: The current model document.
-:type doc: Autodesk.Revit.DB.Document
-:param levels: The levels of which a head visibility at zero end is to be toggled.
-:type levels: [Autodesk.Revit.DB.Level]
-:param view: The view in which a level heads visibility is to be toggled.
-:type view: Autodesk.Revit.DB.View
-:return:</p>
-<blockquote>
-<div><p>Result class instance.
-- result.status. True if all level head(s) visibility at one end was changed successfully, otherwise False.
-- result.message will contain the name(s) of the level(s) where a head visibility was changed.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message including the level name.
-- result.result will be empty</p>
-</div></blockquote>
+<dd><p>Toggles level head visibility on zero end for given levels</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>levels</strong> (<em>[</em><em>Autodesk.Revit.DB.Level</em><em>]</em>) – The levels of which a head visibility at zero end is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a level heads visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all level head(s) visibility at one end was changed successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the level(s) where a head visibility was changed.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the level name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>

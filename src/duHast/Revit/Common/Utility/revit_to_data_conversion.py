@@ -34,6 +34,21 @@ A number of functions used to revit elements to data storage classes.
 
 from duHast.Revit.Common.Objects.Data.colour_base import ColourBase
 
+from Autodesk.Revit.DB import ViewDetailLevel
+
+# dictionary conversion for view detail level to int
+VIEW_DETAIL_LEVEL_NAME_MAPPING = {
+    ViewDetailLevel.Undefined: -1,
+    ViewDetailLevel.Coarse: 0,
+    ViewDetailLevel.Medium: 1,
+    ViewDetailLevel.Fine: 2,
+}
+
+# Create a reverse mapping of view detail enum values by swapping keys and values
+VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE = {
+    v: k for k, v in VIEW_DETAIL_LEVEL_NAME_MAPPING.items()
+}
+
 def to_colour (revit_colour):
     """
     Convertes a Revit colour instance to a ColourBase storage instance
@@ -47,9 +62,10 @@ def to_colour (revit_colour):
 
     c = ColourBase()
     try:
-        c.red = revit_colour.Red
-        c.green = revit_colour.Green
-        c.blue = revit_colour.Blue
+        # convert byte values to integers!
+        c.red = int(revit_colour.Red)
+        c.green = int(revit_colour.Green)
+        c.blue = int(revit_colour.Blue)
     except Exception as e:
         c.red = -1
         c.green = -1

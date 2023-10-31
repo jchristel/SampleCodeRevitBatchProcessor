@@ -4,6 +4,22 @@ duHast.Revit.Common.Utility package
 Submodules
 ----------
 
+duHast.Revit.Common.Utility.element\_copying module
+---------------------------------------------------
+
+.. automodule:: duHast.Revit.Common.Utility.element_copying
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Common.Utility.element\_spatial\_utils module
+----------------------------------------------------------
+
+.. automodule:: duHast.Revit.Common.Utility.element_spatial_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Common.Utility.revit\_to\_data\_conversion module
 --------------------------------------------------------------
 

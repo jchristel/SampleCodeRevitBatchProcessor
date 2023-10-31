@@ -19,14 +19,14 @@ This module contains a number of helper functions relating to purging Revit fami
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
-from duHast.Revit.Common import purge_utils as rPurgeUtils
-from duHast.Utilities import utility as util
+from duHast.Revit.Common.purge_utils import has_dependent_elements
+from duHast.Utilities.utility import remove_items_from_list
 from duHast.Revit.Family.family_utils import (
     get_family_symbols_ids,
     get_symbols_from_type,
@@ -59,19 +59,21 @@ def family_all_types_in_use(fam_type_ids, used_type_ids):
 
 def get_unused_in_place_ids_for_purge(doc, unused_type_getter):
     """
-    Filters symbol(type) ids and family ids (when not a single type of given family is in use) of families.
-    The returned list of ids can be just unused family symbols or entire families if none of their symbols are in use.
-    in terms of purging its faster to delete an entire family definition rather then deleting it's symbols first and then the
-    definition.
+    Filters symbol (type) IDs and family IDs of families.
+
+    The returned list of IDs can be either unused family symbols or entire families if none of their symbols are in use. 
+    In terms of purging, it's faster to delete an entire family definition rather than deleting its symbols first and then the definition.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param unused_type_getter:
-        A function returning ids of unused symbols (family types) as a list.
-        It requires as argument the current model document only.
-    :type unused_type_getter: function (doc) -> list Autodesk.Revit.DB.ElementId
-    :return: A list of Element Ids representing the family symbols and or family id's matching filter.
-    :rtype: list Autodesk.Revit.DB.ElementId
+
+    :param unused_type_getter: A function returning IDs of unused symbols (family types) as a list. It requires the current model document as an argument.
+    :type unused_type_getter: function (doc) -> list of Autodesk.Revit.DB.ElementId
+
+    :return: A list of Element IDs representing the family symbols and/or family IDs matching the filter.
+    :rtype: list of Autodesk.Revit.DB.ElementId
     """
+
 
     unused_ids = []
     unused_family_ids = []
@@ -84,7 +86,7 @@ def get_unused_in_place_ids_for_purge(doc, unused_type_getter):
     for key, value in families.items():
         if family_all_types_in_use(value, unused_type_ids):
             unused_family_ids.append(key)
-            unused_type_ids = util.remove_items_from_list(unused_type_ids, value)
+            unused_type_ids = remove_items_from_list(unused_type_ids, value)
     # check whether entire families can be purged and if so add their ids to list to be returned
     if len(unused_family_ids) > 0:
         unused_ids = unused_family_ids + unused_type_ids
@@ -95,20 +97,24 @@ def get_unused_in_place_ids_for_purge(doc, unused_type_getter):
 
 def get_used_unused_type_ids(doc, type_id_getter, use_type=0, exclude_shared_fam=True):
     """
-    Filters types obtained by past in type_id_getter method and depending on use_type past in returns either the used or unused symbols of a family
+    Filters types obtained by passing in the `type_id_getter` method and, depending on `use_type`, returns either the used or unused symbols of a family.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param type_id_getter:
-        A function returning ids of symbols (family types) as a list, requires as argument:
-        the current model doc,
-        ICollection of built in categories,
-        bool: exclude shared families
-    :type type_id_getter: function (doc, ICollection, bool) -> list[Autodesk.Revit.DB.ElementId]
-    :param use_type: 0, no dependent elements (not used); 1: has dependent elements(is in use)
+
+    :param type_id_getter: A function returning IDs of symbols (family types) as a list. It requires the following arguments:
+        - The current model document.
+        - ICollection of built-in categories.
+        - A boolean: exclude shared families.
+    :type type_id_getter: function (doc, ICollection, bool) -> list of Autodesk.Revit.DB.ElementId
+
+    :param use_type: 0 for no dependent elements (not used); 1 for has dependent elements (is in use).
     :type use_type: int
-    :return: A list of Element Ids representing the family symbols matching filter.
+
+    :return: A list of Element IDs representing the family symbols matching the filter.
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
+
 
     # get all types elements available
     all_loadable_three_d_type_ids = type_id_getter(
@@ -121,7 +127,7 @@ def get_used_unused_type_ids(doc, type_id_getter, use_type=0, exclude_shared_fam
     ids = []
     for type_id in all_type_ids:
         type = doc.GetElement(type_id)
-        has_dependents = rPurgeUtils.has_dependent_elements(doc, type)
+        has_dependents = has_dependent_elements(doc, type)
         if has_dependents == use_type:
             ids.append(type_id)
     return ids

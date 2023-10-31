@@ -27,8 +27,8 @@ Revit solids helper functions
 #
 
 
-import Autodesk.Revit.DB as rdb
-from duHast.Data.Objects.Properties.Geometry import from_revit_conversion as rCon
+from Autodesk.Revit.DB import Options, Solid
+from duHast.Data.Objects.Properties.Geometry.from_revit_conversion import convert_solid_to_flattened_2d_points
 
 
 def get_2d_points_from_solid(element):
@@ -46,19 +46,19 @@ def get_2d_points_from_solid(element):
 
     all_element_points = []
     # get geometry from element
-    opt = rdb.Options()
+    opt = Options()
     fr1_geom = element.get_Geometry(opt)
     solids = []
     # check geometry for Solid elements
     # todo check for FamilyInstance geometry ( in place families!)
     for item in fr1_geom:
-        if type(item) is rdb.Solid:
+        if type(item) is Solid:
             solids.append(item)
 
     # process solids to points
     # in place families may have more then one solid
     for s in solids:
-        points_per_solid = rCon.convert_solid_to_flattened_2d_points(s)
+        points_per_solid = convert_solid_to_flattened_2d_points(s)
         if len(points_per_solid) > 0:
             for points_lists in points_per_solid:
                 all_element_points.append(points_lists)

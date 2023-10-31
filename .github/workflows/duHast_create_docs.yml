@@ -1,0 +1,49 @@
+name: Step 1 - Check version, publish docs
+
+on:
+  push:
+    branches:
+      - DuHast
+
+jobs:
+  check:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN}}
+        ref: ${{ github.head_ref }}
+        fetch-depth: 0
+
+    - name: Setup Python environment
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Check setup.cfg file
+      run: |
+        python $env:GITHUB_WORKSPACE\.github\workflows\check_setup_file.py
+      id: check_version_changed
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install Sphinx==7.0.1
+        pip install sphinx-adc-theme==0.1.7
+
+    - name: Create .rst files
+      run: |
+        sphinx-apidoc -f -o docsource/duHast src/duHast/
+        
+    - name: Convert to html
+      run: |
+        sphinx-build -b html docsource/ docs/
+
+    - name: Commit update files back to main branch
+      run: |
+        git config --global user.name 'Github Action'
+        git config --global user.email 'action@github.com'
+        git add .
+        git commit -m "Committed changes made by GitHub Action"
+        git push -f

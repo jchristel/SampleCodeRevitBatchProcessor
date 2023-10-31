@@ -348,27 +348,34 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.show_bubble_end">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">show_bubble_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_bubble</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.show_bubble_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>Toggles grid bubble visibility on specified end for given grid.
-:param doc: The current model document.
-:type doc: Autodesk.Revit.DB.Document
-:param grid: The grid of which a bubbles visibility is to be toggled.
-:type grid: Autodesk.Revit.DB.Grid
-:param view: The view in which a grid bubbles visibility is to be toggled.
-:type view: Autodesk.Revit.DB.View
-:param end_identifier: An enumerated type representing ends of a datum plane.
-:type end_identifier: Autodesk.Revit.DB.DatumEnds
-:param show_bubble: True bubble will switched on, False it will be switched off
-:type show_bubble: bool
-:return:</p>
+<dd><p>Toggles grid bubble visibility on the specified end for a given grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grid</strong> (<em>Autodesk.Revit.DB.Grid</em>) – The grid of which a bubble’s visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a grid bubble’s visibility is to be toggled.</p></li>
+<li><p><strong>end_identifier</strong> (<em>Autodesk.Revit.DB.DatumEnds</em>) – An enumerated type representing ends of a datum plane.</p></li>
+<li><p><strong>show_bubble</strong> (<em>bool</em>) – True if the bubble will be switched on, False if it will be switched off.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p><cite>result.status</cite> (bool): True if the grid bubble(s) visibility was set successfully, otherwise False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains the name(s) of the grid(s) where bubble visibility was set.</p></li>
+<li><p><cite>result.result</cite> (list): Empty list.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p>On exception:</p>
 <blockquote>
-<div><p>Result class instance.
-- result.status. True if all grids bubble(s) visibility was set successfully, otherwise False.
-- result.message will contain the name(s) of the grid(s) where a bubble visibility was set.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message including the grid name.
-- result.result will be empty</p>
+<div><ul class="simple">
+<li><p><cite>result.status</cite> (bool) will be False.</p></li>
+<li><p><cite>result.message</cite> (str) will contain a generic exception message including the grid name.</p></li>
+<li><p><cite>result.result</cite> (list) will be empty.</p></li>
+</ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -380,23 +387,32 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.hide_both_bubbles">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">hide_both_bubbles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.hide_both_bubbles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hides both bubbles of grids in given view.
-:param doc: The current model document.
-:type doc: Autodesk.Revit.DB.Document
-:param grid: The grid of which a bubbles visibility is to be toggled.
-:type grid: Autodesk.Revit.DB.Grid
-:param view: The view in which a grid bubbles visibility is to be toggled.
-:type view: Autodesk.Revit.DB.View
-:return:</p>
+<dd><p>Hides both bubbles of grids in the given view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grid</strong> (<em>Autodesk.Revit.DB.Grid</em>) – The grid for which bubble visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which grid bubble visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p><cite>result.status</cite> (bool): True if all grid bubble(s) visibility was switched off successfully, otherwise False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains the name(s) of the grid(s) where bubble visibility was set.</p></li>
+<li><p><cite>result.result</cite> (list): Empty list.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p>On exception:</p>
 <blockquote>
-<div><p>Result class instance.
-- result.status. True if all grids bubble(s) visibility was switched off successfully, otherwise False.
-- result.message will contain the name(s) of the grid(s) where a bubble visibility was set.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message including the grid name.
-- result.result will be empty</p>
+<div><ul class="simple">
+<li><p><cite>result.status</cite> (bool) will be False.</p></li>
+<li><p><cite>result.message</cite> (str) will contain a generic exception message including the grid name.</p></li>
+<li><p><cite>result.result</cite> (list) will be empty.</p></li>
+</ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -408,23 +424,32 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.show_bubble_zero_end">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">show_bubble_zero_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.show_bubble_zero_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>Turns on grid bubbles at zero end in specified view.
-:param doc: The current model document.
-:type doc: Autodesk.Revit.DB.Document
-:param grid: The grids of which a bubbles visibility is to be toggled.
-:type grid: [Autodesk.Revit.DB.Grid]
-:param view: The view in which a grid bubbles visibility is to be toggled.
-:type view: Autodesk.Revit.DB.View
-:return:</p>
+<dd><p>Turns on grid bubbles at the zero end in the specified view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grid</strong> (<em>List</em><em>[</em><em>Autodesk.Revit.DB.Grid</em><em>]</em>) – The grids for which bubble visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which grid bubble visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p><cite>result.status</cite> (bool): True if all grid bubble(s) visibility at the zero end was set to visible successfully, otherwise False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains the name(s) of the grid(s) where bubble visibility was set.</p></li>
+<li><p><cite>result.result</cite> (list): Empty list.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p>On exception:</p>
 <blockquote>
-<div><p>Result class instance.
-- result.status. True if all grids bubble(s) visibility at zero end was set to visible successfully, otherwise False.
-- result.message will contain the name(s) of the grid(s) where a bubble visibility was set.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message including the grid name.
-- result.result will be empty</p>
+<div><ul class="simple">
+<li><p><cite>result.status</cite> (bool) will be False.</p></li>
+<li><p><cite>result.message</cite> (str) will contain a generic exception message including the grid name.</p></li>
+<li><p><cite>result.result</cite> (list) will be empty.</p></li>
+</ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -436,23 +461,32 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.show_bubble_one_end">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">show_bubble_one_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.show_bubble_one_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>Turns on grid bubbles at One end in specified view.
-:param doc: The current model document.
-:type doc: Autodesk.Revit.DB.Document
-:param grid: The grids of which a bubbles visibility is to be toggled.
-:type grid: [Autodesk.Revit.DB.Grid]
-:param view: The view in which a grid bubbles visibility is to be toggled.
-:type view: Autodesk.Revit.DB.View
-:return:</p>
+<dd><p>Turns on grid bubbles at one end in the specified view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grid</strong> (<em>List</em><em>[</em><em>Autodesk.Revit.DB.Grid</em><em>]</em>) – The grids for which bubble visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which grid bubble visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p><cite>result.status</cite> (bool): True if all grid bubble(s) visibility at one end was set to visible successfully, otherwise False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains the name(s) of the grid(s) where bubble visibility was set.</p></li>
+<li><p><cite>result.result</cite> (list): Empty list.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p>On exception:</p>
 <blockquote>
-<div><p>Result class instance.
-- result.status. True if all grids bubble(s) visibility at one end was set to visible successfully, otherwise False.
-- result.message will contain the name(s) of the grid(s) where a bubble visibility was set.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message including the grid name.
-- result.result will be empty</p>
+<div><ul class="simple">
+<li><p><cite>result.status</cite> (bool) will be False.</p></li>
+<li><p><cite>result.message</cite> (str) will contain a generic exception message including the grid name.</p></li>
+<li><p><cite>result.result</cite> (list) will be empty.</p></li>
+</ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -464,25 +498,33 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.toggle_bubble_end">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">toggle_bubble_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.toggle_bubble_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>Toggles grid bubble visibility on specified end for given grid in given views.
-:param doc: The current model document.
-:type doc: Autodesk.Revit.DB.Document
-:param grid: The grid of which a bubbles visibility is to be toggled.
-:type grid: Autodesk.Revit.DB.Grid
-:param view: The view in which a grid bubbles visibility is to be toggled.
-:type view: Autodesk.Revit.DB.View
-:param end_identifier: The end of the grid to be modified.
-:type view: Autodesk.Revit.DB.DatumEnds
-:return:</p>
+<dd><p>Toggles grid bubble visibility on a specified end for a given grid in given views.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grid</strong> (<em>Autodesk.Revit.DB.Grid</em>) – The grid of which bubble visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which grid bubble visibility is to be toggled.</p></li>
+<li><p><strong>end_identifier</strong> (<em>Autodesk.Revit.DB.DatumEnds</em>) – The end of the grid to be modified.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p><cite>result.status</cite> (bool): True if the grid bubble(s) visibility was changed successfully, otherwise False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains the name of the grid where bubble visibility was changed.</p></li>
+<li><p><cite>result.result</cite> (list): Empty list.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p>On exception:</p>
 <blockquote>
-<div><p>Result class instance.
-- result.status. True if all grids bubble(s) visibility was changed successfully, otherwise False.
-- result.message will contain the name(s) of the grid(s) where a bubble visibility was changed.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message including the grid name.
-- result.result will be empty</p>
+<div><ul class="simple">
+<li><p><cite>result.status</cite> (bool) will be False.</p></li>
+<li><p><cite>result.message</cite> (str) will contain a generic exception message including the grid name.</p></li>
+<li><p><cite>result.result</cite> (list) will be empty.</p></li>
+</ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -494,23 +536,32 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.toggle_bubble_one_end">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">toggle_bubble_one_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.toggle_bubble_one_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>Toggles grid bubble visibility on one end for given grids
-:param doc: The current model document.
-:type doc: Autodesk.Revit.DB.Document
-:param grids: The grids of which a bubbles visibility at one end is to be toggled.
-:type grids: [Autodesk.Revit.DB.Grid]
-:param view: The view in which a grid bubbles visibility is to be toggled.
-:type view: Autodesk.Revit.DB.View
-:return:</p>
+<dd><p>Toggles grid bubble visibility on one end for given grids.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grids</strong> (<em>List</em><em>[</em><em>Autodesk.Revit.DB.Grid</em><em>]</em>) – The grids of which bubble visibility at one end is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which grid bubble visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p><cite>result.status</cite> (bool): True if the bubble visibility at one end was changed successfully for all grids, otherwise False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains the name(s) of the grid(s) where bubble visibility was changed.</p></li>
+<li><p><cite>result.result</cite> (list): Empty list.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p>On exception:</p>
 <blockquote>
-<div><p>Result class instance.
-- result.status. True if all grids bubble(s) visibility at one end was changed successfully, otherwise False.
-- result.message will contain the name(s) of the grid(s) where a bubble visibility was changed.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message including the grid name.
-- result.result will be empty</p>
+<div><ul class="simple">
+<li><p><cite>result.status</cite> (bool) will be False.</p></li>
+<li><p><cite>result.message</cite> (str) will contain a generic exception message including the grid name.</p></li>
+<li><p><cite>result.result</cite> (list) will be empty.</p></li>
+</ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -522,23 +573,32 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids_appearance.toggle_bubble_zero_end">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_appearance.</span></span><span class="sig-name descname"><span class="pre">toggle_bubble_zero_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_appearance.toggle_bubble_zero_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>Toggles grid bubble visibility on zero end for given grids
-:param doc: The current model document.
-:type doc: Autodesk.Revit.DB.Document
-:param grids: The grids of which a bubbles visibility at zero end is to be toggled.
-:type grids: [Autodesk.Revit.DB.Grid]
-:param view: The view in which a grid bubbles visibility is to be toggled.
-:type view: Autodesk.Revit.DB.View
-:return:</p>
+<dd><p>Toggles grid bubble visibility on zero end for given grids.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grids</strong> (<em>List</em><em>[</em><em>Autodesk.Revit.DB.Grid</em><em>]</em>) – The grids of which bubble visibility at zero end is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which grid bubble visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p><cite>result.status</cite> (bool): True if the bubble visibility at zero end was changed successfully for all grids, otherwise False.</p></li>
+<li><p><cite>result.message</cite> (str): Contains the name(s) of the grid(s) where bubble visibility was changed.</p></li>
+<li><p><cite>result.result</cite> (list): Empty list.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p>On exception:</p>
 <blockquote>
-<div><p>Result class instance.
-- result.status. True if all grids bubble(s) visibility at one end was changed successfully, otherwise False.
-- result.message will contain the name(s) of the grid(s) where a bubble visibility was changed.
-- result.result empty list
-On exception:
-- result.status (bool) will be False.
-- result.message will contain generic exception message including the grid name.
-- result.result will be empty</p>
+<div><ul class="simple">
+<li><p><cite>result.status</cite> (bool) will be False.</p></li>
+<li><p><cite>result.message</cite> (str) will contain a generic exception message including the grid name.</p></li>
+<li><p><cite>result.result</cite> (list) will be empty.</p></li>
+</ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -556,29 +616,21 @@ On exception:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids_worksets.modify_grid_worksets_default">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_worksets.</span></span><span class="sig-name descname"><span class="pre">modify_grid_worksets_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_worksets.modify_grid_worksets_default" title="Permalink to this definition">¶</a></dt>
-<dd><p>Workset modifier method. Moves all grids to one workset
-rules format:
-[‘Model name’,[</p>
-<blockquote>
-<div><dl class="simple">
-<dt>[workset modifier method,</dt><dd><p>[worksetName]
-]</p>
-</dd>
-</dl>
-<p>]</p>
-</div></blockquote>
+<dd><p>Workset modifier method. Moves all grids to one workset.</p>
+<p>Rules format:</p>
+<p>[‘Model name’, [[workset modifier method,[worksetName]]]]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>_type_</em>) – _description_</p></li>
-<li><p><strong>worksetRules</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>worksetRules</strong> (<em>List</em>) – The workset rules in the specified format.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>returns a result object</p>
+<dd class="field-even"><p>A result object.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_type_</p>
+<dd class="field-odd"><p>Type</p>
 </dd>
 </dl>
 </dd></dl>
@@ -586,21 +638,31 @@ rules format:
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_type_name">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_worksets.</span></span><span class="sig-name descname"><span class="pre">modify_grid_worksets_by_type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_type_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Workset modifier method. Moves grids matching type condition to a particular workset</p>
-<dl>
-<dt><a href="#id1"><span class="problematic" id="id2">defaultWorksetTypeRules_</span></a> = [</dt><dd><dl class="simple">
-<dt>[‘model name’,[</dt><dd><dl class="simple">
-<dt>[ModifyGridWorkSetsByTypeName,[</dt><dd><p>[‘workset name’, util.ConDoesNotEqual, ‘grid type name’],
-[‘workset name’, util.ConDoesEqual, ‘grid type name’]
-]</p>
+<dd><p>Workset modifier method. Moves grids matching a type condition to a particular workset.</p>
+<p>Default workset type rules example:</p>
+<p>[[‘model name’, [[ModifyGridWorkSetsByTypeName, [[‘workset name’, util.ConDoesNotEqual, ‘grid type name’],[‘workset name’, util.ConDoesEqual, ‘grid type name’]]]]]]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>worksetRules</strong> (<em>List</em>) – The workset rules in the specified format.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A result object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
 </dd>
 </dl>
-</dd>
-</dl>
-<p>]</p>
-</dd>
-</dl>
-<p>]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_parameter_value">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_worksets.</span></span><span class="sig-name descname"><span class="pre">modify_grid_worksets_by_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_parameter_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Workset modifier method. Moves grids matching parameter condition to a particular workset</p>
+<p>Default workset type rules example:</p>
+<p>[[‘model name’, [[ModifyGridWorkSetsByParameterValue, [[‘workset name’, util.ConTwoStartWithOne, ‘Name’, ‘name starts with value’]]]]]]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -618,56 +680,26 @@ rules format:
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_parameter_value">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_worksets.</span></span><span class="sig-name descname"><span class="pre">modify_grid_worksets_by_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_worksets.modify_grid_worksets_by_parameter_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Workset modifier method. Moves grids matching parameter condition to a particular workset
-#defaultWorksetRulesNames_ = [</p>
-<blockquote>
-<div><dl class="simple">
-<dt>[‘model name’,[</dt><dd><dl class="simple">
-<dt>[ModifyGridWorkSetsByParameterValue,[</dt><dd><p>[‘workset name’, util.ConTwoStartWithOne, ‘Name’ ,’name starts with value’]
-]</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>]</p>
-</div></blockquote>
-<p>]
-:param doc: _description_
-:type doc: _type_
-:param worksetRules: _description_
-:type worksetRules: _type_
-:return: returns a result object
-:rtype: _type_</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids_worksets.modify_grids_worksets">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_worksets.</span></span><span class="sig-name descname"><span class="pre">modify_grids_worksets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_worksets.modify_grids_worksets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modifies worksets of grids as per workset rules
-rules format:
-<a href="#id3"><span class="problematic" id="id4">defaultWorksetRulesAll_</span></a> = [</p>
-<blockquote>
-<div><dl class="simple">
-<dt>[‘model name’,[</dt><dd><dl class="simple">
-<dt>[ModifyGridWorkSetsDefault,[</dt><dd><p>[‘default workset name’] # there should only be one per model
-]</p>
+<dd><p>Modifies worksets of grids as per workset rules format.</p>
+<p>Default workset type rules example:</p>
+<p>[[‘model name’, [[ModifyGridWorkSetsDefault, [[‘default workset name’]  # There should only be one per model]]]]]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>revitFileName</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>worksetRules</strong> (<em>_type_</em>) – _description_</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>returns a result object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>_type_</p>
 </dd>
 </dl>
-</dd>
-</dl>
-<p>]</p>
-</div></blockquote>
-<p>]
-:param doc: _description_
-:type doc: _type_
-:param revitFileName: _description_
-:type revitFileName: _type_
-:param worksetRules: _description_
-:type worksetRules: _type_
-:return: returns a result object
-:rtype: _type_</p>
 </dd></dl>
 
 </section>

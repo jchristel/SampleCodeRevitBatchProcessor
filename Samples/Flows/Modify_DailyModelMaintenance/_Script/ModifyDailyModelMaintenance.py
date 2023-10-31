@@ -68,6 +68,7 @@ from utils.check_tag_locations import check_ffe_tags_locations
 from duHast.Utilities.console_out import output
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Revit.Common.file_io import sync_file
+from duHast.Revit.BIM360.bim_360 import get_bim_360_path, convert_bim_360_file_path
 
 
 clr.AddReference("System.Core")
@@ -91,6 +92,12 @@ if not debug_:
 else:
     # get default revit file name
     revitFilePath_ = DEBUG_REVIT_FILE_NAME
+
+
+# update to cope with cloud based file path
+if(settings.IS_CLOUD_PROJECT):
+    cloudPath = get_bim_360_path(doc)
+    revitFilePath_ = convert_bim_360_file_path(cloudPath)
 
 # -------------
 # my code here:
@@ -122,6 +129,8 @@ ACTIONS = [
     rep.report_wall_types,
     rep.report_cad_link_data,
     rep.report_revit_link_data,
+    rep.report_template_overrides,
+    rep.report_warning_types,
     modify_element_worksets_with_filters,
     update_workset_default_visibility,
     solve_warnings,
@@ -151,24 +160,31 @@ def output_modules(message):
 t = Timer()
 for action in ACTIONS:
     t.start()
-    flag = action(doc, revitFilePath_, output_modules)
-    output(flag.message, revit_script_util.Output)  # TODO: add spacer characters?
-    output("status: [{}]".format(flag.status, t.stop()), revit_script_util.Output)
-    output("-", revit_script_util.Output)
+    try:
+        flag = action(doc, revitFilePath_, output_modules)
+        output(flag.message, revit_script_util.Output)  # TODO: add spacer characters?
+        output("status: {} [{}]".format(t.stop(), flag.status), revit_script_util.Output)
+        output("-", revit_script_util.Output)
+    except Exception as e:
+        output(
+            "Failed to execute action: {} with exception {}".format(action, e),
+            revit_script_util.Output,
+        )
+    finally:
+        if t.is_running():
+            t.stop()
 
-# sync changes back to central
-if debug_ == False:
-    # ------------------------------------- syncing -------------------------------------
+# ------------------------------------- syncing -------------------------------------
 
-    # finally sync model and get rid of old file data (compress model)
-    output(
-        "Syncing to Central with compact central file option enabled: start",
-        revit_script_util.Output,
-    )
-    syncing_ = sync_file(doc, True)
-    output(
-        "Syncing to Central: finished [{}]".format(syncing_.status),
-        revit_script_util.Output,
-    )
+# finally sync model and get rid of old file data (compress model)
+output(
+    "Syncing to Central with compact central file option enabled: start",
+    revit_script_util.Output,
+)
+syncing_ = sync_file(doc, True)
+output(
+    "Syncing to Central: finished [{}]".format(syncing_.status),
+    revit_script_util.Output,
+)
 
 output("Modifying Revit File.... finished ", revit_script_util.Output)

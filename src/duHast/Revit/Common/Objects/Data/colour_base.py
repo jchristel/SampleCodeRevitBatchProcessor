@@ -48,6 +48,11 @@ class ColourBase(base.Base):
 
         super(ColourBase, self).__init__(**kwargs)
 
+        # set defaults
+        self.red = -1
+        self.green = -1
+        self.blue = -1
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
@@ -62,25 +67,17 @@ class ColourBase(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load overrides
-            if "red" in j:
+            # load values and throw exception if something is missing!
+            try:
                 self.red = j["red"]
-            else:
-                self.red = 0
-
-            if "green" in j:
                 self.green = j["green"]
-            else:
-                self.green = 0
-
-            if "blue" in j:
                 self.blue = j["blue"]
-            else:
-                self.blue = 0
-        else:
-            self.red = 0
-            self.green = 0
-            self.blue = 0
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(
+                        ColourBase.data_type, e
+                    )
+                )
 
     def __eq__(self, other):
         """
@@ -92,4 +89,27 @@ class ColourBase(base.Base):
         :rtype: Bool
         """
 
-        return (self.red, self.green, self.blue) == (other.red, other.green, other.blue)
+        return isinstance(other, ColourBase) and (self.red, self.green, self.blue) == (
+            other.red,
+            other.green,
+            other.blue,
+        )
+
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)
+    
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+        try:
+            return hash((self.red, self.green, self.blue))
+        except Exception as e:
+            raise ValueError(
+                "Exception {} occurred in {} with values: red:{}, green:{}, blue:{}".format(
+                    e, self.data_type, self.red, self.green, self.blue
+                )
+            )

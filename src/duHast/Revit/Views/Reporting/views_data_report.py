@@ -26,33 +26,12 @@ This module contains the Revit view report functionality.
 #
 #
 
-from duHast.Revit.Views.Utility.data_view import get_view_settings
 from duHast.Revit.Views.Objects.view_graphics_settings import ViewGraphicsSettings
 from duHast.Utilities.files_json import write_json_to_file, read_json_data_from_file
-
-
-PROP_FILE_NAME = "file_name"
-PROP_VIEW_DATA = "view_data"
-
-
-def get_views_graphic_settings_data(doc, views):
-    """
-    Gets view data graphic settings from the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :return: list of ViewGraphicsSettings instances
-    :rtype: [:class:`.ViewGraphicsSettings`]
-    """
-
-    views_settings = []
-
-    # loop over past in views and retrieve settings
-    for view in views:
-        view_setting = get_view_settings(doc=doc, view=view)
-        views_settings.append(view_setting)
-
-    return views_settings
+from duHast.Revit.Views.Reporting.view_reports_json_props import (
+    PROP_FILE_NAME,
+    PROP_VIEW_DATA,
+)
 
 
 def write_graphics_settings_report(revit_file_name, file_path, data):
@@ -96,7 +75,7 @@ def read_view_data_from_file(file_path):
     :param file_path: Fully qualified file path of report file.
     :type file_path: str
     :raises ValueError: If data node is missing from file
-    
+
     :return: list of settings if files was read successfully otherwise an exception will be raised.
     :rtype: :class:`.ViewGraphicsSettings`
     """
@@ -104,12 +83,23 @@ def read_view_data_from_file(file_path):
     data_views = []
     # read json file
     data_read = read_json_data_from_file(file_path=file_path)
-    # check it got the required property node
-    if (PROP_VIEW_DATA) in data_read:
-        # convert node entries into class instances
-        for entry in data_read[PROP_VIEW_DATA]:
-            data_view = ViewGraphicsSettings(entry)
-            data_views.append(data_view)
+
+    # check if this is a list of data view items
+    if isinstance(data_read, list):
+        for data_entry in data_read:
+            # check it got the required property node
+            if (PROP_VIEW_DATA) in data_entry:
+                # convert node entries into class instances
+                for entry in data_entry[PROP_VIEW_DATA]:
+                    data_view = ViewGraphicsSettings(j=entry)
+                    data_views.append(data_view)
+    elif isinstance(data_read, dict):
+        # check it got the required property node
+        if (PROP_VIEW_DATA) in data_read:
+            # convert node entries into class instances
+            for entry in data_read[PROP_VIEW_DATA]:
+                data_view = ViewGraphicsSettings(j=entry)
+                data_views.append(data_view)
     else:
         # missing node...raise an exception
         raise ValueError("Data does not contain a {} node".format(PROP_VIEW_DATA))

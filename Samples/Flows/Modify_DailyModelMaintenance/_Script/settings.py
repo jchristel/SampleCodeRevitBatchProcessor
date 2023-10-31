@@ -53,41 +53,43 @@ sys.path += [SCRIPT_DIRECTORY]
 FLOW_DIRECTORY = get_parent_directory(SCRIPT_DIRECTORY)
 
 #: any data output to go here
-OUTPUT_FOLDER = FLOW_DIRECTORY + r"\_Output"
+OUTPUT_FOLDER = os.path.join(FLOW_DIRECTORY, r"_Output")
 
 #: log marker file location
-LOG_MARKER_DIRECTORY = FLOW_DIRECTORY + r"\_LogMarker"
+LOG_MARKER_DIRECTORY = os.path.join(FLOW_DIRECTORY, r"_LogMarker")
 
 #: log file destination folder name
-LOGFILE_COPY_TO_DIRECTORY = FLOW_DIRECTORY + r"_LogFilesFromRTV"
+LOGFILE_COPY_TO_DIRECTORY = os.path.join(FLOW_DIRECTORY, r"_LogFilesFromRTV")
 
 #: WSM marker file location
 WSM_MARKER_DIRECTORY = LOG_MARKER_DIRECTORY
 
 # directory containing revit batch processor task files
-TASK_LIST_DIRECTORY = FLOW_DIRECTORY + r"\__TaskList"
+TASK_LIST_DIRECTORY = os.path.join(FLOW_DIRECTORY, r"_TaskList")
 
 # number of task files to be used / created
 NO_OF_TASK_LIST_FILES = 3
 # file extension of files to be processed
 FILE_EXTENSION_OF_FILES_TO_PROCESS = ".rvt"
 
+# flag indicating whether this is a cloud based project
+IS_CLOUD_PROJECT = False
 
 #: the project directory
 PROJECT_DIRECTORY = r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\Flows\Modify_DailyModelMaintenance\_sampleFiles"
 
 # files to process directory
-PATH_TO_FILES_TO_PROCESS = PROJECT_DIRECTORY + r"\Project Files"
+PATH_TO_FILES_TO_PROCESS = os.path.join(PROJECT_DIRECTORY,r"\Project Files")
 
 # path to workset default visibility settings
-WORKSET_DEFAULT_VISIBILITY_SETTINGS = FLOW_DIRECTORY + r"\ProjectsWorksets.txt"
+WORKSET_DEFAULT_VISIBILITY_SETTINGS = os.path.join(FLOW_DIRECTORY,r"\ProjectsWorksets.txt")
 
 # path to library folders
-PATH_TO_CLINICAL_LIBRARY = PROJECT_DIRECTORY + r"\Project Library\__Clinical"
-PATH_TO_BESPOKE_JOINERY_LIBRARY = (
-    PROJECT_DIRECTORY + r"\Project Library\__BespokeJoinery"
+PATH_TO_CLINICAL_LIBRARY =  os.path.join(PROJECT_DIRECTORY,r"\Project Library\__Clinical")
+PATH_TO_BESPOKE_JOINERY_LIBRARY = os.path.join(
+    PROJECT_DIRECTORY ,r"\Project Library\__BespokeJoinery"
 )
-PATH_TO_UNIONS_LIBRARY = PROJECT_DIRECTORY + r"\Project Library\__Unions"
+PATH_TO_UNIONS_LIBRARY = os.path.join(PROJECT_DIRECTORY,r"\Project Library\__Unions")
 
 # reports by file extensions used
 REPORT_EXTENSION_LEVELS = "_Levels"
@@ -103,7 +105,9 @@ REPORT_EXTENSION_VIEWS = "_Views"
 REPORT_EXTENSION_WALL_TYPES = "_Wall_Types"
 REPORT_EXTENSION_FFE_TAG_INSTANCES = "_FFE_Tags"
 REPORT_EXTENSION_CAD_LINKS= "_CAD_Links"
-REPORT_EXTENSION_REVIT_LINKS = "Revit_Links"
+REPORT_EXTENSION_REVIT_LINKS = "_Revit_Links"
+REPORT_EXTENSION_VIEW_TEMPLATE_OVERRIDES = "_VT_Overrides"
+REPORT_EXTENSION_WARNING_TYPES = "_Warning_Types"
 
 # combined report file names
 COMBINED_REPORT_NAME_LEVELS = "ProjectsLevels.csv"
@@ -119,6 +123,9 @@ COMBINED_REPORT_NAME_VIEWS = "Views.csv"
 COMBINED_REPORT_NAME_WALL_TYPES = "Wall_Types.csv"
 COMBINED_REPORT_NAME_CAD_LINKS= "CAD_Links.csv"
 COMBINED_REPORT_NAME_REVIT_LINKS = "Revit_Links.csv"
+COMBINED_REPORT_NAME_VIEW_TEMPLATE_OVERRIDES = "VT_Overrides.json"¶
+COMBINED_REPORT_NAME_VIEW_TEMPLATE_FILTER_OVERRIDES = "VT_Filter_Overrides.json"¶
+COMBINED_REPORT_NAME_WARNING_TYPES = "WarningTypes.csv"¶
 
 # list containing default worksets for levels grids, scope boxes per project file
 DEFAULT_WORKSETS = [["Revit", ["Shared Levels and Grids"]]]
@@ -132,6 +139,10 @@ TEMP_FILE_NAME_EXTENSION = ".temp"
 
 # report file extension
 REPORT_FILE_NAME_EXTENSION = ".csv"
+
+# json report file extension¶
+REPORT_JSON_FILE_EXTENSION = ".json"¶
+¶
 
 # log file extension
 LOG_FILE_NAME_EXTENSION = ".log"
@@ -163,6 +174,33 @@ VIEW_DATA_FILTERS = [
     "Design Stage",
 ]
 
+# These are the properties to be reported on in filtered sheet reports
+SHEET_DATA_PROPERTIES = [
+    "Current Revision Date",
+    "Current Revision Description",
+    "Current Revision",
+    "Sheet Number",
+    "Sheet Name",
+    "Sheet Prefix",
+]
+
+# list custom family parameter values to include in reporting
+FAMILY_PARAMETERS_TO_REPORT = [
+    "Sample Parameter One",
+    "Sample Parameter Two",
+    "Sample Parameter Three",
+]
+
 # FFE tag type name to be reported on prior family reload so
 # tags can be moved back if reload shifted them
 MULTI_CATEGORY_TAG_TYPE_NAME = "Label Only"
+
+# list of files of which to combine View template reports into json formatted hash tables¶
+VIEW_TEMPLATE_FILE_LIST = []
+
+# json formatted view template hash files start with:¶
+VIEW_TEMPLATE_HASH_FILE_PREFIX = "VT"¶
+¶
+# json formatted view template hash files end on:¶
+VIEW_TEMPLATE_HASH_FILE_SUFFIX = "Overrides"¶
+

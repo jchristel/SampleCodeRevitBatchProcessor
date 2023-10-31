@@ -88,7 +88,7 @@ def write_out_export_file_data(
 
     return_value = res.Result()
     if export_status.status == True:
-        if export_status.result is not None and len(export_status.result) > 0:
+        if any(export_status.result):
             for export_name in export_status.result:
                 # strip extension of export file name
                 export_file_name = export_name[1][0:-4]

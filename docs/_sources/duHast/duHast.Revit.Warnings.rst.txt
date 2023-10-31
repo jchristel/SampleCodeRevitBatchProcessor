@@ -8,6 +8,9 @@ Subpackages
    :maxdepth: 4
 
    duHast.Revit.Warnings.Data
+   duHast.Revit.Warnings.Objects
+   duHast.Revit.Warnings.Reporting
+   duHast.Revit.Warnings.Utility
 
 Submodules
 ----------
@@ -20,10 +23,26 @@ duHast.Revit.Warnings.solver module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Warnings.solver\_area\_separation\_lines\_overlap module
+---------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Warnings.solver_area_separation_lines_overlap
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Warnings.solver\_duplicate\_mark module
 ----------------------------------------------------
 
 .. automodule:: duHast.Revit.Warnings.solver_duplicate_mark
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Warnings.solver\_room\_separation\_lines\_overlap module
+---------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Warnings.solver_room_separation_lines_overlap
    :members:
    :undoc-members:
    :show-inheritance:

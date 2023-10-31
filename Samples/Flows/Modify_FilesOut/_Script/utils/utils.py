@@ -132,7 +132,7 @@ def copy_exports(
 
     return_value = res.Result()
     if export_status.status == True:
-        if export_status.result is not None and len(export_status.result) > 0:
+        if any(export_status.result):
             for export_name in export_status.result:
                 # check if file exists...some files will not be exported if the view is empty!
                 current_full_file_name = os.path.join( export_name[0] , export_name[1])

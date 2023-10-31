@@ -75,7 +75,7 @@ def optimize_ifc_files(export_status, ifc_file_directory):
     return_value = res.Result()
     ifcFiles = []
     if export_status.status == True:
-        if export_status.result is not None and len(export_status.result) > 0:
+        if any(export_status.result):
             for export_name in export_status.result:
                 # check if file exists...
                 current_full_file_name = os.path.join(export_name[0], export_name[1])

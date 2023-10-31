@@ -1,6 +1,14 @@
 duHast.Revit.ModelHealth.Reporting package
 ==========================================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Revit.ModelHealth.Reporting.Properties
+
 Submodules
 ----------
 

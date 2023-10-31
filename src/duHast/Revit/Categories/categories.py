@@ -19,8 +19,8 @@ Revit category helper functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -30,11 +30,11 @@ import clr
 import System
 from System.Collections.Generic import List
 
-from duHast.Revit.Common import delete as rDel
+from duHast.Revit.Common.delete import delete_by_element_ids
 from duHast.Utilities.Objects import result as res
-from duHast.Revit.Common import transaction as rTran
+from duHast.Revit.Common.transaction import in_transaction
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import BuiltInParameter, Transaction
 
 #: subcategory renaming sampled dictionary
 #: key is the current subcategory name, value is the new subcategory name
@@ -42,10 +42,10 @@ CAT_RENAMING = {"Clearance Zones": "AMAZING"}
 
 #: list of built in parameters attached to family elements containing subcategory ids
 ELEMENTS_PARAS_SUB = [
-    rdb.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE,
-    rdb.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE_MINUS_ANALYTICAL,
-    rdb.BuiltInParameter.FAMILY_ELEM_SUBCATEGORY,
-    rdb.BuiltInParameter.CLINE_SUBCATEGORY,
+    BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE,
+    BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE_MINUS_ANALYTICAL,
+    BuiltInParameter.FAMILY_ELEM_SUBCATEGORY,
+    BuiltInParameter.CLINE_SUBCATEGORY,
 ]
 
 
@@ -118,7 +118,7 @@ def delete_main_sub_category(doc, sub_cat_name):
     sub_cats = get_main_sub_categories(doc)
     if sub_cat_name in sub_cats:
         # delete subcategory
-        status_delete = rDel.delete_by_element_ids(
+        status_delete = delete_by_element_ids(
             doc,
             [sub_cats[sub_cat_name].Id],
             "delete subcategory: " + sub_cat_name,
@@ -286,10 +286,10 @@ def set_family_category(doc, new_category_name):
                     new_category_name
                 )
 
-            transaction = rdb.Transaction(
+            transaction = Transaction(
                 doc, "Changing family category to:" + str(new_category_name)
             )
-            change_cat = rTran.in_transaction(transaction, action)
+            change_cat = in_transaction(transaction, action)
             if change_cat.status:
                 return_value.update_sep(
                     True,

@@ -53,6 +53,11 @@ class OverrideProjection(base.Base):
 
         super(OverrideProjection, self).__init__(**kwargs)
 
+        # set defaults
+        self.pattern_background = pattern_background.PatternBackground()
+        self.pattern_foreground = pattern_foreground.PatternForeground()
+        self.line_projection = line_projection.LineProjection()
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
@@ -67,31 +72,24 @@ class OverrideProjection(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load overrides
-            if pattern_background.PatternBackground.data_type in j:
+            # load overrides and throw exception if something is missing!
+            try:
+                
                 self.pattern_background = pattern_background.PatternBackground(
-                    j[pattern_background.PatternBackground.data_type]
+                    j=j[pattern_background.PatternBackground.data_type]
                 )
-            else:
-                self.pattern_background = pattern_background.PatternBackground()
-
-            if pattern_foreground.PatternForeground.data_type in j:
                 self.pattern_foreground = pattern_foreground.PatternForeground(
-                    j[pattern_foreground.PatternForeground.data_type]
+                    j=j[pattern_foreground.PatternForeground.data_type]
                 )
-            else:
-                self.pattern_foreground = pattern_foreground.PatternForeground()
-
-            if line_projection.LineProjection.data_type in j:
                 self.line_projection = line_projection.LineProjection(
-                    j[line_projection.LineProjection.data_type]
+                    j=j[line_projection.LineProjection.data_type]
                 )
-            else:
-                self.line_projection = line_projection.LineProjection()
-        else:
-            self.pattern_background = pattern_background.PatternBackground()
-            self.pattern_foreground = pattern_foreground.PatternForeground()
-            self.line_projection = line_projection.LineProjection()
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(
+                        OverrideProjection.data_type, e
+                    )
+                )
 
     def __eq__(self, other):
         """
@@ -103,8 +101,42 @@ class OverrideProjection(base.Base):
         :rtype: Bool
         """
 
-        return (self.pattern_background, self.pattern_foreground, self.line_projection) == (
+        return isinstance(other, OverrideProjection) and (
+            self.pattern_background,
+            self.pattern_foreground,
+            self.line_projection,
+        ) == (
             other.pattern_background,
             other.pattern_foreground,
             other.line_projection,
         )
+
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)
+    
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+
+        try:
+            return hash(
+                (
+                    self.pattern_background,
+                    self.pattern_foreground,
+                    self.line_projection,
+                )
+            )
+        except Exception as e:
+            raise ValueError(
+                "Exception {} occurred in {} with values: pattern background:{}, pattern fore: {}, line projection: {}".format(
+                    e,
+                    self.data_type,
+                    self.pattern_background,
+                    self.pattern_foreground,
+                    self.line_projection,
+                )
+            )

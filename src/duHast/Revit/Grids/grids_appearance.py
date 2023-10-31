@@ -22,8 +22,8 @@ Note: Any grid appearance modification in a view will throw an exception if the 
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -97,26 +97,35 @@ def change_grids_2D(doc, grids, view):
 
 def show_bubble_end(doc, grid, view, end_identifier, show_bubble):
     """
-    Toggles grid bubble visibility on specified end for given grid.
+    Toggles grid bubble visibility on the specified end for a given grid.
+
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param grid: The grid of which a bubbles visibility is to be toggled.
+
+    :param grid: The grid of which a bubble's visibility is to be toggled.
     :type grid: Autodesk.Revit.DB.Grid
-    :param view: The view in which a grid bubbles visibility is to be toggled.
+
+    :param view: The view in which a grid bubble's visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
+
     :param end_identifier: An enumerated type representing ends of a datum plane.
     :type end_identifier: Autodesk.Revit.DB.DatumEnds
-    :param show_bubble: True bubble will switched on, False it will be switched off
+
+    :param show_bubble: True if the bubble will be switched on, False if it will be switched off.
     :type show_bubble: bool
-    :return:
-        Result class instance.
-        - result.status. True if all grids bubble(s) visibility was set successfully, otherwise False.
-        - result.message will contain the name(s) of the grid(s) where a bubble visibility was set.
-        - result.result empty list
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain generic exception message including the grid name.
-        - result.result will be empty
+
+    :return: Result class instance.
+
+        - `result.status` (bool): True if the grid bubble(s) visibility was set successfully, otherwise False.
+        - `result.message` (str): Contains the name(s) of the grid(s) where bubble visibility was set.
+        - `result.result` (list): Empty list.
+
+    On exception:
+
+        - `result.status` (bool) will be False.
+        - `result.message` (str) will contain a generic exception message including the grid name.
+        - `result.result` (list) will be empty.
+
     :rtype: :class:`.Result`
     """
 
@@ -158,22 +167,29 @@ def show_bubble_end(doc, grid, view, end_identifier, show_bubble):
 
 def hide_both_bubbles(doc, grids, view):
     """
-    Hides both bubbles of grids in given view.
+    Hides both bubbles of grids in the given view.
+
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param grid: The grid of which a bubbles visibility is to be toggled.
+
+    :param grid: The grid for which bubble visibility is to be toggled.
     :type grid: Autodesk.Revit.DB.Grid
-    :param view: The view in which a grid bubbles visibility is to be toggled.
+
+    :param view: The view in which grid bubble visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
-    :return:
-        Result class instance.
-        - result.status. True if all grids bubble(s) visibility was switched off successfully, otherwise False.
-        - result.message will contain the name(s) of the grid(s) where a bubble visibility was set.
-        - result.result empty list
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain generic exception message including the grid name.
-        - result.result will be empty
+
+    :return: Result class instance.
+
+        - `result.status` (bool): True if all grid bubble(s) visibility was switched off successfully, otherwise False.
+        - `result.message` (str): Contains the name(s) of the grid(s) where bubble visibility was set.
+        - `result.result` (list): Empty list.
+
+    On exception:
+
+        - `result.status` (bool) will be False.
+        - `result.message` (str) will contain a generic exception message including the grid name.
+        - `result.result` (list) will be empty.
+
     :rtype: :class:`.Result`
     """
 
@@ -187,22 +203,29 @@ def hide_both_bubbles(doc, grids, view):
 
 def show_bubble_zero_end(doc, grids, view):
     """
-    Turns on grid bubbles at zero end in specified view.
+    Turns on grid bubbles at the zero end in the specified view.
+
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param grid: The grids of which a bubbles visibility is to be toggled.
-    :type grid: [Autodesk.Revit.DB.Grid]
-    :param view: The view in which a grid bubbles visibility is to be toggled.
+
+    :param grid: The grids for which bubble visibility is to be toggled.
+    :type grid: List[Autodesk.Revit.DB.Grid]
+
+    :param view: The view in which grid bubble visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
-    :return:
-        Result class instance.
-        - result.status. True if all grids bubble(s) visibility at zero end was set to visible successfully, otherwise False.
-        - result.message will contain the name(s) of the grid(s) where a bubble visibility was set.
-        - result.result empty list
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain generic exception message including the grid name.
-        - result.result will be empty
+
+    :return: Result class instance.
+
+        - `result.status` (bool): True if all grid bubble(s) visibility at the zero end was set to visible successfully, otherwise False.
+        - `result.message` (str): Contains the name(s) of the grid(s) where bubble visibility was set.
+        - `result.result` (list): Empty list.
+
+    On exception:
+
+        - `result.status` (bool) will be False.
+        - `result.message` (str) will contain a generic exception message including the grid name.
+        - `result.result` (list) will be empty.
+
     :rtype: :class:`.Result`
     """
 
@@ -215,22 +238,29 @@ def show_bubble_zero_end(doc, grids, view):
 
 def show_bubble_one_end(doc, grids, view):
     """
-    Turns on grid bubbles at One end in specified view.
+    Turns on grid bubbles at one end in the specified view.
+
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param grid: The grids of which a bubbles visibility is to be toggled.
-    :type grid: [Autodesk.Revit.DB.Grid]
-    :param view: The view in which a grid bubbles visibility is to be toggled.
+
+    :param grid: The grids for which bubble visibility is to be toggled.
+    :type grid: List[Autodesk.Revit.DB.Grid]
+
+    :param view: The view in which grid bubble visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
-    :return:
-        Result class instance.
-        - result.status. True if all grids bubble(s) visibility at one end was set to visible successfully, otherwise False.
-        - result.message will contain the name(s) of the grid(s) where a bubble visibility was set.
-        - result.result empty list
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain generic exception message including the grid name.
-        - result.result will be empty
+
+    :return: Result class instance.
+
+        - `result.status` (bool): True if all grid bubble(s) visibility at one end was set to visible successfully, otherwise False.
+        - `result.message` (str): Contains the name(s) of the grid(s) where bubble visibility was set.
+        - `result.result` (list): Empty list.
+
+    On exception:
+
+        - `result.status` (bool) will be False.
+        - `result.message` (str) will contain a generic exception message including the grid name.
+        - `result.result` (list) will be empty.
+
     :rtype: :class:`.Result`
     """
 
@@ -243,24 +273,32 @@ def show_bubble_one_end(doc, grids, view):
 
 def toggle_bubble_end(doc, grid, view, end_identifier):
     """
-    Toggles grid bubble visibility on specified end for given grid in given views.
+    Toggles grid bubble visibility on a specified end for a given grid in given views.
+
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param grid: The grid of which a bubbles visibility is to be toggled.
+
+    :param grid: The grid of which bubble visibility is to be toggled.
     :type grid: Autodesk.Revit.DB.Grid
-    :param view: The view in which a grid bubbles visibility is to be toggled.
+
+    :param view: The view in which grid bubble visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
+
     :param end_identifier: The end of the grid to be modified.
-    :type view: Autodesk.Revit.DB.DatumEnds
-    :return:
-        Result class instance.
-        - result.status. True if all grids bubble(s) visibility was changed successfully, otherwise False.
-        - result.message will contain the name(s) of the grid(s) where a bubble visibility was changed.
-        - result.result empty list
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain generic exception message including the grid name.
-        - result.result will be empty
+    :type end_identifier: Autodesk.Revit.DB.DatumEnds
+
+    :return: Result class instance.
+
+        - `result.status` (bool): True if the grid bubble(s) visibility was changed successfully, otherwise False.
+        - `result.message` (str): Contains the name of the grid where bubble visibility was changed.
+        - `result.result` (list): Empty list.
+
+    On exception:
+
+        - `result.status` (bool) will be False.
+        - `result.message` (str) will contain a generic exception message including the grid name.
+        - `result.result` (list) will be empty.
+
     :rtype: :class:`.Result`
     """
 
@@ -302,22 +340,29 @@ def toggle_bubble_end(doc, grid, view, end_identifier):
 
 def toggle_bubble_one_end(doc, grids, view):
     """
-    Toggles grid bubble visibility on one end for given grids
+    Toggles grid bubble visibility on one end for given grids.
+
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param grids: The grids of which a bubbles visibility at one end is to be toggled.
-    :type grids: [Autodesk.Revit.DB.Grid]
-    :param view: The view in which a grid bubbles visibility is to be toggled.
+
+    :param grids: The grids of which bubble visibility at one end is to be toggled.
+    :type grids: List[Autodesk.Revit.DB.Grid]
+
+    :param view: The view in which grid bubble visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
-    :return:
-        Result class instance.
-        - result.status. True if all grids bubble(s) visibility at one end was changed successfully, otherwise False.
-        - result.message will contain the name(s) of the grid(s) where a bubble visibility was changed.
-        - result.result empty list
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain generic exception message including the grid name.
-        - result.result will be empty
+
+    :return: Result class instance.
+
+        - `result.status` (bool): True if the bubble visibility at one end was changed successfully for all grids, otherwise False.
+        - `result.message` (str): Contains the name(s) of the grid(s) where bubble visibility was changed.
+        - `result.result` (list): Empty list.
+
+    On exception:
+
+        - `result.status` (bool) will be False.
+        - `result.message` (str) will contain a generic exception message including the grid name.
+        - `result.result` (list) will be empty.
+
     :rtype: :class:`.Result`
     """
 
@@ -329,22 +374,29 @@ def toggle_bubble_one_end(doc, grids, view):
 
 def toggle_bubble_zero_end(doc, grids, view):
     """
-    Toggles grid bubble visibility on zero end for given grids
+    Toggles grid bubble visibility on zero end for given grids.
+
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param grids: The grids of which a bubbles visibility at zero end is to be toggled.
-    :type grids: [Autodesk.Revit.DB.Grid]
-    :param view: The view in which a grid bubbles visibility is to be toggled.
+
+    :param grids: The grids of which bubble visibility at zero end is to be toggled.
+    :type grids: List[Autodesk.Revit.DB.Grid]
+
+    :param view: The view in which grid bubble visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
-    :return:
-        Result class instance.
-        - result.status. True if all grids bubble(s) visibility at one end was changed successfully, otherwise False.
-        - result.message will contain the name(s) of the grid(s) where a bubble visibility was changed.
-        - result.result empty list
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain generic exception message including the grid name.
-        - result.result will be empty
+
+    :return: Result class instance.
+
+        - `result.status` (bool): True if the bubble visibility at zero end was changed successfully for all grids, otherwise False.
+        - `result.message` (str): Contains the name(s) of the grid(s) where bubble visibility was changed.
+        - `result.result` (list): Empty list.
+
+    On exception:
+
+        - `result.status` (bool) will be False.
+        - `result.message` (str) will contain a generic exception message including the grid name.
+        - `result.result` (list) will be empty.
+        
     :rtype: :class:`.Result`
     """
 

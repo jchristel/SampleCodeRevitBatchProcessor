@@ -13,6 +13,28 @@ Module containing reporting functions.
 
 """
 
+# License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# BSD License
+# Copyright 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+#
+#
+#
+
 # required for .ToList() on FilteredElementCollector
 import clr, os
 
@@ -56,8 +78,20 @@ from duHast.Revit.Common.Reporting.worksets_report_utils import get_workset_repo
 from duHast.Revit.Common.Reporting.worksets_report_header import REPORT_WORKSETS_HEADER
 
 from duHast.Revit.Views.Reporting.views_report import write_view_data_by_property_names
+from duHast.Revit.Views.Reporting.views_data_report import (
+    write_graphics_settings_report,
+)
+from duHast.Revit.Views.Utility.convert_revit_override_to_data import (
+    get_views_graphic_settings_data,
+)
+from duHast.Revit.Views.templates import get_view_templates
 from duHast.Revit.Walls.Reporting.walls_report import get_wall_report_data
 from duHast.Revit.Walls.Reporting.walls_report_header import REPORT_WALLS_HEADER
+
+from duHast.Revit.Warnings.Reporting.warnings_report import (
+    get_warnings_report_data,
+    write_warnings_data,
+)
 
 # tag reporting imports
 from duHast.Revit.Annotation.Reporting.tags_independent_report import (
@@ -155,16 +189,11 @@ def report_sheets_short(doc, revit_file_path, output):
         + settings.REPORT_EXTENSION_SHEETS_SHORT
         + settings.REPORT_FILE_NAME_EXTENSION
     )
-    properties = [
-        "Current Revision Date",
-        "Current Revision Description",
-        "Current Revision",
-        "Sheet Number",
-        "Sheet Name",
-        "Sheet Prefix",
-    ]
     task_value = write_sheet_data_by_property_names(
-        doc, file_name, get_file_name_without_ext(revit_file_path), properties
+        doc,
+        file_name,
+        get_file_name_without_ext(revit_file_path),
+        settings.SHEET_DATA_PROPERTIES,
     )
     return_value.update(task_value)
     return return_value
@@ -366,51 +395,52 @@ def report_families(doc, revit_file_path, output):
     for family_symbol in family_symbols:
         row_data = []
         if family_symbol.Family.IsInPlace == False:
-            parameter_item_code = get_parameter_value_by_name(family_symbol, "SampleParameterOne")
-            if parameter_item_code == None:
-                parameter_item_code = "NA"
-            parameter_item_description = get_parameter_value_by_name(
-                family_symbol, "SampleParameterTwo"
-            )
-            if parameter_item_description == None:
-                parameter_item_description = "NA"
-            parameter_item_group = get_parameter_value_by_name(
-                family_symbol, "SampleParameterThree"
-            )
-            if parameter_item_group == None:
-                parameter_item_group = "NA"
+            custom_parameter_values = []
+            for parameter_name in settings.FAMILY_PARAMETERS_TO_REPORT:
+                parameter_value = get_parameter_value_by_name(
+                    family_symbol, parameter_name
+                )
+                if parameter_value == None:
+                    parameter_value = "NA"
+                custom_parameter_values.append(parameter_value)
+
             family = doc.GetElement(family_symbol.Family.Id)
             collector_instances_placed = get_family_instances_by_symbol_type_id(
                 doc, family_symbol.Id
             )
             count_instances = len(collector_instances_placed.ToList())
             category = family.FamilyCategory
+
             row_data = [
                 revit_project_file_name,
                 rdb.Element.Name.GetValue(family).encode("utf-8"),
                 category.Name,
                 rdb.Element.Name.GetValue(family_symbol).encode("utf-8"),
-                parameter_item_code,
-                parameter_item_description,
-                parameter_item_group,
                 str(count_instances),
             ]
+
+            # insert parameter values at index 4
+            if len(custom_parameter_values) > 0:
+                row_data[4:4] = custom_parameter_values
+
             data.append(row_data)
     try:
+        header = [
+            "Project File Name",
+            "Family Name",
+            "Family Category",
+            "Family Type Name",
+            "Number of Instances Placed",
+        ]
+        # insert custom parameter names to headers if any
+        if len(settings.FAMILY_PARAMETERS_TO_REPORT) > 0:
+            header[4:4] = settings.FAMILY_PARAMETERS_TO_REPORT
+
         write_report_data_as_csv(
-            file_name,
-            [
-                "Project File Name",
-                "Family Name",
-                "Family Category",
-                "Family Type Name",
-                "SampleParameterOne",
-                "SampleParameterTwo",
-                "SampleParameterThree",
-                "Number of Instances Placed",
-            ],
-            data,
-            "w",
+            file_name=file_name,
+            header=header,
+            data=data,
+            write_type="w",
         )
         return_value.update_sep(True, "Successfully wrote family data to file.")
     except Exception as e:
@@ -586,7 +616,7 @@ def report_revit_link_data(doc, revit_file_path, output):
             settings.OUTPUT_FOLDER,
             get_file_name_without_ext(revit_file_path)
             + settings.REPORT_EXTENSION_REVIT_LINKS,
-            + settings.REPORT_FILE_NAME_EXTENSION,
+            +settings.REPORT_FILE_NAME_EXTENSION,
         )
         write_report_data_as_csv(
             file_name,
@@ -636,7 +666,7 @@ def report_cad_link_data(doc, revit_file_path, output):
             settings.OUTPUT_FOLDER,
             get_file_name_without_ext(revit_file_path)
             + settings.REPORT_EXTENSION_CAD_LINKS,
-            + settings.REPORT_FILE_NAME_EXTENSION,
+            +settings.REPORT_FILE_NAME_EXTENSION,
         )
         write_report_data_as_csv(
             file_name,
@@ -732,5 +762,131 @@ def report_ffe_tags(doc, revit_file_path, output):
     except Exception as e:
         return_value.update_sep(
             False, "Failed to write tag instance data with exception: {}".format(e)
+        )
+    return return_value
+
+
+def report_template_overrides(doc, revit_file_path, output):
+    """
+    Reports category and filter overrides to all templates which support that.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revit_file_path: The current model document file path
+    :type revit_file_path: str
+    :param output: A function piping messages to designated target.
+    :type output: func(message)
+
+    :return:
+        Result class instance.
+
+        - result.status False if an exception occurred, otherwise True.
+        - result.message will contain processing messages.
+        - result.result empty list
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+        - result.result will be an empty list
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+    output("Reporting template data...start")
+
+    revit_file_name = get_file_name_without_ext(revit_file_path)
+    # check if document requires view templates to be exported
+    export_vt = False
+    for name in settings.VIEW_TEMPLATE_FILE_LIST:
+        if revit_file_name in name:
+            export_vt = True
+            break
+
+    if export_vt:
+        file_name = os.path.join(
+            settings.OUTPUT_FOLDER,
+            revit_file_name
+            + settings.REPORT_EXTENSION_VIEW_TEMPLATE_OVERRIDES
+            + settings.REPORT_FILE_NAME_EXTENSION,
+        )
+
+        # get view templates which allow for graphical overrides
+        view_templates_in_model = get_view_templates(doc)
+        view_template_filtered = []
+        for vt in view_templates_in_model:
+            if vt.AreGraphicsOverridesAllowed():
+                view_template_filtered.append(vt)
+
+        # get view template data
+        data = get_views_graphic_settings_data(doc, view_template_filtered)
+
+        # write data to file
+        try:
+            write_json_file_result = write_graphics_settings_report(
+                revit_file_name=revit_file_name,
+                file_path=file_name,
+                data=data,
+            )
+            return_value.update(write_json_file_result)
+        except Exception as e:
+            return_value.update_sep(
+                False, "Failed to write view template data with exception: {}".format(e)
+            )
+    else:
+        return_value.update_sep(
+            True,
+            "Document: {} is not marked for view template reporting".format(
+                revit_file_name
+            ),
+        )
+
+    return return_value
+
+
+def report_warning_types(doc, revit_file_path, output):
+    """
+    Reports all warning types in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revit_file_path: The current model document file path
+    :type revit_file_path: str
+    :param output: A function piping messages to designated target.
+    :type output: func(message)
+
+    :return:
+        Result class instance.
+
+        - result.status False if an exception occurred, otherwise True.
+        - result.message will contain processing messages.
+        - result.result empty list
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+        - result.result will be an empty list
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+    output("Reporting warning types...start")
+    file_name = os.path.join(
+        settings.OUTPUT_FOLDER,
+        get_file_name_without_ext(revit_file_path)
+        + settings.REPORT_EXTENSION_WARNING_TYPES
+        + settings.REPORT_FILE_NAME_EXTENSION,
+    )
+    # get wall report headers
+    data = get_warnings_report_data(doc, get_file_name_without_ext(revit_file_path))
+    try:
+        write_data = write_warnings_data(file_name, data)
+        return_value.update(write_data)
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to write warning type data with exception: {}".format(e)
         )
     return return_value

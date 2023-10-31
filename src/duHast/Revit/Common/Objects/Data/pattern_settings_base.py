@@ -38,7 +38,9 @@ from duHast.Utilities.Objects import base
 
 
 class PatternSettingBase(base.Base):
-    def __init__(self, data_type="unknown", j={}, **kwargs):
+    NO_PATTERN = "no pattern assigned"
+    SOLID_PATTERN = "SOLID"
+    def __init__(self, name=NO_PATTERN, id=-1, data_type="unknown", j={}, **kwargs):
         """
         Class constructor.
 
@@ -46,7 +48,13 @@ class PatternSettingBase(base.Base):
 
         super(PatternSettingBase, self).__init__(**kwargs)
 
+        # set defaults
         self.data_type = data_type
+        if name == None:
+            self.name = PatternSettingBase.NO_PATTERN
+        else:
+            self.name = name
+        self.id = id
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -62,20 +70,16 @@ class PatternSettingBase(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load overrides
-            if "id" in j:
+            # load values and throw exception if something is missing!
+            try:
                 self.id = j["id"]
-            else:
-                self.id = -1
-
-            if "name" in j:
                 self.name = j["name"]
-            else:
-                self.name = "unknown pattern"
-
-        else:
-            self.id = -1
-            self.name = "unknown pattern"
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(
+                        "PatternSettingBase", e
+                    )
+                )
 
     def __eq__(self, other):
         """
@@ -87,4 +91,23 @@ class PatternSettingBase(base.Base):
         :rtype: Bool
         """
 
-        return (self.name) == (other.name)
+        return isinstance(other, PatternSettingBase) and (self.name) == (other.name)
+
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)
+    
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+        try:
+            return hash((self.name))
+        except Exception as e:
+            raise ValueError(
+                "Exception {} occurred in {} with values: name:{}".format(
+                    e, self.data_type, self.name
+                )
+            )

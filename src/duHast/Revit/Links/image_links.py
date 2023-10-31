@@ -29,7 +29,7 @@ This module contains a number of helper functions relating to image links.
 import Autodesk.Revit.DB as rdb
 
 from duHast.Revit.Common import common as com
-
+from duHast.Revit.Common.revit_version import get_revit_version_number
 
 def get_images_types_in_model(doc):
     """
@@ -71,11 +71,20 @@ def sort_image_link_types_by_import_or_linked(doc):
     image_link = []
     image_import = []
     collector_image_types = get_images_types_in_model(doc)
-    for im in collector_image_types:
-        if im.IsLoadedFromFile():
-            image_link.append(im)
-        else:
-            image_import.append(im)
+    # check revit version to cater for API changes
+    revit_version = get_revit_version_number(doc)
+    if(revit_version<=2021):
+        for im in collector_image_types:
+            if im.IsLoadedFromFile():
+                image_link.append(im)
+            else:
+                image_import.append(im)
+    else:
+        for im in collector_image_types:
+            if im.Source == rdb.ImageTypeSource.Link:
+                image_link.append(im)
+            elif im.Source == rdb.ImageTypeSource.Import:
+                image_import.append(im)
     return image_link, image_import
 
 

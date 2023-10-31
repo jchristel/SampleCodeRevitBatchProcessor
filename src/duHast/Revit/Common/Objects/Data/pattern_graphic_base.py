@@ -55,6 +55,11 @@ class PatternGraphicBase(base.Base):
 
         self.data_type = data_type
 
+        # set default values
+        self.colour = ColourBase()
+        self.is_visible = True
+        self.fill_pattern_setting = FillPatternSettings()
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
@@ -69,29 +74,19 @@ class PatternGraphicBase(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load overrides
-
-            if ColourBase.data_type in j:
-                self.colour = ColourBase(j[ColourBase.data_type])
-            else:
-                self.colour = ColourBase()
-
-            if "is_visible" in j:
+            # load values and throw exception if something is missing!
+            try:
+                self.colour = ColourBase(j=j[ColourBase.data_type])
                 self.is_visible = j["is_visible"]
-            else:
-                self.is_visible = True
-
-            if "fill_pattern_setting" in j:
                 self.fill_pattern_setting = FillPatternSettings(
-                    j["fill_pattern_setting"]
+                    j=j["fill_pattern_setting"]
                 )
-            else:
-                self.fill_pattern_setting = FillPatternSettings()
-        else:
-            # set default values
-            self.colour = ColourBase()
-            self.fill_pattern_setting = FillPatternSettings()
-            self.is_visible = True
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(
+                        "PatternGraphicBase", e
+                    )
+                )
 
     def __eq__(self, other):
         """
@@ -104,8 +99,42 @@ class PatternGraphicBase(base.Base):
         :rtype: Bool
         """
 
-        return (self.is_visible, self.fill_pattern_setting, self.colour) == (
+        return isinstance(other, PatternGraphicBase) and (
+            self.is_visible,
+            self.fill_pattern_setting,
+            self.colour,
+        ) == (
             other.is_visible,
-            other.self.fill_pattern_setting,
+            other.fill_pattern_setting,
             other.colour,
         )
+
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)
+    
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+        try:
+            return hash(
+                (
+                    self.is_visible,
+                    self.fill_pattern_setting,
+                    self.colour,
+                )
+            )
+
+        except Exception as e:
+            raise ValueError(
+                "Exception {} occurred in {} with values: is_visible:{}, fill_pattern_setting: {}, colour: {}".format(
+                    e,
+                    self.data_type,
+                    self.is_visible,
+                    self.fill_pattern_setting,
+                    self.colour,
+                )
+            )

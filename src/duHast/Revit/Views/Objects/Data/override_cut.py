@@ -35,7 +35,11 @@ Stores common overrides between categories and filters
 import json
 
 from duHast.Utilities.Objects import base
-from duHast.Revit.Common.Objects.Data import pattern_foreground, pattern_background, line_cut
+from duHast.Revit.Common.Objects.Data import (
+    pattern_foreground,
+    pattern_background,
+    line_cut,
+)
 
 
 class OverrideCut(base.Base):
@@ -48,6 +52,11 @@ class OverrideCut(base.Base):
         """
 
         super(OverrideCut, self).__init__(**kwargs)
+
+        # set defaults
+        self.pattern_background = pattern_background.PatternBackground()
+        self.pattern_foreground = pattern_foreground.PatternForeground()
+        self.line_cut = line_cut.LineCut()
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -63,29 +72,21 @@ class OverrideCut(base.Base):
                     "Argument supplied must be of type string or type dictionary"
                 )
 
-            # load overrides
-            if pattern_background.PatternBackground.data_type in j:
+            # load overrides and throw exception if something is missing!
+            try:
                 self.pattern_background = pattern_background.PatternBackground(
-                    j[pattern_background.PatternBackground.data_type]
+                    j=j[pattern_background.PatternBackground.data_type]
                 )
-            else:
-                self.pattern_background = pattern_background.PatternBackground()
-
-            if pattern_foreground.PatternForeground.data_type in j:
                 self.pattern_foreground = pattern_foreground.PatternForeground(
-                    j[pattern_foreground.PatternForeground.data_type]
+                    j=j[pattern_foreground.PatternForeground.data_type]
                 )
-            else:
-                self.pattern_foreground = pattern_foreground.PatternForeground()
-
-            if line_cut.LineCut.data_type in j:
-                self.line_cut = line_cut.LineCut(j[line_cut.LineCut.data_type])
-            else:
-                self.line_cut = line_cut.LineCut()
-        else:
-            self.pattern_background = pattern_background.PatternBackground()
-            self.pattern_foreground = pattern_foreground.PatternForeground()
-            self.line_cut = line_cut.LineCut()
+                self.line_cut = line_cut.LineCut(j=j[line_cut.LineCut.data_type])
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(
+                        OverrideCut.data_type, e
+                    )
+                )
 
     def __eq__(self, other):
         """
@@ -97,8 +98,38 @@ class OverrideCut(base.Base):
         :rtype: Bool
         """
 
-        return (self.pattern_background, self.pattern_foreground, self.line_cut) == (
+        return isinstance(other, OverrideCut) and (
+            self.pattern_background,
+            self.pattern_foreground,
+            self.line_cut,
+        ) == (
             other.pattern_background,
             other.pattern_foreground,
             other.line_cut,
         )
+
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)
+
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+
+        try:
+            return hash(
+                (self.pattern_background, self.pattern_foreground, self.line_cut)
+            )
+        except Exception as e:
+            raise ValueError(
+                "Exception {} occurred in {} with values: pattern background:{}, pattern fore: {}, line cut: {}".format(
+                    e,
+                    self.data_type,
+                    self.pattern_background,
+                    self.pattern_foreground,
+                    self.line_cut,
+                )
+            )

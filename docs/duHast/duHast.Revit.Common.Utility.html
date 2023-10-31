@@ -91,6 +91,46 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
+<section id="module-duHast.Revit.Common.Utility.element_copying">
+<span id="duhast-revit-common-utility-element-copying-module"></span><h2>duHast.Revit.Common.Utility.element_copying module<a class="headerlink" href="#module-duHast.Revit.Common.Utility.element_copying" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-functions-for-copying-elements">
+<h3>This module contains a number of functions for copying elements<a class="headerlink" href="#this-module-contains-a-number-of-functions-for-copying-elements" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Utility.element_copying.copy_elements_from_target_doc">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Utility.element_copying.</span></span><span class="sig-name descname"><span class="pre">copy_elements_from_target_doc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destination_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_of_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Utility.element_copying.copy_elements_from_target_doc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy elements from one document to another
+:param destination_doc: The document which will be the copy destination
+:type destination_doc: Document
+:param source_doc: The template document which will be the copy source
+:type source_doc: Document
+:param list_of_ids: List of element ids to copy
+:type list_of_ids: List[ElementId]
+:param element_str: String of element type to copy for logging messages
+:type element_str: str
+:return: List of new elements
+:rtype: list</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.Utility.element_spatial_utils">
+<span id="duhast-revit-common-utility-element-spatial-utils-module"></span><h2>duHast.Revit.Common.Utility.element_spatial_utils module<a class="headerlink" href="#module-duHast.Revit.Common.Utility.element_spatial_utils" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-utilities-for-an-elements-spatial-properties">
+<h3>This module contains a number of utilities for an elements spatial properties<a class="headerlink" href="#this-module-contains-a-number-of-utilities-for-an-elements-spatial-properties" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Utility.element_spatial_utils.get_room_element_is_in">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Utility.element_spatial_utils.</span></span><span class="sig-name descname"><span class="pre">get_room_element_is_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Utility.element_spatial_utils.get_room_element_is_in" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the room an element is in
+:param element: The element to check
+:type element: FamilyInstance
+:param phase_dict: The dictionary of phase name to phase element
+:type phase_dict: dict
+:return: The room the element is in
+:rtype: Room</p>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Common.Utility.revit_to_data_conversion">
 <span id="duhast-revit-common-utility-revit-to-data-conversion-module"></span><h2>duHast.Revit.Common.Utility.revit_to_data_conversion module<a class="headerlink" href="#module-duHast.Revit.Common.Utility.revit_to_data_conversion" title="Permalink to this heading">¶</a></h2>
 <section id="a-number-of-functions-used-to-revit-elements-to-data-storage-classes">

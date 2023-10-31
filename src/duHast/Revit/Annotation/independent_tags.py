@@ -19,17 +19,26 @@ A number of functions around Revit independent tags.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
 
-import Autodesk.Revit.DB as rdb
-from duHast.Revit.Common import parameter_get_utils as rParaGet
-from duHast.Revit.Common.revit_version import get_revit_version_number
+from Autodesk.Revit.DB import (
+    BuiltInParameter,
+    ElementId,
+    FilteredElementCollector,
+    IndependentTag,
+)
+from duHast.Revit.Common.parameter_get_utils import (
+    get_built_in_parameter_value,
+    get_parameter_value_as_element_id,
+)
+
+# from duHast.Revit.Common.revit_version import get_revit_version_number
 
 
 def get_all_independent_tags(doc):
@@ -41,7 +50,7 @@ def get_all_independent_tags(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of independent tag elements
     """
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.IndependentTag)
+    return FilteredElementCollector(doc).OfClass(IndependentTag)
 
 
 def get_independent_tag_type_arrow_head_ids(doc):
@@ -58,9 +67,11 @@ def get_independent_tag_type_arrow_head_ids(doc):
     for t in tags:
         t_type_id = t.GetTypeId()
         t_type_element = doc.GetElement(t_type_id)
-        id = rParaGet.get_built_in_parameter_value(
-            t_type_element, rdb.BuiltInParameter.LEADER_ARROWHEAD
+        id = get_built_in_parameter_value(
+            t_type_element,
+            BuiltInParameter.LEADER_ARROWHEAD,
+            get_parameter_value_as_element_id,
         )
-        if id not in used_ids and id != rdb.ElementId.InvalidElementId and id != None:
+        if id not in used_ids and id != ElementId.InvalidElementId and id != None:
             used_ids.append(id)
     return used_ids

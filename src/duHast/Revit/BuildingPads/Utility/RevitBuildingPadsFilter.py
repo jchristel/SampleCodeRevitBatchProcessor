@@ -27,8 +27,7 @@ This module contains a number of base element filter functions relating to Revit
 #
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
-
+from Autodesk.Revit.DB import BuiltInCategory, BuildingPadType , FilteredElementCollector
 
 def _get_all_building_pad_types_by_category(doc):
     """
@@ -46,8 +45,8 @@ def _get_all_building_pad_types_by_category(doc):
     """
 
     collector = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_BuildingPad)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_BuildingPad)
         .WhereElementIsElementType()
     )
     return collector
@@ -69,4 +68,4 @@ def _get_building_pad_types_by_class(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.BuildingPadType)
+    return FilteredElementCollector(doc).OfClass(BuildingPadType)

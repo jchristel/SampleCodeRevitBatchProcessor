@@ -72,6 +72,7 @@ from duHast.Revit.Purge.purge_unused_e_transmit import purge_unused_e_transmit
 from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Utilities.console_out import output
 from duHast.Utilities.Objects import result as res
+from duHast.Revit.BIM360.bim_360 import get_bim_360_path, convert_bim_360_file_path
 
 from utils.worksets import modify
 from utils.views import modify_sheets, modify_views
@@ -95,6 +96,11 @@ clr.AddReference("RevitAPIUI")
 # NOTE: these only make sense for batch Revit file processing mode.
 doc = revit_script_util.GetScriptDocument()
 REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
+
+# update to cope with cloud based file path
+if(settings.IS_CLOUD_PROJECT):
+    cloudPath = get_bim_360_path(doc)
+    REVIT_FILE_PATH = convert_bim_360_file_path(cloudPath)
 
 # -------------
 # my code here:

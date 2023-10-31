@@ -3,9 +3,39 @@
 A class used to return status, messages and objects back to a caller.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The `Result` class is a subclass of the `base.Base` class and is used to store and manipulate the results of a process. It has fields for `message`, `status`, and `result`, and provides methods to update these fields.
 
-A class used to return the value if any, a message and the status of a method (true if everything is ok or false if something went wrong).
+Example Usage:
+    result = Result()  # Create a new instance of the Result class
+    result.append_message("An error occurred")  # Append a new message to the existing message
+    result.update_status(False)  # Update the status to False
+    result.update_sep(True, "Process completed successfully")  # Update the status and append a new message
+    print(result)  # Print the result object
 
+Methods:
+    __init__(self):
+        Initializes the Result object with default values for `message`, `status`, and `result`
+
+    __repr__(self):
+        Returns a string representation of the Result object, including the formatted message, status, and result
+
+    append_message(self, message):
+        Appends a new line and new message string to the existing message
+
+    update(self, otherResult):
+        Updates the Result object using another Result object, updating the message, status, and result
+
+    update_sep(self, status, message):
+        Updates the status and message properties of the Result object
+
+    update_status(self, status):
+        Updates the status property of the Result object
+
+Fields:
+    message: A string representing the message of the result
+    status: A boolean representing the status of the result
+    result: A list to store the result items
+   
 """
 
 
@@ -25,8 +55,8 @@ A class used to return the value if any, a message and the status of a method (t
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -52,6 +82,17 @@ class Result(base.Base):
         self.status = True
         self.result = []
 
+    def __repr__(self):
+        # Split the message string into individual lines
+        lines = self.message.splitlines()
+
+        # Use str.format() to add indentation and line breaks
+        formatted_string = "\n".join(["...{}".format(line) for line in lines])
+
+        return "message: \n{} \nstatus: [{}] \nresult: {}".format(
+            formatted_string, self.status, self.result
+        )
+
     def append_message(self, message):
         """
         Appends a new line and new message string to the existing message.
@@ -64,12 +105,13 @@ class Result(base.Base):
 
         try:
             if self.message == "-":
-                self.message = message
+                self.message = "{}".format(message)
             else:
-                self.message = self.message + "\n" + message
+                self.message = "{}\n{}".format(self.message, message)
         except Exception as e:
-            print(str(e))
-            pass
+            self.message = "{} \nAn exception in result class occurred!!! {}".format(
+                self.message, e
+            )
 
     def update(self, otherResult):
         """
@@ -83,13 +125,16 @@ class Result(base.Base):
         :type otherResult: SampleBatchProcessorCode.Result
         """
 
+        if not isinstance(otherResult, Result):
+            raise TypeError("otherResult must be an instance of Result")
+
         try:
             # check if default message string, if so do not update
             if otherResult.message != "-":
                 self.append_message(otherResult.message)
             self.status = self.status & otherResult.status
             # check if result property that was passed in has values
-            if otherResult.result is not None and len(otherResult.result) > 0:
+            if any(otherResult.result):
                 for item in otherResult.result:
                     self.result.append(item)
         except Exception as e:
@@ -108,6 +153,9 @@ class Result(base.Base):
         :param message: The message to be appended.
         :type message: str
         """
+
+        if not isinstance(status, bool):
+            raise TypeError("status must be an instance of boolean")
 
         try:
             self.append_message(message)

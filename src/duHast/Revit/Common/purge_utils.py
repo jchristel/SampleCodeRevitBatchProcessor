@@ -28,7 +28,7 @@ Revit purge utility functions.
 #
 
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import BuiltInParameter, ElementId
 
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 
@@ -99,7 +99,7 @@ def check_whether_dependent_elements_are_multiple_orphaned_legend_components(
         if len(dic.keys()) == 2 and len(dic[category_name]) == len(element_ids) - 1:
             # this should be the only code path returning true...
             for value in dic[category_name]:
-                if value.OwnerViewId != rdb.ElementId.InvalidElementId:
+                if value.OwnerViewId != ElementId.InvalidElementId:
                     flag = False
                     break
         else:
@@ -126,7 +126,7 @@ def filter_out_warnings(doc, dependent_elements):
     for id in dependent_elements:
         el = doc.GetElement(id)
         p_value = rParaGet.get_built_in_parameter_value(
-            el, rdb.BuiltInParameter.ELEM_PARTITION_PARAM, rParaGet.get_parameter_value
+            el, BuiltInParameter.ELEM_PARTITION_PARAM, rParaGet.get_parameter_value
         )
         if p_value != "Reviewable Warnings":
             ids.append(id)

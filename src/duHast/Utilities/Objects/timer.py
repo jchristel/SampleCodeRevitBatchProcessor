@@ -19,8 +19,8 @@ A timer class to measure code performance.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -42,18 +42,38 @@ class TimerError(Exception):
 
 
 class Timer(base.Base):
+    """
+    A class that provides functionality to measure the elapsed time between starting and stopping the timer.
+
+    Example Usage:
+    ```python
+    timer = Timer()  # Create a new instance of the Timer class
+    timer.start()  # Start the timer
+    # Perform some operations
+    timer.stop()  # Stop the timer and get the elapsed time
+    ```
+
+    Methods:
+    - __init__(): Initializes a new instance of the Timer class.
+    - start(): Starts a new timer.
+    - stop(): Stops the timer and returns the elapsed time.
+    - is_running(): Checks whether the timer is running.
+    """
+
     def __init__(self):
+        """
+        Initializes a new instance of the Timer class.
+        """
         self._stop_watch = None
 
         super(Timer, self).__init__()
 
     def start(self):
         """
-        Start a new timer
+        Starts a new timer.
 
-        :raises TimerError: When timer is running already.
+        :raises TimerError: When the timer is already running.
         """
-
         if self._stop_watch is not None:
             raise TimerError("Timer is running. Use .stop() to stop it")
 
@@ -62,14 +82,12 @@ class Timer(base.Base):
 
     def stop(self):
         """
-        Stop the timer, and report the elapsed time.
+        Stops the timer and returns the elapsed time.
 
-        :raises TimerError: When timer is not running yet.
+        :raises TimerError: When the timer is not running yet.
         :return: The elapsed time since the timer has started.
-
         :rtype: str
         """
-
         if self._stop_watch is None:
             raise TimerError("Timer is not running. Use .start() to start it")
         self._stop_watch.Stop()
@@ -89,10 +107,12 @@ class Timer(base.Base):
 
     def is_running(self):
         """
-        Check whether the stop watch running.
-        """
+        Checks whether the timer is running.
 
-        if (self._stop_watch is None):
+        :return: True if the timer is running, False otherwise.
+        :rtype: bool
+        """
+        if self._stop_watch is None:
             return False
         else:
             return True

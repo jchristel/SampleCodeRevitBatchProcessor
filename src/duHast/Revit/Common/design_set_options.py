@@ -35,7 +35,7 @@ from duHast.Revit.Common import parameter_get_utils as rParaGet
 
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import BuiltInParameter, DesignOption, Element, FilteredElementCollector
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports
@@ -54,7 +54,7 @@ def get_design_options(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.DesignOption)
+    collector = FilteredElementCollector(doc).OfClass(DesignOption)
     return collector
 
 
@@ -68,14 +68,14 @@ def get_design_sets(doc):
     :rtype: list of Autodesk.Revit.DB.Element
     """
 
-    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.DesignOption)
+    collector = get_design_options(doc=doc)
     design_sets = []
     design_set_names = []
     for do in collector:
         e = doc.GetElement(
-            do.get_Parameter(rdb.BuiltInParameter.OPTION_SET_ID).AsElementId()
+            do.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId()
         )
-        designSetName = rdb.Element.Name.GetValue(e)
+        designSetName = Element.Name.GetValue(e)
         if designSetName not in design_set_names:
             design_sets.append(e)
             design_set_names.append(designSetName)
@@ -96,20 +96,20 @@ def is_design_option_primary(doc, design_set_name, design_option_name):
     :rtype: bool
     """
 
-    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.DesignOption)
+    collector = get_design_options(doc=doc)
     is_primary = False
     # loop over all design options in model, get the set they belong to and check for matches on both, set and option, by name
     for do in collector:
-        design_o_name = rdb.Element.Name.GetValue(do)
+        design_o_name = Element.Name.GetValue(do)
         # check if '< 'in name indicating a primary option, if so remove from name
         index_chevron = design_o_name.find("<")
         if index_chevron > 0:
             design_o_name = design_o_name[: index_chevron - 2]
         # design set
         design_set = doc.GetElement(
-            do.get_Parameter(rdb.BuiltInParameter.OPTION_SET_ID).AsElementId()
+            do.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId()
         )
-        design_set_name = rdb.Element.Name.GetValue(design_set)
+        design_set_name = Element.Name.GetValue(design_set)
         # check for match on both set and option
         if design_set_name == design_set_name and design_o_name == design_option_name:
             # get isPrimary property on design option
@@ -147,10 +147,10 @@ def get_design_set_option_info(doc, element):
         dic["isPrimary"] = design_option.IsPrimary
         e = doc.GetElement(
             design_option.get_Parameter(
-                rdb.BuiltInParameter.OPTION_SET_ID
+                BuiltInParameter.OPTION_SET_ID
             ).AsElementId()
         )
-        dic["designSetName"] = rdb.Element.Name.GetValue(e)
+        dic["designSetName"] = Element.Name.GetValue(e)
     except Exception as e:
         pass
     return dic

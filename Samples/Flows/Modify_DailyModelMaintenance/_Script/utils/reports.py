@@ -28,8 +28,8 @@ Module containing reporting functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -81,7 +81,9 @@ from duHast.Revit.Views.Reporting.views_report import write_view_data_by_propert
 from duHast.Revit.Views.Reporting.views_data_report import (
     write_graphics_settings_report,
 )
-from duHast.Revit.Views.Utility.convert_revit_override_to_data import get_views_graphic_settings_data
+from duHast.Revit.Views.Utility.convert_revit_override_to_data import (
+    get_views_graphic_settings_data,
+)
 from duHast.Revit.Views.templates import get_view_templates
 from duHast.Revit.Walls.Reporting.walls_report import get_wall_report_data
 from duHast.Revit.Walls.Reporting.walls_report_header import REPORT_WALLS_HEADER
@@ -187,16 +189,11 @@ def report_sheets_short(doc, revit_file_path, output):
         + settings.REPORT_EXTENSION_SHEETS_SHORT
         + settings.REPORT_FILE_NAME_EXTENSION
     )
-    properties = [
-        "Current Revision Date",
-        "Current Revision Description",
-        "Current Revision",
-        "Sheet Number",
-        "Sheet Name",
-        "Sheet Prefix",
-    ]
     task_value = write_sheet_data_by_property_names(
-        doc, file_name, get_file_name_without_ext(revit_file_path), properties
+        doc,
+        file_name,
+        get_file_name_without_ext(revit_file_path),
+        settings.SHEET_DATA_PROPERTIES,
     )
     return_value.update(task_value)
     return return_value
@@ -398,51 +395,52 @@ def report_families(doc, revit_file_path, output):
     for family_symbol in family_symbols:
         row_data = []
         if family_symbol.Family.IsInPlace == False:
-            parameter_item_code = get_parameter_value_by_name(family_symbol, "SampleParameterOne")
-            if parameter_item_code == None:
-                parameter_item_code = "NA"
-            parameter_item_description = get_parameter_value_by_name(
-                family_symbol, "SampleParameterTwo"
-            )
-            if parameter_item_description == None:
-                parameter_item_description = "NA"
-            parameter_item_group = get_parameter_value_by_name(
-                family_symbol, "SampleParameterThree"
-            )
-            if parameter_item_group == None:
-                parameter_item_group = "NA"
+            custom_parameter_values = []
+            for parameter_name in settings.FAMILY_PARAMETERS_TO_REPORT:
+                parameter_value = get_parameter_value_by_name(
+                    family_symbol, parameter_name
+                )
+                if parameter_value == None:
+                    parameter_value = "NA"
+                custom_parameter_values.append(parameter_value)
+
             family = doc.GetElement(family_symbol.Family.Id)
             collector_instances_placed = get_family_instances_by_symbol_type_id(
                 doc, family_symbol.Id
             )
             count_instances = len(collector_instances_placed.ToList())
             category = family.FamilyCategory
+
             row_data = [
                 revit_project_file_name,
                 rdb.Element.Name.GetValue(family).encode("utf-8"),
                 category.Name,
                 rdb.Element.Name.GetValue(family_symbol).encode("utf-8"),
-                parameter_item_code,
-                parameter_item_description,
-                parameter_item_group,
                 str(count_instances),
             ]
+
+            # insert parameter values at index 4
+            if len(custom_parameter_values) > 0:
+                row_data[4:4] = custom_parameter_values
+
             data.append(row_data)
     try:
+        header = [
+            "Project File Name",
+            "Family Name",
+            "Family Category",
+            "Family Type Name",
+            "Number of Instances Placed",
+        ]
+        # insert custom parameter names to headers if any
+        if len(settings.FAMILY_PARAMETERS_TO_REPORT) > 0:
+            header[4:4] = settings.FAMILY_PARAMETERS_TO_REPORT
+
         write_report_data_as_csv(
-            file_name,
-            [
-                "Project File Name",
-                "Family Name",
-                "Family Category",
-                "Family Type Name",
-                "SampleParameterOne",
-                "SampleParameterTwo",
-                "SampleParameterThree",
-                "Number of Instances Placed",
-            ],
-            data,
-            "w",
+            file_name=file_name,
+            header=header,
+            data=data,
+            write_type="w",
         )
         return_value.update_sep(True, "Successfully wrote family data to file.")
     except Exception as e:
@@ -618,7 +616,7 @@ def report_revit_link_data(doc, revit_file_path, output):
             settings.OUTPUT_FOLDER,
             get_file_name_without_ext(revit_file_path)
             + settings.REPORT_EXTENSION_REVIT_LINKS,
-            + settings.REPORT_FILE_NAME_EXTENSION,
+            +settings.REPORT_FILE_NAME_EXTENSION,
         )
         write_report_data_as_csv(
             file_name,
@@ -668,7 +666,7 @@ def report_cad_link_data(doc, revit_file_path, output):
             settings.OUTPUT_FOLDER,
             get_file_name_without_ext(revit_file_path)
             + settings.REPORT_EXTENSION_CAD_LINKS,
-            + settings.REPORT_FILE_NAME_EXTENSION,
+            +settings.REPORT_FILE_NAME_EXTENSION,
         )
         write_report_data_as_csv(
             file_name,
@@ -766,6 +764,7 @@ def report_ffe_tags(doc, revit_file_path, output):
             False, "Failed to write tag instance data with exception: {}".format(e)
         )
     return return_value
+
 
 def report_template_overrides(doc, revit_file_path, output):
     """

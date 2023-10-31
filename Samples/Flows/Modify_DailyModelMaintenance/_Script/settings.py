@@ -174,6 +174,23 @@ VIEW_DATA_FILTERS = [
     "Design Stage",
 ]
 
+# These are the properties to be reported on in filtered sheet reports
+SHEET_DATA_PROPERTIES = [
+    "Current Revision Date",
+    "Current Revision Description",
+    "Current Revision",
+    "Sheet Number",
+    "Sheet Name",
+    "Sheet Prefix",
+]
+
+# list custom family parameter values to include in reporting
+FAMILY_PARAMETERS_TO_REPORT = [
+    "Sample Parameter One",
+    "Sample Parameter Two",
+    "Sample Parameter Three",
+]
+
 # FFE tag type name to be reported on prior family reload so
 # tags can be moved back if reload shifted them
 MULTI_CATEGORY_TAG_TYPE_NAME = "Label Only"

@@ -67,3 +67,23 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
+  
+  pypi-publish:
+    name: Upload release to PyPI
+    needs:
+    - publish-to-testpypi
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/DuHast
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+    steps:
+    - name: Download all the dists again
+      uses: actions/download-artifact@v3
+      with:
+        name: python-package-distributions
+        path: dist/
+        
+    - name: Publish package distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1

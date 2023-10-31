@@ -1,6 +1,8 @@
 import os
 import re
 
+from typing import List
+
 def set_action_output(value):
     """
     Sets the GitHub Action output by writing the output value to a file specified by the "GITHUB_OUTPUT" environment variable.

@@ -20,6 +20,8 @@ The 'Model Maintenance' flow ia aimed at a QA process where one has the requirem
     #. families in model and placement count
     #. views (abbreviated)
     #. rooms and ceilings geometry (which can be processed further -> i.e. which ceiling is in which room)
+    #. warnings
+    #. view template overrides
 
 #. reload families
 #. fix worksets of given categories
@@ -37,11 +39,16 @@ This flow is run through a powershell script which executes:
 
 #. A pre-processing script collecting all Revit files in a given directory.
 #. No 3 off parallel running sessions of Revit Batch Processor processing the selected files.
-#. A post process which 
+#. A first post process running in python 3.x which 
 
     #. processes the log files of the above sessions and searches for any exceptions messages therein.
-    #. collates report files into combined files
-    #. And finally cleans up any marker files (log and work sharing monitor).
+    #. collates report files into combined csv files
+    #. collates room and ceiling data reports and creates a rooms with associated ceiling types report
+    #. collates view template reports and converts them into a flattened 3D array in parquet file format
+
+#. A second post process script running in iron python 2.7 which:
+
+    #. cleans up any marker files (log and work sharing monitor).
 
 
 Setup
@@ -92,6 +99,8 @@ Directory containing any flow output.
 
 #. A report file per revit file processed and category reported on.
 #. A combined report file which contains all the reports per a single categories for all files.
+#. Rooms and associated ceilings .json file
+#. View template parquet files
 
 _sampleFiles
 ^^^^^^^^^^^^^^^^^^^
@@ -107,9 +116,13 @@ The python and powershell scripts of the flow.
 
     - the task script executed by each Revit Batch Processor session
 
-- Post_DailyModelMaintenance.py
+- Post_DailyModelMaintenance.py (requires python >3.8)
 
-    - the post script executed by the flow after all Revit Batch Processor sessions have finished
+    - the first post script executed by the flow after all Revit Batch Processor sessions have finished
+
+- Post_DailyModelMaintenance_cleanUp.py
+
+    - the second post script executed by the flow after all Revit Batch Processor sessions and the fist post script have finished
 
 - Post_AddRevisionKillWSM.py
 
@@ -129,7 +142,8 @@ The python and powershell scripts of the flow.
 
 - startDailyMaintenance.ps1
 
-- The powershell script executing:
+    - The powershell script executing:
+
         - pre Revit Batch Processor scripts
         - concurrent Revit Batch Processor sessions
         - post Revit Batch Processor scripts
@@ -215,13 +229,19 @@ A number of utility scripts executed in the main script.
     - shared parameters
     - families in model and placement count
     - views (abbreviated)
+    - warning types
 
+- view_templates.py
+
+    - exports view template graphical and filter override files as .json files
+    
 - warnings_solver.py
 
     Solves the following warnings:
 
     - Duplicate mark warnings.
     - Room tags outside of room warnings.
+    - Overlapping room and area separation line warnings.
 
 - worksets.py
 

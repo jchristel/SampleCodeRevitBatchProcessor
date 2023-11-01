@@ -106,6 +106,8 @@
 <li><p>families in model and placement count</p></li>
 <li><p>views (abbreviated)</p></li>
 <li><p>rooms and ceilings geometry (which can be processed further -&gt; i.e. which ceiling is in which room)</p></li>
+<li><p>warnings</p></li>
+<li><p>view template overrides</p></li>
 </ol>
 </div></blockquote>
 </li>
@@ -123,12 +125,20 @@
 <ol class="arabic">
 <li><p>A pre-processing script collecting all Revit files in a given directory.</p></li>
 <li><p>No 3 off parallel running sessions of Revit Batch Processor processing the selected files.</p></li>
-<li><p>A post process which</p>
+<li><p>A first post process running in python 3.x which</p>
 <blockquote>
 <div><ol class="arabic simple">
 <li><p>processes the log files of the above sessions and searches for any exceptions messages therein.</p></li>
-<li><p>collates report files into combined files</p></li>
-<li><p>And finally cleans up any marker files (log and work sharing monitor).</p></li>
+<li><p>collates report files into combined csv files</p></li>
+<li><p>collates room and ceiling data reports and creates a rooms with associated ceiling types report</p></li>
+<li><p>collates view template reports and converts them into a flattened 3D array in parquet file format</p></li>
+</ol>
+</div></blockquote>
+</li>
+<li><p>A second post process script running in iron python 2.7 which:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>cleans up any marker files (log and work sharing monitor).</p></li>
 </ol>
 </div></blockquote>
 </li>
@@ -165,6 +175,8 @@
 <ol class="arabic simple">
 <li><p>A report file per revit file processed and category reported on.</p></li>
 <li><p>A combined report file which contains all the reports per a single categories for all files.</p></li>
+<li><p>Rooms and associated ceilings .json file</p></li>
+<li><p>View template parquet files</p></li>
 </ol>
 </section>
 <section id="samplefiles">
@@ -182,10 +194,17 @@
 </ul>
 </div></blockquote>
 </li>
-<li><p>Post_DailyModelMaintenance.py</p>
+<li><p>Post_DailyModelMaintenance.py (requires python &gt;3.8)</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>the post script executed by the flow after all Revit Batch Processor sessions have finished</p></li>
+<li><p>the first post script executed by the flow after all Revit Batch Processor sessions have finished</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Post_DailyModelMaintenance_cleanUp.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the second post script executed by the flow after all Revit Batch Processor sessions and the fist post script have finished</p></li>
 </ul>
 </div></blockquote>
 </li>
@@ -217,15 +236,20 @@
 </ul>
 </div></blockquote>
 </li>
-<li><p>startDailyMaintenance.ps1</p></li>
-<li><dl class="simple">
-<dt>The powershell script executing:</dt><dd><ul class="simple">
+<li><p>startDailyMaintenance.ps1</p>
+<blockquote>
+<div><ul>
+<li><p>The powershell script executing:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>pre Revit Batch Processor scripts</p></li>
 <li><p>concurrent Revit Batch Processor sessions</p></li>
 <li><p>post Revit Batch Processor scripts</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
 </li>
 </ul>
 <p>Report files used for some scripts:</p>
@@ -341,6 +365,14 @@
 <li><p>shared parameters</p></li>
 <li><p>families in model and placement count</p></li>
 <li><p>views (abbreviated)</p></li>
+<li><p>warning types</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>view_templates.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>exports view template graphical and filter override files as .json files</p></li>
 </ul>
 </div></blockquote>
 </li>
@@ -350,6 +382,7 @@
 <ul class="simple">
 <li><p>Duplicate mark warnings.</p></li>
 <li><p>Room tags outside of room warnings.</p></li>
+<li><p>Overlapping room and area separation line warnings.</p></li>
 </ul>
 </div></blockquote>
 </li>

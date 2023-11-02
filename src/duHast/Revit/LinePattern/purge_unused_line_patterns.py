@@ -31,6 +31,7 @@ from Autodesk.Revit.DB import (
     LinePatternElement,
     Transaction,
     TransactionGroup,
+    TransactionStatus,
 )
 
 modified_by_delete = 0
@@ -65,19 +66,26 @@ def purge_unused_line_patterns(rvt_doc, DEBUG=False):
         """
         deleted_elems = e.GetDeletedElementIds()
         modified_elems = e.GetModifiedElementIds()
+        debug_string = ""
 
         if DEBUG:
-            debug_string = ""
+            if str(e.Operation) == "TransactionCommitted":
+                debug_string += "Deleted elements: {}\n".format(len(deleted_elems))
+                debug_string += "Modified elements: {}\n".format(len(modified_elems))
 
-            for elem_id in modified_elems:
-                elem = rvt_doc.GetElement(elem_id)
-                debug_string += "MODIFIED: {} - {}\n".format(elem_id, elem.Name)
+                if len(modified_elems) == 0:
+                    debug_string += (
+                        "No modified elements. Line pattern will be deleted\n"
+                    )
+                elif len(modified_elems) > 0:
+                    debug_string += (
+                        "Line pattern will not be deleted. Event modified elements:\n"
+                    )
+                    for elem_id in modified_elems:
+                        elem = rvt_doc.GetElement(elem_id)
+                        debug_string += "{}\n".format(elem.Name)
 
-            print(
-                "Modified_by_delete for operation {} is: {}".format(
-                    e.Operation, modified_by_delete
-                )
-            )
+            print(debug_string)
 
         global modified_by_delete
         modified_by_delete = len(deleted_elems) + len(modified_elems)
@@ -90,14 +98,14 @@ def purge_unused_line_patterns(rvt_doc, DEBUG=False):
     line_patterns = (
         FilteredElementCollector(rvt_doc).OfClass(LinePatternElement).ToElements()
     )
-    print("Line patterns before purge: {}".format(len(line_patterns)))
+
     deleted_line_patterns = ""
     unused_line_pattern_count = 0
 
     # Loop through the line patterns and delete them one by one
     for lp in line_patterns:
         if DEBUG:
-            print("Line pattern: {}".format(lp.Name))
+            print("Processing line pattern: {}".format(lp.Name))
 
         line_pattern_data = lp.Name + " (id: {})".format(lp.Id)
 
@@ -113,8 +121,6 @@ def purge_unused_line_patterns(rvt_doc, DEBUG=False):
         trans.Commit()
 
         global modified_by_delete
-        if DEBUG:
-            print("Modified by delete in main: {}".format(modified_by_delete))
 
         if modified_by_delete == 1:
             unused_line_pattern_count += 1
@@ -124,18 +130,18 @@ def purge_unused_line_patterns(rvt_doc, DEBUG=False):
         else:
             trans_grp.RollBack()
 
-    out_message = "Deleted {} unused line patterns:\n{}".format(
+    deleted_line_patterns += "\n"
+    out_message = "\nDeleted {} unused line patterns:\n\n{}".format(
         unused_line_pattern_count, deleted_line_patterns
     )
 
+    print("\nLine patterns before purge: {}\n\n".format(len(line_patterns)))
     # Get all line patterns in the model again for a post-task count
     line_patterns = (
         FilteredElementCollector(rvt_doc).OfClass(LinePatternElement).ToElements()
     )
-
     print(out_message)
-
-    print("Line patterns after purge: {}".format(len(line_patterns)))
+    print("\nLine patterns after purge: {}".format(len(line_patterns)))
 
     # Unsubscribe from the DocumentChanged event
     app.DocumentChanged -= document_change_purge_line_patterns

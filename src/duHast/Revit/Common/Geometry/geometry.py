@@ -33,7 +33,8 @@ from System import Linq
 
 clr.ImportExtensions(Linq)
 
-from Autodesk.Revit.DB  import UV, PlanarFace
+from Autodesk.Revit.DB import UV, PlanarFace
+
 
 # ---------------------------- debug ----------------------------
 def get_point_as_string(point):
@@ -66,8 +67,9 @@ def get_edge_as_string(edge):
         returnValue = returnValue + "\n" + get_point_as_string(p)
     return returnValue
 
+
 def UV_pt_list_from_crv_list(curve_list):
-    """ 
+    """
     Returns a list of UV points from a list of curves
     :param curve_list: A list of curves
     :param type: list
@@ -81,6 +83,7 @@ def UV_pt_list_from_crv_list(curve_list):
         pt_list.append((st_pt.X, st_pt.Y))
 
     return pt_list
+
 
 def point_in_polygon(point, polygon):
     """
@@ -97,18 +100,21 @@ def point_in_polygon(point, polygon):
     is_inside = False
 
     pt_1_x, pt_1_y = polygon[0]
-    for i in range(num_of_polygon_sides+1):
+    for i in range(num_of_polygon_sides + 1):
         pt_2_x, pt_2_y = polygon[i % num_of_polygon_sides]
         if point[1] > min(pt_1_y, pt_2_y):
             if point[1] <= max(pt_1_y, pt_2_y):
                 if point[0] <= max(pt_1_x, pt_2_x):
                     if pt_1_y != pt_2_y:
-                        x_intersection = (point[1] - pt_1_y) * (pt_2_x - pt_1_x) / (pt_2_y - pt_1_y) + pt_1_x
+                        x_intersection = (point[1] - pt_1_y) * (pt_2_x - pt_1_x) / (
+                            pt_2_y - pt_1_y
+                        ) + pt_1_x
                     if pt_1_x == pt_2_x or point[0] <= x_intersection:
                         is_inside = not is_inside
         pt_1_x, pt_1_y = pt_2_x, pt_2_y
 
     return is_inside
+
 
 # ---------------------------- math utility ----------------------------
 
@@ -825,3 +831,14 @@ def build_loops_dictionary(loops):
         # only one exterior loop exists, no interior loops
         return_value[key] = []
     return return_value
+
+
+def negate_vector(vector):
+    """
+    Negates the direction of a given vector
+    :param vector: The vector to negate
+    :type vector: list or tuple
+    :return: The negated vector
+    :rtype: list
+    """
+    return [-x for x in vector]

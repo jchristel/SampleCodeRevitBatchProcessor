@@ -142,7 +142,7 @@ def get_curtain_wall_door_symbols(doc):
     )
 
     # convert panel symbols to ids
-    panel_ids = get_ids_from_element_collector(col=filter_panels)
+    panel_ids = get_ids_from_element_collector(col=panels_in_model)
 
     # check if similar type query returns any panel id...if so then this is a curtain wall door
     for door_symbol in door_symbols_in_model:

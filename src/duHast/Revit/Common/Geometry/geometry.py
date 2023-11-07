@@ -33,7 +33,7 @@ from System import Linq
 
 clr.ImportExtensions(Linq)
 
-from Autodesk.Revit.DB import UV, PlanarFace
+from Autodesk.Revit.DB import UV, PlanarFace, XYZ
 
 
 # ---------------------------- debug ----------------------------
@@ -842,3 +842,31 @@ def negate_vector(vector):
     :rtype: list
     """
     return [-x for x in vector]
+
+
+def sort_points_by_min_and_max(min_pt, max_pt):
+    """
+    Takes BoundingBox or Outline Min and Max points and
+    returns the true Min and Max points. This is to ensure
+    no zero thickness geometries are created.
+    :param min_pt: The minimum point
+    :type min_pt: XYZ
+    :param max_pt: The maximum point
+    :type max_pt: XYZ
+    :return: The sorted points
+    :rtype: tuple
+    """
+    min_x = min_pt.X
+    min_y = min_pt.Y
+    min_z = min_pt.Z
+
+    max_x = max_pt.X
+    max_y = max_pt.Y
+    max_z = max_pt.Z
+
+    smin_x = min(min_x, max_x)
+    smin_y = min(min_y, max_y)
+    smax_x = max(min_x, max_x)
+    smax_y = max(min_y, max_y)
+
+    return (XYZ(smin_x, smin_y, min_z), XYZ(smax_x, smax_y, max_z))

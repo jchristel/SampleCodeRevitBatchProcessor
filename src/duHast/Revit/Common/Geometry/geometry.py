@@ -870,3 +870,29 @@ def sort_points_by_min_and_max(min_pt, max_pt):
     smax_y = max(min_y, max_y)
 
     return (XYZ(smin_x, smin_y, min_z), XYZ(smax_x, smax_y, max_z))
+
+def transform_point_by_elem_transform(pt, transform):
+    """
+    Transforms a point by an element transform
+    :param pt: The point to transform
+    :type pt: XYZ
+    :param transform: The transform to use
+    :type transform: Transform
+    :return: The transformed point
+    :rtype: XYZ
+    """
+
+    x = pt.X
+    y = pt.Y
+    z = pt.Z
+
+    b0 = transform.get_Basis(0)
+    b1 = transform.get_Basis(1)
+    b2 = transform.get_Basis(2)
+    origin = transform.Origin
+
+    x_new = x * b0.X + y * b1.X + z * b2.X + origin.X
+    y_new = x * b0.Y + y * b1.Y + z * b2.Y + origin.Y
+    z_new = x * b0.Z + y * b1.Z + z * b2.Z + origin.Z
+
+    return XYZ(x_new, y_new, z_new)

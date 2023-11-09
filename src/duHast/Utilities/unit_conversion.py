@@ -64,3 +64,7 @@ def convert_imperial_cubic_feet_to_metric_cubic_metre(value):
     """
 
     return value * 0.02831685
+
+
+def convert_mm_to_imperial_feet(length):
+    return length / 304.8

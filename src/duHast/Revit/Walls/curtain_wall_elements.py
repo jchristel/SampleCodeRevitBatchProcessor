@@ -30,12 +30,20 @@ import clr
 import System
 from System.Collections.Generic import List
 
-from duHast.Revit.Common import common as com
-from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Common.common import get_ids_from_element_collector
+from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
-
+from Autodesk.Revit.DB import (
+    BuiltInCategory,
+    BuiltInParameter,
+    ElementClassFilter,
+    ElementMulticategoryFilter,
+    FamilyInstance,
+    FamilySymbol,
+    FilteredElementCollector,
+    Panel,
+)
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports
@@ -73,10 +81,10 @@ BUILTIN_TYPE_FAMILY_NAMES = [
 ]
 
 #: category filter for all element filters by category
-CURTAINWALL_ELEMENTS_CATEGORY_FILTER = List[rdb.BuiltInCategory](
+CURTAINWALL_ELEMENTS_CATEGORY_FILTER = List[BuiltInCategory](
     [
-        rdb.BuiltInCategory.OST_CurtainWallPanels,
-        rdb.BuiltInCategory.OST_CurtainWallMullions,
+        BuiltInCategory.OST_CurtainWallPanels,
+        BuiltInCategory.OST_CurtainWallMullions,
     ]
 )
 
@@ -101,11 +109,11 @@ def get_all_curtain_wall_element_types_by_category(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    multi_cat_filter = rdb.ElementMulticategoryFilter(
+    multi_cat_filter = ElementMulticategoryFilter(
         CURTAINWALL_ELEMENTS_CATEGORY_FILTER
     )
     collector = (
-        rdb.FilteredElementCollector(doc)
+        FilteredElementCollector(doc)
         .WherePasses(multi_cat_filter)
         .WhereElementIsElementType()
     )
@@ -177,11 +185,11 @@ def get_curtain_wall_element_instances_by_category(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    multi_cat_filter = rdb.ElementMulticategoryFilter(
+    multi_cat_filter = ElementMulticategoryFilter(
         CURTAINWALL_ELEMENTS_CATEGORY_FILTER
     )
     return (
-        rdb.FilteredElementCollector(doc)
+        FilteredElementCollector(doc)
         .WherePasses(multi_cat_filter)
         .WhereElementIsNotElementType()
     )
@@ -205,7 +213,7 @@ def get_all_curtain_wall_element_type_ids_by_category(doc):
 
     ids = []
     col_cat = get_all_curtain_wall_element_types_by_category(doc)
-    ids = com.get_ids_from_element_collector(col_cat)
+    ids = get_ids_from_element_collector(col_cat)
     return ids
 
 
@@ -228,7 +236,7 @@ def get_all_curtain_wall_element_types_by_category_excl_in_place(doc):
     collector = get_all_curtain_wall_element_types_by_category(doc)
     elements = []
     for c in collector:
-        if c.GetType() != rdb.FamilySymbol:
+        if c.GetType() != FamilySymbol:
             elements.append(c)
     return elements
 
@@ -252,7 +260,7 @@ def get_all_curtain_wall_element_type_ids_by_category_excl_symbols(doc):
     collector = get_all_curtain_wall_element_types_by_category(doc)
     ids = []
     for c in collector:
-        if c.GetType() != rdb.FamilySymbol:
+        if c.GetType() != FamilySymbol:
             ids.append(c.Id)
     return ids
 
@@ -275,20 +283,37 @@ def get_all_curtain_wall_non_shared_symbol_ids_by_category(doc):
     """
 
     ids = []
-    multi_cat_filter = rdb.ElementMulticategoryFilter(
+    multi_cat_filter = ElementMulticategoryFilter(
         CURTAINWALL_ELEMENTS_CATEGORY_FILTER
     )
     collector = (
-        rdb.FilteredElementCollector(doc)
+        FilteredElementCollector(doc)
         .WherePasses(multi_cat_filter)
         .WhereElementIsElementType()
     )
     for c in collector:
-        if c.GetType() == rdb.FamilySymbol:
+        if c.GetType() == FamilySymbol:
             fam = c.Family
-            p_value = rParaGet.get_built_in_parameter_value(
-                fam, rdb.BuiltInParameter.FAMILY_SHARED
+            p_value = get_built_in_parameter_value(
+                fam, BuiltInParameter.FAMILY_SHARED
             )
             if p_value != None and p_value == "No" and c.Id not in ids:
                 ids.append(c.Id)
     return ids
+
+
+
+def get_curtain_wall_panels(doc, curtain_wall_instance):
+    # returns any panel instances hosted in a curtain wall.
+    # excludes any family instances!
+    
+    panels = []
+    # get the panels from the curtain walls
+    filter = ElementClassFilter(FamilyInstance)
+    dependent_family_instance_ids = curtain_wall_instance.GetDependentElements(filter)
+    # loop over dependent elements and only return any panel instances
+    for id in dependent_family_instance_ids:
+        dependent_element = doc.GetElement(id)
+        if type(dependent_element) == Panel:
+            panels.append(dependent_element)
+    return panels

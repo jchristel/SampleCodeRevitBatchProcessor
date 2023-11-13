@@ -291,24 +291,3 @@ def get_first_row_in_file_no_strip(file_path):
     except Exception:
         row = None
     return row
-
-
-def remove_backup_revit_files_from_list(files):
-    """
-    Takes a list of revit files or full paths and removes any backup files from the list.
-
-    :param files: List of revit files or full paths
-    :type files: list
-    :return: List of revit files or full paths with backup files removed
-    :rtype: list
-    """
-    files_not_backups = []
-    # Exclude any files that are backups: they have .0001.rvt (or similar pattern) in their name
-    for rvt_file in files:
-        pattern = r"\.\d{4}\.rvt"
-        matches = re.findall(pattern, rvt_file)
-
-        if not matches:
-            files_not_backups.append(rvt_file)
-
-    return files_not_backups

@@ -67,4 +67,11 @@ def convert_imperial_cubic_feet_to_metric_cubic_metre(value):
 
 
 def convert_mm_to_imperial_feet(length):
+    """
+    Convert a length value in millimeters to imperial feet.
+    
+    :param length: A float value representing the length in millimeters.
+    :type length: float
+    :return: A float value representing the length in imperial feet.
+    """
     return length / 304.8

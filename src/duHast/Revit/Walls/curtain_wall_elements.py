@@ -304,9 +304,17 @@ def get_all_curtain_wall_non_shared_symbol_ids_by_category(doc):
 
 
 def get_curtain_wall_panels(doc, curtain_wall_instance):
-    # returns any panel instances hosted in a curtain wall.
-    # excludes any family instances!
-    
+    """
+    Returns a list of panel instances that are hosted in a curtain wall, excluding any family instances.
+
+    :param doc: The current Revit model document.
+    :type doc: Document
+    :param curtain_wall_instance: The curtain wall instance for which to retrieve the panel instances.
+    :type curtain_wall_instance: FamilyInstance
+    :return: A list of panel instances hosted in the curtain wall.
+    :rtype: list[Panel]
+    """
+
     panels = []
     # get the panels from the curtain walls
     filter = ElementClassFilter(FamilyInstance)

@@ -1,12 +1,9 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Helper functions for benchmarking:. 
+A collection of common UI elements 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- two values
-- whether a text value starts or does not start with a given text value
-
 """
+
 #
 # License:
 #
@@ -29,46 +26,54 @@ Helper functions for benchmarking:.
 #
 #
 #
+from Autodesk.Revit.UI import TaskDialog
 
-import time
+
+class AlertDialog(TaskDialog):
+    def __init__(self, content):
+        self.Title = "BVN"
+        TaskDialog.__init__(self.Title)
+        self.MainContent = content
 
 
-def measure_time(should_print=True):
+def alert(content, exitscript=True, additional_content=None):
     """
-    Decorator function to measure the time a function takes to execute
-    and then print it to the console.
-
-    Use like:
-    @measure_time(should_print = show_benchmarking_output_bool)
-    def function_to_measure():
-        pass
-
-    :param should_print: Whether the elapsed time should be printed to the console
-    :type should_print: bool
+    This will display a task dialog with the given content. If exitscript
+    is True, the script will terminate after the dialog is closed. Additional
+    content input will be put in an expander. This could be more technical
+    output
+    :param content: The main content of the dialog
+    :type content: str
+    :param exitscript: If True, the script will terminate after dialog close, defaults to True
+    :type exitscript: bool, optional
+    :param additional_content: Additional content to be put in an expander, defaults to None
+    :type additional_content: str, optional
     """
+    if exitscript:
+        dialog = AlertDialog(content)
+        dialog.MainInstruction = "Error from script:"
+        dialog.FooterText = "(Script will stop after this message)"
+    else:
+        dialog = AlertDialog(content)
+        dialog.MainInstruction = "Notification:"
 
-    # Get the function name for the print statement
-    def wrapper(func):
-        func_name = func.__name__
+    # Turn off the Title prefix
+    dialog.TitleAutoPrefix = False
 
-        def wrapper_func(*args, **kwargs):
-            # Get the start time
-            start = time.time()
-            # Execute the function
-            result = func(*args, **kwargs)
-            # Get the end time
-            end = time.time()
-            # Calculate the elapsed time
-            elapsed = round(float(end - start), 5)
-            # Print the elapsed time
+    # Set additional content if provided
+    if additional_content:
+        dialog.ExpandedContent = additional_content
 
-            print("Elapsed time for {} is : {}".format(func_name, elapsed))
-            # Return the result of the function
-            return result
+    # Show the dialog
+    dialog.Show()
 
-        if should_print:
-            return wrapper_func
+    # Exit script if required
+    if exitscript:
+        if additional_content:
+            raise SystemExit(
+                "Script terminated because {}\n\nFurther details:\n{}".format(
+                    content, additional_content
+                )
+            )
         else:
-            return func
-
-    return wrapper
+            raise SystemExit("Script terminated because {}".format(content))

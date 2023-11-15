@@ -29,6 +29,8 @@ The entry point for the file selection GUI.
 
 import sys, getopt, os
 
+import duHast.Utilities.files_io
+
 # to get to the root folder of this repo
 sys.path.append(
     os.path.join(os.path.realpath(__file__), os.pardir, os.pardir, os.pardir)
@@ -50,7 +52,7 @@ from duHast.UI import workloader as wl
 
 from duHast.Utilities.files_csv import read_csv_file, get_first_row_in_csv_file
 from duHast.Utilities.files_tab import get_first_row_in_file_no_strip
-from duHast.Utilities.files_io import file_exist, get_file_size, FILE_SIZE_IN_KB
+from duHast.Utilities.files_io import file_exist, get_file_size, FILE_SIZE_IN_KB, is_back_up_file
 from duHast.UI.file_item import MyFileItem
 
 # import bim360 utils from Library
@@ -252,7 +254,7 @@ def get_file_data(settings):
             # The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters.
             for revit_file in revit_files_unfiltered:
                 # remove any back up files from selection
-                if fl.is_back_up_file(os.path.basename(revit_file.name)) == False:
+                if is_back_up_file(os.path.basename(revit_file.name)) == False:
                     if (
                         len(os.path.dirname(os.path.abspath(revit_file.name))) < 248
                         and len(revit_file.name) < 260

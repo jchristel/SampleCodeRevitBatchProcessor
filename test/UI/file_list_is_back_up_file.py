@@ -29,7 +29,7 @@ import os
 
 from test.utils import test
 
-from duHast.UI.file_list import is_back_up_file
+from duHast.Utilities.files_io import is_back_up_file
 
 
 class IsBackUpFile(test.Test):

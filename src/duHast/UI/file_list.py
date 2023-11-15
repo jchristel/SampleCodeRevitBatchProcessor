@@ -44,6 +44,7 @@ from duHast.UI import workloader as wl
 
 # custom result class
 from duHast.Utilities.Objects import result as res
+from duHast.Utilities.files_io import is_back_up_file
 
 # -------------
 # my code here:
@@ -105,46 +106,6 @@ def get_revit_files_incl_sub_dirs(directory, file_extension):
                 size = os.path.getsize(f)
                 files.append(fi.MyFileItem(f, size))
     return files
-
-
-def is_back_up_file(file_path):
-    """
-    Checks whether a file is a Revit back up file.
-
-    Backup files are usually in format 'filename.01234.ext'
-
-    Method of checking:
-
-    - splitting file name at every full stop
-    - check whether a list with more more then 2 entries came back ?
-
-        - no:
-            - not a back up
-        - yes:
-            - check last list entry whether it is 4 characters in length and can it be convert it into an integer?
-
-                - yes:
-                    - backup file
-                - no
-                    - normal file
-
-    :param file_path: A fully qualified file path.
-    :type file_path: str
-
-    :return: True if a back up file, otherwise False.
-    :rtype: bool
-    """
-
-    is_backup = False
-    chunks = file_path.split(".")
-    if len(chunks) > 2:
-        last_chunk = chunks[len(chunks) - 2]
-        try:
-            converted_num = int(last_chunk)
-            is_backup = True
-        except Exception:
-            pass
-    return is_backup
 
 
 def get_file_size(item):

@@ -30,7 +30,6 @@ import uuid
 from collections import namedtuple
 
 from test.utils import test
-from duHast.UI.file_list import is_back_up_file
 from duHast.UI.script import get_file_data
 from duHast.UI.file_select_settings import FileSelectionSettings
 from duHast.UI.file_item import MyFileItem

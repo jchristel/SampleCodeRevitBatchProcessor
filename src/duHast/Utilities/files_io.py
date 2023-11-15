@@ -291,3 +291,61 @@ def get_first_row_in_file_no_strip(file_path):
     except Exception:
         row = None
     return row
+
+
+def remove_backup_revit_files_from_list(files):
+    """
+    Takes a list of revit files or full paths and removes any backup files from the list.
+
+    :param files: List of revit files or full paths
+    :type files: list
+    :return: List of revit files or full paths with backup files removed
+    :rtype: list
+    """
+    files_not_backups = []
+    # Exclude any files that are backups: they have .0001.rvt (or similar pattern) in their name
+    for rvt_file in files:
+        if(not is_back_up_file(rvt_file)):
+            files_not_backups.append(rvt_file)
+
+    return files_not_backups
+
+
+def is_back_up_file(file_path):
+    """
+    Checks whether a file is a Revit back up file.
+
+    Backup files are usually in format 'filename.01234.ext'
+
+    Method of checking:
+
+    - splitting file name at every full stop
+    - check whether a list with more more then 2 entries came back ?
+
+        - no:
+            - not a back up
+        - yes:
+            - check last list entry whether it is 4 characters in length and can it be convert it into an integer?
+
+                - yes:
+                    - backup file
+                - no
+                    - normal file
+
+    :param file_path: A fully qualified file path.
+    :type file_path: str
+
+    :return: True if a back up file, otherwise False.
+    :rtype: bool
+    """
+
+    is_backup = False
+    chunks = file_path.split(".")
+    if len(chunks) > 2:
+        last_chunk = chunks[len(chunks) - 2]
+        try:
+            converted_num = int(last_chunk)
+            is_backup = True
+        except Exception:
+            pass
+    return is_backup

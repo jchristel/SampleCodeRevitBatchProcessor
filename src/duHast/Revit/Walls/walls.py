@@ -43,8 +43,14 @@ from duHast.Revit.Walls import stacked_walls as rStackedWall
 from duHast.Revit.Walls.Utility import walls_filter as rWallFilter
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
 
+from Autodesk.Revit.DB import (
+    BuiltInCategory,
+    ElementCategoryFilter,
+    FamilyInstance,
+    FamilySymbol,
+    FilteredElementCollector,
+)
 # -------------------------------------------- common variables --------------------
 
 #: Built in wall family name for basic wall
@@ -100,10 +106,10 @@ def get_in_place_wall_family_instances(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Walls)
+    filter = ElementCategoryFilter(BuiltInCategory.OST_Walls)
     return (
-        rdb.FilteredElementCollector(doc)
-        .OfClass(rdb.FamilyInstance)
+        FilteredElementCollector(doc)
+        .OfClass(FamilyInstance)
         .WherePasses(filter)
     )
 
@@ -120,9 +126,9 @@ def get_all_in_place_wall_type_ids(doc):
     """
 
     ids = []
-    filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Walls)
+    filter = ElementCategoryFilter(BuiltInCategory.OST_Walls)
     col = (
-        rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(filter)
+        FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
     )
     ids = com.get_ids_from_element_collector(col)
     return ids
@@ -164,8 +170,8 @@ def get_all_basic_wall_instances(doc, available_ids):
 
     instances = []
     col = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_Walls)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_Walls)
         .WhereElementIsNotElementType()
     )
     for c in col:
@@ -191,8 +197,8 @@ def get_used_basic_wall_type_ids(doc, available_ids):
 
     ids = []
     col = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_Walls)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_Walls)
         .WhereElementIsNotElementType()
     )
     for c in col:

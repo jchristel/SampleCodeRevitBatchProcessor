@@ -26,8 +26,10 @@ This module contains a Revit walls utility functions.
 #
 #
 
-import Autodesk.Revit.DB as rdb
-from duHast.Revit.Walls.Utility import walls_filter as rWallFilter
+from duHast.Revit.Walls.Utility.walls_filter import (
+    _get_all_wall_types_by_class,
+    _get_all_wall_types_by_category,
+)
 
 
 def build_wall_type_dictionary(collector, dic):
@@ -62,9 +64,9 @@ def sort_wall_types_by_family_name(doc):
     """
 
     # get all Wall Type Elements
-    wts = rWallFilter._get_all_wall_types_by_class(doc)
+    wts = _get_all_wall_types_by_class(doc)
     # get all wall types including in place wall families
-    wts_two = rWallFilter._get_all_wall_types_by_category(doc)
+    wts_two = _get_all_wall_types_by_category(doc)
     used_wts = {}
     used_wts = build_wall_type_dictionary(wts, used_wts)
     used_wts = build_wall_type_dictionary(wts_two, used_wts)

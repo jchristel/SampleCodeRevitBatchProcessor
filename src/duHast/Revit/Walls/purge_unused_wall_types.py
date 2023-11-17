@@ -28,18 +28,22 @@ This module contains a number of helper functions relating to purging Revit wall
 
 
 # required for .ToList() call
-import clr
+#import clr
 
-clr.AddReference("System.Core")
-from System import Linq
+#clr.AddReference("System.Core")
+#from System import Linq
 
-clr.ImportExtensions(Linq)
+#clr.ImportExtensions(Linq)
 
-from duHast.Revit.Common import purge_utils as rPurgeUtils
-from duHast.Revit.Walls import walls as rWall
-from duHast.Revit.Family import purge_unused_family_types as rFamPurge
-from duHast.Revit.Walls import curtain_walls as rCurtainWall
-from duHast.Revit.Walls import stacked_walls as rStackWall
+from duHast.Revit.Common.purge_utils import get_used_unused_type_ids
+
+from duHast.Revit.Walls.walls import (
+    get_all_in_place_wall_type_ids,
+    get_all_basic_wall_type_ids,
+)
+from duHast.Revit.Family.purge_unused_family_types import get_unused_in_place_ids_for_purge
+from duHast.Revit.Walls.curtain_walls import get_all_curtain_wall_type_ids
+from duHast.Revit.Walls.stacked_walls import get_all_stacked_wall_type_ids
 
 # -------------------- used types --------------------------
 
@@ -55,9 +59,7 @@ def get_used_stacked_wall_type_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rPurgeUtils.get_used_unused_type_ids(
-        doc, rStackWall.get_all_stacked_wall_type_ids, 1
-    )
+    ids = get_used_unused_type_ids(doc, get_all_stacked_wall_type_ids, 1)
     return ids
 
 
@@ -72,9 +74,7 @@ def get_used_in_place_wall_type_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rPurgeUtils.get_used_unused_type_ids(
-        doc, rWall.get_all_in_place_wall_type_ids, 1
-    )
+    ids = get_used_unused_type_ids(doc, get_all_in_place_wall_type_ids, 1)
     return ids
 
 
@@ -89,9 +89,7 @@ def get_used_curtain_wall_type_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rPurgeUtils.get_used_unused_type_ids(
-        doc, rCurtainWall.get_all_curtain_wall_type_ids, 1
-    )
+    ids = get_used_unused_type_ids(doc, get_all_curtain_wall_type_ids, 1)
     return ids
 
 
@@ -106,9 +104,7 @@ def get_used_basic_wall_type_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rPurgeUtils.get_used_unused_type_ids(
-        doc, rWall.get_all_basic_wall_type_ids, 1
-    )
+    ids = get_used_unused_type_ids(doc, get_all_basic_wall_type_ids, 1)
     return ids
 
 
@@ -128,12 +124,10 @@ def get_unused_basic_wall_type_ids_to_purge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rPurgeUtils.get_used_unused_type_ids(
-        doc, rWall.get_all_basic_wall_type_ids, 0
-    )
+    ids = get_used_unused_type_ids(doc, get_all_basic_wall_type_ids, 0)
     # looks like a separate check is required whether any basic wall type is used in stacked wall type in model at this point
     # DOH! GetStackedWallMemberIds() is only available on wall element but not wallType. Why?
-    available_type_count = len(rWall.get_all_basic_wall_type_ids(doc).ToList())
+    available_type_count = len(get_all_basic_wall_type_ids(doc))
     if len(ids) == available_type_count:
         ids.pop(0)
     return ids
@@ -152,10 +146,8 @@ def get_unused_curtain_wall_type_ids_to_purge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rPurgeUtils.get_used_unused_type_ids(
-        doc, rCurtainWall.get_all_curtain_wall_type_ids, 0
-    )
-    available_type_count = len(rCurtainWall.get_all_curtain_wall_type_ids(doc).ToList())
+    ids = get_used_unused_type_ids(doc, get_all_curtain_wall_type_ids, 0)
+    available_type_count = len(get_all_curtain_wall_type_ids(doc))
     if len(ids) == available_type_count:
         ids.pop(0)
     return ids
@@ -172,9 +164,7 @@ def get_unused_in_place_wall_type_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rPurgeUtils.get_used_unused_type_ids(
-        doc, rWall.get_all_in_place_wall_type_ids, 0
-    )
+    ids = get_used_unused_type_ids(doc, get_all_in_place_wall_type_ids, 0)
     return ids
 
 
@@ -190,7 +180,7 @@ def get_unused_in_place_wall_ids_for_purge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rFamPurge.get_unused_in_place_ids_for_purge(
+    ids = get_unused_in_place_ids_for_purge(
         doc, get_unused_in_place_wall_type_ids
     )
     return ids
@@ -209,10 +199,8 @@ def get_unused_stacked_wall_type_ids_to_purge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rPurgeUtils.get_used_unused_type_ids(
-        doc, rStackWall.get_all_stacked_wall_type_ids, 0
-    )
-    available_type_count = len(rStackWall.get_all_stacked_wall_type_ids(doc).ToList())
+    ids = get_used_unused_type_ids(doc, get_all_stacked_wall_type_ids, 0)
+    available_type_count = len(get_all_stacked_wall_type_ids(doc))
     if len(ids) == available_type_count:
         ids.pop(0)
     return ids

@@ -27,11 +27,16 @@ This module contains a number of helper functions relating to Revit stacked wall
 #
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
-from duHast.Revit.Common import common as com
+from Autodesk.Revit.DB import (
+    BuiltInCategory,
+    FilteredElementCollector,
+    WallKind,
+)
+
+from duHast.Revit.Common.common import get_ids_from_element_collector
 
 #: Built in wall family name for stacked wall
-STACKED_WALL_FAMILY_NAME = "Stacked Wall"
+STACKED_WALL_FAMILY_NAME = WallKind.Stacked
 
 # -------------------------------- stacked wall types -------------------------------------------------------
 
@@ -46,8 +51,8 @@ def get_all_stacked_wall_instances(doc):
     """
 
     return (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_StackedWalls)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_StackedWalls)
         .WhereElementIsNotElementType()
     )
 
@@ -62,8 +67,8 @@ def get_all_stacked_wall_types(doc):
     """
 
     return (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_StackedWalls)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_StackedWalls)
         .WhereElementIsElementType()
     )
 
@@ -80,9 +85,9 @@ def get_all_stacked_wall_type_ids(doc):
 
     ids = []
     col = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_StackedWalls)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_StackedWalls)
         .WhereElementIsElementType()
     )
-    ids = com.get_ids_from_element_collector(col)
+    ids = get_ids_from_element_collector(col)
     return ids

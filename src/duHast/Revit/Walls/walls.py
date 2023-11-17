@@ -26,21 +26,21 @@ This module contains a number of helper functions relating to Revit walls.
 #
 #
 
-import clr
+#import clr
 
-clr.AddReference("System.Core")
-from System import Linq
+#clr.AddReference("System.Core")
+#from System import Linq
 
-clr.ImportExtensions(Linq)
-import System
+#clr.ImportExtensions(Linq)
+#import System
 
 # import common library modules
-from duHast.Revit.Common import common as com
+from duHast.Revit.Common.common import get_ids_from_element_collector
 
-from duHast.Revit.Walls.Utility import walls_type_sorting as rWallTypeSort
-from duHast.Revit.Walls import curtain_walls as rCurtainWall
-from duHast.Revit.Walls import stacked_walls as rStackedWall
-from duHast.Revit.Walls.Utility import walls_filter as rWallFilter
+from duHast.Revit.Walls.Utility.walls_type_sorting import sort_wall_types_by_family_name
+from duHast.Revit.Walls.curtain_walls import CURTAIN_WALL_FAMILY_NAME
+from duHast.Revit.Walls.stacked_walls import STACKED_WALL_FAMILY_NAME
+from duHast.Revit.Walls.Utility.walls_filter import _get_all_wall_types_by_category, _get_all_wall_types_by_class
 
 # import Autodesk
 
@@ -50,16 +50,17 @@ from Autodesk.Revit.DB import (
     FamilyInstance,
     FamilySymbol,
     FilteredElementCollector,
+    WallKind,
 )
 # -------------------------------------------- common variables --------------------
 
 #: Built in wall family name for basic wall
-BASIC_WALL_FAMILY_NAME = "Basic Wall"
+BASIC_WALL_FAMILY_NAME = WallKind.Basic
 
 #: List of all Built in wall family names
 BUILTIN_WALL_TYPE_FAMILY_NAMES = [
-    rStackedWall.STACKED_WALL_FAMILY_NAME,
-    rCurtainWall.CURTAIN_WALL_FAMILY_NAME,
+    STACKED_WALL_FAMILY_NAME,
+    CURTAIN_WALL_FAMILY_NAME,
     BASIC_WALL_FAMILY_NAME,
 ]
 
@@ -73,7 +74,7 @@ def get_all_wall_types_by_category(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    collector = rWallFilter._get_all_wall_types_by_category(doc)
+    collector = _get_all_wall_types_by_category(doc)
     return collector
 
 
@@ -88,7 +89,7 @@ def get_all_wall_types_by_class(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    collector = rWallFilter._get_all_wall_types_by_class(doc)
+    collector = _get_all_wall_types_by_class(doc)
     return collector
 
 
@@ -130,7 +131,7 @@ def get_all_in_place_wall_type_ids(doc):
     col = (
         FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
     )
-    ids = com.get_ids_from_element_collector(col)
+    ids = get_ids_from_element_collector(col)
     return ids
 
 
@@ -149,7 +150,7 @@ def get_all_basic_wall_type_ids(doc):
     """
 
     ids = []
-    dic = rWallTypeSort.sort_wall_types_by_family_name(doc)
+    dic = sort_wall_types_by_family_name(doc)
     if dic.has_key(BASIC_WALL_FAMILY_NAME):
         ids = dic[BASIC_WALL_FAMILY_NAME]
     return ids

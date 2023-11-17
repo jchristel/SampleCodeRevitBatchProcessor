@@ -26,9 +26,14 @@ This module contains a number of helper functions relating to purging Revit curt
 #
 #
 
-from duHast.Revit.Family import purge_unused_family_types as rFamPurge
-from duHast.Revit.Common import purge_utils as rPurgeUtils
-from duHast.Revit.Walls import curtain_wall_elements as rCurtainWallElem
+from duHast.Revit.Family.purge_unused_family_types import get_unused_in_place_ids_for_purge
+from duHast.Revit.Common.purge_utils import get_used_unused_type_ids
+from duHast.Revit.Walls.curtain_wall_elements import (
+    get_all_curtain_wall_element_type_ids_by_category,
+    get_all_curtain_wall_element_type_ids_by_category_excl_symbols,
+    get_all_curtain_wall_non_shared_symbol_ids_by_category,
+    get_all_curtain_wall_non_shared_symbol_ids_by_category,
+)
 
 
 def get_used_curtain_wall_element_type_ids(doc):
@@ -44,8 +49,8 @@ def get_used_curtain_wall_element_type_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rPurgeUtils.get_used_unused_type_ids(
-        doc, rCurtainWallElem.get_all_curtain_wall_element_type_ids_by_category, 1
+    ids = get_used_unused_type_ids(
+        doc, get_all_curtain_wall_element_type_ids_by_category, 1
     )
     return ids
 
@@ -82,9 +87,9 @@ def get_unused_non_symbol_curtain_wall_element_type_ids_to_purge(doc):
     """
 
     # get unused type ids
-    ids = rPurgeUtils.get_used_unused_type_ids(
+    ids = get_used_unused_type_ids(
         doc,
-        rCurtainWallElem.get_all_curtain_wall_element_type_ids_by_category_excl_symbols,
+        get_all_curtain_wall_element_type_ids_by_category_excl_symbols,
         0,
     )
     # unlike other element types, here I do NOT make sure there is at least on curtain wall element type per system family left in model!!
@@ -103,8 +108,8 @@ def get_used_curtain_wall_symbol_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rPurgeUtils.get_used_unused_type_ids(
-        doc, rCurtainWallElem.get_all_curtain_wall_non_shared_symbol_ids_by_category, 1
+    ids = get_used_unused_type_ids(
+        doc, get_all_curtain_wall_non_shared_symbol_ids_by_category, 1
     )
     return ids
 
@@ -121,8 +126,8 @@ def get_unused_curtain_wall_symbol_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rPurgeUtils.get_used_unused_type_ids(
-        doc, rCurtainWallElem.get_all_curtain_wall_non_shared_symbol_ids_by_category, 0
+    ids = get_used_unused_type_ids(
+        doc, get_all_curtain_wall_non_shared_symbol_ids_by_category, 0
     )
     return ids
 
@@ -138,7 +143,7 @@ def get_unused_curtain_wall_symbol_ids_for_purge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = rFamPurge.get_unused_in_place_ids_for_purge(
+    ids = get_unused_in_place_ids_for_purge(
         doc, get_unused_curtain_wall_symbol_ids
     )
     return ids

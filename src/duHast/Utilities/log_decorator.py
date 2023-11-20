@@ -7,8 +7,8 @@ def get_add_logger_decorator(log_obj_inst):
     """
     This is a decorator factory that returns a decorator that can be used to add logging to a function.
     Pass this function an instance of the LoggerObject class from duHast.Utilities.Objects.logger_object.py.
-    This will connect the decorator to the logger object application wide.
-    Assign the return value to a variable called log, add_logger or the like.
+    Inherit and extend this class to the needs of your application. This will connect the decorator to
+    the logger object application wide. Assign the return value to a variable called log or add_logger etc.
 
     :param log_obj_inst: An instance of the LoggerObject class from duHast.Utilities.Objects.logger_object.py
     :type log_obj_inst: duHast.Utilities.Objects.logger_object.LoggerObject
@@ -30,7 +30,7 @@ def get_add_logger_decorator(log_obj_inst):
 
         If using the decorator from the get_add_log_decorator factory you can override the logger object
         instance by passing in a different one to the decorator. This will only affect the function
-        that the decorator is used on. NOT the application wide logger object.
+        that the decorator is used on. NOT the application wide logger object that the decorator uses.
 
         :param logger_in: An instance of the LoggerObject class from duHast.Utilities.Objects.logger_object.py.
         :type logger_in: duHast.Utilities.Objects.logger_object.LoggerObject

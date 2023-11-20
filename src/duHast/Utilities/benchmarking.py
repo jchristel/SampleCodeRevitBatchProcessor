@@ -34,8 +34,8 @@ import time
 import functools
 
 
-# Get the function name for the print statement
 def measure_time_wrapper(func, logger=None, measure=True):
+    # Get the function name for the print statement
     func_name = func.__name__
 
     @functools.wraps(func)
@@ -72,7 +72,7 @@ def add_measure_time(func, should_output=True):
     Use like:
     @measure_time(should_output = show_benchmarking_output_bool)
     def function_to_measure():
-        pass
+        do_stuff()
 
     :param should_output: Whether the elapsed time should be printed to the console
     :type should_output: bool

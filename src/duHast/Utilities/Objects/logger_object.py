@@ -5,19 +5,13 @@ import sys
 from duHast.Utilities.directory_io import create_target_directory
 
 
-def check_log_file_dir_exists(log_file_dir):
-    if not os.path.exists(log_file_dir):
-        os.mkdir(log_file_dir)
-
-
 class LoggerObject:
     def __init__(
         self, log_name="duHast", output_path=os.getenv("APPDATA"), log_level=(10, 30)
     ):
         self.log_name = log_name
-        self.output_path = output_path  # os.getenv("APPDATA")
+        self.output_path = output_path
         self.log_file_dir = os.path.join(self.output_path, self.log_name)
-        # check_log_file_dir_exists(self.log_file_dir)
         create_target_directory(self.output_path, self.log_name)
         self.log_file_path = os.path.join(self.log_file_dir, self.log_name + ".log")
         log_level_file, log_level_console = log_level
@@ -31,6 +25,7 @@ class LoggerObject:
         logging.basicConfig(level=logging.DEBUG)
 
     def get_standard_formatter(self):
+        """Standard output formatting for console and file handlers"""
         return logging.Formatter(
             "%(levelname)s | %(asctime)s.%(msecs)03d | %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
@@ -52,12 +47,8 @@ class LoggerObject:
         console_handler.setFormatter(self.console_log_format)
         return console_handler
 
-    def get_logger(self, name=None, func_name=""):
-        if name == None:
-            new_logger = logging.getLogger(self.log_name)
-        else:
-            new_logger = logging.getLogger(name)
-
+    def get_logger(self):
+        new_logger = logging.getLogger(self.log_name)
         new_logger.propagate = 0
         while new_logger.handlers:
             new_logger.handlers.pop()

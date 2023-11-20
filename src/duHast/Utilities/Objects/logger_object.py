@@ -19,7 +19,7 @@ class LoggerObject:
         self.file_log_format = self.get_standard_formatter()
         self.file_handler = self.create_file_handler()
         self.console_log_level = log_level_console
-        self.console_log_format = self.get_standard_formatter()
+        self.console_log_format = self.get_presentation_formatter()
         self.console_handler = self.create_console_handler()
         self.logger_object = self.get_logger()
         logging.basicConfig(level=logging.DEBUG)
@@ -30,6 +30,10 @@ class LoggerObject:
             "%(levelname)s | %(asctime)s.%(msecs)03d | %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
         )
+
+    def get_presentation_formatter(self):
+        """Output formatting for presentation"""
+        return logging.Formatter("%(message)s")
 
     def create_file_handler(self):
         # Set file output

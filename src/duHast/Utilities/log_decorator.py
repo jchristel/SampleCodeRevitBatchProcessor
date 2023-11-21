@@ -1,10 +1,10 @@
 import functools
-import sys
+import traceback
 from duHast.Utilities.benchmarking import measure_time_wrapper
 
 
 def get_add_logger_decorator(
-    log_obj_inst, errors_in_console=True, suppress_exceptions=False
+    log_obj_inst, errors_in_console=True, suppress_exceptions=True
 ):
     """
     This is a decorator factory that returns a decorator that can be used to add logging to a function.
@@ -106,8 +106,8 @@ def get_add_logger_decorator(
                         return result
 
                 except Exception as e:
-                    msg = "Exception raised in {}. Exception: {}".format(
-                        func_name, str(e.message)
+                    msg = "ERROR raised in {}.\n\n{}\n".format(
+                        func_name, traceback.format_exc()
                     )
                     if errors_in_console:
                         logger.error(msg)

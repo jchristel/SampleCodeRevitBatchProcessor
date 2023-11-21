@@ -1,9 +1,11 @@
 import functools
-
+import sys
 from duHast.Utilities.benchmarking import measure_time_wrapper
 
 
-def get_add_logger_decorator(log_obj_inst):
+def get_add_logger_decorator(
+    log_obj_inst, errors_in_console=True, suppress_exceptions=False
+):
     """
     This is a decorator factory that returns a decorator that can be used to add logging to a function.
     Pass this function an instance of the LoggerObject class from duHast.Utilities.Objects.logger_object.py.
@@ -12,12 +14,18 @@ def get_add_logger_decorator(log_obj_inst):
 
     :param log_obj_inst: An instance of the LoggerObject class from duHast.Utilities.Objects.logger_object.py
     :type log_obj_inst: duHast.Utilities.Objects.logger_object.LoggerObject
+    :param errors_in_console: Whether to output errors to the console. Defaults to True. Turn off to handle
+    in the application code
+    :type errors_in_console: bool
     :return: A decorator that can be used to add logging to a function
     :rtype: function
 
     """
 
-    def add_logger(logger_in=log_obj_inst, log_level=(10, 30), measure_time=False):
+    def add_logger(
+        log_level=(10, 30),
+        measure_time=False,
+    ):
         """
         Decorator function to add logging to a function.
         By default it will log the start and end of the function, the arguments passed in and the return value.
@@ -28,12 +36,6 @@ def get_add_logger_decorator(log_obj_inst):
         def example_function():
             do_stuff()
 
-        If using the decorator from the get_add_log_decorator factory you can override the logger object
-        instance by passing in a different one to the decorator. This will only affect the function
-        that the decorator is used on. NOT the application wide logger object that the decorator uses.
-
-        :param logger_in: An instance of the LoggerObject class from duHast.Utilities.Objects.logger_object.py.
-        :type logger_in: duHast.Utilities.Objects.logger_object.LoggerObject
         :param log_level: A tuple of the python log levels for the file and console handlers. See
         https://docs.python.org/3/library/logging.html#levels for log levels
         :type log_level: tuple/list of int (file_log_level, console_log_level)
@@ -47,6 +49,7 @@ def get_add_logger_decorator(log_obj_inst):
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
                 func_name = func.__name__
+                logger_in = log_obj_inst
                 # First check to see if the log levels passed in are different and update
                 cur_file_log_level = logger_in.file_handler.level
                 cur_console_log_level = logger_in.console_handler.level
@@ -57,6 +60,7 @@ def get_add_logger_decorator(log_obj_inst):
                 ):
                     # Update the log levels
                     logger = logger_in.update_log_level(log_level)
+                    logger.info("Updated log levels to {}".format(log_level))
                     updated_levels = True
                 try:
                     # Log the start of the function execution
@@ -87,6 +91,8 @@ def get_add_logger_decorator(log_obj_inst):
                 except Exception as e:
                     pass
 
+                result = None
+
                 try:
                     # Execute the wrapped function either with or without time measurement
                     if measure_time:
@@ -98,13 +104,19 @@ def get_add_logger_decorator(log_obj_inst):
                     else:
                         result = func(*args, **kwargs)
                         return result
+
                 except Exception as e:
-                    logger.error(
-                        "Exception raised in {}. exception: {}".format(
-                            func_name, str(e)
-                        )
+                    msg = "Exception raised in {}. Exception: {}".format(
+                        func_name, str(e.message)
                     )
-                    raise e
+                    if errors_in_console:
+                        logger.error(msg)
+
+                    else:
+                        logger.error(msg, extra={"block": "console"})
+
+                    if not suppress_exceptions:
+                        raise e
 
                 finally:
                     # Log the return value

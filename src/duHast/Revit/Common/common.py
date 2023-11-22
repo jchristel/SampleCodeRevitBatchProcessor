@@ -78,6 +78,18 @@ def get_element_mark(e):
     return mark
 
 
+def element_ids_to_semicolon_delimited_text(element_ids):
+    """
+    Convert a list of ElementIds to a semicolon delimited string
+
+    :param element_ids: List of ElementIds
+    :type element_ids: List[ElementId]
+    :return: Semicolon delimited string of ElementIds
+    :rtype: str
+    """
+    return str.Join("; ", [str(elementId.IntegerValue) for elementId in element_ids])
+
+
 # ----------------------------------------Legend Components -----------------------------------------------
 
 

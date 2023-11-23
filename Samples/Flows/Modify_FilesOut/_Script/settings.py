@@ -47,7 +47,7 @@ from duHast.Utilities.compare import does_not_equal
 from duHast.Utilities.date_stamps import get_folder_date_stamp
 
 # import common library
-from duHast.Utilities import Utility as util
+#from duHast.Utilities import Utility as util
 
 #: get the script location
 SCRIPT_DIRECTORY = get_directory_path_from_file_path(__file__)

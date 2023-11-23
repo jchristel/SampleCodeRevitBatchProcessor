@@ -106,7 +106,7 @@ def set_parameter_value(
             return action_return_value
 
         transaction = rdb.Transaction(doc, transaction_name)
-        return_value = in_transaction(transaction, action)
+        return_value = in_transaction(transaction, action, doc)
     elif para.StorageType == rdb.StorageType.Double:
         # THIS IS THE KEY:  Use SetValueString instead of Set.  Set requires your data to be in
         # whatever internal units of measure Revit uses. SetValueString expects your value to
@@ -128,7 +128,7 @@ def set_parameter_value(
             return action_return_value
 
         transaction = rdb.Transaction(doc, transaction_name)
-        return_value = in_transaction(transaction, action)
+        return_value = in_transaction(transaction, action, doc)
     elif para.StorageType == rdb.StorageType.Integer:
 
         def action():
@@ -145,7 +145,7 @@ def set_parameter_value(
             return action_return_value
 
         transaction = rdb.Transaction(doc, transaction_name)
-        return_value = in_transaction(transaction, action)
+        return_value = in_transaction(transaction, action, doc)
     elif para.StorageType == rdb.StorageType.String:
 
         def action():

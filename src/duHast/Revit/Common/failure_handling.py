@@ -304,5 +304,5 @@ def in_transaction_with_failures_processing(tranny, action, doc):
             tranny.RollBack()
         return result
 
-    result = with_failures_processing_handler(doc.Application, inAction, "")
+    result = with_failures_processing_handler(doc.Application, inAction)
     return result

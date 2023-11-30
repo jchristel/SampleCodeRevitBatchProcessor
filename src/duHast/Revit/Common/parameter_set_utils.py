@@ -21,8 +21,8 @@ Revit API utility functions to set parameter values.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -88,6 +88,7 @@ def set_parameter_value(
     # first before applied to the parameter
     if para.StorageType == rdb.StorageType.ElementId:
         new_id = rdb.ElementId(int(value_as_string))
+
         # changing parameter value is required to run inside a transaction
         def action():
             # set up a result instance to be returned to caller with transaction outcome
@@ -215,10 +216,164 @@ def set_built_in_parameter_value(
     """
 
     return_value = res.Result()
-    
+
     para = element.get_Parameter(built_in_parameter_def)
-    if para !=None:
+    if para != None:
         return_value = parameter_value_setter(para, value_as_string, doc)
     else:
         return_value.update_sep(False, "Parameter not found")
+    return return_value
+
+
+def set_parameter_value_simple(
+    para,
+    value_as_string,  # type: str
+):
+    """
+    Sets the parameter value by trying to convert the past in string representing the value into the appropriate value type.
+
+    Changing a parameter value requires this action to run inside a transaction.
+
+    :param para: Parameter of which the value is to be set.
+    :type para: Autodesk.Revit.DB.Parameter
+    :param value_as_string: The new parameter value.
+    :type value_as_string: str
+
+    :raise: Any exception will need to be managed by the function caller.
+
+
+    :return:
+        Result class instance.
+
+        - Set parameter status (bool) returned in result.status. False if an exception occurred, otherwise True.
+        - Result.message property updated in format: Changed parameter value of type x ['parameter name'] : 'old value' to: 'new value'.
+
+        On exception:
+
+        - Set parameter.status (bool) will be False.
+        - Set parameter.message will contain the exception message.
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+    old_value = rParaGet.get_parameter_value(para)
+    # different parameter storage types will require different actions due to value type past in is a string which will need converting
+    # first before applied to the parameter
+    if para.StorageType == rdb.StorageType.ElementId:
+        new_id = rdb.ElementId(int(value_as_string))
+        para.Set(new_id)
+        return_value.message = (
+            "Changed parameter value of type Id.[ {} ] from: {} to: {}".format(
+                para.Definition.Name, old_value, value_as_string
+            )
+        )
+    elif para.StorageType == rdb.StorageType.Double:
+        # THIS IS THE KEY:  Use SetValueString instead of Set.  Set requires your data to be in
+        # whatever internal units of measure Revit uses. SetValueString expects your value to
+        # be in whatever the current DisplayUnitType (units of measure) the document is set to
+        # for the UnitType associated with the parameter.
+        #
+        # So SetValueString is basically how the Revit GUI works.
+        para.SetValueString(value_as_string)
+        return_value.message = (
+            "Changed parameter value of type double.[ {} ] from: {} to: {}".format(
+                para.Definition.Name, old_value, value_as_string
+            )
+        )
+    elif para.StorageType == rdb.StorageType.Integer:
+        para.Set(int(value_as_string))
+        return_value.message = (
+            "Changed parameter value of type integer.[ {} ] from: {} to: {}".format(
+                para.Definition.Name, old_value, value_as_string
+            )
+        )
+    elif para.StorageType == rdb.StorageType.String:
+        para.Set(value_as_string)
+        return_value.message = (
+            "Changed parameter value of type string.[ {} ] from: {} to: {}".format(
+                para.Definition.Name, old_value, value_as_string
+            )
+        )
+    else:
+        # dead end
+        return_value.update_sep(
+            False,
+            "Dont know what to do with this storage type: {}".format(para.StorageType),
+        )
+    return return_value
+
+
+def set_parameter_without_transaction_wrapper_by_name(
+    element, parameter_name, parameter_value
+):
+    """
+    Sets the parameter value by trying to convert the past in string representing the value into the appropriate value type.
+
+    Changing a parameter value requires this action to run inside a transaction.
+
+    :param element: Element of which the parameter value is to be set.
+    :type element: Autodesk.Revit.DB.Element
+    :param parameter_name: The name of the parameter of which the value is to be set.
+    :type parameter_name: str
+    :param parameter_value: The new parameter value.
+    :type parameter_value: any
+
+    :return:
+        Result class instance.
+
+        - Set parameter status (bool) returned in result.status. False if an exception occurred, otherwise True.
+        - Result.message property updated in format: Changed parameter value of type x ['parameter name'] : 'old value' to: 'new value'.
+
+        On exception:
+
+        - Set parameter.status (bool) will be False.
+        - Set parameter.message will contain the exception message.
+    """
+
+    return_value = res.Result()
+    if not isinstance(parameter_value, str):
+        parameter_value = str(parameter_value)
+    para = element.LookupParameter(parameter_name)
+    return_value = set_parameter_value_simple(
+        para=para, value_as_string=parameter_value
+    )
+    return return_value
+
+
+def set_builtin_parameter_without_transaction_wrapper_by_name(
+    element, parameter_definition, parameter_value
+):
+    """
+    Sets the parameter value by trying to convert the past in string representing the value into the appropriate value type.
+
+    Changing a parameter value requires this action to run inside a transaction.
+
+    :param element: Element of which the parameter value is to be set.
+    :type element: Autodesk.Revit.DB.Element
+    :param parameter_definition: The parameter definition of which the value is to be set.
+    :type parameter_definition: Autodesk.Revit.DB.BuiltInParameter
+    :param parameter_value: The new parameter value.
+    :type parameter_value: any
+
+    :return:
+        Result class instance.
+
+        - Set parameter status (bool) returned in result.status. False if an exception occurred, otherwise True.
+        - Result.message property updated in format: Changed parameter value of type x ['parameter name'] : 'old value' to: 'new value'.
+
+        On exception:
+
+        - Set parameter.status (bool) will be False.
+        - Set parameter.message will contain the exception message.
+
+    """
+
+    return_value = res.Result()
+    if not isinstance(parameter_value, str):
+        parameter_value = str(parameter_value)
+    para = element.get_Parameter(parameter_definition)
+    return_value = set_parameter_value_simple(
+        para=para, value_as_string=parameter_value
+    )
     return return_value

@@ -215,10 +215,10 @@ def set_built_in_parameter_value(
     """
 
     return_value = res.Result()
-    return_value.update_sep(False, "Parameter not found")
-    paras = element.GetOrderedParameters()
-    for para in paras:
-        if para.Definition.BuiltInParameter == built_in_parameter_def:
-            return_value = parameter_value_setter(para, value_as_string, doc)
-            break
+    
+    para = element.get_Parameter(built_in_parameter_def)
+    if para !=None:
+        return_value = parameter_value_setter(para, value_as_string, doc)
+    else:
+        return_value.update_sep(False, "Parameter not found")
     return return_value

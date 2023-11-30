@@ -19,8 +19,8 @@ This module contains a number of helper functions relating to Revit links, CAD l
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -30,12 +30,20 @@ import clr
 import System
 
 # import common library modules
-from duHast.Revit.Common import delete as rDel
+from duHast.Revit.Common.delete import delete_by_element_ids
+from duHast.Revit.Common.common import get_ids_from_element_collector
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Links.Utility.link_path import get_link_path
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import (
+    BuiltInCategory,
+    Element,
+    FilteredElementCollector,
+    ModelPathUtils,
+    RevitLinkInstance,
+    RevitLinkType,
+)
 
 
 def get_all_revit_link_instances(doc):
@@ -51,7 +59,7 @@ def get_all_revit_link_instances(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkInstance)
+    collector = FilteredElementCollector(doc).OfClass(RevitLinkInstance)
     return collector
 
 
@@ -65,7 +73,7 @@ def get_all_revit_link_types(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkType)
+    collector = FilteredElementCollector(doc).OfClass(RevitLinkType)
     return collector
 
 
@@ -88,6 +96,30 @@ def get_revit_link_type_from_instance(doc, link_instance):
             return lt
 
 
+def get_link_docs(doc, link_names_filter=[]):
+    """
+    Gets the link documents for the specified link names.
+
+    :param doc: The current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param link_names_filter: A list of link names to filter. Default is an empty list.
+    :type link_names_filter: list[str]
+
+    :return: A dictionary mapping link names to their respective link documents.
+    :rtype: dict[str, Autodesk.Revit.DB.Document]
+    """
+    link_docs = {}
+    link_instances = get_all_revit_link_instances(doc)
+    for link in link_instances:
+        link_type = get_revit_link_type_from_instance(doc=doc, link_instance=link)
+        link_name = Element.Name.GetValue(link_type)
+        if link_name in link_names_filter:
+            link_doc = link.GetLinkDocument()
+            if link_doc is not None:
+                link_docs[link_name] = link.GetLinkDocument()
+    return link_docs
+
+
 def delete_revit_links(doc):
     """
     Deletes all revit links in a file.
@@ -103,14 +135,11 @@ def delete_revit_links(doc):
     :rtype: :class:`.Result`
     """
 
-    ids = []
     return_value = res.Result()
-    for p in rdb.FilteredElementCollector(doc).OfCategory(
-        rdb.BuiltInCategory.OST_RvtLinks
-    ):
-        ids.append(p.Id)
+    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_RvtLinks)
+    ids = get_ids_from_element_collector(col=col)
     # delete all links at once
-    return_value = rDel.delete_by_element_ids(
+    return_value = delete_by_element_ids(
         doc, ids, "Deleting Revit links", "Revit link(s)"
     )
     return return_value
@@ -150,13 +179,13 @@ def reload_revit_links(
     return_value = res.Result()
     try:
         # get all revit link types in model
-        for p in rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkType):
-            link_type_name = do_something_with_link_name(rdb.Element.Name.GetValue(p))
+        for p in FilteredElementCollector(doc).OfClass(RevitLinkType):
+            link_type_name = do_something_with_link_name(Element.Name.GetValue(p))
             new_link_path = "unknown"
             try:
                 new_link_path = get_link_path(link_type_name, link_locations, ".rvt")
                 if new_link_path != None:
-                    mp = rdb.ModelPathUtils.ConvertUserVisiblePathToModelPath(
+                    mp = ModelPathUtils.ConvertUserVisiblePathToModelPath(
                         new_link_path
                     )
                     # attempt to reload with worksets set to last viewed
@@ -223,12 +252,12 @@ def reload_revit_links_from_list(
     try:
         # loop over links supplied
         for p in link_types_tob_reloaded:
-            link_type_name = do_something_with_link_name(rdb.Element.Name.GetValue(p))
+            link_type_name = do_something_with_link_name(Element.Name.GetValue(p))
             new_link_path = "unknown"
             try:
                 new_link_path = get_link_path(link_type_name, link_locations, ".rvt")
                 if new_link_path != None:
-                    mp = rdb.ModelPathUtils.ConvertUserVisiblePathToModelPath(
+                    mp = ModelPathUtils.ConvertUserVisiblePathToModelPath(
                         new_link_path
                     )
                     # attempt to reload with worksets set to last viewed

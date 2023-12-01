@@ -4,24 +4,54 @@ from duHast.Revit.Common.Objects.ParameterDirectiveBase import ParameterDirectiv
 
 
 class ParameterMappingDirective(ParameterDirectiveBase):
+    """Class for parameter mapping directives."""
+
     data_type = "parameter_mapping_directive"
 
     def __init__(
         self,
+        target_parameter_name="",
         source_parameter_name="",
+        parameter_modifier=None,
+        parameter_value=None,
         source_parameter_is_instance=True,
         parameter_getter=None,
         j={},
         **kwargs
     ):
-        super(ParameterMappingDirective, self).__init__(**kwargs)
+        """ Constructor for the ParameterMappingDirective class.
+
+        :param target_parameter_name: The name of the parameter to be modified.
+        :type target_parameter_name: str
+        :param source_parameter_name: The name of the parameter to be used as the source.
+        :type source_parameter_name: str
+        :param parameter_modifier: The modifier to be applied to the parameter value.
+        :type parameter_modifier: A function accepting the value as an argument and returning the modified value.
+        :param parameter_value: The value to be applied to the parameter.
+        :type parameter_value: any
+        :param source_parameter_is_instance: Indicates if the source parameter is an instance parameter.
+        :type source_parameter_is_instance: bool
+        :param parameter_getter: A function that returns the value of the source parameter.
+        :type parameter_getter: A function that returns the value of the source parameter.
+        :param j: A json object containing the properties of the class.
+        :type j: json
+        :param kwargs: Additional keyword arguments.
+        :type kwargs: dict
+
+        :raises ValueError: If the source_parameter_name or source_parameter_is_instance is not supplied in j.
+
+        """
+
+        super(ParameterMappingDirective, self).__init__(
+            target_parameter_name=target_parameter_name,
+            parameter_modifier=parameter_modifier,
+            parameter_value=parameter_value,
+            **kwargs
+        )
 
         self.source_parameter_name = source_parameter_name
         self.source_parameter_is_instance = source_parameter_is_instance
-        self.target_parameter_name = target_parameter_name
-        self.parameter_modifier = parameter_modifier
         self.parameter_getter = parameter_getter
-        self.parameter_value = None
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -42,8 +72,6 @@ class ParameterMappingDirective(ParameterDirectiveBase):
             try:
                 self.source_parameter_name = j["source_parameter_name"]
                 self.source_parameter_is_instance = j["source_parameter_is_instance"]
-                self.target_parameter_name = j["target_parameter_name"]
-                self.parameter_value = j["parameter_value"]
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(
@@ -59,8 +87,8 @@ class ParameterMappingDirective(ParameterDirectiveBase):
         - parameter_getter
 
 
-        :param other: Another instance of  ParameterDirective  class
-        :type other: :class:`. ParameterDirective`
+        :param other: Another instance of  ParameterMappingDirective  class
+        :type other: :class:`. ParameterMappingDirective`
         :return: True if all properties of compared class instances are equal, otherwise False.
         :rtype: Bool
         """

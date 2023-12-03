@@ -39,7 +39,7 @@ from duHast.Revit.Views.Objects.Data.override_by_base import OverrideByBase
 class OverrideByFilter(OverrideByBase):
     data_type = "override_by_filter"
 
-    def __init__(self, filter_name="", filter_id=-1, j={}):
+    def __init__(self, filter_name="", filter_id=-1, j=None):
         """
         Class constructor.
 

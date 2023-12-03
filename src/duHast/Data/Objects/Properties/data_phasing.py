@@ -34,7 +34,7 @@ class DataPhasing(data_base.DataBase):
 
     data_type = "phasing"
 
-    def __init__(self, j={}):
+    def __init__(self, j=None):
         """
         Class constructor
 

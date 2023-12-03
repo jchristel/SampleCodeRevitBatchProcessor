@@ -39,7 +39,7 @@ from duHast.Revit.Common.Objects.Data.line_graphic_base import LineGraphicBase
 class LineCut(LineGraphicBase):
     data_type = "line_cut"
 
-    def __init__(self, j={}):
+    def __init__(self, j=None):
         """
         Class constructor.
 

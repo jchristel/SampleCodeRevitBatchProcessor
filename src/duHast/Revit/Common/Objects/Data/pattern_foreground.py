@@ -38,7 +38,7 @@ from duHast.Revit.Common.Objects.Data.pattern_graphic_base import PatternGraphic
 class PatternForeground(PatternGraphicBase):
     data_type = "pattern_foreground"
 
-    def __init__(self, j={}):
+    def __init__(self, j=None):
         """
         Class constructor.
 

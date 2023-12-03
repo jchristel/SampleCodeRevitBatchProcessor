@@ -45,7 +45,7 @@ from duHast.Revit.Views.Objects.Data.override_by_filter import OverrideByFilter
 
 
 class ViewGraphicsSettings(base.Base):
-    def __init__(self, view_name="", view_id=-1, j={}, **kwargs):
+    def __init__(self, view_name="", view_id=-1, j=None, **kwargs):
         """
         Class constructor.
 

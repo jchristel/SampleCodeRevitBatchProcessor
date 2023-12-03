@@ -34,7 +34,7 @@ class DataInstanceProperties(data_base.DataBase):
 
     data_type = "instance_properties"
 
-    def __init__(self, j={}):
+    def __init__(self, j=None):
         """
         Class constructor
 

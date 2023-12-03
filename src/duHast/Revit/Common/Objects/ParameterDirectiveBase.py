@@ -13,7 +13,7 @@ class ParameterDirectiveBase(base.Base):
         target_parameter_name="",
         parameter_modifier=None,
         parameter_value=None,
-        j={},
+        j=None,
         **kwargs
     ):
         """

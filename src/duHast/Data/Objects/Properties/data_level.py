@@ -34,7 +34,7 @@ class DataLevel(data_base.DataBase):
 
     data_type = "level"
 
-    def __init__(self, j={}):
+    def __init__(self, j=None):
         """
         Class constructor
 

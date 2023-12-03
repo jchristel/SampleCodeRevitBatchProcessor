@@ -16,7 +16,7 @@ class ParameterMappingDirective(ParameterDirectiveBase):
         parameter_value=None,
         source_parameter_is_instance=True,
         parameter_getter=None,
-        j={},
+        j=None,
         **kwargs
     ):
         """ Constructor for the ParameterMappingDirective class.

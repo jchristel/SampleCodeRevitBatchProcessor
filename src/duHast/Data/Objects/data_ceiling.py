@@ -43,7 +43,7 @@ class DataCeiling(data_base.DataBase, data_element_geometry.DataElementGeometryB
 
     data_type = "ceiling"
 
-    def __init__(self, j={}):
+    def __init__(self, j=None):
         """
         Class constructor.
 

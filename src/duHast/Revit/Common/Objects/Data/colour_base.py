@@ -40,7 +40,7 @@ from duHast.Utilities.Objects import base
 class ColourBase(base.Base):
     data_type = "colour"
 
-    def __init__(self, j={}, **kwargs):
+    def __init__(self, j=None, **kwargs):
         """
         Class constructor.
 

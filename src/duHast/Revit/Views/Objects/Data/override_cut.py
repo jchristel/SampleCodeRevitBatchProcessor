@@ -45,7 +45,7 @@ from duHast.Revit.Common.Objects.Data import (
 class OverrideCut(base.Base):
     data_type = "override_cut"
 
-    def __init__(self, j={}, **kwargs):
+    def __init__(self, j=None, **kwargs):
         """
         Class constructor.
 

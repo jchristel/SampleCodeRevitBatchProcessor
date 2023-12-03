@@ -45,7 +45,7 @@ from duHast.Revit.LinePattern.Objects.Data.fill_pattern_settings import (
 
 
 class PatternGraphicBase(base.Base):
-    def __init__(self, data_type="unknown", j={}, **kwargs):
+    def __init__(self, data_type="unknown", j=None, **kwargs):
         """
         Class constructor.
 

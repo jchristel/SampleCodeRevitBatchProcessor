@@ -39,7 +39,7 @@ from duHast.Revit.Common.Objects.Data.line_graphic_base import LineGraphicBase
 class LineProjection(LineGraphicBase):
     data_type = "line_projection"
 
-    def __init__(self, j={}):
+    def __init__(self, j=None):
         """
         Class constructor.
 

@@ -40,7 +40,7 @@ from duHast.Data.Objects.Properties import data_element_geometry
 class DataRoom(data_base.DataBase, data_element_geometry.DataElementGeometryBase):
     data_type = "room"
 
-    def __init__(self, j={}):
+    def __init__(self, j=None):
         """
         Class constructor.
 

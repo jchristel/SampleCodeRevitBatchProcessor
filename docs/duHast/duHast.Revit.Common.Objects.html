@@ -159,6 +159,102 @@
 </ul>
 </div>
 </section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Common.Objects.ParameterDirectiveBase">
+<span id="duhast-revit-common-objects-parameterdirectivebase-module"></span><h2>duHast.Revit.Common.Objects.ParameterDirectiveBase module<a class="headerlink" href="#module-duHast.Revit.Common.Objects.ParameterDirectiveBase" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Objects.ParameterDirectiveBase.ParameterDirectiveBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Objects.ParameterDirectiveBase.</span></span><span class="sig-name descname"><span class="pre">ParameterDirectiveBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_parameter_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_modifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Objects.ParameterDirectiveBase.ParameterDirectiveBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Base class for all parameter directives.</p>
+<p>Constructor for the ParameterDirective class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_parameter_name</strong> (<em>str</em>) – The name of the parameter to be modified.</p></li>
+<li><p><strong>parameter_modifier</strong> (<em>A function accepting the value as an argument and returning the modified value.</em>) – The modifier to be applied to the parameter value.</p></li>
+<li><p><strong>parameter_value</strong> (<em>any</em>) – The value to be applied to the parameter.</p></li>
+<li><p><strong>j</strong> (<em>json</em>) – A json object containing the properties of the class.</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Additional keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the target_parameter_name or parameter_value is not supplied in j.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Objects.ParameterDirectiveBase.ParameterDirectiveBase.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'parameter_directive_base'</span></em><a class="headerlink" href="#duHast.Revit.Common.Objects.ParameterDirectiveBase.ParameterDirectiveBase.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Objects.ParameterDirectiveBase.ParameterDirectiveBase.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Objects.ParameterDirectiveBase.ParameterDirectiveBase.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the instance of this class to json.
+Ignores parameter modifier property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A Json object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>json</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.Objects.ParameterMappingDirective">
+<span id="duhast-revit-common-objects-parametermappingdirective-module"></span><h2>duHast.Revit.Common.Objects.ParameterMappingDirective module<a class="headerlink" href="#module-duHast.Revit.Common.Objects.ParameterMappingDirective" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Objects.ParameterMappingDirective.ParameterMappingDirective">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Objects.ParameterMappingDirective.</span></span><span class="sig-name descname"><span class="pre">ParameterMappingDirective</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_parameter_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_parameter_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_modifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_parameter_is_instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_getter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Objects.ParameterMappingDirective.ParameterMappingDirective" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Revit.Common.Objects.ParameterDirectiveBase.ParameterDirectiveBase" title="duHast.Revit.Common.Objects.ParameterDirectiveBase.ParameterDirectiveBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParameterDirectiveBase</span></code></a></p>
+<p>Class for parameter mapping directives.</p>
+<p>Constructor for the ParameterMappingDirective class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_parameter_name</strong> (<em>str</em>) – The name of the parameter to be modified.</p></li>
+<li><p><strong>source_parameter_name</strong> (<em>str</em>) – The name of the parameter to be used as the source.</p></li>
+<li><p><strong>parameter_modifier</strong> (<em>A function accepting the value as an argument and returning the modified value.</em>) – The modifier to be applied to the parameter value.</p></li>
+<li><p><strong>parameter_value</strong> (<em>any</em>) – The value to be applied to the parameter.</p></li>
+<li><p><strong>source_parameter_is_instance</strong> (<em>bool</em>) – Indicates if the source parameter is an instance parameter.</p></li>
+<li><p><strong>parameter_getter</strong> (<em>A function that returns the value</em><em> of </em><em>the source parameter.</em>) – A function that returns the value of the source parameter.</p></li>
+<li><p><strong>j</strong> (<em>json</em>) – A json object containing the properties of the class.</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Additional keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the source_parameter_name or source_parameter_is_instance is not supplied in j.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Objects.ParameterMappingDirective.ParameterMappingDirective.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'parameter_mapping_directive'</span></em><a class="headerlink" href="#duHast.Revit.Common.Objects.ParameterMappingDirective.ParameterMappingDirective.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Objects.ParameterMappingDirective.ParameterMappingDirective.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Objects.ParameterMappingDirective.ParameterMappingDirective.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the instance of this class to json.
+Ignores parameter modifier and parameter getter class properties</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A Json object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>json</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Common.Objects">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Common.Objects" title="Permalink to this heading">¶</a></h2>
 </section>

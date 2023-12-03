@@ -71,6 +71,14 @@ duHast.Revit.Common.element\_filtering module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Common.failure\_handling module
+--------------------------------------------
+
+.. automodule:: duHast.Revit.Common.failure_handling
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Common.file\_io module
 -----------------------------------
 

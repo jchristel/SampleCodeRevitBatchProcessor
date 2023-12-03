@@ -366,6 +366,26 @@ TODO: This code repeats across a number of modules. Use generic instead!</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.get_curtain_wall_panels">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.curtain_wall_elements.</span></span><span class="sig-name descname"><span class="pre">get_curtain_wall_panels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curtain_wall_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.get_curtain_wall_panels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of panel instances that are hosted in a curtain wall, excluding any family instances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Document</em>) – The current Revit model document.</p></li>
+<li><p><strong>curtain_wall_instance</strong> (<em>FamilyInstance</em>) – The curtain wall instance for which to retrieve the panel instances.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of panel instances hosted in the curtain wall.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[Panel]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Walls.curtain_walls">
 <span id="duhast-revit-walls-curtain-walls-module"></span><h2>duHast.Revit.Walls.curtain_walls module<a class="headerlink" href="#module-duHast.Revit.Walls.curtain_walls" title="Permalink to this heading">¶</a></h2>
@@ -374,7 +394,7 @@ TODO: This code repeats across a number of modules. Use generic instead!</p>
 </section>
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_walls.CURTAIN_WALL_FAMILY_NAME">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.curtain_walls.</span></span><span class="sig-name descname"><span class="pre">CURTAIN_WALL_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Curtain</span> <span class="pre">Wall'</span></em><a class="headerlink" href="#duHast.Revit.Walls.curtain_walls.CURTAIN_WALL_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.curtain_walls.</span></span><span class="sig-name descname"><span class="pre">CURTAIN_WALL_FAMILY_NAME</span></span><a class="headerlink" href="#duHast.Revit.Walls.curtain_walls.CURTAIN_WALL_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in wall family name for curtain wall</p>
 </dd></dl>
 
@@ -670,7 +690,7 @@ In the case that no wall instance using any of the types is placed this will ret
 </section>
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Walls.stacked_walls.STACKED_WALL_FAMILY_NAME">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.stacked_walls.</span></span><span class="sig-name descname"><span class="pre">STACKED_WALL_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Stacked</span> <span class="pre">Wall'</span></em><a class="headerlink" href="#duHast.Revit.Walls.stacked_walls.STACKED_WALL_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.stacked_walls.</span></span><span class="sig-name descname"><span class="pre">STACKED_WALL_FAMILY_NAME</span></span><a class="headerlink" href="#duHast.Revit.Walls.stacked_walls.STACKED_WALL_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in wall family name for stacked wall</p>
 </dd></dl>
 
@@ -737,13 +757,13 @@ In the case that no wall instance using any of the types is placed this will ret
 </section>
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Walls.walls.BASIC_WALL_FAMILY_NAME">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.walls.</span></span><span class="sig-name descname"><span class="pre">BASIC_WALL_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Basic</span> <span class="pre">Wall'</span></em><a class="headerlink" href="#duHast.Revit.Walls.walls.BASIC_WALL_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.walls.</span></span><span class="sig-name descname"><span class="pre">BASIC_WALL_FAMILY_NAME</span></span><a class="headerlink" href="#duHast.Revit.Walls.walls.BASIC_WALL_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in wall family name for basic wall</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Walls.walls.BUILTIN_WALL_TYPE_FAMILY_NAMES">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.walls.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_WALL_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Stacked</span> <span class="pre">Wall',</span> <span class="pre">'Curtain</span> <span class="pre">Wall',</span> <span class="pre">'Basic</span> <span class="pre">Wall']</span></em><a class="headerlink" href="#duHast.Revit.Walls.walls.BUILTIN_WALL_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.walls.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_WALL_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.WallKind.Stacked,</span> <span class="pre">Autodesk.Revit.DB.WallKind.Curtain,</span> <span class="pre">Autodesk.Revit.DB.WallKind.Basic]</span></em><a class="headerlink" href="#duHast.Revit.Walls.walls.BUILTIN_WALL_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all Built in wall family names</p>
 </dd></dl>
 

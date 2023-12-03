@@ -1,0 +1,21 @@
+duHast.UI.Objects package
+=========================
+
+Submodules
+----------
+
+duHast.UI.Objects.common\_ui module
+-----------------------------------
+
+.. automodule:: duHast.UI.Objects.common_ui
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.UI.Objects
+   :members:
+   :undoc-members:
+   :show-inheritance:

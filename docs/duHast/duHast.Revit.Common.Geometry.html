@@ -747,6 +747,42 @@ Note: works only on planar faces</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.negate_vector">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">negate_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.negate_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Negates the direction of a given vector
+:param vector: The vector to negate
+:type vector: list or tuple
+:return: The negated vector
+:rtype: list</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.sort_points_by_min_and_max">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">sort_points_by_min_and_max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_pt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_pt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.sort_points_by_min_and_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes BoundingBox or Outline Min and Max points and
+returns the true Min and Max points. This is to ensure
+no zero thickness geometries are created.
+:param min_pt: The minimum point
+:type min_pt: XYZ
+:param max_pt: The maximum point
+:type max_pt: XYZ
+:return: The sorted points
+:rtype: tuple</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.transform_point_by_elem_transform">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">transform_point_by_elem_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.transform_point_by_elem_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms a point by an element transform
+:param pt: The point to transform
+:type pt: XYZ
+:param transform: The transform to use
+:type transform: Transform
+:return: The transformed point
+:rtype: XYZ</p>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Common.Geometry.solids">
 <span id="duhast-revit-common-geometry-solids-module"></span><h2>duHast.Revit.Common.Geometry.solids module<a class="headerlink" href="#module-duHast.Revit.Common.Geometry.solids" title="Permalink to this heading">¶</a></h2>

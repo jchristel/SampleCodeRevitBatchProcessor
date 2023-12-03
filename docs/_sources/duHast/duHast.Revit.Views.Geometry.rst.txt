@@ -1,0 +1,21 @@
+duHast.Revit.Views.Geometry package
+===================================
+
+Submodules
+----------
+
+duHast.Revit.Views.Geometry.view\_geometry module
+-------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.Geometry.view_geometry
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Views.Geometry
+   :members:
+   :undoc-members:
+   :show-inheritance:

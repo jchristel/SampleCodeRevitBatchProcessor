@@ -1,0 +1,29 @@
+duHast.Revit.Doors package
+==========================
+
+Submodules
+----------
+
+duHast.Revit.Doors.doors module
+-------------------------------
+
+.. automodule:: duHast.Revit.Doors.doors
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Doors.doors\_create module
+---------------------------------------
+
+.. automodule:: duHast.Revit.Doors.doors_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Doors
+   :members:
+   :undoc-members:
+   :show-inheritance:

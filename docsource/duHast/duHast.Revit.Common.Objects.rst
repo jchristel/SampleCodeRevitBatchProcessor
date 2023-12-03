@@ -9,6 +9,25 @@ Subpackages
 
    duHast.Revit.Common.Objects.Data
 
+Submodules
+----------
+
+duHast.Revit.Common.Objects.ParameterDirectiveBase module
+---------------------------------------------------------
+
+.. automodule:: duHast.Revit.Common.Objects.ParameterDirectiveBase
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Common.Objects.ParameterMappingDirective module
+------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Common.Objects.ParameterMappingDirective
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 0.1.1 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
-    <link rel="next" title="duHast.Utilities package" href="duHast.Utilities.html" />
+    <link rel="next" title="duHast.UI.Objects package" href="duHast.UI.Objects.html" />
     <link rel="prev" title="duHast.Revit.Warnings.Utility package" href="duHast.Revit.Warnings.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
@@ -31,7 +31,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="duHast.Utilities.html" title="duHast.Utilities package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.UI.Objects.html" title="duHast.UI.Objects package" accesskey="N">next</a></div>
             <div class="headerButton"><a href="duHast.Revit.Warnings.Utility.html" title="duHast.Revit.Warnings.Utility package" accesskey="P">previous</a></div>
         </li>
     </ul>
@@ -88,6 +88,24 @@
             
   <section id="duhast-ui-package">
 <h1>duHast.UI package<a class="headerlink" href="#duhast-ui-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.UI.Objects.html">duHast.UI.Objects package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.UI.Objects.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.UI.Objects.html#module-duHast.UI.Objects.common_ui">duHast.UI.Objects.common_ui module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.html#a-collection-of-common-ui-elements">A collection of common UI elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.common_ui.AlertDialog"><code class="docutils literal notranslate"><span class="pre">AlertDialog</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.common_ui.alert"><code class="docutils literal notranslate"><span class="pre">alert()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.UI.Objects.html#module-duHast.UI.Objects">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
@@ -156,67 +174,6 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>[<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.UI.file_list.is_back_up_file">
-<span class="sig-prename descclassname"><span class="pre">duHast.UI.file_list.</span></span><span class="sig-name descname"><span class="pre">is_back_up_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.file_list.is_back_up_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks whether a file is a Revit back up file.</p>
-<p>Backup files are usually in format ‘filename.01234.ext’</p>
-<p>Method of checking:</p>
-<ul>
-<li><p>splitting file name at every full stop</p></li>
-<li><p>check whether a list with more more then 2 entries came back ?</p>
-<blockquote>
-<div><ul>
-<li><dl class="simple">
-<dt>no:</dt><dd><ul class="simple">
-<li><p>not a back up</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl>
-<dt>yes:</dt><dd><ul>
-<li><p>check last list entry whether it is 4 characters in length and can it be convert it into an integer?</p>
-<blockquote>
-<div><ul class="simple">
-<li><dl class="simple">
-<dt>yes:</dt><dd><ul>
-<li><p>backup file</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>no</dt><dd><ul>
-<li><p>normal file</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – A fully qualified file path.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if a back up file, otherwise False.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>

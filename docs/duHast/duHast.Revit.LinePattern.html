@@ -487,6 +487,35 @@
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.LinePattern.purge_unused_line_patterns">
+<span id="duhast-revit-linepattern-purge-unused-line-patterns-module"></span><h2>duHast.Revit.LinePattern.purge_unused_line_patterns module<a class="headerlink" href="#module-duHast.Revit.LinePattern.purge_unused_line_patterns" title="Permalink to this heading">¶</a></h2>
+<section id="function-to-purge-revit-line-patterns">
+<h3>Function to purge Revit line patterns.<a class="headerlink" href="#function-to-purge-revit-line-patterns" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.LinePattern.purge_unused_line_patterns.purge_unused_line_patterns">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.purge_unused_line_patterns.</span></span><span class="sig-name descname"><span class="pre">purge_unused_line_patterns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DEBUG</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.purge_unused_line_patterns.purge_unused_line_patterns" title="Permalink to this definition">¶</a></dt>
+<dd><p>This script will ascertain line patterns not used in your model and delete them.
+It deletes the line patterns one by one and checks if there is modified elements
+which indicates an element was using the line pattern. The trasaction is rolled
+back if there is a modified element.</p>
+<p>IMPORTANT: This has flushed out some corrupt families with unresolvable geometry
+so it is advisable to run on a detached copy of your model first and rectify any
+family errors</p>
+<p>Credit for this script goes to Autodesk forum
+user so-chong from the below forum post
+<a class="reference external" href="https://forums.autodesk.com/t5/revit-api-forum/check-if-linepattern-is-in-use/td-p/7435014">https://forums.autodesk.com/t5/revit-api-forum/check-if-linepattern-is-in-use/td-p/7435014</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rvt_doc</strong> (<em>Document</em>) – The Revit document to purge line patterns from</p></li>
+<li><p><strong>DEBUG</strong> (<em>bool</em>) – Whether to print debug information or not. Optional. Defaults to False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.LinePattern">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.LinePattern" title="Permalink to this heading">¶</a></h2>
 </section>

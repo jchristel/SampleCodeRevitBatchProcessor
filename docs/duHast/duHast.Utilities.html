@@ -18,7 +18,7 @@
     <link rel="top" title="Sample Code Revit Batch Processor 0.1.1 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
     <link rel="next" title="duHast.Utilities.Objects package" href="duHast.Utilities.Objects.html" />
-    <link rel="prev" title="duHast.UI package" href="duHast.UI.html" />
+    <link rel="prev" title="duHast.UI.Objects package" href="duHast.UI.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
@@ -32,7 +32,7 @@
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
             <div class="headerButton"><a href="duHast.Utilities.Objects.html" title="duHast.Utilities.Objects package" accesskey="N">next</a></div>
-            <div class="headerButton"><a href="duHast.UI.html" title="duHast.UI package" accesskey="P">previous</a></div>
+            <div class="headerButton"><a href="duHast.UI.Objects.html" title="duHast.UI.Objects package" accesskey="P">previous</a></div>
         </li>
     </ul>
 </div>
@@ -545,10 +545,26 @@
 </ul>
 </section>
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Utilities.benchmarking.measure_time">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.benchmarking.</span></span><span class="sig-name descname"><span class="pre">measure_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.benchmarking.measure_time" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Utilities.benchmarking.measure_time_wrapper">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.benchmarking.</span></span><span class="sig-name descname"><span class="pre">measure_time_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.benchmarking.measure_time_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.benchmarking.add_measure_time">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.benchmarking.</span></span><span class="sig-name descname"><span class="pre">add_measure_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">should_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.benchmarking.add_measure_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decorator function to measure the time a function takes to execute
 and then print it to the console.</p>
+<p>Use like:
+&#64;measure_time(should_output = show_benchmarking_output_bool)
+def function_to_measure():</p>
+<blockquote>
+<div><p>do_stuff()</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>should_output</strong> (<em>bool</em>) – Whether the elapsed time should be printed to the console</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -1438,6 +1454,84 @@ value: lit of str</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.remove_backup_revit_files_from_list">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_io.</span></span><span class="sig-name descname"><span class="pre">remove_backup_revit_files_from_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.remove_backup_revit_files_from_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a list of revit files or full paths and removes any backup files from the list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>files</strong> (<em>list</em>) – List of revit files or full paths</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of revit files or full paths with backup files removed</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.is_back_up_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_io.</span></span><span class="sig-name descname"><span class="pre">is_back_up_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.is_back_up_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a file is a Revit back up file.</p>
+<p>Backup files are usually in format ‘filename.01234.ext’</p>
+<p>Method of checking:</p>
+<ul>
+<li><p>splitting file name at every full stop</p></li>
+<li><p>check whether a list with more more then 2 entries came back ?</p>
+<blockquote>
+<div><ul>
+<li><dl class="simple">
+<dt>no:</dt><dd><ul class="simple">
+<li><p>not a back up</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>yes:</dt><dd><ul>
+<li><p>check last list entry whether it is 4 characters in length and can it be convert it into an integer?</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>yes:</dt><dd><ul>
+<li><p>backup file</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>no</dt><dd><ul>
+<li><p>normal file</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – A fully qualified file path.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if a back up file, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Utilities.files_json">
 <span id="duhast-utilities-files-json-module"></span><h2>duHast.Utilities.files_json module<a class="headerlink" href="#module-duHast.Utilities.files_json" title="Permalink to this heading">¶</a></h2>
@@ -1881,6 +1975,20 @@ If message is longer then 70-2 characters it will be returned un-changed.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.unit_conversion.convert_mm_to_imperial_feet">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.unit_conversion.</span></span><span class="sig-name descname"><span class="pre">convert_mm_to_imperial_feet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.unit_conversion.convert_mm_to_imperial_feet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a length value in millimeters to imperial feet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>length</strong> (<em>float</em>) – A float value representing the length in millimeters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A float value representing the length in imperial feet.</p>
 </dd>
 </dl>
 </dd></dl>

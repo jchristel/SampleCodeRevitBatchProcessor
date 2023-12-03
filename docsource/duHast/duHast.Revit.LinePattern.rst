@@ -60,6 +60,14 @@ duHast.Revit.LinePattern.line\_styles module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.LinePattern.purge\_unused\_line\_patterns module
+-------------------------------------------------------------
+
+.. automodule:: duHast.Revit.LinePattern.purge_unused_line_patterns
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

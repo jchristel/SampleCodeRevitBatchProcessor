@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   duHast.Revit.Views.Geometry
    duHast.Revit.Views.Objects
    duHast.Revit.Views.Reporting
    duHast.Revit.Views.Utility

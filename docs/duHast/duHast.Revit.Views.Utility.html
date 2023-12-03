@@ -392,10 +392,19 @@ filter_data_objects (list): A list of filter data objects to be converted.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.Utility.sheet_parameters.get_sheet_num_name_comb">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.sheet_parameters.</span></span><span class="sig-name descname"><span class="pre">get_sheet_num_name_comb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sht</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.sheet_parameters.get_sheet_num_name_comb" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the sheet number and name of a sheet in the format ‘number - name’
-:param sht: The sheet to get the number and name of
-:type sht: ViewSheet
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.sheet_parameters.</span></span><span class="sig-name descname"><span class="pre">get_sheet_num_name_comb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sht</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_first</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span> <span class="pre">-</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.sheet_parameters.get_sheet_num_name_comb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the sheet number and name of a sheet and returns the the combination
+of the two. Typically helpful for logging/printing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num_first</strong> – Whether the sheet number should be first in the string.</p>
+</dd>
+</dl>
+<p>Defaults to True
+:type num_first: bool
+:param splitter: The string to split the sheet number and name with. Defaults
+to ‘ - ‘
+:type splitter: str
 :return: The sheet number and name
 :rtype: str</p>
 </dd></dl>
@@ -426,6 +435,14 @@ duHast.Revit.Views.Utility.sheets
 <section id="this-module-contains-a-base-helper-functions-relating-to-revit-view-types">
 <h3>This module contains a base helper functions relating to Revit view types.<a class="headerlink" href="#this-module-contains-a-base-helper-functions-relating-to-revit-view-types" title="Permalink to this heading">¶</a></h3>
 </section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Utility.view_types.get_view_type_enum_to_name_dict">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Utility.view_types.</span></span><span class="sig-name descname"><span class="pre">get_view_type_enum_to_name_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Utility.view_types.get_view_type_enum_to_name_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a dictionary of the ViewType enum to verbose name e.g. FloorPlan to Floor Plan
+:return: A dictionary in format of Autodesk.Revit.DB.ViewType.FloorPlan: “Floor Plan”
+:rtype: dict</p>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Views.Utility">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Views.Utility" title="Permalink to this heading">¶</a></h2>

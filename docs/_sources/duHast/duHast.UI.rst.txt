@@ -1,6 +1,14 @@
 duHast.UI package
 =================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.UI.Objects
+
 Submodules
 ----------
 

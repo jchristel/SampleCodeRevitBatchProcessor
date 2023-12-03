@@ -33,7 +33,8 @@ from System import Linq
 
 clr.ImportExtensions(Linq)
 
-from Autodesk.Revit.DB  import UV, PlanarFace
+from Autodesk.Revit.DB import UV, PlanarFace, XYZ
+
 
 # ---------------------------- debug ----------------------------
 def get_point_as_string(point):
@@ -66,8 +67,9 @@ def get_edge_as_string(edge):
         returnValue = returnValue + "\n" + get_point_as_string(p)
     return returnValue
 
+
 def UV_pt_list_from_crv_list(curve_list):
-    """ 
+    """
     Returns a list of UV points from a list of curves
     :param curve_list: A list of curves
     :param type: list
@@ -81,6 +83,7 @@ def UV_pt_list_from_crv_list(curve_list):
         pt_list.append((st_pt.X, st_pt.Y))
 
     return pt_list
+
 
 def point_in_polygon(point, polygon):
     """
@@ -97,18 +100,21 @@ def point_in_polygon(point, polygon):
     is_inside = False
 
     pt_1_x, pt_1_y = polygon[0]
-    for i in range(num_of_polygon_sides+1):
+    for i in range(num_of_polygon_sides + 1):
         pt_2_x, pt_2_y = polygon[i % num_of_polygon_sides]
         if point[1] > min(pt_1_y, pt_2_y):
             if point[1] <= max(pt_1_y, pt_2_y):
                 if point[0] <= max(pt_1_x, pt_2_x):
                     if pt_1_y != pt_2_y:
-                        x_intersection = (point[1] - pt_1_y) * (pt_2_x - pt_1_x) / (pt_2_y - pt_1_y) + pt_1_x
+                        x_intersection = (point[1] - pt_1_y) * (pt_2_x - pt_1_x) / (
+                            pt_2_y - pt_1_y
+                        ) + pt_1_x
                     if pt_1_x == pt_2_x or point[0] <= x_intersection:
                         is_inside = not is_inside
         pt_1_x, pt_1_y = pt_2_x, pt_2_y
 
     return is_inside
+
 
 # ---------------------------- math utility ----------------------------
 
@@ -825,3 +831,68 @@ def build_loops_dictionary(loops):
         # only one exterior loop exists, no interior loops
         return_value[key] = []
     return return_value
+
+
+def negate_vector(vector):
+    """
+    Negates the direction of a given vector
+    :param vector: The vector to negate
+    :type vector: list or tuple
+    :return: The negated vector
+    :rtype: list
+    """
+    return [-x for x in vector]
+
+
+def sort_points_by_min_and_max(min_pt, max_pt):
+    """
+    Takes BoundingBox or Outline Min and Max points and
+    returns the true Min and Max points. This is to ensure
+    no zero thickness geometries are created.
+    :param min_pt: The minimum point
+    :type min_pt: XYZ
+    :param max_pt: The maximum point
+    :type max_pt: XYZ
+    :return: The sorted points
+    :rtype: tuple
+    """
+    min_x = min_pt.X
+    min_y = min_pt.Y
+    min_z = min_pt.Z
+
+    max_x = max_pt.X
+    max_y = max_pt.Y
+    max_z = max_pt.Z
+
+    smin_x = min(min_x, max_x)
+    smin_y = min(min_y, max_y)
+    smax_x = max(min_x, max_x)
+    smax_y = max(min_y, max_y)
+
+    return (XYZ(smin_x, smin_y, min_z), XYZ(smax_x, smax_y, max_z))
+
+def transform_point_by_elem_transform(pt, transform):
+    """
+    Transforms a point by an element transform
+    :param pt: The point to transform
+    :type pt: XYZ
+    :param transform: The transform to use
+    :type transform: Transform
+    :return: The transformed point
+    :rtype: XYZ
+    """
+
+    x = pt.X
+    y = pt.Y
+    z = pt.Z
+
+    b0 = transform.get_Basis(0)
+    b1 = transform.get_Basis(1)
+    b2 = transform.get_Basis(2)
+    origin = transform.Origin
+
+    x_new = x * b0.X + y * b1.X + z * b2.X + origin.X
+    y_new = x * b0.Y + y * b1.Y + z * b2.Y + origin.Y
+    z_new = x * b0.Z + y * b1.Z + z * b2.Z + origin.Z
+
+    return XYZ(x_new, y_new, z_new)

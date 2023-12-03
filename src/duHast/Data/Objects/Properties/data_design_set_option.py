@@ -33,7 +33,7 @@ from duHast.Data.Utils import data_base
 class DataDesignSetOption(data_base.DataBase):
     data_type = "design_set"
 
-    def __init__(self, j={}):
+    def __init__(self, j=None):
         """
         Class constructor.
 

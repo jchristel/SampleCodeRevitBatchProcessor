@@ -25,9 +25,12 @@ This module contains a base helper functions relating to Revit view types.
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-# --------------------------------------------- View Types  ------------------
 
 import Autodesk.Revit.DB as rdb
+from System import Enum
+
+
+# --------------------------------------------- View Types  ------------------
 
 
 def _get_view_types(doc):
@@ -41,3 +44,20 @@ def _get_view_types(doc):
 
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewFamilyType)
     return collector
+
+
+def get_view_type_enum_to_name_dict():
+    """
+    Get a dictionary of the ViewType enum to verbose name e.g. FloorPlan to Floor Plan
+    :return: A dictionary in format of Autodesk.Revit.DB.ViewType.FloorPlan: "Floor Plan"
+    :rtype: dict
+    """
+    enum_and_name_dict = {}
+    view_type_enum_vals = Enum.GetValues(rdb.ViewType)
+
+    for enum_val in view_type_enum_vals:
+        str_val = str(enum_val)
+        val_with_spaces = "".join(map(lambda x: x if x.islower() else " " + x, str_val))
+        enum_and_name_dict[enum_val] = val_with_spaces.strip()
+
+    return enum_and_name_dict

@@ -26,8 +26,11 @@ This module contains a Revit walls utility functions.
 #
 #
 
-import Autodesk.Revit.DB as rdb
-
+from Autodesk.Revit.DB import (
+    BuiltInCategory,
+    FilteredElementCollector,
+    WallType,
+)
 
 def _get_all_wall_types_by_class(doc):
     """
@@ -39,7 +42,7 @@ def _get_all_wall_types_by_class(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.WallType)
+    return FilteredElementCollector(doc).OfClass(WallType)
 
 
 def _get_all_wall_types_by_category(doc):
@@ -52,8 +55,8 @@ def _get_all_wall_types_by_category(doc):
     """
 
     collector = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_Walls)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_Walls)
         .WhereElementIsElementType()
     )
     return collector

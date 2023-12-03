@@ -22,8 +22,8 @@ Module adding a revision to the splash screen sheet as the main script within ba
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -42,8 +42,13 @@ import datetime
 import settings as settings  # sets up all commonly used variables and path locations!
 
 # import common library
-from duHast.Revit.Common import file_io as rFileIO
-from duHast.Revit.Revisions import revisions as rRev
+from duHast.Revit.Common.file_io import sync_file
+from duHast.Revit.Revisions.revisions import (
+    add_revisions_to_sheet,
+    create_revision,
+    mark_revision_as_issued_by_revision_id,
+    REVISION_DATA,
+)
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.console_out import output
 from duHast.Revit.BIM360.bim_360 import get_bim_360_path, convert_bim_360_file_path
@@ -53,6 +58,13 @@ clr.AddReference("System.Core")
 clr.ImportExtensions(System.Linq)
 
 import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import (
+    FilteredElementCollector,
+    Revision,
+    RevisionNumberType,
+    RevisionVisibility,
+    View,
+)
 import revit_script_util
 import revit_file_util
 
@@ -64,13 +76,14 @@ doc = revit_script_util.GetScriptDocument()
 REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 
 # update to cope with cloud based file path
-if(settings.IS_CLOUD_PROJECT):
+if settings.IS_CLOUD_PROJECT:
     cloudPath = get_bim_360_path(doc)
     REVIT_FILE_PATH = convert_bim_360_file_path(cloudPath)
 
 # -------------
 # my code here:
 # -------------
+
 
 def get_splash_sheet(doc):
     """
@@ -83,8 +96,8 @@ def get_splash_sheet(doc):
     """
 
     collector = (
-        rdb.FilteredElementCollector(doc)
-        .OfClass(rdb.View)
+        FilteredElementCollector(doc)
+        .OfClass(View)
         .Where(lambda e: e.Name == settings.SPLASH_SCREEN_SHEET_NAME)
     )
     results = collector.ToList()
@@ -115,12 +128,12 @@ def mark_revisions_as_issued(doc, revIds):
 
     result = res.Result()
     # get all revisions in file
-    revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
+    revisions_in_model = Revision.GetAllRevisionIds(doc)
     # check against what was applied
     ids_of_revisions_to_be_marked_issued = set(revIds).intersection(revisions_in_model)
     # print (idsToBeMarkedIssued)
     for id in ids_of_revisions_to_be_marked_issued:
-        rev_result = rRev.mark_revision_as_issued_by_revision_id(doc, id)
+        rev_result = mark_revision_as_issued_by_revision_id(doc, id)
         result.update(rev_result)
     return result
 
@@ -152,7 +165,7 @@ def add_revisions_to_document(doc):
     try:
         for rev in REVISIONS_TO_ADD:
             # create new revision
-            new_revision_status = rRev.create_revision(doc, rev)
+            new_revision_status = create_revision(doc, rev)
             if new_revision_status.status:
                 # append to existing revisions
                 ids.Add(new_revision_status.result[0].Id)
@@ -199,9 +212,7 @@ def add_revisions_to_sheets(doc):
         revIds = revision_add_to_document_result.result
         # add revisions to sheets:
         for sheet in sheets:
-            revision_add_to_sheet_result = rRev.add_revisions_to_sheet(
-                doc, sheet, revIds
-            )
+            revision_add_to_sheet_result = add_revisions_to_sheet(doc, sheet, revIds)
             result.update(revision_add_to_sheet_result)
         # set revisions as issued
         revision_marked_as_issued_result = mark_revisions_as_issued(doc, revIds)
@@ -217,13 +228,13 @@ def add_revisions_to_sheets(doc):
 
 #: list of revisions to be added to the model and the splash screen sheet
 REVISIONS_TO_ADD = [
-    rRev.REVISION_DATA(
+    REVISION_DATA(
         "MODEL ISSUE - FOR INFORMATION",
         "JC",
         "",
-        rdb.RevisionNumberType.Numeric,
+        RevisionNumberType.Numeric,
         datetime.datetime.now().strftime("%d/%m/%y"),
-        rdb.RevisionVisibility.Hidden,
+        RevisionVisibility.Hidden,
     )
 ]
 
@@ -241,7 +252,7 @@ output(
 #: synch or save document
 if doc.IsWorkshared:
     output("Add revision.... Syncing to Central: start", revit_script_util.Output)
-    result_ = rFileIO.sync_file(doc)
+    result_ = sync_file(doc)
     output(
         "Add revision.... Syncing to Central: finished [{}]".format(result_.status),
         revit_script_util.Output,

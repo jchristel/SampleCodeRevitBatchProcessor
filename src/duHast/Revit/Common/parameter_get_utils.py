@@ -21,8 +21,8 @@ Revit API utility functions to get parameter values.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -37,7 +37,7 @@ from System import Linq
 clr.ImportExtensions(Linq)
 
 # import everything from Autodesk Revit DataBase namespace (Revit API)
-from Autodesk.Revit.DB import ElementId #, ParameterType, StorageType
+from Autodesk.Revit.DB import ElementId  # , ParameterType, StorageType
 import Autodesk.Revit.DB as rdb
 
 # utilities
@@ -49,20 +49,21 @@ from duHast.Utilities import unit_conversion as unitConversion
 
 
 def has_property(obj, property_name):
-    '''
+    """
     Reflection to work out whether a property on a .net object exists (in case it has been removed)
 
-    :param obj: A .net object 
+    :param obj: A .net object
     :type obj: var
     :param property_name: The property name to check for
     :type property_name: str
     :return: None if the property does not exist
     :rtype: _type_
-    '''
+    """
 
     obj_type = obj.GetType()
     prop_info = obj_type.GetProperty(property_name)
     return prop_info is not None
+
 
 # ----------------------------------------parameters-----------------------------------------------
 
@@ -176,7 +177,7 @@ def getter_double_as_double_converted_to_metric(para):
     parameter_value = None
 
     # in revit 2023 Definition.ParameterType is obsolete...check for it:
-    if has_property(obj = para.Definition, property_name="ParameterType"):
+    if has_property(obj=para.Definition, property_name="ParameterType"):
         if para.AsValueString() != None and para.AsValueString() != "":
             if para.Definition.ParameterType == rdb.ParameterType.Length:
                 parameter_value = unitConversion.convert_imperial_feet_to_metric_mm(
@@ -559,11 +560,10 @@ def get_built_in_parameter_value(
 
     # set return value default
     parameter_value = None
-    paras = element.GetOrderedParameters()
-    for para in paras:
-        if para.Definition.BuiltInParameter == built_in_parameter_def:
-            parameter_value = parameter_value_getter(para)
-            break
+    para = element.get_Parameter(built_in_parameter_def)
+    if para != None:
+        parameter_value = parameter_value_getter(para)
+
     return parameter_value
 
 
@@ -594,26 +594,25 @@ def get_parameter_value_by_name(
 
     # set return value default
     parameter_value = None
-    paras = element.GetOrderedParameters()
-    for para in paras:
-        if para.Definition.Name == parameter_name:
-            parameter_value = parameter_value_getter(para)
-            break
+    para = element.LookupParameter(parameter_name)
+    if para != None:
+        parameter_value = parameter_value_getter(para)
     return parameter_value
 
-def param_is_empty_or_null(param):
-	""" 
-	Checks if a parameter is empty or null
-	:param param: The parameter to check
-	:type param: Parameter
-	:return: True if the parameter is empty or null, False if it is not
-	:rtype: bool
-	"""
 
-	if param == None:
-		return True
-	else:
-		if param.AsString() == '' or param.AsString() == None:
-			return True
-		else:
-			return False
+def param_is_empty_or_null(param):
+    """
+    Checks if a parameter is empty or null
+    :param param: The parameter to check
+    :type param: Parameter
+    :return: True if the parameter is empty or null, False if it is not
+    :rtype: bool
+    """
+
+    if param == None:
+        return True
+    else:
+        if param.AsString() == "" or param.AsString() == None:
+            return True
+        else:
+            return False

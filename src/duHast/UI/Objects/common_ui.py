@@ -1,12 +1,9 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Helper functions for benchmarking:. 
+A collection of common UI elements 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- two values
-- whether a text value starts or does not start with a given text value
-
 """
+
 #
 # License:
 #
@@ -29,56 +26,54 @@ Helper functions for benchmarking:.
 #
 #
 #
-
-import time
-import functools
+from Autodesk.Revit.UI import TaskDialog
 
 
-def measure_time_wrapper(func, logger=None, measure=True):
-    # Get the function name for the print statement
-    func_name = func.__name__
+class AlertDialog(TaskDialog):
+    def __init__(self, content):
+        self.Title = "BVN"
+        TaskDialog.__init__(self.Title)
+        self.MainContent = content
 
-    @functools.wraps(func)
-    def wrapper_func(*args, **kwargs):
-        # Get the start time
-        start = time.time()
-        # Execute the function
-        result = func(*args, **kwargs)
-        # Get the end time
-        end = time.time()
-        # Calculate the elapsed time
-        elapsed = round(float(end - start), 5)
-        message = "Elapsed time for {} is : {}".format(func_name, elapsed)
-        if logger:
-            # Log the elapsed time
-            logger.info(message)
+
+def alert(content, exitscript=True, additional_content=None):
+    """
+    This will display a task dialog with the given content. If exitscript
+    is True, the script will terminate after the dialog is closed. Additional
+    content input will be put in an expander. This could be more technical
+    output
+    :param content: The main content of the dialog
+    :type content: str
+    :param exitscript: If True, the script will terminate after dialog close, defaults to True
+    :type exitscript: bool, optional
+    :param additional_content: Additional content to be put in an expander, defaults to None
+    :type additional_content: str, optional
+    """
+    if exitscript:
+        dialog = AlertDialog(content)
+        dialog.MainInstruction = "Error from script:"
+        dialog.FooterText = "(Script will stop after this message)"
+    else:
+        dialog = AlertDialog(content)
+        dialog.MainInstruction = "Notification:"
+
+    # Turn off the Title prefix
+    dialog.TitleAutoPrefix = False
+
+    # Set additional content if provided
+    if additional_content:
+        dialog.ExpandedContent = additional_content
+
+    # Show the dialog
+    dialog.Show()
+
+    # Exit script if required
+    if exitscript:
+        if additional_content:
+            raise SystemExit(
+                "Script terminated because {}\n\nFurther details:\n{}".format(
+                    content, additional_content
+                )
+            )
         else:
-            # Print the elapsed time
-            print(message)
-        # Return the result of the function
-        return result
-
-    if measure:
-        return wrapper_func
-    else:
-        return func
-
-
-def add_measure_time(func, should_output=True):
-    """
-    Decorator function to measure the time a function takes to execute
-    and then print it to the console.
-
-    Use like:
-    @measure_time(should_output = show_benchmarking_output_bool)
-    def function_to_measure():
-        do_stuff()
-
-    :param should_output: Whether the elapsed time should be printed to the console
-    :type should_output: bool
-    """
-
-    if should_output:
-        return measure_time_wrapper(func, measure=should_output)
-    else:
-        return func
+            raise SystemExit("Script terminated because {}".format(content))

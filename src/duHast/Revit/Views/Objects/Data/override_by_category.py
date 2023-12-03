@@ -41,7 +41,7 @@ class OverrideByCategory(OverrideByBase):
     data_type = "override_by_category"
 
     def __init__(
-        self, main_category_name="", sub_category_name="", category_id=-1, j={}
+        self, main_category_name="", sub_category_name="", category_id=-1, j=None
     ):
         """
         Class constructor.

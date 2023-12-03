@@ -33,7 +33,7 @@ from duHast.Data.Objects.Properties.Geometry import geometry_base
 class DataPolygon(geometry_base.DataGeometryBase):
     data_type = "polygon"
 
-    def __init__(self, j={}):
+    def __init__(self, j=None):
         """
         Class constructor
 

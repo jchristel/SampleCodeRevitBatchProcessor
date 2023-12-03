@@ -1,14 +1,8 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A base class used to store line category overrides.
+This module contains a number of functions around creating Revit doors.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-Stores overrides of projection lines.
-
 """
-
-
 #
 # License:
 #
@@ -32,20 +26,54 @@ Stores overrides of projection lines.
 #
 #
 
+from duHast.Utilities.Objects import result as res
 
-from duHast.Revit.Common.Objects.Data.line_graphic_base import LineGraphicBase
+from Autodesk.Revit.DB import (
+    Element,
+)
 
+from Autodesk.Revit.DB.Structure import (
+    StructuralType,
+)
 
-class LineProjection(LineGraphicBase):
-    data_type = "line_projection"
+def door_in_basic_wall(doc, door_symbol, door_location, wall, wall_level):
+    return_value = res.Result()
+    try:
+        # the symbol needs to be activated before using it
+        # https://thebuildingcoder.typepad.com/blog/2014/08/activate-your-family-symbol-before-using-it.html
+        if not door_symbol.IsActive:
+            return_value.append_message(
+                "Activating symbol {}".format(
+                    Element.Name.GetValue(door_symbol)
+                )
+            )
+            door_symbol.Activate()
+            doc.Regenerate()
 
-    def __init__(self, j=None):
-        """
-        Class constructor.
+        # create door instance in wall
+        door_instance = doc.Create.NewFamilyInstance(
+            door_location,
+            door_symbol,
+            wall,
+            wall_level,
+            StructuralType.NonStructural,
+        )
 
-        :param j: A json formatted dictionary of this class, defaults to {}
-        :type j: dict, optional
-        """
+        # return the newly created door instance
+        return_value.result.append(door_instance)
 
-        # store data type  in base class
-        super(LineProjection, self).__init__(data_type=self.data_type, j=j)
+        # update messages
+        return_value.append_message(
+            "Added door {} to wall.".format(
+                Element.Name.GetValue(door_symbol)
+            )
+        )
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to create door with exception: {}".format(
+                e,
+            ),
+        )
+
+        return return_value

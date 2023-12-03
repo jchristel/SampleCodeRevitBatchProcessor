@@ -31,7 +31,7 @@ from duHast.Data.Utils import data_base
 
 
 class DataGeometryBase(data_base.DataBase):
-    def __init__(self, data_type, j={}):
+    def __init__(self, data_type, j=None):
         """
         Class constructor
 

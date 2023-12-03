@@ -26,11 +26,16 @@ This module contains a Revit curtain walls utility functions.
 #
 #
 
-import Autodesk.Revit.DB as rdb
-from duHast.Revit.Walls.Utility import walls_type_sorting as rWallTypeSort
+from Autodesk.Revit.DB import (
+    BuiltInCategory,
+    FilteredElementCollector,
+    WallKind,
+)
+
+from duHast.Revit.Walls.Utility.walls_type_sorting import sort_wall_types_by_family_name
 
 #: Built in wall family name for curtain wall
-CURTAIN_WALL_FAMILY_NAME = "Curtain Wall"
+CURTAIN_WALL_FAMILY_NAME = WallKind.Curtain
 
 
 def get_all_curtain_wall_type_ids(doc):
@@ -43,7 +48,7 @@ def get_all_curtain_wall_type_ids(doc):
     """
 
     ids = []
-    dic = rWallTypeSort.sort_wall_types_by_family_name(doc)
+    dic = sort_wall_types_by_family_name(doc)
     if dic.has_key(CURTAIN_WALL_FAMILY_NAME):
         ids = dic[CURTAIN_WALL_FAMILY_NAME]
     return ids
@@ -62,8 +67,8 @@ def get_all_curtain_wall_instances(doc, available_ids):
 
     instances = []
     col = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_Walls)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_Walls)
         .WhereElementIsNotElementType()
     )
     for c in col:
@@ -85,8 +90,8 @@ def get_placed_curtain_wall_type_ids(doc, available_ids):
 
     instances = []
     col = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_Walls)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_Walls)
         .WhereElementIsNotElementType()
     )
     for c in col:

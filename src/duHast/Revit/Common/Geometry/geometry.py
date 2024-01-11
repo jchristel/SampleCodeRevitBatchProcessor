@@ -30,10 +30,11 @@ import clr
 
 clr.AddReference("System.Core")
 from System import Linq
+from System import Math
 
 clr.ImportExtensions(Linq)
 
-from Autodesk.Revit.DB import UV, PlanarFace, XYZ
+from Autodesk.Revit.DB import BoundingBoxXYZ, UV, PlanarFace, XYZ
 
 
 # ---------------------------- debug ----------------------------
@@ -896,3 +897,29 @@ def transform_point_by_elem_transform(pt, transform):
     z_new = x * b0.Z + y * b1.Z + z * b2.Z + origin.Z
 
     return XYZ(x_new, y_new, z_new)
+
+def merge_bounding_box_xyz(bounding_box_xyz_0, bounding_box_xyz_1):
+    """
+    Merges two bounding boxes into one.
+    :param bounding_box_xyz_0: The first bounding box
+    :type bounding_box_xyz_0: BoundingBoxXYZ
+    :param bounding_box_xyz_1: The second bounding box
+    :type bounding_box_xyz_1: BoundingBoxXYZ
+    
+    :return: The merged bounding box
+    :rtype: BoundingBoxXYZ
+    """
+
+    merged_result = BoundingBoxXYZ()
+    merged_result.Min = XYZ(
+        Math.Min(bounding_box_xyz_0.Min.X, bounding_box_xyz_1.Min.X),
+        Math.Min(bounding_box_xyz_0.Min.Y, bounding_box_xyz_1.Min.Y),
+        Math.Min(bounding_box_xyz_0.Min.Z, bounding_box_xyz_1.Min.Z),
+    )
+
+    merged_result.Max = XYZ(
+        Math.Max(bounding_box_xyz_0.Max.X, bounding_box_xyz_1.Max.X),
+        Math.Max(bounding_box_xyz_0.Max.Y, bounding_box_xyz_1.Max.Y),
+        Math.Max(bounding_box_xyz_0.Max.Z, bounding_box_xyz_1.Max.Z),
+    )
+    return merged_result

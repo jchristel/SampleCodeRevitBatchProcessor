@@ -51,7 +51,7 @@ def get_solids_based_bounding_box_from_family_instance(doc, family_instance):
 
     # result is a bounding box
     merged_result = None
-    # set a default options
+    # set a default option
     opts = Options()
     # get the host family geometry first
     merged_result = get_bounding_box_from_family_solids(
@@ -59,18 +59,19 @@ def get_solids_based_bounding_box_from_family_instance(doc, family_instance):
     )
 
     # check if any nested shared families are in play
-    subElements = family_instance.GetSubComponentIds()
-    if subElements is not None:
+    sub_elements = family_instance.GetSubComponentIds()
+    if sub_elements is not None:
         # get the bounding box of the sub elements
-        for sub_element in subElements:
-            print("sub element: {}".format(sub_element))
+        for sub_element in sub_elements:
             sub_element = doc.GetElement(sub_element)
-            print("sub element: {}".format(sub_element))
             sub_element_bb = get_bounding_box_from_family_solids(
                 sub_element.get_Geometry(opts)
             )
+            # check if the result is None and if so set it to the first sub element bounding box
+            # this can happen if the host family has no solids but the nested family has
             if merged_result == None:
                 merged_result = sub_element_bb
                 continue
+            # merge the bounding boxes
             merged_result = merge_bounding_box_xyz(merged_result, sub_element_bb)
     return merged_result

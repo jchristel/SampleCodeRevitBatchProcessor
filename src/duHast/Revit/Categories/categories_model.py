@@ -25,10 +25,10 @@ Revit category helper functions for project files.
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
-
+from System import Enum
 from collections import namedtuple
 
-from Autodesk.Revit.DB import Category
+from Autodesk.Revit.DB import BuiltInCategory, Category
 
 
 # tuples containing categories data
@@ -70,7 +70,7 @@ def get_categories_in_model(doc):
 
 def get_category_from_builtInCategory(doc, built_in_category):
     """
-    Returns a category based on the buil in category enum value.
+    Returns a category based on the build in category enum value.
 
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -107,3 +107,20 @@ def get_category_by_names(doc, main_category_name, sub_category_name):
                         return sub_cat
     return return_value
             
+
+def get_builtin_category_by_name(category_name):
+    """
+    Returns the built in category enum value based on the category name.(i.e. OST_Walls)
+
+    :param category_name: The category name
+    :type category_name: str
+    :return: The built in category enum value
+    :rtype: Autodesk.Revit.DB.BuiltInCategory
+    """
+
+    values = Enum.GetValues(BuiltInCategory)
+    names = Enum.GetNames(BuiltInCategory)
+    for value, name in zip(values, names):
+        if name == category_name:
+            return value
+    return None

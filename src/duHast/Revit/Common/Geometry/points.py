@@ -30,7 +30,7 @@ from Autodesk.Revit.DB import (
     Transform,
     XYZ,
 )
-from duHast.Revit.Common.Geometry.geometry import is_close
+from duHast.Utilities.compare import is_close
 
 
 def rotate_point_around_z_with_origin(point, origin, angle_in_radians):

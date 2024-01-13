@@ -27,7 +27,7 @@ Revit families geometry helper functions.
 #
 
 from duHast.Revit.Common.Geometry.solids import (
-    get_bounding_box_from_family_solids,
+    get_bounding_box_from_family_geometry,
 )
 from duHast.Revit.Common.Geometry.geometry import merge_bounding_box_xyz
 
@@ -54,7 +54,7 @@ def get_solids_based_bounding_box_from_family_instance(doc, family_instance):
     # set a default option
     opts = Options()
     # get the host family geometry first
-    merged_result = get_bounding_box_from_family_solids(
+    merged_result = get_bounding_box_from_family_geometry(
         family_instance.get_Geometry(opts)
     )
 
@@ -64,7 +64,7 @@ def get_solids_based_bounding_box_from_family_instance(doc, family_instance):
         # get the bounding box of the sub elements
         for sub_element in sub_elements:
             sub_element = doc.GetElement(sub_element)
-            sub_element_bb = get_bounding_box_from_family_solids(
+            sub_element_bb = get_bounding_box_from_family_geometry(
                 sub_element.get_Geometry(opts)
             )
             # check if the result is None and if so set it to the first sub element bounding box

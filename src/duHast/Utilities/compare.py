@@ -97,3 +97,25 @@ def two_does_not_start_with_one(valueOne, valueTwo):
         return False
     else:
         return True
+
+
+def is_close(a, b, rel_tol=1e-09, abs_tol=0.0):
+    """
+    Compares two floats with a tolerance. Returns True if they are close enough, otherwise False
+
+    refer to: https://stackoverflow.com/questions/5595425/what-is-the-best-way-to-compare-floats-for-almost-equality-in-python
+
+    :param a: A float
+    :type a: float
+    :param b: A float
+    :type b: float
+    :param rel_tol: Relative tolerance used to compare the two floats, defaults to 1e-09
+    :type rel_tol: float, optional
+    :param abs_tol: Absolute tolerance used to compare the two floats, defaults to 0.0
+    :type abs_tol: float, optional
+
+    :return: Returns True if they are close enough to be considered equal, otherwise False
+    :rtype: bool
+    """
+
+    return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)

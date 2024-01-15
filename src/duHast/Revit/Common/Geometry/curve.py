@@ -28,7 +28,7 @@ Revit curve helper functions
 
 from Autodesk.Revit.DB import Arc, Line, Transform, XYZ
 
-from duHast.Revit.Common.Geometry.geometry import is_close
+from duHast.Utilities.compare import is_close
 from duHast.Utilities.Objects import result as res
 
 

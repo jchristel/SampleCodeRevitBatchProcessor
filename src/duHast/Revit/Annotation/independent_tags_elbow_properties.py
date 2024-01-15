@@ -30,7 +30,7 @@ A number of functions around Revit independent tags elbow properties.
 from Autodesk.Revit.DB import LeaderEndCondition
 
 from duHast.Revit.Common.revit_version import get_revit_version_number
-from duHast.Revit.Common.Geometry.geometry import get_point_as_doubles
+from duHast.Revit.Common.Geometry.points import get_point_as_doubles
 
 ELBOW_LOCATION = "elbow_location"
 LEADER_END = "leader_end"

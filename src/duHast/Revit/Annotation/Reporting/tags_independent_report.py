@@ -38,7 +38,7 @@ from duHast.Revit.Annotation.Reporting import (
     gen_annotations_instance_report_header as props,
 )
 
-from duHast.Revit.Common.Geometry.geometry import get_point_as_doubles
+from duHast.Revit.Common.Geometry.points import get_point_as_doubles
 from duHast.Revit.Common.revit_version import get_revit_version_number
 
 import Autodesk.Revit.DB as rdb

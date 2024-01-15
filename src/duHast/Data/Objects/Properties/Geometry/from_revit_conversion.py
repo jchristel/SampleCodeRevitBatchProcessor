@@ -19,8 +19,8 @@ Revit Geometry to data geometry conversion helper functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -29,6 +29,7 @@ Revit Geometry to data geometry conversion helper functions.
 from duHast.Data.Objects.Properties.Geometry import geometry_polygon as dGeometryPoly
 from duHast.Revit.Common.Geometry import geometry as rGeo
 from collections import namedtuple
+from duHast.Revit.Common.Geometry.points import get_point_as_doubles
 
 
 def convert_xyz_in_data_geometry_polygons(doc, dgObject):
@@ -47,13 +48,13 @@ def convert_xyz_in_data_geometry_polygons(doc, dgObject):
     data_geometry = dGeometryPoly.DataPolygon()
     outer_loop = []
     for xyz_point in dgObject.outer_loop:
-        point_as_double = rGeo.get_point_as_doubles(xyz_point)
+        point_as_double = get_point_as_doubles(xyz_point)
         outer_loop.append(point_as_double)
     inner_loops = []
     for inner_loop in dgObject.inner_loops:
         inner_loop_points = []
         for xyz_point in inner_loop:
-            point_as_double = rGeo.get_point_as_doubles(xyz_point)
+            point_as_double = get_point_as_doubles(xyz_point)
             inner_loop_points.append(point_as_double)
         inner_loops.append(inner_loop_points)
     data_geometry.outer_loop = outer_loop

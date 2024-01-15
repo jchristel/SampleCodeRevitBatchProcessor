@@ -94,7 +94,8 @@ def get_levels_list_descending(doc):
     """
 
     levels_ascending = get_levels_list_ascending(doc)
-    levels_descending = levels_ascending.reverse()
+    # using .Reverse() since this is a c# list, to get descending order rather than .reverse() which is a python list method
+    levels_descending = levels_ascending.Reverse()
     return levels_descending
 
 

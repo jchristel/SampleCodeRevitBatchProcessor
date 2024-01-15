@@ -29,6 +29,22 @@ duHast.Revit.Family.family\_functions module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.family\_geometry module
+-------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_geometry
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.family\_instance\_create module
+---------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_instance_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.family\_load\_option module
 -----------------------------------------------
 

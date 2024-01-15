@@ -20,6 +20,14 @@ duHast.Revit.Common.Geometry.geometry module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Common.Geometry.points module
+------------------------------------------
+
+.. automodule:: duHast.Revit.Common.Geometry.points
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Common.Geometry.solids module
 ------------------------------------------
 

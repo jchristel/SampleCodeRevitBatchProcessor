@@ -437,7 +437,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Categories.categories_model.get_category_from_builtInCategory">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories_model.</span></span><span class="sig-name descname"><span class="pre">get_category_from_builtInCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories_model.get_category_from_builtInCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a category based on the buil in category enum value.</p>
+<dd><p>Returns a category based on the build in category enum value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -465,6 +465,23 @@ sub_category_name (str): The name of the sub category to search for within the m
 </dd>
 <dt>Returns:</dt><dd><p>category object: The retrieved category object if a match is found.
 None: If no match is found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories_model.get_builtin_category_by_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories_model.</span></span><span class="sig-name descname"><span class="pre">get_builtin_category_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories_model.get_builtin_category_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the built in category enum value based on the category name.(i.e. OST_Walls)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>category_name</strong> (<em>str</em>) – The category name</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The built in category enum value</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.BuiltInCategory</p>
 </dd>
 </dl>
 </dd></dl>

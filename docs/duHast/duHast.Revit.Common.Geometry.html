@@ -170,23 +170,6 @@ override_joins (bool, optional): Flag to indicate whether to override the joins 
 <h3>Revit geometry extraction helper functions<a class="headerlink" href="#revit-geometry-extraction-helper-functions" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.get_point_as_string">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_point_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.get_point_as_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns Revit point as a string.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit point.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>String in format ‘X:Y:Z’</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.get_edge_as_string">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_edge_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.get_edge_as_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a revit edge as a string.</p>
@@ -223,104 +206,6 @@ override_joins (bool, optional): Flag to indicate whether to override the joins 
 :type polygon: list, tuple, or set
 :return: True if the point is inside the polygon, False if it is not
 :rtype: bool</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.is_close">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">is_close</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rel_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-09</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abs_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.is_close" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compares two floats with a tolerance. Returns True if they are close enough, otherwise False</p>
-<p>refer to: <a class="reference external" href="https://stackoverflow.com/questions/5595425/what-is-the-best-way-to-compare-floats-for-almost-equality-in-python">https://stackoverflow.com/questions/5595425/what-is-the-best-way-to-compare-floats-for-almost-equality-in-python</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<em>float</em>) – A float</p></li>
-<li><p><strong>b</strong> (<em>float</em>) – A float</p></li>
-<li><p><strong>rel_tol</strong> (<em>float</em><em>, </em><em>optional</em>) – Relative tolerance used to compare the two floats, defaults to 1e-09</p></li>
-<li><p><strong>abs_tol</strong> (<em>float</em><em>, </em><em>optional</em>) – Absolute tolerance used to compare the two floats, defaults to 0.0</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Returns True if they are close enough to be considered equal, otherwise False</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.are_points_identical">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">are_points_identical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.are_points_identical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compares the X,Y,Z values of two revit point and returns True if they are the same, otherwise False</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>p1</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit point.</p></li>
-<li><p><strong>p2</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit point.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if they are the same, otherwise False.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.check_duplicate_point">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">check_duplicate_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.check_duplicate_point" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks whether a collection of points contains another given point and returns True if that is the case.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>points</strong> (<em>list Autodesk.Revit.DB.XYZ</em>) – List of revit points</p></li>
-<li><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit point.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if point is in collection, otherwise False.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.get_point_as_doubles">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_point_as_doubles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.get_point_as_doubles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a revit XYZ to a list of doubles in order x,y,z.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit point.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of doubles in order of x,y,z</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list double</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.flatten_xyz_point">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">flatten_xyz_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.flatten_xyz_point" title="Permalink to this definition">¶</a></dt>
-<dd><p>Flattens a XYZ point to a UV by omitting the Z value of the XYZ.</p>
-<p><a class="reference external" href="https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html">https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit point.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A 2D point (UV)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Autodesk.Revit.DB.UV</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -758,8 +643,66 @@ Note: works only on planar faces</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.sort_points_by_min_and_max">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">sort_points_by_min_and_max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_pt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_pt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.sort_points_by_min_and_max" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.merge_bounding_box_xyz">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">merge_bounding_box_xyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounding_box_xyz_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounding_box_xyz_1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.merge_bounding_box_xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges two bounding boxes into one.
+:param bounding_box_xyz_0: The first bounding box
+:type bounding_box_xyz_0: BoundingBoxXYZ
+:param bounding_box_xyz_1: The second bounding box
+:type bounding_box_xyz_1: BoundingBoxXYZ</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The merged bounding box</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>BoundingBoxXYZ</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.Geometry.points">
+<span id="duhast-revit-common-geometry-points-module"></span><h2>duHast.Revit.Common.Geometry.points module<a class="headerlink" href="#module-duHast.Revit.Common.Geometry.points" title="Permalink to this heading">¶</a></h2>
+<section id="revit-points-helper-functions">
+<h3>Revit points helper functions<a class="headerlink" href="#revit-points-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.rotate_point_around_z_with_origin">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">rotate_point_around_z_with_origin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle_in_radians</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.rotate_point_around_z_with_origin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotates a point around the Z-axis with a given origin and angle in radians.
+Returns the rotated point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The point to rotate.</p></li>
+<li><p><strong>origin</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The origin of the rotation.</p></li>
+<li><p><strong>angle_in_radians</strong> (<em>float</em>) – The angle in radians to rotate the point.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The rotated point.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.XYZ</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.transform_point_by_elem_transform">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">transform_point_by_elem_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.transform_point_by_elem_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms a point by an element transform
+:param pt: The point to transform
+:type pt: XYZ
+:param transform: The transform to use
+:type transform: Transform
+:return: The transformed point
+:rtype: XYZ</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.sort_points_by_min_and_max">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">sort_points_by_min_and_max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_pt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_pt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.sort_points_by_min_and_max" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes BoundingBox or Outline Min and Max points and
 returns the true Min and Max points. This is to ensure
 no zero thickness geometries are created.
@@ -772,15 +715,131 @@ no zero thickness geometries are created.
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.geometry.transform_point_by_elem_transform">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">transform_point_by_elem_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.geometry.transform_point_by_elem_transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transforms a point by an element transform
-:param pt: The point to transform
-:type pt: XYZ
-:param transform: The transform to use
-:type transform: Transform
-:return: The transformed point
-:rtype: XYZ</p>
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.get_point_as_doubles">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">get_point_as_doubles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.get_point_as_doubles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a revit XYZ to a list of doubles in order x,y,z.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit point.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of doubles in order of x,y,z</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list double</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.get_doubles_as_xyz">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">get_doubles_as_xyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doubles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.get_doubles_as_xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a list of doubles to a revit XYZ.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doubles</strong> (<em>list double</em>) – List of doubles in order of x,y,z</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A revit point.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.XYZ</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.get_rotation_around_z_as_xyz">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">get_rotation_around_z_as_xyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doubles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.get_rotation_around_z_as_xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a list of doubles to a revit XYZ.
+The first two doubles are the x,y coordinates of the point.
+The third double is the z coordinate of the point to which 1 is added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doubles</strong> (<em>list double</em>) – List of doubles in order of x,y,z</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A revit point.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.XYZ</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.flatten_xyz_point">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">flatten_xyz_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.flatten_xyz_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flattens a XYZ point to a UV by omitting the Z value of the XYZ.</p>
+<p><a class="reference external" href="https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html">https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit point.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 2D point (UV)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.UV</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.are_points_identical">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">are_points_identical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.are_points_identical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares the X,Y,Z values of two revit point and returns True if they are the same, otherwise False</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit point.</p></li>
+<li><p><strong>p2</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit point.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if they are the same, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.check_duplicate_point">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">check_duplicate_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.check_duplicate_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a collection of points contains another given point and returns True if that is the case.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>list Autodesk.Revit.DB.XYZ</em>) – List of revit points</p></li>
+<li><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit point.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if point is in collection, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.get_point_as_string">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">get_point_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.get_point_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Revit point as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit point.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String in format ‘X:Y:Z’</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -804,6 +863,24 @@ Does not work with in place elements.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.solids.get_bounding_box_from_family_geometry">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.solids.</span></span><span class="sig-name descname"><span class="pre">get_bounding_box_from_family_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry_element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.solids.get_bounding_box_from_family_geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a bounding box from the families solid elements geometry only.
+This is different from the family instance bounding box!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>geometry_element</strong> (<em>Autodesk.Revit.DB.GeometryElement</em>) – The geometry element of a family instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The bounding box of the family geometry.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.BoundingBoxXYZ</p>
 </dd>
 </dl>
 </dd></dl>

@@ -1,0 +1,9 @@
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Information & Communication Services (IT)\DisplayScreen_PublicInformationSystem_WallMounted_ITBU_014.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Station_WashDecon_HeightAdj_RectangularSinks_Manual_PreRinse_MMIC_052.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Electrical Services (EL)\Cardiac_Protected_Electrical_Area_ELPR_002.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\DiagnosticSet_WallMounted_MMGE_031.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Hydraulic Services (HY)\ToiletSuite_Accessible_ConcealedCistern_HYWC_500.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Dryer_Hand_TopDrying_Dyson_FQGE_018_2.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Analyser_Rotem_MMLA_508.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Monitor_Foetal_CTG_MMGE_063.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Holder_BarcodeScanner_FIHR_503.rfa

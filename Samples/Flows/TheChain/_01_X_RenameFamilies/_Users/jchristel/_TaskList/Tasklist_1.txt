@@ -1,0 +1,2 @@
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Couch_Examination_Electric_Mobile_MMBE_023.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Analyser_Rotem_MMLA_508.rfa

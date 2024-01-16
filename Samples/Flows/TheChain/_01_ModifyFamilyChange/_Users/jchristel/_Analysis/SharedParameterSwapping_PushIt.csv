@@ -1,0 +1,10 @@
+old parameter name,new parameter name,new parameter shared parameter file,new parameter is instance,new parameter grouping
+SP_Width,WIDTH_BVN,\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\05 Python\Shared_Parameters_Renaming.txt,TRUE,Dimensions
+Sp_Width,WIDTH_BVN,\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\05 Python\Shared_Parameters_Renaming.txt,TRUE,Dimensions
+SP_Ceiling_Height,CEILING_HEIGHT_BVN,\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\05 Python\Shared_Parameters_Renaming.txt,TRUE,Dimensions
+Sp_Ceiling_Height,CEILING_HEIGHT_BVN,\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\05 Python\Shared_Parameters_Renaming.txt,TRUE,Dimensions
+SP_Depth,DEPTH_BVN,\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\05 Python\Shared_Parameters_Renaming.txt,TRUE,Dimensions
+Sp_Depth,DEPTH_BVN,\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\05 Python\Shared_Parameters_Renaming.txt,TRUE,Dimensions
+SP_Room_ID,ROOM_ID_BVN,\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\05 Python\Shared_Parameters_Renaming.txt,TRUE,Dimensions
+RADIUS,RADIUS_BVN,\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\05 Python\Shared_Parameters_Renaming.txt,TRUE,Dimensions
+THICKNESS_CARCESS_BVN,CARCASS_THICKNESS_BVN,\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\05 Python\Shared_Parameters_Renaming.txt,TRUE,Dimensions

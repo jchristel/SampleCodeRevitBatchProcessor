@@ -1,0 +1,14 @@
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\SteelMesh_Framed_CeilingMounted_FIRT_017.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\FlouroscopyImagingUnit_ImageIntensifier_Fixed_Carm_MMMI_516.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Monitor_OperatingTheatres_WallMounted_SuppliedWithOwnBracket_MMGE_511.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Desk_JoineryIntegrated_ColumnLeg_AdjHeight_ElectronicSitToStand_BenchMountedScreen_Straight_1500W_FQDW_577_1.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Dispenser_DisposableGlove_Triple_FIDI_014.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Dispenser_DisposableGlove_Quadruple_FIDI_513.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Chair_Recliner_Visitor_ClinicalAreas_FQBS_587.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Cupboard_Bedside_Fixed_OpenPockets_FixedShelf_AntiLigature_FIJO_559.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Station_Wheelchair Parking Depot_FQGE_619.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Treadmill_Automatic_StressTesting_MMAH_536.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Treadmill_Automatic_MMAH_027.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Cleaner_Scrubber_Floor_RideOn_FQCW_514.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Cleaner_Scrubber_Floor_Drier_Compact_WalkBehind_FQCW_047_1.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Cleaner_Scrubber_Floor_FQVW_047_1.rfa

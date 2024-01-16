@@ -1,0 +1,5 @@
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Trolley_WireMesh_MMGE_593.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Detail Items\Bush_PlanOutline_DCO.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Planter_Mobile_OnCastors_Type1_FQGE_051_1.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Detail Items\Shrub_Plan_01_DCO.rfa
+

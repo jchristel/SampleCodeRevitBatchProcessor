@@ -1,0 +1,31 @@
+digraph G {
+  subgraph cluster_0 {
+    node [style=filled,color=grey];
+    "Process Host families report" -> "Process families and save missing" 
+    label = "Saving out missing families";
+    color=black
+    }
+  
+  subgraph cluster_1 {
+    node [style=filled,color=lightgrey];
+    "Missing Families Hosts report" -> Input;
+    label = "Saving out missing families Inputs";
+    color=red
+  }
+
+  subgraph cluster_2 {
+    node [style=filled,color=lightgrey];
+    Output -> "Saved families report";
+    label = "Saving out missing families Outputs";
+    color=green
+  }
+
+  start -> "Process Host families report";
+  "Saved families report" -> end;
+  Input -> "Process Host families report" [color=red]
+  "Process families and save missing" -> Output [color=green]
+  
+  start [shape=Mdiamond];
+  end [shape=Msquare];
+  label = "The Chain - Reporting family properties";
+}

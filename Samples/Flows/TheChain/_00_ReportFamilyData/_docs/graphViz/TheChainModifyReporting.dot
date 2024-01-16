@@ -1,0 +1,40 @@
+digraph G {
+  subgraph cluster_0 {
+    node [style=filled,color=grey];
+    "Report Entire Library A" -> "Report On Failed Families A" -> "Modify families default" -> "Reload families" -> "Report Entire Library B" -> "Report On Failed Families B"
+    color=black
+    }
+  
+  subgraph cluster_1 {
+    node [style=filled,color=lightgrey];
+    "List Failed Families" -> Input;
+    "Current Report Location" -> Input;
+    label = "Reporting On Failed Families Inputs";
+    color=red
+  }
+
+  subgraph cluster_2 {
+    node [style=filled,color=lightgrey];
+    TaskList
+    label = "Modify families Inputs";
+    color=red
+  }
+
+  subgraph cluster_3 {
+    node [style=filled,color=lightgrey];
+    ChangedFamilies
+    label = "Reload families Inputs";
+    color=red
+  }
+
+  start -> "Report Entire Library A";
+  "Report On Failed Families B" -> end;
+  TaskList -> "Modify families default" [color=blue]
+  "Modify families default" -> ChangedFamilies
+  ChangedFamilies -> "Reload families"
+  Input -> "Report On Failed Families A" [color=blue]
+  
+  start [shape=Mdiamond];
+  end [shape=Msquare];
+  label = "The Chain - Modifying family properties";
+}

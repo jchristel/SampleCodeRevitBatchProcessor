@@ -1,0 +1,36 @@
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Bracket_DualMonitors_DeskMounted_VerticalArrangement_CardiacCentralStation_FIHR_600.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Couch_Examination_Electric_Mobile_MMBE_023.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Rack_CatheterStorage_Mobile_MMGE_799.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Table_Tilt_MMGE_102.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Device_Imaging_Echocardiography_MMMI_325.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\ControlUnit_Display_ControlBox_Keyboard_CT_MMMI_206.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Track_Curtain_Privacy_CeilingSuspended_AroundDoor_AdjacentWindow_FIRT_513.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Trolley_WireMesh_MMGE_593.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Device_DockingStation_QuadGlucometer_BloodGlucose_MMGE_802.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Track_Curtain_CeilingRecessed_Straight_FIRT_029.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Hook_Rope_BirthingSupport_FIHR_530.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Walls & Wall Finishes (WL)\WallFinish_Panel_WLWA_XXX.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\System_SurgicalNavigation_MMMI_552.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Bulkhead_Vertical_LockerSystem_FQGE_533.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Electrical Services (EL)\PowerRail_DeskMounted_ELGE_506.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Washer_Index_MultiChamber_SideServiceEnclosure_MMIC_093_2.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Cabinet_IroningBoard_FQSN_023.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Specialty Equipment\Monitor_Blood_Pressure_SEQ.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Specialty Equipment\Monitor_Foetal_CTG_SEQ.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Box_Alarm_MRI_MMMI_171.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Screen_Privacy_Wallmounted_FQGE_539.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Chair_Patient_ENT_Electric_MMGE_174.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Bars_Parallel_MMAH_001.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Lifter_ForkCaseStacker_Adjustable_Mobile_MMGE_695.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Track_Relocatable_GPO_CeilingMount_Straight_FIRT_530.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Information & Communication Services (IT)\ControlPanel_AVIntegrationSystem_WallMounted_ITAV_060.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\System_Haemodynamic_MMMI_557.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Device_DentalHandpieceProcessor_InstrumentOiling_Lubricating_MMDN_502.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Device_FluidWarmer_MMGE_531.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Accessories_MedicalImaging_FreeDetector_MMMI_567_1.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Rail_Hanging_Utility_Horizontal_WallMounted_FIRT_013.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Rail_Equipment_Vertical_FloorMountedBase_WallMountedTop_FIRT_510.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Doors, Windows & Accessories (DW)\WindowDressing_External_DWWD_013.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Information & Communication Services (IT)\Device_ElectronicRecord_IntensiveCare_Bracket_Pendant_ITCL_536.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\System_Electrophysiology_CathLab_MMMI_398.rfa
+\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Piano_GrandPiano_FQGE_529.rfa

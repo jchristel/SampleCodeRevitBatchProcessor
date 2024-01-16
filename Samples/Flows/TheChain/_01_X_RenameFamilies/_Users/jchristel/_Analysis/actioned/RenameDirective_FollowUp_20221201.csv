@@ -1,0 +1,142 @@
+MissingFamilyName,HostFilePath,FamilyBaseDataRootFamilies.categoryName,New FamilyName
+FRH184CL,,Furniture,BanquetteSeat_1840W_790D_1250H_Jardan_FUR
+FRH186L,,Furniture,BanquetteSeat_1860W_790D_1250H_Jardan_FUR
+FRH190,,Furniture,BanquetteSeat_1900W_790D_1250H_Jardan_FUR
+SANH560,,Plumbing Fixtures,Basin_560W_450D_190D_PLU
+SANH610,,Plumbing Fixtures,Basin_610W_575D_200D_PLU
+PlumbingFixture_Basin_Britex_HBGU,,Plumbing Fixtures,Basin_Britex_450W_400D_300H_PLU
+43854_Basin-Wall-Caroma Care 600,,Plumbing Fixtures,Basin_CaromaCare600_PLU
+44512_Caroma-Care-700-Shelf-LH-Wall-Basin,,Plumbing Fixtures,Basin_CaromaCare700_Shelf_LH_PLU
+44511_Caroma-Care-700-Shelf-RH-Wall-Basin,,Plumbing Fixtures,Basin_CaromaCare700_Shelf_RH_PLU
+Basin-Caroma Opal Shroud_Not Shared,,Plumbing Fixtures,Basin_CaromaOpal_Shroud_NotShared_PLU
+Basin-Caroma Opal Shroud,,Plumbing Fixtures,Basin_CaromaOpal_Shroud_PLU
+Caroma_Opal_510_Wall_Basin,,Plumbing Fixtures,Basin_CaromaOpal510_PLU
+Basin_Caroma_Opal_920Shelf,,Plumbing Fixtures,Basin_CaromaOpal920_Shelf_PLU
+Basin_Caroma_Sole_Semi_Recessed,,Plumbing Fixtures,Basin_CaromaSole_SemiRecessed_PLU
+SANH710BL_1,,Plumbing Fixtures,Basin_Shelf_LH_710W_400D_150H_PLU
+SANH710BR_1,,Plumbing Fixtures,Basin_Shelf_RH_710W_400D_150H_PLU
+PlumbingFixture_Security_Combination-Unit_Britex_SCU90S,,Plumbing Fixtures,Basin_WC_SecurityCombination_Britex_PLU
+Bath_Baby_Portable_FF_380_geometry,,Plumbing Fixtures,Bath_Baby_Portable_920W_530D_250H_PLU
+Bed_Patient_ICU,,Furniture,Bed_Patient_ICU_FUR
+574 BLINDS_PART_BVN,,Furniture,Blinds_LineGraphic_FUR
+574 BLINDS_PART_BVN,,Specialty Equipment,Blinds_LineGraphic_SEQ
+Bracket_DeskMounted_Cardiac Monitor,,Furniture,Bracket_DeskMounted_Cardiac Monitor_FUR
+Bracket_Monitor_Patient_Anaesthetic_WallMounted,,Furniture,Bracket_Monitor_Patient_Anaesthetic_WallMounted_FUR
+Bulkhead Fill,,Detail Items,Bulkhead_Fill_DCO
+Planting plan small,,Detail Items,Bush_PlanOutline_DCO
+Camera,,Electrical Fixtures,Camera_CCTV_EFX
+Castor_Component,,Generic Models,Castor_Wheels_Adjustable_GEN
+CastorWheel,,Specialty Equipment,Castor_Wheels_Adjustable_SEQ
+Castor,,Furniture,Castor_Wheels_FUR
+Ceiling Support,,Structural Framing,Ceiling_Support_SFT
+Ceiling Hoist_450kg_Graphic,,Detail Items,CeilingHoist_Plan_DCO
+Chair_-_ZK_lounge_5434,,Furniture,Chair_Lounge_800W_740D_800H_FUR
+Chair_Meeting,,Furniture,Chair_Meeting_FUR
+clock,,Specialty Equipment,Clock_Analogue_Round_SEQ
+CORNER GUARD_GRAPHICS,,Generic Models,Corner_Guard_Graphics_GEN
+Couch_Exam_Electric_Gyn,,Electrical Equipment,Couch_Exam_Electric_Gyn_EEQ
+Dispenser_toilet_paper_SEQ,,Specialty Equipment,Dispenser_Toilet_Paper_SEQ
+Table_Mounted_Charging_Point_OneThird_GPO,,Electrical Fixtures,GPO_Table_Mounted_Charging_Point_OneThird_EFX
+551_HANDLE_HAEFLE,,Casework,Handle_Haefele_CAS
+Howard Silvers 048366 Handle,,Furniture,Handle_HowardSilvers_FUR
+Trolley_Handle_Component,,Furniture,Handle_Trolley_FUR
+Hose_Reel_Retractable_AK_Reel,,Plumbing Fixtures,Hose_Reel_Retractable_PLU
+Hosecock,,Plumbing Fixtures,Hosecock_PLU
+SYSTEM_imaging_cathlab_arm,,Specialty Equipment,Imaging_Biplane_Arm_SEQ
+Waste1,,Plumbing Fixtures,Inlet_Waste_GrateCover_PLU
+Waste2,,Plumbing Fixtures,Inlet_Waste_PopCover_PLU
+Apple Keyboard,,Electrical Equipment,Keyboard_Apple_EEQ
+FE-11400,,Generic Models,Keyboard_GEN
+Keyboard_Mouse,,Furniture,Keyboard_Mouse_FUR
+JOI_KOP_Carcass,,Casework,KOP_Carcass_CAS
+JOI_KOP_Door,,Casework,KOP_Door_CAS
+MODEL TEXT LABEL,,Generic Models,Label_ModelText_50mm_GEN
+GENERIC_LABEL_TEXT_BVN,,Generic Annotations,Label_Text_1_5mm_ANN
+Left_Right_Generic Anotation,,Generic Annotations,Label_Text_Generic_3mm_ANN
+GENERIC_LABEL_TEXT_NESTED_BVN,,Generic Annotations,Label_Text_Rotation_1_5mm_ANN
+Left_Right_ANN,,Generic Models,Left_Right_Graphic_GEN
+Left_Right_Symbol,,Detail Items,Left_Right_Symbol_DCO
+Legs,,Generic Models,Leg_InvertedUShape_Adjustable_GEN
+Level Head - Upgrade,,Level Heads,LevelHead_Upgrade_ANN
+Lever,,Generic Models,Lever_S_Shaped_150L_50H_GEN
+LightOperating,,Generic Models,Light_Operating_2Booms_GEN
+LightProcedure,,Lighting Fixtures,Light_Procedure_LFX
+Lounge_Modular_Arm_Component,,Furniture,Lounge_Modular_Arm_FUR
+Lounge_Modular_Leg_Component,,Furniture,Lounge_Modular_Leg_FUR
+Ice_Machine,,Plumbing Fixtures,Machine_Ice_PLU.rfa
+Monitor_Blood_Pressure,,Specialty Equipment,Monitor_Blood_Pressure_SEQ
+Monitor_Cardiac_VitalSigns_Portable,,Electrical Equipment,Monitor_Cardiac_VitalSigns_Portable_EEQ
+Family6,,Specialty Equipment,Monitor_Foetal_CTG_SEQ
+Might Mouse,,Electrical Equipment,Mouse_Apple_EEQ
+Might Mouse,,Specialty Equipment,Mouse_Apple_SEQ
+Outlet,,Generic Annotations,Outlet_Plan_Graphic_ANN
+Rack_Pamphlet_Components,,Furniture Systems,Pamphlet_Holder_FSY
+Infusion Pump,,Specialty Equipment,Pump_Infusion_SEQ
+Rack,,Furniture,Rack_Drying_Bottle_FUR
+X_Roll_Holder,,Plumbing Fixtures,Roll_Holder_PLU
+Marker_Room Calculation Point_CAS,,Casework,RoomCalculationPoint_Marker_CAS
+PCU_1,,Electrical Equipment,Screen_Apple_EEQ
+Apple Screen Backstand,,Furniture,Screen_Apple_StandOnly_FUR
+Screen_Batten_Vertical_Angled,,Generic Models,Screen_Batten_Vertical_Angled_GEN
+DisplayScreen_Only,,Electrical Equipment,Screen_Display_EEQ
+Monitor,,Electrical Equipment,Screen_LCD_18I_EEQ
+FE-35960,,Generic Models,Screen_LCD_18I_GEN
+Monitor_Allsizes_090_ELQ,,Electrical Equipment,Screen_LED_EEQ
+Schnittende - Upgrade,,Section Marks,Section_Tail_Filled_ANN
+Shelf bracket,,Furniture,Shelf_Bracket_Single_Undermount_FUR
+SHELVING BRACKET,,Generic Models,Shelf_Bracket_Single_Undermount_GEN
+Trolley_Shelf_Component,,Furniture,Shelf_Trolley_FUR
+551_Frame for-Shelving Adjustable,,Casework,Shelving_Frame_WallMounted_Adjustable_CAS
+Sink,,Generic Models,Sink_C_Shape_GEN
+Clark_Cleaners_Sink,,Plumbing Fixtures,Sink_Clark_Cleaners_PLU
+0811_SINK_FLUSHING RIM_BASE,,Plumbing Fixtures,Sink_Flushing_PLU
+Sink,,Plumbing Fixtures,Sink_Single_530W_370D_240H_PLU
+Spray_Gun_Water,,Plumbing Fixtures,Spray_Gun_Water_PLU
+Responder5,,Nurse Call Devices,Station_NurseCallPullChordWithAudioAndBackToBedButton_ITCL_530
+SUCTION ADAPTER,,Specialty Equipment,Suction_Adapter_SEQ
+SUCTION BOTTLE,,Specialty Equipment,Suction_Bottle_SEQ
+BRACKET - SUCTION BOTTLE,,Specialty Equipment,SuctionBottle_Bracket_SEQ
+SYMBOL FOR AUDIO JACK,,Generic Annotations,Symbol_AudioJack_ANN
+SYMBOL FOR AV PORT,,Generic Annotations,Symbol_AvPort_ANN
+SYMBOL FOR S10051 Door Release,,Generic Annotations,Symbol_Door_Release_ANN
+E SYMBOL_DURESS ALARM,,Generic Annotations,Symbol_Duress_Alarm_ANN
+E_SYMBOL_LIGHT SWITCH - ONE WAY,,Generic Annotations,Symbol_Light_Switch_One_Way_ANN
+E SYMBOL_NURSE CALL,,Generic Annotations,Symbol_Nurse_Call_ANN
+E SYMBOL_NURSE CALL E,,Generic Annotations,Symbol_Nurse_Call_Ermegency_ANN
+E SYMBOL_NURSE CALL PATIENT HANDSET,,Generic Annotations,Symbol_Nurse_Call_Patient_Handset_ANN
+SYMBOL FOR S07040,,Generic Annotations,Symbol_Outlet_CarbonDioxide_ANN
+SYMBOL FOR S01006,,Generic Annotations,Symbol_Outlet_Data_Double_ANN
+TRIPLE DATA,,Generic Annotations,Symbol_Outlet_Data_Triple_ANN
+Symbol_GPO_ANN,,Generic Annotations,Symbol_Outlet_GPO_ANN.rfa
+SYMBOL FOR S09001,,Generic Annotations,Symbol_Outlet_GPO_Double_ANN
+SYMBOL FOR S09000,,Generic Annotations,Symbol_Outlet_GPO_Single_ANN
+SYMBOL FOR S09060,,Generic Annotations,Symbol_Outlet_GPO_Single_Emergency_ANN
+SYMBOL_HDMI,,Generic Annotations,Symbol_Outlet_HDMI_ANN.rfa
+SYMBOL FOR S07020,,Generic Annotations,Symbol_Outlet_NitrousOxide_ANN
+SYMBOL FOR S07000,,Generic Annotations,Symbol_Outlet_Oxygen_ANN
+Steelcase - C Scape - Shared Table - Column,,Furniture,Table_Base_Round_710D_FUR
+TapHandle,,Plumbing Fixtures,Tap_Handle_StarShape_PLU
+TAPWARE_mixer_elbow_levers_short,,Plumbing Fixtures,Tap_Mixer_ElbowLevers_Short_PLU
+TAPWARE_mixer_gooseneckt,,Plumbing Fixtures,Tap_Mixer_GooseNeck_PLU
+Taps_Caroma_Gseries+_160outlet_150Handles_G53350C4A_PLU,,Plumbing Fixtures,Tap_Mixer_WallMounted_CaromaGSeries_150Handles_PLU
+Taps_WallMounted,,Plumbing Fixtures,Tap_Mixer_WallMounted_GooseNeck_PLU
+Tapware_LongReach,,Plumbing Fixtures,Tap_Mixer_WallMounted_LongSpoud_PLU
+"Telephone_handset, standard",,Electrical Equipment,Telephone_Handset_WallMounted_EEQ
+Film_ANN,,Generic Models,Text_Film_ElevationOnly_GEN
+MGVB,,Generic Annotations,Text_MGVB_1_2mm_ANN
+RPZD,,Generic Annotations,Text_RPZD_1_2mm_ANN
+TMV,,Generic Annotations,Text_TMV_1_2mm_ANN
+TMV_Label,,Generic Models,Text_TMV_ElevationOnly_GEN
+Toilet_Caroma_Care800_Exposed_Cisterne,,Plumbing Fixtures,Toilet_Suite_CaromaCare800_ExposedCistern_PLU
+34188_743500W_BK_File_Rfa_149372_ori_2016May24085228,,Plumbing Fixtures,Toilet_Suite_ExposedCistern_FaceBased_PLU
+DC_Caroma_Toilet_Side_Button,,Generic Models,Toilet_Suite_Flush_Button_Round_GEN
+Toilet_Stylus_Venecia_WallFaced,,Plumbing Fixtures,Toilet_Suite_StylusVenecia_FaceBased_PLU
+Trolley_LaminarFlow,,Furniture Systems,Trolley_LaminarFlow_FSY
+DC_Caroma_PLM_Bowl_Care 800,,Plumbing Fixtures,WC_CaromaCare800_PLU
+DC_Caroma_PLM_Lids_Leda,,Plumbing Fixtures,WC_Lid_CaromaLeda_PLU
+WireBasket_Drawer,,Casework,WireBasket_Drawer_CAS
+WireBasketDrawers_1Bay,,Furniture,WireBasket_Drawers_1Bay_FUR
+WireBasket_DrawerUnit,,Casework,WireBasket_DrawerUnit_CAS
+WireBasket_DrawerUnit,,Furniture,WireBasket_DrawerUnit_FUR
+BasketWire,,Specialty Equipment,WireBasket_SEQ
+Film_Symbol,,Detail Items,Word_Film_DCO

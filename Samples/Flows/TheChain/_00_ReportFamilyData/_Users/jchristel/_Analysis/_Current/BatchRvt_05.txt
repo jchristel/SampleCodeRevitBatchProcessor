@@ -1,0 +1,165 @@
+08/02/2023 08:36:28 : 
+08/02/2023 08:36:28 : Session ID: <2023-02-07T21:36:28.760Z>
+08/02/2023 08:36:28 : 
+08/02/2023 08:36:28 : Log File:
+08/02/2023 08:36:28 : 
+08/02/2023 08:36:28 : 	C:\Users\jchristel\AppData\Local\BatchRvt\BatchRvt_20230208_083628_760.log
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : Task Script:
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : 	\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\04 BatchP\_00_ReportFamilyData\_Script\ReportFamilyData.py
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : Revit Task / File processing time-out setting:
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : 	30 minutes
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : Revit Processing mode:
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : 	Batch Revit File processing
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : Pre-Processing Script:
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : 	\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\04 BatchP\_00_ReportFamilyData\_Script\Pre_FirstTask.py
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : Post-Processing Script:
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : 	\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\04 BatchP\_00_ReportFamilyData\_Script\Post_BVNRevitFileSaveAsWSMKillOnly.py
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : Central File Processing mode:
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : 	Create New Local
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : 	Local File will be deleted after processing.
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : 	Worksets Configuration: Close All
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : 	Revit files will be audited on opening.
+08/02/2023 08:36:29 : 
+08/02/2023 08:36:29 : Pre-processing script operation started.
+08/02/2023 08:36:30 : Wrote log marker: ....[True]
+08/02/2023 08:36:30 : 
+08/02/2023 08:36:30 : Pre-processing script operation completed.
+08/02/2023 08:36:30 : 
+08/02/2023 08:36:30 : Reading Revit File list:
+08/02/2023 08:36:30 : 
+08/02/2023 08:36:30 : 	\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\04 BatchP\_00_ReportFamilyData\_Users\jchristel\_TaskList\Tasklist_3.txt
+08/02/2023 08:36:30 : 
+08/02/2023 08:36:30 : Revit Files for processing (2):
+08/02/2023 08:36:30 : 
+08/02/2023 08:36:30 : 	\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Monitor_Foetal_CTG_EEQ.rfa
+08/02/2023 08:36:30 : 	File exists: YES
+08/02/2023 08:36:30 : 	File size: 0.36MB
+08/02/2023 08:36:30 : 	Revit version: Autodesk Revit 2020 (Build: 20220517_1515(x64))
+08/02/2023 08:36:30 : 
+08/02/2023 08:36:30 : 	\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Monitor_Blood_Pressure_EEQ.rfa
+08/02/2023 08:36:30 : 	File exists: YES
+08/02/2023 08:36:30 : 	File size: 0.36MB
+08/02/2023 08:36:30 : 	Revit version: Autodesk Revit 2020 (Build: 20220517_1515(x64))
+08/02/2023 08:36:30 : 
+08/02/2023 08:36:30 : Starting batch operation...
+08/02/2023 08:36:30 : 
+08/02/2023 08:36:30 : Processing Revit files (1 to 2 of 2) in Revit 2020 session.
+08/02/2023 08:36:30 : 
+08/02/2023 08:36:30 : 	\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Monitor_Foetal_CTG_EEQ.rfa
+08/02/2023 08:36:30 : 	File exists: YES
+08/02/2023 08:36:30 : 	File size: 0.36MB
+08/02/2023 08:36:30 : 	Revit version: Autodesk Revit 2020 (Build: 20220517_1515(x64))
+08/02/2023 08:36:30 : 
+08/02/2023 08:36:30 : 	\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Monitor_Blood_Pressure_EEQ.rfa
+08/02/2023 08:36:30 : 	File exists: YES
+08/02/2023 08:36:30 : 	File size: 0.36MB
+08/02/2023 08:36:30 : 	Revit version: Autodesk Revit 2020 (Build: 20220517_1515(x64))
+08/02/2023 08:36:30 : 
+08/02/2023 08:36:30 : Starting Revit 2020 session...
+08/02/2023 08:36:30 : 
+08/02/2023 08:36:30 : Monitoring host Revit process (PID: 146608)
+08/02/2023 08:36:30 : 
+08/02/2023 08:37:40 : 	- 
+08/02/2023 08:37:40 : 	- Processing file (1 of 2): \\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Monitor_Foetal_CTG_EEQ.rfa
+08/02/2023 08:37:40 : 	- 
+08/02/2023 08:37:40 : 	- The file is a Family file.
+08/02/2023 08:37:43 : 	- 
+08/02/2023 08:37:43 : 	- Opening file: \\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Monitor_Foetal_CTG_EEQ.rfa
+08/02/2023 08:37:47 : 	- 
+08/02/2023 08:37:48 : 	- Task script operation started.
+08/02/2023 08:37:48 : 	- Reporting On Revit File.... start
+08/02/2023 08:37:48 : 	- Processer [FamilyBase] of family: Monitor_Foetal_CTG_EEQ [OK]
+08/02/2023 08:37:48 : 	- Processer [SharedParameter] of family: Monitor_Foetal_CTG_EEQ [OK]
+08/02/2023 08:37:48 : 	- Processer [LinePattern] of family: Monitor_Foetal_CTG_EEQ [OK]
+08/02/2023 08:37:48 : 	- Processer [Category] of family: Monitor_Foetal_CTG_EEQ [OK]
+08/02/2023 08:37:48 : 	- Processer [Warnings] of family: Monitor_Foetal_CTG_EEQ [OK]
+08/02/2023 08:37:48 : 	- Processer [FamilyBase] of family: LevelHead_Upgrade_ANN [OK]
+08/02/2023 08:37:48 : 	- Processer [SharedParameter] of family: LevelHead_Upgrade_ANN [OK]
+08/02/2023 08:37:48 : 	- Processer [LinePattern] of family: LevelHead_Upgrade_ANN [OK]
+08/02/2023 08:37:48 : 	- Processer [Category] of family: LevelHead_Upgrade_ANN [OK]
+08/02/2023 08:37:48 : 	- Processer [Warnings] of family: LevelHead_Upgrade_ANN [OK]
+08/02/2023 08:37:48 : 	- Processer [FamilyBase] of family: Section_Tail_Upgrade_ANN [OK]
+08/02/2023 08:37:48 : 	- Processer [SharedParameter] of family: Section_Tail_Upgrade_ANN [OK]
+08/02/2023 08:37:48 : 	- Processer [LinePattern] of family: Section_Tail_Upgrade_ANN [OK]
+08/02/2023 08:37:48 : 	- Processer [Category] of family: Section_Tail_Upgrade_ANN [OK]
+08/02/2023 08:37:48 : 	- Processer [Warnings] of family: Section_Tail_Upgrade_ANN [OK]
+08/02/2023 08:37:48 : 	- -
+08/02/2023 08:37:48 : 	- Post Action Update shared parameters data successfull completed.
+08/02/2023 08:37:53 : 	- Post Action Update line pattern data successfull completed.
+08/02/2023 08:37:53 : 	- Post Action Update subcategories data successfull completed.
+08/02/2023 08:37:53 : 	- -.... status: True
+08/02/2023 08:37:53 : 	- Succesfully wrote FamilyBase data to file..... status: True
+08/02/2023 08:37:53 : 	- Succesfully wrote SharedParameter data to file..... status: True
+08/02/2023 08:37:53 : 	- Succesfully wrote LinePattern data to file..... status: True
+08/02/2023 08:37:53 : 	- Succesfully wrote Category data to file..... status: True
+08/02/2023 08:37:53 : 	- Succesfully wrote Warnings data to file..... status: True
+08/02/2023 08:37:53 : 	- 
+08/02/2023 08:37:53 : 	- Task script operation completed.
+08/02/2023 08:37:53 : 	- 
+08/02/2023 08:37:54 : 	- Closed file: \\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Monitor_Foetal_CTG_EEQ.rfa
+08/02/2023 08:37:54 : 	- 
+08/02/2023 08:37:54 : 	- Operation completed.
+08/02/2023 08:37:54 : 	- 
+08/02/2023 08:37:55 : 	- Processing file (2 of 2): \\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Monitor_Blood_Pressure_EEQ.rfa
+08/02/2023 08:37:55 : 	- 
+08/02/2023 08:37:55 : 	- The file is a Family file.
+08/02/2023 08:37:55 : 	- 
+08/02/2023 08:37:55 : 	- Opening file: \\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Monitor_Blood_Pressure_EEQ.rfa
+08/02/2023 08:37:55 : 	- 
+08/02/2023 08:37:56 : 	- Task script operation started.
+08/02/2023 08:37:56 : 	- Reporting On Revit File.... start
+08/02/2023 08:37:56 : 	- Processer [FamilyBase] of family: Monitor_Blood_Pressure_EEQ [OK]
+08/02/2023 08:37:56 : 	- Processer [SharedParameter] of family: Monitor_Blood_Pressure_EEQ [OK]
+08/02/2023 08:37:56 : 	- Processer [LinePattern] of family: Monitor_Blood_Pressure_EEQ [OK]
+08/02/2023 08:37:56 : 	- Processer [Category] of family: Monitor_Blood_Pressure_EEQ [OK]
+08/02/2023 08:37:56 : 	- Processer [Warnings] of family: Monitor_Blood_Pressure_EEQ [OK]
+08/02/2023 08:37:56 : 	- Processer [FamilyBase] of family: LevelHead_Upgrade_ANN [OK]
+08/02/2023 08:37:56 : 	- Processer [SharedParameter] of family: LevelHead_Upgrade_ANN [OK]
+08/02/2023 08:37:56 : 	- Processer [LinePattern] of family: LevelHead_Upgrade_ANN [OK]
+08/02/2023 08:37:56 : 	- Processer [Category] of family: LevelHead_Upgrade_ANN [OK]
+08/02/2023 08:37:56 : 	- Processer [Warnings] of family: LevelHead_Upgrade_ANN [OK]
+08/02/2023 08:37:56 : 	- Processer [FamilyBase] of family: Section_Tail_Upgrade_ANN [OK]
+08/02/2023 08:37:56 : 	- Processer [SharedParameter] of family: Section_Tail_Upgrade_ANN [OK]
+08/02/2023 08:37:56 : 	- Processer [LinePattern] of family: Section_Tail_Upgrade_ANN [OK]
+08/02/2023 08:37:56 : 	- Processer [Category] of family: Section_Tail_Upgrade_ANN [OK]
+08/02/2023 08:37:56 : 	- Processer [Warnings] of family: Section_Tail_Upgrade_ANN [OK]
+08/02/2023 08:37:56 : 	- -
+08/02/2023 08:37:57 : 	- Post Action Update shared parameters data successfull completed.
+08/02/2023 08:37:57 : 	- Post Action Update line pattern data successfull completed.
+08/02/2023 08:37:57 : 	- Post Action Update subcategories data successfull completed.
+08/02/2023 08:37:57 : 	- -.... status: True
+08/02/2023 08:37:57 : 	- Succesfully wrote FamilyBase data to file..... status: True
+08/02/2023 08:37:57 : 	- Succesfully wrote SharedParameter data to file..... status: True
+08/02/2023 08:37:57 : 	- Succesfully wrote LinePattern data to file..... status: True
+08/02/2023 08:37:57 : 	- Succesfully wrote Category data to file..... status: True
+08/02/2023 08:37:57 : 	- Succesfully wrote Warnings data to file..... status: True
+08/02/2023 08:37:57 : 	- 
+08/02/2023 08:37:57 : 	- Task script operation completed.
+08/02/2023 08:37:57 : 	- 
+08/02/2023 08:37:57 : 	- Closed file: \\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Monitor_Blood_Pressure_EEQ.rfa
+08/02/2023 08:37:57 : 	- 
+08/02/2023 08:37:57 : 	- Operation completed.
+08/02/2023 08:38:07 : 
+08/02/2023 08:38:07 : Revit process (PID: 146608) has exited!
+08/02/2023 08:38:07 : 
+08/02/2023 08:38:07 : Post-processing script operation started.
+08/02/2023 08:38:08 : WSM Kill status: ....All WSM sessions where killed. [True]
+08/02/2023 08:38:08 : 
+08/02/2023 08:38:08 : Post-processing script operation completed.
+08/02/2023 08:38:08 : 
+08/02/2023 08:38:08 : Operation completed.

@@ -1,0 +1,23 @@
+digraph G {
+  subgraph cluster_0 {
+    node [style=filled,color=grey];
+    "Report Entire Library" -> "Report On Failed Families" [color=blue,arrowhead=normal,arrowtail=dot]
+    label = "Reporting";
+    color=black
+    }
+  
+  subgraph cluster_1 {
+    node [style=filled,color=lightgrey];
+    "List Failed Families" -> Input;
+    "Current Report Location" -> Input;
+    label = "Reporting On Failed Families Inputs";
+    color=red
+  }
+  start -> "Report Entire Library";
+  "Report On Failed Families" -> end;
+  Input -> "Report On Failed Families" [color=blue]
+  
+  start [shape=Mdiamond];
+  end [shape=Msquare];
+  label = "The Chain - Reporting family properties";
+}

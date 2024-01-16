@@ -1,0 +1,9 @@
+digraph G {
+    subgraph cluster_0 {
+        style=filled;
+        color=lightgrey;
+        node [style=filled,color=white];
+        Reporting -> Modifying -> Reloading -> Reporting;
+        label = "Principle of family updates";
+  }
+}

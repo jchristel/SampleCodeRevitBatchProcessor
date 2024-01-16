@@ -1,0 +1,102 @@
+Casework,Bulkhead,Bulkhead_BVN
+Casework,Fixed Furniture,Furniture_Fixed_BVN
+Casework,Joinery,Joinery_BVN
+Casework,KitOfParts_ConstructionLines_BVN,KitOfParts_ConstructionLines_BVN
+Casework,Hidden Lines_OH,Overhead_BVN
+Casework,overhead,Overhead_BVN
+Casework,Elevation Swing,Swing_Elevation_BVN
+Columns,SP-Corridor-CrashRail,Spatial_Plan_Corridor_Crash_Rail_BVN
+Columns,SP-Corridor-HandRail,Spatial_Plan_Corridor_Hand_Rail_BVN
+Columns,SP-Room-Separation,Spatial_Plan_Room_Separation_BVN
+Columns,SP-Walls,Spatial_Plan_Walls_BVN
+Columns,SP-Walls-Centre-Line,Spatial_Plan_Walls_Centre_Line_BVN
+Detail Items,CEILING MOUNTED,Ceiling_Mounted_BVN
+Detail Items,Stair_Clearance,Clearance_Zones_Stair_BVN
+Detail Items,Film,Glazing_Film_BVN
+Detail Items,Left_Right_Hand,Left_Right_Hand_BVN
+Detail Items,SP-Door-Detailed,Spatial_Plan_Door_Detailed_BVN
+Detail Items,SP-Lift,Spatial_Plan_Lift_BVN
+Detail Items,SP_Riser_Graphic,Spatial_PLan_Riser_Graphic_BVN
+Detail Items,SP-Stair-Outline,Spatial_Plan_Stair_Outline_BVN
+Detail Items,SP-Stair-Tread,Spatial_Plan_Stair_Tread_BVN
+Detail Items,SP-Windows,Spatial_Plan_Windows_BVN
+Electrical Equipment,Appliance,Appliance_BVN
+Electrical Equipment,Appliance_Freestanding,Appliance_Freestanding_BVN
+Electrical Equipment,CEILING MOUNTED,Ceiling_Mounted_BVN
+Electrical Equipment,Clinical Equipment,Clinical_Equipment_BVN
+Electrical Equipment,Computer Equipment,Computer_Equipment_BVN
+Electrical Fixtures,CEILING MOUNTED,Ceiling_Mounted_BVN
+Electrical Fixtures,Floor Services Box,Floor_Service_Box_BVN
+Furniture,Blinds,Blinds_BVN
+Furniture,CEILING MOUNTED,Ceiling_Mounted_BVN
+Furniture,Circulation,Clearance_Zones_BVN
+Furniture,Clinical Equipment,Clinical_Equipment_BVN
+Furniture,Computer Equipment,Computer_Equipment_BVN
+Furniture,Fixed Furniture,Furniture_Fixed_BVN
+Furniture,Loose Furniture,Furniture_Loose_BVN
+Furniture,Haworth,Joinery_BVN
+Furniture,Chairs,Joinery_Chairs_BVN
+Furniture,_WILKHAHN_Table Frame,Joinery_Frame_BVN
+Furniture,_WILKHAHN_Table Leg,Joinery_Leg_BVN
+Furniture,Herman Miller - Seat,Joinery_Seat_BVN
+Furniture,Seating_Freestanding,Joinery_Seating_Freestanding_BVN
+Furniture,Shelving,Joinery_Shelving_BVN
+Furniture,Tables_Freestanding,Joinery_Table_BVN
+Furniture,_WILKHAHN_Table Top,Joinery_Table_Top_BVN
+Furniture,Overhead,Overhead_BVN
+Furniture,Overhead Lines,Overhead_BVN
+Furniture Systems,CEILING MOUNTED,Ceiling_Mounted_BVN
+Furniture Systems,Overhead,Overhead_BVN
+Generic Annotations,Generic Annotation_Ceiling Only,Ceiling_Plan_Only_BVN
+Generic Annotations,SPP_2D Symbol,Spatial_Plan_2D_Symbol_BVN
+Generic Annotations,Electrical Symbol,Symbol_Electrical_BVN
+Generic Models,Ceiling Light,Ceiling_Light_BVN
+Generic Models,CEILING MOUNTED,Ceiling_Mounted_BVN
+Generic Models,Exclusion Zone,Clearance_Zones_BVN
+Generic Models,Clinical Equipment,Clinical_Equipment_BVN
+Generic Models,Film Glazing Indicator,Glazing_Film_BVN
+Generic Models,MSP,Medical_Service_Panel_BVN
+Generic Models,SP-Area-Outline,Spatial_Plan_Area_Outline_BVN
+Generic Models,SP-Door-Detailed,Spatial_Plan_Door_Detailed_BVN
+Generic Models,SP-Door-EgressMarker,Spatial_Plan_Door_Egress_Marker_BVN
+Generic Models,SP-Door-Infill,Spatial_Plan_Door_Infill_BVN
+Generic Models,SP-FFE-CURTAIN,Spatial_Plan_FFE_Curtain_BVN
+Generic Models,SP-FFE-Outlines,Spatial_Plan_FFE_Outlines_BVN
+Generic Models,SP-Windows-Simple,Spatial_Plan_Windows_Simple_BVN
+Generic Models,Wall Finish,Wall_Finish_BVN
+Generic Models,Wall Finish Indicator,Wall_Finish_Indicator_BVN
+Generic Models,Wall Protection Indicator,Wall_Protection_Indicator_BVN
+Lighting Devices,CEILING MOUNTED,Ceiling_Mounted_BVN
+Lighting Devices,Floor Light,Floor_Light_BVN
+Lighting Devices,Overhead,Overhead_BVN
+Lighting Fixtures,Ceiling Light,Ceiling_Light_BVN
+Lighting Fixtures,CEILING MOUNTED,Ceiling_Mounted_BVN
+Lighting Fixtures,Desk Light,Desk_Light_BVN
+Mechanical Equipment,Clinical Equipment,Clinical_Equipment_BVN
+Plumbing Fixtures,Basins/Sinks/Tubs,Basins_Sinks_Tubs_BVN
+Plumbing Fixtures,Circulation,Clearance_Zones_BVN
+Plumbing Fixtures,Clearance,Clearance_Zones_BVN
+Plumbing Fixtures,Clinical Equipment,Clinical_Equipment_BVN
+Plumbing Fixtures,Clinical Fixture,Clinical_Equipment_BVN
+Plumbing Fixtures,Equipment Zone,Equipment_Zones_BVN
+Plumbing Fixtures,Enware - Tape Ware,Taps_Mixers_BVN
+Plumbing Fixtures,faucet,Taps_Mixers_BVN
+Plumbing Fixtures,Faucet Base,Taps_Mixers_BVN
+Plumbing Fixtures,Faucet Handles,Taps_Mixers_BVN
+Plumbing Fixtures,Faucet Spouts,Taps_Mixers_BVN
+Plumbing Fixtures,Taps/Mixers,Taps_Mixers_BVN
+Plumbing Fixtures,Toilets/Bidets,Toilets_Bidets_BVN
+Plumbing Fixtures,Waste Outlet,Waste_Outlets_BVN
+Plumbing Fixtures,Waste Outlets,Waste_Outlets_BVN
+Specialty Equipment,Bed Extension,Bed_Extension_BVN
+Specialty Equipment,CEILING MOUNTED,Ceiling_Mounted_BVN
+Specialty Equipment,Ceiling Mounted_Lines,Ceiling_Mounted_BVN
+Specialty Equipment,Ceiling Track,Ceiling_Track_BVN
+Specialty Equipment,Clearance Zones,Clearance_Zones_BVN
+Specialty Equipment,SIEMENS H - Installation,Clearance_Zones_BVN
+Specialty Equipment,Clinical Equipment,Clinical_Equipment_BVN
+Specialty Equipment,SIEMENS H - Medical Equipment,Clinical_Equipment_BVN
+Specialty Equipment,FLOOR ONLY,Floor_Plan_Only_BVN
+Specialty Equipment,Grab Rails,Rails_BVN
+Structural Framing,Ceiling Support,Ceiling_Support_BVN
+Structural Framing,Wall Stiffener,Wall_Stiffener_BVN

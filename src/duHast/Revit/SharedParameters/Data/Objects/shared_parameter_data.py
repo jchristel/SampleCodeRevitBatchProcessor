@@ -26,7 +26,7 @@ Family shared parameter data class.
 #
 #
 
-from duHast.Revit.Family.Data import ifamily_data as IFamData
+from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities import utility as util
 from duHast.Revit.SharedParameters import shared_parameters as rSharedPara
 

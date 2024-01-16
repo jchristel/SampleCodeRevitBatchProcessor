@@ -40,10 +40,10 @@ from duHast.Revit.Common.Objects.Data.pattern_background import PatternBackgroun
 from duHast.Revit.Common.Objects.Data.pattern_foreground import PatternForeground
 from duHast.Revit.Common.Objects.Data.line_projection import LineProjection
 from duHast.Revit.Common.Objects.Data.line_cut import LineCut
-from duHast.Revit.LinePattern.Objects.Data.line_pattern_settings import (
+from duHast.Revit.LinePattern.Data.Objects.line_pattern_settings import (
     LinePatternSettings,
 )
-from duHast.Revit.LinePattern.Objects.Data.fill_pattern_settings import (
+from duHast.Revit.LinePattern.Data.Objects.fill_pattern_settings import (
     FillPatternSettings,
 )
 from duHast.Revit.Common.Objects.Data.pattern_settings_base import PatternSettingBase

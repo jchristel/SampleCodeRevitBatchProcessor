@@ -27,9 +27,9 @@ Family line pattern data processor class.
 #
 
 
-from duHast.Revit.Family.Data.ifamily_processor import IFamilyProcessor
-from duHast.Revit.LinePattern import line_pattern_data as rLinePatData
-from duHast.Revit.Family.Data import ifamily_data as IFamData
+from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
+from duHast.Revit.LinePattern.Data.Objects import line_pattern_data as rLinePatData
+from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities.Objects import result as res
 
 

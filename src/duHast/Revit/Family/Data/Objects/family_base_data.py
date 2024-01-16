@@ -27,7 +27,7 @@ Family base data class.
 #
 #
 
-from duHast.Revit.Family.Data import ifamily_data as IFamData
+from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities import directory_io as dirIO, files_io as fileIO
 from duHast.Revit.Common import file_io as rFile
 from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDataUtils

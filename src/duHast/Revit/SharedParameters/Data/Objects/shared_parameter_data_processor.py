@@ -26,9 +26,9 @@ Family shared parameter data processor class.
 #
 #
 
-from duHast.Revit.Family.Data.ifamily_processor import IFamilyProcessor
+from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
 from duHast.Revit.SharedParameters import shared_parameter_data as rSharedData
-from duHast.Revit.Family.Data import ifamily_data as IFamData
+from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities.Objects import result as res
 
 

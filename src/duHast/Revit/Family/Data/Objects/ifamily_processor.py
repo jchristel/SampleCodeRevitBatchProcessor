@@ -32,7 +32,7 @@ Interface for family processing class.
 import System
 import Autodesk.Revit.DB as rdb
 import json
-from duHast.Revit.Family.Data import ifamily_data as IFamData
+from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.Objects import base
 

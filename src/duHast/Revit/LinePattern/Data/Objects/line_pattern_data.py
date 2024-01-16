@@ -26,7 +26,7 @@ Family line pattern data class.
 #
 #
 
-from duHast.Revit.Family.Data import ifamily_data as IFamData
+from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities import utility as util
 from duHast.Revit.Categories import categories as rCats
 from duHast.Revit.LinePattern.line_patterns import (

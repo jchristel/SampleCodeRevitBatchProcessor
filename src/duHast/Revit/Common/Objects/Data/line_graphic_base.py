@@ -40,7 +40,7 @@ import json
 
 from duHast.Utilities.Objects import base
 from duHast.Revit.Common.Objects.Data.colour_base import ColourBase
-from duHast.Revit.LinePattern.Objects.Data.line_pattern_settings import (
+from duHast.Revit.LinePattern.Data.Objects.line_pattern_settings import (
     LinePatternSettings,
 )
 

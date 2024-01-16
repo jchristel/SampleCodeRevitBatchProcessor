@@ -26,7 +26,7 @@ Family category data class.
 #
 #
 
-from duHast.Revit.Family.Data import ifamily_data as IFamData
+from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities import utility as util
 from duHast.Revit.Categories import categories as rCat
 from duHast.Revit.Categories.Utility import category_properties_get_utils as rCatPropGet

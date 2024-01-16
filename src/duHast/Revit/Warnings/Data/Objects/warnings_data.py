@@ -26,7 +26,7 @@ Family warnings data class.
 #
 #
 
-from duHast.Revit.Family.Data import ifamily_data as IFamData
+from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 
 # from duHast.Utilities import Utility as util
 from duHast.Revit.Warnings import warnings as rWarn

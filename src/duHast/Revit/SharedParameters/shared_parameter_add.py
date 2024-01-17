@@ -358,6 +358,7 @@ def bind_shared_parameters_to_new_category(
     else:
         new_binding = rvt_doc.Application.Create.NewInstanceBinding(new_cat_set)
     binding_map = rvt_doc.ParameterBindings
+    target_cat_name = rdb.Category.GetCategory(rvt_doc, target_cat.Id).Name
 
     outlist = []
     errors = []
@@ -368,6 +369,12 @@ def bind_shared_parameters_to_new_category(
     for sp_def in target_params:
         ex_binding = binding_map.Item[sp_def]
         if ex_binding:
+            ex_binding_cats = [cat.Name for cat in ex_binding.Categories]
+            if target_cat_name in ex_binding_cats:
+                outlist.append(
+                    "{} already bound to {}".format(sp_def.Name, target_cat_name)
+                )
+                continue
             try:
                 ex_binding.Categories.Insert(target_cat)
                 rvt_doc.ParameterBindings.ReInsert(sp_def, ex_binding)

@@ -31,10 +31,12 @@ import System
 
 # import common library modules
 from duHast.Revit.Common.revit_version import get_revit_version_number
+from duHast.Revit.SharedParameters.shared_parameter_add import (
+    load_shared_parameter_file,
+)
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-
 
 # --------------------------------------------- utility functions ------------------
 
@@ -52,6 +54,32 @@ def get_all_shared_parameters(doc):
 
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.SharedParameterElement)
     return collector
+
+
+def get_all_shared_parameters_from_file(rvt_doc, shared_param_file_path=None):
+    """
+    Gets all the shared parameter definitions from a shared parameter file. Can
+    either be set manually or will be loaded from the default location which Revit
+    is pointing at
+    :param rvt_doc: Current Revit model document.
+    :type rvt_doc: Autodesk.Revit.DB.Document
+    :param shared_param_file_path: (Optional) The path to the shared parameter file.
+    :type shared_param_file_path: str
+    :return: A flat list of shared parameter definitions
+    :rtype: list
+    """
+    def_file = load_shared_parameter_file(rvt_doc, shared_param_file_path)
+    shared_params = []
+
+    if def_file:
+        sp_groups = def_file.Groups
+        for sp_gp in sp_groups:
+            for sp_def in sp_gp.Definitions:
+                shared_params.append(sp_def)
+
+        return shared_params
+    else:
+        return None
 
 
 def get_family_shared_parameters(doc):

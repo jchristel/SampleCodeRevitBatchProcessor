@@ -17,13 +17,13 @@ from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import transaction as rTran
 
 
-def load_shared_parameter_file(doc, path):
+def load_shared_parameter_file(doc, path=None):
     """
     Loads a shared parameter file.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param path: Fully qualified file path to shared parameter text file.
+    :param path: (Optional) Fully qualified file path to shared parameter text file.
     :type path: str
 
     :return: The opened shared parameter file.
@@ -31,7 +31,9 @@ def load_shared_parameter_file(doc, path):
     """
 
     app = doc.Application
-    app.SharedParametersFilename = path
+    if path:
+        app.SharedParametersFilename = path
+
     return app.OpenSharedParameterFile()
 
 
@@ -87,12 +89,10 @@ def bind_shared_parameter(
 
     return_value = res.Result()
     try:
-
         app = doc.Application
 
         # check if we are going to get something valid:
         if doc.Settings.Categories.get_Item(category) != None:
-
             # This is needed already here to
             # store old ones for re-inserting
             cat_set = app.Create.NewCategorySet()
@@ -286,6 +286,7 @@ def add_shared_parameter_to_family(para, mgr, doc, def_file):
                 if def_para.Name != para.name:
                     # jump to next parameter
                     continue
+
                 # set up an action to add parameter
                 def action():
                     action_return_value = res.Result()
@@ -329,3 +330,65 @@ def add_shared_parameter_to_family(para, mgr, doc, def_file):
         )
 
     return return_value
+
+
+def bind_shared_parameters_to_new_category(
+    rvt_doc, target_params, target_cat, target_param_grp, type_binding=False
+):
+    """
+    Takes a list of shared parameter definitions and creates a binding to a new category. Will
+    add category to an existing binding if one exists already
+    :param rvt_doc: Revit document
+    :type rvt_doc: Autodesk.Revit.DB.Document
+    :param target_params: List of shared parameter definitions
+    :type target_params: list[Autodesk.Revit.DB.ExternalDefinition]
+    :param target_cat: Category to bind to
+    :type target_cat: BuiltInCategory
+    :param target_param_grp: Parameter Group new parameters will appear in
+    :type target_param_grp: BuiltInParameterGroup
+    :param type_binding: True if type binding, False if instance binding
+    :type type_binding: bool
+    :return: List of successful bindings, list of errors
+    :rtype: tuple
+    """
+    new_cat_set = rvt_doc.Application.Create.NewCategorySet()
+    new_cat_set.Insert(target_cat)
+    if type_binding:
+        new_binding = rvt_doc.Application.Create.NewTypeBinding(new_cat_set)
+    else:
+        new_binding = rvt_doc.Application.Create.NewInstanceBinding(new_cat_set)
+    binding_map = rvt_doc.ParameterBindings
+
+    outlist = []
+    errors = []
+
+    t = rdb.Transaction(rvt_doc, "Bind new category to shared parameters")
+    t.Start()
+
+    for sp_def in target_params:
+        ex_binding = binding_map.Item[sp_def]
+        if ex_binding:
+            try:
+                ex_binding.Categories.Insert(target_cat)
+                rvt_doc.ParameterBindings.ReInsert(sp_def, ex_binding)
+                outlist.append("Bound {} to {}".format(sp_def.Name, target_cat.Name))
+            except:
+                errors.append(
+                    "Could add {} to existing binding for {}".format(
+                        target_cat.Name, sp_def.Name
+                    )
+                )
+        else:
+            try:
+                binding_map.Insert(sp_def, new_binding, target_param_grp)
+                outlist.append("Bound {} to {}".format(sp_def.Name, target_cat.Name))
+            except:
+                errors.append(
+                    "Could not add {} to new binding for {}".format(
+                        target_cat.Name, sp_def.Name
+                    )
+                )
+
+    t.Commit()
+
+    return outlist, errors

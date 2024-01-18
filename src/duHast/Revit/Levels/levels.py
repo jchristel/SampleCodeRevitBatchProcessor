@@ -216,7 +216,7 @@ def get_nearest_level_absolute(z, levels, ignore_level_names):
     :type z: float
     :param levels: List of levels in the model. (sorted ascending)
     :type levels: list
-    :return: Returns the level and the offset adjustment (in imperial) from the source family instance level.
+    :return: Returns the level and the offset adjustment (in metric) from the source family instance level.
     :rtype: tuple
     """
 
@@ -233,7 +233,7 @@ def get_nearest_level_absolute(z, levels, ignore_level_names):
         if level.Name in ignore_level_names:
             continue
         # get the absolute distance
-        distance_to_level = abs(z - convert_imperial_feet_to_metric_mm( level.Elevation))
+        distance_to_level = abs(z - convert_imperial_feet_to_metric_mm(level.Elevation))
         # store the first level as the nearest level
         if absolute_distance_to_level is None:
             absolute_distance_to_level = distance_to_level
@@ -246,6 +246,48 @@ def get_nearest_level_absolute(z, levels, ignore_level_names):
     if nearest_level == None:
         return None, None
     else:
-        offset_from_level = z - convert_imperial_feet_to_metric_mm( nearest_level.Elevation)
-        # print("...offset_from_level: {}".format(offset_from_level))
+        offset_from_level = z - convert_imperial_feet_to_metric_mm(
+            nearest_level.Elevation
+        )
         return nearest_level, offset_from_level
+
+
+def get_nearest_lowest_level(z, levels, ignore_level_names):
+    """
+    Returns the nearest lowest level below the Z value and the offset adjustment from the level (in metric) in a tuple.
+
+    Note:
+    Will return None if the placement level could not be determined.
+    Nearest level is the level below or at the Z value and which is not in the ignore_level_names list.
+
+    :param z: The Z coordinate (metric!)
+    :type z: float
+    :param levels: List of levels in the model. (needs to be sorted ascending)
+    :type levels: list
+    :return: Returns the level and the offset adjustment (in metric) from the source family instance level.
+    :rtype: tuple
+    """
+
+    # get level by Z coordinate of family
+    nearest_level = None
+    for level in levels:
+        # check if level is to be ignored
+        if level.Name in ignore_level_names:
+            continue
+        # store the lowest level for later
+        if nearest_level == None:
+            nearest_level = level
+        # get the level by height
+        if round(convert_imperial_feet_to_metric_mm(level.Elevation), 2) <= round(z, 2):
+            nearest_level = level
+        else:
+            break
+
+    # check if matching level was found and calc any offset
+    if nearest_level != None:
+        offset_from_level_adjustment = z - convert_imperial_feet_to_metric_mm(
+            nearest_level.Elevation
+        )
+        return nearest_level, offset_from_level_adjustment
+    else:
+        return None, None

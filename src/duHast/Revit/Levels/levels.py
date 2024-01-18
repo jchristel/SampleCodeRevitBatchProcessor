@@ -220,11 +220,6 @@ def get_nearest_level_absolute(z, levels, ignore_level_names):
     :rtype: tuple
     """
 
-    # find the nearest level matching the Z value
-    # nearest level is the level with the shortest absolute distance to the Z value
-    # if the Z value is below the lowest level elevation in the model the lowest level will be returned
-    # if the Z value is above the highest level elevation in the model the highest level will be returned
-
     # distance placeholder
     absolute_distance_to_level = None
     nearest_level = None

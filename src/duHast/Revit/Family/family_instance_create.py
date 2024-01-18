@@ -77,6 +77,12 @@ def place_a_family_instance_by_level(
     def action():
         action_return_value = res.Result()
         try:
+            # the symbol needs to be activated before using it
+            # https://thebuildingcoder.typepad.com/blog/2014/08/activate-your-family-symbol-before-using-it.html
+            if not family_symbol.IsActive:
+                family_symbol.Activate()
+                doc.Regenerate()
+                
             # create a new instance
             element = doc.Create.NewFamilyInstance(
                 location_point,
@@ -107,4 +113,79 @@ def place_a_family_instance_by_level(
     transaction = Transaction(doc, "Placing Family")
     return_value = transaction_manager(transaction, action, doc)
 
+    return return_value
+
+def place_a_family_instance_in_basic_wall(doc,
+    location_point,
+    wall,
+    family_symbol,
+    target_placement_level,
+    transaction_manager=in_transaction,
+    modify_action=None,
+    ):
+    """
+    Places a family instance in a basic wall.
+
+    Note: It is much faster to modify the family instance after placement in the same transaction than to place it in one transaction
+    and modify its parameters in a separate transaction.
+    Use the modify_action parameter to provide a function that modifies the family instance after placement. Function to accept a family instance as a parameter.
+
+    :param doc: The revit document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param location_point: The location point of the family instance.
+    :type location_point: Autodesk.Revit.DB.XYZ
+    :param wall: The wall to place the family instance in.
+    :type wall: Autodesk.Revit.DB.Wall
+    :param family_symbol: The family symbol to place.
+    :type family_symbol: Autodesk.Revit.DB.FamilySymbol
+    :param target_placement_level: The level to place the family instance on.
+    :type target_placement_level: Autodesk.Revit.DB.Level
+    :param transaction_manager: The transaction manager to use.
+    :type transaction_manager: function
+    :param modify_action: An action to run after the family instance is placed to modify its properties.
+    :type modify_action: function
+
+    :return: A result object.
+    :rtype: duHast.Utilities.Objects.result.Result
+    """
+
+    # places a family in the model
+    def action():
+        action_return_value = res.Result()
+        try:
+            # the symbol needs to be activated before using it
+            # https://thebuildingcoder.typepad.com/blog/2014/08/activate-your-family-symbol-before-using-it.html
+            if not family_symbol.IsActive:
+                family_symbol.Activate()
+                doc.Regenerate()
+            # create a new instance
+            element = doc.Create.NewFamilyInstance(
+                location_point,
+                family_symbol,
+                wall,
+                target_placement_level,
+                StructuralType.NonStructural,
+            )
+            
+            action_return_value.append_message("Family placed successfully.")
+            action_return_value.result.append(element)
+
+            # if a modify action is provided, run it
+            if modify_action:
+                modify_result = modify_action(element)
+                if isinstance(modify_result, res.Result):
+                    action_return_value.update(modify_result)
+            else:
+                action_return_value.append_message(
+                    "No modify action provided, skipping."
+                )
+
+        except Exception as e:
+            action_return_value.update_sep(
+                False, "Failed to place family instance: {}".format(e)
+            )
+        return action_return_value
+
+    transaction = Transaction(doc, "Placing Family")
+    return_value = transaction_manager(transaction, action, doc)
     return return_value

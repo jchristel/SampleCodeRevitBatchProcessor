@@ -58,6 +58,8 @@ import sys
 import settings as settings  # sets up all commonly used variables and path locations!
 from duHast.Utilities.console_out import output  # output to console function
 from duHast.Utilities.files_csv import write_report_data_as_csv
+from duHast.Utilities.batch_processor_log_utils import process_log_files
+
 import Post_FamilyDataCleanUp as pCleanUp  # clean up functions
 from Post_FamilyDataLogFiles import (
     write_out_re_process_data,
@@ -95,7 +97,7 @@ CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED = ["status: False"]
 # ------------------------------------------- user feed back and report to disk -------------------------------------------
 
 
-def _UserOutAndLogFile(processingResults, fileName, header=[]):
+def user_out_and_log_file(processing_results, file_name, header=[]):
     """
     Show user feed back and write to report file
 
@@ -108,26 +110,62 @@ def _UserOutAndLogFile(processingResults, fileName, header=[]):
     :type processingResults: class:`.Result`
     """
 
-    if processingResults.result != None:
+    if processing_results.result != None:
         # show user any issues
-        for m in processingResults.result:
+        for m in processing_results.result:
             output("::".join(m))
         # write data out to file
         write_report_data_as_csv(
             file_name=os.path.join(
-                settings.OUTPUT_FOLDER, fileName
+                settings.OUTPUT_FOLDER, file_name
             ),  # report full file name
             header=header,  # empty header
-            data=processingResults.result,
+            data=processing_results.result,
         )
     else:
         output(
             "{}: Result did not contain any data to be written to file.".format(
-                fileName
+                file_name
             )
         )
-        write_empty_report_file(fileName, header)
+        write_empty_report_file(file_name, header)
 
+# -------------------------------------------- log files --------------------------------------------
+
+def process_all_log_files():
+    """
+    Checks log files for any warnings or exceptions and writes out a report file containing any issues in format\
+        filepath exception description
+    """
+
+    # process logs
+    processing_results = process_log_files(
+        folder_path=settings.LOG_MARKER_DIRECTORY,
+        debug=CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED,
+    )
+
+    output("LogResults.... status: {}".format(processing_results.status))
+
+    # write any files with exceptions out to file:
+    if processing_results.result != None:
+        # re-format output data
+        data_to_file = []
+        data_to_process_file = []
+        for data in processing_results.result:
+            row = [data[0], data[2]]
+            data_to_file.append(row)
+            # re - process files
+            rowProcessData = [data[0]]
+            data_to_process_file.append(rowProcessData)
+        processing_results.result = data_to_file
+        output("LogResults.... message(s): \n[{}]".format(processing_results.result))
+        user_out_and_log_file(processing_results, settings.FILE_NAME_EXCEPTIONS_REPORT)
+
+        # write out second family list as CSV (files which failed to process for a reason and need to be processed again)
+        write_out_re_process_data(
+            data=data_to_process_file,
+            header=settings.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT,
+        )
 
 # ------------------------------------------- Report analysis -------------------------------------------
 
@@ -162,7 +200,7 @@ def check_circular_references():
                 ]
                 data_to_file.append(row)
             check_circular_ref_result.result = data_to_file
-        _UserOutAndLogFile(
+        user_out_and_log_file(
             check_circular_ref_result, settings.FILE_NAME_CIRCULAR_REFERENCE_REPORT
         )
     except Exception as e:
@@ -209,7 +247,7 @@ def check_missing_families():
                         )
                     )
             check_missing_families.result = data_to_file
-            _UserOutAndLogFile(
+            user_out_and_log_file(
                 check_missing_families, settings.FILE_NAME_MISSING_FAMILIES_REPORT
             )
         else:

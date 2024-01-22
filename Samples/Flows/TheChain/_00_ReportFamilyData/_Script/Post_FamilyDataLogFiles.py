@@ -59,7 +59,11 @@ from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.files_io import copy_file
 from duHast.Utilities.directory_io import directory_exists
 from duHast.Utilities.utility import pad_single_digit_numeric_string
-from duHast.Utilities.batch_processor_log_utils import process_log_files, get_current_session_ids, get_log_files, get_log_txt_files, delete_log_data_files
+from duHast.Utilities.batch_processor_log_utils import (
+    get_current_session_ids,
+    get_log_files,
+    get_log_txt_files,
+)
 
 
 # -------------
@@ -125,42 +129,6 @@ def write_out_re_process_data(data, file_name, header=[]):
             data=[],
         )
         output("{}: Empty file written.".format(file_name))
-
-
-def process_all_log_files():
-    """
-    Checks log files for any warnings or exceptions and writes out a report file containing any issues in format\
-        filepath exception description
-    """
-
-    # process logs
-    processing_results = process_log_files(
-        folder_path=settings.LOG_MARKER_DIRECTORY,
-        debug=CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED,
-    )
-
-    output("LogResults.... status: {}".format(processing_results.status))
-
-    # write any files with exceptions out to file:
-    if processing_results.result != None:
-        # re-format output data
-        data_to_file = []
-        data_to_process_file = []
-        for data in processing_results.result:
-            row = [data[0], data[2]]
-            data_to_file.append(row)
-            # re - process files
-            rowProcessData = [data[0]]
-            data_to_process_file.append(rowProcessData)
-        processing_results.result = data_to_file
-        output("LogResults.... message(s): \n[{}]".format(processing_results.result))
-        # _UserOutAndLogFile(processing_results, settings.FILE_NAME_EXCEPTIONS_REPORT)
-
-        # write out second family list as CSV (files which failed to process for a reason and need to be processed again)
-        write_out_re_process_data(
-            data=data_to_process_file,
-            header=settings.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT,
-        )
 
 
 # ------------------------------------------- copy log files -------------------------------------------

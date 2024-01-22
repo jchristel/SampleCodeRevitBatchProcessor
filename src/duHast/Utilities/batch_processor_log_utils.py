@@ -166,7 +166,7 @@ def write_session_id_marker_file(folder_path, session_id):
     return status
 
 
-def get_current_session_ids(folder_path):
+def get_current_session_ids(folder_path, delete_marker_files=True):
     """
     Returns file names of all text files in a given directory representing session Ids.
 
@@ -180,13 +180,16 @@ def get_current_session_ids(folder_path):
     """
     ids = []
     file_list = glob.glob(folder_path + "\\*" + ".txt")
-    # delete marker files
-    result_delete = True
-    for fd in file_list:
-        if debug_mode_ == False:
-            result_delete = result_delete & fileIO.file_delete(fd)
-    if not result_delete:
-        output("Failed to delete a marker file!")
+    # delete marker files if required
+    if(delete_marker_files == True):
+        for fd in file_list:
+            fileIO.file_delete(fd)
+        result_delete = True
+        for fd in file_list:
+            if debug_mode_ == False:
+                result_delete = result_delete & fileIO.file_delete(fd)
+        if not result_delete:
+            output("Failed to delete a marker file!")
     for f in file_list:
         ids.append(
             adjust_session_id_file_name_back(Path.GetFileNameWithoutExtension(f))

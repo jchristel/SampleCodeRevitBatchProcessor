@@ -63,7 +63,7 @@ set familyReloadChangedFamilyReport="%_rootFolderPath%_02_ModifyFamilyLibraryRel
 :: toggle to run initial report
 set initialReport=1
 :: toggle to run follow up report
-set followUpReport=1
+set followUpReport=0
 :: toggle write out missing families
 set writeOutMissingFamilies=0
 
@@ -71,7 +71,7 @@ set writeOutMissingFamilies=0
 set modifyFamilyDefault=0
 
 :: rename families 
-set renameFamilies=1
+set renameFamilies=0
 
 :: rename sub categories
 set renameSubCategories=0
@@ -80,9 +80,9 @@ set renameSubCategories=0
 set changeFamilyCategories=0
 
 :: reload any changed families
-set reloadFamilies=1
+set reloadFamilies=0
 :: will do a full report after a reload
-set reportFullAfterReload=1
+set reportFullAfterReload=0
 
 :: debug toggle
 set toggleDebug=0

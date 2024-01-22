@@ -1,8 +1,0 @@
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Furniture\Baby_Change_Table_FUR.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Fixtures\Cardiac_Protected_Electrical_Area_Sign_EFX.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Couch_Exam_Electric_EEQ.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Specialty Equipment\Device_CoagulationTesting_RotemSigma_SEQ.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Dryer_Hand_WallMounted_Dyson_EEQ.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Monitor_Blood_Pressure_EEQ.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Monitor_Foetal_CTG_EEQ.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Generic Models\RoomCalculationPoint_Marker_GEN.rfa

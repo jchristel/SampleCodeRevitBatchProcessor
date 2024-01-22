@@ -120,3 +120,5 @@ FILE_NAME_MARKER_MERGE_FAMILY_DATA = "MergeFamilyData" + REPORT_FILE_EXTENSION
 
 # flag indicating whether this is a cloud based project
 IS_CLOUD_PROJECT = False
+
+REVIT_LIBRARY_PATH = r'C:\Users\jchristel\dev\test_lib'

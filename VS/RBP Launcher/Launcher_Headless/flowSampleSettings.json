@@ -1,0 +1,43 @@
+{
+  "pre script": {
+    "python version": "2.7",
+    "script file path": "my/file/path"
+  },
+  "batch processor scripts": [
+    {
+      "start_interval": 20,
+      "pre script": {
+        "python version": "2.7",
+        "script file path": "my/file/path"
+      },
+      "post script": {
+        "python version": "2.7",
+        "script file path": "my\filepath"
+      },
+      "setting files": [
+        "my/file/path",
+        "my/file/path",
+        "my/file/path"
+      ]
+    },
+    {
+      "start_interval": 20,
+      "pre script": {
+        "python version": "2.7",
+        "script file path": "my/file/path"
+      },
+      "post script": {
+        "python version": "2.7",
+        "script file path": "my\filepath"
+      },
+      "setting files": [
+        "my/file/path",
+        "my/file/path"
+      ]
+    }
+  ],
+  "post script": {
+    "python version": "2.7",
+    "script file path": "my\filepath"
+  }
+}

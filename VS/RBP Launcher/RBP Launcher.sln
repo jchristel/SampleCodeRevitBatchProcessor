@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RBP Launcher", "RBP Launcher\RBP Launcher.csproj", "{49136A78-F62D-4FD1-B9A9-CDFC4B25F090}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launcher_Headless", "Launcher_Headless\Launcher_Headless.csproj", "{EEB7D06E-665E-43B8-92AB-AA07B9AA5622}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{49136A78-F62D-4FD1-B9A9-CDFC4B25F090}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49136A78-F62D-4FD1-B9A9-CDFC4B25F090}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49136A78-F62D-4FD1-B9A9-CDFC4B25F090}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49136A78-F62D-4FD1-B9A9-CDFC4B25F090}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEB7D06E-665E-43B8-92AB-AA07B9AA5622}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEB7D06E-665E-43B8-92AB-AA07B9AA5622}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEB7D06E-665E-43B8-92AB-AA07B9AA5622}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEB7D06E-665E-43B8-92AB-AA07B9AA5622}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {925BC662-EABA-463A-BD0D-7F28996458FA}
+	EndGlobalSection
+EndGlobal

@@ -55,8 +55,8 @@ import os
 import sys
 
 
-import settings as utilData # sets up all commonly used variables and path locations!
-import Post_Output as pOut # output to console function
+import settings as settings # sets up all commonly used variables and path locations!
+from duHast.Utilities.console_out import output # output to console function
 import Post_FamilyDataCleanUp as pCleanUp # clean up functions
 
 # import common library
@@ -73,11 +73,11 @@ import RevitFamilyReportUtils as rFamRepUtils
 
 # list containing file name prefixes and the associoated combined report file names
 FILE_DATA_TO_COMBINE = [
-    ['Category', 'FamilyCategoriesCombinedReport' + utilData.REPORT_FILE_EXTENSION],
-    ['SharedParameter', 'FamilySharedParametersCombinedReport' + utilData.REPORT_FILE_EXTENSION],
-    ['LinePattern', 'FamilyLinePatternsCombinedReport' + utilData.REPORT_FILE_EXTENSION],
-    ['FamilyBase', 'FamilyBaseDataCombinedReport' + utilData.REPORT_FILE_EXTENSION],
-    ['Warnings', 'FamilyWarningsCombinedReport' + utilData.REPORT_FILE_EXTENSION]
+    ['Category', 'FamilyCategoriesCombinedReport' + settings.REPORT_FILE_EXTENSION],
+    ['SharedParameter', 'FamilySharedParametersCombinedReport' + settings.REPORT_FILE_EXTENSION],
+    ['LinePattern', 'FamilyLinePatternsCombinedReport' + settings.REPORT_FILE_EXTENSION],
+    ['FamilyBase', 'FamilyBaseDataCombinedReport' + settings.REPORT_FILE_EXTENSION],
+    ['Warnings', 'FamilyWarningsCombinedReport' + settings.REPORT_FILE_EXTENSION]
 ]
 
 # looking for message indicating one of the data processors failed
@@ -98,10 +98,10 @@ def _writeEmptyReportFile(fileName, header = []):
     :type header: list, optional
     '''
 
-    pOut.Output(fileName + ': Writing empty report file.')
+    output('{}: Writing empty report file.'.format(fileName))
     dataToFile = []
     util.writeReportDataAsCSV(
-        utilData.OUTPUT_FOLDER + '\\' + fileName, # report full file name
+        settings.OUTPUT_FOLDER + '\\' + fileName, # report full file name
         header, # empty header by default
         dataToFile, 
         writeType = 'w')
@@ -122,16 +122,16 @@ def _UserOutAndLogFile(processingResults, fileName, header = []):
     if(processingResults.result != None):
         # show user any issues
         for m in processingResults.result:
-            pOut.Output('::'.join(m))
+            output('::'.join(m))
         # write data out to file
         util.writeReportDataAsCSV(
-            utilData.OUTPUT_FOLDER + '\\' + fileName, # report full file name
+            settings.OUTPUT_FOLDER + '\\' + fileName, # report full file name
             header, # empty header 
             processingResults.result, 
             writeType = 'w'
         )
     else:
-        pOut.Output(fileName + ': Result did not contain any data to be written to file.')
+        output('{}: Result did not contain any data to be written to file.'.format(fileName))
         _writeEmptyReportFile(fileName, header)
 
 # ------------------------------------------- clean up -------------------------------------------
@@ -146,10 +146,10 @@ def CheckTempReportsExist():
     flag = False
     for toCombine in FILE_DATA_TO_COMBINE:
         files = util.GetFilesFromDirectoryWalkerWithFilters(
-            utilData.OUTPUT_FOLDER, 
+            settings.OUTPUT_FOLDER, 
             '', 
             toCombine[0], 
-            utilData.REPORT_FILE_EXTENSION
+            settings.REPORT_FILE_EXTENSION
         )
         if (len(files) > 0):
             flag = True
@@ -163,13 +163,13 @@ def CombineTempReports():
 
     # combine all by file repoorts into one per porocessor
     for toCombine in FILE_DATA_TO_COMBINE:
-        pOut.Output('Combining '+ toCombine[0] + ' report files.')
+        output('Combining {} report files.'.format(toCombine[0]))
         # combine files
         util.CombineFiles(
-            utilData.OUTPUT_FOLDER, 
+            settings.OUTPUT_FOLDER, 
             '' , 
             toCombine[0], 
-            utilData.REPORT_FILE_EXTENSION,
+            settings.REPORT_FILE_EXTENSION,
             toCombine[1], 
             util.GetFilesFromDirectoryWalkerWithFilters
         )
@@ -189,16 +189,16 @@ def _writeReprocess(data, fileName, header = []):
     if (len(data) > 0):
         # show user any issues
         for d in data:
-            pOut.Output('::'.join(d))
+            output('::'.join(d))
         # write data out to file
         util.writeReportDataAsCSV(
-            utilData.OUTPUT_FOLDER + '\\' + fileName, # report full file name
+            settings.OUTPUT_FOLDER + '\\' + fileName, # report full file name
             header, # empty header by default
             data, 
             writeType = 'w'
         )
     else:
-        pOut.Output(fileName + ': Result did not contain any data to be written to file.')
+        output('{}: Result did not contain any data to be written to file.'.format(fileName))
         _writeEmptyReportFile(fileName, header)
 
 def ProcessLogFiles():
@@ -209,11 +209,11 @@ def ProcessLogFiles():
 
     # process logs
     processingResults_ = logutils.ProcessLogFiles(
-        utilData.LOG_MARKER_DIRECTORY,
+        settings.LOG_MARKER_DIRECTORY,
         CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED
         )
 
-    pOut.Output('LogResults.... status: ' + str(processingResults_.status))
+    output('LogResults.... status: {}'.format(processingResults_.status))
 
     # write any files with exceptions out to file:
     if(processingResults_.result != None):
@@ -227,10 +227,10 @@ def ProcessLogFiles():
             rowProcessData = [data[0]]
             dataToProcessFile.append(rowProcessData)
         processingResults_.result = dataToFile
-        _UserOutAndLogFile(processingResults_, utilData.FILE_NAME_EXCEPTIONS_REPORT)
+        _UserOutAndLogFile(processingResults_, settings.FILE_NAME_EXCEPTIONS_REPORT)
 
         # write out second family list as CSV (files which failed to process for a reason and need to be processed again)
-        _writeReprocess(dataToProcessFile, utilData.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT)
+        _writeReprocess(dataToProcessFile, settings.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT)
 
 # ------------------------------------------- copy log files -------------------------------------------
 
@@ -267,11 +267,11 @@ def CopyLogFiles(targetFolder):
     '''
 
     flagCopyLogs = True
-    if(util.DirectoryExists(utilData.LOG_MARKER_DIRECTORY)):
+    if(util.DirectoryExists(settings.LOG_MARKER_DIRECTORY)):
         if(util.DirectoryExists(targetFolder)):
             # get log marker files
             markerfileIds = logutils.GetCurrentSessionIds(
-                utilData.LOG_MARKER_DIRECTORY,
+                settings.LOG_MARKER_DIRECTORY,
                 False #keep markers for processing later on
                 )
             # check if any ids where retrieved
@@ -285,13 +285,13 @@ def CopyLogFiles(targetFolder):
                 # combine copy results
                 flagCopyLogs = copyLog and copyTextLog
             else:
-                pOut.Output('\nNo log marker files found in ' + utilData.LOG_MARKER_DIRECTORY)
+                output('\nNo log marker files found in {}'.format(settings.LOG_MARKER_DIRECTORY))
                 flagCopyLogs = False
         else:
-            pOut.Output ('\nLog file destination directory does not exist: ' + targetFolder)
+            output ('\nLog file destination directory does not exist: {}'.format(targetFolder))
             flagCopyLogs = False
     else:
-        pOut.Output ('\nLog marker directory does not exist: ' + utilData.LOG_MARKER_DIRECTORY)
+        output ('\nLog marker directory does not exist: {}'.format(settings.LOG_MARKER_DIRECTORY))
         flagCopyLogs = False
     return flagCopyLogs
 
@@ -305,10 +305,10 @@ def CheckCircularReferences():
     try:
         # check for circular references in families
         checkCircularRefResult = famDataCircularCheck.CheckFamiliesHaveCircularReferences(
-            utilData.OUTPUT_FOLDER + '\\' + 'FamilyBaseDataCombinedReport' + utilData.REPORT_FILE_EXTENSION
+            settings.OUTPUT_FOLDER + '\\' + 'FamilyBaseDataCombinedReport' + settings.REPORT_FILE_EXTENSION
             )
 
-        pOut.Output('Circular referencing check.... status: ' + str(checkCircularRefResult.status))
+        output('Circular referencing check.... status: {}'.format(checkCircularRefResult.status))
         if(checkCircularRefResult.result != None):
             # re-format output data
             dataToFile = []
@@ -320,10 +320,10 @@ def CheckCircularReferences():
                     ]
                 dataToFile.append(row)
             checkCircularRefResult.result = dataToFile
-        _UserOutAndLogFile(checkCircularRefResult, utilData.FILE_NAME_CIRCULAR_REFERENCE_REPORT)
+        _UserOutAndLogFile(checkCircularRefResult, settings.FILE_NAME_CIRCULAR_REFERENCE_REPORT)
     except Exception as e:
-        pOut.Output('Failed circular reference check with exception: ' + str(e))
-        _writeEmptyReportFile(utilData.FILE_NAME_CIRCULAR_REFERENCE_REPORT)
+        output('Failed circular reference check with exception: {}'.format(e))
+        _writeEmptyReportFile(settings.FILE_NAME_CIRCULAR_REFERENCE_REPORT)
 
 def CheckMissingFamilies():
     '''
@@ -331,12 +331,12 @@ def CheckMissingFamilies():
     Uses the FamilyBaseDataCombinedReport.csv report file
     '''
 
-    dataFilePath = utilData.OUTPUT_FOLDER + '\\' + 'FamilyBaseDataCombinedReport' + utilData.REPORT_FILE_EXTENSION
+    dataFilePath = settings.OUTPUT_FOLDER + '\\' + 'FamilyBaseDataCombinedReport' + settings.REPORT_FILE_EXTENSION
     
     try:
         checkMissingFams = famDataMissingFams.CheckFamiliesMissingFromLibrary(dataFilePath)
 
-        pOut.Output('Missing families from library check.... status: ' + str(checkMissingFams.status))
+        output('Missing families from library check.... status: {}'.format(checkMissingFams.status))
         #initialise missing families list
         missingFams = []
         if(len(checkMissingFams.result) > 0):
@@ -354,13 +354,13 @@ def CheckMissingFamilies():
                     ]
                     dataToFile.append(row)
                 except  Exception as e:
-                    pOut.Output('an exception occured when processing missing family data prior to be written to file: ' + str(e))
+                    output('an exception occurred when processing missing family data prior to be written to file: {}'.format(e))
             checkMissingFams.result = dataToFile
-            _UserOutAndLogFile(checkMissingFams, utilData.FILE_NAME_MISSING_FAMILIES_REPORT)
+            _UserOutAndLogFile(checkMissingFams, settings.FILE_NAME_MISSING_FAMILIES_REPORT)
         else:
             # write empty report files
             dataToFile = []
-            _writeReprocess(dataToFile, utilData.FILE_NAME_MISSING_FAMILIES_REPORT)
+            _writeReprocess(dataToFile, settings.FILE_NAME_MISSING_FAMILIES_REPORT)
     
         # get host families of those missing families
         missingFamiliesHostFamilies = famDataMissingFams.FindMissingFamiliesDirectHostFamilies (
@@ -379,16 +379,16 @@ def CheckMissingFamilies():
                     ]
                     dataToFile.append(row)
                 except  Exception as e:
-                    pOut.Output('an exception occured when processing missing family data prior to be written to file: ' + str(e))
-            _writeReprocess(dataToFile, utilData.FILE_NAME_MISSING_FAMILIES_HOSTS_REPORT )
+                    output('an exception occurred when processing missing family data prior to be written to file: {}'.format(e))
+            _writeReprocess(dataToFile, settings.FILE_NAME_MISSING_FAMILIES_HOSTS_REPORT )
         else:
             # write empty report files
             dataToFile = []
-            _writeReprocess(dataToFile, utilData.FILE_NAME_MISSING_FAMILIES_HOSTS_REPORT )
+            _writeReprocess(dataToFile, settings.FILE_NAME_MISSING_FAMILIES_HOSTS_REPORT )
     except Exception as e:
-        pOut.Output('Failed missing family check with exception: ' + str(e))
-        _writeEmptyReportFile(utilData.FILE_NAME_MISSING_FAMILIES_REPORT)
-        _writeEmptyReportFile(utilData.FILE_NAME_MISSING_FAMILIES_HOSTS_REPORT)
+        output('Failed missing family check with exception: {}'.format(e))
+        _writeEmptyReportFile(settings.FILE_NAME_MISSING_FAMILIES_REPORT)
+        _writeEmptyReportFile(settings.FILE_NAME_MISSING_FAMILIES_HOSTS_REPORT)
 
 
 # ------------------------------------------- Analysis folder and copy files -------------------------------------------
@@ -397,15 +397,15 @@ def SetUpdatedFolderInAnalysis():
     '''
     Sets up a dated folder in the Analysis directory
 
-    :return: True if folder was created succesfully, otherwise False
+    :return: True if folder was created successfully, otherwise False
     :rtype: bool
     '''
 
     flag =  util.CreateFolder(
-        utilData.ANALYSIS_FOLDER, 
+        settings.ANALYSIS_FOLDER, 
         util.GetFolderDateStamp()
         )
-    folderName = utilData.ANALYSIS_FOLDER + '\\' + util.GetFolderDateStamp()
+    folderName = settings.ANALYSIS_FOLDER + '\\' + util.GetFolderDateStamp()
     return flag, folderName
 
 def CopyResultsIntoAnalysis(targetFolder):
@@ -420,8 +420,8 @@ def CopyResultsIntoAnalysis(targetFolder):
     
     flagCopy = True
     # copy all text files from output
-    files = util.GetFilesWithFilter(utilData.OUTPUT_FOLDER , utilData.REPORT_FILE_EXTENSION)
-    pOut.Output( 'Found result files: ' + str(len(files)))
+    files = util.GetFilesWithFilter(settings.OUTPUT_FOLDER , settings.REPORT_FILE_EXTENSION)
+    output( 'Found result files: {}'.format(len(files)))
     for f in files:
         # get the file name of the path
         fileName = os.path.basename(f)
@@ -429,7 +429,7 @@ def CopyResultsIntoAnalysis(targetFolder):
         newfilePath = os.path.join(targetFolder, fileName)
         # copy the log file
         flagCopyFile = util.CopyFile(f, newfilePath)
-        pOut.Output('Copied file: ' + util.GetFileNameWithoutExt(f) + ' to: ' + newfilePath + ' [' + str(flagCopyFile) + ']')
+        output('Copied file: {} to: {} [{}]'.format(util.GetFileNameWithoutExt(f) ,newfilePath ,flagCopyFile))
         flagCopy = flagCopy and flagCopyFile
     return flagCopy
 
@@ -447,7 +447,7 @@ def _CombineReportFilesCheck():
     previousReportsDirectory = ''
 
     # build marker file path
-    markerFilePath = utilData.INPUT_DIRECTORY + '\\' + utilData.FILE_NAME_MARKER_MERGE_FAMILY_DATA
+    markerFilePath = settings.INPUT_DIRECTORY + '\\' + settings.FILE_NAME_MARKER_MERGE_FAMILY_DATA
     # check if file exists in input location
     if(util.FileExist(markerFilePath)):
         # read file
@@ -482,35 +482,35 @@ def CombineCurrentWithPreviousReportFiles(previousReportRootDirectory):
         # set default values
         currentReportFile = ''
         previousReportFile  = ''
-        if(util.FileExist(utilData.OUTPUT_FOLDER + '\\' + toCombine[1])):
-            currentReportFile = utilData.OUTPUT_FOLDER + '\\' + toCombine[1]
-            pOut.Output('Found match for current report file: ' + currentReportFile)
+        if(util.FileExist(settings.OUTPUT_FOLDER + '\\' + toCombine[1])):
+            currentReportFile = settings.OUTPUT_FOLDER + '\\' + toCombine[1]
+            output('Found match for current report file: {}'.format(currentReportFile))
         else:
-            pOut.Output('No match found for: ' + toCombine[1] + ' current output folder.')
+            output('No match found for: {} current output folder.'.format(toCombine[1]))
 
         if(util.FileExist(previousReportRootDirectory + '\\' + toCombine[1])):
             previousReportFile = previousReportRootDirectory + '\\' + toCombine[1]
-            pOut.Output('Found match for previous report file: ' + previousReportFile)
+            output('Found match for previous report file: {}'.format(previousReportFile))
         else:
-            pOut.Output('No match found for: ' + toCombine[1] + ' previous report folder.')
+            output('No match found for: {} previous report folder.'.format(toCombine[1]))
 
         if(currentReportFile != '' and previousReportFile != ''):
             # put try catch around this in case report files are empty...
             try:
                 # update report
                 updatedReportRowsStatus = rFamRepUtils.CombineReports(previousReportFile, currentReportFile)
-                pOut.Output(updatedReportRowsStatus.message)
+                output(updatedReportRowsStatus.message)
                 updatedReportRows = updatedReportRowsStatus.result
                 # write out new report on top of old one
                 util.writeReportDataAsCSV(
                     currentReportFile, 
                     '', 
                     updatedReportRows)
-                pOut.Output ('Wrote updated report to: ' + currentReportFile)
+                output ('Wrote updated report to: {}'.format(currentReportFile))
             except Exception as e:
-                pOut.Output("Failed to combine reports: [" + currentReportFile + "]\t[" + previousReportFile + '] with exception: ' + str(e))
+                output("Failed to combine reports: [{}]\t[{}] with exception: {}".format(currentReportFile,previousReportFile, e))
         else:
-            pOut.Output('Failed to find two report files for report: ' + toCombine[1] + ' Nothing was combined.')
+            output('Failed to find two report files for report: {} Nothing was combined.'.format(toCombine[1]))
 
 # -------------
 # main:
@@ -522,7 +522,7 @@ if(CheckTempReportsExist()):
     # combine temporary, by family, reports
     CombineTempReports()
     # delete the working by session id directories
-    pCleanUp.DeleteWorkingDirectories()
+    pCleanUp.delete_working_directories()
 
     # check whether report files need to be combined / merged with previous  (older) report files before progressing
     combineReportFiles, previousReportRootDirectory = _CombineReportFilesCheck()
@@ -539,9 +539,9 @@ if(CheckTempReportsExist()):
     # therefore those log files need to be copied first
     if(datedAnalysisFolderCreated_):
         flagCopyLogOne_ = CopyLogFiles(datedAnalysisDatedDirectoryPath_)
-        pOut.Output('Copied all log files to Analysis dated folder with status: ' + str(flagCopyLogOne_))
-        flagCopyLogTwo_ = CopyLogFiles(utilData.ANALYSIS_CURRENT_FOLDER)
-        pOut.Output('Copied all log files to Analysis current folder with status: ' + str(flagCopyLogTwo_))
+        output('Copied all log files to Analysis dated folder with status: {}'.format(flagCopyLogOne_))
+        flagCopyLogTwo_ = CopyLogFiles(settings.ANALYSIS_CURRENT_FOLDER)
+        output('Copied all log files to Analysis current folder with status: {}'.format(flagCopyLogTwo_))
     
     # check log files for any exceptions or warnings ( do this last since log marker files are required to copy logs for \
     # analysis in powerBi)
@@ -551,10 +551,10 @@ if(CheckTempReportsExist()):
     # copy report files
     if(datedAnalysisFolderCreated_):
         flagCopyResultOne_ = CopyResultsIntoAnalysis(datedAnalysisDatedDirectoryPath_)
-        pOut.Output('Copied all report files to Analysis dated folder with status: ' + str(flagCopyResultOne_))
-        flagCopyResultTwo_ = CopyResultsIntoAnalysis(utilData.ANALYSIS_CURRENT_FOLDER)
-        pOut.Output('Copied all report files to Analysis current folder with status: ' + str(flagCopyResultTwo_))
+        output('Copied all report files to Analysis dated folder with status: {}'.format(flagCopyResultOne_))
+        flagCopyResultTwo_ = CopyResultsIntoAnalysis(settings.ANALYSIS_CURRENT_FOLDER)
+        output('Copied all report files to Analysis current folder with status: {}'.format(flagCopyResultTwo_))
 else:
-    pOut.Output('No temp report files where found, indicating no families where processed.')
+    output('No temp report files where found, indicating no families where processed.')
 # delete any files in Input directory
-pCleanUp.DeleteFileInInputDir()
+pCleanUp.delete_file_in_input_directory()

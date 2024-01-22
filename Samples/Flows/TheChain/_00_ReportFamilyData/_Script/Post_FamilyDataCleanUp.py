@@ -1,9 +1,9 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains post reporting clean up functions:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-'''
+"""
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -34,35 +34,43 @@ This module contains post reporting clean up functions:
 # --------------------------
 
 
-import settings as utilData # sets up all commonly used variables and path locations!
-import Post_Output as pOut
-# import common library
-import Utility as util
+import settings as settings  # sets up all commonly used variables and path locations!
+from duHast.Utilities.console_out import output
+from duHast.Utilities.files_get import get_files_single_directory
+from duHast.Utilities.files_io import file_delete
+from duHast.Utilities.directory_io import get_child_directories, directory_delete
 
 
 # -------------
 # my code here:
 # -------------
 
-def DeleteFileInInputDir():
-    '''
-    Deletes any files in the input directory.
-    '''
-    files = util.GetFilesSingleFolder(utilData.INPUT_DIRECTORY, '', '', utilData.REPORT_FILE_EXTENSION)
-    if(len(files) > 0):
-        for f in files:
-            flagDelete = util.FileDelete(f)
-            pOut.Output('Deleted marker file: ' + f+ ' [' + str(flagDelete) +']')
-    else:
-        pOut.Output('Input directory did not contain any files.')
 
-def DeleteWorkingDirectories():
-    '''
+def delete_file_in_input_directory():
+    """
+    Deletes any files in the input directory.
+    """
+    files = get_files_single_directory(
+        folder_path=settings.INPUT_DIRECTORY,
+        file_prefix="",
+        file_suffix="",
+        file_extension=settings.REPORT_FILE_EXTENSION,
+    )
+    if len(files) > 0:
+        for f in files:
+            flag_delete = file_delete(f)
+            output("Deleted marker file: {} [{}]".format(f, flag_delete))
+    else:
+        output("Input directory did not contain any files.")
+
+
+def delete_working_directories():
+    """
     Deletes the session ID directories in which all the single reports are saved.
-    '''
-    
+    """
+
     # clean up. get directories in output folder and delete them
-    dirs = util.GetChildDirectories(utilData.OUTPUT_FOLDER)
+    dirs = get_child_directories(settings.OUTPUT_FOLDER)
     for dir in dirs:
-        flagDelete = util.DirectoryDelete(dir)
-        pOut.Output('Deleted directory: ' + str(dir) + ' [' + str(flagDelete) +']')
+        flag_delete = directory_delete(dir)
+        output("Deleted directory: {} [{}]".format(dir, flag_delete))

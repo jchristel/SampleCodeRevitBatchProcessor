@@ -1,4 +1,4 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains post reporting functions:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,7 +20,7 @@ This module contains post reporting functions:
     - dont do anything...
 
 
-'''
+"""
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -49,112 +49,125 @@ This module contains post reporting functions:
 # --------------------------
 # Imports
 # --------------------------
-import clr
-import System
 import os
-import sys
 
-
-import settings as utilData # sets up all commonly used variables and path locations!
-import Post_Output as pOut # output to console function
-import Post_FamilyDataCleanUp as pCleanUp # clean up functions
+import settings as settings  # sets up all commonly used variables and path locations!
+from duHast.Utilities.console_out import output
 
 # import common library
-import Utility as util
-import BatchProcessorLogUtils as logutils
-import RevitFamilyBaseDataAnalysisCircularReferencing as famDataCircularCheck
-import RevitFamilyBaseDataAnalysisMissingFamilies as famDataMissingFams
-import RevitFamilyBaseDataUtils as rFamBaseDataUtils
-import RevitFamilyReportUtils as rFamRepUtils
+from duHast.Utilities.files_csv import write_report_data_as_csv
+from duHast.Utilities.files_io import copy_file
+from duHast.Utilities.directory_io import directory_exists
+from duHast.Utilities.utility import pad_single_digit_numeric_string
+from duHast.Utilities.batch_processor_log_utils import process_log_files, get_current_session_ids, get_log_files, get_log_txt_files, delete_log_data_files
+
 
 # -------------
 # my code here:
 # -------------
 
-# list containing file name prefixes and the associoated combined report file names
+# list containing file name prefixes and the associated combined report file names
 FILE_DATA_TO_COMBINE = [
-    ['Category', 'FamilyCategoriesCombinedReport' + utilData.REPORT_FILE_EXTENSION],
-    ['SharedParameter', 'FamilySharedParametersCombinedReport' + utilData.REPORT_FILE_EXTENSION],
-    ['LinePattern', 'FamilyLinePatternsCombinedReport' + utilData.REPORT_FILE_EXTENSION],
-    ['FamilyBase', 'FamilyBaseDataCombinedReport' + utilData.REPORT_FILE_EXTENSION],
-    ['Warnings', 'FamilyWarningsCombinedReport' + utilData.REPORT_FILE_EXTENSION]
+    ["Category", "FamilyCategoriesCombinedReport" + settings.REPORT_FILE_EXTENSION],
+    [
+        "SharedParameter",
+        "FamilySharedParametersCombinedReport" + settings.REPORT_FILE_EXTENSION,
+    ],
+    [
+        "LinePattern",
+        "FamilyLinePatternsCombinedReport" + settings.REPORT_FILE_EXTENSION,
+    ],
+    ["FamilyBase", "FamilyBaseDataCombinedReport" + settings.REPORT_FILE_EXTENSION],
+    ["Warnings", "FamilyWarningsCombinedReport" + settings.REPORT_FILE_EXTENSION],
 ]
 
 # looking for message indicating one of the data processors failed
-CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED = [
-    'status: False'
-    ]
-
+CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED = ["status: False"]
 
 
 # ------------------------------------------- log file processing -------------------------------------------
 
-def _writeReprocess(data, fileName, header = []):
-    '''
+
+def write_out_re_process_data(data, file_name, header=[]):
+    """
     Writes out a CSV file which can be used to re-process families which did not process correctly the first time around.
 
     :param data: _description_
     :type data: [[str]]
-    :param header: _description_
+    :param file_name: The file name.
+    :type file_name: str
+    :param header: header row, defaults to []
     :type header: [str]
-    '''
+    """
 
-    if (len(data) > 0):
+    if len(data) > 0:
         # show user any issues
         for d in data:
-            pOut.Output('::'.join(d))
+            output("::".join(d))
         # write data out to file
-        util.writeReportDataAsCSV(
-            utilData.OUTPUT_FOLDER + '\\' + fileName, # report full file name
-            header, # empty header by default
-            data, 
-            writeType = 'w'
+        write_report_data_as_csv(
+            file_name=os.path.join(
+                settings.OUTPUT_FOLDER, file_name
+            ),  # report full file name
+            header=header,  # empty header by default
+            data=data,
         )
     else:
-        pOut.Output(fileName + ': Result did not contain any data to be written to file.')
-        # write out empty re-process file
-        util.writeReportDataAsCSV( 
-            utilData.OUTPUT_FOLDER + '\\' + fileName, 
-            header,
-            []
+        output(
+            "{}: Result did not contain any data to be written to file.".format(
+                file_name
+            )
         )
-        pOut.Output(fileName + ': Empty file written.')
+        # write out empty re-process file
+        write_report_data_as_csv(
+            file_name=settings.OUTPUT_FOLDER + "\\" + file_name,
+            header=header,
+            data=[],
+        )
+        output("{}: Empty file written.".format(file_name))
 
-def ProcessLogFiles():
-    '''
+
+def process_all_log_files():
+    """
     Checks log files for any warnings or exceptions and writes out a report file containing any issues in format\
         filepath exception description
-    '''
+    """
 
     # process logs
-    processingResults_ = logutils.ProcessLogFiles(
-        utilData.LOG_MARKER_DIRECTORY,
-        CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED
-        )
+    processing_results = process_log_files(
+        folder_path=settings.LOG_MARKER_DIRECTORY,
+        debug=CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED,
+    )
 
-    pOut.Output('LogResults.... status: ' + str(processingResults_.status))
+    output("LogResults.... status: {}".format(processing_results.status))
 
     # write any files with exceptions out to file:
-    if(processingResults_.result != None):
+    if processing_results.result != None:
         # re-format output data
-        dataToFile = []
-        dataToProcessFile = []
-        for data in processingResults_.result:
+        data_to_file = []
+        data_to_process_file = []
+        for data in processing_results.result:
             row = [data[0], data[2]]
-            dataToFile.append(row)
+            data_to_file.append(row)
             # re - process files
             rowProcessData = [data[0]]
-            dataToProcessFile.append(rowProcessData)
-        processingResults_.result = dataToFile
-        _UserOutAndLogFile(processingResults_, utilData.FILE_NAME_EXCEPTIONS_REPORT)
+            data_to_process_file.append(rowProcessData)
+        processing_results.result = data_to_file
+        output("LogResults.... message(s): \n[{}]".format(processing_results.result))
+        # _UserOutAndLogFile(processing_results, settings.FILE_NAME_EXCEPTIONS_REPORT)
 
         # write out second family list as CSV (files which failed to process for a reason and need to be processed again)
-        _writeReprocess(dataToProcessFile, utilData.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT)
+        write_out_re_process_data(
+            data=data_to_process_file,
+            header=settings.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT,
+        )
+
 
 # ------------------------------------------- copy log files -------------------------------------------
 
-def _copyLog(logfiles, targetFolder, extension):
-    '''
+
+def copy_log_worker(log_files, target_directory, extension):
+    """
     Copies log files and renames them
 
     :param logfiles: A list of fully qualified log file path.
@@ -163,53 +176,68 @@ def _copyLog(logfiles, targetFolder, extension):
     :type targetFolder: str
     :param extension: File extension in format: '.extension'
     :type extension: str
-    '''
+    """
 
     flag = True
-    # copy logfiles over
-    logCounter = 1
-    for logfilePath in logfiles:
+    # copy log files over
+    log_counter = 1
+    for log_file_path in log_files:
         # get the file name of the path
-        logFileName = 'BatchRvt_' + util.PadSingleDigitNumericString(str(logCounter)) + extension
+        log_file_name = (
+            "BatchRvt_" + pad_single_digit_numeric_string(str(log_counter)) + extension
+        )
         # build the destination file path
-        newLogFilePath = targetFolder + '\\' + logFileName
+        new_log_file_path = os.path.join(target_directory, log_file_name)
         # copy the log file
-        flagCopy = util.CopyFile(logfilePath, newLogFilePath)
-        flag = flag and flagCopy
-        logCounter = logCounter  + 1
+        flag_copy = copy_file(old_name=log_file_path, new_name=new_log_file_path)
+        flag = flag and flag_copy
+        log_counter = log_counter + 1
     return flag
 
-def CopyLogFiles(targetFolder):
-    '''
+
+def copy_log_files_to_marker_dir(target_directory):
+    """
     Copies log files (.log and .txt) from local app data folder to provided folder and renames them:\
         'BatchRvt_' + counter
-    '''
+    """
 
-    flagCopyLogs = True
-    if(util.DirectoryExists(utilData.LOG_MARKER_DIRECTORY)):
-        if(util.DirectoryExists(targetFolder)):
+    flag_copy_logs = True
+    if directory_exists(settings.LOG_MARKER_DIRECTORY):
+        if directory_exists(target_directory):
             # get log marker files
-            markerfileIds = logutils.GetCurrentSessionIds(
-                utilData.LOG_MARKER_DIRECTORY,
-                False #keep markers for processing later on
-                )
+            marker_file_ids = get_current_session_ids(
+                folder_path=settings.LOG_MARKER_DIRECTORY,
+                delete_marker_files=False,  # keep markers for processing later on
+            )
             # check if any ids where retrieved
-            if (len(markerfileIds) > 0):
+            if len(marker_file_ids) > 0:
                 # copy .log files
-                logfiles = logutils.GetLogFiles(markerfileIds)
-                copyLog =  _copyLog(logfiles, targetFolder, '.log')
+                log_files = get_log_files(marker_file_ids)
+                copy_log = copy_log_worker(log_files, target_directory, ".log")
                 # copy .txt files
-                logfiles = logutils.GetLogTxtFiles(markerfileIds)
-                copyTextLog = _copyLog(logfiles, targetFolder, '.txt')
+                log_files = get_log_txt_files(marker_file_ids)
+                copy_text_log = copy_log_worker(log_files, target_directory, ".txt")
                 # combine copy results
-                flagCopyLogs = copyLog and copyTextLog
+                flag_copy_logs = copy_log and copy_text_log
             else:
-                pOut.Output('\nNo log marker files found in ' + utilData.LOG_MARKER_DIRECTORY)
-                flagCopyLogs = False
+                output(
+                    "\nNo log marker files found in: {}".format(
+                        settings.LOG_MARKER_DIRECTORY
+                    )
+                )
+                flag_copy_logs = False
         else:
-            pOut.Output ('\nLog file destination directory does not exist: ' + targetFolder)
-            flagCopyLogs = False
+            output(
+                "\nLog file destination directory does not exist: {}".format(
+                    target_directory
+                )
+            )
+            flag_copy_logs = False
     else:
-        pOut.Output ('\nLog marker directory does not exist: ' + utilData.LOG_MARKER_DIRECTORY)
-        flagCopyLogs = False
-    return flagCopyLogs
+        output(
+            "\nLog marker directory does not exist: {}".format(
+                settings.LOG_MARKER_DIRECTORY
+            )
+        )
+        flag_copy_logs = False
+    return flag_copy_logs

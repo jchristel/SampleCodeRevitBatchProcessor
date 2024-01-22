@@ -1,26 +1,12 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains post reporting functions:
+Module executed as a post process script within the batch processor environment.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- check if anything was reported: do any temp files exists?
-- if so:
-    - Combine temp report files per family into single report file per report type.
-    - Delete temp folders
-    - Copy report files and log files into analysis folders.
-    - Check Family base data report file for:
 
-        - missing families 
-        - host families which contain missing families
-        - circular references in family nesting
+- kills all running revit work sharing monitor sessions
 
-    - Check log files for:
+"""
 
-        - any exceptions which may have occured during processing
-- if not:
-    - dont do anything...
-
-
-'''
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -39,8 +25,8 @@ This module contains post reporting functions:
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -50,23 +36,30 @@ This module contains post reporting functions:
 # Imports
 # --------------------------
 
-# import common library
-import Utility as util
+import settings as settings  # sets up all commonly used variables and path locations!
 
+# import WSM kill utils
+from duHast.Utilities import worksharing_monitor_process as wsmp
+
+# import script_util
+import script_util
+from duHast.Utilities.console_out import output
 
 # -------------
 # my code here:
 # -------------
 
-# output messages
-def Output(message = ''):
-    '''
-    Print message to console.
+# -------------
+# main:
+# -------------
 
-    :param message: The message, defaults to ''
-    :type message: str, optional
-    '''
+# kill off all WSM sessions
+statusWSMKill_ = wsmp.die_wsm_die(settings.WSM_MARKER_DIRECTORY, True)
 
-    # 08/09/2022 19:09:19 :
-    timestamp = util.GetDateStamp('%d/%m/%Y %H_%M_%S : ')
-    print (timestamp + message)
+# show WSM kill status
+output(
+    "WSM Kill status: ....{} [{}]".format(
+        statusWSMKill_.message, statusWSMKill_.status
+    ),
+    script_util.Output,
+)

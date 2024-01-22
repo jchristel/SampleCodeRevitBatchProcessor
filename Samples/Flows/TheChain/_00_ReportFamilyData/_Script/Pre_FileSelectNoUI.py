@@ -1,15 +1,11 @@
-﻿'''
+﻿"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains pre task function(s)
+Module executed as a pre process script outside the batch processor environment.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Writes out a task lists of files to be processed. 
+- this module writes Revit files to task lists.
 
-- Files are located in directory specified in global variable, also includes any files in sub directories.
-- Number of task files in specified in global variable.
-- Task file location is specified in global varaible.
-
-'''
+"""
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
@@ -38,81 +34,87 @@ Writes out a task lists of files to be processed.
 
 # this sample shows how to write out a number of task files using bucket distribution
 
-# --------------------------
-# Imports
-# --------------------------
+import sys
+import os
 
-import sys, os
+import settings as settings  # sets up all commonly used variables and path locations!
 
-import settings as utilData # sets up all commonly used variables and path locations!
+import duHast.Utilities.Objects.result as res
+
 # import file list module
-import FileList as fl
-import Utility as util
+from duHast.UI.file_list import (
+    write_file_list,
+    bucket_to_task_list_bim_360,
+    get_revit_files,
+)
+from duHast.Revit.BIM360.util_bim_360 import get_bim_360_revit_files_from_file_list
+from duHast.Utilities.console_out import output
+from duHast.Utilities.directory_io import directory_exists
+from duHast.Utilities.files_io import file_exist
 
 # -------------
 # my code here:
 # -------------
 
-def Output(message = ''):
-    '''
-    Print message to console.
-
-    :param message: The message, defaults to ''
-    :type message: str, optional
-    '''
-
-    # 08/09/2022 19:09:19 :
-    timestamp = util.GetDateStamp('%d/%m/%Y %H_%M_%S : ')
-    print (timestamp + message)
-
 # -------------
 # main:
 # -------------
 
-# will contain either a folder path of where to collect files from or a fully qualified file path to 
+# will contain either a folder path of where to collect files from or a fully qualified file path to
 # process exceptions file which will contain list of files to process again
-processPath_ = ''
+PROCESS_PATH = ""
 
-# check if a folder path was passt in...otherwise go with default
-if (len(sys.argv) == 2):
+# check if a folder path was past in...otherwise go with default
+if len(sys.argv) == 2:
     # build file path
-    processPath_ = sys.argv[1]
+    PROCESS_PATH = sys.argv[1]
     # check for valid path
-    if(util.DirectoryExists(processPath_) == True):
-        processPath_ =  processPath_ + '\\' + utilData.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT
+    if directory_exists(PROCESS_PATH) == True:
+        PROCESS_PATH = os.path.join(
+            PROCESS_PATH, settings.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT
+        )
         # TODO: check if file exists and if not write out empty task files!
-        if(util.FileExist(processPath_) == False):
-            Output('No task file present in input folder: ' + processPath_)
+        if file_exist(PROCESS_PATH) == False:
+            output("No task file present in input folder: {}".format(PROCESS_PATH))
             # exit with an error status
             sys.exit(2)
     else:
-        processPath_ =  utilData.REVIT_LIBRARY_PATH
-    # give user feed back
-    Output ('Collecting files from ' + processPath_)
-
+        PROCESS_PATH = settings.REVIT_LIBRARY_PATH
 else:
-    processPath_ =  utilData.REVIT_LIBRARY_PATH
-    # give user feed back
-    Output ('Collecting files from ' + processPath_)
+    PROCESS_PATH = settings.REVIT_LIBRARY_PATH
 
-Output('Writing file Data.... start')
 
-# write out task lists
-result_ = fl.WriteFileList(
-    processPath_,
-    utilData.FILE_EXTENSION_OF_FILES_TO_PROCESS, 
-    utilData.TASK_FILE_DIRECTORY, 
-    utilData.NUMBER_OF_TASK_FILES, 
-    fl.GetRevitFilesForProcessingSimpleInclSubDirs)
+output("Collecting files from: {}".format(PROCESS_PATH))
+# get file data
+output("Writing file Data.... start")
+result_ = res.Result()
 
-# check if files where written successfully!
-if (result_.status == False):
-    # no file found...: write out empty task lists!
-    for i in range (utilData.NUMBER_OF_TASK_FILES):
-        fileName = fl.getTaskFileName(utilData.TASK_FILE_DIRECTORY, i)
-        resultEmpty_ = fl.writeEmptyTaskList(fileName)
-        result_.Update(resultEmpty_)
+# check if cloud vs file based models
+if settings.IS_CLOUD_PROJECT == False:
+    # get files from a network server
+    result_ = write_file_list(
+        directory_path=PROCESS_PATH,
+        file_extension=settings.FILE_EXTENSION_OF_FILES_TO_PROCESS,
+        task_list_directory=settings.TASK_LIST_DIRECTORY,
+        task_files_number=settings.NO_OF_TASK_LIST_FILES,
+        file_getter=get_revit_files,
+    )
+else:
+    # get files from a csv file list containing cloud based model data
+    result_ = write_file_list(
+        directory_path=PROCESS_PATH,
+        file_extension=settings.FILE_EXTENSION_OF_FILES_TO_PROCESS,
+        task_list_directory=settings.TASK_LIST_DIRECTORY,
+        task_files_number=settings.NO_OF_TASK_LIST_FILES,
+        file_getter=get_bim_360_revit_files_from_file_list,
+        file_data_processor=bucket_to_task_list_bim_360,
+    )
 
-# give user feed back
-Output (result_.message)
-Output('Writing file Data.... status: ' + str(result_.status))
+output(result_.message)
+output("Writing file Data.... status: [{}]".format(result_.status))
+
+# make sure the calling powershell script knows if something went wrong
+if result_.status:
+    sys.exit(0)
+else:
+    sys.exit(1)

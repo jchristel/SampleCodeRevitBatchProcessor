@@ -51,7 +51,7 @@ Helper functions to process Revit BatchProcessor log files.
 
 import clr
 import System
-from System.IO import Path
+
 import glob
 import time
 import os
@@ -192,7 +192,7 @@ def get_current_session_ids(folder_path, delete_marker_files=True):
             output("Failed to delete a marker file!")
     for f in file_list:
         ids.append(
-            adjust_session_id_file_name_back(Path.GetFileNameWithoutExtension(f))
+            adjust_session_id_file_name_back(fileIO.get_file_name_without_ext(f))
         )
     return ids
 

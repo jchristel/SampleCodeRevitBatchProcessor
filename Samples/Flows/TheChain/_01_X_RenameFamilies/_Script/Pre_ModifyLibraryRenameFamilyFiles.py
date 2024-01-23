@@ -120,22 +120,22 @@ def _writeOverAllTaskFile(resultGetHosts):
             # check whether fam got renamed
             filePath = _getNewPath (renameDirectivesResult.result, fam.filePath)
             if( filePath != fam.filePath):
-                result.AppendMessage('Changed path from: ' + fam.filePath + ' to: ' + filePath)
+                result.append_message('Changed path from: ' + fam.filePath + ' to: ' + filePath)
             else:
-                result.AppendMessage('Kept path: ' + fam.filePath)
+                result.append_message('Kept path: ' + fam.filePath)
             row = [filePath]
             data.append(row)
         
-        result.AppendMessage ('Writing to: ' + taskFileName)
+        result.append_message ('Writing to: ' + taskFileName)
         try:
             util.writeReportDataAsCSV(
                 taskFileName, 
                 [], 
                 data
             )
-            result.UpdateSep(True, 'Created task files.')
+            result.update_sep(True, 'Created task files.')
         except Exception as e:
-            result.UpdateSep(False, 'Failed to write family rename task file with exception: ' + str(e))
+            result.update_sep(False, 'Failed to write family rename task file with exception: ' + str(e))
     else:
         # write out empty task list since no host files where found
         try:
@@ -144,9 +144,9 @@ def _writeOverAllTaskFile(resultGetHosts):
                 [], 
                 data
             )
-            result.UpdateSep(True, 'Created empty task files.')
+            result.update_sep(True, 'Created empty task files.')
         except Exception as e:
-            result.UpdateSep(False, 'Failed to write family rename task file with exception: ' + str(e))
+            result.update_sep(False, 'Failed to write family rename task file with exception: ' + str(e))
     return result
 
 # -------------
@@ -168,13 +168,13 @@ if (len(sys.argv) == 2):
     resultGetHosts_ = rFamFindHostFams.FindHostFamiliesWithNestedFamsRequiringRename(rootPath_)
     Output (resultGetHosts_.message)
     # update overall status
-    result_.Update(resultGetHosts_)
+    result_.update(resultGetHosts_)
     
     # write task file
     resultWriteTaskFile_ = _writeOverAllTaskFile(resultGetHosts_)
     Output (resultWriteTaskFile_.message)
     # update overall status
-    result_.Update(resultWriteTaskFile_)
+    result_.update(resultWriteTaskFile_)
     
     # check how to exit
     if(result_.status):

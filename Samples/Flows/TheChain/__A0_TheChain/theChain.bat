@@ -85,7 +85,7 @@ set reloadFamilies=0
 set reportFullAfterReload=0
 
 :: debug toggle
-set toggleDebug=0
+set toggleDebug=1
 
 :: end toggles ...........................................................................................
 

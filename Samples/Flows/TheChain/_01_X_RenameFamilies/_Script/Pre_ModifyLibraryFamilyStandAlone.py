@@ -167,7 +167,7 @@ if(len(taskListFiles) > 0):
             bucket, 
             fl.BucketToTaskListFileSystem
         )
-        result_.Update(statusWrite)
+        result_.update(statusWrite)
         Output (statusWrite.message)
         counter += 1
     Output('Finished writing out task files')

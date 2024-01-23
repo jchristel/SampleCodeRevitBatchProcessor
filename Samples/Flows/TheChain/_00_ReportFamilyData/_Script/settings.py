@@ -34,11 +34,11 @@ run this script.
 
 # path to Common library modules
 DU_HAST_PATH = r"C:\Program Files\Python311\Lib\site-packages"
-
+DU_HAST_DEBUG =r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\src"
 
 # set path to common library
 import sys
-
+sys.path = [DU_HAST_DEBUG] + sys.path
 sys.path += [DU_HAST_PATH]
 
 import os

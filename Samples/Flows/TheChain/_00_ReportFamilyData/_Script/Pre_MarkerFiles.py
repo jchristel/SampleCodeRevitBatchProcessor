@@ -69,7 +69,7 @@ wsm_marker_ = wsmp.write_out_wsm_data_to_file(settings.WSM_MARKER_DIRECTORY)
 
 output("Script directory: {}".format(settings.SCRIPT_DIRECTORY), script_util.Output)
 output("flow directory: {}".format(settings.FLOW_DIRECTORY), script_util.Output)
-output("duHast directory: {}".format(settings.DU_HAST_DIRECTORY), script_util.Output)
+output("duHast directory: {}".format(settings.DU_HAST_PATH), script_util.Output)
 
 # -------------
 # main:

@@ -63,7 +63,6 @@ from duHast.Utilities.batch_processor_log_utils import process_log_files
 import Post_FamilyDataCleanUp as pCleanUp  # clean up functions
 from Post_FamilyDataLogFiles import (
     write_out_re_process_data,
-    process_all_log_files,
     copy_log_files_to_marker_dir,
 )
 from Post_FamilyDataAnalysis import (

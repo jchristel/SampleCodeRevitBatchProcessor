@@ -185,7 +185,7 @@ def PurgeUnused (doc):
         # purge unused
         returnValue = lePurge.PurgeUnusedETransmit(doc)
     else:
-        returnValue.UpdateSep(False,'Nested family which is Label driven found. Nothing was purged.')
+        returnValue.update_sep(False,'Nested family which is Label driven found. Nothing was purged.')
     
     return returnValue
 
@@ -204,12 +204,12 @@ def _UpdatePurgeStatus(returnValue, actionStatus):
     '''
     try:
         if(returnValue.status and actionStatus.status):
-            returnValue.Update(actionStatus)
+            returnValue.update(actionStatus)
         elif(returnValue.status == False and actionStatus.status == True):
             returnValue.status = True
-            returnValue.AppendMessage(actionStatus.message)
+            returnValue.append_message(actionStatus.message)
         else:
-            returnValue.AppendMessage(actionStatus.message)
+            returnValue.append_message(actionStatus.message)
     except Exception as e:
         Output ('Exception in _UpdatePurgeStatus: ' + str(e))
     return returnValue
@@ -244,13 +244,13 @@ def PurgeUnusedOthers(doc):
         # process categories first
         processorCategories, procesStatus = _processFamily(doc, rCatProcessor.CategoryProcessor())
         if(procesStatus):
-            data = processorCategories.get_Data()
-            returnValue.AppendMessage('data length categories: ' + str(len(data)))
+            data = processorCategories.get_data()
+            returnValue.append_message('data length categories: ' + str(len(data)))
             # purge unused categories
             outcomePurgeCats = rCatDataPu.PurgeUnused(doc, processorCategories)
-            returnValue.Update(outcomePurgeCats)
+            returnValue.update(outcomePurgeCats)
         else:
-            returnValue.UpdateSep(False,'Category processor failed...nothing was purged.')
+            returnValue.update_sep(False,'Category processor failed...nothing was purged.')
     except Exception as e:
         Output ('Exception in purge categories: ' + str(e))
     
@@ -258,8 +258,8 @@ def PurgeUnusedOthers(doc):
         # process line patterns 
         processorLinePatterns, procesStatus = _processFamily(doc, rLinePatProcessor.LinePatternProcessor())
         if(procesStatus):
-            data = processorLinePatterns.get_Data()
-            returnValue.AppendMessage('data length line patterns: ' + str(len(data)))
+            data = processorLinePatterns.get_data()
+            returnValue.append_message('data length line patterns: ' + str(len(data)))
             # purge unused categories
             outcomePurgeLinepats = rLinePatDataPu.PurgeUnused(doc, processorLinePatterns)
             # check if both purge actions succseeded...if only one do not change the status to false since the 
@@ -267,7 +267,7 @@ def PurgeUnusedOthers(doc):
             returnValue = _UpdatePurgeStatus(returnValue, outcomePurgeLinepats)
         else:
             # no need to update the status at this point as if true family needs to be saved even if the line pattern purge failed.
-            returnValue.AppendMessage('Line pattern processor failed...nothing was purged.')
+            returnValue.append_message('Line pattern processor failed...nothing was purged.')
     except Exception as e:
         Output ('Exception in purge line patterns: ' + str(e))
 
@@ -275,8 +275,8 @@ def PurgeUnusedOthers(doc):
         # process shared parameters
         processorSharedParameters, processStatus = _processFamily(doc, rSharedParaProcessor.SharedParameterProcessor())
         if(processStatus):
-            data = processorSharedParameters.get_Data()
-            returnValue.AppendMessage('data length shared paras: ' + str(len(data)))
+            data = processorSharedParameters.get_data()
+            returnValue.append_message('data length shared paras: ' + str(len(data)))
             # purge unused shared parameter definitions
             outcomePurgeSharedParas = rSharedParaDataPu.PurgeUnused(doc, processorSharedParameters)
             # check if both purge actions succseeded...if only one do not change the status to false since the 
@@ -284,7 +284,7 @@ def PurgeUnusedOthers(doc):
             returnValue = _UpdatePurgeStatus(returnValue, outcomePurgeSharedParas)
         else:
             # no need to update the status at this point as if true family needs to be saved even if the shared parameter purge failed.
-            returnValue.AppendMessage('Shared parameter processor failed...nothing was purged.')
+            returnValue.append_message('Shared parameter processor failed...nothing was purged.')
     except Exception as e:
         Output ('Exception in purge unused shared parameters: ' + str(e))
     
@@ -351,8 +351,8 @@ def UpdateReferenceStatus(doc):
     '''
 
     returnValue = res.Result()
-    returnValue.Update(rFamUtils.SetRefPlanesToNotAReference(doc))
-    returnValue.Update(rFamUtils.SetSymbolicAndModelLinesToNotAReference(doc))
+    returnValue.update(rFamUtils.SetRefPlanesToNotAReference(doc))
+    returnValue.update(rFamUtils.SetSymbolicAndModelLinesToNotAReference(doc))
     return returnValue
 # -----------------------------------------------------------------------------------------------------------------------------------------------
 # main:
@@ -385,7 +385,7 @@ for famAction in familyActions:
     if(resultFamAction.status):
         # need to save family
         overAllStatus_.status = True
-    overAllStatus_.AppendMessage(resultFamAction.message)
+    overAllStatus_.append_message(resultFamAction.message)
     Output (resultFamAction.message)
     Output (str(resultFamAction.status))
 

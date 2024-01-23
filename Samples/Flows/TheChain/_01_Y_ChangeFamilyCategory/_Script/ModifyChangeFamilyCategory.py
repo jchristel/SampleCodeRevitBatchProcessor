@@ -193,18 +193,18 @@ def UpdateFamilyCategory(doc):
             if(catChangeDirective.newCategoryName !=famCatName):
                 # store marker for later
                 foundCategoryMatch = True
-                returnValue.AppendMessage('Attempting to change category from: {} to: {}.'.format(famCatName, catChangeDirective.newCategoryName))
+                returnValue.append_message('Attempting to change category from: {} to: {}.'.format(famCatName, catChangeDirective.newCategoryName))
                 try:
                     # attempt to update the family category
-                    returnValue.Update(rCats.ChangeFamilyCategory(doc,catChangeDirective.newCategoryName))
+                    returnValue.update(rCats.ChangeFamilyCategory(doc,catChangeDirective.newCategoryName))
                 except Exception as e:
-                    returnValue.UpdateSep(
+                    returnValue.update_sep(
                         False,
                         '{}: failed to change family category with exception: {}'.format(fileName_, e)
                     )
     # check if a category mismatch was found at all
     if(foundCategoryMatch == False):
-        returnValue.UpdateSep(False, '{} :No category change required for this family. Current category: {} Category in change directive: {}'.format(fileName_, famCatName, newCategoryName))
+        returnValue.update_sep(False, '{} :No category change required for this family. Current category: {} Category in change directive: {}'.format(fileName_, famCatName, newCategoryName))
     return returnValue
 
 # -----------------------------------------------------------------------------------------------------------------------------------------------
@@ -239,7 +239,7 @@ for famAction in familyActions:
     if(resultFamAction.status):
         # need to save family
         overAllStatus_.status = True
-    overAllStatus_.AppendMessage(resultFamAction.message)
+    overAllStatus_.append_message(resultFamAction.message)
     Output ('Messages from change family category action: {}'.format(resultFamAction.message))
     Output ('Overall status: {} (If false, this will not save the family)'.format(resultFamAction.status))
 

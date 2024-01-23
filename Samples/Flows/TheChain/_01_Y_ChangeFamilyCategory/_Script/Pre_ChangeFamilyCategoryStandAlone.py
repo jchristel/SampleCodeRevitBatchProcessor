@@ -166,13 +166,13 @@ if(len(taskListFiles) > 0):
             bucket, 
             fl.BucketToTaskListFileSystem
         )
-        result_.Update(statusWrite)
+        result_.update(statusWrite)
         Output (statusWrite.message)
         counter += 1
     Output('Finished writing out task files')
 else:
     Output ('Task file did not contain any families...Exiting process.')
-    result_.UpdateSep(False, 'Task file did not contain any families...Exiting process.')
+    result_.update_sep(False, 'Task file did not contain any families...Exiting process.')
 
 if(result_.status):
     sys.exit(0)

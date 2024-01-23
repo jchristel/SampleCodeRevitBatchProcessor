@@ -90,7 +90,7 @@ if(util.FileExist(processPath_)):
         for i in range (util.NUMBER_OF_TASK_FILES):
             fileName = fl.getTaskFileName(utilData.TASK_FILE_DIRECTORY, i)
             resultEmpty_ = fl.writeEmptyTaskList(fileName)
-            result_.Update(resultEmpty_)
+            result_.update(resultEmpty_)
 
     # give user feed back
     Output (result_.message)

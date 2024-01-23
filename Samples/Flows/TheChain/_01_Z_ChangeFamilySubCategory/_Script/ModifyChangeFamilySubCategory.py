@@ -174,17 +174,17 @@ def UpdateSubCategoryNames(doc):
             # if a name match attempt to rename
             if(allreadyInFamilyOld):
                 foundSubCatMatch = True
-                returnValue.Update(rCats.RenameSubCategory(
+                returnValue.update(rCats.RenameSubCategory(
                     doc, 
                     subCatChangeDirective.oldSubCategoryName, 
                     subCatChangeDirective.newSubCategoryName)
             )
             else:
-                returnValue.AppendMessage('Subcategory: '+ subCatChangeDirective.oldSubCategoryName + ' does not exist in family file.')
+                returnValue.append_message('Subcategory: '+ subCatChangeDirective.oldSubCategoryName + ' does not exist in family file.')
     if(foundCategoryMatch == False):
-        returnValue.UpdateSep(False, 'No change directive found matching family category: ' + famCatName)
+        returnValue.update_sep(False, 'No change directive found matching family category: ' + famCatName)
     if(foundCategoryMatch and foundSubCatMatch == False):
-        returnValue.UpdateSep(False, 'No change directive found matching any family subcategory!')
+        returnValue.update_sep(False, 'No change directive found matching any family subcategory!')
     return returnValue
 
 # -----------------------------------------------------------------------------------------------------------------------------------------------
@@ -216,7 +216,7 @@ for famAction in familyActions:
     if(resultFamAction.status):
         # need to save family
         overAllStatus_.status = True
-    overAllStatus_.AppendMessage(resultFamAction.message)
+    overAllStatus_.append_message(resultFamAction.message)
     Output (resultFamAction.message)
     Output (str(resultFamAction.status))
 

@@ -83,7 +83,7 @@ if %toggleDebug%==1 (
     %stamp% & echo.
     %stamp% & echo ********************************* DEBUG END *****************************************************
    
-    goto outOfHere
+    REM goto outOfHere
 )
 
 :: check if full report is required

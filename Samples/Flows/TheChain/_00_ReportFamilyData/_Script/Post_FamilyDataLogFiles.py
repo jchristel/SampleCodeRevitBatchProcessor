@@ -62,7 +62,6 @@ from duHast.Utilities.utility import pad_single_digit_numeric_string
 from duHast.Utilities.batch_processor_log_utils import (
     get_current_session_ids,
     get_log_files,
-    get_log_txt_files,
 )
 
 
@@ -183,7 +182,9 @@ def copy_log_files_to_marker_dir(target_directory):
                 log_files = get_log_files(marker_file_ids)
                 copy_log = copy_log_worker(log_files, target_directory, ".log")
                 # copy .txt files
-                log_files = get_log_txt_files(marker_file_ids)
+                log_files = get_log_files(
+                    list_of_session_ids=marker_file_ids, file_extension=".txt"
+                )
                 copy_text_log = copy_log_worker(log_files, target_directory, ".txt")
                 # combine copy results
                 flag_copy_logs = copy_log and copy_text_log

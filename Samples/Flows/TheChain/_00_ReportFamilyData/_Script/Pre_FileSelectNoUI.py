@@ -95,8 +95,8 @@ if settings.IS_CLOUD_PROJECT == False:
     result_ = write_file_list(
         directory_path=PROCESS_PATH,
         file_extension=settings.FILE_EXTENSION_OF_FILES_TO_PROCESS,
-        task_list_directory=settings.TASK_LIST_DIRECTORY,
-        task_files_number=settings.NO_OF_TASK_LIST_FILES,
+        task_list_directory=settings.TASK_FILE_DIRECTORY,
+        task_files_number=settings.NUMBER_OF_TASK_FILES,
         file_getter=get_revit_files,
     )
 else:
@@ -104,8 +104,8 @@ else:
     result_ = write_file_list(
         directory_path=PROCESS_PATH,
         file_extension=settings.FILE_EXTENSION_OF_FILES_TO_PROCESS,
-        task_list_directory=settings.TASK_LIST_DIRECTORY,
-        task_files_number=settings.NO_OF_TASK_LIST_FILES,
+        task_list_directory=settings.TASK_FILE_DIRECTORY,
+        task_files_number=settings.NUMBER_OF_TASK_FILES,
         file_getter=get_bim_360_revit_files_from_file_list,
         file_data_processor=bucket_to_task_list_bim_360,
     )

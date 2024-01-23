@@ -180,7 +180,7 @@ for famAction in familyActions:
     if(resultFamAction.status):
         # need to save family
         overAllStatus_.status = True
-    overAllStatus_.AppendMessage(resultFamAction.message)
+    overAllStatus_.append_message(resultFamAction.message)
     Output (resultFamAction.message)
     Output (resultFamAction.status)
 

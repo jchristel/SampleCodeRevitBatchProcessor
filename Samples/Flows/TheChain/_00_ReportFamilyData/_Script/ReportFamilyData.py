@@ -180,16 +180,15 @@ def report_data(processor, file_name_prefix):
     :rtype: :class:`.Result`
     """
 
-    result = res.Result()
+    result = res()
     if len(ROOT_PATH) < 248:
         # build output file name
         file_name = check_file_path_length(file_name_prefix)
         try:
             write_report_data_as_csv(
                 file_name,
-                processor.stringReportHeaders,
-                processor.get_Data_StringList(),
-                "w",
+                processor.string_report_headers,
+                processor.get_data_string_list(),
             )
             result.update_sep(
                 True, "Successfully wrote  data to file {}".format(file_name)
@@ -243,8 +242,8 @@ if RESULT_DIRECTORY:
         if family_name.lower().endswith(".rfa"):
             family_name = family_name[:-4]
 
-        flag_data_collection = collector.processFamily(
-            doc, family_name, family_category_name
+        flag_data_collection = collector.process_family(
+            doc=doc, root_name=family_name, root_category=family_category_name
         )
 
         output(
@@ -258,9 +257,9 @@ if RESULT_DIRECTORY:
             processor = next(
                 processor
                 for processor in processor_instances
-                if processor.dataType == p.dataType
+                if processor.data_type == p.data_type
             )
-            flag_report = report_data(processor, p.dataType)
+            flag_report = report_data(processor, p.data_type)
             output(
                 "{}.... status: {}".format(flag_report.message, flag_report.status),
                 revit_script_util.Output,

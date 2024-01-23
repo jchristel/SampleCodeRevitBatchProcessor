@@ -113,7 +113,7 @@ def ChangeParamterToFamilyParameter(doc):
     returnvalue = res.Result()
     #  dictionary used to change shard parameters to family parameters
     parameterMapper = {}
-    returnvalue.AppendMessage('Changing shared parameters to family parameters...start')
+    returnvalue.append_message('Changing shared parameters to family parameters...start')
     # parameter change directives
     try:
         fileData = util.ReadCSVfile(utilR.CHANGE_SHARED_PARAMETER_TO_FAMILY_PARAMETER_PATH)
@@ -122,9 +122,9 @@ def ChangeParamterToFamilyParameter(doc):
                 if(len(row) > 1):
                     parameterMapper[row[0]] = row[1]# get the family manager
         else:
-            returnvalue.UpdateSep(False, 'No shared parameter change directives file found ot file is empty.')
+            returnvalue.update_sep(False, 'No shared parameter change directives file found ot file is empty.')
     except Exception as e:
-        returnvalue.UpdateSep(False, 'No shared parameter change directives file found.')
+        returnvalue.update_sep(False, 'No shared parameter change directives file found.')
 
     #a match wass found
     matchFound = False
@@ -145,26 +145,26 @@ def ChangeParamterToFamilyParameter(doc):
                     returnvalueTranny = res.Result()
                     try:
                         manager.ReplaceParameter(p, parameterMapper[p.Definition.Name], p.Definition.ParameterGroup, p.IsInstance)
-                        returnvalueTranny.UpdateSep(True, 'Successfully changed parameter ' + paraOldName + ' to a family parameter: '+ parameterMapper[paraOldName])
+                        returnvalueTranny.update_sep(True, 'Successfully changed parameter ' + paraOldName + ' to a family parameter: '+ parameterMapper[paraOldName])
                     except Exception as e:
-                        returnvalueTranny.UpdateSep(False, 'Failed to change parameter ' + paraOldName + ' to a family parameter with exception: '+ str(e))
+                        returnvalueTranny.update_sep(False, 'Failed to change parameter ' + paraOldName + ' to a family parameter with exception: '+ str(e))
                     return returnvalueTranny
                 # put everythin in a transaction
                 transaction = Transaction(doc, "change to family parameter "+ paraOldName)
                 result = com.InTransaction(transaction, action)
-                returnvalue.Update(result)
+                returnvalue.update(result)
                 if(result.status):
                     # delete shared parameter definition:
                     sharedParas = rSharedP.GetAllSharedParameters(doc)
                     for sp in sharedParas:
                         if(sp.Name == paraOldName):
                             resultDelete = com.DeleteByElementIds(doc, [sp.Id], 'deleting: '+ paraOldName, 'shared parameter')
-                            returnvalue.Update(resultDelete)
+                            returnvalue.update(resultDelete)
                             break
     else:
-        returnvalue.UpdateSep(False, 'No shared parameter change directives where found.')
+        returnvalue.update_sep(False, 'No shared parameter change directives where found.')
     if(matchFound == False):
-        returnvalue.UpdateSep(False, 'No matching shared parameter(s) where found in family.')
+        returnvalue.update_sep(False, 'No matching shared parameter(s) where found in family.')
     return returnvalue
 
 
@@ -192,7 +192,7 @@ def DeleteUnwantedSharedParameters(doc):
     '''
 
     returnvalue = res.Result()
-    returnvalue.AppendMessage('Deleting unwanted shared parameters...start')
+    returnvalue.append_message('Deleting unwanted shared parameters...start')
     try:
         # read data file
         fileData = util.ReadCSVfile(utilR.DELTETE_SHARED_PARAMETER_LIST_FILE_PATH)
@@ -202,15 +202,15 @@ def DeleteUnwantedSharedParameters(doc):
                 if(len(row[1]) == 36):
                     guidsToDelete.append(row[1])
             else:
-                returnvalue.UpdateSep(False,'Shared parameter file contains malformed row: ' + str(row))
+                returnvalue.update_sep(False,'Shared parameter file contains malformed row: ' + str(row))
     except Exception as e:
-        returnvalue.UpdateSep(False, 'No unwanted shared parameter file found.')
+        returnvalue.update_sep(False, 'No unwanted shared parameter file found.')
     # go ahaed and delete...
     if(len(guidsToDelete) > 0):
         resultDelete = rSharedP.DeleteSharedParameters(doc, guidsToDelete)
-        returnvalue.Update(resultDelete)
+        returnvalue.update(resultDelete)
     else:
-        returnvalue.UpdateSep(False, "No valid GUIDS found in guid data file: " + utilR.DELTETE_SHARED_PARAMETER_LIST_FILE_PATH)
+        returnvalue.update_sep(False, "No valid GUIDS found in guid data file: " + utilR.DELTETE_SHARED_PARAMETER_LIST_FILE_PATH)
     return returnvalue
 
 
@@ -301,26 +301,26 @@ def AddDefaultParameters(doc, sharedParametersToAdd):
             # if not add it to family
             if(famSharedParameter == None):
                 famParaResult = rSharedPAdd.AddSharedParameterToFamily(sharedParametersToAdd[para][0], manager, doc, sharedParaDefFile)
-                returnValue.Update(famParaResult)
+                returnValue.update(famParaResult)
                 if (famParaResult.status):
                     famSharedParameter = famParaResult.result[0]
                 else:
-                    returnValue.UpdateSep(False, 'Failed to add parameter:  ' + para + ' to family!')
+                    returnValue.update_sep(False, 'Failed to add parameter:  ' + para + ' to family!')
             # add parameter value if at least one type exists
             if(familyTypes.Size > 0):
                 # check whether a formula or a value needs to be set
                 if(sharedParametersToAdd_[para][1] != '' and famSharedParameter != None):
                     # set formula
-                    returnValue.Update(rFamParaUtils.SetParameterFormula(doc, manager, famSharedParameter, sharedParametersToAdd[para][1]))
+                    returnValue.update(rFamParaUtils.SetParameterFormula(doc, manager, famSharedParameter, sharedParametersToAdd[para][1]))
                 elif(sharedParametersToAdd_[para][2] != '' and famSharedParameter != None):
                     # set value
-                    returnValue.Update(rFamParaUtils.SetFamilyParameterValue(doc, manager, famSharedParameter, sharedParametersToAdd[para][2])) 
+                    returnValue.update(rFamParaUtils.SetFamilyParameterValue(doc, manager, famSharedParameter, sharedParametersToAdd[para][2])) 
                 elif(sharedParametersToAdd_[para][1] == '' and  sharedParametersToAdd_[para][2] == ''):
-                    returnValue.AppendMessage('No parameter value provided for parameter:  ' + para )
+                    returnValue.append_message('No parameter value provided for parameter:  ' + para )
                 else:
-                    returnValue.AppendMessage('Failed to add value to parameter:  ' + para )
+                    returnValue.append_message('Failed to add value to parameter:  ' + para )
             else:
-                returnValue.AppendMessage('No parameter value set since no type exists in family')
+                returnValue.append_message('No parameter value set since no type exists in family')
         else:
-            returnValue.UpdateSep(False, 'Failed to load shared parameter file.')
+            returnValue.update_sep(False, 'Failed to load shared parameter file.')
     return returnValue

@@ -1,2 +1,1 @@
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Fixtures\Cardiac_Protected_Electrical_Area_Sign_EFX.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Generic Models\RoomCalculationPoint_Marker_GEN.rfa
+C:\Users\jchristel\dev\test_lib\Lifter_Patient_CeilingMounted_Track_Linear_MMBE_056.rfa

@@ -11,8 +11,12 @@ namespace Launcher_Headless.Utilities
     {
         // settings
         public static string settingsFolderName = "BatchRvtLauncher";
+        public static string logFolderName = "logs";
+        public static string logFileName = "log.txt";
         public static string settingsFileName = "settings.json";
         public static string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         public static string settigsFilePath = Path.Combine(localAppDataPath,settingsFolderName,settingsFileName);
+
+        public static List<string> supportedIronPythonVersions = new List<string> { "2.7", "3.5" };
     }
 }

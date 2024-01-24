@@ -1,7 +1,7 @@
 {
   "pre script": {
-    "python version": "2.7",
-    "script file path": "my/file/path"
+    "python version": "IronPython",
+    "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\empty.py"
   },
   "batch processor scripts": [
     {
@@ -37,7 +37,7 @@
     }
   ],
   "post script": {
-    "python version": "2.7",
-    "script file path": "my\filepath"
+    "python version": "3.10",
+    "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\empty.py"
   }
 }

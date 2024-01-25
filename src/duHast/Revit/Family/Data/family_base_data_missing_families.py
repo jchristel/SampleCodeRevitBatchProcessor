@@ -275,9 +275,10 @@ def find_missing_families_direct_host_families(
         )
         returnValue.append_message(
             "{} Read overall family base data report. {} root entries found and {} nested entries found.".format(
-                tProcess.stop(), len(overallFamilyBaseRootData)
-            ),
-            len(overallFamilyBaseNestedData),
+                tProcess.stop(),
+                len(overallFamilyBaseRootData),
+                len(overallFamilyBaseNestedData),
+            )
         )
 
         tProcess.start()

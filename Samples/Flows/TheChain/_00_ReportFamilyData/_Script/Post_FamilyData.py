@@ -265,6 +265,19 @@ def check_missing_families():
         missing_families_host_families = find_missing_families_direct_host_families(
             data_file_path, missing_families
         )
+
+        output(
+            "Missing families hosts .... status: {}".format(
+                missing_families_host_families.status
+            )
+        )
+        # provide more feedback as to what went wrong
+        if(missing_families_host_families.status == False):
+            output("Missing families hosts.... message: {}".format(
+                missing_families_host_families.message
+            ))
+
+
         if len(missing_families_host_families.result) > 0:
             # re-format output data
             data_to_file = []

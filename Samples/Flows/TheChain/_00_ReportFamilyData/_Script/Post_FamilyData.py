@@ -163,7 +163,7 @@ def process_all_log_files():
         # write out second family list as CSV (files which failed to process for a reason and need to be processed again)
         write_out_re_process_data(
             data=data_to_process_file,
-            header=settings.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT,
+            file_name=settings.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT,
         )
 
 # ------------------------------------------- Report analysis -------------------------------------------
@@ -226,6 +226,11 @@ def check_missing_families():
                 check_missing_families.status
             )
         )
+        # provide more feedback as to what went wrong
+        if(check_missing_families.status == False):
+            output("Missing families from library check.... message: {}".format(
+                check_missing_families.message
+            ))
         # initialise missing families list
         missing_families = []
         if len(check_missing_families.result) > 0:

@@ -157,6 +157,7 @@ def copy_log_worker(log_files, target_directory, extension):
         new_log_file_path = os.path.join(target_directory, log_file_name)
         # copy the log file
         flag_copy = copy_file(old_name=log_file_path, new_name=new_log_file_path)
+        output("from:{} \nto: {}\nstatus: {}".format(log_file_path, new_log_file_path, flag_copy))
         flag = flag and flag_copy
         log_counter = log_counter + 1
     return flag
@@ -182,10 +183,12 @@ def copy_log_files_to_marker_dir(target_directory):
                 log_files = get_log_files(marker_file_ids)
                 copy_log = copy_log_worker(log_files, target_directory, ".log")
                 # copy .txt files
-                log_files = get_log_files(
-                    list_of_session_ids=marker_file_ids, file_extension=".txt"
-                )
-                copy_text_log = copy_log_worker(log_files, target_directory, ".txt")
+                # replace file extension .log to .txt
+                log_txt_files = []
+                for f in log_files:
+                    file_txt = f.replace(".log", ".txt")
+                    log_txt_files.append(file_txt)
+                copy_text_log = copy_log_worker(log_txt_files, target_directory, ".txt")
                 # combine copy results
                 flag_copy_logs = copy_log and copy_text_log
             else:

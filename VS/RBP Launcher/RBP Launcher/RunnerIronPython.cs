@@ -29,8 +29,10 @@ namespace RBP_Launcher
                 ScriptRuntimeSetup setup = Python.CreateRuntimeSetup(null);
                 ScriptRuntime runtime = new ScriptRuntime(setup);
                 //assign args if required
-                if (scriptArguments != null && scriptArguments.Count > 0)
-                { 
+                if (scriptArguments != null)
+                {
+                    //add the script path as first entry
+                    scriptArguments.Insert(0, scriptFilePath);
                     runtime.GetSysModule().SetVariable("argv", scriptArguments);
                 }
 

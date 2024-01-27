@@ -34,8 +34,8 @@ import os
 import sys
 
 def check_arguments():
-    if(len(sys.argv)>0):
-        arguments = sys.argv[:]
+    if(len(sys.argv)>1):
+        arguments = sys.argv[1:]
         print("Command-line arguments:")
         for index, arg in enumerate(arguments, start=0):
             print("{}. {}".format(index, arg))

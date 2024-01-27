@@ -30,19 +30,24 @@ test no args file
 #
 #
 
+import os
 import sys
 
 def check_arguments():
-    arguments = sys.argv[1:]
-    if not arguments:
+    if(len(sys.argv)>0):
+        arguments = sys.argv[:]
+        print("Command-line arguments:")
+        for index, arg in enumerate(arguments, start=0):
+            print("{}. {}".format(index, arg))
+    else:
+        print ("no arguments supplied")
         raise ValueError("No command-line arguments provided.")
-    print("Command-line arguments:")
-    for index, arg in enumerate(arguments, start=1):
-        print("{}. {}".format(index, arg))
         
-if __name__ == "__main__":
-    try:
-        check_arguments()
-        sys.exit(0)
-    except ValueError as e:
-        sys.exit(1)
+
+try:
+    check_arguments()
+    #os._exit(0)
+    sys.exit(0)
+except ValueError as e:
+    #os._exit(1)
+    sys.exit(1)

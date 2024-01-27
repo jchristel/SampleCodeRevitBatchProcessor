@@ -30,10 +30,5 @@ test no args file
 #
 #
 
-import sys
+
 print("here1")
-
-if __name__ == "__main__":
-    print("here2")
-    sys.exit(0)
-

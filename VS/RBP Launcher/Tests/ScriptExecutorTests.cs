@@ -63,6 +63,25 @@ namespace Tests
         }
 
         [Test]
+        public void ExecuteScript_WithSingleArgument_Success()
+        {
+            // Get the directory where the test assembly is located
+            var testDirectory = TestContext.CurrentContext.TestDirectory;
+
+            // Construct the relative path to Python script
+            var scriptFilePath = Path.Combine(testDirectory, "PythonScripts", "no_args.py");
+
+            // Arrange
+            var scriptExecutor = new RBP_Launcher.RunnerIronPython();
+            var scriptArguments = new List<string> { "arg1"};
+
+            // Act
+            bool result = scriptExecutor.ExecuteScript(scriptFilePath, scriptArguments);
+            // Assertion to check is true
+            Assert.That(result, Is.EqualTo(true), "Expected result was true");
+        }
+
+        [Test]
         public void ExecuteScript_WithoutArguments_Success()
         {
             // Get the directory where the test assembly is located

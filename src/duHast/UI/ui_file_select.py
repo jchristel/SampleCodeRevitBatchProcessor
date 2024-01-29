@@ -38,6 +38,7 @@ import ctypes
 
 # import settings class
 # from duHast.UI import FileSelectSettings as set
+from duHast.UI.file_list import get_revit_files_for_processing
 def Mbox(title, text, style):
     """
     A simple win forms message box.
@@ -73,6 +74,7 @@ class MyWindow(Windows.Window):
 
         wpf.LoadComponent(self, xaml_full_file_name)
 
+        self.GUIChange = True
         # populate fields
         self.selectedFiles = []
         self.revitfiles = revitFiles
@@ -82,6 +84,22 @@ class MyWindow(Windows.Window):
         self.tbFileType.Text = settings.revit_file_extension
         self.tbNoOfFiles.Text = str(settings.output_file_num)
         self.cbInclSubDirs.IsChecked = settings.incl_sub_dirs
+        self.GUIChange = False
+
+    def _HandleFileChange(self):
+        '''
+        _summary_
+        '''
+        
+        if(self.GUIChange == False):
+            revitFiles = get_revit_files_for_processing(
+                self.tbSourceFolder.Text, 
+                self.cbInclSubDirs.IsChecked, 
+                self.tbFileType.Text)
+            
+            self.revitfiles = revitFiles
+            # set new source
+            self.files.ItemsSource = revitFiles
 
     def BtnOK(self, sender, EventArgs):
         """
@@ -126,3 +144,37 @@ class MyWindow(Windows.Window):
         # print('cancel')
         self.DialogResult = False
         self.Close()
+
+    def TextBoxSourcePath_TextChanged(self, sender, TextChangedEventArgs):
+        '''
+        Source Path text box change event handler
+
+        :param sender: _description_
+        :type sender: _type_
+        :param TextChangedEventArgs: _description_
+        :type TextChangedEventArgs: _type_
+        '''
+
+        self._HandleFileChange()
+    
+    def CheckBoxSubDir_Checked(self, sender, RoutedEventArgs):
+        '''
+        _summary_
+
+        :param sender: _description_
+        :type sender: _type_
+        :param RoutedEventArgs: _description_
+        :type RoutedEventArgs: _type_
+        '''
+        self._HandleFileChange()
+
+    def SubDirCheckBox_Unchecked(self, sender, RoutedEventArgs):
+        '''
+        _summary_
+
+        :param sender: _description_
+        :type sender: _type_
+        :param RoutedEventArgs: _description_
+        :type RoutedEventArgs: _type_
+        '''
+        self._HandleFileChange()

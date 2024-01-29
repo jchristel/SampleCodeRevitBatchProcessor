@@ -53,9 +53,9 @@
                             </Grid.RowDefinitions>
                             <Label Name="lSourcePath" Grid.Row="0" Content="Source Path" 
                        Height="30" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                            <TextBox x:Name="tbSourceFolder" Grid.Row="0" Grid.Column="1" IsReadOnly="True"
+                            <TextBox x:Name="tbSourceFolder" Grid.Row="0" Grid.Column="1" IsReadOnly="False"
                        Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,10,0"
-                       VerticalContentAlignment="Center"/>
+                       VerticalContentAlignment="Center" TextChanged="TextBoxSourcePath_TextChanged"/>
                             <Label Name="lDestinationPath" Grid.Row="1" Content="Destination Path" 
                        Height="30" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <TextBox x:Name="tbDestinationFolder" Grid.Row="1" Grid.Column="1" IsReadOnly="True"
@@ -79,8 +79,8 @@
                         VerticalContentAlignment="Center"/>
                                 <Label Name="lInclSubDirectories" Grid.Column="1" Content="Incl Sub Dirs" 
                        Height="30" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                <CheckBox Name="cbInclSubDirs" Grid.Column="2" IsEnabled="False"
-                          VerticalAlignment="Center"/>
+                                <CheckBox Name="cbInclSubDirs" Grid.Column="2" IsEnabled="True"
+                          VerticalAlignment="Center" Checked="CheckBoxSubDir_Checked" Unchecked="SubDirCheckBox_Unchecked"/>
                             </Grid>
                         </Grid>
                     </Border>

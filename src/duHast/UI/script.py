@@ -29,8 +29,6 @@ The entry point for the file selection GUI.
 
 import sys, getopt, os
 
-import duHast.Utilities.files_io
-
 # to get to the root folder of this repo
 sys.path.append(
     os.path.join(os.path.realpath(__file__), os.pardir, os.pardir, os.pardir)
@@ -137,14 +135,14 @@ def process_args(argv):
             "hsi:o:n:e:",
             ["subDir", "input=", "outputDir=", "numberFiles=", "fileExtension="],
         )
-    except getopt.GetoptError:
+    except getopt.GetoptError as e:
         print(
-            "test.py -s -i <input> -o <output_directory> -n <numberOfOutputFiles> -e <fileExtension>"
+            "script.py -s -i <input> -o <output_directory> -n <numberOfOutputFiles> -e <fileExtension> failed with exception: {}".format(e)
         )
     for opt, arg in opts:
         if opt == "-h":
             print(
-                "test.py -i <input> -o <output_directory> -n <numberOfOutputFiles> -e <fileExtension>"
+                "script.py -i <input> -o <output_directory> -n <numberOfOutputFiles> -e <fileExtension>"
             )
         elif opt in ("-s", "--subDir"):
             include_sub_dirs_in_search = True
@@ -163,7 +161,7 @@ def process_args(argv):
                 print(arg + " value is not an integer")
                 got_args = False
         elif opt in ("-e", "--fileExtension"):
-            revit_file_extension = arg
+            revit_file_extension = arg.strip()
             got_args = True
 
     # check if input values are valid

@@ -44,11 +44,131 @@ from duHast.UI import workloader as wl
 
 # custom result class
 from duHast.Utilities.Objects import result as res
-from duHast.Utilities.files_io import is_back_up_file
+from duHast.Utilities.files_io import is_back_up_file, get_file_size, FILE_SIZE_IN_KB
+from duHast.Utilities.files_get import (
+    get_files,
+    get_files_from_directory_walker_with_filters_simple,
+)
+from duHast.Utilities.files_csv import get_first_row_in_csv_file, read_csv_file
+from duHast.Utilities.files_tab import get_first_row_in_file_no_strip
+from duHast.Revit.BIM360.util_bim_360 import get_bim_360_file_data
+
 
 # -------------
 # my code here:
 # -------------
+
+
+def get_revit_files_for_processing(location, include_sub_dirs, file_extension):
+    """
+    Extracts file data from varies sources:
+        - bim 360 task text file
+        - files on a local server directory
+        - files on a local server directory and it's subdirectories
+        - local server based files provided through a task text file
+
+    :param location: Can either be a directory, or a fully qualified file path.
+    :type location: str
+    :param includeSubDirs: If true and location is a directory, subdirectories will be included in file search.
+    :type includeSubDirs: bool
+    :param fileExtension: File type filter in '.ext'
+    :type fileExtension: str
+
+    :return: List of MyFileItem objects.
+    :rtype: :class:`.MyFileItem`
+    """
+
+    revit_files = []
+    try:
+        if os.path.isfile(location):
+            # got a text file...could either be BIM360 data or a file task list
+            revit_files = _get_file_data_from_text_file(location)
+        elif os.path.isdir(location):
+            # check a to search for files is to include sub dirs
+            revit_files_unfiltered = []
+            if include_sub_dirs:
+                # get revit files in input dir and subdirs (with backup files removed already)
+                revit_files_unfiltered = get_revit_files_incl_sub_dirs(
+                    location, file_extension
+                )
+            else:
+                # get revit files in input dir (with backup files removed already)
+                revit_files_unfiltered = get_revit_files(location, file_extension)
+            # check for max path violations!
+            # The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, \
+            # and the directory name must be less than 248 characters.
+            for revit_file in revit_files_unfiltered:
+                # remove any back up files from selection
+                if (
+                    len(os.path.dirname(os.path.abspath(revit_file.name))) < 248
+                    and len(revit_file.name) < 260
+                ):
+                    revit_files.append(revit_file)
+    except Exception as e:
+        # return an empty list which will cause this script to abort
+        revit_files = []
+    return revit_files
+
+
+def _get_files_from_list_file(file_path_csv):
+    """
+    Reads server based file data, the fully qualified file path, from a task file list file in csv format.
+
+    :param filePathCSV: The fully qualified file path to the task list file.
+    :type filePathCSV: str
+
+    :return: A list of MyFileitem objects. If an exception occured an empty list will be returned.
+    :rtype: :class:`.MyFileItem`
+    """
+
+    revit_files = []
+    try:
+        # read the CSV into rows
+        rows = read_csv_file(file_path_csv)
+        # check whether anything came back
+        if len(rows) > 0:
+            # process rows
+            for row_data in rows:
+                if len(row_data) > 0:
+                    file_size = get_file_size(row_data[0], FILE_SIZE_IN_KB)
+                    dummy = fi.MyFileItem(row_data[0], file_size)
+                    revit_files.append(dummy)
+    except Exception as e:
+        # return an empty list which will cause this script to abort
+        revit_files = []
+    return revit_files
+
+
+def _get_file_data_from_text_file(file_path):
+    """
+    Reads a file server based task list file. This file can either be a BIM360 task list file or \
+        a task list file containing file server based file path in a single column.
+
+    :param filePath: The fully qualified file path to the task list file.
+    :type filePath: str
+    :return: A list of MyFileitem objects.
+    :rtype: :class:`.MyFileItem`
+    """
+
+    files = []
+
+    # if file is empty an empty list will be returned
+    # also need to check whether this is a csv file...
+    if file_path.lower().endswith(".csv"):
+        # list of entries in first row
+        row = get_first_row_in_csv_file(file_path)
+    else:
+        row = get_first_row_in_file_no_strip(file_path)
+        # make sure we get a list of entries
+        if row is not None:
+            row = row.split("\t")
+    if row is not None:
+        # bim 360 or autodesk construction cloud files have at least 3 entries
+        if len(row) > 2:
+            files = get_bim_360_file_data(file_path)
+        else:
+            files = _get_files_from_list_file(file_path)
+    return files
 
 
 def get_revit_files(directory, file_extension):
@@ -65,17 +185,13 @@ def get_revit_files(directory, file_extension):
     """
 
     files = []
-    list_of_files = os.listdir(directory)
+    list_of_files = get_files(directory, file_extension)
     for f in list_of_files:
-        # check for file extension match
-        if f.lower().endswith(file_extension.lower()):
-            # check if this is a back up file
-            if is_back_up_file(f) == False:
-                # Use join to get full file path.
-                location = os.path.join(directory, f)
-                # Get size and add to list of files.
-                size = os.path.getsize(location)
-                files.append(fi.MyFileItem(location, size))
+        # check if this is a back up file
+        if is_back_up_file(f) == False:
+            # Get size and add to list of files.
+            size = os.path.getsize(f)
+            files.append(fi.MyFileItem(f, size))
     return files
 
 
@@ -94,17 +210,16 @@ def get_revit_files_incl_sub_dirs(directory, file_extension):
 
     files = []
     # Get the list of all files in directory tree at given path
-    list_of_files = list()
-    for dirpath, dirnames, filenames in os.walk(directory):
-        list_of_files += [os.path.join(dirpath, file) for file in filenames]
+    list_of_files = get_files_from_directory_walker_with_filters_simple(
+        directory, file_extension
+    )
+
     for f in list_of_files:
-        # check for file extension match
-        if f.lower().endswith(file_extension.lower()):
-            # check if this is a back up file,
-            if is_back_up_file(f) == False:
-                # Get size and add to list of files.
-                size = os.path.getsize(f)
-                files.append(fi.MyFileItem(f, size))
+        # check if this is a back up file,
+        if is_back_up_file(f) == False:
+            # Get size and add to list of files.
+            size = os.path.getsize(f)
+            files.append(fi.MyFileItem(f, size))
     return files
 
 

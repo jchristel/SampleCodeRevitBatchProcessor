@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Launcher_Headless.Utilities
+namespace RBP_Launcher.Utilities
 {
     public class Constants
     {

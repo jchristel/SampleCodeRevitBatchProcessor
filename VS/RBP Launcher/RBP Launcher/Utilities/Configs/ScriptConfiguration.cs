@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Launcher_Headless.Utilities
+namespace RBP_Launcher.Utilities.Configs
 {
     public class ScriptConfiguration
     {

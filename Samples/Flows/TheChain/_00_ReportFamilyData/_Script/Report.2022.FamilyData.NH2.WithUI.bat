@@ -24,13 +24,11 @@ set _targetPath=%LocalAppData%\RevitBatchProcessor\BatchRvt.exe
 :: default path for python installation
 set _pythonPath="C:\Program Files (x86)%\IronPython 2.7\ipy64.exe"
 :: file path to UI file select python script
-set _UIFileSelectPath="\\bvn\Data\studio\infotech\standards\Scripts\Revit Python\RBP\SampleCodeRevitBatchProcessor\UI\script.py"
+set _UIFileSelectPath="%_rootFolderPath%_Script\Pre_FileSelectUI.py"
 :: directory path from which python UI is going to show revit files
-set _UIInputDirectory="P:\19\1903020.000\Design\BIM\_Revit\2.0 Project Library"
+set _UIInputDirectory="C:\Users\jchristel\dev\test_lib"
 :: directory path into which the python UI will write the task files into (includes the user name)
 set _UIOutputDirectory="%_rootFolderPath%_Users\%USERNAME%\_TaskList"
-:: number of task files to be written out by python UI
-set _UINumberOfTaskfiles=4
 :: file path to file select python script
 set _FileSelectPath="%_rootFolderPath%_Script\Pre_FileSelectNoUI.py"
 :: directory where settings files are saved (includes the user name)
@@ -60,7 +58,6 @@ if %toggleDebug%==1 (
   %stamp% & echo _rootFolderPath: %_rootFolderPath%
   %stamp% & echo _targetPath: %_targetPath%
   %stamp% & echo _pythonPath: %_pythonPath%
-  %stamp% & echo _UINumberOfTaskfiles: %_UINumberOfTaskfiles%
   %stamp% & echo _FileSelectPath: %_FileSelectPath%
   %stamp% & echo _settingsDiretoryPath: %_settingsDiretoryPath%
   %stamp% & echo _settingsStepOneFileName: %_settingsStepOneFileName%
@@ -99,7 +96,7 @@ If %saveErrorLevel% EQU 2 (
 
 :: Launch file selection script
 :: Launch UI file selection script 
-call %_pythonPath% %_UIFileSelectPath% -i %_UIInputDirectory% -o %_UIOutputDirectory% -n %_UINumberOfTaskfiles% -e .rfa
+call %_pythonPath% %_UIFileSelectPath% %_UIInputDirectory%
 
 :: check for errors in file selection
 IF NOT ERRORLEVEL 1 GOTO no_error

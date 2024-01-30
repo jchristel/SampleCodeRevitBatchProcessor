@@ -34,13 +34,13 @@ namespace RBP_Launcher.Utilities.Configs
         }
 
         [JsonProperty("pre script")]
-        public ScriptDetails PreScript { get; set; }
+        public List<ScriptDetails> PreScript { get; set; }
 
         [JsonProperty("batch processor scripts")]
         public List<Script> BatchProcessorScripts { get; set; }
 
         [JsonProperty("post script")]
-        public ScriptDetails PostScript { get; set; }
+        public List<ScriptDetails> PostScript { get; set; }
 
         public static ScriptConfiguration FromJson(string json)
         {

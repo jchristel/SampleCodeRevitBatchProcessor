@@ -24,75 +24,68 @@ try
             Console.WriteLine($"Starting ...");
             // get python script runners
             Dictionary<string, RBP_Launcher.IScriptRunner> pythonScriptRunners = RBP_Launcher.Utilities.PythonScriptRunners.GetAvailablePythonScriptRunners();
-            
-            // launch flow pre process
-            if (pythonScriptRunners.ContainsKey(scriptConfig.PreScript.PythonVersion.Replace(".", "")))
+            // run pre flow scripts
+            bool preScriptsExecutionStatus = Launcher_Headless.Utilities.ExcuteScripts.RunScripts(scriptConfig.PreScript, pythonScriptRunners);
+            // check if all scripts finished successfully
+            if (preScriptsExecutionStatus)
             {
-                Console.WriteLine($"Starting python {scriptConfig.PreScript.PythonVersion} script at {scriptConfig.PreScript.ScriptFilePath}");
-                //pythonScriptRunners[config.PreScript.PythonVersion.Replace(".", "")].ExecuteScript(config.PreScript.ScriptFilePath, new List<string> { "arg1", "arg1 value", "arg2", "arg2 value" });
-                pythonScriptRunners[scriptConfig.PreScript.PythonVersion.Replace(".", "")].ExecuteScript(scriptConfig.PreScript.ScriptFilePath, null);
+                Log.Debug("All pre flow scripts executed successfully.");
+                int counter = 0;
+                // start all scrit groups
+                foreach (RBP_Launcher.Utilities.Configs.ScriptConfiguration.Script rbpScriptGroup in scriptConfig.BatchProcessorScripts)
+                {
+                    counter = counter + 1;
+                    //launch pre process
+                    //TODO
+
+                    //log out put
+                    Log.Information($"Starting batch processor flow session {counter} of {scriptConfig.BatchProcessorScripts.Count}");
+
+                    // launch rbp
+                    RBP_Launcher.Launcher rbpLauncher = new RBP_Launcher.Launcher(
+                    rbpFilePath: appSettings.RbpFilePath,
+                    startInterval: rbpScriptGroup.StartInterval,
+                    settingFiles: rbpScriptGroup.SettingFiles
+                    );
+
+                    rbpLauncher.LaunchApplicationsAndWait();
+                    //launch post process
+
+                }
+                // run post flow scripts
+                bool postScriptsExecutionStatus = Launcher_Headless.Utilities.ExcuteScripts.RunScripts(scriptConfig.PostScript, pythonScriptRunners);
+                // check if all scripts finished successfully
+                if (postScriptsExecutionStatus)
+                {
+                    Log.Debug("All post flow scripts executed successfully.");
+                }
+                else
+                {
+                    throw new Exception("One or multiple post flow scripts failed to execute. Exiting");
+                }
             }
             else
             {
-                Console.WriteLine($"Python {scriptConfig.PreScript.PythonVersion} not installed...");
-                throw new Exception($"Exception Python {scriptConfig.PreScript.PythonVersion} not installed occured in pre flow script execution.");
-            }
-
-
-            int counter = 0;
-            // start all scrit groups
-            foreach (RBP_Launcher.Utilities.Configs.ScriptConfiguration.Script rbpScriptGroup in scriptConfig.BatchProcessorScripts)
-            {
-                counter = counter + 1;
-                //launch pre process
-                //TODO
-
-                //log out put
-                Log.Information($"Starting batch processor flow session {counter} of {scriptConfig.BatchProcessorScripts.Count}");
-
-                // launch rbp
-                RBP_Launcher.Launcher rbpLauncher = new RBP_Launcher.Launcher(
-                rbpFilePath: appSettings.RbpFilePath,
-                startInterval: rbpScriptGroup.StartInterval,
-                settingFiles: rbpScriptGroup.SettingFiles
-                );
-
-                rbpLauncher.LaunchApplicationsAndWait();
-
-                //launch post process
-                // TODO
-            }
-
-            // launch flow post process
-            if (pythonScriptRunners.ContainsKey(scriptConfig.PostScript.PythonVersion.Replace(".", "")))
-            {
-                Console.WriteLine($"Starting python {scriptConfig.PostScript.PythonVersion} script at {scriptConfig.PostScript.ScriptFilePath}");
-                pythonScriptRunners[scriptConfig.PostScript.PythonVersion.Replace(".", "")].ExecuteScript(scriptConfig.PostScript.ScriptFilePath, null);
-            }
-            else
-            {
-                Console.WriteLine($"Python {scriptConfig.PostScript.PythonVersion} not installed...");
-                throw new Exception($"Exception Python {scriptConfig.PreScript.PythonVersion} not installed occured in post flow script execution.");
+                throw new Exception("One or multiple pre flow scripts failed to execute. Exiting");
             }
         }
         else
         {
-            Console.WriteLine($"Failed to read flow settings from {filePathFlow}. Exiting");
-            Log.Debug($"Failed to read flow settings from {filePathFlow}. Exiting");
+            throw new Exception($"Failed to read flow settings from {filePathFlow}. Exiting");
         }
     }
     else
     {
-        Console.WriteLine($"Failed to read settings from {RBP_Launcher.Utilities.Constants.settigsFilePath}. Exiting");
-        Log.Debug($"Failed to read settings from {RBP_Launcher.Utilities.Constants.settigsFilePath}. Exiting");
+        throw new Exception($"Failed to read settings from {RBP_Launcher.Utilities.Constants.settigsFilePath}. Exiting");
     }
 }
 catch(Exception ex)
 {
-    Console.WriteLine($"exited with exception {ex}");
+    Console.WriteLine($"Exception {ex}");
     Log.Error(ex, "An error occurred in Main");
 }
 
 
 // Close and flush the log when the application exits
 Log.CloseAndFlush();
+

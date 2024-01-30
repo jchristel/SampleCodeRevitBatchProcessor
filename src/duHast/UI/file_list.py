@@ -139,6 +139,24 @@ def _get_files_from_list_file(file_path_csv):
     return revit_files
 
 
+def get_files_from_csv_list_file(file_path_csv, file_extension):
+    """
+    Reads server based file data, the fully qualified file path, from a task file list file in csv format.
+
+    :param filePathCSV: The fully qualified file path to the task list file.
+    :type filePathCSV: str
+    :param fileExtension: The file extension filter in format '.ext'
+    :type fileExtension: str
+    :return: A list of MyFileitem objects. If an exception occured an empty list will be returned.
+    :rtype: :class:`.MyFileItem`
+    """
+
+    revit_files = _get_files_from_list_file(file_path_csv)
+    # filter out files with wrong extension
+    revit_files = [f for f in revit_files if f.name.lower().endswith(file_extension)]
+    return revit_files
+
+
 def _get_file_data_from_text_file(file_path):
     """
     Reads a file server based task list file. This file can either be a BIM360 task list file or \
@@ -375,4 +393,58 @@ def write_file_list(
         return_value.append_message("Finished writing out task files")
     except Exception as e:
         return_value.update_sep(False, "Failed to save file list! " + str(e))
+    return return_value
+
+
+def get_task_file_name(task_list_directory, counter):
+    """
+    Builds a fully qualified task file path.
+
+    :param taskListDirectory: The fully qualified directory where the task file is (to be) located
+    :type taskListDirectory: str
+    :param counter: A counter to be added to the task file name
+    :type counter: int
+
+    :return: A fully qualified task file path
+    :rtype: str
+    """
+
+    file_name = os.path.join(task_list_directory, "Tasklist_" + str(counter) + ".txt")
+    return file_name
+
+
+def write_empty_task_list(file_name):
+    """
+    Writes out an empty task list.
+
+    :param fileName: Fully qualified file path of the task file name including extension.
+    :type fileName: str
+
+    :return:
+        Result class instance.
+
+        - Write file status (bool) returned in result.status. False if an exception occurred, otherwise True.
+        - Result.message property contains fully qualified file path to empty task list file.
+
+        On exception:
+
+        - .status (bool) will be False.
+        - .message will contain the exception message.
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+    try:
+        f = open(file_name, "w")
+        f.close()
+        return_value.AppendMessage("wrote empty task list: {} [TRUE]".format(file_name))
+    except Exception as e:
+        return_value.UpdateSep(
+            False,
+            "Failed to write empty task list: "
+            + file_name
+            + " with exception "
+            + str(e),
+        )
     return return_value

@@ -11,8 +11,8 @@ Setting Up - The Chain
     - "taskScriptFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Script\\ReportFamilyData.py",
     - "revitFileListFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Users\\jchristel\\_TaskList\\Tasklist_1.txt",
     - "dataExportFolderPath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Users\\jchristel\\_Users\\jchristel\\SessionData",
-    - "preProcessingScriptFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Script\\Pre_FirstTask.py",
-    - "PostProcessingScriptFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Script\\Post_BVNRevitFileSaveAsWSMKillOnly.py",
+    - "preProcessingScriptFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Script\\Pre_MarkerFiles.py",
+    - "PostProcessingScriptFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Script\\Post_KillWSM.py",
 
 - check revit version in _default settings to match your required version
 

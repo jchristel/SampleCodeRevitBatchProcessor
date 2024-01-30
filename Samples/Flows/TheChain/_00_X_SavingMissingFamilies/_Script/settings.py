@@ -1,4 +1,4 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of global variables.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -6,7 +6,7 @@ This module contains a number of global variables.
 Apart from defining a number of variable values this module also updates path variable with directories containing modules required to 
 run this script.
 
-'''
+"""
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
@@ -33,114 +33,96 @@ run this script.
 #
 
 # path to Common library modules
-COMMON_LIBRARY_DEBUG_PATH = r'\\bvn\Data\studio\infotech\standards\Scripts\Revit Python\RBP\SampleCodeRevitBatchProcessor\Library'
-COMMON_LIBRARY_UI_DEBUG_PATH = r'\\bvn\Data\studio\infotech\standards\Scripts\Revit Python\RBP\SampleCodeRevitBatchProcessor\UI'
-#SCRIPT_LOCATION = r'P:\19\1903020.000\Design\BIM\_Revit\5.0 Project Resources\01 Scripts\04 BatchP\_00_ReportFamilyData\_Script'
-
+DU_HAST_PATH = r"C:\Program Files\Python311\Lib\site-packages"
+DU_HAST_DEBUG = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\src"
 
 # set path to common library
 import sys
-sys.path += [COMMON_LIBRARY_DEBUG_PATH, COMMON_LIBRARY_UI_DEBUG_PATH]
 
+sys.path = [DU_HAST_DEBUG] + sys.path
+sys.path += [DU_HAST_PATH]
+
+import os
+
+from duHast.Utilities.directory_io import get_parent_directory
+from duHast.Utilities.files_io import get_directory_path_from_file_path
+from duHast.Utilities.utility import get_current_user_name
 import Utility as util
 
 # get the script location
-SCRIPT_DIRECTORY = util.GetFolderPathFromFile(__file__)
+SCRIPT_DIRECTORY = get_directory_path_from_file_path(__file__)
 # add the script directory to path
 sys.path += [SCRIPT_DIRECTORY]
 # build flow directory name
-FLOW_DIRECTORY = util.GetParentDirectory(SCRIPT_DIRECTORY)
+FLOW_DIRECTORY = get_parent_directory(SCRIPT_DIRECTORY)
 # build user directory name
-ROOT_SCRIPT_DIRECTORY_USER = FLOW_DIRECTORY + r'\_Users'+ '\\' + util.GetCurrentUserName()
+ROOT_SCRIPT_DIRECTORY_USER = os.path.join(
+    FLOW_DIRECTORY, "_Users" + "\\" + get_current_user_name()
+)
 
 # how many task files are written to file
 NUMBER_OF_TASK_FILES = 4
 # where are task files located
-TASK_FILE_DIRECTORY = ROOT_SCRIPT_DIRECTORY_USER + r'\_TaskList'
+TASK_FILE_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, r"_TaskList")
 # file extension of files to be processed
-FILE_EXTENSION_OF_FILES_TO_PROCESS = '.rfa'
+FILE_EXTENSION_OF_FILES_TO_PROCESS = ".rfa"
 
 # Root directory path of files to be processed
-REVIT_FILES_DIRECTORY = r'\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship'
+REVIT_FILES_DIRECTORY = (
+    r'C:\Users\jchristel\dev\test_lib'
+)
 
 # log marker file location
-LOG_MARKER_DIRECTORY = ROOT_SCRIPT_DIRECTORY_USER + r'\_LogMarker'
+LOG_MARKER_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_LogMarker")
 
 # WSM marker file location
 WSM_MARKER_DIRECTORY = LOG_MARKER_DIRECTORY
 
 # input directory path
-# may contain marker files (see below) 
-INPUT_DIRECTORY = ROOT_SCRIPT_DIRECTORY_USER + r'\_Input'
+# may contain marker files (see below)
+INPUT_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_Input")
 
 # any data output to go here
-OUTPUT_FOLDER = ROOT_SCRIPT_DIRECTORY_USER + r'\_Output'
+OUTPUT_FOLDER = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_Output")
 # combined families folder
-OUTPUT_FOLDER_COMBINED_FAMILIES = ROOT_SCRIPT_DIRECTORY_USER + r'\_Output\combined'
-ANALYSIS_FOLDER = ROOT_SCRIPT_DIRECTORY_USER + r'\_Analysis'
-ANALYSIS_CURRENT_FOLDER = ROOT_SCRIPT_DIRECTORY_USER + r'\_Analysis\_Current'
+OUTPUT_FOLDER_COMBINED_FAMILIES = os.path.join(
+    ROOT_SCRIPT_DIRECTORY_USER, "_Output\combined"
+)
+ANALYSIS_FOLDER = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_Analysis")
+ANALYSIS_CURRENT_FOLDER = os.path.join(ROOT_SCRIPT_DIRECTORY_USER , r"_Analysis\_Current")
 
 # all reports are of this file type
-REPORT_FILE_EXTENSION = '.csv'
+REPORT_FILE_EXTENSION = ".csv"
 
 # log file containing any files where an exception occured during processing or one of the processors failed
-FILE_NAME_EXCEPTIONS_REPORT = 'ProcessExceptions' + REPORT_FILE_EXTENSION
+FILE_NAME_EXCEPTIONS_REPORT = "ProcessExceptions" + REPORT_FILE_EXTENSION
 
 # log file containing any files where circular referencing occured
-FILE_NAME_CIRCULAR_REFERENCE_REPORT = 'CircularReferences' + REPORT_FILE_EXTENSION
+FILE_NAME_CIRCULAR_REFERENCE_REPORT = "CircularReferences" + REPORT_FILE_EXTENSION
 
 # log file containing any files containing missing families
-FILE_NAME_MISSING_FAMILIES_REPORT = 'MissingFamilies' + REPORT_FILE_EXTENSION
+FILE_NAME_MISSING_FAMILIES_REPORT = "MissingFamilies" + REPORT_FILE_EXTENSION
 
 # log file containing any files containing missing families (to be used in follow up processing run where only these families
 # will be processed rather then the entire data sat)
-FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT = 'SecondProcessFamilies' + REPORT_FILE_EXTENSION
+FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT = (
+    "SecondProcessFamilies" + REPORT_FILE_EXTENSION
+)
 
 # log file containing any files containing missing families
-FILE_NAME_MISSING_FAMILIES_HOSTS_REPORT = 'HostsMissingFamilies' + REPORT_FILE_EXTENSION
+FILE_NAME_MISSING_FAMILIES_HOSTS_REPORT = "HostsMissingFamilies" + REPORT_FILE_EXTENSION
 
 # marker file indicating missing families are to be saved out.
 # contains two rows:
 # - first row: fully qualified file path of family base data report file to be used as reference
 # - second row: fully qualified root directory path to where save missing families to
-FILE_NAME_MARKER_SAVEOUT_MISSING_FAMILIES = 'SaveOutMissingFams' + REPORT_FILE_EXTENSION
+FILE_NAME_MARKER_SAVEOUT_MISSING_FAMILIES = "SaveOutMissingFams" + REPORT_FILE_EXTENSION
 
-# marker file indicating that in a post process the combined report files are to be merged with (older) report files 
+# marker file indicating that in a post process the combined report files are to be merged with (older) report files
 # in a given folder
 # contains single rows:
 # - first row: fully qualified root directory path to where other family data files are located.
-FILE_NAME_MARKER_MERGE_FAMILY_DATA = 'MergeFamilyData' + REPORT_FILE_EXTENSION
+FILE_NAME_MARKER_MERGE_FAMILY_DATA = "MergeFamilyData" + REPORT_FILE_EXTENSION
 
-
-def SaveOutMissingFamiliesCheck():
-    '''
-    Check whether a marker file exists, which specifies: where family base report is located and the directory to save missing families to.
-
-    :return: True if marker file exists, otherwise False. The file path of the family base data raport. The root directory path to where families are to be saved to.
-    :rtype: bool, string, string
-    '''
-
-    saveOut = False
-    familyBaseDataFilePath = ''
-    familyOutDirectory = ''
-
-    # build marker file path
-    markerFilePath = INPUT_DIRECTORY + '\\' + FILE_NAME_MARKER_SAVEOUT_MISSING_FAMILIES
-    # check if file exists in input location
-    if(util.FileExist(markerFilePath)):
-        # read file
-        rows = util.ReadCSVfile(markerFilePath)
-        # should be at least two rows...
-        if (len(rows) >= 2):
-            gotBaseData = False
-            gotDirOut = False
-            # assign family base data file path
-            if(util.FileExist(rows[0][0])):
-                familyBaseDataFilePath = rows[0][0]
-                gotBaseData = True
-            # assign family out file path
-            if(util.DirectoryExists(rows[1][0])):
-                familyOutDirectory = rows[1][0]
-                gotDirOut = True
-            saveOut = gotBaseData and gotDirOut
-    return saveOut , familyBaseDataFilePath , familyOutDirectory
+# flag indicating whether this is a cloud based project
+IS_CLOUD_PROJECT = False

@@ -172,8 +172,6 @@ call %_pythonPath% "%_cleanUpScriptPath%"
 %stamp% & echo.
 %stamp% & echo ********************************** Finished ****************************************************************
 
-REM pause
-
 
 REM get out before executing the spinner code below
 exit /b

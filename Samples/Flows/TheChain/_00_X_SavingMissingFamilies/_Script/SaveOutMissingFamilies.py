@@ -1,4 +1,4 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module is the actual script batch processor executes per family file.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -7,7 +7,7 @@ It reads the report file and saves out any nested family found not present in re
 
 Host families are not saved.
 
-'''
+"""
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
@@ -35,104 +35,94 @@ Host families are not saved.
 #
 
 
-
-
 # --------------------------
 # Imports
 # --------------------------
 
-# debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_rrFiles.rvt'
-
 import clr
 import System
 
-import utilDataBVN as utilData # sets up all commonly used variables and path locations!
-import Utility as util
-import Result as res
-import UtilBatchP as utilBP
+import settings as settings  # sets up all commonly used variables and path locations!
 
+from duHast.Utilities.console_out import output
 
 # family data processors
-import RevitFamilyBaseDataProcessor as rFamBaseProcessor
+from duHast.Revit.Family.Data.Objects.family_base_data_processor import (
+    FamilyBaseProcessor,
+)
 
 # family data collector class
-import RevitFamilyDataCollector as rFamCol
+from duHast.Revit.Family.Data.Objects.family_data_collector import (
+    RevitFamilyDataCollector,
+)
 
-from Autodesk.Revit.DB import *
 
-# flag whether this runs in debug or not
-debug_ = False
+import revit_script_util
+import revit_file_util
 
-# Add batch processor scripting references
-if not debug_:
-    import revit_script_util
-    import revit_file_util
-    clr.AddReference('RevitAPI')
-    clr.AddReference('RevitAPIUI')
-    # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
-    # get the session Id
-    sessionId_ = revit_script_util.GetSessionId()
-else:
-    # get default revit file name
-    revitFilePath_ = debugRevitFileName_
-    sessionId_ = "123"
+clr.AddReference("RevitAPI")
+clr.AddReference("RevitAPIUI")
+# NOTE: these only make sense for batch Revit file processing mode.
+doc = revit_script_util.GetScriptDocument()
+REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
+# get the session Id
+SESSION_ID = revit_script_util.GetSessionId()
+
 
 # store output here:
-rootPath_ = utilData.OUTPUT_FOLDER
+ROOT_PATH = settings.OUTPUT_FOLDER
 
 # -------------
 # my code here:
 # -------------
-
-
-def Output(message = ''):
-    '''
-    Prints message either to revit batch processor console or sceen. (Depends on global debug_ flag)
-    To batch processor (debug = False) or console (debug = True)
-
-    :param message: The message to be printed, defaults to ''
-    :type message: str, optional
-    '''
-
-    if not debug_:
-        revit_script_util.Output(str(message))
-    else:
-        print (message)
 
 # -------------
 # main:
 # -------------
 
 # save revit file to new location
-Output('Writing out missing families .... start')
+output(
+    "Writing out missing families .... start",
+    revit_script_util.Output,
+)
 
 # check whether missing families are to be written to file
 # missing families are families which do not appear as root families in base family data report
-saveOutMissingFamilies, baseDataReportFilePath, familyOutRootDirectory = utilData.SaveOutMissingFamiliesCheck()
+(
+    save_out_missing_families,
+    base_data_report_file_path,
+    family_out_root_directory,
+) = settings.SaveOutMissingFamiliesCheck()
+
 # update available processor instances accordingly
-if(saveOutMissingFamilies):
+if save_out_missing_families:
     # Set up list containing all family processor instances to be executed per family.
-    procs = [ 
-        rFamBaseProcessor.FamilyBaseProcessor(
-            baseDataReportFilePath, # reference list of known families
-            familyOutRootDirectory, # where to write families to
-            sessionId_ # session id to make sure families are written to unique folder
+    processors = [
+        FamilyBaseProcessor(
+            base_data_report_file_path,  # reference list of known families
+            family_out_root_directory,  # where to write families to
+            SESSION_ID,  # session id to make sure families are written to unique folder
         )
     ]
-    familyCategoryName = doc.OwnerFamily.FamilyCategory.Name
-    famName = doc.Title
+    family_category_name = doc.OwnerFamily.FamilyCategory.Name
+    fam_name = doc.Title
     # strip .rfa of name
-    if(famName.lower().endswith('.rfa')):
-        famName = famName[:-4]
-    
-    # process family (and save missing fams out)
-    collector = rFamCol.RevitFamilyDataCollector(procs)
-    flagDataCollection_ = collector.processFamily(doc, famName, familyCategoryName)
+    if fam_name.lower().endswith(".rfa"):
+        fam_name = fam_name[:-4]
 
-    Output (flagDataCollection_.message + '.... status: ' + str(flagDataCollection_.status))
+    # process family (and save missing fams out)
+    collector = RevitFamilyDataCollector(processors)
+    flag_data_collection = collector.processFamily(doc, fam_name, family_category_name)
+
+    output(
+        "{} .... status: {}".format(
+            flag_data_collection.message, flag_data_collection.status
+        ),
+        revit_script_util.Output,
+    )
 
 else:
-    Output('Failed to read data required to save out missing families!')
+    output(
+        "Failed to read data required to save out missing families!",
+        revit_script_util.Output,
+    )

@@ -1,4 +1,4 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains post saving out missing families functions:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -10,7 +10,7 @@ This module contains post saving out missing families functions:
     - any exceptions which may have occured during processing
 
 
-'''
+"""
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -45,39 +45,29 @@ import os
 import sys
 
 
-import utilDataBVN as utilData # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
+from utility import save_out_missing_families_check
+
+from duHast.Utilities.console_out import output
+from duHast.Utilities.batch_processor_log_utils import process_log_files
+from duHast.Utilities.files_csv import write_report_data_as_csv
+from duHast.Utilities.files_io import file_delete
+from duHast.Utilities.files_get import get_files_single_directory
+from duHast.UI.file_list import get_revit_files
+
+
 # import common library
 import Utility as util
-import BatchProcessorLogUtils as logutils
-import FileList as fl
 
 # -------------
 # my code here:
 # -------------
 
-# output messages
-def Output(message = ''):
-    '''
-    Print message to console.
-
-    :param message: The message, defaults to ''
-    :type message: str, optional
-    '''
-
-    # 08/09/2022 19:09:19 :
-    timestamp = util.GetDateStamp('%d/%m/%Y %H_%M_%S : ')
-    print (timestamp + message)
-
-
-# looking for message indicating one of the data processors failed
-CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED = [
-    'status: False'
-    ]
-
 # ------------------------------------------- user feed back and report to disk -------------------------------------------
 
-def _UserOutAndLogFile(processingResults, fileName, header = []):
-    '''
+
+def _UserOutAndLogFile(processing_results, file_name, header=[]):
+    """
     Show user feed back and write to report file
 
     :param processingResults: Result class instance.
@@ -87,79 +77,90 @@ def _UserOutAndLogFile(processingResults, fileName, header = []):
         - result.result A list of lists of string containing the data to be written to file.
 
     :type processingResults: class:`.Result`
-    '''
+    """
 
-    if(processingResults.result != None):
+    if processing_results.result != None:
         # show user any issues
-        for m in processingResults.result:
-            Output('::'.join(m))
+        for m in processing_results.result:
+            output("::".join(m))
         # write data out to file
-        util.writeReportDataAsCSV(
-            utilData.OUTPUT_FOLDER + '\\' + fileName, # report full file name
-            header, # empty header 
-            processingResults.result, 
-            writeType = 'w'
+        write_report_data_as_csv(
+            os.path.join(settings.OUTPUT_FOLDER ,file_name),  # report full file name
+            header,  # empty header
+            processing_results.result,
+            writeType="w",
         )
     else:
-        Output('Result did not contain any data to be written to file.')
+        output("Result did not contain any data to be written to file.")
+
 
 # ------------------------------------------- clean up -------------------------------------------
 
-def DeleteFileInInputDir():
-    '''
+
+def delete_file_in_input_dir():
+    """
     Deletes any files in the input directory.
-    '''
-    files = util.GetFilesSingleFolder(utilData.INPUT_DIRECTORY, '', '', utilData.REPORT_FILE_EXTENSION)
-    if(len(files) > 0):
+    """
+    files = get_files_single_directory(
+        settings.INPUT_DIRECTORY, "", "", settings.REPORT_FILE_EXTENSION
+    )
+    if len(files) > 0:
         for f in files:
-            flagDelete = util.FileDelete(f)
-            Output('Deleted marker file: ' + f + ' [' + str(flagDelete) +']')
+            flag_delete = file_delete(f)
+            output("Deleted marker file: {} [{}]".format(f, flag_delete))
     else:
-        Output('Input directory did not contain any files.')
+        output("Input directory did not contain any files.")
 
 
 # ------------------------------------------- log file processing -------------------------------------------
 
-def ProcessLogFiles():
-    '''
+
+def process_log_files():
+    """
     Checks log files for any warnings or exceptions and writes out a report file containing any issues in format\
         filepath exception description
-    '''
+    """
 
     # process logs
-    processingResults_ = logutils.ProcessLogFiles(
-        utilData.LOG_MARKER_DIRECTORY,
-        CUSTOM_EXCEPTION_MESSAGES_TO_BE_FLAGGED
-        )
+    processing_results_ = process_log_files(
+        settings.LOG_MARKER_DIRECTORY,
+    )
 
-    Output('LogResults.... status: ' + str(processingResults_.status))
+    output("LogResults.... status: {}".format(processing_results_.status))
 
     # write any files with exceptions out to file:
-    if(processingResults_.result != None):
+    if processing_results_.result != None:
         # re-format output data
-        dataToFile = []
-        for data in processingResults_.result:
+        data_to_file = []
+        for data in processing_results_.result:
             row = [data[0], data[2]]
-            dataToFile.append(row)
-        processingResults_.result = dataToFile
-        _UserOutAndLogFile(processingResults_, utilData.FILE_NAME_EXCEPTIONS_REPORT)
+            data_to_file.append(row)
+        processing_results_.result = data_to_file
+        _UserOutAndLogFile(processing_results_, settings.FILE_NAME_EXCEPTIONS_REPORT)
+
 
 # -------------
 # main:
 # -------------
 
 # check log files for any exceptions or warnings
-ProcessLogFiles()
+process_log_files()
 
 # get the folder in which families have been saved to:
-saveOutMissingFamilies, baseDataReportFilePath, familyOutRootDirectory = utilData.SaveOutMissingFamiliesCheck()
+(
+    save_out_missing_families,
+    base_data_report_file_path,
+    family_out_root_directory,
+) = save_out_missing_families_check()
 
 # collect data and write to processing file
-if(saveOutMissingFamilies):
+if save_out_missing_families:
     # get all families located in combined out folder
-    files = fl.GetRevitFilesForProcessingSimpleInclSubDirs(utilData.OUTPUT_FOLDER_COMBINED_FAMILIES, '.rfa')
-    
-    if(len(files) > 0):
+    files = get_revit_files(
+        settings.OUTPUT_FOLDER_COMBINED_FAMILIES, ".rfa"
+    )
+
+    if len(files) > 0:
         # needs to be a list of lists
         data = []
         # get data from file items
@@ -168,16 +169,18 @@ if(saveOutMissingFamilies):
             data.append([fileObject.name])
 
         # write data to file
-        util.writeReportDataAsCSV(
-            utilData.OUTPUT_FOLDER + '\\' + utilData.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT, # report full file name
-            [], # empty header by default
-            data, 
-            writeType = 'w'
+        write_report_data_as_csv(
+            os.path.join(
+                settings.OUTPUT_FOLDER,
+                settings.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT,
+            ),  # report full file name
+            [],  # empty header by default
+            data,
         )
     else:
-        Output('No families located in output folder!')
+        output("No families located in output folder!")
 else:
-    Output('Failed to read data required to analyse missing families!')
+    output("Failed to read data required to analyse missing families!")
 
 # clean up
-DeleteFileInInputDir()
+delete_file_in_input_dir()

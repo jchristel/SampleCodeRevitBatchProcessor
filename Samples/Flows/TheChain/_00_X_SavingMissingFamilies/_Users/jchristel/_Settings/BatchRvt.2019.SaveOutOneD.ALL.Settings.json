@@ -9,7 +9,7 @@
   "executePreProcessingScript": true,
   "preProcessingScriptFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_X_SavingMissingFamilies\\_Script\\Pre_MarkerFiles.py",
   "executePostProcessingScript": true,
-  "PostProcessingScriptFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_X_SavingMissingFamilies\\_Script\\Post_BVNRevitFileSaveAsWSMKillOnly.py",
+  "PostProcessingScriptFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_X_SavingMissingFamilies\\_Script\\Post_KillWSM.py",
   "centralFileOpenOption": "CreateNewLocal",
   "deleteLocalAfter": true,
   "discardWorksetsOnDetach": false,

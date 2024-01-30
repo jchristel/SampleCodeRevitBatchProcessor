@@ -1,19 +1,15 @@
-﻿"""
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains pre task function(s)
+This module contains a number of global variables.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Writes out a task lists of files to be processed based on missing families host report
-
-- Host report is located in /Users/Username/_Input directory
-- Number of task files in specified in global variable.
-- Task file location is specified in global varaible.
+Apart from defining a number of variable values this module also updates path variable with directories containing modules required to 
+run this script.
 
 """
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#
 # License:
 #
 #
@@ -36,66 +32,45 @@ Writes out a task lists of files to be processed based on missing families host 
 #
 #
 
-# this sample shows how to write out a number of task files using bucket distribution
-
-# --------------------------
-# Imports
-# --------------------------
 
 import sys
 import os
 
 import settings as settings  # sets up all commonly used variables and path locations!
 
-# import file list module
-from duHast.UI.file_list import (
-    write_file_list,
-    get_files_from_csv_list_file,
-    get_task_file_name,
-    write_empty_task_list,
-)
-from duHast.Utilities.console_out import output
 from duHast.Utilities.files_io import file_exist
+from duHast.Utilities.files_csv import read_csv_file
+from duHast.Utilities.directory_io import directory_exists
 
+def save_out_missing_families_check():
+    """
+    Check whether a marker file exists, which specifies: where family base report is located and the directory to save missing families to.
 
-# -------------
-# my code here:
-# -------------
+    :return: True if marker file exists, otherwise False. The file path of the family base data report. The root directory path to where families are to be saved to.
+    :rtype: bool, string, string
+    """
 
-# -------------
-# main:
-# -------------
+    save_out = False
+    family_base_data_file_path = ""
+    family_out_directory = ""
 
-# build file path to missing families host family report
-PROCESS_PATH = os.path.join(
-    settings.INPUT_DIRECTORY, settings.FILE_NAME_MISSING_FAMILIES_HOSTS_REPORT
-)
-
-if file_exist(PROCESS_PATH):
-    # give user feed back
-    output("Collecting files from: {}".format(PROCESS_PATH))
-
-    # write out task lists
-    result_ = write_file_list(
-        PROCESS_PATH,
-        settings.FILE_EXTENSION_OF_FILES_TO_PROCESS,
-        settings.TASK_FILE_DIRECTORY,
-        settings.NUMBER_OF_TASK_FILES,
-        get_files_from_csv_list_file,
-    )
-
-    # check if any file to be processed where found!
-    if result_.status and len(result_.result) == 0:
-        # no file found...: write out empty task lists!
-        for i in range(settings.NUMBER_OF_TASK_FILES):
-            file_name = get_task_file_name(settings.TASK_FILE_DIRECTORY, i)
-            result_empty_ = write_empty_task_list(file_name)
-            result_.update(result_empty_)
-
-    # give user feed back
-    output(result_.message)
-    output("Writing file Data.... status: {}".format(result_.status))
-else:
-    output("Missing families host report does not exist: {}".format(PROCESS_PATH))
-    # exit with error
-    sys.exit(2)
+    # build marker file path
+    marker_file_path = os.path.join(settings.INPUT_DIRECTORY ,settings.FILE_NAME_MARKER_SAVEOUT_MISSING_FAMILIES)
+    # check if file exists in input location
+    if file_exist(marker_file_path):
+        # read file
+        rows =  read_csv_file(marker_file_path)
+        # should be at least two rows...
+        if len(rows) >= 2:
+            got_base_data = False
+            got_dir_out = False
+            # assign family base data file path
+            if file_exist(rows[0][0]):
+                family_base_data_file_path = rows[0][0]
+                got_base_data = True
+            # assign family out file path
+            if directory_exists(rows[1][0]):
+                family_out_directory = rows[1][0]
+                got_dir_out = True
+            save_out = got_base_data and got_dir_out
+    return save_out, family_base_data_file_path, family_out_directory

@@ -44,7 +44,7 @@ from duHast.UI import workloader as wl
 
 # custom result class
 from duHast.Utilities.Objects import result as res
-from duHast.Utilities.files_io import is_back_up_file, get_file_size, FILE_SIZE_IN_KB
+from duHast.Utilities.files_io import is_back_up_file, get_file_size as files_io_get_file_size, FILE_SIZE_IN_KB
 from duHast.Utilities.files_get import (
     get_files,
     get_files_from_directory_walker_with_filters_simple,
@@ -130,7 +130,7 @@ def _get_files_from_list_file(file_path_csv):
             # process rows
             for row_data in rows:
                 if len(row_data) > 0:
-                    file_size = get_file_size(row_data[0], FILE_SIZE_IN_KB)
+                    file_size = files_io_get_file_size (row_data[0], FILE_SIZE_IN_KB)
                     dummy = fi.MyFileItem(row_data[0], file_size)
                     revit_files.append(dummy)
     except Exception as e:
@@ -328,6 +328,7 @@ def write_revit_task_file(file_name, bucket, get_data=bucket_to_task_list_file_s
             f.write(data.encode("utf-8").decode("utf-8"))
         f.close()
         return_value.append_message("wrote task list: {} [TRUE]".format(file_name))
+        return_value.result.append(file_name)
     except Exception as e:
         return_value.update_sep(
             False,
@@ -438,13 +439,12 @@ def write_empty_task_list(file_name):
     try:
         f = open(file_name, "w")
         f.close()
-        return_value.AppendMessage("wrote empty task list: {} [TRUE]".format(file_name))
+        return_value.append_message("wrote empty task list: {} [TRUE]".format(file_name))
     except Exception as e:
-        return_value.UpdateSep(
+        return_value.update_sep(
             False,
-            "Failed to write empty task list: "
-            + file_name
-            + " with exception "
-            + str(e),
+            "Failed to write empty task list: {} with exception: {}".format(
+                file_name, e
+            ),
         )
     return return_value

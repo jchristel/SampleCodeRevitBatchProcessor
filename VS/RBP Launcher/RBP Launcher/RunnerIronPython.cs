@@ -75,13 +75,13 @@ namespace RBP_Launcher
                     if (exitCode != 0) 
                     {
                         executedWithoutExceptions = false;
-                        Log.Information($"Script {scriptFilePath} finished with system exit exception: {exitCode} and other code: {otherCode}");
+                        Log.Error($"Script {scriptFilePath} finished with system exit exception: {exitCode} and other code: {otherCode}");
                     }
                 }
                 catch (Exception ex)
                 {
                     executedWithoutExceptions = false;
-                    Log.Information($"Script {scriptFilePath} finished with exception: {ex}");
+                    Log.Error($"Script {scriptFilePath} finished with exception: {ex}");
                 }
 
                 // Flush and close the StreamWriter

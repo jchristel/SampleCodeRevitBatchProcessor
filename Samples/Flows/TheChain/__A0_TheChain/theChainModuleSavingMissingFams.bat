@@ -73,7 +73,6 @@ if %toggleDebug%==1 (
     %stamp% & echo.
     %stamp% & echo ********************************* DEBUG END *****************************************************
    
-    goto outOfHere
 )
 
 %stamp% & echo.

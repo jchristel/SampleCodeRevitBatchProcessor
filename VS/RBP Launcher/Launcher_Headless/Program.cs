@@ -21,43 +21,50 @@ try
         if (scriptConfig != null)
         {
             // start excuting flow
-            Console.WriteLine($"Starting ...");
+            Console.WriteLine("Starting ...");
+            Log.Information("Starting ...");
             // get python script runners
             Dictionary<string, RBP_Launcher.IScriptRunner> pythonScriptRunners = RBP_Launcher.Utilities.PythonScriptRunners.GetAvailablePythonScriptRunners();
             // run pre flow scripts
+            Console.WriteLine("Starting pre flow groups scripts...");
+            Log.Information("Starting pre flow groups scripts...");
             bool preScriptsExecutionStatus = Launcher_Headless.Utilities.ExcuteScripts.RunScripts(scriptConfig.PreScript, pythonScriptRunners);
             // check if all scripts finished successfully
             if (preScriptsExecutionStatus)
             {
-                Log.Debug("All pre flow scripts executed successfully.");
                 int counter = 0;
+                Log.Debug("All pre flow scripts executed successfully.");
+                Console.WriteLine("Batch processor flow session...");
+                Log.Information("Batch processor flow session...");
                 // start all scrit groups
                 foreach (RBP_Launcher.Utilities.Configs.ScriptConfiguration.Script rbpScriptGroup in scriptConfig.BatchProcessorScripts)
                 {
-                    counter = counter + 1;
-                    //launch pre process
-                    //TODO
-
+                    counter++;
+                    
                     //log out put
+                    Console.WriteLine($"Starting batch processor flow session {counter} of {scriptConfig.BatchProcessorScripts.Count}");
                     Log.Information($"Starting batch processor flow session {counter} of {scriptConfig.BatchProcessorScripts.Count}");
 
-                    // launch rbp
-                    RBP_Launcher.Launcher rbpLauncher = new RBP_Launcher.Launcher(
-                    rbpFilePath: appSettings.RbpFilePath,
-                    startInterval: rbpScriptGroup.StartInterval,
-                    settingFiles: rbpScriptGroup.SettingFiles
-                    );
+                    bool flowGroupExecutionStatus = Launcher_Headless.Utilities.ExcuteScripts.RunBatchProcessorScripts(
+                        rbpScriptGroup,
+                        appSettings,
+                        pythonScriptRunners);
 
-                    rbpLauncher.LaunchApplicationsAndWait();
-                    //launch post process
-
+                    if (!flowGroupExecutionStatus)
+                    {
+                        throw new Exception($"Flow group {counter} failed to execute without an exception. Exiting.");
+                    }
                 }
+
                 // run post flow scripts
+                Console.WriteLine("Starting post flow groups scripts...");
+                Log.Information("Starting post flow groups scripts...");
                 bool postScriptsExecutionStatus = Launcher_Headless.Utilities.ExcuteScripts.RunScripts(scriptConfig.PostScript, pythonScriptRunners);
                 // check if all scripts finished successfully
                 if (postScriptsExecutionStatus)
                 {
-                    Log.Debug("All post flow scripts executed successfully.");
+                    Log.Debug("All post flow group scripts executed successfully.");
+                    Console.WriteLine("Finished!");
                 }
                 else
                 {

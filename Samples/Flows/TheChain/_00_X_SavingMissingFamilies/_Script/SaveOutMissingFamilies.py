@@ -43,7 +43,7 @@ import clr
 import System
 
 import settings as settings  # sets up all commonly used variables and path locations!
-
+from utility import save_out_missing_families_check
 from duHast.Utilities.console_out import output
 
 # family data processors
@@ -92,7 +92,7 @@ output(
     save_out_missing_families,
     base_data_report_file_path,
     family_out_root_directory,
-) = settings.SaveOutMissingFamiliesCheck()
+) = save_out_missing_families_check()
 
 # update available processor instances accordingly
 if save_out_missing_families:
@@ -110,9 +110,9 @@ if save_out_missing_families:
     if fam_name.lower().endswith(".rfa"):
         fam_name = fam_name[:-4]
 
-    # process family (and save missing fams out)
+    # process family (and save missing families out)
     collector = RevitFamilyDataCollector(processors)
-    flag_data_collection = collector.processFamily(doc, fam_name, family_category_name)
+    flag_data_collection = collector.process_family(doc, fam_name, family_category_name)
 
     output(
         "{} .... status: {}".format(

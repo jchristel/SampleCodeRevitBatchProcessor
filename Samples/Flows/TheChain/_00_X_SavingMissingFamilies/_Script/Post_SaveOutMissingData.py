@@ -49,15 +49,13 @@ import settings as settings  # sets up all commonly used variables and path loca
 from utility import save_out_missing_families_check
 
 from duHast.Utilities.console_out import output
-from duHast.Utilities.batch_processor_log_utils import process_log_files
+from duHast.Utilities.batch_processor_log_utils import (
+    process_log_files as util_process_log_files,
+)
 from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.files_io import file_delete
 from duHast.Utilities.files_get import get_files_single_directory
-from duHast.UI.file_list import get_revit_files
-
-
-# import common library
-import Utility as util
+from duHast.UI.file_list import get_revit_files_incl_sub_dirs
 
 # -------------
 # my code here:
@@ -85,10 +83,9 @@ def _UserOutAndLogFile(processing_results, file_name, header=[]):
             output("::".join(m))
         # write data out to file
         write_report_data_as_csv(
-            os.path.join(settings.OUTPUT_FOLDER ,file_name),  # report full file name
+            os.path.join(settings.OUTPUT_FOLDER, file_name),  # report full file name
             header,  # empty header
             processing_results.result,
-            writeType="w",
         )
     else:
         output("Result did not contain any data to be written to file.")
@@ -122,7 +119,7 @@ def process_log_files():
     """
 
     # process logs
-    processing_results_ = process_log_files(
+    processing_results_ = util_process_log_files(
         settings.LOG_MARKER_DIRECTORY,
     )
 
@@ -156,7 +153,7 @@ process_log_files()
 # collect data and write to processing file
 if save_out_missing_families:
     # get all families located in combined out folder
-    files = get_revit_files(
+    files = get_revit_files_incl_sub_dirs(
         settings.OUTPUT_FOLDER_COMBINED_FAMILIES, ".rfa"
     )
 
@@ -164,9 +161,9 @@ if save_out_missing_families:
         # needs to be a list of lists
         data = []
         # get data from file items
-        for fileObject in files:
+        for file_object in files:
             # append as a list
-            data.append([fileObject.name])
+            data.append([file_object.name])
 
         # write data to file
         write_report_data_as_csv(

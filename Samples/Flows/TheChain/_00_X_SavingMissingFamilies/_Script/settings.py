@@ -47,7 +47,6 @@ import os
 from duHast.Utilities.directory_io import get_parent_directory
 from duHast.Utilities.files_io import get_directory_path_from_file_path
 from duHast.Utilities.utility import get_current_user_name
-import Utility as util
 
 # get the script location
 SCRIPT_DIRECTORY = get_directory_path_from_file_path(__file__)

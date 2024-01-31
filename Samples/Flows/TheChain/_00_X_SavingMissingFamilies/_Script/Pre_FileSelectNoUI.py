@@ -83,7 +83,8 @@ if file_exist(PROCESS_PATH):
         settings.NUMBER_OF_TASK_FILES,
         get_files_from_csv_list_file,
     )
-
+    output("Wrote {} task file(s): [{}]".format(len(result_.result), result_.status))
+    
     # check if any file to be processed where found!
     if result_.status and len(result_.result) == 0:
         # no file found...: write out empty task lists!

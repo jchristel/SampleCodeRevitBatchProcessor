@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Launcher_Headless": {
+      "commandName": "Project",
+      "commandLineArgs": "--settings \"C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Launcher_Headless\\flowSampleSettings.json\""
+    }
+  }
+}

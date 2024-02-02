@@ -1,97 +1,79 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Serilog;
 
 namespace RBP_Launcher
 {
     public class Launcher
     {
-
-        private readonly string _rbpFilePath;
-        private readonly int _startInterval;
-        private readonly List<string> _settingFiles;
-
-        public Launcher(string rbpFilePath, int startInterval, List<string> settingFiles)
+        public static void LaunchIt(Utilities.Configs.LauncherHeadlessConfiguration launcherConfig, Utilities.Configs.ScriptConfiguration flowConfig)
         {
-            _rbpFilePath = rbpFilePath;
-            _startInterval = startInterval;
-            _settingFiles = settingFiles;
-        }
-
-        public string RBPFilePath => _rbpFilePath;
-
-        public int StartInterval => _startInterval;
-
-        public List<string> SettingFiles => _settingFiles;
-
-
-        public void LaunchApplicationsAndWait()
-        {
-            
-                // Loop to start the process three times with a 2-minute wait in between
-                for (int i = 0; i < _settingFiles.Count; i++)
+            try
+            {
+                // start excuting flow
+                Console.WriteLine("Starting ...");
+                Log.Information("Starting ...");
+                // get python script runners
+                Dictionary<string, IScriptRunner> pythonScriptRunners = Utilities.PythonScriptRunners.GetAvailablePythonScriptRunners();
+                // run pre flow scripts
+                Console.WriteLine("Starting pre flow groups scripts...");
+                Log.Information("Starting pre flow groups scripts...");
+                bool preScriptsExecutionStatus = Launcher_Headless.Utilities.ExcuteScripts.RunScripts(flowConfig.PreScript, pythonScriptRunners);
+                // check if all scripts finished successfully
+                if (preScriptsExecutionStatus)
                 {
-                    // add settings file argument to path before passing to rbp
-                    string arg = "--settings_file \"" + _settingFiles[i] + "\"";
-                    // Create a new process start info
-                    ProcessStartInfo startInfo = new ProcessStartInfo
+                    int counter = 0;
+                    Log.Debug("All pre flow scripts executed successfully.");
+                    Console.WriteLine("Batch processor flow session...");
+                    Log.Information("Batch processor flow session...");
+                    // start all scrit groups
+                    foreach (RBP_Launcher.Utilities.Configs.ScriptConfiguration.Script rbpScriptGroup in flowConfig.BatchProcessorScripts)
                     {
-                        FileName = _rbpFilePath,
-                        Arguments = arg,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        UseShellExecute = false,
-                        CreateNoWindow = true
-                    };
+                        counter++;
 
-                    // Create a new process
-                    using (Process process = new Process { StartInfo = startInfo })
-                    {
-                        // Attach event handlers to capture the output
-                        process.OutputDataReceived += (sender, e) =>
+                        //log out put
+                        Console.WriteLine($"Starting batch processor flow session {counter} of {flowConfig.BatchProcessorScripts.Count}");
+                        Log.Information($"Starting batch processor flow session {counter} of {flowConfig.BatchProcessorScripts.Count}");
+
+                        bool flowGroupExecutionStatus = Launcher_Headless.Utilities.ExcuteScripts.RunBatchProcessorScripts(
+                            rbpScriptGroup,
+                            launcherConfig,
+                            pythonScriptRunners);
+
+                        if (!flowGroupExecutionStatus)
                         {
-                            if (!string.IsNullOrEmpty(e.Data))
-                            {
-                                Console.ForegroundColor = ConsoleColor.Green; // Set color for process output
-                                Console.WriteLine($"Process {i + 1} Output: {e.Data}");
-                                Console.ResetColor(); // Reset color to default
-                            }
-                        };
-
-                        process.ErrorDataReceived += (sender, e) =>
-                        {
-                            if (!string.IsNullOrEmpty(e.Data))
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red; // Set color for process error
-                                Console.WriteLine($"Process {i + 1} Error: {e.Data}");
-                                Console.ResetColor(); // Reset color to default
-                            }
-                        };
-
-                        // Start the process
-                        process.Start();
-
-                        // Begin asynchronous reading of the output streams
-                        process.BeginOutputReadLine();
-                        process.BeginErrorReadLine();
-
-                        // Wait for the process to finish
-                        process.WaitForExit();
-
-                        // Check the exit code
-                        int exitCode = process.ExitCode;
-                        Console.WriteLine($"Process {i + 1} exited with code {exitCode}");
+                            throw new Exception($"Flow group {counter} failed to execute without an exception. Exiting.");
+                        }
                     }
 
-                    // Wait for intervall before starting the next process
-                    if (i < _settingFiles.Count-1)
+                    // run post flow scripts
+                    Console.WriteLine("Starting post flow groups scripts...");
+                    Log.Information("Starting post flow groups scripts...");
+                    bool postScriptsExecutionStatus = Launcher_Headless.Utilities.ExcuteScripts.RunScripts(flowConfig.PostScript, pythonScriptRunners);
+                    // check if all scripts finished successfully
+                    if (postScriptsExecutionStatus)
                     {
-                        Console.WriteLine($"Waiting for {_startInterval} second(s) before starting the next process...");
-                        Thread.Sleep(_startInterval * 1000); // seconds in milliseconds
+                        Log.Debug("All post flow group scripts executed successfully.");
+                        Console.WriteLine("Finished!");
+                    }
+                    else
+                    {
+                        throw new Exception("One or multiple post flow scripts failed to execute. Exiting");
                     }
                 }
-
-            Console.WriteLine("All processes have finished. Proceeding with the program.");
+                else
+                {
+                    throw new Exception("One or multiple pre flow scripts failed to execute. Exiting");
+                }
+            }
+            catch (Exception)
+            {
+                //bubble up whatever went wrong
+                throw;
+            }
         }
     }
 }

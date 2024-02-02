@@ -69,7 +69,7 @@ namespace Launcher_Headless.Utilities
                 }
                 
                 // setup launcher instance
-                RBP_Launcher.Launcher rbpLauncher = new RBP_Launcher.Launcher(
+                RBP_Launcher.RBPSubProcessLauncher rbpLauncher = new RBP_Launcher.RBPSubProcessLauncher(
                     rbpFilePath: appSettings.RbpFilePath,
                     startInterval: rbpScriptGroup.StartInterval,
                     settingFiles: rbpScriptGroup.SettingFiles

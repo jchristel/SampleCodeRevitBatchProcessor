@@ -2,11 +2,11 @@
   "pre script": [
     {
       "python version": "IronPython",
-      "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\no_args.py"
+      "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\empty.py"
     },
     {
       "python version": "IronPython",
-      "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\no_args.py"
+      "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\empty.py"
     }
   ],
   "batch processor scripts": [
@@ -14,11 +14,11 @@
       "start_interval": 20,
       "pre script": {
         "python version": "IronPython",
-        "script file path": "my/file/path"
+        "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\empty.py"
       },
       "post script": {
         "python version": "IronPython",
-        "script file path": "my\filepath"
+        "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\empty.py"
       },
       "setting files": [
         "my/file/path",
@@ -30,11 +30,11 @@
       "start_interval": 20,
       "pre script": {
         "python version": "IronPython",
-        "script file path": "my/file/path"
+        "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\empty.py"
       },
       "post script": {
         "python version": "3.10",
-        "script file path": "my\filepath"
+        "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\empty.py"
       },
       "setting files": [
         "my/file/path",

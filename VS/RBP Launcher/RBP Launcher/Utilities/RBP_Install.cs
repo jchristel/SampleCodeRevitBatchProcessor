@@ -6,7 +6,7 @@ namespace RBP_Launcher.Utilities
     public class RBP_Install
     {
         
-        public static string GetInstallPathFromRegistry(string applicationName)
+        public static string? GetInstallPathFromRegistry(string applicationName)
         {
             string uninstallKeyPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
 
@@ -35,7 +35,7 @@ namespace RBP_Launcher.Utilities
             return null;
         }
 
-        public static string GetInstallPathForCurrentUser(string applicationName)
+        public static string? GetInstallPathForCurrentUser(string applicationName)
         {
             // Base registry key for the current user
             RegistryKey baseKey = Registry.CurrentUser;

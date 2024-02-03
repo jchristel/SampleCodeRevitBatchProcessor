@@ -9,7 +9,7 @@ namespace RBP_Launcher.Utilities.Configs
 {
     public class FlowSettings
     {
-        public static ScriptConfiguration GetFlowSettings(string settingsFilePath)
+        public static ScriptConfiguration? GetFlowSettings(string settingsFilePath)
         {
             try
             {

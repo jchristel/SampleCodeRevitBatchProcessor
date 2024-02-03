@@ -1,10 +1,16 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Launcher_Headless.Utilities;
+using RBP_Launcher.Utilities;
 using Serilog;
 using Microsoft.Extensions.Configuration;
 
 // setup logger
 LoggingToFile.SetupFileLogger();
+
+// setup console output
+// Create an instance of the observer
+var consoleObserver = new RBP_Launcher.Utilities.ConsoleOutputObserver();
+// Set the observer instance to the service locator
+RBP_Launcher.Utilities.Output.ServiceLocator.OutputObserver = consoleObserver;
 
 try
 {
@@ -15,10 +21,6 @@ try
     if (appSettings != null)
     {
         // get flow settings
-        // TODO: get settings path from arguments past in
-
-        // Replace "path/to/your/file.json" with the actual path to your JSON file
-        //string filePathFlow = @"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\RBP Launcher\Launcher_Headless\flowSampleSettings.json";
         Console.WriteLine($"Reading flow settings from {filePathFlow}");
         var scriptConfig = RBP_Launcher.Utilities.Configs.FlowSettings.GetFlowSettings(filePathFlow);
         if (scriptConfig != null)

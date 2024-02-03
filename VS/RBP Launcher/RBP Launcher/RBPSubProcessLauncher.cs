@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using RBP_Launcher.Utilities.Output;
 
 namespace RBP_Launcher
 {
@@ -52,9 +53,7 @@ namespace RBP_Launcher
                         {
                             if (!string.IsNullOrEmpty(e.Data))
                             {
-                                Console.ForegroundColor = ConsoleColor.Green; // Set color for process output
-                                Console.WriteLine($"Process {i + 1} Output: {e.Data}");
-                                Console.ResetColor(); // Reset color to default
+                                ServiceLocator.OutputObserver?.Update($"Process {i + 1} Output: {e.Data}");
                             }
                         };
 
@@ -62,9 +61,7 @@ namespace RBP_Launcher
                         {
                             if (!string.IsNullOrEmpty(e.Data))
                             {
-                                Console.ForegroundColor = ConsoleColor.Red; // Set color for process error
-                                Console.WriteLine($"Process {i + 1} Error: {e.Data}");
-                                Console.ResetColor(); // Reset color to default
+                                ServiceLocator.OutputObserver?.Update($"Process {i + 1} [{KeyWords.Error}]: {e.Data}");
                             }
                         };
 
@@ -80,18 +77,18 @@ namespace RBP_Launcher
 
                         // Check the exit code
                         int exitCode = process.ExitCode;
-                        Console.WriteLine($"Process {i + 1} exited with code {exitCode}");
+                        ServiceLocator.OutputObserver?.Update($"Process {i + 1} exited with code {exitCode}");
                     }
 
                     // Wait for intervall before starting the next process
                     if (i < _settingFiles.Count-1)
                     {
-                        Console.WriteLine($"Waiting for {_startInterval} second(s) before starting the next process...");
+                        ServiceLocator.OutputObserver?.Update($"Waiting for {_startInterval} second(s) before starting the next process...");
                         Thread.Sleep(_startInterval * 1000); // seconds in milliseconds
                     }
                 }
 
-            Console.WriteLine("All processes have finished. Proceeding with the program.");
+            ServiceLocator.OutputObserver?.Update("All processes have finished. Proceeding with the program.");
         }
     }
 }

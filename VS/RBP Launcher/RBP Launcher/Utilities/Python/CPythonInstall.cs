@@ -24,7 +24,7 @@ namespace RBP_Launcher.Utilities
             catch (Exception ex)
             {
                 Log.Error(ex, "An error occurred in {ClassName}.{MethodName}", nameof(CPythonInstall), nameof(GetLatestPythonVersion));
-                return new KeyValuePair<string, string> ( null, null );
+                return default (KeyValuePair<string, string>);
             }
             
         }

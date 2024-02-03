@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Serilog;
+﻿using Serilog;
 using System.Diagnostics;
-
+using RBP_Launcher.Utilities.Output;
 namespace RBP_Launcher
 {
-    public class RunnerCPython : IScriptRunner
+    public class RunnerCPython : Interfaces.IScriptRunner
     {
         private readonly string _versionNumber;
         private readonly string _versionNotProvided = "NA";
@@ -33,12 +28,12 @@ namespace RBP_Launcher
         {
             if (_versionNumber == _versionNotProvided)
             {
-                KeyValuePair<string, string> pythonVersion = RBP_Launcher.Utilities.CPythonInstall.GetLatestPythonVersion();
+                KeyValuePair<string, string> pythonVersion = Utilities.CPythonInstall.GetLatestPythonVersion();
                 return pythonVersion.Value;
             }
             else
             {
-                Dictionary<string, string> pythonInstalled = RBP_Launcher.Utilities.CPythonInstall.GetAllStandardPythonInstalls();
+                Dictionary<string, string> pythonInstalled = Utilities.CPythonInstall.GetAllStandardPythonInstalls();
                 if (pythonInstalled.ContainsKey(_versionNumber))
                 {
                     return pythonInstalled[_versionNumber];
@@ -50,7 +45,7 @@ namespace RBP_Launcher
             }
         }
 
-        public bool ExecuteScript(string scriptFilePath, List<string> scriptArguments = null)
+        public bool ExecuteScript(string scriptFilePath, List<string>? scriptArguments = null)
         {
             bool executedWithoutExceptions = true;
             try
@@ -93,9 +88,7 @@ namespace RBP_Launcher
                     {
                         if (!string.IsNullOrEmpty(e.Data))
                         {
-                            Console.ForegroundColor = ConsoleColor.Green; // Set color for process output
-                            Console.WriteLine($"CPython Process Output: {e.Data}");
-                            Console.ResetColor(); // Reset color to default
+                            ServiceLocator.OutputObserver?.Update($"CPython Process Output: {e.Data}");
                         }
                     };
 
@@ -103,9 +96,7 @@ namespace RBP_Launcher
                     {
                         if (!string.IsNullOrEmpty(e.Data))
                         {
-                            Console.ForegroundColor = ConsoleColor.Red; // Set color for process error
-                            Console.WriteLine($"CPython Process Error: {e.Data}");
-                            Console.ResetColor(); // Reset color to default
+                            ServiceLocator.OutputObserver?.Update($"CPython Process [{KeyWords.Error}]: {e.Data}");
                         }
                     };
                     process.Start();

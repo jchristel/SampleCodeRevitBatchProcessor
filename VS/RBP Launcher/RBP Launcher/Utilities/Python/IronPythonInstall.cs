@@ -8,7 +8,7 @@ namespace RBP_Launcher.Utilities
 {
     public class IronPythonInstall
     {
-        public static string GetLatestVersionInstallPath()
+        public static string? GetLatestVersionInstallPath()
         {
             string latestInstallPath = null;
             // get all versions

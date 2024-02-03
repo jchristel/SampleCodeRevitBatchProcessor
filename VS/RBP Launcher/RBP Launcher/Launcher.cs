@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Serilog;
+using RBP_Launcher.Utilities.Output;
 
 namespace RBP_Launcher
 {
@@ -14,34 +15,34 @@ namespace RBP_Launcher
             try
             {
                 // start excuting flow
-                Console.WriteLine("Starting ...");
+                ServiceLocator.OutputObserver?.Update("Starting ...");
                 Log.Information("Starting ...");
                 // get python script runners
-                Dictionary<string, IScriptRunner> pythonScriptRunners = Utilities.PythonScriptRunners.GetAvailablePythonScriptRunners();
+                Dictionary<string, Interfaces.IScriptRunner> pythonScriptRunners = Utilities.PythonScriptRunners.GetAvailablePythonScriptRunners();
                 // run pre flow scripts
-                Console.WriteLine("Starting pre flow groups scripts...");
+                ServiceLocator.OutputObserver?.Update("Starting pre flow groups scripts...");
                 Log.Information("Starting pre flow groups scripts...");
-                bool preScriptsExecutionStatus = Launcher_Headless.Utilities.ExcuteScripts.RunScripts(flowConfig.PreScript, pythonScriptRunners);
+                bool preScriptsExecutionStatus = Utilities.ExcuteScripts.RunScripts(flowConfig.PreScript, pythonScriptRunners);
                 // check if all scripts finished successfully
                 if (preScriptsExecutionStatus)
                 {
                     int counter = 0;
                     Log.Debug("All pre flow scripts executed successfully.");
-                    Console.WriteLine("Batch processor flow session...");
+                    ServiceLocator.OutputObserver?.Update("Batch processor flow session...");
                     Log.Information("Batch processor flow session...");
                     // start all scrit groups
-                    foreach (RBP_Launcher.Utilities.Configs.ScriptConfiguration.Script rbpScriptGroup in flowConfig.BatchProcessorScripts)
+                    foreach (Utilities.Configs.ScriptConfiguration.Script rbpScriptGroup in flowConfig.BatchProcessorScripts)
                     {
                         counter++;
 
                         //log out put
-                        Console.WriteLine($"Starting batch processor flow session {counter} of {flowConfig.BatchProcessorScripts.Count}");
+                        ServiceLocator.OutputObserver?.Update($"Starting batch processor flow session {counter} of {flowConfig.BatchProcessorScripts.Count}");
                         Log.Information($"Starting batch processor flow session {counter} of {flowConfig.BatchProcessorScripts.Count}");
 
-                        bool flowGroupExecutionStatus = Launcher_Headless.Utilities.ExcuteScripts.RunBatchProcessorScripts(
-                            rbpScriptGroup,
-                            launcherConfig,
-                            pythonScriptRunners);
+                        bool flowGroupExecutionStatus = Utilities.ExcuteScripts.RunBatchProcessorScripts(
+                            rbpScriptGroup: rbpScriptGroup,
+                            appSettings: launcherConfig,
+                            scriptRunners: pythonScriptRunners);
 
                         if (!flowGroupExecutionStatus)
                         {
@@ -50,14 +51,14 @@ namespace RBP_Launcher
                     }
 
                     // run post flow scripts
-                    Console.WriteLine("Starting post flow groups scripts...");
+                    ServiceLocator.OutputObserver?.Update("Starting post flow groups scripts...");
                     Log.Information("Starting post flow groups scripts...");
-                    bool postScriptsExecutionStatus = Launcher_Headless.Utilities.ExcuteScripts.RunScripts(flowConfig.PostScript, pythonScriptRunners);
+                    bool postScriptsExecutionStatus = Utilities.ExcuteScripts.RunScripts(flowConfig.PostScript, pythonScriptRunners);
                     // check if all scripts finished successfully
                     if (postScriptsExecutionStatus)
                     {
                         Log.Debug("All post flow group scripts executed successfully.");
-                        Console.WriteLine("Finished!");
+                        ServiceLocator.OutputObserver?.Update("Finished!");
                     }
                     else
                     {

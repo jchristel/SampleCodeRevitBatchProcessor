@@ -15,7 +15,7 @@ namespace RBP_Launcher.Utilities.Configs
         /// <returns>
         /// LauncherHeadlessConfiguration if file was read succesfully, otherwise null.
         /// </returns>
-        public static LauncherHeadlessConfiguration GetAppSettings()
+        public static LauncherHeadlessConfiguration? GetAppSettings()
         {
             try
             {

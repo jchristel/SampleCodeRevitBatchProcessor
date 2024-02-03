@@ -4,22 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Serilog;
+using RBP_Launcher.Utilities.Output;
 
-namespace Launcher_Headless.Utilities
+namespace RBP_Launcher.Utilities
 {
     public class ExcuteScripts
     {
-        public static bool RunScripts(List<RBP_Launcher.Utilities.Configs.ScriptConfiguration.ScriptDetails> scripts, Dictionary<string, RBP_Launcher.IScriptRunner> scriptRunners)
+        public static bool RunScripts(List<Configs.ScriptConfiguration.ScriptDetails> scripts, Dictionary<string, Interfaces.IScriptRunner> scriptRunners)
         {
             bool returnValue = true;
             try
             {
-                foreach (RBP_Launcher.Utilities.Configs.ScriptConfiguration.ScriptDetails script in scripts)
+                foreach (Configs.ScriptConfiguration.ScriptDetails script in scripts)
                 {
                     // launch flow pre process
                     if (scriptRunners.ContainsKey(script.PythonVersion.Replace(".", "")))
                     {
-                        Console.WriteLine($"Starting python {script.PythonVersion} script at {script.ScriptFilePath}");
+                        ServiceLocator.OutputObserver?.Update($"Starting python {script.PythonVersion} script at {script.ScriptFilePath}");
                         //pythonScriptRunners[config.PreScript.PythonVersion.Replace(".", "")].ExecuteScript(config.PreScript.ScriptFilePath, new List<string> { "arg1", "arg1 value", "arg2", "arg2 value" });
                         bool executeScriptStatus = scriptRunners[script.PythonVersion.Replace(".", "")].ExecuteScript(script.ScriptFilePath, null);
                         //check what came back
@@ -30,7 +31,7 @@ namespace Launcher_Headless.Utilities
                     }
                     else
                     {
-                        Console.WriteLine($"Python {script.PythonVersion} not installed...");
+                        ServiceLocator.OutputObserver?.Update($"{KeyWords.Error} Python {script.PythonVersion} not installed...");
                         throw new Exception($"Exception Python {script.PythonVersion} not installed occured in script execution.");
                     }
                 }
@@ -45,9 +46,9 @@ namespace Launcher_Headless.Utilities
         }
 
         public static bool RunBatchProcessorScripts(
-            RBP_Launcher.Utilities.Configs.ScriptConfiguration.Script rbpScriptGroup, 
-            RBP_Launcher.Utilities.Configs.LauncherHeadlessConfiguration appSettings, 
-            Dictionary<string, RBP_Launcher.IScriptRunner> scriptRunners
+            Configs.ScriptConfiguration.Script rbpScriptGroup, 
+            Configs.LauncherHeadlessConfiguration appSettings, 
+            Dictionary<string, Interfaces.IScriptRunner> scriptRunners
             )
         {
             bool returnValue = true;
@@ -55,7 +56,7 @@ namespace Launcher_Headless.Utilities
             {
                 //launch pre process
                 bool preGroupProcessScriptExecutionStatus = RunScripts(
-                    new List<RBP_Launcher.Utilities.Configs.ScriptConfiguration.ScriptDetails> { rbpScriptGroup.PreScript }, 
+                    new List<Configs.ScriptConfiguration.ScriptDetails> { rbpScriptGroup.PreScript }, 
                     scriptRunners
                     );
                 
@@ -69,7 +70,7 @@ namespace Launcher_Headless.Utilities
                 }
                 
                 // setup launcher instance
-                RBP_Launcher.RBPSubProcessLauncher rbpLauncher = new RBP_Launcher.RBPSubProcessLauncher(
+                RBPSubProcessLauncher rbpLauncher = new RBPSubProcessLauncher(
                     rbpFilePath: appSettings.RbpFilePath,
                     startInterval: rbpScriptGroup.StartInterval,
                     settingFiles: rbpScriptGroup.SettingFiles
@@ -79,7 +80,7 @@ namespace Launcher_Headless.Utilities
 
                 //launch post process
                 bool postGroupProcessScriptExecutionStatus = RunScripts(
-                    new List<RBP_Launcher.Utilities.Configs.ScriptConfiguration.ScriptDetails> { rbpScriptGroup.PostScript }, 
+                    new List<Configs.ScriptConfiguration.ScriptDetails> { rbpScriptGroup.PostScript }, 
                     scriptRunners
                     );
 

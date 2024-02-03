@@ -2,10 +2,11 @@
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using Serilog;
+using RBP_Launcher.Utilities.Output;
 
 namespace RBP_Launcher
 {
-    public class RunnerIronPython:IScriptRunner
+    public class RunnerIronPython: Interfaces.IScriptRunner
     {
         public RunnerIronPython()
         {
@@ -21,7 +22,7 @@ namespace RBP_Launcher
         private readonly List<string> _searchPath;
 
 
-        public bool ExecuteScript(string scriptFilePath, List<string> scriptArguments = null)
+        public bool ExecuteScript(string scriptFilePath, List<string>? scriptArguments = null)
         {
             bool executedWithoutExceptions = true;
             try
@@ -69,7 +70,7 @@ namespace RBP_Launcher
                 catch(IronPython.Runtime.Exceptions.SystemExitException sysEx)
                 {
                     // check the exit code
-                    object otherCode = null;
+                    object? otherCode = null;
                     int exitCode = sysEx.GetExitCode(out otherCode);
                     // only do something if the exit code is not 0 ( all ok )
                     if (exitCode != 0) 
@@ -90,7 +91,7 @@ namespace RBP_Launcher
 
                 // Access the redirected output
                 string output = outputStream.GetOutput();
-                Console.WriteLine($"Redirected IronPython Output: {output}");
+                ServiceLocator.OutputObserver?.Update($"Redirected IronPython Output: {output}");
 
             }
             catch (Microsoft.Scripting.SyntaxErrorException syntaxError)

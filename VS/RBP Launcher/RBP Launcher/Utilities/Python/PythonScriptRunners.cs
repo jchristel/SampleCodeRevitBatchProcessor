@@ -9,9 +9,9 @@ namespace RBP_Launcher.Utilities
     public class PythonScriptRunners
     {
         public static string ironPythonScriptRunnerName = "IronPython";
-        public static Dictionary<string, IScriptRunner>GetAvailablePythonScriptRunners()
+        public static Dictionary<string, Interfaces.IScriptRunner>GetAvailablePythonScriptRunners()
         {
-            Dictionary<string, IScriptRunner>scriptRunners = new Dictionary<string, IScriptRunner>();
+            Dictionary<string, Interfaces.IScriptRunner>scriptRunners = new Dictionary<string, Interfaces.IScriptRunner>();
             
             
             //get all standard python installations

@@ -60,7 +60,7 @@ static string GetFlowSettingsFromArgs(string[] args)
     var configuration = configBuilder.Build();
 
     // YAccess configuration value for settings
-    string filePathFlow = configuration["settings"];
+    string? filePathFlow = configuration["settings"];
     if (filePathFlow == null)
     {
         PrintHelpText();

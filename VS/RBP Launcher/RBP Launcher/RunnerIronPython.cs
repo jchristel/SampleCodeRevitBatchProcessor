@@ -10,7 +10,7 @@ namespace RBP_Launcher
     {
         public RunnerIronPython()
         {
-
+            _searchPath = new List<string>();
         }
 
         public RunnerIronPython(List<string> searchPath)

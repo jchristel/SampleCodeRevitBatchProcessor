@@ -24,7 +24,7 @@ namespace RBP_Launcher
 
 
 
-        private string GetPythonPath() 
+        private string? GetPythonPath() 
         {
             if (_versionNumber == _versionNotProvided)
             {
@@ -51,7 +51,7 @@ namespace RBP_Launcher
             try
             {
                 //get standard python versions available
-                string pythonDirectoryPath = GetPythonPath();
+                string? pythonDirectoryPath = GetPythonPath();
                 // check if we have python installed as required
                 if(pythonDirectoryPath == null)
                 {

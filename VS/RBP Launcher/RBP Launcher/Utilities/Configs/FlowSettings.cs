@@ -15,7 +15,7 @@ namespace RBP_Launcher.Utilities.Configs
             {
                 // Read the JSON string from the file
                 string jsonString = File.ReadAllText(settingsFilePath);
-                ScriptConfiguration config = ScriptConfiguration.FromJson(jsonString);
+                ScriptConfiguration? config = ScriptConfiguration.FromJson(jsonString);
                 return config;
             }
             catch (Exception ex)

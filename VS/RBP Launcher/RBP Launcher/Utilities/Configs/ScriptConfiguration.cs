@@ -12,37 +12,37 @@ namespace RBP_Launcher.Utilities.Configs
         public class Script
         {
             [JsonProperty("start_interval")]
-            public int StartInterval { get; set; }
+            public int? StartInterval { get; set; }
 
             [JsonProperty("pre script")]
-            public ScriptDetails PreScript { get; set; }
+            public ScriptDetails? PreScript { get; set; }
 
             [JsonProperty("post script")]
-            public ScriptDetails PostScript { get; set; }
+            public ScriptDetails? PostScript { get; set; }
 
             [JsonProperty("setting files")]
-            public List<string> SettingFiles { get; set; }
+            public List<string>? SettingFiles { get; set; }
         }
 
         public class ScriptDetails
         {
             [JsonProperty("python version")]
-            public string PythonVersion { get; set; }
+            public string? PythonVersion { get; set; }
 
             [JsonProperty("script file path")]
-            public string ScriptFilePath { get; set; }
+            public string? ScriptFilePath { get; set; }
         }
 
         [JsonProperty("pre script")]
-        public List<ScriptDetails> PreScript { get; set; }
+        public List<ScriptDetails>? PreScript { get; set; }
 
         [JsonProperty("batch processor scripts")]
-        public List<Script> BatchProcessorScripts { get; set; }
+        public List<Script>? BatchProcessorScripts { get; set; }
 
         [JsonProperty("post script")]
-        public List<ScriptDetails> PostScript { get; set; }
+        public List<ScriptDetails>? PostScript { get; set; }
 
-        public static ScriptConfiguration FromJson(string json)
+        public static ScriptConfiguration? FromJson(string json)
         {
             return JsonConvert.DeserializeObject<ScriptConfiguration>(json);
         }

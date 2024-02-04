@@ -20,7 +20,7 @@ namespace RBP_Launcher.Utilities.Configs
             try
             {
                 string jsonApplicationSettings = File.ReadAllText(Constants.settigsFilePath);
-                LauncherHeadlessConfiguration configApplication = LauncherHeadlessConfiguration.FromJson(jsonApplicationSettings);
+                LauncherHeadlessConfiguration? configApplication = LauncherHeadlessConfiguration.FromJson(jsonApplicationSettings);
                 return configApplication;
             }
             catch (Exception ex)

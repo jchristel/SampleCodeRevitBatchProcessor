@@ -10,11 +10,16 @@ namespace RBP_Launcher.Utilities
 {
     public class ExcuteScripts
     {
-        public static bool RunScripts(List<Configs.ScriptConfiguration.ScriptDetails> scripts, Dictionary<string, Interfaces.IScriptRunner> scriptRunners)
+        public static bool RunScripts(List<Configs.ScriptConfiguration.ScriptDetails>? scripts, Dictionary<string, Interfaces.IScriptRunner> scriptRunners)
         {
             bool returnValue = true;
             try
             {
+                // check for null value
+                if(scripts == null)
+                {
+                    throw new ArgumentNullException(nameof(scripts));
+                }
                 foreach (Configs.ScriptConfiguration.ScriptDetails script in scripts)
                 {   
                     //all property values on script instance must be set!
@@ -61,20 +66,28 @@ namespace RBP_Launcher.Utilities
             bool returnValue = true;
             try
             {
-                //launch pre process
-                bool preGroupProcessScriptExecutionStatus = RunScripts(
-                    new List<Configs.ScriptConfiguration.ScriptDetails> { rbpScriptGroup.PreScript }, 
-                    scriptRunners
-                    );
-                
-                //debug logging
-                Log.Debug($"Pre group flow scripts executed with status {preGroupProcessScriptExecutionStatus}.");
-                
-                // check what came back
-                if (!preGroupProcessScriptExecutionStatus)
-                {
-                    throw new Exception($"Pre group script: {rbpScriptGroup.PreScript.ScriptFilePath} failed to execute.");
+                if (rbpScriptGroup.PreScript != null)
+                { 
+                    //launch pre process
+                    bool preGroupProcessScriptExecutionStatus = RunScripts(
+                        new List<Configs.ScriptConfiguration.ScriptDetails> { rbpScriptGroup.PreScript },
+                        scriptRunners
+                        );
+
+                    //debug logging
+                    Log.Debug($"Pre group flow scripts executed with status {preGroupProcessScriptExecutionStatus}.");
+                    // check what came back
+                    if (!preGroupProcessScriptExecutionStatus)
+                    {
+                        throw new Exception($"Pre group script: {rbpScriptGroup.PreScript.ScriptFilePath} failed to execute.");
+                    }
                 }
+                else
+                {
+                    ServiceLocator.OutputObserver?.Update("No pre group script specified.");
+                    Log.Information("No pre group script specified.");
+                }
+               
                 
                 // setup launcher instance
                 RBPSubProcessLauncher rbpLauncher = new RBPSubProcessLauncher(
@@ -85,26 +98,35 @@ namespace RBP_Launcher.Utilities
                 // launch rbp
                 rbpLauncher.LaunchApplicationsAndWait();
 
-                //launch post process
-                bool postGroupProcessScriptExecutionStatus = RunScripts(
-                    new List<Configs.ScriptConfiguration.ScriptDetails> { rbpScriptGroup.PostScript }, 
-                    scriptRunners
-                    );
-
-                //debug logging
-                Log.Debug($"Post group flow scripts executed with status {postGroupProcessScriptExecutionStatus}.");
-
-                // check what came back
-                if (!postGroupProcessScriptExecutionStatus)
+                if (rbpScriptGroup.PostScript != null)
                 {
-                    throw new Exception($"Post group script: {rbpScriptGroup.PostScript.ScriptFilePath} failed to execute.");
+
+                    //launch post process
+                    bool postGroupProcessScriptExecutionStatus = RunScripts(
+                        new List<Configs.ScriptConfiguration.ScriptDetails> { rbpScriptGroup.PostScript },
+                        scriptRunners
+                        );
+
+                    //debug logging
+                    Log.Debug($"Post group flow scripts executed with status {postGroupProcessScriptExecutionStatus}.");
+
+                    // check what came back
+                    if (!postGroupProcessScriptExecutionStatus)
+                    {
+                        throw new Exception($"Post group script: {rbpScriptGroup.PostScript.ScriptFilePath} failed to execute.");
+                    }
                 }
+                else
+                {
+                    ServiceLocator.OutputObserver?.Update("No post group script specified.");
+                    Log.Information("No pre group script specified.");
+                }
+
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "An error occurred in {ClassName}.{MethodName}", nameof(ExcuteScripts), nameof(RunBatchProcessorScripts));
                 returnValue = false;
-                
             }
             return returnValue;
         }

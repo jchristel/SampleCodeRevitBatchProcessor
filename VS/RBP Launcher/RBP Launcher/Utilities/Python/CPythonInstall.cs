@@ -14,6 +14,11 @@ namespace RBP_Launcher.Utilities
             try
             {
                 Dictionary<string, string> versions = GetAllStandardPythonInstalls();
+                //check for empty dictioanry ( no python installed)
+                if (versions.Count == 0)
+                {
+                    throw new Exception("No standard python installations found");
+                }
                 // Find the version with the highest major version, then highest minor version
                 var latestVersion = versions.OrderByDescending(kv => kv.Key[0])
                                            .ThenByDescending(kv => kv.Key.Length > 1 ? int.Parse(kv.Key.Substring(1)) : 0)
@@ -39,29 +44,40 @@ namespace RBP_Launcher.Utilities
             Dictionary<string,string> result = new Dictionary<string,string>();
             foreach (string pythonInstallPath in allUsers)
             {
-                string pythonVersion = GetParentDirectoryName(pythonInstallPath);
-                string pythonVersionNumber = GetPythonVersion(pythonVersion);
-                if(pythonVersionNumber!=null)
+                string? pythonVersion = GetParentDirectoryName(pythonInstallPath);
+                if (pythonVersion != null)
                 {
-                    result[pythonVersionNumber] = pythonInstallPath;
+                    string? pythonVersionNumber = GetPythonVersion(pythonVersion);
+                    if (pythonVersionNumber != null)
+                    {
+                        result[pythonVersionNumber] = pythonInstallPath;
+                    }
                 }
                 
             }
              
             return result;
         }
-        public static  string GetParentDirectoryName(string directoryPath)
+        public static string? GetParentDirectoryName(string directoryPath)
         {
             // Get the parent directory's full path
-            string parentDirectoryPath = Path.GetDirectoryName(directoryPath);
+            string? parentDirectoryPath = Path.GetDirectoryName(directoryPath);
 
-            // Extract the last part of the path (parent directory's name)
-            string parentDirectoryName = Path.GetFileName(parentDirectoryPath);
+            if(parentDirectoryPath != null)
+            {
+                // Extract the last part of the path (parent directory's name)
+                string? parentDirectoryName = Path.GetFileName(parentDirectoryPath);
+                return parentDirectoryName;
+            }
+            else
+            {
+                return null;
+            }
 
-            return parentDirectoryName;
+            
         }
 
-        public static string GetPythonVersion(string input)
+        public static string? GetPythonVersion(string input)
         {
             // Define a regular expression pattern to match "Python" followed by digits
             string pattern = @"Python(\d+)";

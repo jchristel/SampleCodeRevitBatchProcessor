@@ -18,19 +18,22 @@ namespace RBP_Launcher.Utilities
         /// <param name="subKeyName"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static string GetSubKeyValue(string subKeyName, RegistryKey key)
+        public static string? GetSubKeyValue(string subKeyName, RegistryKey key)
         {
-            string subKeyValue = null;
+            string? subKeyValue = null;
 
             try
             {
                 // Check if the subkey exists
                 if (key.GetSubKeyNames().Contains(subKeyName))
                 {
-                    using (RegistryKey installPathKey = key.OpenSubKey(subKeyName))
+                    using (RegistryKey? installPathKey = key.OpenSubKey(subKeyName))
                     {
-                        // Get the value of the subkey
-                        subKeyValue = installPathKey.GetValue("") as string;
+                        if (installPathKey != null)
+                        {
+                            // Get the value of the subkey
+                            subKeyValue = installPathKey.GetValue("") as string;
+                        }
                     }
                 }
                 else
@@ -53,7 +56,7 @@ namespace RBP_Launcher.Utilities
             try
             {
                 // Registry base key for 32-bit Python installations
-                RegistryKey baseKey = rootKey.OpenSubKey(baseKeyName);
+                RegistryKey? baseKey = rootKey.OpenSubKey(baseKeyName);
 
                 if (baseKey != null)
                 {
@@ -63,16 +66,19 @@ namespace RBP_Launcher.Utilities
                     // Iterate through each Python version
                     foreach (var subKeyName in subKeyNames)
                     {
-                        using (RegistryKey subKey = baseKey.OpenSubKey(subKeyName))
+                        using (RegistryKey? subKey = baseKey.OpenSubKey(subKeyName))
                         {
-                            string value = GetSubKeyValue(subKeyNameMatch, subKey);
-                            if (!string.IsNullOrEmpty(value))
+                            if (subKey != null)
                             {
-                                values[subKeyName] = value;
-                            }
-                            else
-                            {
-                                Log.Debug($"{subKeyNameMatch} value is null or empty for base key {subKey.Name}");
+                                string? value = GetSubKeyValue(subKeyNameMatch, subKey);
+                                if (!string.IsNullOrEmpty(value))
+                                {
+                                    values[subKeyName] = value;
+                                }
+                                else
+                                {
+                                    Log.Debug($"{subKeyNameMatch} value is null or empty for base key {subKey.Name}");
+                                }
                             }
                         }
                     }

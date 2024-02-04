@@ -124,7 +124,7 @@ namespace RBP_Launcher
             var path = engine.GetSearchPaths();
             path.Add(Path.GetDirectoryName(scriptFilePath));
             // add the /lib folder
-            string latestInstallPath = Utilities.IronPythonInstall.GetLatestVersionInstallPath();
+            string? latestInstallPath = Utilities.IronPythonInstall.GetLatestVersionInstallPath();
             if (latestInstallPath != null)
             {
                 path.Add(Path.Join(latestInstallPath, "Lib"));

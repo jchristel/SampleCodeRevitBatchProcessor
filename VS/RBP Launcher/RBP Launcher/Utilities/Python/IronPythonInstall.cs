@@ -10,10 +10,10 @@ namespace RBP_Launcher.Utilities
     {
         public static string? GetLatestVersionInstallPath()
         {
-            string latestInstallPath = null;
+            string? latestInstallPath = null;
             // get all versions
             Dictionary<string, string> installPaths = GetIronPythonInstallPaths();
-            if (installPaths == null)
+            if (installPaths == null || installPaths.Count == 0)
             {
                 return latestInstallPath;
             }
@@ -48,50 +48,6 @@ namespace RBP_Launcher.Utilities
                     @"SOFTWARE\IronPython",
                     Registry.LocalMachine
                 );
-
-                //// Determine the base registry key to use based on the application's bitness
-                //RegistryKey baseKey = Registry.LocalMachine;
-                //if (Environment.Is64BitProcess)
-                //{
-                //    baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
-                //}
-
-                //// Open the registry key for IronPython installations
-                //using (RegistryKey ironPythonKey = baseKey.OpenSubKey(@"SOFTWARE\IronPython"))
-                //{
-                //    if (ironPythonKey != null)
-                //    {
-                //        // Get the names of all subkeys (versions)
-                //        string[] versions = ironPythonKey.GetSubKeyNames();
-                //        // Iterate through each version to get the install path
-                //        foreach (string version in versions)
-                //        {
-                //            using (RegistryKey versionKey = ironPythonKey.OpenSubKey(version))
-                //            {
-                //                if (versionKey != null)
-                //                {
-                //                    string installPath = RegistryTools.GetSubKeyValue(RegistryTools._keyInstallPath, versionKey);
-                //                    if (!string.IsNullOrEmpty(installPath))
-                //                    {
-                //                        installPaths[version]=installPath;
-                //                    }
-                //                    else
-                //                    {
-                //                        Log.Debug($"InstallPath value is null or empty for IronPython version {version}");
-                //                    }
-                //                }
-                //                else
-                //                {
-                //                    Log.Debug($"Unable to open registry key for IronPython version {version}");
-                //                }
-                //            }
-                //        }
-                //    }
-                //    else
-                //    {
-                //        Log.Debug("Registry key for IronPython not found");
-                //    }
-                //}
             }
             catch (Exception ex)
             {

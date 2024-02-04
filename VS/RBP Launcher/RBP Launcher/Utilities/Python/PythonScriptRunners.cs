@@ -15,13 +15,16 @@ namespace RBP_Launcher.Utilities
             
             
             //get all standard python installations
+            //this can return an empty dictionary
             var standardPython = CPythonInstall.GetAllStandardPythonInstalls();
 
-            //TODO: some try catch here in case stuff is not installed at all!
-
-            // add iron python script runner
-            scriptRunners.Add(ironPythonScriptRunnerName, new RunnerIronPython());
-
+            //check if an ironpython installation exists
+            string? latestInstallPath = IronPythonInstall.GetLatestVersionInstallPath();
+            if (latestInstallPath != null)
+            {
+                // add iron python script runner
+                scriptRunners.Add(ironPythonScriptRunnerName, new RunnerIronPython());
+            }
             foreach (var python in standardPython)
             {
                 scriptRunners.Add(python.Key, new RunnerCPython(python.Key));

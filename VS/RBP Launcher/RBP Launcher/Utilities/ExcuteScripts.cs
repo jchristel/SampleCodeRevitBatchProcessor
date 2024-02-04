@@ -16,23 +16,30 @@ namespace RBP_Launcher.Utilities
             try
             {
                 foreach (Configs.ScriptConfiguration.ScriptDetails script in scripts)
-                {
-                    // launch flow pre process
-                    if (scriptRunners.ContainsKey(script.PythonVersion.Replace(".", "")))
-                    {
-                        ServiceLocator.OutputObserver?.Update($"Starting python {script.PythonVersion} script at {script.ScriptFilePath}");
-                        //pythonScriptRunners[config.PreScript.PythonVersion.Replace(".", "")].ExecuteScript(config.PreScript.ScriptFilePath, new List<string> { "arg1", "arg1 value", "arg2", "arg2 value" });
-                        bool executeScriptStatus = scriptRunners[script.PythonVersion.Replace(".", "")].ExecuteScript(script.ScriptFilePath, null);
-                        //check what came back
-                        if (!executeScriptStatus)
+                {   
+                    //all property values on script instance must be set!
+                    if(script.PythonVersion != null && script.ScriptFilePath != null) { 
+                        // launch flow pre process
+                        if (scriptRunners.ContainsKey(script.PythonVersion.Replace(".", "")))
                         {
-                            throw new Exception("Stopped executing scripts in que since previous script failed to execute without an exception.");
+                            ServiceLocator.OutputObserver?.Update($"Starting python {script.PythonVersion} script at {script.ScriptFilePath}");
+                            //pythonScriptRunners[config.PreScript.PythonVersion.Replace(".", "")].ExecuteScript(config.PreScript.ScriptFilePath, new List<string> { "arg1", "arg1 value", "arg2", "arg2 value" });
+                            bool executeScriptStatus = scriptRunners[script.PythonVersion.Replace(".", "")].ExecuteScript(script.ScriptFilePath, null);
+                            //check what came back
+                            if (!executeScriptStatus)
+                            {
+                                throw new Exception("Stopped executing scripts in que since previous script failed to execute without an exception.");
+                            }
+                        }
+                        else
+                        {
+                            ServiceLocator.OutputObserver?.Update($"{KeyWords.Error} Python {script.PythonVersion} not installed...");
+                            throw new Exception($"Exception Python {script.PythonVersion} not installed occured in script execution.");
                         }
                     }
                     else
                     {
-                        ServiceLocator.OutputObserver?.Update($"{KeyWords.Error} Python {script.PythonVersion} not installed...");
-                        throw new Exception($"Exception Python {script.PythonVersion} not installed occured in script execution.");
+                        throw new Exception($"Not all required properties have a value set. Python version: [{script.PythonVersion}], script file path: [{script.ScriptFilePath}]");
                     }
                 }
             }

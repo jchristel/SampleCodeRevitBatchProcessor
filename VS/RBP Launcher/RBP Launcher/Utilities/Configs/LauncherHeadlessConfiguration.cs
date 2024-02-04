@@ -10,12 +10,12 @@ namespace RBP_Launcher.Utilities.Configs
     public class LauncherHeadlessConfiguration
     {
         [JsonProperty("rbpFilePath")]
-        public string RbpFilePath { get; set; }
+        public string? RbpFilePath { get; set; }
 
         [JsonProperty("cPython")]
-        public List<PythonConfiguration> CPython { get; set; }
+        public List<PythonConfiguration>? CPython { get; set; }
 
-        public static LauncherHeadlessConfiguration FromJson(string json)
+        public static LauncherHeadlessConfiguration? FromJson(string json)
         {
             return JsonConvert.DeserializeObject<LauncherHeadlessConfiguration>(json);
         }
@@ -24,11 +24,9 @@ namespace RBP_Launcher.Utilities.Configs
     public class PythonConfiguration
     {
         [JsonProperty("version")]
-        public string Version { get; set; }
+        public string? Version { get; set; }
 
         [JsonProperty("filePath")]
-        public string FilePath { get; set; }
+        public string? FilePath { get; set; }
     }
-
-    
 }

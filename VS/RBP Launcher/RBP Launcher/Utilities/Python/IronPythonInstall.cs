@@ -21,12 +21,23 @@ namespace RBP_Launcher.Utilities
             //get the latest version based on the key
             var sortedPairs= installPaths.OrderBy(kv => ParseVersion(kv.Key));
             // Reconstruct an OrderedDictionary from the sorted key-value pairs
-            OrderedDictionary orderedDict = new OrderedDictionary();
+            OrderedDictionary orderedDict = new();
             foreach (var kvp in sortedPairs)
             {
                 orderedDict.Add(kvp.Key, kvp.Value);
             }
-            return (orderedDict[orderedDict.Count - 1]).ToString();
+
+            // Check if the dictionary is not empty
+            if (orderedDict.Count > 0)
+            {
+                var latestItem = orderedDict[^1];
+                if (latestItem != null)
+                {
+                    return latestItem.ToString();
+                }
+            }
+
+            return latestInstallPath;
         }
 
         private static (int, int) ParseVersion(string version)
@@ -39,7 +50,7 @@ namespace RBP_Launcher.Utilities
 
         public static Dictionary<string, string> GetIronPythonInstallPaths()
         {
-            Dictionary<string, string> installPaths = new Dictionary<string, string>();
+            Dictionary<string, string> installPaths = new();
             try
             {
 

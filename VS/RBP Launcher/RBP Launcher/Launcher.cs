@@ -31,23 +31,32 @@ namespace RBP_Launcher
                     ServiceLocator.OutputObserver?.Update("Batch processor flow session...");
                     Log.Information("Batch processor flow session...");
                     // start all scrit groups
-                    foreach (Utilities.Configs.ScriptConfiguration.Script rbpScriptGroup in flowConfig.BatchProcessorScripts)
+                    if(flowConfig.BatchProcessorScripts != null)
                     {
-                        counter++;
-
-                        //log out put
-                        ServiceLocator.OutputObserver?.Update($"Starting batch processor flow session {counter} of {flowConfig.BatchProcessorScripts.Count}");
-                        Log.Information($"Starting batch processor flow session {counter} of {flowConfig.BatchProcessorScripts.Count}");
-
-                        bool flowGroupExecutionStatus = Utilities.ExcuteScripts.RunBatchProcessorScripts(
-                            rbpScriptGroup: rbpScriptGroup,
-                            appSettings: launcherConfig,
-                            scriptRunners: pythonScriptRunners);
-
-                        if (!flowGroupExecutionStatus)
+                        foreach (Utilities.Configs.ScriptConfiguration.Script rbpScriptGroup in flowConfig.BatchProcessorScripts)
                         {
-                            throw new Exception($"Flow group {counter} failed to execute without an exception. Exiting.");
+                            counter++;
+
+                            //log out put
+                            ServiceLocator.OutputObserver?.Update($"Starting batch processor flow session {counter} of {flowConfig.BatchProcessorScripts.Count}");
+                            Log.Information($"Starting batch processor flow session {counter} of {flowConfig.BatchProcessorScripts.Count}");
+
+                            bool flowGroupExecutionStatus = Utilities.ExcuteScripts.RunBatchProcessorScripts(
+                                rbpScriptGroup: rbpScriptGroup,
+                                appSettings: launcherConfig,
+                                scriptRunners: pythonScriptRunners);
+
+                            if (!flowGroupExecutionStatus)
+                            {
+                                throw new Exception($"Flow group {counter} failed to execute without an exception. Exiting.");
+                            }
                         }
+                    }
+                    else
+                    {
+                        string message = "No Batch processor scripts provided...";
+                        ServiceLocator.OutputObserver?.Update(message);
+                        Log.Information(message);
                     }
 
                     // run post flow scripts

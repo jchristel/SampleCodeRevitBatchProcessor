@@ -9,10 +9,10 @@ namespace RBP_Launcher.Utilities
     // Custom TextWriter to capture redirected output
     class RedirectedOutput : Stream
     {
-        private readonly System.Text.StringBuilder outputBuffer = new System.Text.StringBuilder();
+        private readonly System.Text.StringBuilder outputBuffer = new();
 
         // Define an event to notify subscribers when output is received
-        public event EventHandler<OutputReceivedEventArgs> OutputReceived;
+        public event EventHandler<OutputReceivedEventArgs>? OutputReceived;
 
         public override bool CanRead => true;
         public override bool CanSeek => false;
@@ -25,6 +25,10 @@ namespace RBP_Launcher.Utilities
             set { }
         }
 
+        public RedirectedOutput()
+        {
+            OutputReceived = null; // Initialize the event
+        }
         public override void Flush() { }
 
         public override int Read(byte[] buffer, int offset, int count)

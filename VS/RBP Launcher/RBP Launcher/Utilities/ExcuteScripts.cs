@@ -29,7 +29,7 @@ namespace RBP_Launcher.Utilities
                         {
                             ServiceLocator.OutputObserver?.Update($"Starting python {script.PythonVersion} script at {script.ScriptFilePath}");
                             //pythonScriptRunners[config.PreScript.PythonVersion.Replace(".", "")].ExecuteScript(config.PreScript.ScriptFilePath, new List<string> { "arg1", "arg1 value", "arg2", "arg2 value" });
-                            bool executeScriptStatus = scriptRunners[script.PythonVersion.Replace(".", "")].ExecuteScript(script.ScriptFilePath, null);
+                            bool executeScriptStatus = scriptRunners[script.PythonVersion.Replace(".", "")].ExecuteScript(script.ScriptFilePath, script.ScriptArguments);
                             //check what came back
                             if (!executeScriptStatus)
                             {

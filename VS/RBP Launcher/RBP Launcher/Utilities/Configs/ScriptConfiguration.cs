@@ -31,6 +31,9 @@ namespace RBP_Launcher.Utilities.Configs
 
             [JsonProperty("script file path")]
             public string? ScriptFilePath { get; set; }
+
+            [JsonProperty("script arguments")]
+            public List<string>? ScriptArguments { get; set; }
         }
 
         [JsonProperty("pre script")]

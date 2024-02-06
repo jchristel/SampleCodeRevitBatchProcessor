@@ -19,7 +19,7 @@ namespace RBP_Launcher.Utilities
             }
 
             //get the latest version based on the key
-            var sortedPairs= installPaths.OrderBy(kv => ParseVersion(kv.Key));
+            var sortedPairs = installPaths.OrderBy(kv => ParseVersion(kv.Key));
             // Reconstruct an OrderedDictionary from the sorted key-value pairs
             OrderedDictionary orderedDict = new();
             foreach (var kvp in sortedPairs)
@@ -30,7 +30,7 @@ namespace RBP_Launcher.Utilities
             // Check if the dictionary is not empty
             if (orderedDict.Count > 0)
             {
-                var latestItem = orderedDict[^1];
+                var latestItem = orderedDict[orderedDict.Count - 1];
                 if (latestItem != null)
                 {
                     return latestItem.ToString();

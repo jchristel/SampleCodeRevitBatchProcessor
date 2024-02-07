@@ -53,8 +53,10 @@ from Autodesk.Revit.DB import (
     FilteredElementCollector,
     FilteredWorksetCollector,
     Transaction,
+    Workset,
     WorksetKind,
     WorksetDefaultVisibilitySettings,
+    WorksetTable,
 )
 
 # --------------------------------------------- utility functions ------------------
@@ -193,7 +195,7 @@ def modify_element_workset(doc, default_workset_name, collector, element_type_na
     :return:
         Result class instance.
 
-        - .result = True if successfully moved all elements to new workset. Otherwise False.
+        - .status = True if successfully moved all elements to new workset. Otherwise False.
         - .message will contain stats in format [success :: failure]
 
     :rtype: :class:`.Result`
@@ -359,7 +361,7 @@ def update_workset_default_visibility_from_report(doc, report_path, revit_file_p
     :return:
         Result class instance.
 
-        - .result = True if:
+        - .status = True if:
 
             - successfully updated all workset default visibility where different to report
             - or none needed updating.
@@ -440,4 +442,58 @@ def update_workset_default_visibility_from_report(doc, report_path, revit_file_p
         return_value.update_sep(
             True, "No settings found for file: {}".format(file_name)
         )
+    return return_value
+
+
+def create_workset(doc, workset_name):
+    """
+    Creates a workset with a given name in a document.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param workset_name: The name of the workset to be created
+    :type workset_name: str
+
+    :return:
+        Result class instance.
+
+        - .status = True if:
+
+            - successfully created the workset
+
+        - Otherwise False:
+
+            - An exception occurred.
+            - A workset with that name already exists.
+            - Document is not workshared
+
+        - Common:
+
+            - .message will contain each workset
+
+        .result will contain the workset element in a list if successfully created, otherwise an empty list.
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+    if (doc.IsWorkshared):
+        if(WorksetTable.IsWorksetNameUnique(doc, workset_name)):
+            def action():
+                action_return_value = res.Result()
+                try:
+                    new_workset = Workset.Create(doc, workset_name)
+                    action_return_value.update_sep(True, "Workset {} created.".format(workset_name))
+                    action_return_value.result.append(new_workset)
+                except Exception as e:
+                    action_return_value.update_sep(False, "Failed to create workset {} with exception: {}".format(workset_name,e))
+                return action_return_value
+            
+            transaction = Transaction(doc, "Adding workset {}".format(workset_name))
+            tranny_status = rTran.in_transaction(transaction, action)
+            return_value.update(tranny_status)
+        else:
+            return_value.update_sep(False, "Workset name already exists: {}".format(workset_name))
+    else:
+        return_value.update_sep(False, "Cant create a workset in a non workshared file.")
     return return_value

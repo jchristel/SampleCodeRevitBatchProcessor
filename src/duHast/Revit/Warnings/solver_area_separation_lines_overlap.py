@@ -102,7 +102,7 @@ class RevitWarningsSolverAreaSepLinesOverlap(base.Base):
         :return:
             Result class instance.
 
-            - .result = True if all area separation lines could be deleted / modified without an exception. Otherwise False.
+            - .status True if all area separation lines could be deleted / modified without an exception. Otherwise False.
             - .message will be 'moved tag to area xyz'
 
         :rtype: :class:`.Result`

@@ -335,7 +335,7 @@ def _check_families_still_exist(famData):
     :return:
         Result class instance.
 
-        - .result = True if successfully removed any outdated family data or None needed removing. Otherwise False.
+        - .status True if successfully removed any outdated family data or None needed removing. Otherwise False.
         - .message will contain list of families removed or message nothing needed to be removed.
         - . result will contain past in dictionary at index 0
 

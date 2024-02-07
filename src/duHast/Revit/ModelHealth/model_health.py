@@ -215,7 +215,7 @@ def get_parameters_of_instance(fam_instance, doc):
     :return:
         Result class instance.
 
-        - .result = True if all parameters where found on the family and got updated successfully or no update at all was required. Otherwise False.
+        - .status True if all parameters where found on the family and got updated successfully or no update at all was required. Otherwise False.
         - .message will be 'Failed to get value for'
 
     :rtype: :class:`.Result`
@@ -404,7 +404,7 @@ def update_model_health_tracer_family(doc, revit_file_path):
     :return:
         Result class instance.
 
-        - .result = True if all model key health metric where updated successfully. Otherwise False.
+        - .status True if all model key health metric where updated successfully. Otherwise False.
         - .message will be listing each parameter update: old value to new value
 
     :rtype: :class:`.Result`
@@ -448,7 +448,7 @@ def write_model_health_report(doc, revit_file_path, output_directory):
     :return:
         Result class instance.
 
-        - .result = True if data was written to files successfully. Otherwise False.
+        - .status True if data was written to files successfully. Otherwise False.
         - .message will be contain data file path for each file.
 
     :rtype: :class:`.Result`

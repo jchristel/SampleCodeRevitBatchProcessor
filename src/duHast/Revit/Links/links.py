@@ -129,7 +129,7 @@ def delete_revit_links(doc):
     :return:
         Result class instance.
 
-        - .result = True if all revit links got deleted successfully. Otherwise False.
+        - .status True if all revit links got deleted successfully. Otherwise False.
         - .message will contain deletion status. On exception it will also include the exception message.
 
     :rtype: :class:`.Result`
@@ -170,7 +170,7 @@ def reload_revit_links(
     :return: 
         Result class instance.
         
-        - .result = True if all revit links got reloaded successfully. Otherwise False.
+        - .status True if all revit links got reloaded successfully. Otherwise False.
         - .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
     
     :rtype: :class:`.Result`
@@ -242,7 +242,7 @@ def reload_revit_links_from_list(
     :return: 
         Result class instance.
         
-        - .result = True if all revit links got reloaded successfully. Otherwise False.
+        - .status True if all revit links got reloaded successfully. Otherwise False.
         - .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
     
     :rtype: :class:`.Result`

@@ -133,7 +133,7 @@ def write_warnings_data(file_name, data):
     :type current_file_name: str
     :return:
         Result class instance.
-        - .result = True if data was written successfully. Otherwise False.
+        - .status True if data was written successfully. Otherwise False.
         - .message will contain write status.
     :rtype: :class:`.Result`
     """

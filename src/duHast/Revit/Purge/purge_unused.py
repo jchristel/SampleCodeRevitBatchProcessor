@@ -162,7 +162,7 @@ def purge_unplaced_elements(
     :return: 
         Result class instance.
         
-        - .result = True if all purge actions completed successfully. Otherwise False.
+        - .status True if all purge actions completed successfully. Otherwise False.
         - .message will be listing each purge action and its status
     
     :rtype: :class:`.Result`
@@ -740,7 +740,7 @@ def purge_unused(doc, revit_file_path, is_debug):
     :return: 
         Result class instance.
         
-        - .result = True if all purge actions completed successfully. Otherwise False.
+        - .status True if all purge actions completed successfully. Otherwise False.
         - .message will be listing each purge action and its status
     
     :rtype: :class:`.Result`

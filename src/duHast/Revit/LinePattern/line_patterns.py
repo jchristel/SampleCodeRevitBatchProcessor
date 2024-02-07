@@ -138,7 +138,7 @@ def delete_line_patterns_contains(doc, contains):
     :return:
         Result class instance.
 
-        - .result = True if line pattern where deleted successfully. Otherwise False.
+        - .status True if line pattern where deleted successfully. Otherwise False.
         - .message will contain delete status per pattern.
 
     :rtype: :class:`.Result`
@@ -169,7 +169,7 @@ def delete_line_pattern_starts_with(doc, starts_with):
     :return:
         Result class instance.
 
-        - .result = True if line pattern where deleted successfully. Otherwise False.
+        - .status True if line pattern where deleted successfully. Otherwise False.
         - .message will contain delete status per pattern.
 
     :rtype: :class:`.Result`
@@ -200,7 +200,7 @@ def delete_line_patterns_without(doc, contains):
     :return:
         Result class instance.
 
-        - .result = True if line pattern where deleted successfully. Otherwise False.
+        - .status True if line pattern where deleted successfully. Otherwise False.
         - .message will contain delete status per pattern.
 
     :rtype: :class:`.Result`
@@ -266,7 +266,7 @@ def delete_duplicate_line_patter_names(doc):
     :return:
         Result class instance.
 
-        - .result = True if all views where deleted. Otherwise False.
+        - .status True if all views where deleted. Otherwise False.
         - .message will contain deletion status.
 
     :rtype: :class:`.Result`

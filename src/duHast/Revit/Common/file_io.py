@@ -54,7 +54,7 @@ def sync_file(
     :type compact_central_file: bool, optional
     :return:
         Result class instance.
-        - .result = True if successfully synced file. Otherwise False.
+        - .status True if successfully synced file. Otherwise False.
     :rtype: :class:`.Result`
     """
 
@@ -97,7 +97,7 @@ def saves_as_workshared_file(
     :type full_file_name: string
     :return:
         Result class instance.
-        - .result = True if successfully saved file, otherwise False.
+        - .status True if successfully saved file, otherwise False.
     :rtype: :class:`.Result`
     """
 
@@ -145,7 +145,7 @@ def save_as_family(
     :type compact_file: bool, optional
     :return:
         Result class instance.
-            - .result = True if successfully saved file, otherwise False.
+            - .status True if successfully saved file, otherwise False.
     :rtype: :class:`.Result`
     """
 
@@ -204,7 +204,7 @@ def save_as(
     :type file_extension: str, optional
     :return:
         Result class instance.
-        - .result = True if successfully saved file, otherwise False.
+        - .status True if successfully saved file, otherwise False.
     :rtype: :class:`.Result`
     """
 
@@ -256,7 +256,7 @@ def save_file(
     :type compact_file: bool, optional
     :return:
             Result class instance.
-            - .result = True if file was saved successfully. Otherwise False.
+            - .status True if file was saved successfully. Otherwise False.
             - .message = 'Saved revit file!'
             On exception:
             - result.status (bool) will be False.
@@ -294,7 +294,7 @@ def enable_worksharing(
 
     :return:
             Result class instance.
-            - .result = True if worksharing was enabled successfully. Otherwise False.
+            - .status True if worksharing was enabled successfully. Otherwise False.
             - .message = 'Successfully enabled worksharing.'
             On exception:
             - result.status (bool) will be False.

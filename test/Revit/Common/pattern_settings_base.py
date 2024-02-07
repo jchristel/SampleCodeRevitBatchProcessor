@@ -52,7 +52,7 @@ class PatternSettingsB(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if pattern settings base tests completed successfully, otherwise False.
+                - .status True if pattern settings base tests completed successfully, otherwise False.
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 

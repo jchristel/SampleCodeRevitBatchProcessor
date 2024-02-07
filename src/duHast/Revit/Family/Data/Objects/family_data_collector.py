@@ -179,7 +179,7 @@ class RevitFamilyDataCollector(base.Base):
         :return: 
             Result class instance.
             
-            - .result = True if all data processor instances ran without an exception. Otherwise False.
+            - .status True if all data processor instances ran without an exception. Otherwise False.
             - .message will contain each processor type and its processing status'
         
         :rtype: :class:`.Result`

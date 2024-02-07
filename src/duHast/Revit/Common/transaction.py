@@ -57,7 +57,7 @@ def in_transaction(
     :return:
         Result class instance.
 
-        - .result = True if successfully executed transaction, otherwise False.
+        - .status True if successfully executed transaction, otherwise False.
 
     :rtype: :class:`.Result`
     """

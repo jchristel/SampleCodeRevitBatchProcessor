@@ -67,7 +67,7 @@ class RevitWarningsSolverRoomTagToRoom(base.Base):
         :return:
             Result class instance.
 
-            - .result = True if all room tags within warnings could be moved to room location point. Otherwise False.
+            - .status True if all room tags within warnings could be moved to room location point. Otherwise False.
             - .message will be 'moved tag to room xyz'
 
         :rtype: :class:`.Result`

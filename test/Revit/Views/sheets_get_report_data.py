@@ -52,7 +52,7 @@ class GetSheetReportData(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if sheet report data was retrieved successfully, otherwise False
+                - .status True if sheet report data was retrieved successfully, otherwise False
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 

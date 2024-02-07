@@ -47,7 +47,7 @@ def delete_line_styles_starts_with(doc, starts_with):
     :type starts_with: str
     :return: Result class instance.
 
-        - .result = True if all views where deleted. Otherwise False.
+        - .status True if all views where deleted. Otherwise False.
         - .message will contain deletion status.
         
     :rtype: :class:`.Result`

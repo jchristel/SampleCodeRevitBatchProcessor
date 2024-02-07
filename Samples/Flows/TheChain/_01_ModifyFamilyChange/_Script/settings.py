@@ -1,4 +1,4 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module is a settings module 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8,7 +8,7 @@ It contains
 - Global variables used throughout the modules in this workflow.
 - Amends PATH variable to include sample code library locations
 
-'''
+"""
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
@@ -36,68 +36,84 @@ It contains
 
 
 # path to Common library modules
-COMMON_LIBRARY_DEBUG_PATH = r'\\bvn\Data\studio\infotech\standards\Scripts\Revit Python\RBP\SampleCodeRevitBatchProcessor\Library'
-COMMON_LIBRARY_UI_DEBUG_PATH = r'\\bvn\Data\studio\infotech\standards\Scripts\Revit Python\RBP\SampleCodeRevitBatchProcessor\UI'
-#SCRIPT_LOCATION = r'P:\19\1903020.000\Design\BIM\_Revit\5.0 Project Resources\01 Scripts\04 BatchP\_01_ModifyFamilyChange\_Script'
+DU_HAST_PATH = r"C:\Program Files\Python311\Lib\site-packages"
+DU_HAST_DEBUG = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\src"
+
 # set path to common library
 import sys
-sys.path += [COMMON_LIBRARY_DEBUG_PATH, COMMON_LIBRARY_UI_DEBUG_PATH]
 
-# import common library
-import Utility as util
+sys.path = [DU_HAST_DEBUG] + sys.path
+sys.path += [DU_HAST_PATH]
+
+import os
+
+from duHast.Utilities.directory_io import get_parent_directory
+from duHast.Utilities.files_io import get_directory_path_from_file_path
+from duHast.Utilities.utility import get_current_user_name
+
 
 # get the script location
-SCRIPT_DIRECTORY = util.GetFolderPathFromFile(__file__)
+SCRIPT_DIRECTORY = get_directory_path_from_file_path(__file__)
 # add the script directory to path
 sys.path += [SCRIPT_DIRECTORY]
 # build flow directory name
-FLOW_DIRECTORY = util.GetParentDirectory(SCRIPT_DIRECTORY)
+FLOW_DIRECTORY = get_parent_directory(SCRIPT_DIRECTORY)
 # build user directory name
-ROOT_SCRIPT_DIRECTORY_USER = FLOW_DIRECTORY + r'\_Users'+ '\\' + util.GetCurrentUserName()
+ROOT_SCRIPT_DIRECTORY_USER = os.path.join(
+    FLOW_DIRECTORY, "_Users" + "\\" + get_current_user_name()
+)
 
 # debug mode revit project file name
-DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_Files.rvt'
+DEBUG_REVIT_FILE_NAME = r"C:\temp\Test_Files.rvt"
 
-# revit library location
-#REVIT_LIBRARY_PATH = r'\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship'
-REVIT_LIBRARY_PATH = r'\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\Temporary Families\Families Not Upgraded'
+# revit files library location
+REVIT_LIBRARY_PATH = r"C:\Users\jchristel\dev\test_lib"
 REVIT_LIBRARY_INCLUDE_SUB_DIRS_IN_SEARCH = True
-FILE_EXTENSION_OF_FILES_TO_PROCESS = '.rfa'
+FILE_EXTENSION_OF_FILES_TO_PROCESS = ".rfa"
 
-# this is where families will be saved temporarily after succesfull reload
-WORKING_DIRECTORY = ROOT_SCRIPT_DIRECTORY_USER + r'\_Output'
+# this is where families will be saved temporarily after successful reload
+WORKING_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_Output")
 
 # log marker file location
-LOG_MARKER_DIRECTORY = ROOT_SCRIPT_DIRECTORY_USER + r'\_LogMarker'
+LOG_MARKER_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_LogMarker")
 
 # directory containing any task lists identifying specific families only to be processed
 # if that folder is empty, all families in library will be processed
-# directory may also contain any other input data required for tasks to be executed in files processed. i.e. 
+# directory may also contain any other input data required for tasks to be executed in files processed. i.e.
 #   - rename loaded families
 #   - rename custom categories
-PREDEFINED_TASK_FILE_DIRECTORY = ROOT_SCRIPT_DIRECTORY_USER + r'\_TaskList'
+PREDEFINED_TASK_FILE_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_TaskList")
 # any predefined task file needs to start with this string
-PREDEFINED_TASK_FILE_NAME_PREFIX = 'ChangeList'
+PREDEFINED_TASK_FILE_NAME_PREFIX = "ChangeList"
 # file name filter
-PREDEFINED_TASK_FILE_NAME_FILTER = PREDEFINED_TASK_FILE_NAME_PREFIX 
-PREDEFINED_TASK_FILE_EXTENSION = '.task'
+PREDEFINED_TASK_FILE_NAME_FILTER = PREDEFINED_TASK_FILE_NAME_PREFIX
+PREDEFINED_TASK_FILE_EXTENSION = ".task"
 
 # all reports are of this file type
-REPORT_FILE_EXTENSION = '.csv'
+REPORT_FILE_EXTENSION = ".csv"
 
-INPUT_DIRECTORY = ROOT_SCRIPT_DIRECTORY_USER + r'\_Input'
+INPUT_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_Input")
 
 # file containing GUIDs and names of any shared parameter to be deleted ... no questions asked
-DELTETE_SHARED_PARAMETER_LIST_FILE_PATH = ROOT_SCRIPT_DIRECTORY_USER + r'\_Input\UnwantedSharedParameterGUIDS.csv'
-# file containing names of shared parameter which are to be converted to family parameters 
-CHANGE_SHARED_PARAMETER_TO_FAMILY_PARAMETER_PATH = ROOT_SCRIPT_DIRECTORY_USER + r'\_Input\ChangeSharedParameterToFamilyParameter.csv'
+DELETE_SHARED_PARAMETER_LIST_FILE_PATH = os.path.join(
+    ROOT_SCRIPT_DIRECTORY_USER, r"\_Input\UnwantedSharedParameterGUIDS.csv"
+)
+# file containing names of shared parameter which are to be converted to family parameters
+CHANGE_SHARED_PARAMETER_TO_FAMILY_PARAMETER_PATH = os.path.join(
+    ROOT_SCRIPT_DIRECTORY_USER, r"\_Input\ChangeSharedParameterToFamilyParameter.csv"
+)
 # swap shared parameter directive
-SWAP_SHARED_PARAMETER_DIRECTIVE_PATH = ROOT_SCRIPT_DIRECTORY_USER + r'\_Input\SharedParameterSwapping.csv'
+SWAP_SHARED_PARAMETER_DIRECTIVE_PATH = os.path.join(
+    ROOT_SCRIPT_DIRECTORY_USER, "\_Input\SharedParameterSwapping.csv"
+)
 
 # file name of follow up report
-FOLLOW_UP_REPORT_FILE_NAME = 'FollowUpReportList' + REPORT_FILE_EXTENSION
+FOLLOW_UP_REPORT_FILE_NAME = "FollowUpReportList" + REPORT_FILE_EXTENSION
 
 # where are task files located
-TASK_FILE_DIRECTORY = ROOT_SCRIPT_DIRECTORY_USER + r'\_TaskList'
+TASK_FILE_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_TaskList")
 # number of task files in use
 TASK_FILE_NO = 4
+
+# flag indicating whether this is a cloud based project
+IS_CLOUD_PROJECT = False

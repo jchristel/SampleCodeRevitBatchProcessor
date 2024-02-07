@@ -82,6 +82,32 @@ def get_category_from_builtInCategory(doc, built_in_category):
     
     return Category.GetCategory(doc, built_in_category)
 
+def get_builtInCategory_from_category(doc, category):
+    """
+    Returns a built in category enum value based on the category object.
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param category: The category object
+    :type category: Autodesk.Revit.DB.Category
+    :return: The built in category enum value
+    :rtype: Autodesk.Revit.DB.BuiltInCategory
+    """
+
+    values = Enum.GetValues(BuiltInCategory)
+    names = Enum.GetNames(BuiltInCategory)
+    for value, name in zip(values, names):
+        try:
+            cat = Category.GetCategory(doc, value)
+            if(cat == None):
+                continue
+            if cat.Name == category.Name:
+                return value
+        except:
+            continue
+    return None
+
+
 def get_category_by_names(doc, main_category_name, sub_category_name):
     """
     Retrieves a category object from a document based on the given main category name and optional sub category name.

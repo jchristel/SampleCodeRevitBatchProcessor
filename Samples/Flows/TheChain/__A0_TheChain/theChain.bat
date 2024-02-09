@@ -61,14 +61,14 @@ set familyReloadChangedFamilyReport="%_rootFolderPath%_02_ModifyFamilyLibraryRel
 :: might try to populate those via a UI ???
 
 :: toggle to run initial report
-set initialReport=0
+set initialReport=1
 :: toggle to run follow up report
 set followUpReport=0
 :: toggle write out missing families
-set writeOutMissingFamilies=1
+set writeOutMissingFamilies=0
 
 :: overall modify family toggle
-set modifyFamilyDefault=0
+set modifyFamilyDefault=1
 
 :: rename families 
 set renameFamilies=0

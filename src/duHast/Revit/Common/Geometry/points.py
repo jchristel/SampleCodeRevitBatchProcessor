@@ -28,6 +28,7 @@ Revit points helper functions
 
 from Autodesk.Revit.DB import (
     Transform,
+    UV,
     XYZ,
 )
 from duHast.Utilities.compare import is_close

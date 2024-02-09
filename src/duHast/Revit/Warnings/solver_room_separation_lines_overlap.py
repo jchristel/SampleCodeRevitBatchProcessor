@@ -146,6 +146,6 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
                 return_value.update(modify_curves_status)
         else:
             return_value.update_sep(
-                True, "No warnings of type: room separation lines overlap in model."
+                True, "{}: No warnings of type: room separation lines overlap in model.".format(self.filter_name)
             )
         return return_value

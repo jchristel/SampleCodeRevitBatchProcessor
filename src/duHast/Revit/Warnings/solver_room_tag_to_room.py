@@ -91,6 +91,6 @@ class RevitWarningsSolverRoomTagToRoom(base.Base):
                 counter = counter + 1
         else:
             return_value.update_sep(
-                True, "No warnings of type: room tag outside of room in model."
+                True, "{}: No warnings of type: room tag outside of room in model.".format(self.filter_name)
             )
         return return_value

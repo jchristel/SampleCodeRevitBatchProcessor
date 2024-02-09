@@ -4,6 +4,7 @@ Duplicate mark warnings solver class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """
+
 #
 # License:
 #
@@ -20,8 +21,8 @@ Duplicate mark warnings solver class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -38,6 +39,7 @@ from duHast.Utilities.Objects import base
 
 
 class RevitWarningsSolverDuplicateMark(base.Base):
+
     def __init__(self, filter_func, filter_values=[]):
         """
         Constructor: this solver takes two arguments: a filter function and a list of values to filter by
@@ -58,6 +60,8 @@ class RevitWarningsSolverDuplicateMark(base.Base):
     # --------------------------- duplicate mark guid ---------------------------
     #: guid identifying this specific warning
     GUID = "6e1efefe-c8e0-483d-8482-150b9f1da21a"
+
+    IGNORED_WARNINGS = ["Type Mark"]
 
     def solve_warnings(self, doc, warnings):
         """
@@ -80,11 +84,32 @@ class RevitWarningsSolverDuplicateMark(base.Base):
         return_value = res.Result()
         if len(warnings) > 0:
             for warning in warnings:
+                # Flag to indicate if we should continue the outer loop
+                should_continue_outer = False
+                # check for any duplicate Type Mark warnings...which are not to be addressed!
+                for ignore in self.IGNORED_WARNINGS:
+                    if ignore in warning.GetDescriptionText():
+                        element_ids = warning.GetFailingElements()
+                        for el_id in element_ids:
+                            element = doc.GetElement(el_id)
+                            return_value.update_sep(
+                                True,
+                                "{} Warning of type: duplicate {}. {} will be ignored.".format(
+                                    self.filter_name,
+                                    rdb.Element.Name.GetValue(element),
+                                    ignore,
+                                ),
+                            )
+                        should_continue_outer = True
+                        break  # Break out of the inner loop
+                if should_continue_outer:
+                    continue  # Continue the outer loop
                 element_ids = warning.GetFailingElements()
                 for el_id in element_ids:
                     element = doc.GetElement(el_id)
                     # check whether element passes filter
                     if self.filter(doc, el_id, self.filter_values):
+
                         try:
                             p_value = rParaGet.get_built_in_parameter_value(
                                 element, rdb.BuiltInParameter.ALL_MODEL_MARK
@@ -97,22 +122,33 @@ class RevitWarningsSolverDuplicateMark(base.Base):
                                     "",
                                 )
                                 return_value.update(result)
+                            else:
+                                return_value.update_sep(
+                                    True,
+                                    "{}:  Element has no mark value: {}".format(
+                                        self.filter_name,
+                                        rdb.Element.Name.GetValue(element),
+                                    ),
+                                )
                         except Exception as e:
                             return_value.update_sep(
                                 False,
-                                "Failed to solve warning duplicate mark with exception: {}".format(
-                                    e
+                                "{}: Failed to solve warning duplicate mark with exception: {}".format(
+                                    self.filter_name, e
                                 ),
                             )
                     else:
                         return_value.update_sep(
                             True,
-                            "Element removed by filter: {} : {}".format(
+                            "{}: Element removed by filter: {}".format(
                                 self.filter_name, rdb.Element.Name.GetValue(element)
                             ),
                         )
         else:
             return_value.update_sep(
-                True, "No warnings of type: duplicate mark in model."
+                True,
+                "{}: No warnings of type: duplicate mark in model.".format(
+                    self.filter_name
+                ),
             )
         return return_value

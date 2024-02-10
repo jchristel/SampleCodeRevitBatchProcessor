@@ -4,9 +4,92 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Launcher_GUI"
+        xmlns:local_view_models="clr-namespace:Launcher_GUI.ViewModels"
+        xmlns:nodify="clr-namespace:Nodify;assembly=Nodify"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Window.Resources>
+        <GeometryDrawing x:Key="SmallGridGeometry"
+                        Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
+                        Brush="{StaticResource NodifyEditor.SelectionRectangleBackgroundBrush}" />
 
+        <GeometryDrawing x:Key="LargeGridGeometry"
+                        Geometry="M0,0 L0,1 0.015,1 0.015,0.015 1,0.015 1,0 Z"
+                        Brush="{StaticResource NodifyEditor.SelectionRectangleBackgroundBrush}" />
+
+        <DrawingBrush x:Key="SmallGridLinesDrawingBrush"
+                    TileMode="Tile"
+                    ViewportUnits="Absolute"
+                    Viewport="0 0 20 20"
+                    Transform="{Binding ViewportTransform, ElementName=Editor}"
+                    Drawing="{StaticResource SmallGridGeometry}" />
+
+        <DrawingBrush x:Key="LargeGridLinesDrawingBrush"
+                    TileMode="Tile"
+                    ViewportUnits="Absolute"
+                    Opacity="0.5"
+                    Viewport="0 0 100 100"
+                    Transform="{Binding ViewportTransform, ElementName=Editor}"
+                    Drawing="{StaticResource LargeGridGeometry}" />
+    </Window.Resources>
+    <Grid Background="{StaticResource NodifyEditor.BackgroundBrush}">
+        <nodify:NodifyEditor  x:Name="Editor" Background="{StaticResource SmallGridLinesDrawingBrush}"
+                             ItemsSource="{Binding Nodes}"
+                             Connections="{Binding Connections}"
+                             PendingConnection="{Binding PendingConnection}"
+                             DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}">
+            <nodify:NodifyEditor.DataContext>
+                <local_view_models:EditorViewModel />
+            </nodify:NodifyEditor.DataContext>
+
+            <nodify:NodifyEditor.ItemTemplate>
+                <DataTemplate DataType="{x:Type local_view_models:NodeViewModel}">
+                    <nodify:Node Header="{Binding Title}"
+                         Input="{Binding Input}"
+                         Output="{Binding Output}">
+                        <nodify:Node.InputConnectorTemplate>
+                            <DataTemplate DataType="{x:Type local_view_models:ConnectorViewModel}">
+                                <nodify:NodeInput Header="{Binding Title}"
+                                        IsConnected="True"
+                                        Anchor="{Binding Anchor, Mode=OneWayToSource}" />
+                            </DataTemplate>
+                        </nodify:Node.InputConnectorTemplate>
+
+                        <nodify:Node.OutputConnectorTemplate>
+                            <DataTemplate DataType="{x:Type local_view_models:ConnectorViewModel}">
+                                <nodify:NodeOutput Header="{Binding Title}"
+                                    IsConnected="{Binding IsConnected}"
+                                    Anchor="{Binding Anchor, Mode=OneWayToSource}"  />
+                            </DataTemplate>
+                        </nodify:Node.OutputConnectorTemplate>
+                    </nodify:Node>
+                </DataTemplate>
+            </nodify:NodifyEditor.ItemTemplate>
+
+            <nodify:NodifyEditor.ConnectionTemplate>
+                <DataTemplate DataType="{x:Type local_view_models:ConnectionViewModel}">
+                    <nodify:LineConnection Source="{Binding Source.Anchor}"
+                                   Target="{Binding Target.Anchor}" />
+                </DataTemplate>
+            </nodify:NodifyEditor.ConnectionTemplate>
+
+            <nodify:NodifyEditor.PendingConnectionTemplate>
+                <DataTemplate DataType="{x:Type local_view_models:PendingConnectionViewModel}">
+                    <nodify:PendingConnection StartedCommand="{Binding StartCommand}"
+                                      CompletedCommand="{Binding FinishCommand}"
+                                      AllowOnlyConnectors="True" />
+                </DataTemplate>
+            </nodify:NodifyEditor.PendingConnectionTemplate>
+
+            <nodify:NodifyEditor.ItemContainerStyle>
+                <Style TargetType="{x:Type nodify:ItemContainer}">
+                    <Setter Property="Location" 
+                    Value="{Binding Location}" />
+                </Style>
+            </nodify:NodifyEditor.ItemContainerStyle>
+
+        </nodify:NodifyEditor>
+        <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"
+              Panel.ZIndex="-2" />
     </Grid>
 </Window>

@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:Launcher_GUI"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/Nodify.xaml" />
     </Application.Resources>
 </Application>

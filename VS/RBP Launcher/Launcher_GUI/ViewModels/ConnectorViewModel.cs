@@ -8,32 +8,51 @@ using System.Windows;
 
 namespace Launcher_GUI.ViewModels
 {
-    public class ConnectorViewModel : INotifyPropertyChanged
+    public class ConnectorViewModel : ObservableObject
     {
-        private Point _anchor;
-        public Point Anchor
+        private string? _title;
+        public string? Title
         {
-            set
-            {
-                _anchor = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Anchor)));
-            }
-            get => _anchor;
+            get => _title;
+            set => SetProperty(ref _title, value);
+        }
+
+        private double _value;
+        public double Value
+        {
+            get => _value;
+            set => SetProperty(ref _value, value)
+                .Then(() => ValueObservers.ForEach(o => o.Value = value));
         }
 
         private bool _isConnected;
         public bool IsConnected
         {
-            set
-            {
-                _isConnected = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsConnected)));
-            }
             get => _isConnected;
+            set => SetProperty(ref _isConnected, value);
         }
 
-        public string Title { get; set; }
+        private bool _isInput;
+        public bool IsInput
+        {
+            get => _isInput;
+            set => SetProperty(ref _isInput, value);
+        }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private Point _anchor;
+        public Point Anchor
+        {
+            get => _anchor;
+            set => SetProperty(ref _anchor, value);
+        }
+
+        private OperationViewModel _operation = default!;
+        public OperationViewModel Operation
+        {
+            get => _operation;
+            set => SetProperty(ref _operation, value);
+        }
+
+        public List<ConnectorViewModel> ValueObservers { get; } = new List<ConnectorViewModel>();
     }
 }

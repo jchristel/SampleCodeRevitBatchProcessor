@@ -6,18 +6,20 @@ using System.Threading.Tasks;
 
 namespace Launcher_GUI.ViewModels
 {
-    public class ConnectionViewModel
+    public class ConnectionViewModel : ObservableObject
     {
-        public ConnectionViewModel(ConnectorViewModel source, ConnectorViewModel target)
+        private ConnectorViewModel _input = default!;
+        public ConnectorViewModel Input
         {
-            Source = source;
-            Target = target;
-
-            Source.IsConnected = true;
-            Target.IsConnected = true;
+            get => _input;
+            set => SetProperty(ref _input, value);
         }
 
-        public ConnectorViewModel Source { get; }
-        public ConnectorViewModel Target { get; }
+        private ConnectorViewModel _output = default!;
+        public ConnectorViewModel Output
+        {
+            get => _output;
+            set => SetProperty(ref _output, value);
+        }
     }
 }

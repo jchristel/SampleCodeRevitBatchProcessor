@@ -5,26 +5,39 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Launcher_GUI.ViewModels;
+using System.Windows;
 
 namespace Launcher_GUI.ViewModels
 {
-    public class PendingConnectionViewModel
+    public class PendingConnectionViewModel : ObservableObject
     {
-        private readonly EditorViewModel _editor;
-        private ConnectorViewModel _source;
-
-        public PendingConnectionViewModel(EditorViewModel editor)
+        private ConnectorViewModel _source = default!;
+        public ConnectorViewModel Source
         {
-            _editor = editor;
-            StartCommand = new DelegateCommand<ConnectorViewModel>(source => _source = source);
-            FinishCommand = new DelegateCommand<ConnectorViewModel>(target =>
-            {
-                if (target != null)
-                    _editor.Connect(_source, target);
-            });
+            get => _source;
+            set => SetProperty(ref _source, value);
         }
 
-        public ICommand StartCommand { get; }
-        public ICommand FinishCommand { get; }
+        private ConnectorViewModel? _target;
+        public ConnectorViewModel? Target
+        {
+            get => _target;
+            set => SetProperty(ref _target, value);
+        }
+
+        private bool _isVisible;
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set => SetProperty(ref _isVisible, value);
+        }
+
+        private Point _targetLocation;
+
+        public Point TargetLocation
+        {
+            get => _targetLocation;
+            set => SetProperty(ref _targetLocation, value);
+        }
     }
 }

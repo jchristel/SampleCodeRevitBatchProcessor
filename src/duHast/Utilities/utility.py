@@ -216,3 +216,20 @@ def flatten(d, parent_key="", sep="_"):
         else:
             items.append((new_key, v))
     return dict(items)
+
+def flatten_list(lst):
+    """
+    Function to flatten a nested list
+    
+    :param lst: The list to be flattened
+    :type lst: list
+    :return: The flattened list
+    :rtype: list
+    """
+    flattened = []
+    for item in lst:
+        if isinstance(item, list):
+            flattened.extend(flatten(item))
+        else:
+            flattened.append(item)
+    return flattened

@@ -270,7 +270,7 @@ def delete_unwanted_shared_parameters(doc):
     return return_value
 
 
-def swap_shared_parameters(doc):
+def swap_shared_parameters_in_family(doc):
     """
     Swaps out shared parameters as per directive
 

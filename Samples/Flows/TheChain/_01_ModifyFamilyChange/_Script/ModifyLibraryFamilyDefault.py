@@ -60,9 +60,13 @@ from duHast.Revit.Family.family_reference_elements import (
     set_ref_planes_to_not_a_reference,
     set_symbolic_and_model_lines_to_not_a_reference,
 )
-from duHast.Revit.Family.Data.family_data_collector import RevitFamilyDataCollector
+from duHast.Revit.Family.Data.Objects.family_data_collector import (
+    RevitFamilyDataCollector,
+)
 from duHast.Revit.Purge.purge_unused_e_transmit import purge_unused_e_transmit
-from duHast.Revit.Categories.Data.category_data_processor import CategoryProcessor
+from duHast.Revit.Categories.Data.Objects.category_data_processor import (
+    CategoryProcessor,
+)
 from duHast.Revit.Categories.Data.category_data_purge_unused import (
     purge_unused_sub_categories,
 )
@@ -81,7 +85,7 @@ from duHast.Revit.SharedParameters.Data.shared_parameter_data_purge_Unused impor
 
 import ModifyLibraryFamilyDefaultParameters as rParameterDefaultActions
 
-from timer import Timer
+from duHast.Utilities.Objects.timer import Timer
 
 import revit_script_util
 import revit_file_util
@@ -167,7 +171,7 @@ def process_family(doc, processor):
     if family_name.lower().endswith(".rfa"):
         family_name = family_name[:-4]
     # process family
-    flag_data_collection_ = collector.processFamily(
+    flag_data_collection_ = collector.process_family(
         doc, family_name, family_category_name
     )
     return processor, flag_data_collection_
@@ -382,13 +386,13 @@ def purge_unused_others(doc):
 
     try:
         # swap shared parameters
-        outcome_swap_shared_paras = rParameterDefaultActions.swap_shared_parameters(doc)
+        outcome_swap_shared_paras = rParameterDefaultActions.swap_shared_parameters_in_family(doc)
         # check if both actions succeeded...if only one do not change the status to false since the
         # family still requires to be saved!
         return_value = update_purge_status(return_value, outcome_swap_shared_paras)
     except Exception as e:
         output(
-            "Exception in changing shared parameters to family parameters:{} ".format(
+            "Exception in swap shared parameters:{} ".format(
                 e
             ),
             revit_script_util.Output,

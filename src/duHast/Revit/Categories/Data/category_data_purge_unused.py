@@ -67,7 +67,7 @@ def purge_unused_sub_categories(doc, processor):
 
     ids_to_delete = []
     # get categories found in root processor data only
-    root_fam_data = processor._findRootFamilyData()
+    root_fam_data = processor._find_root_family_data()
     # get all root category entries where usage counter == 0 and subCategoryId > 0 (pointing to a custom sub category and not a built in one).
     for root_fam in root_fam_data:
         if (

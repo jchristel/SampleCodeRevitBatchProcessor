@@ -78,7 +78,7 @@ def purge_unused(doc, processor):
     if fam_cat_name != "Generic Annotations" and fam_cat_name.endswith("Tags") == False:
         ids_to_delete = []
         # get categories found in root processor data only
-        root_fam_data = processor._findRootFamilyData()
+        root_fam_data = processor._find_root_family_data()
         # get all root line pattern entries where usage counter == 0.
         for root_fam in root_fam_data:
             if root_fam[IFamData.USAGE_COUNTER] == 0:

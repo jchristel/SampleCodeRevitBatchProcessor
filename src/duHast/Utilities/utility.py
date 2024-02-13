@@ -229,7 +229,7 @@ def flatten_list(lst):
     flattened = []
     for item in lst:
         if isinstance(item, list):
-            flattened.extend(flatten(item))
+            flattened.extend(flatten_list(item))
         else:
             flattened.append(item)
     return flattened

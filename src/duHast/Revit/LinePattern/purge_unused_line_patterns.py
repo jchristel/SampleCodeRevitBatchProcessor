@@ -3,6 +3,7 @@
 Function to purge Revit line patterns.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -83,7 +84,12 @@ def purge_unused_line_patterns(rvt_doc, DEBUG=False):
                     )
                     for elem_id in modified_elems:
                         elem = rvt_doc.GetElement(elem_id)
-                        debug_string += "{}\n".format(elem.Name)
+                        try:
+                            debug_string += "{}\n".format(elem.Name)
+                        except:
+                            debug_string += "Element Id: {}\n".format(
+                                str(elem.Id.IntegerValue)
+                            )
 
             print(debug_string)
 
@@ -104,17 +110,18 @@ def purge_unused_line_patterns(rvt_doc, DEBUG=False):
 
     # Loop through the line patterns and delete them one by one
     for lp in line_patterns:
+        lp_name = lp.Name
         if DEBUG:
-            print("Processing line pattern: {}".format(lp.Name))
+            print("Processing line pattern: {}".format(lp_name))
 
-        line_pattern_data = lp.Name + " (id: {})".format(lp.Id)
-
+        line_pattern_data = lp_name + " (id: {})".format(lp.Id)
+        t_name = "Purge Line Pattern: {}".format(lp_name)
         # Transaction group is what we will roll back if there is a modified element
-        trans_grp = TransactionGroup(rvt_doc, "Purge Line Patterns")
+        trans_grp = TransactionGroup(rvt_doc, t_name)
         trans_grp.Start()
 
         # Transaction is what we will commit to trigger DocumentChanged
-        trans = Transaction(rvt_doc, "Purge Line Pattern")
+        trans = Transaction(rvt_doc, t_name)
         trans.Start()
 
         rvt_doc.Delete(lp.Id)
@@ -129,6 +136,10 @@ def purge_unused_line_patterns(rvt_doc, DEBUG=False):
 
         else:
             trans_grp.RollBack()
+
+        # Reset the modified_by_delete variable here incase it is
+        # not reset in the DocumentChanged event
+        modified_by_delete = 0
 
     deleted_line_patterns += "\n"
     out_message = "\nDeleted {} unused line patterns:\n\n{}".format(

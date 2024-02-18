@@ -27,6 +27,11 @@ Function to purge Revit line patterns.
 #
 #
 
+import clr
+import System
+clr.AddReference("System.Core")
+clr.ImportExtensions(System.Linq)
+
 from Autodesk.Revit.DB import (
     FilteredElementCollector,
     LinePatternElement,

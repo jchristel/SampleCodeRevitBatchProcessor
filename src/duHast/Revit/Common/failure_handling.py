@@ -42,7 +42,6 @@ from Autodesk.Revit.DB import (
     FailureResolutionType,
     FailureSeverity,
     FailureProcessingResult,
-    IFailuresPreprocessor,
 )
 
 
@@ -52,21 +51,12 @@ def Output(message=""):
     """
     print(message)
 
+def get_failure_warning_report(failure, failure_definition):
+    failure_message = []
 
-def _report_failure_warning(failure, failure_definition):
-    """
-    Reports elements that are failing and the failure description to the output window
-
-    :param failure: The failure to report
-    :type failure: FailureMessage
-    :param failure_definition: The failure definition
-    :type failure_definition: FailureDefinition
-
-    """
     failure_severity = failure.GetSeverity()
-    # TODO: more thorough reporting?
-    Output()
-    Output(
+    failure_message.append("\n")
+    failure_message.append(
         "\t"
         + str(failure_severity)
         + " - "
@@ -84,8 +74,8 @@ def _report_failure_warning(failure, failure_definition):
     ):
         failing_element_ids = failure.GetFailingElementIds()
         if len(failing_element_ids) > 0:
-            Output()
-            Output(
+            failure_message.append("\n")
+            failure_message.append(
                 "\t"
                 + "Failing element ids: {}".format(
                     element_ids_to_semicolon_delimited_text(failing_element_ids)
@@ -93,8 +83,8 @@ def _report_failure_warning(failure, failure_definition):
             )
         additional_elementIds = failure.GetAdditionalElementIds()
         if len(additional_elementIds) > 0:
-            Output()
-            Output(
+            failure_message.append("\n")
+            failure_message.append(
                 "\t"
                 + "Additional element ids: {}".format(
                     element_ids_to_semicolon_delimited_text(additional_elementIds)
@@ -103,12 +93,12 @@ def _report_failure_warning(failure, failure_definition):
 
     if failure_severity == FailureSeverity.Error:
         if failure.HasResolutions():
-            Output()
-            Output("\t" + "Applicable resolution types:")
-            Output()
+            failure_message.append("\n")
+            failure_message.append("\t" + "Applicable resolution types:")
+            failure_message.append("\n")
             default_resolution_type = failure_definition.GetDefaultResolutionType()
             for resolution_type in failure_definition.GetApplicableResolutionTypes():
-                Output(
+                failure_message.append(
                     "\t\t"
                     + str(resolution_type)
                     + (
@@ -122,9 +112,24 @@ def _report_failure_warning(failure, failure_definition):
                     + "'"
                 )
         else:
-            Output()
-            Output("\t" + "WARNING: no resolutions available")
+            failure_message.append("\n")
+            failure_message.append("\t" + "WARNING: no resolutions available")
+    return failure_message
 
+def _report_failure_warning(failure, failure_definition):
+    """
+    Reports elements that are failing and the failure description to the output window
+
+    :param failure: The failure to report
+    :type failure: FailureMessage
+    :param failure_definition: The failure definition
+    :type failure_definition: FailureDefinition
+
+    """
+    
+    failure_messages =  get_failure_warning_report(failure, failure_definition)
+    failure_message_string = '\n'.join(failure_messages)
+    Output (failure_message_string)
     return
 
 
@@ -206,26 +211,6 @@ def process_failures(failures_accessor, roll_back_on_warning=False):
         result = FailureProcessingResult.Continue
     return result
 
-
-class FailuresPreprocessor(IFailuresPreprocessor):
-    def __init__(self, output):
-        self.output = output
-        return
-
-    def PreprocessFailures(self, failures_accessor):
-        result = process_failures(failures_accessor, self.output)
-        return result
-
-
-def SetTransactionFailureOptions(transaction, output):
-    failureOptions = transaction.GetFailureHandlingOptions()
-    failureOptions.SetForcedModalHandling(True)
-    failureOptions.SetClearAfterRollback(True)
-    failureOptions.SetFailuresPreprocessor(FailuresPreprocessor(output))
-    transaction.SetFailureHandlingOptions(failureOptions)
-    return
-
-
 def set_failures_accessor_failure_options(failures_accessor):
     failureOptions = failures_accessor.GetFailureHandlingOptions()
     failureOptions.SetForcedModalHandling(True)
@@ -272,11 +257,6 @@ def with_failures_processing_handler(app, action):
 # -------------------------------------------------------------------------------------------------------------
 # END OF FAILURE HANDLING CODE COPIED FROM REVIT BATCH PROCESSOR
 # -------------------------------------------------------------------------------------------------------------
-
-# ----------------------------------------------
-# AREA OUTLINE REPLICATION CODE START
-# ----------------------------------------------
-
 
 def in_transaction_with_failures_processing(tranny, action, doc):
     """

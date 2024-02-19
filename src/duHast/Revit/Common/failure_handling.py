@@ -46,6 +46,12 @@ from Autodesk.Revit.DB import (
 )
 
 
+class FailureHandlingConfig:
+    def __init__(self, report_failures=True, roll_back_on_warning=False):
+        self.report_failures = report_failures
+        self.roll_back_on_warning = roll_back_on_warning
+
+
 def Output(message=""):
     """
     Default Output function to print to console
@@ -128,17 +134,18 @@ def _report_failure_warning(failure, failure_definition):
     return
 
 
-def process_failures(failures_accessor, roll_back_on_warning=False):
+def process_failures(failures_accessor, fail_config):
     """
     Process the failures encountered when transacting with a Revit document
 
     :param failures_accessor: The failures accessor to process
     :type failures_accessor: FailuresAccessor
-    :param roll_back_on_warning: Whether to roll back the transaction on warnings
-    :type roll_back_on_warning: bool
     :return: The result of the failure processing
     :rtype: FailureProcessingResult
     """
+    roll_back_on_warning = fail_config.roll_back_on_warning
+    report_failures = fail_config.report_failures
+
     try:
         result = FailureProcessingResult.Continue
         doc = failures_accessor.GetDocument()
@@ -146,57 +153,61 @@ def process_failures(failures_accessor, roll_back_on_warning=False):
         failure_registry = app.GetFailureDefinitionRegistry()
         failures = failures_accessor.GetFailureMessages()
         if failures.Any():
-            Output()
-            Output(
-                "Processing Revit document warnings / failures ({}):".format(
-                    failures.Count
+            if report_failures:
+                Output()
+                Output(
+                    "Processing Revit document warnings / failures ({}):".format(
+                        failures.Count
+                    )
                 )
-            )
-            for failure in failures:
-                failure_definition = failure_registry.FindFailureDefinition(
-                    failure.GetFailureDefinitionId()
-                )
-                _report_failure_warning(failure, failure_definition)
-                failure_severity = failure.GetSeverity()
-                if (
-                    failure_severity == FailureSeverity.Warning
-                    and not roll_back_on_warning
-                ):
-                    failures_accessor.DeleteWarning(failure)
-                elif (
-                    failure_severity == FailureSeverity.Error
-                    and failure.HasResolutions()
-                    and result != FailureProcessingResult.ProceedWithRollBack
-                    and not roll_back_on_warning
-                    and str(failure.GetFailureDefinitionId().Guid)
-                    != "3b7fcaec-c01e-4c2e-819f-67ddd102ce1f"  # locked element by other user
-                ):
-                    # If Unlock Constraints is a valid resolution type for the current failure, use it.
-                    if failure.HasResolutionOfType(
-                        FailureResolutionType.UnlockConstraints
+                for failure in failures:
+                    failure_definition = failure_registry.FindFailureDefinition(
+                        failure.GetFailureDefinitionId()
+                    )
+
+                    _report_failure_warning(failure, failure_definition)
+                    failure_severity = failure.GetSeverity()
+                    if (
+                        failure_severity == FailureSeverity.Warning
+                        and not roll_back_on_warning
                     ):
-                        failure.SetCurrentResolutionType(
+                        failures_accessor.DeleteWarning(failure)
+                    elif (
+                        failure_severity == FailureSeverity.Error
+                        and failure.HasResolutions()
+                        and result != FailureProcessingResult.ProceedWithRollBack
+                        and not roll_back_on_warning
+                        and str(failure.GetFailureDefinitionId().Guid)
+                        != "3b7fcaec-c01e-4c2e-819f-67ddd102ce1f"  # locked element by other user
+                    ):
+                        # If Unlock Constraints is a valid resolution type for the current failure, use it.
+                        if failure.HasResolutionOfType(
                             FailureResolutionType.UnlockConstraints
-                        )
-                    elif failure_definition.IsResolutionApplicable(
-                        FailureResolutionType.UnlockConstraints
-                    ):
+                        ):
+                            failure.SetCurrentResolutionType(
+                                FailureResolutionType.UnlockConstraints
+                            )
+                        elif failure_definition.IsResolutionApplicable(
+                            FailureResolutionType.UnlockConstraints
+                        ):
+                            Output()
+                            Output(
+                                "\t"
+                                + "WARNING: UnlockConstraints is not a valid resolution for this failure despite the definition reporting that it is an applicable resolution!"
+                            )
                         Output()
                         Output(
                             "\t"
-                            + "WARNING: UnlockConstraints is not a valid resolution for this failure despite the definition reporting that it is an applicable resolution!"
+                            + "Attempting to resolve error using resolution: {}".format(
+                                failure.GetCurrentResolutionType()
+                            )
                         )
-                    Output()
-                    Output(
-                        "\t"
-                        + "Attempting to resolve error using resolution: {}".format(
-                            failure.GetCurrentResolutionType()
-                        )
-                    )
-                    failures_accessor.ResolveFailure(failure)
-                    result = FailureProcessingResult.ProceedWithCommit
-                else:
-                    result = FailureProcessingResult.ProceedWithRollBack
+                        failures_accessor.ResolveFailure(failure)
+                        result = FailureProcessingResult.ProceedWithCommit
+                    else:
+                        result = FailureProcessingResult.ProceedWithRollBack
+            else:
+                result = FailureProcessingResult.ProceedWithRollBack
         else:
             result = FailureProcessingResult.Continue
     except Exception as e:
@@ -207,25 +218,6 @@ def process_failures(failures_accessor, roll_back_on_warning=False):
     return result
 
 
-class FailuresPreprocessor(IFailuresPreprocessor):
-    def __init__(self, output):
-        self.output = output
-        return
-
-    def PreprocessFailures(self, failures_accessor):
-        result = process_failures(failures_accessor, self.output)
-        return result
-
-
-def SetTransactionFailureOptions(transaction, output):
-    failureOptions = transaction.GetFailureHandlingOptions()
-    failureOptions.SetForcedModalHandling(True)
-    failureOptions.SetClearAfterRollback(True)
-    failureOptions.SetFailuresPreprocessor(FailuresPreprocessor(output))
-    transaction.SetFailureHandlingOptions(failureOptions)
-    return
-
-
 def set_failures_accessor_failure_options(failures_accessor):
     failureOptions = failures_accessor.GetFailureHandlingOptions()
     failureOptions.SetForcedModalHandling(True)
@@ -234,19 +226,19 @@ def set_failures_accessor_failure_options(failures_accessor):
     return
 
 
-def FailuresProcessingEventHandler(sender, args):
+def FailuresProcessingEventHandler(sender, args, fail_config):
     """
     Function to execute when Revit raises the FailuresProcessing event
     """
 
     failures_accessor = args.GetFailuresAccessor()
     set_failures_accessor_failure_options(failures_accessor)
-    result = process_failures(failures_accessor)
+    result = process_failures(failures_accessor, fail_config)
     args.SetProcessingResult(result)
     return
 
 
-def with_failures_processing_handler(app, action):
+def with_failures_processing_handler(app, action, fail_config):
     """
     Execute an action with Revit failure processing enabled
 
@@ -259,7 +251,7 @@ def with_failures_processing_handler(app, action):
     """
     result = None
     failure_processing_event_handler = EventHandler[FailuresProcessingEventArgs](
-        lambda sender, args: FailuresProcessingEventHandler(sender, args)
+        lambda sender, args: FailuresProcessingEventHandler(sender, args, fail_config)
     )
     app.FailuresProcessing += failure_processing_event_handler
     try:
@@ -278,7 +270,9 @@ def with_failures_processing_handler(app, action):
 # ----------------------------------------------
 
 
-def in_transaction_with_failures_processing(tranny, action, doc):
+def in_transaction_with_failures_processing(
+    tranny, action, doc, fail_config=FailureHandlingConfig()
+):
     """
     Executes an action within a Revit transaction with Revit failure processing enabled
 
@@ -288,6 +282,7 @@ def in_transaction_with_failures_processing(tranny, action, doc):
     :type action: function
     :param doc: The document to transact with
     :type doc: Document
+    :param rollback_on_warning: Whether to
     :return: The result of the action
     :rtype: object
 
@@ -304,5 +299,5 @@ def in_transaction_with_failures_processing(tranny, action, doc):
             tranny.RollBack()
         return result
 
-    result = with_failures_processing_handler(doc.Application, inAction)
+    result = with_failures_processing_handler(doc.Application, inAction, fail_config)
     return result

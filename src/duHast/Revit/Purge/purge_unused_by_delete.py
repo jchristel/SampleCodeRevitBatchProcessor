@@ -38,7 +38,7 @@ clr.AddReference("System.Core")
 clr.ImportExtensions(System.Linq)
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Revit.Common.failure_handling import get_failure_warning_report
+from duHast.Revit.Common.failure_handling import get_failure_warning_report, set_failures_accessor_failure_options
 from duHast.Revit.Common.Objects.FailuresPreProcessor import FailuresPreprocessor
 
 from Autodesk.Revit.DB import (
@@ -102,6 +102,10 @@ def pre_process_failures(failures_accessor, process_result):
     :rtype: FailureProcessingResult
     """
     try:
+        # attempt to set failure accessor options
+        # to suppress any warning dialogues
+        set_failures_accessor_failure_options(failures_accessor)
+        # process warnings if any
         result = FailureProcessingResult.Continue
         doc = failures_accessor.GetDocument()
         app = doc.Application

@@ -212,6 +212,14 @@ def process_failures(failures_accessor, roll_back_on_warning=False):
     return result
 
 def set_failures_accessor_failure_options(failures_accessor):
+    """
+    Set the failure handling options for a failures accessor
+
+    The below settings suppress any warning dialogues and automatically clear the failures after a rollback.
+    :param failures_accessor: The failures accessor to set the failure handling options for
+    :type failures_accessor: FailuresAccessor
+    """
+
     failureOptions = failures_accessor.GetFailureHandlingOptions()
     failureOptions.SetForcedModalHandling(True)
     failureOptions.SetClearAfterRollback(True)

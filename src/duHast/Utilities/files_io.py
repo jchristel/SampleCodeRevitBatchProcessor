@@ -119,6 +119,23 @@ def copy_file(old_name, new_name):
         value = False
     return value
 
+def file_move(old_name, new_name):
+    """
+    Moves a file
+    :param old_name: Fully qualified file path to file to be moved.
+    :type old_name: str
+    :param new_name: Fully qualified path to new file location and name.
+    :type new_name: str
+    :return: True file moved, otherwise False
+    :rtype: bool
+    """
+
+    value = True
+    try:
+        shutil.move(old_name, new_name)
+    except Exception:
+        value = False
+    return value
 
 #: file size in KB conversion
 FILE_SIZE_IN_KB = 1024

@@ -174,7 +174,7 @@ def check_whether_shared_parameters_by_name_is_family_parameter(doc, parameter_n
     for fam_para in paras:
         if fam_para.Definition.Name == parameter_name:
             try:
-                # only shared parameters hav .GUID property...
+                # only shared parameters have .GUID property...
                 if str(fam_para.GUID) != "":
                     para = fam_para
                     break

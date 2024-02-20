@@ -386,15 +386,15 @@ def purge_unused_others(doc):
 
     try:
         # swap shared parameters
-        outcome_swap_shared_paras = rParameterDefaultActions.swap_shared_parameters_in_family(doc)
+        outcome_swap_shared_paras = (
+            rParameterDefaultActions.swap_shared_parameters_in_family(doc)
+        )
         # check if both actions succeeded...if only one do not change the status to false since the
         # family still requires to be saved!
         return_value = update_purge_status(return_value, outcome_swap_shared_paras)
     except Exception as e:
         output(
-            "Exception in swap shared parameters:{} ".format(
-                e
-            ),
+            "Exception in swap shared parameters:{} ".format(e),
             revit_script_util.Output,
         )
 
@@ -486,10 +486,7 @@ for family_action in family_actions:
         result_family_action.message,
         revit_script_util.Output,
     )
-    output(
-        str(result_family_action.status),
-        revit_script_util.Output,
-    )
+    output("[{}]".format(result_family_action.status), revit_script_util.Output)
 
 output(
     str(t.stop()),

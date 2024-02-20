@@ -67,6 +67,7 @@ from duHast.Revit.Common.transaction import in_transaction
 from duHast.Revit.Common.delete import delete_by_element_ids
 from duHast.Utilities.files_csv import read_csv_file
 from duHast.Utilities.date_stamps import get_file_date_stamp
+from duHast.Utilities.files_io import file_exist
 
 from duHast.Revit.SharedParameters.shared_parameters_tuple import PARAMETER_DATA
 
@@ -129,6 +130,16 @@ def change_parameter_to_family_parameter(doc):
     )
     # parameter change directives
     try:
+        # check if file exists
+        if file_exist(settings.CHANGE_SHARED_PARAMETER_TO_FAMILY_PARAMETER_PATH) == False:
+            return_value.update_sep(
+                False,
+                "No shared parameter change directives file found: {}".format(
+                    settings.CHANGE_SHARED_PARAMETER_TO_FAMILY_PARAMETER_PATH
+                ),
+            )
+            return return_value
+        
         fileData = read_csv_file(
             settings.CHANGE_SHARED_PARAMETER_TO_FAMILY_PARAMETER_PATH
         )
@@ -137,14 +148,18 @@ def change_parameter_to_family_parameter(doc):
                 if len(row) > 1:
                     parameter_mapper[row[0]] = row[1]  # get the family manager
         else:
+            # time to get out...
             return_value.update_sep(
                 False,
-                "No shared parameter change directives file found ot file is empty.",
+                "No shared parameter change directives file found or file is empty.",
             )
+            return return_value
     except Exception as e:
+        # time to get out...
         return_value.update_sep(
             False, "No shared parameter change directives file found.{}".format(e)
         )
+        return return_value
 
     # a match was found
     match_found = False
@@ -242,6 +257,16 @@ def delete_unwanted_shared_parameters(doc):
     return_value = Result()
     return_value.append_message("Deleting unwanted shared parameters...start")
     try:
+        # check if file exists
+        if file_exist(settings.DELETE_SHARED_PARAMETER_LIST_FILE_PATH) == False:
+            return_value.update_sep(
+                False,
+                "No shared parameter delete file found: {}".format(
+                    settings.DELETE_SHARED_PARAMETER_LIST_FILE_PATH
+                ),
+            )
+            return return_value
+        
         # read data file
         fileData = read_csv_file(settings.DELETE_SHARED_PARAMETER_LIST_FILE_PATH)
         guid_s_to_delete = []
@@ -255,7 +280,13 @@ def delete_unwanted_shared_parameters(doc):
                     "Shared parameter file contains malformed row: {}".format(row),
                 )
     except Exception as e:
-        return_value.update_sep(False, "No unwanted shared parameter file found.")
+        return_value.update_sep(
+            False,
+            "Failed to read shared parameter file: {} with exception: {}".format(
+                settings.DELETE_SHARED_PARAMETER_LIST_FILE_PATH, e
+            ),
+        )
+        return return_value
     # go ahead and delete...
     if len(guid_s_to_delete) > 0:
         result_delete = delete_shared_parameter_by_guid(doc, guid_s_to_delete)
@@ -292,26 +323,33 @@ def swap_shared_parameters_in_family(doc):
 
     :rtype: :class:`.Result`
     """
-
+    
+    return_value = Result()
+    if file_exist(settings.SWAP_SHARED_PARAMETER_DIRECTIVE_PATH) == False:
+        return_value.update_sep(
+            False,
+            "No shared parameter swap file found: {}".format(
+                settings.SWAP_SHARED_PARAMETER_DIRECTIVE_PATH
+            ),
+        )
+        return return_value
+    
     return_value = swap_shared_parameters(
         doc, settings.SWAP_SHARED_PARAMETER_DIRECTIVE_PATH
     )
     return return_value
 
 
-# shared parameter file path ( TODO: can this be made an argument?)
-SHARED_PARAMETER_FILE_PATH_RENAME = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_01_ModifyFamilyChange\_Users\jchristel\_Input\Shared_Parameters_Sample.txt"
-
 TODAYS_DATE = get_file_date_stamp()
 # tuple containing the shared parameters to be added
 SHARED_PARAMETERS_TO_ADD = {
-    "Sample Parameter Name": [
+    "NewTestParameter": [
         PARAMETER_DATA(
             "NewTestParameter", True, BuiltInParameterGroup.PG_IDENTITY_DATA
         ),
         "",
         "sample value",
-        SHARED_PARAMETER_FILE_PATH_RENAME,
+        settings.SHARED_PARAMETER_FILE_PATH,
     ],
 }
 
@@ -361,6 +399,7 @@ def add_default_parameters(doc, shared_parameters_to_add):
             )
             # if not add it to family
             if family_shared_parameter == None:
+                return_value.append_message("Parameter:  {} not found in family".format(para))
                 family_parameter_result = add_shared_parameter_to_family(
                     shared_parameters_to_add[para][0],
                     manager,
@@ -374,6 +413,9 @@ def add_default_parameters(doc, shared_parameters_to_add):
                     return_value.update_sep(
                         False, "Failed to add parameter:  {} to family!".format(para)
                     )
+            else:
+                return_value.append_message("Parameter:  {} found in family".format(para))
+            
             # add parameter value if at least one type exists
             if family_types.Size > 0:
                 # check whether a formula or a value needs to be set

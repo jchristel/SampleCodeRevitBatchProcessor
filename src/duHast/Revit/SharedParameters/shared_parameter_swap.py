@@ -51,6 +51,7 @@ import System
 # from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities import files_csv as fileCSV
+from duHast.Utilities.files_io import file_exist
 from duHast.Revit.SharedParameters import shared_parameter_add as rSharedPAdd
 from duHast.Revit.SharedParameters import shared_parameters_tuple as rSharedT
 from duHast.Revit.Common import parameter_grouping as rPG
@@ -124,77 +125,89 @@ def swap_shared_parameters(doc, change_directive_file_path):
 
     return_value = res.Result()
     _parameter_prefix_ = "_dummy_"
+
+    # check if file exists
+    if(file_exist(change_directive_file_path) == False):
+        return_value.update_sep(False, "Change directive file does not exist: {}".format(change_directive_file_path))
+        return return_value
+    
     # load change directive
     parameter_directives = _load_shared_parameter_data_from_file(
         change_directive_file_path
     )
-    if len(parameter_directives) > 0:
-        # loop over directive and
-        for p_directive in parameter_directives:
-            # load shared para file
-            shared_para_def_file = rSharedPAdd.load_shared_parameter_file(
-                doc, parameter_directives[p_directive].sharedParameterPath
+
+    # check if there are any directives
+    if len(parameter_directives) == 0:
+        return_value.update_sep(False, "No parameter directives in file.")
+        return return_value
+    
+    
+    # loop over directive and
+    for p_directive in parameter_directives:
+        # load shared para file
+        shared_para_def_file = rSharedPAdd.load_shared_parameter_file(
+            doc, parameter_directives[p_directive].sharedParameterPath
+        )
+        return_value.append_message(
+            "Read shared parameter file: {}".format(
+                parameter_directives[p_directive].sharedParameterPath
             )
-            return_value.append_message(
-                "Read shared parameter file: {}".format(
-                    parameter_directives[p_directive].sharedParameterPath
+        )
+
+        if shared_para_def_file != None:
+            #   - swap shared parameter to family parameter
+            status_change_to_fam_para = (
+                rSharedTypeChange.change_shared_parameter_to_family_parameter(
+                    doc, p_directive, _parameter_prefix_
                 )
             )
-            if shared_para_def_file != None:
-                #   - swap shared parameter to family parameter
-                status_change_to_fam_para = (
-                    rSharedTypeChange.change_shared_parameter_to_family_parameter(
-                        doc, p_directive, _parameter_prefix_
+            return_value.update(status_change_to_fam_para)
+            if status_change_to_fam_para.status:
+                #   - delete all shared parameter definition
+                status_delete_old_shared_para_def = (
+                    rSharedParaDelete.delete_shared_parameter_by_name(
+                        doc, p_directive
                     )
                 )
-                return_value.update(status_change_to_fam_para)
-                if status_change_to_fam_para.status:
-                    #   - delete all shared parameter definition
-                    status_delete_old_shared_para_def = (
-                        rSharedParaDelete.delete_shared_parameter_by_name(
-                            doc, p_directive
-                        )
+                return_value.update(status_delete_old_shared_para_def)
+                if status_delete_old_shared_para_def.status:
+                    # get shared parameter definition
+                    s_para_def = rSharedPara.get_shared_parameter_definition(
+                        parameter_directives[p_directive].newParameterData.name,
+                        shared_para_def_file,
                     )
-                    return_value.update(status_delete_old_shared_para_def)
-                    if status_delete_old_shared_para_def.status:
-                        # get shared parameter definition
-                        s_para_def = rSharedPara.get_shared_parameter_definition(
-                            parameter_directives[p_directive].newParameterData.name,
-                            shared_para_def_file,
+                    #   - add new shared parameter
+                    if s_para_def != None:
+                        return_value.append_message(
+                            "Retrieved shared parameter definition for: {}".format(
+                                parameter_directives[
+                                    p_directive
+                                ].newParameterData.name
+                            )
                         )
-                        #   - add new shared parameter
-                        if s_para_def != None:
-                            return_value.append_message(
-                                "Retrieved shared parameter definition for: {}".format(
-                                    parameter_directives[
-                                        p_directive
-                                    ].newParameterData.name
-                                )
-                            )
-                            #   - swap family parameter to shared parameter
-                            status_swap_fam_to_shared_p = rSharedTypeChange.change_family_parameter_to_shared_parameter(
-                                doc,
-                                _parameter_prefix_ + p_directive,  # add prefix
-                                parameter_directives[p_directive].newParameterData,
-                                s_para_def,
-                            )
-                            return_value.update(status_swap_fam_to_shared_p)
-                        else:
-                            return_value.update_sep(
-                                False,
-                                "Failed to get shared parameter definition from file.",
-                            )
+                        #   - swap family parameter to shared parameter
+                        status_swap_fam_to_shared_p = rSharedTypeChange.change_family_parameter_to_shared_parameter(
+                            doc,
+                            _parameter_prefix_ + p_directive,  # add prefix
+                            parameter_directives[p_directive].newParameterData,
+                            s_para_def,
+                        )
+                        return_value.update(status_swap_fam_to_shared_p)
                     else:
-                        return_value.update(status_delete_old_shared_para_def)
+                        return_value.update_sep(
+                            False,
+                            "Failed to get shared parameter definition from file.",
+                        )
                 else:
-                    return_value.update(status_change_to_fam_para)
+                    return_value.update(status_delete_old_shared_para_def)
             else:
-                return_value.update_sep(
-                    False,
-                    "Failed to load shared parameter def file from: "
-                    + parameter_directives[p_directive].sharedParameterPath,
-                )
-    else:
-        return_value.status = False
-        return_value.message = "No change directives in file."
+                return_value.update(status_change_to_fam_para)
+        else:
+            return_value.update_sep(
+                False,
+                "Failed to load shared parameter def file from: {}".format(
+                    parameter_directives[p_directive].sharedParameterPath
+                ),
+            )
+
     return return_value

@@ -34,11 +34,15 @@ If not, means the element is unused and can be deleted.
 # the following import statements are required to use the c# List.Any() method
 import clr
 import System
+
 clr.AddReference("System.Core")
 clr.ImportExtensions(System.Linq)
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Revit.Common.failure_handling import get_failure_warning_report, set_failures_accessor_failure_options
+from duHast.Revit.Common.failure_handling import (
+    get_failure_warning_report,
+    set_failures_accessor_failure_options,
+)
 from duHast.Revit.Common.Objects.FailuresPreProcessor import FailuresPreprocessor
 
 from Autodesk.Revit.DB import (
@@ -54,7 +58,9 @@ from Autodesk.Revit.DB import (
 _modified_by_delete = 0
 
 
-def document_change_purge_element(sender, e, doc, debug, result):
+def document_change_purge_element(
+    sender, e, doc, debug, deleted_elements_modifier, modified_elements_modifier, result
+):
     """
     Function to execute on DocumentChanged event and inspect the modified & deleted elements.
     An unused element will have 1 deleted element and 0 modified elements.
@@ -66,8 +72,18 @@ def document_change_purge_element(sender, e, doc, debug, result):
 
     if debug:
         if str(e.Operation) == "TransactionCommitted":
-            debug_string += "Deleted elements: {}\n".format(len(deleted_elements))
-            debug_string += "Modified elements: {}\n".format(len(modified_elements))
+            debug_string += "Deleted elements before adjustment: {}\n".format(len(deleted_elements))
+            debug_string += "Modified elements before adjustment: {}\n".format(len(modified_elements))
+            
+            # adjust deleted elements if necessary
+            if(deleted_elements_modifier!=None):
+                deleted_elements = deleted_elements_modifier(doc, deleted_elements)
+                debug_string += "Deleted elements after adjustment: {}\n".format(len(deleted_elements))
+
+            # adjust modified elements if necessary
+            if(modified_elements_modifier!=None):
+                modified_elements = modified_elements_modifier(doc, modified_elements)
+                debug_string += "Modified elements after adjustment: {}\n".format(len(modified_elements))
 
             if len(modified_elements) == 0:
                 debug_string += "No modified elements. Element will be deleted\n"
@@ -142,6 +158,8 @@ def pre_process_failures(failures_accessor, process_result):
 def purge_unused_elements(
     doc,
     element_id_getter=None,
+    deleted_elements_modifier=None,
+    modified_elements_modifier=None,
     progress_callback=None,
     debug=False,
 ):
@@ -172,18 +190,24 @@ def purge_unused_elements(
     # It takes two parameters sender and e (representing the sender and event arguments),
     # and then it calls the document_change_purge_element function passing the sender, e, doc, and DEBUG arguments to it.
     app.DocumentChanged += lambda sender, e: document_change_purge_element(
-        sender, e, doc, debug, return_value
+        sender=sender,
+        e=e,
+        doc=doc,
+        debug=debug,
+        deleted_elements_modifier=deleted_elements_modifier,
+        modified_elements_modifier=modified_elements_modifier,
+        result=return_value,
     )
 
     # Get all element ids from getter function
     element_ids = element_id_getter(doc)
 
     # check if there are any elements to purge
-    if(len(element_ids) == 0):
+    if len(element_ids) == 0:
         return_value.append_message("No elements found to purge")
         return return_value
-    
-    deleted_elements = ""
+
+    deleted_elements_data = ""
     unused_elements_count = 0
     callback_counter = 0
 
@@ -222,14 +246,20 @@ def purge_unused_elements(
         # Delete the element
         # check whether invalid element id or a negative id indicating a built-in element which cannot be deleted
         # modified_by_delete is at this case 0, which will stop the element from being deleted and the transaction will be rolled back
-        if(element_id.IntegerValue < 0):
-            return_value.append_message("Element {} is a built-in element and cannot be deleted".format(element_name))
+        if element_id.IntegerValue < 0:
+            return_value.append_message(
+                "Element {} is a built-in element and cannot be deleted".format(
+                    element_name
+                )
+            )
         else:
             try:
                 doc.Delete(element_id)
             except Exception as e:
-                return_value.append_message("Element {} could not be deleted: {}".format(element_name, e))
-                # note if an exception is thrown at delete step 
+                return_value.append_message(
+                    "Element {} could not be deleted: {}".format(element_name, e)
+                )
+                # note if an exception is thrown at delete step
                 # the modified_by_delete will remain 0 and the transaction will be rolled back
                 # document change event does not get triggered
         trans.Commit()
@@ -238,7 +268,7 @@ def purge_unused_elements(
 
         if _modified_by_delete == 1:
             unused_elements_count += 1
-            deleted_elements += element_data + "\n"
+            deleted_elements_data += element_data + "\n"
             trans_grp.Assimilate()
 
         else:
@@ -248,21 +278,17 @@ def purge_unused_elements(
         # not reset in the DocumentChanged event
         _modified_by_delete = 0
 
-    deleted_elements += "\n"
+    deleted_elements_data += "\n"
     return_value.append_message(
         "\nDeleted {} unused elements:\n\n{}".format(
-            unused_elements_count, deleted_elements
+            unused_elements_count, deleted_elements_data
         )
     )
 
-    return_value.append_message(
-        "Elements before purge: {}\n".format(len(element_ids))
-    )
+    return_value.append_message("Elements before purge: {}\n".format(len(element_ids)))
     # Get all line patterns in the model again for a post-task count
     element_ids = element_id_getter(doc)
-    return_value.append_message(
-        "Line patterns after purge: {}".format(len(element_ids))
-    )
+    return_value.append_message("Elements after purge: {}".format(len(element_ids)))
 
     # Unsubscribe from the DocumentChanged event
     app.DocumentChanged -= lambda sender, e: document_change_purge_element(

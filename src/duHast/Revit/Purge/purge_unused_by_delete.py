@@ -45,6 +45,8 @@ from duHast.Revit.Common.failure_handling import (
 )
 from duHast.Revit.Common.Objects.FailuresPreProcessor import FailuresPreprocessor
 
+from duHast.Revit.Purge.Objects.ModifierBase import ModifierBase
+
 from Autodesk.Revit.DB import (
     Element,
     Transaction,
@@ -70,23 +72,43 @@ def document_change_purge_element(
     modified_elements = e.GetModifiedElementIds()
     debug_string = ""
 
-    if debug:
-        if str(e.Operation) == "TransactionCommitted":
-            debug_string += "Deleted elements before adjustment: {}\n".format(len(deleted_elements))
-            debug_string += "Modified elements before adjustment: {}\n".format(len(modified_elements))
-            
-            # adjust deleted elements if necessary
-            if(deleted_elements_modifier!=None):
-                deleted_elements = deleted_elements_modifier(doc, deleted_elements)
-                debug_string += "Deleted elements after adjustment: {}\n".format(len(deleted_elements))
+    try:
+        if debug:
+            if str(e.Operation) == "TransactionCommitted":
+                debug_string += "Deleted elements before adjustment: {}\n".format(
+                    len(deleted_elements)
+                )
+                debug_string += "Modified elements before adjustment: {}\n".format(
+                    len(modified_elements)
+                )
 
-            # adjust modified elements if necessary
-            if(modified_elements_modifier!=None):
-                modified_elements = modified_elements_modifier(doc, modified_elements)
-                debug_string += "Modified elements after adjustment: {}\n".format(len(modified_elements))
+        # adjust deleted elements if necessary
+        if deleted_elements_modifier != None:
+            deleted_elements = deleted_elements_modifier.modify_deleted(doc, deleted_elements)
+            if debug:
+                debug_string += "Applying delete elements modifier\n"
+                debug_string += "Deleted elements after adjustment: {}\n".format(
+                    len(deleted_elements)
+                )
+        else:
+            if debug:
+                debug_string += "No delete elements modifier provided.\n"
 
-            if len(modified_elements) == 0:
-                debug_string += "No modified elements. Element will be deleted\n"
+        # adjust modified elements if necessary
+        if modified_elements_modifier != None:
+            modified_elements = modified_elements_modifier.modify_modified(doc, modified_elements)
+            if debug:
+                debug_string += "Applying modified elements modifier\n"
+                debug_string += "Modified elements after adjustment: {}\n".format(
+                    len(modified_elements)
+                )
+        else:
+            if debug:
+                debug_string += "No modified elements modifier provided.\n"
+
+        if debug:
+            if len(modified_elements) == 0 and len(deleted_elements) == 1:
+                    debug_string += "No modified elements. Element will be deleted\n"
             elif len(modified_elements) > 0:
                 debug_string += (
                     "Element will not be deleted. Event modified elements:\n"
@@ -99,12 +121,22 @@ def document_change_purge_element(
                         debug_string += "Element Id: {}\n".format(
                             str(elem.Id.IntegerValue)
                         )
-
+            elif len(deleted_elements) == 0 and len(modified_elements) == 0:
+                debug_string += "No deleted and modified elements. Element will be ignored\n"
+            else:
+                debug_string += "Element will not be deleted. Deleted {} and modified elements: {}\n".format(
+                    len(deleted_elements), len(modified_elements)
+                )
+                
+    except Exception as e:
+        debug_string += "Error adjusting deleted / modified elements: {}".format(e)	
+    
+    # update logs
+    if (debug):
         result.append_message(debug_string)
-
+    # update global variable
     global _modified_by_delete
     _modified_by_delete = len(deleted_elements) + len(modified_elements)
-
 
 def pre_process_failures(failures_accessor, process_result):
     """
@@ -184,19 +216,38 @@ def purge_unused_elements(
     """
 
     return_value = Result()
+
+    # check variables first
+    if progress_callback != None:
+        if not callable(progress_callback):
+            raise TypeError("progress call back  must be a function")
+    if element_id_getter != None:
+        if not callable(element_id_getter):
+            raise TypeError("element_id_getter must be a function")
+    if deleted_elements_modifier != None:
+        if not isinstance(deleted_elements_modifier, ModifierBase):
+            raise TypeError(
+                "deleted_elements_modifier must be an instance of ModifierBase"
+            )
+    if modified_elements_modifier != None:
+        if not isinstance(modified_elements_modifier, ModifierBase):
+            raise TypeError(
+                "modified_elements_modifier must be an instance of ModifierBase"
+            )
+
     # Get the application and subscribe to the DocumentChanged event
     app = doc.Application
     # This is a lambda function that acts as the event handler.
     # It takes two parameters sender and e (representing the sender and event arguments),
     # and then it calls the document_change_purge_element function passing the sender, e, doc, and DEBUG arguments to it.
     app.DocumentChanged += lambda sender, e: document_change_purge_element(
-        sender=sender,
-        e=e,
-        doc=doc,
-        debug=debug,
-        deleted_elements_modifier=deleted_elements_modifier,
-        modified_elements_modifier=modified_elements_modifier,
-        result=return_value,
+        sender,
+        e,
+        doc,
+        debug,
+        deleted_elements_modifier,
+        modified_elements_modifier,
+        return_value,
     )
 
     # Get all element ids from getter function
@@ -248,8 +299,8 @@ def purge_unused_elements(
         # modified_by_delete is at this case 0, which will stop the element from being deleted and the transaction will be rolled back
         if element_id.IntegerValue < 0:
             return_value.append_message(
-                "Element {} is a built-in element and cannot be deleted".format(
-                    element_name
+                "Element {} {} is a built-in element and cannot be deleted".format(
+                    element_id.IntegerValue, element_name
                 )
             )
         else:

@@ -77,6 +77,9 @@ WORKING_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_Output")
 # log marker file location
 LOG_MARKER_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_LogMarker")
 
+#: WSM marker file location
+WSM_MARKER_DIRECTORY = LOG_MARKER_DIRECTORY
+
 # directory containing any task lists identifying specific families only to be processed
 # if that folder is empty, all families in library will be processed
 # directory may also contain any other input data required for tasks to be executed in files processed. i.e.

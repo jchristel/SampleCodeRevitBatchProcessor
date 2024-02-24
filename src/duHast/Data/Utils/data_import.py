@@ -20,8 +20,8 @@ Data storage reader class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -33,13 +33,22 @@ Data storage reader class.
 # from System import Linq
 # clr.ImportExtensions(Linq)
 
-import json
-
 from duHast.Data.Objects import data_ceiling as dc
 from duHast.Data.Objects import data_room as dr
+from duHast.Utilities.files_json import read_json_data_from_file
 
 
 class ReadDataFromFile:
+    """
+    Class to read data from a json formatted file and store it in data objects.
+
+    The class supports the following data types:
+
+    - :class: `.DataRoom`
+    - :class: `.DataCeiling`
+
+    """
+
     def __init__(self, file_path):
         """
         Class constructor.
@@ -52,63 +61,37 @@ class ReadDataFromFile:
         self.data_type = ""
         self.data = []
 
-    def _read_json_file(self, file_path):
+    # list of data types supported by this class
+    SUPPORTED_DATA_TYPES = {
+        dr.DataRoom.data_type: dr.DataRoom,
+        dc.DataCeiling.data_type: dc.DataCeiling,
+    }
+
+    def _load_data_type(self, json_object, data_type_name):
         """
-        Reads a json formatted text file into a dictionary.
+        Load data type from json object.
 
-        :param file_path: Fully qualified file path to json formatted data file.
-        :type file_path: str
-
-        :return: A dictionary.
-        :rtype: {}
+        :param json_object: Dictionary containing data type.
+        :type json_object: dict
+        :param data_type: The data type name.
+        :type data_type: str
         """
 
-        data = {}
-        try:
-            # Opening JSON file
-            f = open(file_path)
-            # returns JSON object as
-            # a dictionary
-            data = json.load(f)
-        except Exception as e:
+        if data_type_name in json_object:
+            data_type_class = self.SUPPORTED_DATA_TYPES.get(data_type_name)
+            # check if supported data type
+            if data_type_class is None:
+                raise ValueError("Data type not supported: {}".format(data_type_name))
+            
+            # load data
+            for d in json_object[data_type_name]:
+                p = data_type_class(d)
+                self.data.append(p)
+
+        else:
             pass
-        return data
-
-    def _get_room_data_from_JSON(self, room_data):
-        """
-        Converts dictionary into data room objects.
-
-        :param room_data: List of dictionaries describing rooms
-        :type room_data:  [{var}]
-
-        :return: List of data room objects.
-        :rtype: [:class:`.DataRoom`]
-        """
-
-        all_rooms = []
-        for d in room_data:
-            p = dr.DataRoom(d)
-            all_rooms.append(p)
-        return all_rooms
-
-    def _get_ceiling_data_from_JSON(self, ceiling_data):
-        """
-        Converts dictionary into data ceiling objects.
-
-        :param ceiling_data: List of dictionaries describing ceilings
-        :type ceiling_data: [{var}]
-
-        :return: List of data ceiling objects.
-        :rtype: [:class:`.DataCeiling`]
-        """
-
-        all_ceilings = []
-
-        for d in ceiling_data:
-            p = dc.DataCeiling(d)
-            all_ceilings.append(p)
-        return all_ceilings
-
+            # not all data types are always present in the json object!
+           
     def load_data(self):
         """
         Load json formatted rows into data objects and stores them in this class.
@@ -120,26 +103,36 @@ class ReadDataFromFile:
 
         """
 
-        data_objects = []
-        data_json = self._read_json_file(self.data_file_path)
+        # load json from file
+        data_json = read_json_data_from_file(self.data_file_path)
+
+        # this data can com in two different formats:
+        # 1. a list of dictionaries as per item 2. below
+        # 2. a dictionary with 4 keys: 'date processed', 'room', 'ceiling', 'file name'.'room'  and 'ceiling' are lists of dictionaries as  values
+        # the first format is the result of multiple exported files , i.e. one per level being merged into one report file ie. for the entire building
 
         if len(data_json) > 0:
-            # load rooms {Root}.rooms
-            room_json = self._get_room_data_from_JSON(data_json[dr.DataRoom.data_type])
+            # check type of data
+            if isinstance(data_json, list):
+                # we have a list of dictionaries
+                for entry in data_json:
+                    # load each  data type
+                    for data_type_name in self.SUPPORTED_DATA_TYPES:
+                        self._load_data_type(
+                            json_object=entry,
+                            data_type_name=data_type_name,
+                        )
 
-            # add to global list
-            for rj in room_json:
-                data_objects.append(rj)
+            elif isinstance(data_json, dict):
+                # we have a dictionary
+                for data_type_name in self.SUPPORTED_DATA_TYPES:
+                    self._load_data_type(
+                        json_object=data_json,
+                        data_type_name=data_type_name,
+                    )
+            else:
+                raise TypeError("Data format not supported: {}".format(type(data_json)))
 
-            # load ceiling at {Root}.ceilings
-            ceiling_json = self._get_ceiling_data_from_JSON(
-                data_json[dc.DataCeiling.data_type]
-            )
-
-            # add to global list
-            for cj in ceiling_json:
-                data_objects.append(cj)
-        self.data = data_objects
 
     def get_data_by_level(self, level_name):
         """

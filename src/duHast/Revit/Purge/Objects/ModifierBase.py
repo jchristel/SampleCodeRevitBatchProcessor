@@ -3,7 +3,12 @@
 A class used to implement deleted and modified element counts when using purge by delete.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
+Adjust deleted and modified elements if necessary:
+this might be required where an element is presented through 2 or more elements in the revit api:
+e.g. a line style is represented to a line style and a graphics style
+this function will only purge elements which result in only 1 element  deleted and no other element modified
+hence a delete modifier should check the deleted elements and if appropriate return only one element to be deleted
+same applies to modified elements: a custom modifier should return 0 elements if appropriate in order for the element to be purged
    
 """
 

@@ -46,6 +46,7 @@ from duHast.Revit.Common.failure_handling import (
 from duHast.Revit.Common.Objects.FailuresPreProcessor import FailuresPreprocessor
 
 from duHast.Revit.Purge.Objects.ModifierBase import ModifierBase
+from duHast.UI.Objects.ProgressBase import ProgressBase
 
 from Autodesk.Revit.DB import (
     Element,
@@ -84,7 +85,9 @@ def document_change_purge_element(
 
         # adjust deleted elements if necessary
         if deleted_elements_modifier != None:
-            deleted_elements = deleted_elements_modifier.modify_deleted(doc, deleted_elements)
+            deleted_elements = deleted_elements_modifier.modify_deleted(
+                doc, deleted_elements
+            )
             if debug:
                 debug_string += "Applying delete elements modifier\n"
                 debug_string += "Deleted elements after adjustment: {}\n".format(
@@ -94,9 +97,17 @@ def document_change_purge_element(
             if debug:
                 debug_string += "No delete elements modifier provided.\n"
 
-        # adjust modified elements if necessary
+        # adjust deleted and modified elements if necessary:
+        # this might be required where an element is presented through 2 or more elements in the revit api:
+        # e.g. a line style is represented to a line style and a graphics style
+        # this function will only purge elements which result in only 1 element  deleted and no other element modified
+        # hence a delete modifier should check the deleted elements and if appropriate return only one element to be deleted
+        # same applies to modified elements: a custom modifier should return 0 elements if appropriate in order for the element to be purged
+
         if modified_elements_modifier != None:
-            modified_elements = modified_elements_modifier.modify_modified(doc, modified_elements)
+            modified_elements = modified_elements_modifier.modify_modified(
+                doc, modified_elements
+            )
             if debug:
                 debug_string += "Applying modified elements modifier\n"
                 debug_string += "Modified elements after adjustment: {}\n".format(
@@ -108,7 +119,7 @@ def document_change_purge_element(
 
         if debug:
             if len(modified_elements) == 0 and len(deleted_elements) == 1:
-                    debug_string += "No modified elements. Element will be deleted\n"
+                debug_string += "No modified elements. Element will be deleted\n"
             elif len(modified_elements) > 0:
                 debug_string += (
                     "Element will not be deleted. Event modified elements:\n"
@@ -122,21 +133,24 @@ def document_change_purge_element(
                             str(elem.Id.IntegerValue)
                         )
             elif len(deleted_elements) == 0 and len(modified_elements) == 0:
-                debug_string += "No deleted and modified elements. Element will be ignored\n"
+                debug_string += (
+                    "No deleted and modified elements. Element will be ignored\n"
+                )
             else:
                 debug_string += "Element will not be deleted. Deleted {} and modified elements: {}\n".format(
                     len(deleted_elements), len(modified_elements)
                 )
-                
+
     except Exception as e:
-        debug_string += "Error adjusting deleted / modified elements: {}".format(e)	
-    
+        debug_string += "Error adjusting deleted / modified elements: {}".format(e)
+
     # update logs
-    if (debug):
+    if debug:
         result.append_message(debug_string)
     # update global variable
     global _modified_by_delete
     _modified_by_delete = len(deleted_elements) + len(modified_elements)
+
 
 def pre_process_failures(failures_accessor, process_result):
     """
@@ -234,6 +248,9 @@ def purge_unused_elements(
             raise TypeError(
                 "modified_elements_modifier must be an instance of ModifierBase"
             )
+    if progress_callback != None:
+        if not isinstance(progress_callback, ProgressBase):
+            raise TypeError("progress_callback must be an instance of ProgressBase")
 
     # Get the application and subscribe to the DocumentChanged event
     app = doc.Application
@@ -267,7 +284,7 @@ def purge_unused_elements(
         # progress call back
         callback_counter += 1
         if progress_callback != None:
-            progress_callback(callback_counter, len(element_ids))
+            progress_callback.update(callback_counter, len(element_ids))
 
         # get the actual element from the document
         element = doc.GetElement(element_id)

@@ -17,6 +17,7 @@ This module:
     - reports all rooms and any associated ceiling(s) found
 
 """
+
 #
 # License:
 #
@@ -33,8 +34,8 @@ This module:
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -298,6 +299,14 @@ def _intersect_ceiling_vs_room(
     return_value = res.Result()
     # add some exception handling here in case intersect check throws an error
     try:
+        # check if a polygon is empty...if so ignore
+        if ceiling_polygon.is_empty or room_polygon.is_empty:
+            raise Exception(
+                "Ceiling {} or room {} polygon is empty. Ignored!".format(
+                    ceiling_poly_id, room_poly_id
+                )
+            )
+
         # check what exactly is happening
         if ceiling_polygon.intersects(room_polygon):
             # calculates percentage of overlapping ceiling area vs room area
@@ -325,14 +334,14 @@ def _intersect_ceiling_vs_room(
                     )
                 )[0]
                 # get the ceiling object by its Revit id
-                data_object__ceiling = list(
+                data_object_ceiling = list(
                     filter(
                         lambda x: (x.instance_properties.id == ceiling_poly_id),
                         data_objects[level_name][1],
                     )
                 )[0]
                 # add ceiling object to associated elements list of room object
-                data_object_room.associated_elements.append(data_object__ceiling)
+                data_object_room.associated_elements.append(data_object_ceiling)
                 return_value.append_message(
                     "Added ceiling {} to room {}".format(room_poly_id, ceiling_poly_id)
                 )
@@ -344,24 +353,40 @@ def _intersect_ceiling_vs_room(
                 data_objects[level_name][0],
             )
         )[0]
-        data_object__ceiling = list(
+        # set some predefined values in case the room object is not found
+        room_name = "unknown"
+        room_number = "unknown"
+        room_id = "unknown"
+        # populate values if room object is found
+        if data_object_room:
+            room_name = data_object_room.instance_properties.properties["Name"]
+            room_number = data_object_room.instance_properties.properties["Number"]
+            room_id = data_object_room.instance_properties.id
+
+        data_object_ceiling = list(
             filter(
                 lambda x: (x.instance_properties.id == ceiling_poly_id),
                 data_objects[level_name][1],
             )
         )[0]
+        # set some predefined values in case the ceiling object is not found
+        ceiling_id = "unknown"
+        # populate values if ceiling object is found
+        if data_object_ceiling:
+            ceiling_id = data_object_ceiling.instance_properties.id
+
         return_value.append_message(
-            "Exception: {} \n"
-            + "offending room: room name: {} , room number: {} , room id: {} , is valid polygon: {}\n"
-            + "offending ceiling id: {} , is valid polygon: {}"
-        ).format(
-            e.message,
-            data_object_room.instance_properties.properties["Name"],
-            data_object_room.instance_properties.properties["Number"],
-            data_object_room.instance_properties.id,
-            room_polygon.is_valid,
-            data_object__ceiling.instance_properties.id,
-            ceiling_polygon.is_valid,
+            "Exception: {} \noffending room: room name: {} , room number: {} , room id: {} , \n...is valid polygon: {}\n...is empty polygon: {}\noffending ceiling id: {} , \n...is valid polygon: {}\n...is empty polygon: {}".format(
+                e,
+                room_name,
+                room_number,
+                room_id,
+                room_polygon.is_valid,
+                room_polygon.is_empty,
+                ceiling_id,
+                ceiling_polygon.is_valid,
+                ceiling_polygon.is_empty,
+            )
         )
     return return_value
 
@@ -487,72 +512,77 @@ def get_ceilings_by_room(data_source_path):
     # read exported ceiling and room data from file
     data_reader = _read_data(data_source_path)
     # check if read returned anything
-    if len(data_reader.data) > 0:
-        # build dictionary of objects by level and object type
-        data_objects = _build_dictionary_by_level_and_data_type(data_reader)
-        # key level name, value tuple ( rooms [index 0] and ceilings [index 1])
-        # loop over dic and process each key (level):
-        #       - check if rooms and ceilings
-        #       - intersection check
-        #       - update room object with ceiling match
-        # print(data_objects)
-        for level_name in data_objects:
-            # check rooms are on this level
-            if len(data_objects[level_name][0]) > 0:
-                # check ceilings are on this level
-                if len(data_objects[level_name][1]) > 0:
-                    polygons_by_type = {}
-                    # convert geometry data off all rooms and ceilings into dictionaries : key is Revit element id, values are shapely polygons
-                    room_polygons = dToS.get_shapely_polygons_from_geo_object(
-                        data_objects[level_name][0], dr.DataRoom.data_type
-                    )
-                    ceiling_polygons = dToS.get_shapely_polygons_from_geo_object(
-                        data_objects[level_name][1], dc.DataCeiling.data_type
-                    )
-                    polygons_by_type[dr.DataRoom.data_type] = room_polygons
-                    polygons_by_type[dc.DataCeiling.data_type] = ceiling_polygons
-                    # loop over rooms ids and find intersecting ceilings
-                    for room_poly_id in polygons_by_type[dr.DataRoom.data_type]:
-                        # check if valid room poly ( just in case that is a room in schedule only >> not placed in model , or unbound, or overlapping with other room)
-                        if len(room_polygons[room_poly_id]) > 0:
-                            # loop over each room polygon per room...there should only be one...
-                            for room_polygon in room_polygons[room_poly_id]:
-                                # find overlapping ceiling polygons
-                                for ceiling_poly_id in polygons_by_type[
-                                    dc.DataCeiling.data_type
-                                ]:
-                                    for ceiling_polygon in ceiling_polygons[
-                                        ceiling_poly_id
-                                    ]:
-                                        return_value.update(
-                                            _intersect_ceiling_vs_room(
-                                                ceiling_poly_id,
-                                                ceiling_polygon,
-                                                room_poly_id,
-                                                room_polygon,
-                                                data_objects,
-                                                level_name,
-                                            )
-                                        )
-                        else:
-                            return_value.append_message(
-                                "Room with id {} has no valid room poly lines.".format(
-                                    room_poly_id
-                                )
-                            )
-                else:
-                    return_value.append_message(
-                        "No ceilings found for level: {}".format(
-                            data_objects[level_name][0][0].level.name
-                        )
-                    )
-            else:
-                return_value.append_message(
-                    "No rooms found for level: {}".format(data_objects[level_name])
-                )
-        return_value.result = data_objects
-    else:
+    # check if read returned anything
+    if len(data_reader.data) == 0:
         return_value.update_sep(
             False, "File: {} did not contain any valid data.".format(data_source_path)
         )
+        return return_value
+
+    # print (data_reader.data)
+
+    # build dictionary of objects by level and object type
+    data_objects = _build_dictionary_by_level_and_data_type(data_reader)
+    # key level name, value tuple ( rooms [index 0] and ceilings [index 1])
+    # loop over dic and process each key (level):
+    #       - check if rooms and ceilings
+    #       - intersection check
+    #       - update room object with ceiling match
+    # print(data_objects)
+    for level_name in data_objects:
+        # check rooms are on this level
+        if len(data_objects[level_name][0]) > 0:
+            # check ceilings are on this level
+            if len(data_objects[level_name][1]) > 0:
+                polygons_by_type = {}
+                # convert geometry data off all rooms and ceilings into dictionaries : key is Revit element id, values are shapely polygons
+                room_polygons = dToS.get_shapely_polygons_from_geo_object(
+                    data_objects[level_name][0], dr.DataRoom.data_type
+                )
+                ceiling_polygons = dToS.get_shapely_polygons_from_geo_object(
+                    data_objects[level_name][1], dc.DataCeiling.data_type
+                )
+                polygons_by_type[dr.DataRoom.data_type] = room_polygons
+                polygons_by_type[dc.DataCeiling.data_type] = ceiling_polygons
+                # loop over rooms ids and find intersecting ceilings
+                for room_poly_id in polygons_by_type[dr.DataRoom.data_type]:
+                    # check if valid room poly ( just in case that is a room in schedule only >> not placed in model , or unbound, or overlapping with other room)
+                    if len(room_polygons[room_poly_id]) > 0:
+                        # loop over each room polygon per room...there should only be one...
+                        for room_polygon in room_polygons[room_poly_id]:
+                            # find overlapping ceiling polygons
+                            for ceiling_poly_id in polygons_by_type[
+                                dc.DataCeiling.data_type
+                            ]:
+                                for ceiling_polygon in ceiling_polygons[
+                                    ceiling_poly_id
+                                ]:
+                                    return_value.update(
+                                        _intersect_ceiling_vs_room(
+                                            ceiling_poly_id,
+                                            ceiling_polygon,
+                                            room_poly_id,
+                                            room_polygon,
+                                            data_objects,
+                                            level_name,
+                                        )
+                                    )
+                    else:
+                        return_value.append_message(
+                            "Room with id {} has no valid room poly lines.".format(
+                                room_poly_id
+                            )
+                        )
+            else:
+                return_value.append_message(
+                    "No ceilings found for level: {}".format(
+                        data_objects[level_name][0][0].level.name
+                    )
+                )
+        else:
+            return_value.append_message(
+                "No rooms found for level: {}".format(data_objects[level_name])
+            )
+    return_value.result = data_objects
+
     return return_value

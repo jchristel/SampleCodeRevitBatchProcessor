@@ -343,7 +343,7 @@ def _intersect_ceiling_vs_room(
                 # add ceiling object to associated elements list of room object
                 data_object_room.associated_elements.append(data_object_ceiling)
                 return_value.append_message(
-                    "Added ceiling {} to room {}".format(room_poly_id, ceiling_poly_id)
+                    "Added ceiling {} to room {}".format(ceiling_poly_id, room_poly_id)
                 )
     except Exception as e:
         # get the offending elements:

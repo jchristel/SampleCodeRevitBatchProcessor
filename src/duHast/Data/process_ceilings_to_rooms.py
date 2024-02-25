@@ -374,7 +374,7 @@ def _intersect_ceiling_vs_room(
         # populate values if ceiling object is found
         if data_object_ceiling:
             ceiling_id = data_object_ceiling.instance_properties.id
-
+        
         return_value.append_message(
             "Exception: {} \noffending room: room name: {} , room number: {} , room id: {} , \n...is valid polygon: {}\n...is empty polygon: {}\noffending ceiling id: {} , \n...is valid polygon: {}\n...is empty polygon: {}".format(
                 e,
@@ -388,6 +388,7 @@ def _intersect_ceiling_vs_room(
                 ceiling_polygon.is_empty,
             )
         )
+        
     return return_value
 
 
@@ -512,17 +513,29 @@ def get_ceilings_by_room(data_source_path):
     # read exported ceiling and room data from file
     data_reader = _read_data(data_source_path)
     # check if read returned anything
-    # check if read returned anything
     if len(data_reader.data) == 0:
         return_value.update_sep(
             False, "File: {} did not contain any valid data.".format(data_source_path)
         )
         return return_value
 
-    # print (data_reader.data)
+    print("\n".join(data_reader.debug_messages))
 
     # build dictionary of objects by level and object type
     data_objects = _build_dictionary_by_level_and_data_type(data_reader)
+    return_value.append_message(
+        "Data loaded contains {} levels: \n{}".format(
+            len(data_objects),
+            "...\n".join(
+                [
+                    "{}: {} entries, Rooms: {}, Ceilings: {}".format(
+                        key, len(value[0]) + len(value[1]), len(value[0]), len(value[1])
+                    )
+                    for key, value in data_objects.items()
+                ]
+            ),
+        )
+    )
     # key level name, value tuple ( rooms [index 0] and ceilings [index 1])
     # loop over dic and process each key (level):
     #       - check if rooms and ceilings

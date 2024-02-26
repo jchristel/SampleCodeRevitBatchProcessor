@@ -232,9 +232,6 @@ def purge_unused_elements(
     return_value = Result()
 
     # check variables first
-    if progress_callback != None:
-        if not callable(progress_callback):
-            raise TypeError("progress call back  must be a function")
     if element_id_getter != None:
         if not callable(element_id_getter):
             raise TypeError("element_id_getter must be a function")

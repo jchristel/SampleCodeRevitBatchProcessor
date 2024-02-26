@@ -148,12 +148,12 @@ def check_whether_shared_parameters_are_in_file(doc, parameter_gui_ds):
     :rtype: list str
     """
 
-    filtered_gui_ds = []
+    filtered_guids = []
     paras = get_all_shared_parameters(doc)
     for p in paras:
         if p.GuidValue.ToString() in parameter_gui_ds:
-            filtered_gui_ds.append(p.GuidValue.ToString())
-    return filtered_gui_ds
+            filtered_guids.append(p.GuidValue.ToString())
+    return filtered_guids
 
 
 def check_whether_shared_parameters_by_name_is_family_parameter(doc, parameter_name):

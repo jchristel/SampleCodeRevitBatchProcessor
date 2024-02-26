@@ -55,7 +55,7 @@ from duHast.Revit.SharedParameters.shared_parameter_add import (
     load_shared_parameter_file,
 )
 from duHast.Revit.SharedParameters.shared_parameters_delete import (
-    delete_shared_parameter_by_guid,
+    delete_shared_parameters
 )
 from duHast.Revit.SharedParameters.shared_parameters import (
     get_all_shared_parameters,
@@ -272,8 +272,17 @@ def delete_unwanted_shared_parameters(doc):
         guid_s_to_delete = []
         for row in fileData:
             if len(row) > 1:
+                # check if entry is a guid
                 if len(row[1]) == 36:
                     guid_s_to_delete.append(row[1])
+                    return_value.append_message(
+                        "Found shared parameter to delete: {} with guid: {}".format(row[0], row[1])
+                    )
+                else:
+                    return_value.update_sep(
+                        False,
+                        "Shared parameter file contains malformed GUID: {} for parameter: {}".format( row[1], row[0]),
+                    )
             else:
                 return_value.update_sep(
                     False,
@@ -289,7 +298,7 @@ def delete_unwanted_shared_parameters(doc):
         return return_value
     # go ahead and delete...
     if len(guid_s_to_delete) > 0:
-        result_delete = delete_shared_parameter_by_guid(doc, guid_s_to_delete)
+        result_delete = delete_shared_parameters(doc, guid_s_to_delete)
         return_value.update(result_delete)
     else:
         return_value.update_sep(
@@ -325,6 +334,7 @@ def swap_shared_parameters_in_family(doc):
     """
     
     return_value = Result()
+    return_value.append_message("Swap shared parameters...start")
     if file_exist(settings.SWAP_SHARED_PARAMETER_DIRECTIVE_PATH) == False:
         return_value.update_sep(
             False,
@@ -382,6 +392,7 @@ def add_default_parameters(doc, shared_parameters_to_add):
     """
 
     return_value = Result()
+    return_value.append_message("Adding default shared parameters...start")
     # get the family manager
     manager = doc.FamilyManager
     # get a current type
@@ -399,7 +410,7 @@ def add_default_parameters(doc, shared_parameters_to_add):
             )
             # if not add it to family
             if family_shared_parameter == None:
-                return_value.append_message("Parameter:  {} not found in family".format(para))
+                return_value.append_message("Parameter: {} not found in family".format(para))
                 family_parameter_result = add_shared_parameter_to_family(
                     shared_parameters_to_add[para][0],
                     manager,
@@ -414,7 +425,7 @@ def add_default_parameters(doc, shared_parameters_to_add):
                         False, "Failed to add parameter:  {} to family!".format(para)
                     )
             else:
-                return_value.append_message("Parameter:  {} found in family".format(para))
+                return_value.append_message("Parameter:  {} found in family, no need to it add again.".format(para))
             
             # add parameter value if at least one type exists
             if family_types.Size > 0:

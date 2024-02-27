@@ -95,7 +95,11 @@ PREDEFINED_TASK_FILE_EXTENSION = ".task"
 # all reports are of this file type
 REPORT_FILE_EXTENSION = ".csv"
 
+# location of any input files ( refer docs for details )
 INPUT_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_Input")
+
+# flag indicating whether to add default parameters to families
+ADD_DEFAULT_PARAMETERS = False
 
 # file containing GUIDs and names of any shared parameter to be deleted ... no questions asked
 DELETE_SHARED_PARAMETER_LIST_FILE_PATH = os.path.join(

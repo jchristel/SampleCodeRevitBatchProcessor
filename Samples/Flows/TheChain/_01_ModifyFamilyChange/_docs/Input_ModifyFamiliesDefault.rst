@@ -74,4 +74,4 @@ Swap shared parameters
     - column 2: new shared parameter name
     - column 3: fully qualified file path of shared parameter file
     - column 4: Is parameter instance (True / False)
-    - column 5: parameter grouping name ( refer to module: RevitParameterGrouping)
+    - column 5: parameter grouping name ( refer to module: parameter_grouping)

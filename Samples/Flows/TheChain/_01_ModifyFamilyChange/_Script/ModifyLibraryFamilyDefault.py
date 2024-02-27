@@ -399,13 +399,18 @@ def purge_unused_others(doc):
         )
 
     try:
-        # add default parameters
-        outcome_add_default_paras = rParameterDefaultActions.add_default_parameters(
-            doc, rParameterDefaultActions.SHARED_PARAMETERS_TO_ADD
-        )
-        # check if both actions succeeded...if only one do not change the status to false since the
-        # family still requires to be saved!
-        return_value = update_purge_status(return_value, outcome_add_default_paras)
+        if settings.ADD_DEFAULT_PARAMETERS:
+            # add default parameters
+            outcome_add_default_paras = rParameterDefaultActions.add_default_parameters(
+                doc, rParameterDefaultActions.SHARED_PARAMETERS_TO_ADD
+            )
+            # check if both actions succeeded...if only one do not change the status to false since the
+            # family still requires to be saved!
+            return_value = update_purge_status(return_value, outcome_add_default_paras)
+        else:
+            return_value.append_message(
+                "Adding default shared parameters...start\nSkipping adding default parameters as per settings."
+            )
     except Exception as e:
         output(
             "Exception in adding default shared parameters: {}".format(e),

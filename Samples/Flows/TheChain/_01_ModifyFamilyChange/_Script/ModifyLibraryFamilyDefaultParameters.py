@@ -55,7 +55,7 @@ from duHast.Revit.SharedParameters.shared_parameter_add import (
     load_shared_parameter_file,
 )
 from duHast.Revit.SharedParameters.shared_parameters_delete import (
-    delete_shared_parameters
+    delete_shared_parameters,
 )
 from duHast.Revit.SharedParameters.shared_parameters import (
     get_all_shared_parameters,
@@ -131,7 +131,10 @@ def change_parameter_to_family_parameter(doc):
     # parameter change directives
     try:
         # check if file exists
-        if file_exist(settings.CHANGE_SHARED_PARAMETER_TO_FAMILY_PARAMETER_PATH) == False:
+        if (
+            file_exist(settings.CHANGE_SHARED_PARAMETER_TO_FAMILY_PARAMETER_PATH)
+            == False
+        ):
             return_value.update_sep(
                 False,
                 "No shared parameter change directives file found: {}".format(
@@ -139,7 +142,7 @@ def change_parameter_to_family_parameter(doc):
                 ),
             )
             return return_value
-        
+
         fileData = read_csv_file(
             settings.CHANGE_SHARED_PARAMETER_TO_FAMILY_PARAMETER_PATH
         )
@@ -266,7 +269,7 @@ def delete_unwanted_shared_parameters(doc):
                 ),
             )
             return return_value
-        
+
         # read data file
         fileData = read_csv_file(settings.DELETE_SHARED_PARAMETER_LIST_FILE_PATH)
         guid_s_to_delete = []
@@ -276,12 +279,16 @@ def delete_unwanted_shared_parameters(doc):
                 if len(row[1]) == 36:
                     guid_s_to_delete.append(row[1])
                     return_value.append_message(
-                        "Found shared parameter to delete: {} with guid: {}".format(row[0], row[1])
+                        "Found shared parameter to delete: {} with guid: {}".format(
+                            row[0], row[1]
+                        )
                     )
                 else:
                     return_value.update_sep(
                         False,
-                        "Shared parameter file contains malformed GUID: {} for parameter: {}".format( row[1], row[0]),
+                        "Shared parameter file contains malformed GUID: {} for parameter: {}".format(
+                            row[1], row[0]
+                        ),
                     )
             else:
                 return_value.update_sep(
@@ -332,7 +339,7 @@ def swap_shared_parameters_in_family(doc):
 
     :rtype: :class:`.Result`
     """
-    
+
     return_value = Result()
     return_value.append_message("Swap shared parameters...start")
     if file_exist(settings.SWAP_SHARED_PARAMETER_DIRECTIVE_PATH) == False:
@@ -343,9 +350,10 @@ def swap_shared_parameters_in_family(doc):
             ),
         )
         return return_value
-    
-    return_value = swap_shared_parameters(
-        doc, settings.SWAP_SHARED_PARAMETER_DIRECTIVE_PATH
+
+    # attempt to swap shared parameters
+    return_value.update(
+        swap_shared_parameters(doc, settings.SWAP_SHARED_PARAMETER_DIRECTIVE_PATH)
     )
     return return_value
 
@@ -410,7 +418,9 @@ def add_default_parameters(doc, shared_parameters_to_add):
             )
             # if not add it to family
             if family_shared_parameter == None:
-                return_value.append_message("Parameter: {} not found in family".format(para))
+                return_value.append_message(
+                    "Parameter: {} not found in family".format(para)
+                )
                 family_parameter_result = add_shared_parameter_to_family(
                     shared_parameters_to_add[para][0],
                     manager,
@@ -425,8 +435,12 @@ def add_default_parameters(doc, shared_parameters_to_add):
                         False, "Failed to add parameter:  {} to family!".format(para)
                     )
             else:
-                return_value.append_message("Parameter:  {} found in family, no need to it add again.".format(para))
-            
+                return_value.append_message(
+                    "Parameter:  {} found in family, no need to it add again.".format(
+                        para
+                    )
+                )
+
             # add parameter value if at least one type exists
             if family_types.Size > 0:
                 # check whether a formula or a value needs to be set

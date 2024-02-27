@@ -46,7 +46,21 @@ def get_shared_parameter_ids(doc):
     """
 
     shared_col = get_all_shared_parameters(doc)
+    
+    parameter_with_bindings = []
+    # get all parameter binding in a project and exclude those from the list
+    # to speed things up a little
+    iter = doc.ParameterBindings.ForwardIterator()
+    iter.Reset()
+    while iter.MoveNext():
+        definition = iter.Key
+        parameter_with_bindings.append(definition.Id)
+    
+    # get the ids of collector
     ids = get_ids_from_element_collector(shared_col)
+    # remove all shared parameters which are bound to a category
+    ids = [i for i in ids if i not in parameter_with_bindings]
+
     return ids
 
 def purge_shared_parameters_by_delete(doc, progress_callback=None, debug=False):

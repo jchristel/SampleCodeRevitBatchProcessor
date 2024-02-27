@@ -72,77 +72,96 @@ def document_change_purge_element(
     deleted_elements = e.GetDeletedElementIds()
     modified_elements = e.GetModifiedElementIds()
     debug_string = ""
-
-    try:
-        if debug:
-            if str(e.Operation) == "TransactionCommitted":
-                debug_string += "Deleted elements before adjustment: {}\n".format(
-                    len(deleted_elements)
-                )
-                debug_string += "Modified elements before adjustment: {}\n".format(
-                    len(modified_elements)
-                )
-
-        # adjust deleted elements if necessary
-        if deleted_elements_modifier != None:
-            deleted_elements = deleted_elements_modifier.modify_deleted(
-                doc, deleted_elements
-            )
+    # check if anything got deleted or modified
+    if(len(deleted_elements) == 0 and  len(modified_elements) == 0) and debug:
+        debug_string += "No deleted and modified elements. Element will be ignored\n"
+    else:
+        try:
             if debug:
-                debug_string += "Applying delete elements modifier\n"
-                debug_string += "Deleted elements after adjustment: {}\n".format(
-                    len(deleted_elements)
-                )
-        else:
-            if debug:
-                debug_string += "No delete elements modifier provided.\n"
+                if str(e.Operation) == "TransactionCommitted":
+                    debug_string += "Deleted elements before adjustment: {}\n".format(
+                        len(deleted_elements)
+                    )
+                    debug_string += "Modified elements before adjustment: {}\n".format(
+                        len(modified_elements)
+                    )
 
-        # adjust deleted and modified elements if necessary:
-        # this might be required where an element is presented through 2 or more elements in the revit api:
-        # e.g. a line style is represented to a line style and a graphics style
-        # this function will only purge elements which result in only 1 element  deleted and no other element modified
-        # hence a delete modifier should check the deleted elements and if appropriate return only one element to be deleted
-        # same applies to modified elements: a custom modifier should return 0 elements if appropriate in order for the element to be purged
-
-        if modified_elements_modifier != None:
-            modified_elements = modified_elements_modifier.modify_modified(
-                doc, modified_elements
-            )
-            if debug:
-                debug_string += "Applying modified elements modifier\n"
-                debug_string += "Modified elements after adjustment: {}\n".format(
-                    len(modified_elements)
+            # adjust deleted elements if necessary
+            if deleted_elements_modifier != None:
+                deleted_elements = deleted_elements_modifier.modify_deleted(
+                    doc, deleted_elements
                 )
-        else:
-            if debug:
-                debug_string += "No modified elements modifier provided.\n"
-
-        if debug:
-            if len(modified_elements) == 0 and len(deleted_elements) == 1:
-                debug_string += "No modified elements. Element will be deleted\n"
-            elif len(modified_elements) > 0:
-                debug_string += (
-                    "Element will not be deleted. Event modified elements:\n"
-                )
-                for elem_id in modified_elements:
-                    elem = doc.GetElement(elem_id)
-                    try:
-                        debug_string += "{}\n".format(elem.Name)
-                    except:
-                        debug_string += "Element Id: {}\n".format(
-                            str(elem.Id.IntegerValue)
-                        )
-            elif len(deleted_elements) == 0 and len(modified_elements) == 0:
-                debug_string += (
-                    "No deleted and modified elements. Element will be ignored\n"
-                )
+                if debug:
+                    debug_string += "Applying delete elements modifier\n"
+                    debug_string += "Deleted elements after adjustment: {}\n".format(
+                        len(deleted_elements)
+                    )
             else:
-                debug_string += "Element will not be deleted. Deleted {} and modified elements: {}\n".format(
-                    len(deleted_elements), len(modified_elements)
-                )
+                if debug:
+                    debug_string += "No delete elements modifier provided.\n"
 
-    except Exception as e:
-        debug_string += "Error adjusting deleted / modified elements: {}".format(e)
+            # adjust deleted and modified elements if necessary:
+            # this might be required where an element is presented through 2 or more elements in the revit api:
+            # e.g. a line style is represented to a line style and a graphics style
+            # this function will only purge elements which result in only 1 element  deleted and no other element modified
+            # hence a delete modifier should check the deleted elements and if appropriate return only one element to be deleted
+            # same applies to modified elements: a custom modifier should return 0 elements if appropriate in order for the element to be purged
+
+            if modified_elements_modifier != None:
+                modified_elements = modified_elements_modifier.modify_modified(
+                    doc, modified_elements
+                )
+                if debug:
+                    debug_string += "Applying modified elements modifier\n"
+                    debug_string += "Modified elements after adjustment: {}\n".format(
+                        len(modified_elements)
+                    )
+            else:
+                if debug:
+                    debug_string += "No modified elements modifier provided.\n"
+
+            if debug:
+                if len(modified_elements) == 0 and len(deleted_elements) == 1:
+                    debug_string += "No modified elements. Element will be deleted\n"
+                elif len(modified_elements) > 0:
+                    debug_string += (
+                        "Element will not be deleted. Event modified elements:\n"
+                    )
+                    for elem_id in modified_elements:
+                        debug_string += "element id is of type: {}\n".format(type(elem_id))
+                        elem = doc.GetElement(elem_id)
+                        debug_string += "element is of type: {}\n{}\n".format(type(elem),elem)
+                        try:
+                            if(isinstance(elem, Element)):
+                                debug_string += "{}\n".format(elem.Name)
+                        except Exception as e:
+                            debug_string += "An exception occurred when building debug string in modified elements: {}\n".format(e)
+                            
+                elif len(deleted_elements) >1:
+                    debug_string += "Element will not be deleted. More than one element got deleted:\n"
+                    for elem_id in deleted_elements:
+                        debug_string += "Element Id: {}\n".format(
+                                str(elem_id)
+                            )
+                        elem = doc.GetElement(elem_id)
+                        debug_string += "element is of type: {}\n{}\n".format(type(elem), elem)
+                        try:
+                            if(isinstance(elem, Element)):
+                                debug_string += "{}\n".format(elem.Name)
+                        except Exception as e:
+                            debug_string += "An exception occurred when building debug string in deleted elements: {}\n".format(e)
+                elif len(deleted_elements) == 0 and len(modified_elements) == 0:
+                    # just in case modifiers applied reduce both counts to 0...should not happen?
+                    debug_string += (
+                        "No deleted and modified elements. Element will be ignored\n"
+                    )
+                else:
+                    debug_string += "Element will not be deleted. Deleted {} and modified elements: {}\n".format(
+                        len(deleted_elements), len(modified_elements)
+                    )
+
+        except Exception as e:
+            debug_string += "Error adjusting deleted / modified elements: {}".format(e)
 
     # update logs
     if debug:

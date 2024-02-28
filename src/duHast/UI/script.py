@@ -20,8 +20,8 @@ The entry point for the file selection GUI.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -50,7 +50,12 @@ from duHast.UI import workloader as wl
 
 from duHast.Utilities.files_csv import read_csv_file, get_first_row_in_csv_file
 from duHast.Utilities.files_tab import get_first_row_in_file_no_strip
-from duHast.Utilities.files_io import file_exist, get_file_size, FILE_SIZE_IN_KB, is_back_up_file
+from duHast.Utilities.files_io import (
+    file_exist,
+    get_file_size,
+    FILE_SIZE_IN_KB,
+    is_back_up_file,
+)
 from duHast.Utilities.console_out import output_with_time_stamp
 from duHast.UI.file_item import MyFileItem
 
@@ -138,7 +143,9 @@ def process_args(argv):
         )
     except getopt.GetoptError as e:
         output_with_time_stamp(
-            "script.py -s -i <input> -o <output_directory> -n <numberOfOutputFiles> -e <fileExtension> failed with exception: {}".format(e)
+            "script.py -s -i <input> -o <output_directory> -n <numberOfOutputFiles> -e <fileExtension> failed with exception: {}".format(
+                e
+            )
         )
     for opt, arg in opts:
         if opt == "-h":
@@ -168,17 +175,26 @@ def process_args(argv):
     # check if input values are valid
     if output_file_number < 0 or output_file_number > 100:
         got_args = False
-        output_with_time_stamp("The number of output files must be bigger then 0 and smaller then 100")
+        output_with_time_stamp(
+            "The number of output files must be bigger then 0 and smaller then 100"
+        )
     if not file_exist(input_dir_file):
         got_args = False
-        output_with_time_stamp("Invalid input directory or file path: {}".format(input_dir_file))
+        output_with_time_stamp(
+            "Invalid input directory or file path: {}".format(input_dir_file)
+        )
     if not file_exist(output_directory):
         got_args = False
         output_with_time_stamp("Invalid output directory: {}".format(output_directory))
-    if revit_file_extension.lower() != ".rvt" and revit_file_extension.lower() != ".rfa":
+    if (
+        revit_file_extension.lower() != ".rvt"
+        and revit_file_extension.lower() != ".rfa"
+    ):
         got_args = False
         output_with_time_stamp(
-            "Invalid file extension: [{}] expecting: .rvt or .rfa".format(revit_file_extension)
+            "Invalid file extension: [{}] expecting: .rvt or .rfa".format(
+                revit_file_extension
+            )
         )
 
     return got_args, set.FileSelectionSettings(
@@ -258,10 +274,14 @@ def get_file_data(settings):
                     ):
                         revit_files.append(revit_file)
                     else:
-                        output_with_time_stamp("Max path length violation: {}".format(revit_file.name))
+                        output_with_time_stamp(
+                            "Max path length violation: {}".format(revit_file.name)
+                        )
                         output_with_time_stamp("File has been removed from selection!")
     except Exception as e:
-        output_with_time_stamp("An exception occurred during BIM360 file read! {}".format(e))
+        output_with_time_stamp(
+            "An exception occurred during BIM360 file read! {}".format(e)
+        )
         # return an empty list which will cause this script to abort
         revit_files = []
     return revit_files
@@ -291,7 +311,9 @@ def get_files_from_list_file(file_path_csv):
                     dummy = MyFileItem(rowData[0], file_size)
                     revit_files.append(dummy)
     except Exception as e:
-        output_with_time_stamp("An exception occurred during row processing! {}".format(e))
+        output_with_time_stamp(
+            "An exception occurred during row processing! {}".format(e)
+        )
         # return an empty list which will cause this script to abort
         revit_files = []
     return revit_files

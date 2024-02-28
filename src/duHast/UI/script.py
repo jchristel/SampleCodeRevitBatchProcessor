@@ -51,6 +51,7 @@ from duHast.UI import workloader as wl
 from duHast.Utilities.files_csv import read_csv_file, get_first_row_in_csv_file
 from duHast.Utilities.files_tab import get_first_row_in_file_no_strip
 from duHast.Utilities.files_io import file_exist, get_file_size, FILE_SIZE_IN_KB, is_back_up_file
+from duHast.Utilities.console_out import output_with_time_stamp
 from duHast.UI.file_item import MyFileItem
 
 # import bim360 utils from Library
@@ -93,17 +94,17 @@ def main(argv):
                         settings.output_dir, "Tasklist_" + str(counter) + ".txt"
                     )
                     status_write = fl.write_revit_task_file(file_name, bucket, get_data)
-                    print(status_write.message)
+                    output_with_time_stamp(status_write.message)
                     counter += 1
-                print("Finished writing out task files")
+                output_with_time_stamp("Finished writing out task files")
                 sys.exit(0)
             else:
                 # do nothing...
-                print("No files selected!")
+                output_with_time_stamp("No files selected!")
                 sys.exit(2)
         else:
             # show message box
-            print("No files found!")
+            output_with_time_stamp("No files found!")
             sys.exit(2)
     else:
         # invalid or no args provided... get out
@@ -136,12 +137,12 @@ def process_args(argv):
             ["subDir", "input=", "outputDir=", "numberFiles=", "fileExtension="],
         )
     except getopt.GetoptError as e:
-        print(
+        output_with_time_stamp(
             "script.py -s -i <input> -o <output_directory> -n <numberOfOutputFiles> -e <fileExtension> failed with exception: {}".format(e)
         )
     for opt, arg in opts:
         if opt == "-h":
-            print(
+            output_with_time_stamp(
                 "script.py -i <input> -o <output_directory> -n <numberOfOutputFiles> -e <fileExtension>"
             )
         elif opt in ("-s", "--subDir"):
@@ -158,7 +159,7 @@ def process_args(argv):
                 output_file_number = value
                 got_args = True
             except ValueError:
-                print(arg + " value is not an integer")
+                output_with_time_stamp("{}: value is not an integer".format(arg))
                 got_args = False
         elif opt in ("-e", "--fileExtension"):
             revit_file_extension = arg.strip()
@@ -167,19 +168,17 @@ def process_args(argv):
     # check if input values are valid
     if output_file_number < 0 or output_file_number > 100:
         got_args = False
-        print("The number of output files must be bigger then 0 and smaller then 100")
+        output_with_time_stamp("The number of output files must be bigger then 0 and smaller then 100")
     if not file_exist(input_dir_file):
         got_args = False
-        print("Invalid input directory or file path: " + str(input_dir_file))
+        output_with_time_stamp("Invalid input directory or file path: {}".format(input_dir_file))
     if not file_exist(output_directory):
         got_args = False
-        print("Invalid output directory: " + str(output_directory))
-    if revit_file_extension != ".rvt" and revit_file_extension != ".rfa":
+        output_with_time_stamp("Invalid output directory: {}".format(output_directory))
+    if revit_file_extension.lower() != ".rvt" and revit_file_extension.lower() != ".rfa":
         got_args = False
-        print(
-            "Invalid file extension: ["
-            + str(revit_file_extension)
-            + "] expecting: .rvt or .rfa"
+        output_with_time_stamp(
+            "Invalid file extension: [{}] expecting: .rvt or .rfa".format(revit_file_extension)
         )
 
     return got_args, set.FileSelectionSettings(
@@ -259,10 +258,10 @@ def get_file_data(settings):
                     ):
                         revit_files.append(revit_file)
                     else:
-                        print("Max path length violation: {}".format(revit_file.name))
-                        print("File has been removed from selection!")
+                        output_with_time_stamp("Max path length violation: {}".format(revit_file.name))
+                        output_with_time_stamp("File has been removed from selection!")
     except Exception as e:
-        print("An exception occurred during BIM360 file read! {}".format(e))
+        output_with_time_stamp("An exception occurred during BIM360 file read! {}".format(e))
         # return an empty list which will cause this script to abort
         revit_files = []
     return revit_files
@@ -292,7 +291,7 @@ def get_files_from_list_file(file_path_csv):
                     dummy = MyFileItem(rowData[0], file_size)
                     revit_files.append(dummy)
     except Exception as e:
-        print("An exception occurred during row processing! " + str(e))
+        output_with_time_stamp("An exception occurred during row processing! {}".format(e))
         # return an empty list which will cause this script to abort
         revit_files = []
     return revit_files

@@ -1,4 +1,2 @@
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Rack_Catheter  Storage_Mobile_MMGE_799.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\ShelvingUnit_WireMesh_MobileCastors_FQSM_015.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Trolley_WireMesh_MMGE_593.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Lifter_SSD_Electric_Mobile_MMIC_560.rfa
+C:\Users\jchristel\dev\test_lib\Track_Curtain_Privacy_Lshaped_Chamfered_25Degree_FIRT_032_3.rfa
+C:\Users\jchristel\dev\test_lib\Hatch_RadiationDosingSystem_PassThrough_Shielded_DWWH_515.rfa

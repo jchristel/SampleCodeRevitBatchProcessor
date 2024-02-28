@@ -1,3 +1,1 @@
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Bed_Patient_ICU_Electric_WithMattress_MMBE_014.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Trolley_Instruments_Transfer_MMIC_121.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Specialty Equipment\Castor_Wheels_Adjustable_SEQ.rfa
+C:\Users\jchristel\dev\test_lib\Lifter_Patient_CeilingMounted_Track_Linear_MMBE_056.rfa

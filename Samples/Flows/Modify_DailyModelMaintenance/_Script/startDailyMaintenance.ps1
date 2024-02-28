@@ -91,7 +91,7 @@ if ($exitCode -eq 0) {
     # start batch processor sessions with individual settings scripts
     start-batchProcessor -settings_directory $settings_directory -settings_file_names $settings_step_one
 
-    # post processing script¶
+    # post processing scriptï¿½
     Write-ToLogAndConsole -Message "*" -IsHeader $True
     Write-ToLogAndConsole -Message "-"
     Write-ToLogAndConsole -Message "Post Processing Script" -IsHeader $True

@@ -93,7 +93,7 @@ PATH_TO_FILES_TO_PROCESS = r"\path\to\source\files"
 ROOT_PATH_REVIT_DEFAULT = r"default\save\as\path"
 
 # directory containing revit batch processor task files
-TASK_LIST_DIRECTORY = PATH_TO_FILES_TO_PROCESS
+TASK_LIST_DIRECTORY = os.path.join(FLOW_DIRECTORY, r"_TaskList")
 
 # path to downloaded zip files
 # file will be unpacked and moved into PATH_TO_FILES_TO_PROCESS

@@ -1,4 +1,2 @@
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Furniture\Bed_Patient_ICU_FUR.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Shelving_StainlessSteelWireMesh_FullyExtendableDrawers_Shelves_Mobile_FQSM_531.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Trolley_CleanLinen_Tall_MMGE_634.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Furniture\KOP_ShelvingFrameMobile_FUR.rfa
+C:\Users\jchristel\dev\test_lib\Track_Curtain_Privacy_Lshaped_Chamfered_FIRT_032_1.rfa
+C:\Users\jchristel\dev\test_lib\Bucky_Wall_GeneralXray_MMMI_283.rfa

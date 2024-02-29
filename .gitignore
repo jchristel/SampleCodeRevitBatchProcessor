@@ -136,6 +136,7 @@ dmypy.json
 *.user
 *.aps
 *.pch
+*.vs
 *.vspscc
 *.vssscc
 *_i.c

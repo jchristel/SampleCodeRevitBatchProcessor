@@ -46,49 +46,48 @@ This module:
 
 import sys, os
 
-import utilModifyBVN as utilR # sets up all commonly used variables and path locations!
-# import file list module
-import RevitFamilyRenameFiles as renameFiles
-import RevitFamilyRenameFindHostFamilies as rFamFindHostFams
-import Utility as util
-import utilModifyBVN as utilM
-import RevitFamilyRenameFilesUtils as rFamRenameUtils
-import Result as res
+import settings as settings # sets up all commonly used variables and path locations!
+
+from duHast.Utilities.console_out import output
+from duHast.Utilities.files_csv import write_report_data_as_csv
+from duHast.Utilities.Objects.result import Result
+
+from duHast.Revit.Family.family_rename_files_utils import get_rename_directives
+from duHast.Revit.Family.Data.family_rename_files import rename_family_files
+from duHast.Revit.Family.Data.family_rename_find_host_families import find_host_families_with_nested_families_requiring_rename
+
+
 # -------------
 # my code here:
 # -------------
 
-# output messages 
-def Output(message = ''):
-    print (message)
-
-def _getNewPath(renameDirectives, currentFilePath):
+def _get_new_path(rename_directives, current_file_path):
     '''
     Checks wether the current file path exists in one of the rename directives. If so it will return the file path of the renamed file,
     otherwise it will return the past in file path.
 
-    :param renameDirectives: list of tuples representing rename directives
-    :type renameDirectives: [named tuple]
-    :param currentFilePath: The fully qualified file path to a revit family file.
-    :type currentFilePath: str
+    :param rename_directives: list of tuples representing rename directives
+    :type rename_directives: [named tuple]
+    :param current_file_path: The fully qualified file path to a revit family file.
+    :type current_file_path: str
     
     :return: _description_
     :rtype: str
     '''
 
-    for renameDirective in renameDirectives:
+    for rename_directive in rename_directives:
         # check if the rename directive got a file path, if not ignore it!
-        if(len(renameDirective.filePath) > 0 and  renameDirective.filePath == currentFilePath):
-            newFilePath = renameDirective.filePath[:len(renameDirective.filePath) - len(renameDirective.name + '.rfa')] + renameDirective.newName + '.rfa'
-            return newFilePath
-    return currentFilePath
+        if(len(rename_directive.filePath) > 0 and  rename_directive.filePath == current_file_path):
+            new_file_path = rename_directive.filePath[:len(rename_directive.filePath) - len(rename_directive.name + '.rfa')] + rename_directive.newName + '.rfa'
+            return new_file_path
+    return current_file_path
 
-def _writeOverAllTaskFile(resultGetHosts):
+def _write_overall_task_file(result_get_host_families):
     '''
     Writes a task file to disk. Task file comprises of fully qualified file path of every family containing a family which requires renaming.
 
-    :param resultGetHosts: _description_
-    :type resultGetHosts: _type_
+    :param result_get_host_families:  Result class instance containing host families in .result.
+    :type result_get_host_families: :class:`.Result`
     
     :return: 
         Result class instance.
@@ -106,83 +105,86 @@ def _writeOverAllTaskFile(resultGetHosts):
     :rtype: :class:`.Result`
     '''
 
-    result = res.Result()
+    result = Result()
     # overall task file 
-    taskFileName = utilM.INPUT_DIRECTORY + '\\' + utilM.PREDEFINED_TASK_FILE_NAME_PREFIX + '_FamilyRename' + utilM.PREDEFINED_TASK_FILE_EXTENSION
+    full_task_file_name = os.path.join(settings.INPUT_DIRECTORY , settings.PREDEFINED_TASK_FILE_NAME_PREFIX + '_FamilyRename' + settings.PREDEFINED_TASK_FILE_EXTENSION)
     # data to be written to task file
     data = []
     # write out the actual task file
-    if(resultGetHosts and len(resultGetHosts.result) > 0):
-        # get rename directives just in case a host family containing fams to be renamed got renamed itself
+    if(result_get_host_families and len(result_get_host_families.result) > 0):
+        # get rename directives just in case a host family containing families to be renamed got renamed itself
         # and the path must therefore be adjusted
-        renameDirectivesResult = rFamRenameUtils.GetRenameDirectives(rootPath_)
+        rename_directives_result = get_rename_directives(rename_directives_directory_)
         
-        for fam in resultGetHosts.result:
+        for host_family in result_get_host_families.result:
             # check whether fam got renamed
-            filePath = _getNewPath (renameDirectivesResult.result, fam.filePath)
-            if( filePath != fam.filePath):
-                result.append_message('Changed path from: ' + fam.filePath + ' to: ' + filePath)
+            filePath = _get_new_path (rename_directives_result.result, host_family.filePath)
+            if( filePath != host_family.filePath):
+                result.append_message('Changed path from: {} to: {}'.format(host_family.filePath ,filePath))
             else:
-                result.append_message('Kept path: ' + fam.filePath)
+                result.append_message('Path unchanged: {}'.format(host_family.filePath))
             row = [filePath]
             data.append(row)
         
-        result.append_message ('Writing to: ' + taskFileName)
+        result.append_message ('Writing data to: {}'.format(full_task_file_name))
         try:
-            util.writeReportDataAsCSV(
-                taskFileName, 
+            write_report_data_as_csv(
+                full_task_file_name, 
                 [], 
                 data
             )
             result.update_sep(True, 'Created task files.')
         except Exception as e:
-            result.update_sep(False, 'Failed to write family rename task file with exception: ' + str(e))
+            result.update_sep(False, 'Failed to write family rename task file with exception: {}'.format(e))
     else:
         # write out empty task list since no host files where found
         try:
-            util.writeReportDataAsCSV(
-                taskFileName, 
+            write_report_data_as_csv(
+                full_task_file_name, 
                 [], 
                 data
             )
             result.update_sep(True, 'Created empty task files.')
         except Exception as e:
-            result.update_sep(False, 'Failed to write family rename task file with exception: ' + str(e))
+            result.update_sep(False, 'Failed to write family rename task file with exception: {}'.format(e))
     return result
 
 # -------------
 # main:
 # -------------
 
-result_ = res.Result()
-print( 'Python pre process script Rename Files ...')
+_result = Result()
+output( 'Python pre process script Rename Files ...')
 # check if a folder path was past in...otherwise go with default and exit
 if (len(sys.argv) == 2):
-    rootPath_ = sys.argv[1]
-    Output ('Renaming files as per directives saved here: ' + rootPath_)
-    result_ = renameFiles.RenameFamilyFiles(rootPath_)
-    Output (result_.message)
-    Output('Renamed files .... status: ' + str(result_.status))
+    rename_directives_directory_ = sys.argv[1]
+    output ('Renaming files as per directives saved here: {}',format (rename_directives_directory_))
+    _result = rename_family_files(rename_directives_directory_)
+    output (_result.message)
+    output('Renamed files .... status: [{}]'.format(_result.status))
    
     # create task file for family reload action
-    Output ('Creating task files for rename action of nested families ...')
-    resultGetHosts_ = rFamFindHostFams.FindHostFamiliesWithNestedFamsRequiringRename(rootPath_)
-    Output (resultGetHosts_.message)
+    output ('Creating task files for rename action of nested families ...')
+    _result_get_host_families = find_host_families_with_nested_families_requiring_rename(rename_directives_directory_)
+    output (_result_get_host_families.message)
+    output('Got host families with nested families requiring a rename .... status: [{}]'.format(_result_get_host_families.status))
     # update overall status
-    result_.update(resultGetHosts_)
+    _result.update(_result_get_host_families)
     
     # write task file
-    resultWriteTaskFile_ = _writeOverAllTaskFile(resultGetHosts_)
-    Output (resultWriteTaskFile_.message)
+    _result_write_task_file = _write_overall_task_file(_result_get_host_families)
+    output (_result_write_task_file.message)
+    output('Writing overall rename task file .... status: [{}]'.format(_result_write_task_file.status))
+    
     # update overall status
-    result_.update(resultWriteTaskFile_)
+    _result.update(_result_write_task_file)
     
     # check how to exit
-    if(result_.status):
+    if(_result.status):
         sys.exit(0)
     else:
         sys.exit(2)
 else:
-    rootPath_ = r'C:\Users\jchristel\Documents\DebugRevitBP\FamReload'
-    Output ("Using default file path!")
+    rename_directives_directory_ = settings.DEFAULT_NO_GO_DIRECTORY
+    output ("Exiting with error. Using default file path: {} for rename directives".format(rename_directives_directory_))
     sys.exit(2)

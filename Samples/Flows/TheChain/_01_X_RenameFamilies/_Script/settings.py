@@ -64,6 +64,7 @@ ROOT_SCRIPT_DIRECTORY_USER = os.path.join(
 
 # debug mode revit project file name
 DEBUG_REVIT_FILE_NAME = r"C:\temp\Test_Files.rvt"
+DEFAULT_NO_GO_DIRECTORY = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_01_X_RenameFamilies\_Users\jchristel\_FamilyOut"
 
 # revit files library location
 REVIT_LIBRARY_PATH = r"C:\Users\jchristel\dev\test_lib"
@@ -106,6 +107,7 @@ FAMILY_RENAME_DIRECTIVE_DIRECTORY = INPUT_DIRECTORY
 
 # where are task files located
 TASK_FILE_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_TaskList")
+
 # number of task files in use
 TASK_FILE_NO = 4
 

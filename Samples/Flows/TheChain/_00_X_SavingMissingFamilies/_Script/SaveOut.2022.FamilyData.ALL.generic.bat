@@ -30,7 +30,7 @@ set _FileSelectPath="%_rootFolderPath%_Script\Pre_FileSelectNoUI.py"
 :: directory where settings files are saved
 set "_settingsDiretoryPath=%_rootFolderPath%_Users\%USERNAME%\_Settings\"
 :: settings file name for step one. Note %%j variable in name which will be used to cycle through A, B, C...
-set "_settingsStepOneFileName=BatchRvt.2019.SaveOutOne%%j.ALL.Settings.json"
+set "_settingsStepOneFileName=BatchRvt.2022.SaveOutOne%%j.ALL.Settings.json"
 :: settings file name for step two. Note %%j variable in name which will be used to cycle through A, B, C...Not required for this task!
 set "_settingsStepTwoFileName="
 :: file path to clean up script run at the very end

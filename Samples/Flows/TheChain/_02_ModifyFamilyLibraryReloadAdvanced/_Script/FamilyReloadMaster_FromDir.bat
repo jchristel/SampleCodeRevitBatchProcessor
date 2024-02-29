@@ -34,7 +34,7 @@ set _changeListFilesLocation="%_rootFolderPath%_Users\%USERNAME%\_Input\ChangedF
 :: script to split over all task into 4 task files to be processed by reloader script
 set "_taskSplitter=%_rootFolderPath%_Script\PreTaskFileListBuilder.py"
 :: batch file which processes single overall task list once it is split into work chunks 
-set _batchReloadScript="%_rootFolderPath%_Script\Modify.LibraryFamilyReload.NHR_4Parallel.generic.bat"
+set _batchReloadScript="%_rootFolderPath%_Script\Modify.LibraryFamilyReload.ALL_4Parallel.generic.bat"
 :: default path for python installation
 set _pythonPath="C:\Program Files (x86)%\IronPython 2.7\ipy64.exe"
 

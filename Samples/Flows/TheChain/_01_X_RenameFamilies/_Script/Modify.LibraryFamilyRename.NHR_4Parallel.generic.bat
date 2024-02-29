@@ -35,7 +35,7 @@ set _InputDirectory="%_rootFolderPath%_Users\%USERNAME%\_Input"
 :: directory where settings files are saved
 set "_settingsDiretoryPath=%_rootFolderPath%_Users\%USERNAME%\_Settings\"
 :: settings file name for step one. Note %%j variable in name which will be used to cycle through A, B, C...
-set "_settingsStepOneFileName=BatchRvt.2022.ModifyFamiliesOne%%j.NHR.Settings.json"
+set "_settingsStepOneFileName=BatchRvt.2022.ModifyFamiliesOne%%j.ALL.Settings.json"
 :: file path to clean up script run at the very end
 set "_cleanUpScriptPath=%_rootFolderPath%_Script\Post_ModifyLibraryFamily.py"
 :: spinner stuff - back space character

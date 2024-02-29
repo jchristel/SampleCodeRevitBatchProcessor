@@ -74,8 +74,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\..\UI\SelectFIles\ui.xaml">
-      <Link>ui.xaml</Link>
+    <Page Include="ui.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

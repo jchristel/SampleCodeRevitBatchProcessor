@@ -39,6 +39,7 @@ import ctypes
 # import settings class
 # from duHast.UI import FileSelectSettings as set
 from duHast.UI.file_list import get_revit_files_for_processing
+
 def Mbox(title, text, style):
     """
     A simple win forms message box.
@@ -85,6 +86,15 @@ class MyWindow(Windows.Window):
         self.tbNoOfFiles.Text = str(settings.output_file_num)
         self.cbInclSubDirs.IsChecked = settings.incl_sub_dirs
         self.GUIChange = False
+
+    def TextBox_TextChanged(self, sender, e):
+        """
+        Event handler for text changed in TextBox.
+        """
+        filter_text = sender.Text.lower()  # Convert to lowercase for case-insensitive filtering
+        #self.FilteredFiles.Filter = lambda item: filter_text in item.name.lower()
+        filtered_files = [file for file in self.revitfiles if filter_text in file.name.lower()]
+        self.files.ItemsSource = filtered_files
 
     def _HandleFileChange(self):
         '''

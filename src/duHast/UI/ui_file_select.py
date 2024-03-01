@@ -39,6 +39,7 @@ import ctypes
 # import settings class
 # from duHast.UI import FileSelectSettings as set
 from duHast.UI.file_list import get_revit_files_for_processing
+from duHast.UI.file_select_settings import FileSelectionSettings
 
 def Mbox(title, text, style):
     """
@@ -75,6 +76,9 @@ class MyWindow(Windows.Window):
 
         wpf.LoadComponent(self, xaml_full_file_name)
 
+        # set the settings
+        if(isinstance(settings, FileSelectionSettings) == False):
+            raise ValueError("settings parameter must be of type FileSelectionSettings")
         self.GUIChange = True
         # populate fields
         self.selectedFiles = []

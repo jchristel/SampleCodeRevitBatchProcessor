@@ -1,6 +1,8 @@
 from duHast.UI.Objects.ViewModelBase import ViewModelBase
 from duHast.UI.Objects.Command import Command
 from duHast.UI.Objects.file_item import MyFileItem
+from duHast.UI.file_list import get_revit_files_for_processing
+
 
 from System.Collections.ObjectModel import ObservableCollection
 import System
@@ -25,7 +27,7 @@ class ViewModel(ViewModelBase):
 
         ViewModelBase.__init__(self)
         self.window = window
-        
+
         self.debug = []
 
         # set up an observable collection
@@ -46,26 +48,26 @@ class ViewModel(ViewModelBase):
         self.include_sub_dirs = include_sub_dirs
         self.filter_text = filter_text
         self.filter_is_and = filter_is_and
-        self.filter_is_or = not(filter_is_and)
+        self.filter_is_or = not (filter_is_and)
 
         # hook up ok and cancel buttons
         self.BtnOkCommand = Command(self.BtnOK)
         self.BtnCancelCommand = Command(self.BtnCancel)
-        
+
         # filter data of data grid view
         self.TextBox_Filter_TextChanged()
 
-    def convert_list_to_observable_collection(self, list_of_items, target_list):
-        """
-        Used transfer items from a standard python list to another list ( of a .net type)
+    @property
+    def TextBoxText_SourcePath(self):
+        return self.source_path
 
-        Args:
-            list_of_items (_type_): _description_
-            target_list (_type_): _description_
-        """
-        target_list.Clear()  # Clear existing items if any
-        for item in list_of_items:
-            target_list.Add(item)
+    @TextBoxText_SourcePath.setter
+    def TextBoxText_SourcePath(self, value):
+        if self.source_path != value:
+            self.source_path = value
+            self.OnPropertyChanged("TextBoxText_SourcePath")
+            # this appears to be a bit of hack since I cant seem to be able to hook up an event handler to the text changed event via XAML
+            self.text_box_source_path_change()
 
     @property
     def TextBoxText_Filter(self):
@@ -79,6 +81,18 @@ class ViewModel(ViewModelBase):
             # this appears to be a bit of hack since I cant seem to be able to hook up an event handler to the text changed event via XAML
             self.TextBox_Filter_TextChanged()
 
+    def convert_list_to_observable_collection(self, list_of_items, target_list):
+        """
+        Used transfer items from a standard python list to another list ( of a .net type)
+
+        Args:
+            list_of_items (_type_): _description_
+            target_list (_type_): _description_
+        """
+        target_list.Clear()  # Clear existing items if any
+        for item in list_of_items:
+            target_list.Add(item)
+
     def OnPropertyChanged(self, name):
         if self.PropertyChanged:
             self.PropertyChanged(
@@ -89,7 +103,7 @@ class ViewModel(ViewModelBase):
         """
         Event handler for text changed in TextBox.
         """
-        
+
         # clear the previous version of the filtered list
         self.filtered_revit_files.Clear()
         # set up a python vanilla list to contain filtered elements
@@ -103,6 +117,19 @@ class ViewModel(ViewModelBase):
             filtered_revit_files_intermediate, self.filtered_revit_files
         )
 
+    def text_box_source_path_change(self):
+        """
+        when the source directory is changes
+        """
+
+        new_files = get_revit_files_for_processing(
+            self.source_path, self.include_sub_dirs, self.source_file_extension
+        )
+
+        # convert past in files list
+        self.convert_list_to_observable_collection(new_files, self.revit_files)
+        # update filtered list
+        self.TextBox_Filter_TextChanged()
 
     def BtnOK(self):
         """

@@ -59,8 +59,9 @@
                                 <RowDefinition Height="40"/>
                             </Grid.RowDefinitions>
                             <Label Name="lSourcePath" Grid.Row="0" Content="Source Path" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <!-- source path text box -->
                             <TextBox x:Name="tbSourceFolder" Grid.Row="0" Grid.Column="1" IsReadOnly="False" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,10,0" VerticalContentAlignment="Center" 
-                                Text="{Binding source_path, UpdateSourceTrigger=PropertyChanged}"/>
+                                Text="{Binding TextBoxText_SourcePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <Label Name="lDestinationPath" Grid.Row="1" Content="Destination Path" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <TextBox x:Name="tbDestinationFolder" Grid.Row="1" Grid.Column="1" IsReadOnly="True" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,10,0" VerticalContentAlignment="Center" 
                                 Text="{Binding destination_path, UpdateSourceTrigger=PropertyChanged}"/>

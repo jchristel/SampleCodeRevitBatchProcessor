@@ -98,11 +98,28 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <TextBox x:Name="txtFilter" DockPanel.Dock="Top" Grid.Row="1" Margin="5" VerticalAlignment="Top"  />
-                            <DataGrid x:Name="files" Margin="10" Grid.Row="2" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Extended" AlternatingRowBackground="BlanchedAlmond" AutoGenerateColumns="False" >
+                            <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                            </Grid.RowDefinitions>
+                                <!-- Label -->
+                                <Label Content="File Name Filter:" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,5,0"/>
+                                <!-- Filter text box -->
+                                <TextBox x:Name="txtFilter" Grid.Column="1" Text="{Binding TextBoxText_Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="10,0,10,0" VerticalAlignment="Center"/>
+                            </Grid>
+                            <DataGrid x:Name="files" Margin="10" Grid.Row="2" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Extended" AlternatingRowBackground="BlanchedAlmond" AutoGenerateColumns="False" ItemsSource="{Binding filtered_revit_files}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="File" Width="*" Binding="{Binding name}" ></DataGridTextColumn>
                                 </DataGrid.Columns>
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="{x:Type DataGridRow}">
+                                        <Setter Property="IsSelected"  Value="{Binding is_selected, Mode=TwoWay}"/>
+                                    </Style>
+                                </DataGrid.RowStyle>
                             </DataGrid>
                         </Grid>
                     </Border>

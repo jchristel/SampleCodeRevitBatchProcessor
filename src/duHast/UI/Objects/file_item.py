@@ -40,6 +40,7 @@ class MyFileItem(base.Base):
         bim360_project_guid=None,
         bim360_file_guid=None,
         bim360_revit_version="-",
+        is_selected = False,
     ):
         """
         Class constructor.
@@ -64,3 +65,4 @@ class MyFileItem(base.Base):
         self.bim_360_project_guid = bim360_project_guid
         self.bim_360_file_guid = bim360_file_guid
         self.bim_360_revit_version = bim360_revit_version
+        self.is_selected = is_selected

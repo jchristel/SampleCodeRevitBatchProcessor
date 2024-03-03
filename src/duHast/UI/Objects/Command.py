@@ -35,8 +35,9 @@ https://markheath.net/post/wpf-and-mvvm-in-ironpython
 from System.Windows.Input import ICommand
 
 class Command(ICommand):
-    def __init__(self, execute):
+    def __init__(self, execute, can_execute=None):
         self.execute = execute
+        self.can_execute = can_execute
     
     def Execute(self, parameter):
         self.execute()
@@ -48,4 +49,6 @@ class Command(ICommand):
         pass
 
     def CanExecute(self, parameter):
+        if self.can_execute:
+            return self.can_execute(parameter)
         return True

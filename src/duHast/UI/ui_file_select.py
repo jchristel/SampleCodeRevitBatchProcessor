@@ -39,7 +39,7 @@ import ctypes
 # import settings class
 # from duHast.UI import FileSelectSettings as set
 from duHast.UI.file_list import get_revit_files_for_processing
-from duHast.UI.file_select_settings import FileSelectionSettings
+from duHast.UI.Objects.file_select_settings import FileSelectionSettings
 
 def Mbox(title, text, style):
     """

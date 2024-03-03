@@ -43,7 +43,7 @@ from duHast.UI import file_list as fl
 from duHast.UI import ui_file_select as UIFs
 
 # import settings class
-from duHast.UI import file_select_settings as set
+from duHast.UI.Objects import file_select_settings as set
 
 # import workloader utils
 from duHast.UI import workloader as wl
@@ -57,7 +57,7 @@ from duHast.Utilities.files_io import (
     is_back_up_file,
 )
 from duHast.Utilities.console_out import output_with_time_stamp
-from duHast.UI.file_item import MyFileItem
+from duHast.UI.Objects.file_item import MyFileItem
 
 # import bim360 utils from Library
 from duHast.Revit.BIM360 import util_bim_360 as ub360

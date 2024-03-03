@@ -37,7 +37,7 @@ import os
 
 
 # import file item class
-from duHast.UI import file_item as fi
+from duHast.UI.Objects import file_item as fi
 
 # import workloader utils
 from duHast.UI import workloader as wl

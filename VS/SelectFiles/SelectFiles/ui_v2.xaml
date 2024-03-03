@@ -29,7 +29,7 @@
                             <Style TargetType="{x:Type RowDefinition}">
                                 <Setter Property="Height"  Value="Auto" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=Misc2Expander,
+                                    <DataTrigger Binding="{Binding ElementName=DockPanelFiles,
                                         Path=IsExpanded}" Value="True">
                                         <Setter Property="Height" Value="Auto" />
                                     </DataTrigger>
@@ -87,7 +87,7 @@
                         </Grid>
                     </Border>
                 </Expander>
-                <DockPanel Grid.Row="1"  Margin="10,0,0,0">
+                <DockPanel x:Name="DockPanelFiles" Grid.Row="1"  Margin="10,0,0,0">
                     <Border Margin="5" CornerRadius="6" BorderBrush="Gray" BorderThickness="2" Padding="8" DockPanel.Dock="Top">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -98,11 +98,31 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <TextBox x:Name="txtFilter" DockPanel.Dock="Top" Grid.Row="1" Margin="5" VerticalAlignment="Top"  />
-                            <DataGrid x:Name="files" Margin="10" Grid.Row="2" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Extended" AlternatingRowBackground="BlanchedAlmond" AutoGenerateColumns="False" >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="110"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                </Grid.RowDefinitions>
+                                <!-- Label -->
+                                <Label Content="File Name Filter:" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,5,0"/>
+                                <!-- Filter text box -->
+                                <TextBox x:Name="txtFilter" Grid.Column="1" Text="{Binding TextBoxText_Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="10,0,10,0" VerticalAlignment="Center"/>
+                                <RadioButton Grid.Column="2" Content="AND" HorizontalAlignment="Left" Margin="10,0,10,0" VerticalAlignment="Center" IsChecked="{Binding filtered_revit_files}"/>
+                                <RadioButton Grid.Column="2" Content="OR" HorizontalAlignment="Right" Margin="10,0,10,0" VerticalAlignment="Center" IsChecked="{Binding filtered_revit_files}"/>
+                            </Grid>
+                            <DataGrid x:Name="files" Margin="10" Grid.Row="2" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Extended" AlternatingRowBackground="BlanchedAlmond" AutoGenerateColumns="False" ItemsSource="{Binding filtered_revit_files}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="File" Width="*" Binding="{Binding name}" ></DataGridTextColumn>
                                 </DataGrid.Columns>
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="{x:Type DataGridRow}">
+                                        <Setter Property="IsSelected"  Value="{Binding is_selected, Mode=TwoWay}"/>
+                                    </Style>
+                                </DataGrid.RowStyle>
                             </DataGrid>
                         </Grid>
                     </Border>
@@ -118,9 +138,9 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <Button Margin="0 10 10 10" x:Name="btnOK" Grid.Row="0" Grid.Column="1" Content="OK" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75" Command="{Binding BtnOkCommand}">
-                        </Button>
+                            </Button>
                             <Button  Margin="10 10 0 10" x:Name="btnCancel" Grid.Row="0" Grid.Column="0" Content="Cancel" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="75" Command="{Binding BtnCancelCommand}">
-                        </Button>
+                            </Button>
                         </Grid>
                     </Border>
                 </DockPanel>

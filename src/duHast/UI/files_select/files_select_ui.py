@@ -90,6 +90,7 @@ def main(argv):
                 settings.output_file_num,
                 settings.incl_sub_dirs,
                 "2022",
+                True,
                 revit_files,
             )
             # assign view model to xaml

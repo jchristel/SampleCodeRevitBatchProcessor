@@ -19,6 +19,7 @@ class ViewModel(ViewModelBase):
         number_of_task_files,
         include_sub_dirs,
         filter_text,
+        filter_is_and,
         files,
     ):
 
@@ -44,6 +45,8 @@ class ViewModel(ViewModelBase):
         self.number_of_task_files = number_of_task_files
         self.include_sub_dirs = include_sub_dirs
         self.filter_text = filter_text
+        self.filter_is_and = filter_is_and
+        self.filter_is_or = not(filter_is_and)
 
         # hook up ok and cancel buttons
         self.BtnOkCommand = Command(self.BtnOK)

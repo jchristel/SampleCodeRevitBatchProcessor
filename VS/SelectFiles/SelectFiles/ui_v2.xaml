@@ -40,7 +40,7 @@
                     <RowDefinition Name="GridRow3">
                         <RowDefinition.Style>
                             <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height"  Value="Auto" />
+                                <Setter Property="Height"  Value="*" />
                             </Style>
                         </RowDefinition.Style>
                     </RowDefinition>
@@ -87,7 +87,7 @@
                         </Grid>
                     </Border>
                 </Expander>
-                <Expander x:Name="Misc2Expander" Grid.Row="1" Header="Files" IsExpanded="True" Margin="10,0,0,0">
+                <DockPanel Grid.Row="1"  Margin="10,0,0,0">
                     <Border Margin="5" CornerRadius="6" BorderBrush="Gray" BorderThickness="2" Padding="8" DockPanel.Dock="Top">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -106,19 +106,24 @@
                             </DataGrid>
                         </Grid>
                     </Border>
-                </Expander>
-                <Grid Grid.Row="2" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Button Grid.Row="0" Margin="0 0 10 10" x:Name="btnOK" Content="OK" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75" Command="{Binding BtnOkCommand}">  
-                    </Button>
-                    <Button Grid.Row="0" Margin="10 0 10 10" x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="75" Command="{Binding BtnCancelCommand}">
-                    </Button>
-                </Grid>
+                </DockPanel>
+                <DockPanel Margin="10,0,0,0" Grid.Row="2">
+                    <Border Margin="5" CornerRadius="6" BorderBrush="Gray" BorderThickness="2" Padding="8" DockPanel.Dock="Top">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Button Margin="0 10 10 10" x:Name="btnOK" Grid.Row="0" Grid.Column="1" Content="OK" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75" Command="{Binding BtnOkCommand}">
+                        </Button>
+                            <Button  Margin="10 10 0 10" x:Name="btnCancel" Grid.Row="0" Grid.Column="0" Content="Cancel" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="75" Command="{Binding BtnCancelCommand}">
+                        </Button>
+                        </Grid>
+                    </Border>
+                </DockPanel>
             </Grid>
         </Border>
     </DockPanel>

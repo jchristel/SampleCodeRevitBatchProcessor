@@ -62,7 +62,7 @@ from duHast.UI.file_list import (
     get_revit_files_incl_sub_dirs,
 )
 from duHast.UI.workloader import distribute_workload
-from duHast.UI.file_item import MyFileItem
+from duHast.UI.Objects.file_item import MyFileItem
 from duHast.Utilities.console_out import output
 from duHast.Utilities.files_io import file_exist
 from duHast.Utilities.files_get import get_files_with_filter

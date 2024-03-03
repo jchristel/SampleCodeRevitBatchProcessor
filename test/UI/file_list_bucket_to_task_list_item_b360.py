@@ -30,7 +30,7 @@ import os
 from test.utils import test
 
 from duHast.UI.file_list import bucket_to_task_list_bim_360
-from duHast.UI.file_item import MyFileItem
+from duHast.UI.Objects.file_item import MyFileItem
 import uuid
 
 

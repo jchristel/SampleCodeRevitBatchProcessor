@@ -8,8 +8,8 @@ Write-ToLogAndConsole -Message "SETTINGS" -IsHeader $True
 $iron_python_path = "C:\Program Files\IronPython 2.7\ipy32.exe"
 # Display batch processor path
 Write-ToLogAndConsole -Message "Iron python file path: $iron_python_path"
-$ui_file_select_path='"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\src\duHast\UI\script.py"'
-# Display theui fiole select path
+$ui_file_select_path='"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\src\duHast\UI\files_select\files_select_ui.py"'
+# Display the ui file select path
 Write-ToLogAndConsole -Message "UI File select path: $ui_file_select_path"
 # directory path from which python UI is going to show revit files
 $ui_input_directory = '"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles"'

@@ -33,11 +33,11 @@ from duHast.Utilities.Objects import base
 class FileSelectionSettings(base.Base):
     def __init__(
         self,
-        inputDirectory,
+        input_path,
         include_sub_dirs_in_search,
         output_directory,
         output_file_number,
-        revitFileExtension,
+        revit_file_extension,
         filters,
         filter_type,
     ):
@@ -56,11 +56,11 @@ class FileSelectionSettings(base.Base):
         :type revitFileExtension: str
         """
 
-        self.input_directory = inputDirectory
+        self.input_directory = input_path
         self.incl_sub_dirs = include_sub_dirs_in_search
         self.output_dir = output_directory
         self.output_file_num = output_file_number
-        self.revit_file_extension = revitFileExtension
+        self.revit_file_extension = revit_file_extension
         self.filters = filters
         self.filter_type = filter_type
 

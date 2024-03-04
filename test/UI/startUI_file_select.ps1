@@ -19,8 +19,10 @@ $ui_output_directory = ("C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBa
 Write-ToLogAndConsole -Message "UI output directory: $ui_output_directory"
 $ui_number_of_task_files=3
 Write-ToLogAndConsole -Message "Task files: $ui_number_of_task_files"
+$ui_filter_text="2022;2023"
+Write-ToLogAndConsole -Message "filter text: $ui_filter_text"
 # Define the arguments as a single string (escpaed double quotes due to spaces in name!!)
-$python_ui_inputs = "-i $ui_input_directory -o `"$ui_output_directory`" -n $ui_number_of_task_files -e .rvt"
+$python_ui_inputs = "-i $ui_input_directory -o `"$ui_output_directory`" -n $ui_number_of_task_files -f $ui_filter_text -x -e .rvt"
 Write-ToLogAndConsole -Message "UI input arguments: $python_ui_inputs"
 
 Write-ToLogAndConsole -Message "-"

@@ -18,7 +18,11 @@
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=Misc1Expander,
                                         Path=IsExpanded}" Value="True">
-                                        <Setter Property="Height" Value="250" />
+                                        <Setter Property="Height" Value="Auto" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Misc1Expander,
+                                        Path=IsExpanded}" Value="False">
+                                        <Setter Property="Height" Value="40" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -27,20 +31,14 @@
                     <RowDefinition Name="GridRow2">
                         <RowDefinition.Style>
                             <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height"  Value="Auto" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=DockPanelFiles,
-                                        Path=IsExpanded}" Value="True">
-                                        <Setter Property="Height" Value="Auto" />
-                                    </DataTrigger>
-                                </Style.Triggers>
+                                <Setter Property="Height"  Value="*" />
                             </Style>
                         </RowDefinition.Style>
                     </RowDefinition>
                     <RowDefinition Name="GridRow3">
                         <RowDefinition.Style>
                             <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height"  Value="*" />
+                                <Setter Property="Height"  Value="75" />
                             </Style>
                         </RowDefinition.Style>
                     </RowDefinition>

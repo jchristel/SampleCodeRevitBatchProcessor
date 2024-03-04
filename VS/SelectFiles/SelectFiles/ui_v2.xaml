@@ -18,7 +18,11 @@
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=Misc1Expander,
                                         Path=IsExpanded}" Value="True">
-                                        <Setter Property="Height" Value="250" />
+                                        <Setter Property="Height" Value="Auto" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Misc1Expander,
+                                        Path=IsExpanded}" Value="False">
+                                        <Setter Property="Height" Value="40" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -27,20 +31,14 @@
                     <RowDefinition Name="GridRow2">
                         <RowDefinition.Style>
                             <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height"  Value="Auto" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=DockPanelFiles,
-                                        Path=IsExpanded}" Value="True">
-                                        <Setter Property="Height" Value="Auto" />
-                                    </DataTrigger>
-                                </Style.Triggers>
+                                <Setter Property="Height"  Value="*" />
                             </Style>
                         </RowDefinition.Style>
                     </RowDefinition>
                     <RowDefinition Name="GridRow3">
                         <RowDefinition.Style>
                             <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height"  Value="*" />
+                                <Setter Property="Height"  Value="75" />
                             </Style>
                         </RowDefinition.Style>
                     </RowDefinition>
@@ -59,8 +57,9 @@
                                 <RowDefinition Height="40"/>
                             </Grid.RowDefinitions>
                             <Label Name="lSourcePath" Grid.Row="0" Content="Source Path" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <!-- source path text box -->
                             <TextBox x:Name="tbSourceFolder" Grid.Row="0" Grid.Column="1" IsReadOnly="False" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,10,0" VerticalContentAlignment="Center" 
-                                Text="{Binding source_path, UpdateSourceTrigger=PropertyChanged}"/>
+                                Text="{Binding TextBoxText_SourcePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <Label Name="lDestinationPath" Grid.Row="1" Content="Destination Path" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <TextBox x:Name="tbDestinationFolder" Grid.Row="1" Grid.Column="1" IsReadOnly="True" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,10,0" VerticalContentAlignment="Center" 
                                 Text="{Binding destination_path, UpdateSourceTrigger=PropertyChanged}"/>
@@ -111,8 +110,9 @@
                                 <Label Content="File Name Filter:" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,5,0"/>
                                 <!-- Filter text box -->
                                 <TextBox x:Name="txtFilter" Grid.Column="1" Text="{Binding TextBoxText_Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="10,0,10,0" VerticalAlignment="Center"/>
-                                <RadioButton Grid.Column="2" Content="AND" HorizontalAlignment="Left" Margin="10,0,10,0" VerticalAlignment="Center" IsChecked="{Binding filtered_revit_files}"/>
-                                <RadioButton Grid.Column="2" Content="OR" HorizontalAlignment="Right" Margin="10,0,10,0" VerticalAlignment="Center" IsChecked="{Binding filtered_revit_files}"/>
+                                <!-- Radio buttons filter type -->
+                                <RadioButton Grid.Column="2" Content="AND" HorizontalAlignment="Left" Margin="10,0,10,0" VerticalAlignment="Center" IsChecked="{Binding RadioButton_FilterAnd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <RadioButton Grid.Column="2" Content="OR" HorizontalAlignment="Right" Margin="10,0,10,0" VerticalAlignment="Center" IsChecked="{Binding RadioButton_FilterOr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             </Grid>
                             <DataGrid x:Name="files" Margin="10" Grid.Row="2" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Extended" AlternatingRowBackground="BlanchedAlmond" AutoGenerateColumns="False" ItemsSource="{Binding filtered_revit_files}">
                                 <DataGrid.Columns>

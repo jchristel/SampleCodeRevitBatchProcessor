@@ -38,6 +38,8 @@ class FileSelectionSettings(base.Base):
         output_directory,
         output_file_number,
         revitFileExtension,
+        filters,
+        filter_type,
     ):
         """
         Class constructor
@@ -59,6 +61,8 @@ class FileSelectionSettings(base.Base):
         self.output_dir = output_directory
         self.output_file_num = output_file_number
         self.revit_file_extension = revitFileExtension
+        self.filters = filters
+        self.filter_type = filter_type
 
         # ini super class to allow multi inheritance in children!
         super(FileSelectionSettings, self).__init__()

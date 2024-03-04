@@ -19,14 +19,13 @@ sys.path.append(ROOT_REPO_DIRECTORY)
 
 # import UI helper
 from duHast.UI import file_list as fl
-from duHast.UI.Objects import file_select_settings as set
+from duHast.UI.Objects.file_select_settings import FileSelectionSettings
 from duHast.UI.file_list import get_revit_files_for_processing
 from duHast.UI.Objects.XamlLoader import XamlLoader
 from duHast.UI import workloader as wl
 
-from duHast.Utilities.files_io import (
-    file_exist,
-)
+from duHast.Utilities.files_io import file_exist
+from duHast.Utilities.directory_io import directory_exists
 from duHast.Utilities.console_out import output_with_time_stamp
 
 # xaml helper classes
@@ -68,6 +67,7 @@ def main(argv):
             xaml = XamlLoader(XAML_FULL_FILE_NAME)
             # forms window
             window = xaml.Root
+            
             # view model initialise
             view_model = ViewModel(
                 window,
@@ -76,8 +76,8 @@ def main(argv):
                 settings.revit_file_extension,
                 settings.output_file_num,
                 settings.incl_sub_dirs,
-                ["2022"],
-                True,
+                settings.filters,
+                settings.filter_type,
             )
             # assign view model to xaml
             xaml.Root.DataContext = view_model
@@ -169,29 +169,38 @@ def process_args(argv):
     try:
         opts, args = getopt.getopt(
             argv,
-            "hsi:o:n:e:",
-            ["subDir", "input=", "outputDir=", "numberFiles=", "fileExtension="],
+            "hsxi:o:n:e:f:",
+            ["subDir", "TextFilterIsOR", "inputDirectory=", "outputDirectory=", "numberOfOutputFiles=", "fileExtension=", "filterText="],
         )
     except getopt.GetoptError as e:
         output_with_time_stamp(
-            "script.py -s -i <input> -o <output_directory> -n <numberOfOutputFiles> -e <fileExtension> failed with exception: {}".format(
+            "file_select_ui.py -s -x <TextFilterIsOR> -i <inputDirectory> -o <outputDirectory> -n <numberOfOutputFiles> -e <fileExtension> -f <filterText> failed with exception: {}".format(
                 e
             )
         )
+        
+    # set a default value (True) for the filter type
+    filter_is_and = True
+    # set default value for text filters
+    filter_rules = []
+    
+    # check what args have been provided
     for opt, arg in opts:
         if opt == "-h":
             output_with_time_stamp(
-                "script.py -i <input> -o <output_directory> -n <numberOfOutputFiles> -e <fileExtension>"
+                "file_select_ui.py -s <include sub dir> -x <TextFilterIsOR> -i <inputPath> -o <outputDirectory> -n <numberOfOutputFiles> -e <fileExtension> -f <filterText>"
             )
         elif opt in ("-s", "--subDir"):
             include_sub_dirs_in_search = True
-        elif opt in ("-i", "--input"):
+        elif opt in ("-x", "--TextFilterIsOR"):
+            filter_is_and = False
+        elif opt in ("-i", "--inputDirectory"):
             input_dir_file = arg
             got_args = True
-        elif opt in ("-o", "--outputDir"):
+        elif opt in ("-o", "--outputDirectory"):
             output_directory = arg
             got_args = True
-        elif opt in ("-n", "--numberFiles"):
+        elif opt in ("-n", "--numberOfOutputFiles"):
             try:
                 value = int(arg)
                 output_file_number = value
@@ -202,6 +211,9 @@ def process_args(argv):
         elif opt in ("-e", "--fileExtension"):
             revit_file_extension = arg.strip()
             got_args = True
+        elif opt in ("-f", "--filterText"):
+            filter_text = arg.strip()
+            filter_rules = [rule.strip() for rule in filter_text.split(";")]
 
     # check if input values are valid
     if output_file_number < 0 or output_file_number > 100:
@@ -209,12 +221,28 @@ def process_args(argv):
         output_with_time_stamp(
             "The number of output files must be bigger then 0 and smaller then 100"
         )
-    if not file_exist(input_dir_file):
+    
+    # need to check if path provided is a directory or a file path
+    if os.path.isdir(input_dir_file):
+        if not directory_exists(input_dir_file):
+            got_args = False
+            output_with_time_stamp(
+                "Invalid input directory or file path: {}".format(input_dir_file)
+            )
+    elif(os.path.isfile(input_dir_file)):
+        if not file_exist(input_dir_file):
+            got_args = False
+            output_with_time_stamp(
+                "Invalid input file path: {}".format(input_dir_file)
+            )
+    else:
         got_args = False
         output_with_time_stamp(
-            "Invalid input directory or file path: {}".format(input_dir_file)
-        )
-    if not file_exist(output_directory):
+                "Invalid input path: {}".format(input_dir_file)
+            )
+    
+    # check output directory
+    if not directory_exists(output_directory):
         got_args = False
         output_with_time_stamp("Invalid output directory: {}".format(output_directory))
     if (
@@ -227,13 +255,15 @@ def process_args(argv):
                 revit_file_extension
             )
         )
-
-    return got_args, set.FileSelectionSettings(
+    
+    return got_args, FileSelectionSettings(
         input_dir_file,
         include_sub_dirs_in_search,
         output_directory,
         output_file_number,
         revit_file_extension,
+        filter_rules,
+        filter_is_and
     )
 
 

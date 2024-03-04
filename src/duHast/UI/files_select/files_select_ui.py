@@ -13,7 +13,7 @@ from System.Windows import Application
 ROOT_REPO_DIRECTORY = os.path.join(
     os.path.realpath(__file__), os.pardir, os.pardir, os.pardir, os.pardir
 )
-sys.path.append(ROOT_REPO_DIRECTORY)
+sys.path.insert(0,ROOT_REPO_DIRECTORY)
 
 
 # import UI helper
@@ -132,8 +132,8 @@ def main(argv):
         else:
             # show message box
             output_with_time_stamp(
-                "No files found matching extension: {}!".format(
-                    settings.revit_file_extension
+                "No files found matching extension: {} in location: {}!".format(
+                    settings.revit_file_extension, settings.input_directory
                 )
             )
             sys.exit(2)

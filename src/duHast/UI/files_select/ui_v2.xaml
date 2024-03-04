@@ -113,8 +113,8 @@
                                 <!-- Filter text box -->
                                 <TextBox x:Name="txtFilter" Grid.Column="1" Text="{Binding TextBoxText_Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="10,0,10,0" VerticalAlignment="Center"/>
                                 <!-- Radio buttons filter type -->
-                                <RadioButton Grid.Column="2" Content="AND" HorizontalAlignment="Left" Margin="10,0,10,0" VerticalAlignment="Center" IsChecked="{Binding filter_is_and}"/>
-                                <RadioButton Grid.Column="2" Content="OR" HorizontalAlignment="Right" Margin="10,0,10,0" VerticalAlignment="Center" IsChecked="{Binding filter_is_or}"/>
+                                <RadioButton Grid.Column="2" Content="AND" HorizontalAlignment="Left" Margin="10,0,10,0" VerticalAlignment="Center" IsChecked="{Binding RadioButton_FilterAnd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <RadioButton Grid.Column="2" Content="OR" HorizontalAlignment="Right" Margin="10,0,10,0" VerticalAlignment="Center" IsChecked="{Binding RadioButton_FilterOr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             </Grid>
                             <DataGrid x:Name="files" Margin="10" Grid.Row="2" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Extended" AlternatingRowBackground="BlanchedAlmond" AutoGenerateColumns="False" ItemsSource="{Binding filtered_revit_files}">
                                 <DataGrid.Columns>

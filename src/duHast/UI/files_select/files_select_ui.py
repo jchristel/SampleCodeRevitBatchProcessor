@@ -6,8 +6,7 @@ clr.AddReferenceByPartialName("WindowsBase")
 clr.AddReferenceByPartialName("IronPython")
 clr.AddReferenceByPartialName("Microsoft.Scripting")
 
-from System.Windows import Application, SizeToContent
-from System.Windows.Media import Brushes
+from System.Windows import Application
 
 # define path to duHast
 # to get to the root folder of this repo if this script is called directly from a powershell, batch or similar
@@ -82,12 +81,11 @@ def main(argv):
             # assign view model to xaml
             xaml.Root.DataContext = view_model
             
-            # testing
-            # xaml.grid1.Background = Brushes.DarkSalmon
             # show application
             Application().Run(xaml.Root)
             
             # debugging
+            '''
             print("Destination Path {}".format(xaml.Root.DataContext.destination_path))
             print("Source Path {}".format(xaml.Root.DataContext.source_path))
             print(
@@ -105,7 +103,7 @@ def main(argv):
             for frf in view_model.filtered_revit_files:
                 print("filtered files: {}".format(frf.name))
             print("debug {}".format("\n".join(view_model.debug)))
-            
+            '''
             
             # get the dialog result (ok vs cancel buttons)
             ui_result = xaml.Root.DataContext.DialogResult
@@ -142,9 +140,6 @@ def main(argv):
     else:
         # invalid or no args provided... get out
         sys.exit(1)
-
-    # Set the SizeToContent property of the window
-    # xaml.Root.SizeToContent = SizeToContent.WidthAndHeight
 
 
 def process_args(argv):

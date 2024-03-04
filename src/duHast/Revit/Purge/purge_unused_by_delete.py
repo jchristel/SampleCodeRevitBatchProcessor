@@ -39,6 +39,7 @@ clr.AddReference("System.Core")
 clr.ImportExtensions(System.Linq)
 
 from duHast.Utilities.Objects.result import Result
+from duHast.Utilities.Objects.timer import Timer
 from duHast.Revit.Common.failure_handling import (
     get_failure_warning_report,
     set_failures_accessor_failure_options,
@@ -295,8 +296,15 @@ def purge_unused_elements(
     unused_elements_count = 0
     callback_counter = 0
 
+    # set up a timer fro each element and an overall timer
+    t_by_element = Timer()
+    t_overall = Timer()
+    t_overall.start()
+
     # Loop through the line patterns and delete them one by one
     for element_id in element_ids:
+        # start the timer
+        t_by_element.start()
         # progress call back
         callback_counter += 1
         if progress_callback != None:
@@ -362,6 +370,10 @@ def purge_unused_elements(
         # not reset in the DocumentChanged event
         _modified_by_delete = 0
 
+        return_value.append_message(
+            "Element {} took: {}".format(element_id, t_by_element.stop())
+        )
+
     deleted_elements_data += "\n"
     return_value.append_message(
         "\nDeleted {} unused elements:\n\n{}".format(
@@ -379,4 +391,5 @@ def purge_unused_elements(
         sender, e, doc, debug
     )
 
+    return_value.append_message("Purge took: {}".format(t_overall.stop()))
     return return_value

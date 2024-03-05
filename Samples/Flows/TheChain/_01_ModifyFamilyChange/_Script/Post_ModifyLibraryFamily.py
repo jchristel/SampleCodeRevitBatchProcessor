@@ -51,7 +51,7 @@ import sys
 import settings as settings  # sets up all commonly used variables and path locations!
 from duHast.Utilities.console_out import output
 from duHast.Utilities.files_io import file_delete, get_file_name_without_ext, copy_file
-from duHast.Utilities.files_get import get_files_single_directory, get_files_with_filter
+from duHast.Utilities.files_get import get_files_with_filter
 from duHast.Utilities.files_combine import combine_files
 from duHast.Utilities.files_csv import write_report_data_as_csv, read_csv_file
 from duHast.Utilities.batch_processor_log_utils import process_log_files

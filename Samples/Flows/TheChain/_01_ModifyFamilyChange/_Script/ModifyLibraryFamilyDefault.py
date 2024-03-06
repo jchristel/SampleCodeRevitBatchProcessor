@@ -494,7 +494,7 @@ for family_action in family_actions:
     output("[{}]".format(result_family_action.status), revit_script_util.Output)
 
 output(
-    str(t.stop()),
+    "Modifying Revit File.... completed: {}".format(t.stop()),
     revit_script_util.Output,
 )
 
@@ -503,8 +503,8 @@ output(
 # -------------
 
 # get the file name
-fileName = get_file_name_without_ext(REVIT_FILE_PATH)
-REVIT_FILE_PATH_NEW = os.path.join(settings.WORKING_DIRECTORY, fileName + ".rfa")
+file_name_without_ext = get_file_name_without_ext(REVIT_FILE_PATH)
+REVIT_FILE_PATH_NEW = os.path.join(settings.WORKING_DIRECTORY, file_name_without_ext + ".rfa")
 
 # save file if required
 if over_all_status_.status:
@@ -517,7 +517,7 @@ if over_all_status_.status:
         doc,
         settings.WORKING_DIRECTORY,
         REVIT_FILE_PATH,
-        [[fileName, fileName]],
+        [[file_name_without_ext, file_name_without_ext]],
         ".rfa",
         True,
     )
@@ -536,7 +536,7 @@ if over_all_status_.status:
         )
     else:
         # write copy marker file
-        write_copy_marker_file(fileName)
+        write_copy_marker_file(file_name_without_ext)
         # write family has changed marker file
         family_category_name = doc.OwnerFamily.FamilyCategory.Name
-        write_changed_family_marker_file(fileName, family_category_name)
+        write_changed_family_marker_file(file_name_without_ext, family_category_name)

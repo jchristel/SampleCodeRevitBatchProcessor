@@ -31,7 +31,7 @@ import clr
 import System
 
 # import common library modules
-from duHast.Revit.Common import parameter_get_utils as rParaGet
+#from duHast.Revit.Common import parameter_get_utils as rParaGet
 
 
 # import Autodesk

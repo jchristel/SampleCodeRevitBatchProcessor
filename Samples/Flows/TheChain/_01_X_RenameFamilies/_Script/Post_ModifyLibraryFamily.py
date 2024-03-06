@@ -40,10 +40,6 @@ This module is a post - processing module combining temp files, cleaning up temp
 # time out warning
 # exception which caused the process to be aborted
 
-
-# flag whether this runs in debug or not
-debug_ = False
-
 # --------------------------
 # default file path locations
 # --------------------------

@@ -56,13 +56,12 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Revit.Common.file_io import save_as_family
-from duHast.Revit.Categories.categories import get_family_category
+from duHast.Revit.Categories.categories import get_family_category, does_main_sub_category_exists
 from duHast.Revit.Family.Data.family_category_data_utils import (
     read_overall_family_sub_category_change_directives_from_directory,
 )
 from duHast.Revit.Categories.change_family_category import change_family_category
 from duHast.Revit.Categories.family_sub_categories import (
-    does_main_sub_category_exists,
     rename_sub_category,
 )
 from duHast.Utilities.Objects.timer import Timer
@@ -182,10 +181,12 @@ def UpdateSubCategoryNames(doc):
     for sub_category_change_directive in sub_category_change_directives:
         if sub_category_change_directive.familyCategory in family_category:
             found_category_match = True
+            
             # check if old subcategory name is in family to start with
             already_in_family_old = does_main_sub_category_exists(
                 doc, sub_category_change_directive.oldSubCategoryName
             )
+
             # if a name match attempt to rename
             if already_in_family_old:
                 found_sub_category_match = True
@@ -198,15 +199,16 @@ def UpdateSubCategoryNames(doc):
                 )
             else:
                 return_value.append_message(
-                    "Subcategory: "
-                    + sub_category_change_directive.oldSubCategoryName
-                    + " does not exist in family file."
+                    "Subcategory: {}  does not exist in family file.".format(
+                        sub_category_change_directive.oldSubCategoryName
+                    )
                 )
     if found_category_match == False:
         return_value.update_sep(
             False,
-            "No change directive found matching family category: "
-            + family_category_name,
+            "No change directive found matching family category: {}!".format(
+                family_category_name
+            ),
         )
     if found_category_match and found_sub_category_match == False:
         return_value.update_sep(

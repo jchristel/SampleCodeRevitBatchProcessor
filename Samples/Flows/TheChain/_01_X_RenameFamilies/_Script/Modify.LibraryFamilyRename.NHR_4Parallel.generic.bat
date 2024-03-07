@@ -27,7 +27,7 @@ set _targetPath=%LocalAppData%\RevitBatchProcessor\BatchRvt.exe
 :: default path for python installation
 set _pythonPath="C:\Program Files (x86)%\IronPython 2.7\ipy64.exe"
 :: file path to UI file select python script
-set _FileSelectPath="%_rootFolderPath%_Script\Pre_ModifyLibraryFamilyStandAlone.py"
+set _FileSelectPath="%_rootFolderPath%_Script\Pre_FileSelectNoUI.py"
 :: file path to rename family files python script
 set _FileRenamePath="%_rootFolderPath%_Script\Pre_ModifyLibraryRenameFamilyFiles.py"
 :: directory containing files required as inputs
@@ -35,7 +35,7 @@ set _InputDirectory="%_rootFolderPath%_Users\%USERNAME%\_Input"
 :: directory where settings files are saved
 set "_settingsDiretoryPath=%_rootFolderPath%_Users\%USERNAME%\_Settings\"
 :: settings file name for step one. Note %%j variable in name which will be used to cycle through A, B, C...
-set "_settingsStepOneFileName=BatchRvt.2022.ModifyFamiliesOne%%j.NHR.Settings.json"
+set "_settingsStepOneFileName=BatchRvt.2022.ModifyFamiliesOne%%j.ALL.Settings.json"
 :: file path to clean up script run at the very end
 set "_cleanUpScriptPath=%_rootFolderPath%_Script\Post_ModifyLibraryFamily.py"
 :: spinner stuff - back space character

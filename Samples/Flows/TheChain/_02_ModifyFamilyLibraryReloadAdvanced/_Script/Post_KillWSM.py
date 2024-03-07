@@ -1,3 +1,12 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Module executed as a post process script within the batch processor environment.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- kills all running revit work sharing monitor sessions
+
+"""
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -16,50 +25,41 @@
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
 # --------------------------
-# default file path locations
+# Imports
 # --------------------------
 
+import settings as settings  # sets up all commonly used variables and path locations!
 
-#import clr
-#import System
-#from System.IO import Path
-
-import utilReloadBVN as utilR # sets up all commonly used variables and path locations!
 # import WSM kill utils
-import WorksharingMonitorProcess as wsmp
+from duHast.Utilities import worksharing_monitor_process as wsmp
 
-# flag whether this runs in debug or not
-debug_ = False
-
-# Add batch processor scripting references
-if not debug_:
-    import script_util
+# import script_util
+import script_util
+from duHast.Utilities.console_out import output
 
 # -------------
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
-    if not debug_:
-        script_util.Output(str(message))
-    else:
-        print (message)
-
 # -------------
 # main:
 # -------------
 
-# kill off all WSM sessions, no directory path required since we want to kill all WSM sessions
-statusWSMKill_ = wsmp.DieWSMDie('', True)
+# kill off all WSM sessions
+statusWSMKill_ = wsmp.die_wsm_die(settings.WSM_MARKER_DIRECTORY, True)
 
 # show WSM kill status
-Output('WSM Kill status: ....' + str(statusWSMKill_.message) + ' [' + str(statusWSMKill_.status) + ']')
+output(
+    "WSM Kill status: ....{} [{}]".format(
+        statusWSMKill_.message, statusWSMKill_.status
+    ),
+    script_util.Output,
+)

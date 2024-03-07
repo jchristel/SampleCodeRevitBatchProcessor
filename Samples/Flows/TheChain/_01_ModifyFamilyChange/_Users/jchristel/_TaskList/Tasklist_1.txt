@@ -1,3 +1,0 @@
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Shelving_Mobile_StorageSolution_TowerDrawerUnit_Castors_FQSM_544.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\ShelvingUnit_WireMesh_600W_400D_2100H_Mobile_FQSM_041.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Trolley_Accessories_TractionTable_MMOP_600.rfa

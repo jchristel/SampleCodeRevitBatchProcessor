@@ -1,4 +1,4 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module builds the list of families to be processed for sub category name changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -10,9 +10,9 @@ This module builds the list of families to be processed for sub category name ch
 
 - builds a file list and saves it into the task file directory
 
-- returns a 0 if everything went ok othersie a 2 ( an exception occured or no files required changing)
+- returns a 0 if everything went ok otherwise a 2 ( an exception occurred or no files required changing)
 
-'''
+"""
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
@@ -39,68 +39,81 @@ This module builds the list of families to be processed for sub category name ch
 #
 #
 
-# this sample shows how to write out a number of task files using bucket distribution
 
 # --------------------------
 # default file path locations1
 # --------------------------
 
 import sys, os
-import utilModifyBVN as utilM # sets up all commonly used variables and path locations!
-import RevitFamilyCategoryDataUtils as rCatReportTools
-import Utility as util
+
+import settings as settings  # sets up all commonly used variables and path locations!
+
+from duHast.Utilities.console_out import output
+from duHast.Revit.Family.Data.family_category_data_utils import (
+    read_overall_family_category_data_from_directory,
+    read_overall_family_sub_category_change_directives_from_directory,
+    get_families_requiring_sub_category_change,
+)
+
+from duHast.Utilities.files_csv import write_report_data_as_csv
 
 # -------------
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
-    print (message)
 
 # -------------
 # main:
 # -------------
-Output( 'Python pre process script: Task list builder start ...')
-Output('Using path: ' + utilM.FAMILY_CHANGE_DIRECTIVE_DIRECTORY)
+output("Python pre process script: Task list builder start ...")
+output("Using path: {}".format(settings.INPUT_DIRECTORY))
 
 try:
-    rootFams,nestedFams = rCatReportTools.ReadOverallFamilyCategoryDataFromDirectory(utilM.FAMILY_CHANGE_DIRECTIVE_DIRECTORY)
+    root_families, nested_Families = read_overall_family_category_data_from_directory(
+        settings.INPUT_DIRECTORY
+    )
     # check if any root families where found
-    if(len(rootFams) > 0):
-        subCatChangeDirectives = rCatReportTools.ReadOverallFamilySubCategoryChangeDirectivesFromDirectory(utilM.FAMILY_CHANGE_DIRECTIVE_DIRECTORY)
-        rootFamsNeedingChange = rCatReportTools.GetFamiliesRequiringSubCategoryChange(
-            rootFams,
-            subCatChangeDirectives)
-        Output(' matches found: ' + str(len(rootFamsNeedingChange)))
-        if(len(rootFamsNeedingChange)> 0 ):
+    if len(root_families) > 0:
+        sub_category_change_directives = (
+            read_overall_family_sub_category_change_directives_from_directory(
+                settings.INPUT_DIRECTORY
+            )
+        )
+        root_families_needing_change = get_families_requiring_sub_category_change(
+            root_families, sub_category_change_directives
+        )
+        output("matches found: {}".format(len(root_families_needing_change)))
+        if len(root_families_needing_change) > 0:
 
             # writer expects a list of lists...
-            rootFams = []
-            for rf in rootFamsNeedingChange:
-                rootFams.append([rf])
+            root_families_to_file = []
+            for root_family_needing_change in root_families_needing_change:
+                root_families_to_file.append([root_family_needing_change])
             try:
-                taskfileName = utilM.TASK_FILE_DIRECTORY + '\\' + utilM.PREDEFINED_TASK_FILE_NAME_PREFIX + utilM.PREDEFINED_TASK_FILE_EXTENSION
+                task_file_name = os.path.join(
+                    settings.TASK_FILE_DIRECTORY,
+                    settings.PREDEFINED_TASK_FILE_NAME_PREFIX
+                    + settings.PREDEFINED_TASK_FILE_EXTENSION,
+                )
                 # write out task file list into task folder
-                util.writeReportDataAsCSV (
-                    taskfileName,
-                    [], 
-                    rootFams)
+                write_report_data_as_csv(task_file_name, [], root_families_to_file)
                 # user feed back
-                Output('Succesfully wrote task file: ' + taskfileName)
+                output("Successfully wrote task file: {}".format(task_file_name))
                 sys.exit(0)
             except Exception as e:
-                Output("failed to write task file name with exception: " + str(e))
+                output("failed to write task file name with exception: {}".format(e))
                 sys.exit(2)
         else:
             # do nothing...
-            Output ('No root families requiring a sub category renamed found. Terminating without proceeding...')
+            output(
+                "No root families requiring a sub category renamed found. Terminating without proceeding..."
+            )
             sys.exit(2)
     else:
         # do nothing...
-        Output ('No root families in report found. Terminating without proceeding...')
+        output("No root families in report found. Terminating without proceeding...")
         sys.exit(2)
 except Exception as e:
-    Output ('An exception occured when building task list: '+ str(e))
-    Output ('Terminating without proceeding...')
+    output("An exception occurred when building task list: {}".format(e))
+    output("Terminating without proceeding...")
     sys.exit(2)

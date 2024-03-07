@@ -62,12 +62,15 @@ def export_views_to_nwc(doc, export_view_prefix, export_directory, view_name_mod
     """
 
     return_value = res.Result()
-    nwc_export_option = set_up_nwc_default_export_option()
-    return_value = export_3d_views_to_nwc(
-        doc,
-        export_view_prefix,
-        nwc_export_option,
-        export_directory,
-        do_something_with_view_name=view_name_modifier,
-    )
+    try:
+        nwc_export_option = set_up_nwc_default_export_option()
+        return_value = export_3d_views_to_nwc(
+            doc,
+            export_view_prefix,
+            nwc_export_option,
+            export_directory,
+            do_something_with_view_name=view_name_modifier,
+        )
+    except Exception as e:
+        return_value.update_sep(False, "Error exporting views to NWC: {}".format(e))
     return return_value

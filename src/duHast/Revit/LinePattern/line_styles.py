@@ -33,7 +33,7 @@ from System import Linq
 
 clr.ImportExtensions(Linq)
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import BuiltInCategory, ElementId, GraphicsStyleType
 from duHast.Revit.Common import delete as rDel
 
 
@@ -47,15 +47,15 @@ def delete_line_styles_starts_with(doc, starts_with):
     :type starts_with: str
     :return: Result class instance.
 
-        - .result = True if all views where deleted. Otherwise False.
+        - .status True if all views where deleted. Otherwise False.
         - .message will contain deletion status.
         
     :rtype: :class:`.Result`
     """
 
-    lc = doc.Settings.Categories[rdb.BuiltInCategory.OST_Lines]
+    lc = doc.Settings.Categories[BuiltInCategory.OST_Lines]
     ids = list(c.Id for c in lc.SubCategories if c.Name.StartsWith(starts_with)).ToList[
-        rdb.ElementId
+        ElementId
     ]()
     result = rDel.delete_by_element_ids(
         doc,
@@ -75,6 +75,23 @@ def get_all_line_style_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    lc = doc.Settings.Categories[rdb.BuiltInCategory.OST_Lines]
-    ids = list(c.Id for c in lc.SubCategories).ToList[rdb.ElementId]()
+    lc = doc.Settings.Categories[BuiltInCategory.OST_Lines]
+    ids = list(c.Id for c in lc.SubCategories).ToList[ElementId]()
     return ids
+
+def get_all_graphics_style_ids_by_line_style_id(doc):
+    """
+    Gets all graphics style ids by line style id in the model.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A dictionary of all line style ids as integer values with their corresponding graphics style ids as integer values.
+    :rtype: dict
+    """
+
+    return_value = {}
+    cat = doc.Settings.Categories.get_Item(BuiltInCategory.OST_Lines)
+    sub_cats = cat.SubCategories
+    for line_style in sub_cats:
+        graphic_style = line_style.GetGraphicsStyle(GraphicsStyleType.Projection)
+        return_value[line_style.Id.IntegerValue] = graphic_style.Id.IntegerValue
+    return return_value

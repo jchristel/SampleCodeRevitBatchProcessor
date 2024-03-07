@@ -32,52 +32,35 @@
 # the SaveAs() method will compress the newly created central file by default
 
 # --------------------------
-#default file path locations
+# default file path locations
 # --------------------------
 
 import clr
-import System
+import os
 
-import utilReloadBVN as utilR # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
+
 # import common library
-import RevitCommonAPI as com
-import Result as res
-import RevitFamilyReload as rFamReload
-import RevitFamilyUtils as rFamUtils
-import Utility as util
-from timer import Timer
+from duHast.Utilities.console_out import output
+from duHast.Utilities.files_csv import write_report_data_as_csv
+from duHast.Utilities.files_io import get_file_name_without_ext
+from duHast.Revit.Common.file_io import save_as_family
+from duHast.Revit.Family.family_reload import reload_all_families
+from duHast.Utilities.Objects.timer import Timer
 
-#clr.AddReference('System.Core')
-#clr.ImportExtensions(System.Linq)
 
-from Autodesk.Revit.DB import *
+import revit_script_util
+import revit_file_util
 
-# flag whether this runs in debug or not
-debug_ = False
-
-# Add batch processor scripting references
-if not debug_:
-    import revit_script_util
-    import revit_file_util
-    clr.AddReference('RevitAPI')
-    clr.AddReference('RevitAPIUI')
-    # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
-else:
-    #get default revit file name
-    revitFilePath_ = utilR.DEBUG_REVIT_FILE_NAME
+clr.AddReference("RevitAPI")
+clr.AddReference("RevitAPIUI")
+# NOTE: these only make sense for batch Revit file processing mode.
+doc = revit_script_util.GetScriptDocument()
+REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 
 # -------------
 # my code here:
 # -------------
-
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
-    if not debug_:
-        revit_script_util.Output(str(message))
-    else:
-        print (message)
 
 # -------------
 # main:
@@ -87,47 +70,86 @@ def Output(message = ''):
 t = Timer()
 t.start()
 
-# debug test 
-Output('Script directory: ' + utilR.SCRIPT_DIRECTORY)
+# debug test
+output(
+    "Script directory: {}".format(settings.SCRIPT_DIRECTORY),
+    revit_script_util.Output,
+)
 
-Output('Modifying Revit File.... start')
+output(
+    "Modifying Revit File.... start",
+    revit_script_util.Output,
+)
 
 # start reload
-flag = rFamReload.ReloadAllFamilies(
-    doc, 
-    utilR.REVIT_LIBRARY_PATH,
-    utilR.REVIT_LIBRARY_INCLUDE_SUB_DIRS_IN_SEARCH
-    )
+_flag_reload = reload_all_families(
+    doc, settings.REVIT_LIBRARY_PATH, settings.REVIT_LIBRARY_INCLUDE_SUB_DIRS_IN_SEARCH
+)
 
 # show results
-Output (flag.message)
-Output ('Overall reload status: ' + str(flag.status))
-Output (str(t.stop()))
+output(
+    _flag_reload.message,
+    revit_script_util.Output,
+)
+output(
+    "Overall reload status: [{}]".format(_flag_reload.status),
+    revit_script_util.Output,
+)
+output(
+    "{}".format(t.stop()),
+    revit_script_util.Output,
+)
 
 # get the file name
-fileName = util.GetFileNameWithoutExt(revitFilePath_)
-revitFilePathNew_ = utilR.WORKING_DIRECTORY + '\\' + fileName + '.rfa'
+_file_name_without_ext = get_file_name_without_ext(REVIT_FILE_PATH)
+REVIT_FILE_PATH_NEW = os.path.join(
+    settings.WORKING_DIRECTORY, _file_name_without_ext + ".rfa"
+)
 
 # save file if required
-if (True):
+if True:
     # save family file
-    Output('Saving family file: start')
-    syncing_ = com.SaveAsFamily(doc, utilR.WORKING_DIRECTORY, revitFilePath_, [[fileName, fileName]], '.rfa', True)
-    Output('Saving family file: finished ' + str(syncing_.message) + ' :: '  + str(syncing_.status))
+    output(
+        "Saving family file: start",
+        revit_script_util.Output,
+    )
+    syncing_ = save_as_family(
+        doc,
+        settings.WORKING_DIRECTORY,
+        REVIT_FILE_PATH,
+        [[_file_name_without_ext, _file_name_without_ext]],
+        settings.FILE_EXTENSION_OF_FILES_TO_PROCESS,
+        True,
+    )
+
+    output(
+        "Saving family file: finished {} :: [{}]".format(
+            syncing_.message, syncing_.status
+        ),
+        revit_script_util.Output,
+    )
     # save marker file
-    if(syncing_.status == False):
-        Output(str(syncing_.message))
+    # save marker file
+    if syncing_.status == False:
+        output(
+            str(syncing_.message),
+            revit_script_util.Output,
+        )
     else:
         # write marker file
-        fileNameMarker = utilR.WORKING_DIRECTORY + '\\' + fileName + '_marker_.temp'
+        _file_name_marker = os.path.join(
+            settings.WORKING_DIRECTORY, _file_name_without_ext + "_marker_.temp"
+        )
         try:
-            writeDataFlag = util.writeReportDataAsCSV(
-                fileNameMarker, 
-                '', 
-                [
-                    ['Copy From', 'Copy To'],
-                    [revitFilePathNew_, revitFilePath_]]
-                )
-            Output('Wrote marker file: ' + str(fileNameMarker) + ' :: '  + str(True)) 
+            write_report_data_as_csv(
+                _file_name_marker,
+                "",
+                [["Copy From", "Copy To"], [REVIT_FILE_PATH_NEW, REVIT_FILE_PATH]],
+            )
+            output("Wrote marker file: {} :: {}".format(_file_name_marker, True))
         except Exception as e:
-            Output('Wrote marker file: ' + str(fileNameMarker) + ' :: '  + str(False) + '  Exception: ' + str(e))
+            output(
+                "Wrote marker file: {} :: {} with exception: {}".format(
+                    _file_name_marker, False, e
+                )
+            )

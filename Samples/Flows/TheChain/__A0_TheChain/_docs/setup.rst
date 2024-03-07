@@ -8,16 +8,16 @@ Setting Up - The Chain
 
 - change file path in all settings files in all _default folders per work flow: (use visual studio code: find and replace in files)
 
-    - "taskScriptFilePath": "\\\\bvn\\data\\studio\\SharedAssets\\Revit\\RevitContent\\CentralHealthLibrary\\04 BatchP\\_00_ReportFamilyData\\_Script\\ReportFamilyData.py",
-    - "revitFileListFilePath": "\\\\bvn\\data\\studio\\SharedAssets\\Revit\\RevitContent\\CentralHealthLibrary\\04 BatchP\\_00_ReportFamilyData\\_Users\\jchristel\\_TaskList\\Tasklist_1.txt",
-    - "dataExportFolderPath": "\\\\bvn\\data\\studio\\SharedAssets\\Revit\\RevitContent\\CentralHealthLibrary\\04 BatchP\\_00_ReportFamilyData\\_Users\\jchristel\\_Users\\jchristel\\SessionData",
-    - "preProcessingScriptFilePath": "\\\\bvn\\data\\studio\\SharedAssets\\Revit\\RevitContent\\CentralHealthLibrary\\04 BatchP\\_00_ReportFamilyData\\_Script\\Pre_FirstTask.py",
-    - "PostProcessingScriptFilePath": "\\\\bvn\\data\\studio\\SharedAssets\\Revit\\RevitContent\\CentralHealthLibrary\\04 BatchP\\_00_ReportFamilyData\\_Script\\Post_BVNRevitFileSaveAsWSMKillOnly.py",
+    - "taskScriptFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Script\\ReportFamilyData.py",
+    - "revitFileListFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Users\\jchristel\\_TaskList\\Tasklist_1.txt",
+    - "dataExportFolderPath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Users\\jchristel\\_Users\\jchristel\\SessionData",
+    - "preProcessingScriptFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Script\\Pre_MarkerFiles.py",
+    - "PostProcessingScriptFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_00_ReportFamilyData\\_Script\\Post_KillWSM.py",
 
 - check revit version in _default settings to match your required version
 
     - "singleRevitTaskRevitVersion": "Revit2020"
-    - "batchRevitTaskRevitVersion": "Revit2020"
+    - "batchRevitTaskRevitVersion": "Revit2022"
 
 - change file path to revit library in python util files:
     

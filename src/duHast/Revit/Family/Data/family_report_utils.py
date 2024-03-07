@@ -335,7 +335,7 @@ def _check_families_still_exist(famData):
     :return:
         Result class instance.
 
-        - .result = True if successfully removed any outdated family data or None needed removing. Otherwise False.
+        - .status True if successfully removed any outdated family data or None needed removing. Otherwise False.
         - .message will contain list of families removed or message nothing needed to be removed.
         - . result will contain past in dictionary at index 0
 
@@ -384,7 +384,7 @@ def _check_families_still_exist(famData):
     return returnValue
 
 
-def combine_reports(previousReportPath, newReportPath):
+def combine_reports(previous_report_path, new_report_path):
     """
     This combines two reports by:
 
@@ -399,37 +399,37 @@ def combine_reports(previousReportPath, newReportPath):
     First entry (after split at separator) in each of these columns identifies root family uniquely.
     Assume that new report only ever adds or substitutes entries in previous report but does not delete from it!
 
-    :param previousReportPath: A fully qualified file path to the previous report file.
-    :type previousReportPath: str
-    :param newReportPath: A fully qualified file path to the new report file.
-    :type newReportPath: str
+    :param previous_report_path: A fully qualified file path to the previous report file.
+    :type previous_report_path: str
+    :param new_report_path: A fully qualified file path to the new report file.
+    :type new_report_path: str
 
     :return: list of lists of report rows
     :rtype: [[str]]
     """
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # read families from both reports
     # ...compare them:
     # take all families from current report and all none matching families from the other report
 
-    previousAggregatedFamilies = {}
-    newAggregatedFamilies = {}
+    previous_aggregated_families = {}
+    new_aggregated_families = {}
 
     # previous report
     try:
-        previousRoot, previousNested = read_unique_families_with_row_data_from_report(
-            previousReportPath
+        previous_root, previous_nested = read_unique_families_with_row_data_from_report(
+            previous_report_path
         )
-        returnValue.append_message(
-            "Previous report: found {} root families.".format(len(previousRoot))
+        return_value.append_message(
+            "Previous report: found {} root families.".format(len(previous_root))
         )
-        returnValue.append_message(
-            "Previous report: found {} nested families.".format(len(previousNested))
+        return_value.append_message(
+            "Previous report: found {} nested families.".format(len(previous_nested))
         )
         # build dictionary containing all family data per root family
-        previousAggregatedFamilies = _aggregate_family_data(
-            previousRoot, previousNested
+        previous_aggregated_families = _aggregate_family_data(
+            previous_root, previous_nested
         )
     except Exception as e:
         # check whether empty file exception
@@ -438,16 +438,16 @@ def combine_reports(previousReportPath, newReportPath):
 
     # new report
     try:
-        newRoot, newNested = read_unique_families_with_row_data_from_report(
-            newReportPath
+        new_root, new_nested = read_unique_families_with_row_data_from_report(
+            new_report_path
         )
         # build dictionary containing all family data per root family
-        newAggregatedFamilies = _aggregate_family_data(newRoot, newNested)
-        returnValue.append_message(
-            "New report: found {} root families.".format(len(newRoot)) + ""
+        new_aggregated_families = _aggregate_family_data(new_root, new_nested)
+        return_value.append_message(
+            "New report: found {} root families.".format(len(new_root)) + ""
         )
-        returnValue.append_message(
-            "New report: found {} nested families.".format(len(newNested)) + ""
+        return_value.append_message(
+            "New report: found {} nested families.".format(len(new_nested)) + ""
         )
     except Exception as e:
         # check whether empty file exception
@@ -455,29 +455,29 @@ def combine_reports(previousReportPath, newReportPath):
             raise e
 
     # compare dictionaries: build unique list of families
-    uniqueFamDataStatus = _compare_family_dictionaries(
-        previousAggregatedFamilies, newAggregatedFamilies
+    unique_family_data_status = _compare_family_dictionaries(
+        previous_aggregated_families, new_aggregated_families
     )
-    returnValue.update(uniqueFamDataStatus)
-    uniqueFamData = uniqueFamDataStatus.result[0]
+    return_value.update(unique_family_data_status)
+    unique_family_data = unique_family_data_status.result[0]
 
     # check whether families still exist on file server
-    removeNoneExistingFamilies = _check_families_still_exist(uniqueFamData)
-    returnValue.update(removeNoneExistingFamilies)
+    remove_none_existing_families = _check_families_still_exist(unique_family_data)
+    return_value.update(remove_none_existing_families)
     # only update family data if culling occurred without any exceptions
-    if removeNoneExistingFamilies.status:
-        uniqueFamData = removeNoneExistingFamilies.result[0]
+    if remove_none_existing_families.status:
+        unique_family_data = remove_none_existing_families.result[0]
 
     # get report header row (there should be a previous report file...otherwise this will write an empty header row)
-    header = fileCSV.get_first_row_in_csv_file(previousReportPath)
-    headerRow = header.split(",")
+    header = fileCSV.get_first_row_in_csv_file(previous_report_path)
+    header_row = header.split(",")
 
     # build list of data rows
-    rowsCurrent = _get_data_rows_from_dictionary(uniqueFamData)
+    rows_current = _get_data_rows_from_dictionary(unique_family_data)
     # sort rows by root ( first entry ) since other code (circ reference checker for instance) expects data sorted
-    rowsCurrent.sort()
+    rows_current.sort()
     # start with header row
-    rowsCurrent.insert(0, headerRow)
+    rows_current.insert(0, header_row)
     # overwrite return result value since it is already containing data from previous operations
-    returnValue.result = rowsCurrent
-    return returnValue
+    return_value.result = rows_current
+    return return_value

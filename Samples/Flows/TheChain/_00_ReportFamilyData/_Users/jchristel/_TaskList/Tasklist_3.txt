@@ -1,2 +1,0 @@
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Monitor_Blood_Pressure_EEQ.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Electrical Equipment\Monitor_Foetal_CTG_EEQ.rfa

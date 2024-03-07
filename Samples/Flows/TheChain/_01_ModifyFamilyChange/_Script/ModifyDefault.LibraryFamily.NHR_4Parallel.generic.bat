@@ -25,11 +25,11 @@ set _targetPath=%LocalAppData%\RevitBatchProcessor\BatchRvt.exe
 :: default path for python installation
 set _pythonPath="C:\Program Files (x86)%\IronPython 2.7\ipy64.exe"
 :: file path to UI file select python script
-set _FileSelectPath="%_rootFolderPath%_Script\Pre_ModifyLibraryFamilyStandAlone.py"
+set _FileSelectPath="%_rootFolderPath%_Script\Pre_FileSelectNoUI.py"
 :: directory where settings files are saved
 set "_settingsDiretoryPath=%_rootFolderPath%_Users\%USERNAME%\_Settings\"
 :: settings file name for step one. Note %%j variable in name which will be used to cycle through A, B, C...
-set "_settingsStepOneFileName=BatchRvt.2022.ModifyFamiliesDefaultOne%%j.NHR.Settings.json"
+set "_settingsStepOneFileName=BatchRvt.2022.ModifyFamiliesDefaultOne%%j.ALL.Settings.json"
 :: file path to clean up script run at the very end
 set "_cleanUpScriptPath=%_rootFolderPath%_Script\Post_ModifyLibraryFamily.py"
 :: spinner stuff - back space character
@@ -57,7 +57,6 @@ if %toggleDebug%==1 (
   %stamp% & echo _len of batch array: %_len%
   %stamp% & echo.
   %stamp% & echo ********************************* DEBUG END *****************************************************
-  goto outOfHere
 )
 
 REM ---------------------------------------------------------------------------------------------------------------

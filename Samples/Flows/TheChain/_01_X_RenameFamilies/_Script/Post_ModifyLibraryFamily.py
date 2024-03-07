@@ -1,4 +1,4 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module is a post - processing module combining temp files, cleaning up temp files, moving 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -9,7 +9,7 @@ This module is a post - processing module combining temp files, cleaning up temp
 
 - Moving family files back to their origin location.
 
-'''
+"""
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
@@ -40,24 +40,21 @@ This module is a post - processing module combining temp files, cleaning up temp
 # time out warning
 # exception which caused the process to be aborted
 
-
-# flag whether this runs in debug or not
-debug_ = False
-
 # --------------------------
 # default file path locations
 # --------------------------
 
-import clr
-import System
+import os
+import sys
 
-#clr.AddReference('System.Core')
-#clr.ImportExtensions(System.Linq)
+import settings as settings  # sets up all commonly used variables and path locations!
+from duHast.Utilities.console_out import output
+from duHast.Utilities.files_io import file_delete, get_file_name_without_ext, copy_file
+from duHast.Utilities.files_get import get_files_with_filter
+from duHast.Utilities.files_combine import combine_files
+from duHast.Utilities.files_csv import write_report_data_as_csv, read_csv_file
+from duHast.Utilities.batch_processor_log_utils import process_log_files
 
-import utilModifyBVN as utilR # sets up all commonly used variables and path locations!
-# import log utils
-import BatchProcessorLogUtils as logutils
-import Utility as util
 
 # -------------
 # my code here:
@@ -65,154 +62,183 @@ import Utility as util
 
 # temp files to combine
 FILE_DATA_TO_COMBINE = [
-    ['_marker_', 'CopyFilesTaskList' + utilR.REPORT_FILE_EXTENSION],
-    ['_changed_', 'ChangedFilesTaskList' + utilR.REPORT_FILE_EXTENSION]
+    ["_marker_", "CopyFilesTaskList" + settings.REPORT_FILE_EXTENSION],
+    ["_changed_", "ChangedFilesTaskList" + settings.REPORT_FILE_EXTENSION],
 ]
 
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
-    print (message)
 
-def DeleteTempFiles(keepfiles):
-    '''
-    Deletes all temp file.
+def delete_files(directory, file_extension, filter="*", keep_files=[]):
+    """
+    Deletes all files in a given directory with a given file extension.
 
-    :param keepfiles: List of files not to delete (fully qualified file path)
-    :type keepfiles: [str]
+    :param directory: Fully qualified directory path.
+    :type directory: str
 
-    :return: True if all files got deleted succesfully, otherwise False.
-    :rtype: bool
-    '''
+    :param file_extension: File extension to filter for.
+    :type file_extension: str
 
-    flagDeleteAll = True
-    for toDelete in FILE_DATA_TO_COMBINE:
-        filesMatching = util.GetFilesWithFilter(utilR.WORKING_DIRECTORY, '.temp', '*' + toDelete[0])
-        for f in filesMatching:
-            if(f not in keepfiles):
-                flagDelete = util.FileDelete(f)
-                Output('Deleting ' + util.GetFileNameWithoutExt(f) + ' status: ' + str(flagDelete))
-                flagDeleteAll = flagDeleteAll & flagDelete
-    return flagDeleteAll
+    :param filter: Filter to apply to file names.
+    :type filter: str
 
-
-def DeleteTaskListFiles(directoryPath):
-    '''
-    Deletes any task list files which may be present
-
-    :param directoryPath: Fully qualified directory path where task list files are located.
-    :type directoryPath: str
+    :param keep_files: List of files not to delete (fully qualified file path)
+    :type keep_files: [str]
 
     :return: True if all files where deleted or none existed in the first place, otherwise False
     :rtype: bool
-    '''
+    """
 
-    flagOverAll = True
-    taskListFiles = util.GetFilesWithFilter(
-        directoryPath,
-        utilR.PREDEFINED_TASK_FILE_EXTENSION
-        )
-    Output ('Looking for task files in: ' + directoryPath)
-    if(len(taskListFiles) > 0):
-        for f in taskListFiles:
-            flag = util.FileDelete(f)
-            Output ('Deleted task file: ' + f + ' status: [' + str(flag) +']')
-            flagOverAll = flagOverAll and flag
+    flag_over_all = True
+    task_list_files = get_files_with_filter(directory, file_extension, filter)
+    output("Looking for files in: {}".format(directory))
+    if len(task_list_files) > 0:
+        for f in task_list_files:
+            if f not in keep_files:
+                flag = file_delete(f)
+                output(
+                    "Deleted file: {} status: [{}]".format(
+                        get_file_name_without_ext(f), flag
+                    )
+                )
+                flag_over_all = flag_over_all and flag
     else:
-        Output ('No task files found to be deleted.')
-    return flagOverAll
+        output("No files found to be deleted.")
+    return flag_over_all
 
-def CombineDataFiles():
-    '''
+
+def delete_temp_files(keep_files):
+    """
+    Deletes all temp file.
+
+    :param keep_files: List of files not to delete (fully qualified file path)
+    :type keep_files: [str]
+
+    :return: True if all files got deleted successfully, otherwise False.
+    :rtype: bool
+    """
+
+    flag_deleted_all = True
+    for to_delete in FILE_DATA_TO_COMBINE:
+        flag_delete = delete_files(
+            settings.WORKING_DIRECTORY, ".temp", "*" + to_delete[0], keep_files
+        )
+        flag_deleted_all = flag_deleted_all & flag_delete
+    return flag_deleted_all
+
+
+def combine_data_files():
+    """
     Combines varies report files into single text file.
 
     Files are filter based on FILE_DATA_TO_COMBINE list.
-    '''
+    """
 
-    for toCombine in FILE_DATA_TO_COMBINE:
-        Output('Combining '+ toCombine[0] + ' report files.')
+    for to_combine in FILE_DATA_TO_COMBINE:
+        output("Combining {}  report files.".format(to_combine[0]))
         # combine files
-        util.CombineFiles(
-            utilR.WORKING_DIRECTORY, 
-            '' , 
-            toCombine[0], 
-            '.temp',
-            toCombine[1]
-    )
+        combine_files(
+            settings.WORKING_DIRECTORY, "", to_combine[0], ".temp", to_combine[1]
+        )
 
-def MoveFiles():
-    '''
+
+def move_files():
+    """
     Move family files back to original location.
     This is a work around to the fact that I'm unable to save family files after processing!
-    '''
-    
-    fileCopyTaskList = util.ReadCSVfile(utilR.WORKING_DIRECTORY + '\\' + FILE_DATA_TO_COMBINE[0][1])
-    rowCounter = 0
-    for copyRow in fileCopyTaskList:
-        if(rowCounter != 0):
-            flagCopy = util.CopyFile(copyRow[0], copyRow[1])
-            Output('Copied file: ' + copyRow[0] + ' status: '+ str(flagCopy))
-            if(flagCopy):
-                flagDelete = util.FileDelete(copyRow[0])
-                Output('Deleted file: ' + copyRow[0] + ' status: '+ str(flagDelete))
-        rowCounter = rowCounter + 1 
+    """
 
-def CreateFollowUpReportDataFile():
-    '''
-    writes out changed file  list in format for follow up reporting
+    file_copy_task_list = read_csv_file(
+        os.path.join(settings.WORKING_DIRECTORY, FILE_DATA_TO_COMBINE[0][1])
+    )
+
+    row_counter = 0
+    for copy_row in file_copy_task_list:
+        if row_counter != 0:
+            flag_copy = copy_file(copy_row[0], copy_row[1])
+            output("Copied file: {} status: [{}]".format(copy_row[0], flag_copy))
+            if flag_copy:
+                flag_delete = file_delete(copy_row[0])
+                output("Deleted file: {} status: [{}]".format(copy_row[0], flag_delete))
+        row_counter = row_counter + 1
+
+
+def create_follow_up_report_data_file():
+    """
+    writes out changed file list in format for follow up reporting
 
     :return: true if successfully written list to file, otherwise False
     :rtype: bool
-    '''
-    rows = util.ReadCSVfile(utilR.WORKING_DIRECTORY + '\\' + FILE_DATA_TO_COMBINE[1][1])
-    dataFile=[]
-    for i in range (1,len(rows)):
-        data = rows[i][1]
-        dataFile.append([data])
-    
+    """
+    rows = read_csv_file(
+        os.path.join(settings.WORKING_DIRECTORY, FILE_DATA_TO_COMBINE[1][1])
+    )
+    data_file = []
+    for r in rows:
+        data = r[1]
+        data_file.append(data)
+
     # write out file list without header
     header = []
-    
+
     try:
         # write data
-        util.writeReportData(
-            utilR.WORKING_DIRECTORY + '\\' + utilR.FOLLOW_UP_REPORT_FILE_NAME, 
-            header, 
-            dataFile, 
-            writeType = 'w')
+        write_report_data_as_csv(
+            os.path.join(
+                settings.WORKING_DIRECTORY, settings.FOLLOW_UP_REPORT_FILE_NAME
+            ),
+            header,
+            data_file,
+        )
         return True
     except Exception:
         return False
+
 
 # -------------
 # main:
 # -------------
 
 # combine marker files (copy instructions)
-Output('Combining report files:')
-CombineDataFiles()
+output("Combining report files:")
+combine_data_files()
 
 # delete marker files
-flagDeleteAll = DeleteTempFiles([])
-Output('Deleted all temp files: [' + str(flagDeleteAll) + ']')
+flag_delete_all = delete_temp_files([])
+output("Deleted all temp files: [{}]".format(flag_delete_all))
 
 # move family files back to source location
-MoveFiles()
-
-# delete move task file
-flagDeleteMoveTask = util.FileDelete(utilR.WORKING_DIRECTORY + '\\' + FILE_DATA_TO_COMBINE[0][1])
-Output('Deleted move families task file: [' + str(flagDeleteMoveTask) + ']')
+move_files()
 
 # delete any task list files
-flagDeleteMoveTask = DeleteTaskListFiles(utilR.PREDEFINED_TASK_FILE_DIRECTORY)
-Output('Deleted families task file: [' + str(flagDeleteMoveTask) + ']')
+flag_delete_move_task = delete_files(
+    settings.PREDEFINED_TASK_FILE_DIRECTORY, settings.PREDEFINED_TASK_FILE_EXTENSION
+)
+output("Deleted families task file: [{}]".format(flag_delete_move_task))
+
+# delete any files in the \_Input directory
+flag_delete_files_in_input = delete_files(
+    settings.INPUT_DIRECTORY, settings.REPORT_FILE_EXTENSION
+)
+output("Deleted file in _Input directory: [{}]".format(flag_delete_files_in_input))
 
 # create follow up list file
-flagFollowUp = CreateFollowUpReportDataFile()
-if(flagFollowUp):
-    Output('Created follow up list file: [{}]'.format(utilR.WORKING_DIRECTORY + '\\' + utilR.FOLLOW_UP_REPORT_FILE_NAME))
+flag_follow_up = create_follow_up_report_data_file()
+if flag_follow_up:
+    output(
+        "Created follow up list file: [{}]".format(
+            os.path.join(
+                settings.WORKING_DIRECTORY, settings.FOLLOW_UP_REPORT_FILE_NAME
+            )
+        )
+    )
 else:
-    Output('Failed to created follow up list file: [{}]'.format(utilR.WORKING_DIRECTORY + '\\' + utilR.FOLLOW_UP_REPORT_FILE_NAME))
+    output(
+        "Failed to created follow up list file: [{}]".format(
+            os.path.join(
+                settings.WORKING_DIRECTORY, settings.FOLLOW_UP_REPORT_FILE_NAME
+            )
+        )
+    )
 
-processingResults_ = logutils.ProcessLogFiles(utilR.LOG_MARKER_DIRECTORY)
-Output('LogResults.... status: ' + str(processingResults_.status))
-Output('LogResults.... message: ' + str(processingResults_.message))
+processing_results = process_log_files(settings.LOG_MARKER_DIRECTORY)
+output("LogResults.... status: [{}]".format(processing_results.status))
+output("LogResults.... message: {}".format(processing_results.message))

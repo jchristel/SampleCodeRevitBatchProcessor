@@ -30,7 +30,7 @@ from collections import namedtuple
 from test.utils import test
 
 from duHast.UI.workloader import distribute_workload
-from duHast.UI.file_item import MyFileItem
+from duHast.UI.Objects.file_item import MyFileItem
 from duHast.UI.file_list import get_file_size
 import uuid
 

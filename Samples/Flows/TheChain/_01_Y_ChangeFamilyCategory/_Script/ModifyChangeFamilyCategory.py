@@ -1,4 +1,4 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module is used to change the category of a family.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -33,30 +33,30 @@ Outcomes:
     - to help copy family back to origin in post process
     - change family log which can be used is reload advanced flows
 
-'''
+"""
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2023  Jan Christel
+# BSD License
+# Copyright 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
 
@@ -65,215 +65,261 @@ Outcomes:
 # ---------------------------
 
 import clr
-import System
+import os
 
-import utilModifyBVN as utilM # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
+
 # import common library
+from duHast.Utilities.console_out import output
+from duHast.Utilities.Objects.result import Result
+from duHast.Utilities.files_csv import write_report_data_as_csv
+from duHast.Utilities.files_io import get_file_name_without_ext
+from duHast.Revit.Common.file_io import save_as_family
+from duHast.Revit.Categories.categories import get_family_category
+from duHast.Revit.Family.Data.family_category_data_utils import (
+    read_overall_family_category_change_directives_from_directory,
+)
+from duHast.Revit.Categories.change_family_category import change_family_category
+from duHast.Utilities.Objects.timer import Timer
 
-import Result as res
-import RevitCommonAPI as com
-import Utility as util
-import RevitFamilyCategoryDataUtils as rCatReportTools
-import RevitCategories as rCats
 
-from timer import Timer
+import revit_script_util
+import revit_file_util
 
-from Autodesk.Revit.DB import *
-
-# flag whether this runs in debug or not
-debug_ = False
-
-# Add batch processor scripting references
-if not debug_:
-    import revit_script_util
-    import revit_file_util
-    clr.AddReference('RevitAPI')
-    clr.AddReference('RevitAPIUI')
-    # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
-else:
-    #get default revit file name
-    revitFilePath_ = utilM.DEBUG_REVIT_FILE_NAME
+clr.AddReference("RevitAPI")
+clr.AddReference("RevitAPIUI")
+# NOTE: these only make sense for batch Revit file processing mode.
+doc = revit_script_util.GetScriptDocument()
+REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 
 # -------------
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
-    if not debug_:
-        try:
-            revit_script_util.Output(message)
-        except Exception as e:
-            revit_script_util.Output('Exception in Output() ' + str(e))
-    else:
-        print (message)
 
-def _writeCopyMarkerFile(fileName):
-    '''
+def write_copy_marker_file(file_name):
+    """
     Write marker file containing copy from and copy to path.
 
-    :param fileName: Marker file name.
-    :type fileName: str
-    '''
+    :param file_name: Marker file name.
+    :type file_name: str
+    """
 
-    fileNameMarker = utilM.WORKING_DIRECTORY + '\\' + fileName + '_marker_.temp'
+    file_name_marker = os.path.join(
+        settings.WORKING_DIRECTORY, file_name + "_marker_.temp"
+    )
     try:
-        util.writeReportDataAsCSV(
-            fileNameMarker, 
-            ['Copy From', 'Copy To'], 
-            [[revitFilePathNew_, revitFilePath_]]
-            )
-        Output('Wrote marker file: ' + str(fileNameMarker) + ' :: '  + str(True)) 
+        write_report_data_as_csv(
+            file_name_marker,
+            ["Copy From", "Copy To"],
+            [[REVIT_FILE_PATH_NEW, REVIT_FILE_PATH]],
+        )
+        output(
+            "Wrote marker file: {} :: [{}]".format(file_name_marker, True),
+            revit_script_util.Output,
+        )
     except Exception as e:
-        Output('Wrote marker file: ' + str(fileNameMarker) + ' :: '  + str(False) + '  Exception: ' + str(e))
+        output(
+            "Wrote marker file: {} :: [{}]\nException: {}".format(
+                file_name_marker, False, e
+            ),
+            revit_script_util.Output,
+        )
 
-def _writeChangedFamilyMarkerFile(fileName, revitCategoryName):
-    '''
+
+def write_changed_family_marker_file(file_name, revit_category_name):
+    """
     Write changed file marker file containing: file name, file path, revit category name
 
-    :param fileName: Marker file name.
-    :type fileName: str
-    :param revitCategoryName: The family revit category.
-    :type revitCategoryName: str
-    '''
-    
-    fileNameMarker = utilM.WORKING_DIRECTORY + '\\' + fileName + '_changed_.temp'
+    :param file_name: Marker file name.
+    :type file_name: str
+    :param revit_category_name: The family revit category.
+    :type revit_category_name: str
+    """
+
+    file_name_marker = os.path.join(
+        settings.WORKING_DIRECTORY, file_name + "_changed_.temp"
+    )
     try:
-        util.writeReportDataAsCSV(
-            fileNameMarker, 
-            ['file Name', 'file Path', 'revit category'], 
-            [[fileName, revitFilePath_, revitCategoryName]]
-            )
-        Output('Wrote changed family file: ' + str(fileNameMarker) + ' :: '  + str(True)) 
+        write_report_data_as_csv(
+            file_name_marker,
+            ["file Name", "file Path", "revit category"],
+            [[file_name, REVIT_FILE_PATH, revit_category_name]],
+        )
+        output(
+            "Wrote changed family file: {} :: [{}]".format(file_name_marker, True),
+            revit_script_util.Output,
+        )
     except Exception as e:
-        Output('Wrote changed family file: ' + str(fileNameMarker) + ' :: '  + str(False) + '  Exception: ' + str(e))
+        output(
+            "Wrote changed family file: {} :: [{}]\nException: {}".format(
+                file_name_marker, False, e
+            )
+        )
 
 
 # ----------------------------------------------------- default family actions ------------------------------------------
 
-def UpdateFamilyCategory(doc):
-    '''
+
+def update_family_category(doc):
+    """
     Changes family category as per change directive.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: 
+    :return:
         Result class instance.
 
         - result.status. True if change of family category was successful, otherwise False.
         - result.message be generic success message.
         - result.result empty list
-        
+
         On exception:
-        
+
         - result.status (bool) will be False.
         - result.message will contain an exception message.
         - result.result will be empty
 
     :rtype: :class:`.Result`
-    '''
+    """
 
-    returnValue = res.Result()
+    return_value = Result()
     # read change family directives
-    subCatChangeDirectives = rCatReportTools.ReadOverallFamilyCategoryChangeDirectivesFromDirectory(utilM.FAMILY_CHANGE_DIRECTIVE_DIRECTORY)
-    # get the family category ( this is a dictionary where key is the cat name )
-    famCat = rCats.GetFamilyCategory(doc)
-    famCatName = list(famCat.keys())[0]
-    foundCategoryMatch = False
-    newCategoryName = 'no change directive found.'
+    categories_change_directives = (
+        read_overall_family_category_change_directives_from_directory(
+            settings.INPUT_DIRECTORY
+        )
+    )
+    # get the family category ( this is a dictionary where key is the category name )
+    family_category = get_family_category(doc)
+    family_category_name = list(family_category.keys())[0]
+    found_category_match = False
+    new_category_name = "no category change directive found."
     # loop over change directives and find the ones applicable to the current family
-    for catChangeDirective in subCatChangeDirectives:
-        # check if family in list and if the category needs changing
-        if(catChangeDirective.filePath == revitFilePath_ ) :
+    for category_change_directive in categories_change_directives:
+        # check if family is in list and if the category needs changing
+        if category_change_directive.filePath == REVIT_FILE_PATH:
             # save the new category name for later
-            newCategoryName = catChangeDirective.newCategoryName
-            if(catChangeDirective.newCategoryName !=famCatName):
+            new_category_name = category_change_directive.newCategoryName
+            if category_change_directive.newCategoryName != family_category_name:
                 # store marker for later
-                foundCategoryMatch = True
-                returnValue.AppendMessage('Attempting to change category from: {} to: {}.'.format(famCatName, catChangeDirective.newCategoryName))
+                found_category_match = True
+                return_value.append_message(
+                    "Attempting to change category from: {} to: {}.".format(
+                        family_category_name, category_change_directive.newCategoryName
+                    )
+                )
                 try:
                     # attempt to update the family category
-                    returnValue.Update(rCats.ChangeFamilyCategory(doc,catChangeDirective.newCategoryName))
+                    return_value.update(
+                        change_family_category(
+                            doc, category_change_directive.newCategoryName
+                        )
+                    )
                 except Exception as e:
-                    returnValue.UpdateSep(
+                    return_value.update_sep(
                         False,
-                        '{}: failed to change family category with exception: {}'.format(fileName_, e)
+                        "{}: failed to change family category with exception: {}".format(
+                            _file_name_without_ext, e
+                        ),
                     )
     # check if a category mismatch was found at all
-    if(foundCategoryMatch == False):
-        returnValue.UpdateSep(False, '{} :No category change required for this family. Current category: {} Category in change directive: {}'.format(fileName_, famCatName, newCategoryName))
-    return returnValue
+    if found_category_match == False:
+        return_value.update_sep(
+            False,
+            "{} :No category change required for this family. Current category: {} Category in change directive: {}".format(
+                _file_name_without_ext, family_category_name, new_category_name
+            ),
+        )
+    return return_value
+
 
 # -----------------------------------------------------------------------------------------------------------------------------------------------
 # main:
 # -------------
 
 # get the file name
-fileName_ = util.GetFileNameWithoutExt(revitFilePath_)
+_file_name_without_ext = get_file_name_without_ext(REVIT_FILE_PATH)
 
 # setup timer
 t = Timer()
 t.start()
 
-overAllStatus_= res.Result()
+over_all_status_ = Result()
 # assume no change, therefore file needs nod to be saved
-overAllStatus_.status = False
+over_all_status_.status = False
 
 # actions to be executed per family
-familyActions =[
-    UpdateFamilyCategory # change family category
-    ]
+family_actions = [update_family_category]  # change family category
 
-# debug test 
-Output('Script directory: ' + utilM.SCRIPT_DIRECTORY)
-
-Output('Modifying Revit File.... start')
+output(
+    "Modifying Revit File.... start",
+    revit_script_util.Output,
+)
 
 # loop over all family actions and execute them
 # check for each action if family needs to be saved
-for famAction in familyActions:
+for famAction in family_actions:
     resultFamAction = famAction(doc)
-    if(resultFamAction.status):
+    if resultFamAction.status:
         # need to save family
-        overAllStatus_.status = True
-    overAllStatus_.AppendMessage(resultFamAction.message)
-    Output ('Messages from change family category action: {}'.format(resultFamAction.message))
-    Output ('Overall status: {} (If false, this will not save the family)'.format(resultFamAction.status))
+        over_all_status_.status = True
+    over_all_status_.append_message(resultFamAction.message)
+    output(
+        resultFamAction.message,
+        revit_script_util.Output,
+    )
+    output(
+        resultFamAction.status,
+        revit_script_util.Output,
+    )
 
-Output (str(t.stop()))
+output(
+    "Modifying Revit File.... completed: {}".format(t.stop()),
+    revit_script_util.Output,
+)
 
 # -------------
 # Saving file after changes have been made
 # -------------
 
-# get the file name
-revitFilePathNew_ = utilM.WORKING_DIRECTORY + '\\' + fileName_ + '.rfa'
+REVIT_FILE_PATH_NEW = os.path.join(
+    settings.WORKING_DIRECTORY, _file_name_without_ext + ".rfa"
+)
 
 # save file if required
-if (overAllStatus_.status):
+if over_all_status_.status:
     # save family file
-    Output('Saving family file: start')
-    syncing_ = com.SaveAsFamily(
-        doc, 
-        utilM.WORKING_DIRECTORY, 
-        revitFilePath_, 
-        [[fileName_, fileName_]],
-        '.rfa',
-        True
+    output(
+        "Saving family file: start",
+        revit_script_util.Output,
+    )
+    syncing_ = save_as_family(
+        doc,
+        settings.WORKING_DIRECTORY,
+        REVIT_FILE_PATH,
+        [[_file_name_without_ext, _file_name_without_ext]],
+        ".rfa",
+        True,
     )
 
-    Output('Saving family file: finished ' + str(syncing_.message) + ' :: '  + str(syncing_.status))
+    output(
+        "Saving family file: finished {} :: [{}]".format(
+            syncing_.message, syncing_.status
+        ),
+        revit_script_util.Output,
+    )
+
     # save marker file
-    if(syncing_.status == False):
-        Output(str(syncing_.message))
+    if syncing_.status == False:
+        output(
+            str(syncing_.message),
+            revit_script_util.Output,
+        )
     else:
         # write copy marker file
-        _writeCopyMarkerFile(fileName_)
+        write_copy_marker_file(_file_name_without_ext)
         # write family has changed marker file
-        famCatName = doc.OwnerFamily.FamilyCategory.Name
-        _writeChangedFamilyMarkerFile(fileName_, famCatName)
-else:
-    Output('Family was not saved.')
+        family_category_name = doc.OwnerFamily.FamilyCategory.Name
+        write_changed_family_marker_file(_file_name_without_ext, family_category_name)

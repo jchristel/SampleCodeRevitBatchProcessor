@@ -1,8 +1,0 @@
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\PushIt\SP-Room-Fire_10_COL.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\PushIt\SP-Room-Stair_Nudged_10_COL.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\PushIt\SP-Room-Toilet_Instance_Single_10_COL.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\PushIt\SP-Room-Bed-Two_ENS_10_COL.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\PushIt\SP-Room-LShaped_10_COL.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\PushIt\SP-Room-Bay-Cot-flex_10_COL.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\PushIt\SP-Room-Rectangle_Bay_10_COL.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\PushIt\SP-Room-Circular_Bay_10_COL.rfa

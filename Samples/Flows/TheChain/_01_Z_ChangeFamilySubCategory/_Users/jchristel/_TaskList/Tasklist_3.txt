@@ -1,3 +1,0 @@
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Bench_600D_StainlessSteelLipped_ShelfUnder_MobileCastors_FIJO_822.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Bench_750D_OpenUnder_StainlessSteel_Square_MobileCastors_FIJO_542.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Shelf_StainlessSteel_Underbench_FIJO_197.rfa

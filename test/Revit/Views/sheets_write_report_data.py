@@ -52,7 +52,7 @@ class WriteSheetReportData(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if sheets report data was written to file successfully, otherwise False
+                - .status True if sheets report data was written to file successfully, otherwise False
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 

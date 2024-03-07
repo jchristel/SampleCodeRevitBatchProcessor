@@ -29,6 +29,7 @@ Revit transaction wrapper utility functions.
 
 # class used for stats reporting
 from duHast.Utilities.Objects import result as res
+from duHast.Revit.Common.Objects.FailuresPreProcessor import FailuresPreprocessor
 
 # type checker
 # from typing import List, Callable
@@ -57,7 +58,7 @@ def in_transaction(
     :return:
         Result class instance.
 
-        - .result = True if successfully executed transaction, otherwise False.
+        - .status True if successfully executed transaction, otherwise False.
 
     :rtype: :class:`.Result`
     """
@@ -78,3 +79,22 @@ def in_transaction(
     except Exception as e:
         return_value.update_sep(False, "Failed with exception: {}".format(e))
     return return_value
+
+
+def set_transaction_failure_options(transaction, output, preprocessor):
+    """
+    Sets a transactions failure options including a custom failure pre-processor
+
+    :param transaction: _description_
+    :type transaction: _type_
+    :param output: _description_
+    :type output: _type_
+    :param preprocessor: _description_
+    :type preprocessor: _type_
+    """
+    failureOptions = transaction.GetFailureHandlingOptions()
+    failureOptions.SetForcedModalHandling(True)
+    failureOptions.SetClearAfterRollback(True)
+    failureOptions.SetFailuresPreprocessor(FailuresPreprocessor(output, preprocessor))
+    transaction.SetFailureHandlingOptions(failureOptions)
+    return

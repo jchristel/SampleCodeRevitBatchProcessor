@@ -9,20 +9,20 @@ Revit file operations utility functions.
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2021  Jan Christel
+# BSD License
+# Copyright 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
 
@@ -54,7 +54,7 @@ def sync_file(
     :type compact_central_file: bool, optional
     :return:
         Result class instance.
-        - .result = True if successfully synced file. Otherwise False.
+        - .status True if successfully synced file. Otherwise False.
     :rtype: :class:`.Result`
     """
 
@@ -97,7 +97,7 @@ def saves_as_workshared_file(
     :type full_file_name: string
     :return:
         Result class instance.
-        - .result = True if successfully saved file, otherwise False.
+        - .status True if successfully saved file, otherwise False.
     :rtype: :class:`.Result`
     """
 
@@ -145,7 +145,7 @@ def save_as_family(
     :type compact_file: bool, optional
     :return:
         Result class instance.
-            - .result = True if successfully saved file, otherwise False.
+            - .status True if successfully saved file, otherwise False.
     :rtype: :class:`.Result`
     """
 
@@ -204,7 +204,7 @@ def save_as(
     :type file_extension: str, optional
     :return:
         Result class instance.
-        - .result = True if successfully saved file, otherwise False.
+        - .status True if successfully saved file, otherwise False.
     :rtype: :class:`.Result`
     """
 
@@ -256,7 +256,7 @@ def save_file(
     :type compact_file: bool, optional
     :return:
             Result class instance.
-            - .result = True if file was saved successfully. Otherwise False.
+            - .status True if file was saved successfully. Otherwise False.
             - .message = 'Saved revit file!'
             On exception:
             - result.status (bool) will be False.
@@ -294,7 +294,7 @@ def enable_worksharing(
 
     :return:
             Result class instance.
-            - .result = True if worksharing was enabled successfully. Otherwise False.
+            - .status True if worksharing was enabled successfully. Otherwise False.
             - .message = 'Successfully enabled worksharing.'
             On exception:
             - result.status (bool) will be False.

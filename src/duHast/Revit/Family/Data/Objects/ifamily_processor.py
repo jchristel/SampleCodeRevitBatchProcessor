@@ -59,7 +59,7 @@ class IFamilyProcessor(base.Base):
 
     # -------------------------------------- utility ----------------------
 
-    def _update_Data(
+    def _update_data(
         self,
         processor,
         identify_by_this_property_name,
@@ -84,7 +84,7 @@ class IFamilyProcessor(base.Base):
         """
 
         for processor in self.data:
-            for d in processor.get_Data():
+            for d in processor.get_data():
                 if " :: " not in d[IFamData.ROOT]:
                     return processor
 
@@ -101,7 +101,7 @@ class IFamilyProcessor(base.Base):
 
         family_data = []
         for processor in self.data:
-            for d in processor.get_Data():
+            for d in processor.get_data():
                 if " :: " not in d[IFamData.ROOT]:
                     family_data.append(d)
         return family_data
@@ -119,7 +119,7 @@ class IFamilyProcessor(base.Base):
 
         nested_family_data = []
         for processor in self.data:
-            for d in processor.get_Data():
+            for d in processor.get_data():
                 if " :: " in d[IFamData.ROOT]:
                     nested_family_data.append(d)
         return nested_family_data
@@ -213,7 +213,7 @@ class IFamilyProcessor(base.Base):
 
         data_out = []
         for data in self.data:
-            for d in data.get_Data():
+            for d in data.get_data():
                 data_out.append(d)
         return data_out
 

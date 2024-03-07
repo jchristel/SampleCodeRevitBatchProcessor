@@ -34,11 +34,11 @@ run this script.
 
 # path to Common library modules
 DU_HAST_PATH = r"C:\Program Files\Python311\Lib\site-packages"
-
+DU_HAST_DEBUG =r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\src"
 
 # set path to common library
 import sys
-
+sys.path = [DU_HAST_DEBUG] + sys.path
 sys.path += [DU_HAST_PATH]
 
 import os
@@ -61,14 +61,14 @@ ROOT_SCRIPT_DIRECTORY_USER = os.path.join(
 # how many task files are written to file
 NUMBER_OF_TASK_FILES = 4
 # where are task files located
-TASK_FILE_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, r"_TaskList")
+TASK_FILE_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_TaskList")
 # file extension of files to be processed
 FILE_EXTENSION_OF_FILES_TO_PROCESS = ".rfa"
 
 # Root directory path of files to be processed
 # (note: this is the root directory of the files to be processed and not the root directory of the entire project)
 # ideally this can be moved into a config file by user... TODO:
-REVIT_LIBRARY_PATH = r"P:\19\1903020.000\Design\BIM\_Revit\2.0 Project Library"
+REVIT_LIBRARY_PATH = r'C:\Users\jchristel\dev\test_lib'
 
 # log marker file location
 LOG_MARKER_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_LogMarker")
@@ -120,3 +120,5 @@ FILE_NAME_MARKER_MERGE_FAMILY_DATA = "MergeFamilyData" + REPORT_FILE_EXTENSION
 
 # flag indicating whether this is a cloud based project
 IS_CLOUD_PROJECT = False
+
+REVIT_LIBRARY_PATH = r'C:\Users\jchristel\dev\test_lib'

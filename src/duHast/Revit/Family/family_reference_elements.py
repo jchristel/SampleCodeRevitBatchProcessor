@@ -91,8 +91,7 @@ def set_ref_planes_to_not_a_reference(doc):
                 match_at_all = True
             result.update(result_change)
     if match_at_all == False:
-        result.status = False
-        result.message = "No reference planes found requiring reference type update"
+        result.update_sep(False, "No reference planes found requiring reference type update")
     return result
 
 

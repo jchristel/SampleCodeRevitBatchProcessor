@@ -153,7 +153,9 @@ def files_as_dictionary(
 
 def get_files(folder_path, file_extension=".rvt"):
     """
-    Gets a list of files from a given folder with a given file extension
+    Gets a list of files from a given folder with a given file extension.
+    (Returns the full path for each file!)
+
     :param folder_path: Folder path from which to get files to be combined and to which the combined file will be saved.
     :type folder_path: str
     :param file_extension: Filter: File needs to have this file extension, defaults to '.rvt'
@@ -169,6 +171,7 @@ def get_files(folder_path, file_extension=".rvt"):
 def get_files_with_filter(folder_path, file_extension=".rvt", filter="*"):
     """
     Gets a list of files from a given folder with a given file extension and a matching a file name filter.
+    (Returns the full path for each file!)
 
     :param folder_path: Folder path from which to get files.
     :type folder_path: str

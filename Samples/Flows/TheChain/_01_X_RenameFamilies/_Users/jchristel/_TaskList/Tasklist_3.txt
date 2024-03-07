@@ -1,3 +1,0 @@
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Trolley_Patient_Echocargiography_MMBE_069.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Couch_Examination_Manual_Mobile_MMBE_024.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\ChangeTable_Baby_FQBS_035.rfa

@@ -35,67 +35,71 @@ debug_ = False
 # default file path locations
 # --------------------------
 
-import clr
-import System
+import os
 
-#clr.AddReference('System.Core')
-#clr.ImportExtensions(System.Linq)
+# clr.AddReference('System.Core')
+# clr.ImportExtensions(System.Linq)
 
-import utilReloadBVN as utilR # sets up all commonly used variables and path locations!
-import Utility as util
+import settings as settings  # sets up all commonly used variables and path locations!
+from duHast.Utilities.console_out import output
+from duHast.Utilities.files_get import get_files_single_directory
+from duHast.Utilities.files_csv import read_csv_file, write_report_data_as_csv
+from duHast.Utilities.files_io import file_delete
 
 # -------------
 # my code here:
 # -------------
 
 FILE_DATA_TO_COMBINE = [
-    ['ChangedFamilies', 'ChangedFilesTaskList' + utilR.REPORT_FILE_EXTENSION]
+    ["ChangedFamilies", "ChangedFilesTaskList" + settings.REPORT_FILE_EXTENSION]
 ]
-
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
-    print (message)
-
 
 # -------------
 # main:
 # -------------
 
 # get part changed families report files
-filesToCombine = util.GetFilesSingleFolder(
-    utilR.WORKING_DIRECTORY, 
-    utilR.CHANGED_FAMILY_PART_REPORT_PREFIX, 
-    '', 
-    '.csv'
+_files_to_combine = get_files_single_directory(
+    settings.WORKING_DIRECTORY,
+    settings.CHANGED_FAMILY_PART_REPORT_PREFIX,
+    "",
+    settings.REPORT_FILE_EXTENSION,
 )
 # check whether anything came back
-if (len(filesToCombine) > 0):
-    Output ('Found part changed family report files: ' + str(len(filesToCombine)))
-    rowsOverall = []
+if len(_files_to_combine) > 0:
+    output("Found part changed family report files: {}".format(len(_files_to_combine)))
+    rows_overall = []
     # combine files
-    for f in filesToCombine:
-        rows = util.ReadCSVfile(f)
-        Output('read rows from file: [' + str(len(rows) - 1) + '] ' + f)
+    for _file in _files_to_combine:
+        rows = read_csv_file(_file)
+        output("read rows from file: [{}]  {}".format(len(rows) - 1, _file))
         # ignore header row
-        for i in range(1,len(rows)):
+        for i in range(1, len(rows)):
             # read second column into list and append to overall list to be written to file
             # second column contains the file path in library location
             # first column is file path in temp (\Output) location
-            rowsOverall.append([rows[i][1]])
+            rows_overall.append([rows[i][1]])
     # write data to file
     try:
-        combinedChangedFamilyReportPath = utilR.WORKING_DIRECTORY + '\\' + utilR.CHANGED_FAMILY_REPORT_FILE_NAME + utilR.REPORT_FILE_EXTENSION
-        util.writeReportDataAsCSV (
-            combinedChangedFamilyReportPath, 
-            '', 
-            rowsOverall)
-        Output ('Successfully wrote combined changed family report to: ' + combinedChangedFamilyReportPath)
+        _combined_changed_family_report_path = os.path.join(
+            settings.WORKING_DIRECTORY,
+            settings.CHANGED_FAMILY_REPORT_FILE_NAME + settings.REPORT_FILE_EXTENSION,
+        )
+        write_report_data_as_csv(_combined_changed_family_report_path, "", rows_overall)
+        output(
+            "Successfully wrote combined changed family report to: {}".format(
+                _combined_changed_family_report_path
+            )
+        )
         # delete single files
-        for f in filesToCombine:
-            flagDelete = util.FileDelete(f)
-            Output('Deleted part file: [' + str(flagDelete) + '] ' + f)
+        for _file in _files_to_combine:
+            _flag_delete = file_delete(_file)
+            output("Deleted part file: [{}] {}".format(_flag_delete, _file))
     except Exception as e:
-        Output('Failed to write combined family change list to file with exception: ' + str(e))
+        output(
+            "Failed to write combined family change list to file with exception: {}".format(
+                e
+            )
+        )
 else:
-    Output ('No changed families part files found!')
-
+    output("No changed families part files found!")

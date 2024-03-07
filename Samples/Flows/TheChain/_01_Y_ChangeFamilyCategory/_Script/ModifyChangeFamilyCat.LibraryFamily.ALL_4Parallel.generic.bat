@@ -25,7 +25,7 @@ set _targetPath=%LocalAppData%\RevitBatchProcessor\BatchRvt.exe
 :: default path for python installation
 set _pythonPath="C:\Program Files (x86)%\IronPython 2.7\ipy64.exe"
 :: file path to UI file select python script
-set _FileSelectPath="%_rootFolderPath%_Script\Pre_ChangeFamilyCategoryStandAlone.py"
+set _FileSelectPath="%_rootFolderPath%_Script\Pre_FileSelectNoUI.py"
 :: directory where settings files are saved
 set "_settingsDiretoryPath=%_rootFolderPath%_Users\%USERNAME%\_Settings\"
 :: settings file name for step one. Note %%j variable in name which will be used to cycle through A, B, C...
@@ -33,7 +33,7 @@ set "_settingsStepOneFileName=BatchRvt.2022.ModifyChangeFamilyCategoryOne%%j.ALL
 :: file path to clean up script run at the very end
 set "_cleanUpScriptPath=%_rootFolderPath%_Script\Post_ChangeFamilyCategory.py"
 
-set debugFamiliesChangeDirectory="C:\Users\jchristel\Documents\DebugRevitBP\famCatebory\Input"
+set debugFamiliesChangeDirectory="C:\Users\jchristel\dev\test_lib"
 
 :: spinner stuff - back space character
 for /f %%a in ('copy /Z "%~dpf0" nul') do set "_CR=%%a"
@@ -54,6 +54,7 @@ if %toggleDebug%==1 (
   %stamp% & echo _targetPath: %_targetPath%
   %stamp% & echo _pythonPath: %_pythonPath%
   %stamp% & echo _FileSelectPath: %_FileSelectPath%
+  %stamp% & echo _InputPath: %debugFamiliesChangeDirectory%
   %stamp% & echo _settingsDiretoryPath: %_settingsDiretoryPath%
   %stamp% & echo _settingsStepOneFileName: %_settingsStepOneFileName%
   %stamp% & echo _cleanUpScriptPath: %_cleanUpScriptPath%

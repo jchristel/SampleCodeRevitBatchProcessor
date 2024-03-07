@@ -101,7 +101,7 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
         :return:
             Result class instance.
 
-            - .result = True if all room separation lines could be deleted / modified without an exception. Otherwise False.
+            - .status True if all room separation lines could be deleted / modified without an exception. Otherwise False.
             - .message will be 'moved tag to room xyz'
 
         :rtype: :class:`.Result`
@@ -146,6 +146,6 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
                 return_value.update(modify_curves_status)
         else:
             return_value.update_sep(
-                True, "No warnings of type: room separation lines overlap in model."
+                True, "{}: No warnings of type: room separation lines overlap in model.".format(self.filter_name)
             )
         return return_value

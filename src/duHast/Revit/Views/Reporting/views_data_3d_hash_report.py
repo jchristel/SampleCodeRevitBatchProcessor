@@ -320,7 +320,7 @@ def _assign_padded_default_array(hash_data_by_file, progress_call_back=None):
     :type progress_call_back: func(counter, overall_counter), optional
     :return:
         Result class instance.
-        - .result = True if padded array was successfully assigned. Otherwise False.
+        - .status True if padded array was successfully assigned. Otherwise False.
         - .message will contain array size.
     :rtype: :class:`.Result`
     """
@@ -374,7 +374,7 @@ def _assign_row_indices_pointer(hash_data_by_file, progress_call_back=None):
     :type progress_call_back: func(counter, overall_counter), optional
     :return:
         Result class instance.
-        - .result = True if row and column index pointers where successfully assigned. Otherwise False.
+        - .status True if row and column index pointers where successfully assigned. Otherwise False.
         - .message will contain array size.
     :rtype: :class:`.Result`
     """
@@ -454,7 +454,7 @@ def _assign_default_array_values(hash_data_by_file, progress_call_back=None):
     :type progress_call_back: func(counter, overall_counter), optional
     :return:
         Result class instance.
-        - .result = True if default arrays where successfully updated with values from file specific arrays. Otherwise False.
+        - .status True if default arrays where successfully updated with values from file specific arrays. Otherwise False.
         - .message will contain array size.
     :rtype: :class:`.Result`
     """
@@ -519,7 +519,7 @@ def _built_threeD_array(hash_data_by_file):
     :type hash_data_by_file: {str: [:class:`.JSONThreeDStorage`]}
     :return:
         Result class instance.
-        - .result = True if 3D array was successfully created. Otherwise False.
+        - .status True if 3D array was successfully created. Otherwise False.
         - .message will contain array size.
         -. result will contain the 3D array for categories as first value in list and the 3D array for filters as the second value in list
     :rtype: :class:`.Result`
@@ -586,7 +586,7 @@ def _flatten_category_threeD_array(
     :type progress_call_back: func(counter, overall_counter), optional
     :return:
         Result class instance.
-        - .result = True if 3D array was successfully created. Otherwise False.
+        - .status True if 3D array was successfully created. Otherwise False.
         - .message will contain array size.
         -. result will contain the flatten array as first value in list
     :rtype: :class:`.Result`
@@ -637,7 +637,7 @@ def _flatten_filter_threeD_array(
     :type progress_call_back: func(counter, overall_counter), optional
     :return:
         Result class instance.
-        - .result = True if 3D array was successfully created. Otherwise False.
+        - .status True if 3D array was successfully created. Otherwise False.
         - .message will contain array size.
         -. result will contain the flatten array as first value in list
     :rtype: :class:`.Result`
@@ -681,7 +681,7 @@ def convert_vt_data_to_3d_flattened(json_files, progress_call_back=None):
 
     :return:
         Result class instance.
-        - .result = True if flattened array was successfully created. Otherwise False.
+        - .status True if flattened array was successfully created. Otherwise False.
         - .message will contain array size.
         -. result will contain the flatten array as first value in list
     :rtype: :class:`.Result`

@@ -124,6 +124,7 @@ function start-wrapper {
     # Read the contents of the temporary file into a variable
     $output_temp_file = Get-Content $tempFile.FullName
     $output_temp_file | Tee-Object -FilePath $log_file_path -Append
+    Write-Host $output_temp_file
     # Remove the temporary file
     Remove-Item $tempFile.FullName
     # return the process result object (checking for errors...)

@@ -1,5 +1,0 @@
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\GrabRail_WC_Hinged_IntegratedCallButtonMountingPlate_Bariatric_Right_FIRT_516_2.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\GrabRail_WC_Hinged_IntegratedToiletRollHolder_Bariatric_Left_FIRT_515_1.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Rail_Towel_FIRT_016.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Safe_DangerousDrugs_Large_RightHinge_MMGE_086.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Medical & Laboratory Equipment (MM)\Safe_DangerousDrugs_Medium_RightHinge_630W_550D_630H_MMGE_753.rfa

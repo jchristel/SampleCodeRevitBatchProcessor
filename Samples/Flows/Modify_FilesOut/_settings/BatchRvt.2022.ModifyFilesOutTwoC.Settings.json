@@ -16,7 +16,7 @@
   "worksetConfigurationOption": "OpenAllWorksets",
   "revitSessionOption": "UseSameSessionForFilesOfSameVersion",
   "revitProcessingOption": "BatchRevitFileProcessing",
-  "singleRevitTaskRevitVersion": "Revit2017",
+  "singleRevitTaskRevitVersion": "Revit2022",
   "revitFileProcessingOption": "UseSpecificRevitVersion",
   "ifNotAvailableUseMinimumAvailableRevitVersion": false,
   "batchRevitTaskRevitVersion": "Revit2022",

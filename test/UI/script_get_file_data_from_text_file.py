@@ -31,8 +31,8 @@ from collections import namedtuple
 
 from test.utils import test
 from duHast.UI.script import get_file_data
-from duHast.UI.file_select_settings import FileSelectionSettings
-from duHast.UI.file_item import MyFileItem
+from duHast.UI.Objects.file_select_settings import FileSelectionSettings
+from duHast.UI.Objects.file_item import MyFileItem
 from duHast.Utilities.files_csv import write_report_data_as_csv
 
 
@@ -97,11 +97,11 @@ class GetFileDataFromTextFile(test.Test):
             write_report_data_as_csv(data_file_name, "", data)
             # set up settings object
             settings = FileSelectionSettings(
-                inputDirectory=tmp_dir,
+                input_path=tmp_dir,
                 include_sub_dirs_in_search=False,
                 output_directory=tmp_dir,
                 output_file_number=2,
-                revitFileExtension=".rvt",
+                revit_file_extension=".rvt",
             )
             # attempt to get file data
             file_items = get_file_data(settings=settings)
@@ -166,11 +166,11 @@ class GetFileDataFromTextFile(test.Test):
             write_report_data_as_csv(data_file_name, "", data)
             # set up settings object
             settings = FileSelectionSettings(
-                inputDirectory=tmp_dir,
+                input_path=tmp_dir,
                 include_sub_dirs_in_search=False,
                 output_directory=tmp_dir,
                 output_file_number=2,
-                revitFileExtension=".rvt",
+                revit_file_extension=".rvt",
             )
 
             # attempt to get file data
@@ -227,11 +227,11 @@ class GetFileDataFromTextFile(test.Test):
             ]
             # set up settings object
             settings = FileSelectionSettings(
-                inputDirectory=tmp_dir,
+                input_path=tmp_dir,
                 include_sub_dirs_in_search=False,
                 output_directory=tmp_dir,
                 output_file_number=2,
-                revitFileExtension=".rvt",
+                revit_file_extension=".rvt",
             )
 
             # attempt to get file data

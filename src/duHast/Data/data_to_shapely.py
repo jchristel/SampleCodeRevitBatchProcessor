@@ -94,6 +94,11 @@ def get_outer_loop_as_shapely_points(geometry_object, translation_matrix):
     single_polygon_loop = []
     if geometry_object.data_type == geometry_polygon.DataPolygon.data_type:
         for point_double in geometry_object.outer_loop:
+            # check if a 2D or 3D point
+            if len(point_double) == 2:
+                # assume a Z value of 0.0 (room loops are 2D)
+                point_double.append(0.0)
+
             # need to add 1 to list for matrix multiplication
             # number of columns in first matrix (translation) must match number of rows in second matrix (point)
             translated_point = np.dot(
@@ -132,6 +137,10 @@ def get_inner_loops_as_shapely_points(geometry_object, translation_matrix):
         for inner_loop in geometry_object.inner_loops:
             single_polygon_loop = []
             for point_double in inner_loop:
+                # check if a 2D or 3D point
+                if len(point_double) == 2:
+                    # assume a Z value of 0.0 (room loops are 2D)
+                    point_double.append(0.0)
                 # need to add 1 to list for matrix multiplication
                 # number of columns in first matrix (translation) must match number of rows in second matrix (point)
                 translated_point = np.dot(

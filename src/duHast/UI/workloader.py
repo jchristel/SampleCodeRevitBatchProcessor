@@ -37,7 +37,7 @@ from System import Linq
 
 clr.ImportExtensions(Linq)
 
-from duHast.UI import workload_bucket as wb
+from duHast.UI.Objects import workload_bucket as wb
 
 
 def distribute_workload(number_of_buckets, items, getWorkloadSize):

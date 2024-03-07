@@ -84,8 +84,8 @@ class WarningsData(IFamData.IFamilyData):
             # build data
             self.data.append(
                 {
-                    IFamData.ROOT: self.rootPath,
-                    IFamData.ROOT_CATEGORY: self.rootCategoryPath,
+                    IFamData.ROOT: self.root_path,
+                    IFamData.ROOT_CATEGORY: self.root_category_path,
                     IFamData.FAMILY_NAME: doc.Title,
                     IFamData.FAMILY_FILE_PATH: doc.PathName,
                     WARNING_TEXT: war_text,
@@ -101,8 +101,8 @@ class WarningsData(IFamData.IFamilyData):
             # build data
             self.data.append(
                 {
-                    IFamData.ROOT: self.rootPath,
-                    IFamData.ROOT_CATEGORY: self.rootCategoryPath,
+                    IFamData.ROOT: self.root_path,
+                    IFamData.ROOT_CATEGORY: self.root_category_path,
                     IFamData.FAMILY_NAME: doc.Title,
                     IFamData.FAMILY_FILE_PATH: doc.PathName,
                     WARNING_TEXT: "No warnings present in family.",

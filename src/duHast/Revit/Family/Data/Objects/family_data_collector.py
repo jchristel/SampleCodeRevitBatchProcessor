@@ -22,8 +22,8 @@ Family data collector class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -32,7 +32,7 @@ Family data collector class.
 from duHast.Utilities.Objects import result as res
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import Element, FamilySymbol, FilteredElementCollector
 from duHast.Utilities.Objects import base
 
 
@@ -62,7 +62,7 @@ class RevitFamilyDataCollector(base.Base):
         """
 
         family_ids = []
-        col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol)
+        col = FilteredElementCollector(doc).OfClass(FamilySymbol)
         # get families from symbols and filter out in place families
         for fam_symbol in col:
             if (
@@ -95,14 +95,14 @@ class RevitFamilyDataCollector(base.Base):
                     pro.process(doc, root_name, root_category)
                     return_value.append_message(
                         "Processor [{}] of family: {}  [OK]".format(
-                            pro.dataType, doc.Title
+                            pro.data_type, doc.Title
                         )
                     )
                 except Exception as e:
                     return_value.update_sep(
                         False,
                         "Processor [{}] of family: {} [EXCEPTION] {}".format(
-                            pro.dataType, doc.Title, e
+                            pro.data_type, doc.Title, e
                         ),
                     )
 
@@ -133,18 +133,12 @@ class RevitFamilyDataCollector(base.Base):
                     except Exception as e:
                         message = ""
                         if family != None:
-                            message = (
-                                "An exception occurred when opening family "
-                                + rdb.Element.Name.GetValue(family)
-                                + ". Exception: "
-                                + str(e)
+                            message = "An exception occurred when opening family {} . Exception: {}".format(
+                                Element.Name.GetValue(family), e
                             )
                         else:
-                            message = (
-                                "An exception occurred when attempting the get family element by id:"
-                                + str(family_id)
-                                + ". Exception: "
-                                + str(e)
+                            message = "An exception occurred when attempting the get family element by id: {}. Exception: {}".format(
+                                family_id, e
                             )
                         return_value.update_sep(False, message)
             else:
@@ -157,15 +151,12 @@ class RevitFamilyDataCollector(base.Base):
                     except Exception as e:
                         message = ""
                         if doc != None:
-                            message = (
-                                "An exception occurred when closing document: "
-                                + doc.Title
-                                + ". Exception: "
-                                + str(e)
+                            message = "An exception occurred when closing document: {} . Exception: {}".format(
+                                doc.Title, e
                             )
                         else:
-                            message = (
-                                "An exception occurred when closing document: " + str(e)
+                            message = "An exception occurred when closing document: {}".format(
+                                e
                             )
                         return_value.update_sep(False, message)
         return return_value
@@ -188,7 +179,7 @@ class RevitFamilyDataCollector(base.Base):
         :return: 
             Result class instance.
             
-            - .result = True if all data processor instances ran without an exception. Otherwise False.
+            - .status True if all data processor instances ran without an exception. Otherwise False.
             - .message will contain each processor type and its processing status'
         
         :rtype: :class:`.Result`
@@ -201,17 +192,13 @@ class RevitFamilyDataCollector(base.Base):
         # loop over fam processor instances and process family with each of them
         for pro in self.dataProcessors:
             try:
-                pre_action_result = pro.preProcessActions(doc)
+                pre_action_result = pro.pre_process_actions(doc)
                 return_value.update(pre_action_result)
             except Exception as e:
                 return_value.update_sep(
                     False,
-                    "PreProcessor ["
-                    + pro.dataType
-                    + "] of family: "
-                    + str(doc.Title)
-                    + " [EXCEPTION] "
-                    + str(e),
+                    "PreProcessor [{}] of family: {} [EXCEPTION] {}".format(
+                    pro.data_type,doc.Title,e)
                 )
 
         # loop over fam processor instances and process family with each of them
@@ -219,13 +206,13 @@ class RevitFamilyDataCollector(base.Base):
             try:
                 pro.process(doc, root_name, root_category)
                 return_value.append_message(
-                    "Processor [{}] of family: {} [OK]".format(pro.dataType, doc.Title)
+                    "Processor [{}] of family: {} [OK]".format(pro.data_type, doc.Title)
                 )
             except Exception as e:
                 return_value.update_sep(
                     False,
                     "Processor [{}] of family: {} [EXCEPTION] {}".format(
-                        pro.dataType, doc.Title, e
+                        pro.data_type, doc.Title, e
                     ),
                 )
 
@@ -238,13 +225,13 @@ class RevitFamilyDataCollector(base.Base):
         # loop over fam processor instances and process family with each of them
         for pro in self.dataProcessors:
             try:
-                pro_action_result = pro.postProcessActions(doc)
+                pro_action_result = pro.post_process_actions(doc)
                 return_value.update(pro_action_result)
             except Exception as e:
                 return_value.update_sep(
                     False,
                     "PostProcessor [{}] of family: {} [EXCEPTION] {}".format(
-                        pro.dataTyp, doc.Title, e
+                        pro.data_type, doc.Title, e
                     ),
                 )
 

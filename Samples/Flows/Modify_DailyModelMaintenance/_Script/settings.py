@@ -27,11 +27,12 @@ Module containing settings used in all flow scripts.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 
+import os
 
 DU_HAST_DIRECTORY = (
     r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
@@ -79,17 +80,21 @@ IS_CLOUD_PROJECT = False
 PROJECT_DIRECTORY = r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\Flows\Modify_DailyModelMaintenance\_sampleFiles"
 
 # files to process directory
-PATH_TO_FILES_TO_PROCESS = os.path.join(PROJECT_DIRECTORY,r"\Project Files")
+PATH_TO_FILES_TO_PROCESS = os.path.join(PROJECT_DIRECTORY, r"\Project Files")
 
 # path to workset default visibility settings
-WORKSET_DEFAULT_VISIBILITY_SETTINGS = os.path.join(FLOW_DIRECTORY,r"\ProjectsWorksets.txt")
+WORKSET_DEFAULT_VISIBILITY_SETTINGS = os.path.join(
+    FLOW_DIRECTORY, r"\ProjectsWorksets.txt"
+)
 
 # path to library folders
-PATH_TO_CLINICAL_LIBRARY =  os.path.join(PROJECT_DIRECTORY,r"\Project Library\__Clinical")
-PATH_TO_BESPOKE_JOINERY_LIBRARY = os.path.join(
-    PROJECT_DIRECTORY ,r"\Project Library\__BespokeJoinery"
+PATH_TO_CLINICAL_LIBRARY = os.path.join(
+    PROJECT_DIRECTORY, r"\Project Library\__Clinical"
 )
-PATH_TO_UNIONS_LIBRARY = os.path.join(PROJECT_DIRECTORY,r"\Project Library\__Unions")
+PATH_TO_BESPOKE_JOINERY_LIBRARY = os.path.join(
+    PROJECT_DIRECTORY, r"\Project Library\__BespokeJoinery"
+)
+PATH_TO_UNIONS_LIBRARY = os.path.join(PROJECT_DIRECTORY, r"\Project Library\__Unions")
 
 # reports by file extensions used
 REPORT_EXTENSION_LEVELS = "_Levels"
@@ -104,7 +109,7 @@ REPORT_EXTENSION_MARKED_VIEWS = "_MarkedViews"
 REPORT_EXTENSION_VIEWS = "_Views"
 REPORT_EXTENSION_WALL_TYPES = "_Wall_Types"
 REPORT_EXTENSION_FFE_TAG_INSTANCES = "_FFE_Tags"
-REPORT_EXTENSION_CAD_LINKS= "_CAD_Links"
+REPORT_EXTENSION_CAD_LINKS = "_CAD_Links"
 REPORT_EXTENSION_REVIT_LINKS = "_Revit_Links"
 REPORT_EXTENSION_VIEW_TEMPLATE_OVERRIDES = "_VT_Overrides"
 REPORT_EXTENSION_WARNING_TYPES = "_Warning_Types"
@@ -121,11 +126,11 @@ COMBINED_REPORT_NAME_FAMILIES = "ProjectsFamilies.csv"
 COMBINED_REPORT_NAME_MARKED_VIEWS = "MarkedViews.csv"
 COMBINED_REPORT_NAME_VIEWS = "Views.csv"
 COMBINED_REPORT_NAME_WALL_TYPES = "Wall_Types.csv"
-COMBINED_REPORT_NAME_CAD_LINKS= "CAD_Links.csv"
+COMBINED_REPORT_NAME_CAD_LINKS = "CAD_Links.csv"
 COMBINED_REPORT_NAME_REVIT_LINKS = "Revit_Links.csv"
-COMBINED_REPORT_NAME_VIEW_TEMPLATE_OVERRIDES = "VT_Overrides.json"¶
-COMBINED_REPORT_NAME_VIEW_TEMPLATE_FILTER_OVERRIDES = "VT_Filter_Overrides.json"¶
-COMBINED_REPORT_NAME_WARNING_TYPES = "WarningTypes.csv"¶
+COMBINED_REPORT_NAME_VIEW_TEMPLATE_OVERRIDES = "VT_Overrides.json"
+COMBINED_REPORT_NAME_VIEW_TEMPLATE_FILTER_OVERRIDES = "VT_Filter_Overrides.json"
+COMBINED_REPORT_NAME_WARNING_TYPES = "WarningTypes.csv"
 
 # list containing default worksets for levels grids, scope boxes per project file
 DEFAULT_WORKSETS = [["Revit", ["Shared Levels and Grids"]]]
@@ -140,9 +145,8 @@ TEMP_FILE_NAME_EXTENSION = ".temp"
 # report file extension
 REPORT_FILE_NAME_EXTENSION = ".csv"
 
-# json report file extension¶
-REPORT_JSON_FILE_EXTENSION = ".json"¶
-¶
+# json report file extension
+REPORT_JSON_FILE_EXTENSION = ".json"
 
 # log file extension
 LOG_FILE_NAME_EXTENSION = ".log"
@@ -195,12 +199,11 @@ FAMILY_PARAMETERS_TO_REPORT = [
 # tags can be moved back if reload shifted them
 MULTI_CATEGORY_TAG_TYPE_NAME = "Label Only"
 
-# list of files of which to combine View template reports into json formatted hash tables¶
+# list of files of which to combine View template reports into json formatted hash tables
 VIEW_TEMPLATE_FILE_LIST = []
 
-# json formatted view template hash files start with:¶
-VIEW_TEMPLATE_HASH_FILE_PREFIX = "VT"¶
-¶
-# json formatted view template hash files end on:¶
-VIEW_TEMPLATE_HASH_FILE_SUFFIX = "Overrides"¶
+# json formatted view template hash files start with:
+VIEW_TEMPLATE_HASH_FILE_PREFIX = "VT"
 
+# json formatted view template hash files end on:
+VIEW_TEMPLATE_HASH_FILE_SUFFIX = "Overrides"

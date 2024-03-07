@@ -31,7 +31,7 @@ import clr
 
 
 from duHast.Utilities.files_csv import read_csv_file
-from duHast.UI import file_item as fi
+from duHast.UI.Objects import file_item as fi
 
 
 def get_bim_360_revit_files_from_file_list(file_path_csv, extension):

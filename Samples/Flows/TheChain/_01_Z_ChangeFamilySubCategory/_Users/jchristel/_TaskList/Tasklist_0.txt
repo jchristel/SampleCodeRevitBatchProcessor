@@ -1,3 +1,0 @@
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Furniture & Non-medical Equipment (FQ)\Table_Cafe_Square_High Performance Finish_Folding_Stackable_900W_900D_750H_FQTA_513.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\Fixtures & Fittings (FI)\Bench_700D_OpenUnder_StainlessSteel_Lipped_FIJO_522.rfa
-\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\_Kinship\_Health Families Components\Furniture\Table_Base_Round_710D_FUR.rfa

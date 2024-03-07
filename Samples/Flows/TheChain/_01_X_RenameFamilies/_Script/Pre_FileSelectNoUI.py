@@ -6,7 +6,7 @@ This module generates batch processor task files by :
 
 - Combining any number of task files.
 
-    - comma separatd text files
+    - comma separated text files
     - file extension .task 
     - first colum contains the fully qualified file path to a Revit family file which requires processing
     - no header row

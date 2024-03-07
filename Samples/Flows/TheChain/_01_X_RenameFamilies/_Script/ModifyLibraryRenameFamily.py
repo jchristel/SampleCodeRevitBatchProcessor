@@ -202,7 +202,7 @@ for famAction in family_actions:
         revit_script_util.Output,
     )
 
-output("Modifying Revit File.... completed: {}".format(t.stop()))
+output("Modifying Revit File.... completed: {}".format(t.stop()),revit_script_util.Output,)
 
 # -------------
 # Saving file after changes have been made

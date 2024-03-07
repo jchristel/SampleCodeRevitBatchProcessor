@@ -101,23 +101,6 @@ INPUT_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_Input")
 # flag indicating whether to add default parameters to families
 ADD_DEFAULT_PARAMETERS = False
 
-# file containing GUIDs and names of any shared parameter to be deleted ... no questions asked
-DELETE_SHARED_PARAMETER_LIST_FILE_PATH = os.path.join(
-    INPUT_DIRECTORY, "UnwantedSharedParameterGUIDS.csv"
-)
-# file containing names of shared parameter which are to be converted to family parameters
-CHANGE_SHARED_PARAMETER_TO_FAMILY_PARAMETER_PATH = os.path.join(
-    INPUT_DIRECTORY, "ChangeSharedParameterToFamilyParameter.csv"
-)
-# swap shared parameter directive
-SWAP_SHARED_PARAMETER_DIRECTIVE_PATH = os.path.join(
-    INPUT_DIRECTORY, "SharedParameterSwapping.csv"
-)
-
-# shared parameter file path
-SHARED_PARAMETER_FILE_PATH = os.path.join(
-    INPUT_DIRECTORY, "Shared_Parameters_Sample.txt"
-)
 
 # file name of follow up report
 FOLLOW_UP_REPORT_FILE_NAME = "FollowUpReportList" + REPORT_FILE_EXTENSION

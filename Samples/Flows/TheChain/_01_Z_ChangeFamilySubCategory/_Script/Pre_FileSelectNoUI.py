@@ -43,139 +43,140 @@ or if no pre defined list is provided:
 #
 #
 
-
 # --------------------------
 # default file path locations
 # --------------------------
 # directory containing families to be processed
-rootPath_ = ''
+PROCESS_PATH = ""
 
 import sys, os
 
-import utilModifyBVN as utilM # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
+
 # import file list module
-import FileList as fl
-import FileItem as fi
-import Utility as util
-# import workloader utils
-import Workloader as wl
-import Result as res
+from duHast.UI.file_list import (
+    get_file_size,
+    write_revit_task_file,
+    bucket_to_task_list_file_system,
+)
+from duHast.UI.workloader import distribute_workload
+from duHast.UI.Objects.file_item import MyFileItem
+from duHast.Utilities.console_out import output
+from duHast.Utilities.files_io import file_exist
+from duHast.Utilities.files_get import get_files_with_filter
+from duHast.Utilities.files_csv import read_csv_file
+from duHast.Utilities.Objects.result import Result
 
 # -------------
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
-    print (message)
-
-def _taskFilesPresent(directoryPath):
+def are_task_files_present(directory_path):
     '''
     Checks whether task list files are present in given directory.
 
-    :param directoryPath: A fully qualified directory path.
-    :type directoryPath: str
+    :param directory_path: A fully qualified directory path.
+    :type directory_path: str
 
     :return: True if at least one task list file is present, otherwise false.
     :rtype: bool
     '''
 
-    taskListFiles = util.GetFilesWithFilter(
-        directoryPath,
-        utilM.PREDEFINED_TASK_FILE_EXTENSION
+    task_list_files = get_files_with_filter(
+        directory_path,
+        settings.REPORT_FILE_EXTENSION 
         )
-    if(len(taskListFiles) > 0):
+    if(len(task_list_files) > 0):
         return True
     else:
         return False
 
-def _GetTaskListFiles(directoryPath):
-    '''
-    Get any pre defined task files containing the path to a subset of families in the library.
-    
+def get_task_list_files(directory_path):
+    """
+    Get any pre defined task files containing the path to a subset of families in the library. This is done as to not having to process all\
+        families in the library for the task at hand.
+
     :return: List of file path
     :rtype: list of str
-    '''
+    """
 
-    taskListFiles = util.GetFilesWithFilter(
-        directoryPath,
-        utilM.PREDEFINED_TASK_FILE_EXTENSION 
-        )
-    return taskListFiles
+    task_list_files = get_files_with_filter(
+        directory_path, settings.PREDEFINED_TASK_FILE_EXTENSION
+    )
+    return task_list_files
 
-def _combineTaskListFiles(files):
-    '''
+
+def combine_task_list_files(files):
+    """
     Reads the content of each pre defined task file.
-    Expected format is : comma separated text file where first column is a file path to a revit family.
+    Expected format is : csv separated text file where first column is a file path to a revit family.
 
     :param files: List of predefined task files
     :type files: [str]
     :return: List of file items
     :rtype: [:class:`.FileItem`]
-    '''
+    """
 
-    revitFiles = []
-    for taskFilePath in files:
-        rows = util.ReadCSVfile(taskFilePath)
+    revit_files = []
+    for task_file_path in files:
+        rows = read_csv_file(task_file_path)
         for row in rows:
             # make sure row contains at least one column (hopefully containing a file path)
-            if(len(row) >= 1 ):
+            if len(row) >= 1:
                 # does the file still exists?
-                if(util.FileExist(row[0])):
+                if file_exist(row[0]):
                     size = os.path.getsize(row[0])
-                    myFileItem = fi.MyFileItem(row[0],size)
+                    my_file_item = MyFileItem(row[0], size)
                     # make sure list is of unique files
-                    if(myFileItem not in revitFiles):
-                        revitFiles.append(myFileItem )
-    return revitFiles
+                    if my_file_item not in revit_files:
+                        revit_files.append(my_file_item)
+    return revit_files
+
+
 
 # -------------
 # main:
 # -------------
 
-result_ = res.Result()
-Output( 'Python pre process script Generate Task list ...')
+result_ = Result()
+output("Python pre process script Generate Task list ...")
 # check  for a task list file ... otherwise exit
-if(_taskFilesPresent(utilM.TASK_FILE_DIRECTORY)):
-    # check if any task files are present
-    rootPath_ = utilM.TASK_FILE_DIRECTORY
-    Output ('Collecting files from task list(s) located: ' + rootPath_)
-else:
-    Output ('No task files found! Exiting process.')
+PROCESS_PATH = settings.INPUT_DIRECTORY
+if(not are_task_files_present(settings.INPUT_DIRECTORY)):
+    output ('No task files found! Exiting process.')
     # time to get out
     sys.exit(2)
 
 # check whether folder contains any task files
 # if not process files in entire library
-taskListFiles = _GetTaskListFiles(rootPath_)
-Output('Number of task files found: ' + str(len(taskListFiles)))
-if(len(taskListFiles) > 0):
-    revitFiles = _combineTaskListFiles(taskListFiles)
-    Output('Number of files in task files found: ' + str(len(revitFiles)))
+task_list_files = get_task_list_files(PROCESS_PATH)
+
+if(len(task_list_files) > 0):
+    output("Found overall task files: {}".format(len(task_list_files)))
+    revit_files = combine_task_list_files(task_list_files)
+    
     # build bucket list
-    buckets = wl.DistributeWorkload(
-        utilM.TASK_FILE_NO, 
-        revitFiles, 
-        fl.getFileSize
-    )
+    buckets = distribute_workload(settings.TASK_FILE_NO, revit_files, get_file_size)
+
     # write out file lists
     counter = 0
     for bucket in buckets:
-        fileName =  os.path.join(utilM.TASK_FILE_DIRECTORY, 'Tasklist_' + str(counter)+ '.txt')
-        statusWrite = fl.writeRevitTaskFile(
-            fileName, 
-            bucket, 
-            fl.BucketToTaskListFileSystem
+        file_name = os.path.join(
+            settings.TASK_FILE_DIRECTORY, "Tasklist_{}.txt".format(counter)
         )
-        result_.update(statusWrite)
-        Output (statusWrite.message)
+        status_write = write_revit_task_file(
+            file_name, bucket, bucket_to_task_list_file_system
+        )
+        result_.update(status_write)
+        output(status_write.message)
         counter += 1
-    Output('Finished writing out task files')
+    output("Finished writing out task files")
 else:
-    Output ('Task file did not contain any families...Exiting process.')
+    output ('Task file did not contain any families...Exiting process.')
     result_.update_sep(False, 'Task file did not contain any families...Exiting process.')
 
 if(result_.status):
     sys.exit(0)
 else:
+    output(result_.message)
     sys.exit(2)

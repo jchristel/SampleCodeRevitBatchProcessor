@@ -7,7 +7,7 @@
   "enableDataExport": false,
   "dataExportFolderPath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_01_Z_ChangeFamilySubCategory\\_Users\\_default\\SessionData",
   "executePreProcessingScript": false,
-  "preProcessingScriptFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_01_Z_ChangeFamilySubCategory\\_Script\\Pre_ChangeFamilySubCategoryStandAlone.py",
+  "preProcessingScriptFilePath": "",
   "executePostProcessingScript": true,
   "PostProcessingScriptFilePath": "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\Samples\\Flows\\TheChain\\_01_Z_ChangeFamilySubCategory\\_Script\\Post_KillWSM.py",
   "centralFileOpenOption": "CreateNewLocal",

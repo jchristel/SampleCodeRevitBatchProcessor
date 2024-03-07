@@ -25,7 +25,7 @@ set _targetPath=%LocalAppData%\RevitBatchProcessor\BatchRvt.exe
 :: default path for python installation
 set _pythonPath="C:\Program Files (x86)%\IronPython 2.7\ipy64.exe"
 :: file path to file select python script
-set _FileSelectPath="%_rootFolderPath%_Script\Pre_ChangeFamilySubCategoryStandAlone.py"
+set _FileSelectPath="%_rootFolderPath%_Script\Pre_FileSelectNoUI.py"
 :: file path to file select python script
 set _FileBuilderPath="%_rootFolderPath%_Script\Pre_TaskFileListBuilder.py"
 :: directory where settings files are saved

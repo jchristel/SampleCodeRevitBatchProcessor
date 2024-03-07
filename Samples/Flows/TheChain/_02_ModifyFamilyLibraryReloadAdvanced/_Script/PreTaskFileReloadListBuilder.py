@@ -23,44 +23,46 @@
 #
 #
 
-# this sample shows how to write out a number of task files using bucket distribution
 
 # --------------------------
 # default file path locations1
 # --------------------------
 
 import sys, os
-import utilReloadBVN as utilR # sets up all commonly used variables and path locations!
-import RevitFamilyBaseDataAnalysisReloadAdvanced as reloader
+
+import settings as settings  # sets up all commonly used variables and path locations!
+
+from duHast.Utilities.console_out import output
+from duHast.Revit.Family.Data.family_base_data_reload_advanced import build_work_lists
+
 
 # -------------
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
-    print (message)
 
 # -------------
 # main:
 # -------------
-print( 'Python pre process script: Reload list builder start ...')
-# check if a folder path was passt in...otherwise go with default
-if (len(sys.argv) == 2):
-    rootPath_ = sys.argv[1]
-    Output('Using passt in path: ' + rootPath_)
-    result = reloader.BuildWorkLists(
-        rootPath_, # change list file path
-        utilR.FAMILY_BASE_DATA_REPORT_FILE_PATH, # report data file path ( may need refresh prior run!!)
-        utilR.RELOAD_LIST_OUTPUT_DIRECTORY # output folder
-        )
-    Output(result.status)
-    Output(result.message)
-    if(result.status):
+
+output("Python pre process script: Reload list builder start ...")
+# check if a folder path was past in...otherwise go with default
+if len(sys.argv) == 2:
+    _root_path = sys.argv[1]
+    output("Using past in path: {}".format(_root_path))
+    result = build_work_lists(
+        _root_path,  # change list file path
+        settings.FAMILY_BASE_DATA_REPORT_FILE_PATH,  # report data file path ( may need refresh prior run!!)
+        settings.RELOAD_LIST_OUTPUT_DIRECTORY,  # output folder
+    )
+    output("[{}]".format(result.status))
+    output(result.message)
+
+    if result.status:
         sys.exit(0)
     else:
         sys.exit(2)
 else:
-    rootPath_ = r'C:\Users\jchristel\Documents\DebugRevitBP\FamReload'
-    Output ('Aborted with default file path: ' + rootPath_)
+    _root_path = r"C:\Users\jchristel\Documents\DebugRevitBP\FamReload"
+    output("Aborted with default file path: {}".format(_root_path))
     sys.exit(2)

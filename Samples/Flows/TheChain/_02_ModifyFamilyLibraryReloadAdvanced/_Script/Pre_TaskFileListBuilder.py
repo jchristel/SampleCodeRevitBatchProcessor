@@ -30,63 +30,67 @@
 # --------------------------
 
 import sys, os
-import utilReloadBVN as utilR # sets up all commonly used variables and path locations!
-# import file list module
-import FileList as fl
-# import workloader utils
-import Workloader as wl
-import Utility as util
+
+import settings as settings  # sets up all commonly used variables and path locations!
+
+from duHast.Utilities.console_out import output
+from duHast.UI.file_list import (
+    get_revit_files_for_processing,
+    get_file_size,
+    write_revit_task_file,
+    bucket_to_task_list_file_system,
+)
+from duHast.UI.workloader import distribute_workload
 
 # -------------
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
-    print (message)
-
 # -------------
 # main:
 # -------------
-print( 'Python pre process script: Task list builder start ...')
-# check if a folder path was passt in...otherwise go with default
-if (len(sys.argv) == 3):
-    rootPath_ = sys.argv[1]
-    fileName_ = sys.argv[2]
-    Output('Using passt in path: ' + rootPath_)
-    Output('Using passt in file name: ' + fileName_)
+output("Python pre process script: Task list builder start ...")
+# check if a folder path was past in...otherwise go with default
+if len(sys.argv) == 3:
+    _root_path = sys.argv[1]
+    _file_name = sys.argv[2]
+    output("Using past in path: {}".format(_root_path))
+    output("Using past in file name: {}".format(_file_name))
+
     # get files to be processed
-    revitFiles = fl.GetRevitFilesForProcessing(
-                rootPath_ + '\\' + fileName_, 
-                False, 
-                utilR.REVIT_FAMILY_FILE_EXTENSION)
-    if(len(revitFiles) > 0):
-        #for rf in revitFiles:
+    _revit_files = get_revit_files_for_processing(
+        os.path.join(_root_path, _file_name),
+        False,
+        settings.FILE_EXTENSION_OF_FILES_TO_PROCESS,
+    )
+
+    if len(_revit_files) > 0:
+        # for rf in revitFiles:
         #    Output(rf.name + ' :: ' + str(rf.size))
+
         # build bucket list
-        buckets = wl.DistributeWorkload(
-            utilR.TASK_FILE_NO, 
-            revitFiles, 
-            fl.getFileSize
+        buckets = distribute_workload(
+            settings.TASK_FILE_NO, _revit_files, get_file_size
         )
+
         # write out file lists
         counter = 0
         for bucket in buckets:
-            fileName =  os.path.join(utilR.TASK_FILE_DIRECTORY, 'Tasklist_' + str(counter)+ '.txt')
-            statusWrite = fl.writeRevitTaskFile(
-                fileName, 
-                bucket, 
-                fl.BucketToTaskListFileSystem
+            fileName = os.path.join(
+                settings.TASK_FILE_DIRECTORY, "Tasklist_{}.txt".format(counter)
             )
-            Output (statusWrite.message)
+            statusWrite = write_revit_task_file(
+                fileName, bucket, bucket_to_task_list_file_system
+            )
+            output(statusWrite.message)
             counter += 1
-        Output('Finished writing out task files')
+        output("Finished writing out task files")
         sys.exit(0)
     else:
         # do nothing...
-        Output ('No files selected!')
+        output("No files selected!")
         sys.exit(2)
 else:
-    rootPath_ = r'C:\Users\jchristel\Documents\DebugRevitBP\FamReload'
-    Output ('Aborted with default file path: ' + rootPath_)
+    rootPath_ = r"C:\Users\jchristel\Documents\DebugRevitBP\FamReload"
+    output("Aborted with default file path: {}".format(rootPath_))
     sys.exit(2)

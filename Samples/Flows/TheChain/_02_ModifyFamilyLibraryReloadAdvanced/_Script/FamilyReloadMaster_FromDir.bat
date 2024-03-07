@@ -25,14 +25,14 @@ FOR %%A IN ("%~dp0.") DO set "_rootFolderPath=%%~dpA"
 :: location of overall task files ( one file per reload run containing all families to be relaoded)
 set _filesLocation="%_rootFolderPath%_Users\%USERNAME%\_TaskList\OverAll"
 :: path to python file which builds overall task list
-set "_taskListBuilder=%_rootFolderPath%_Script\PreTaskFileReloadListBuilder.py"
+set "_taskListBuilder=%_rootFolderPath%_Script\Pre_TaskFileReloadListBuilder.py"
 :: path to python file which builds overall changed families list
 set "_changedFamiliesListBuilder=%_rootFolderPath%_Script\Post_Everything.py"
 :: path to python file which splits overall task list into work chunks
 :: location of change list files (maybe do GUI?)
 set _changeListFilesLocation="%_rootFolderPath%_Users\%USERNAME%\_Input\ChangedFilesTaskList.csv"
 :: script to split over all task into 4 task files to be processed by reloader script
-set "_taskSplitter=%_rootFolderPath%_Script\PreTaskFileListBuilder.py"
+set "_taskSplitter=%_rootFolderPath%_Script\Pre_TaskFileListBuilder.py"
 :: batch file which processes single overall task list once it is split into work chunks 
 set _batchReloadScript="%_rootFolderPath%_Script\Modify.LibraryFamilyReload.ALL_4Parallel.generic.bat"
 :: default path for python installation

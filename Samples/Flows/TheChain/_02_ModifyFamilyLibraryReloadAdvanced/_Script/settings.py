@@ -56,6 +56,7 @@ from duHast.Utilities.utility import get_current_user_name
 SCRIPT_DIRECTORY = get_directory_path_from_file_path(__file__)
 # add the script directory to path
 sys.path += [SCRIPT_DIRECTORY]
+
 # build flow directory name
 FLOW_DIRECTORY = get_parent_directory(SCRIPT_DIRECTORY)
 # build user directory name
@@ -113,6 +114,10 @@ FAMILY_BASE_DATA_REPORT_FILE_PATH = os.path.join(
 # file name of follow up report
 FOLLOW_UP_REPORT_FILE_NAME = "FollowUpReportList" + REPORT_FILE_EXTENSION
 
+# changed file name prefix , used to get all reloaded family file names for further processing
+CHANGED_FAMILY_PART_REPORT_PREFIX = "PartChangedFam"
+CHANGED_FAMILY_REPORT_FILE_NAME = "ChangedFilesTaskList"
+
 # where are task files located
 TASK_FILE_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_TaskList")
 # number of task files in use
@@ -120,3 +125,7 @@ TASK_FILE_NO = 4
 
 # flag indicating whether this is a cloud based project
 IS_CLOUD_PROJECT = False
+
+# library path to reload from
+REVIT_LIBRARY_PATH = r"\sample\path"
+REVIT_LIBRARY_INCLUDE_SUB_DIRS_IN_SEARCH = True

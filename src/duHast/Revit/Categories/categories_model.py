@@ -3,6 +3,7 @@
 Revit category helper functions for project files.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 #
 # License:
@@ -79,8 +80,9 @@ def get_category_from_builtInCategory(doc, built_in_category):
     :return: A category
     :rtype: Autodesk.Revit.DB.Category
     """
-    
+
     return Category.GetCategory(doc, built_in_category)
+
 
 def get_builtInCategory_from_category(doc, category):
     """
@@ -99,7 +101,7 @@ def get_builtInCategory_from_category(doc, category):
     for value, name in zip(values, names):
         try:
             cat = Category.GetCategory(doc, value)
-            if(cat == None):
+            if cat == None:
                 continue
             if cat.Name == category.Name:
                 return value
@@ -132,7 +134,7 @@ def get_category_by_names(doc, main_category_name, sub_category_name):
                     if sub_cat.Name == sub_category_name:
                         return sub_cat
     return return_value
-            
+
 
 def get_builtin_category_by_name(category_name):
     """

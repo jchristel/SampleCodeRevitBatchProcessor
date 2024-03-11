@@ -336,8 +336,13 @@ def cull_nested_base_data_blocks(overall_family_base_nested_data):
     retained_family_base_nested_data = []
     # cull data per block
     for family_block in family_blocks:
-        d = _cull_data_block(family_block)
-        retained_family_base_nested_data = retained_family_base_nested_data + d
+        if(len(family_block) == 1):
+            # no need to do any culling
+            retained_family_base_nested_data.append(family_block[0])
+            continue
+        else:
+            d = _cull_data_block(family_block)
+            retained_family_base_nested_data = retained_family_base_nested_data + d
 
     return retained_family_base_nested_data
 

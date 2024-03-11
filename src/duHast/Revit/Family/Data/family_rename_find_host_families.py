@@ -137,7 +137,7 @@ def find_host_families_with_nested_families_requiring_rename(input_directory_pat
                 input_directory_path
             )
             return_value.append_message(
-                "{} Read data from file! Rename family entries [{} ] found.".format(
+                "{} Read data from file! Rename family entries [{}] found.".format(
                     t_process.stop(), len(file_rename_list_status.result)
                 )
             )
@@ -190,6 +190,6 @@ def find_host_families_with_nested_families_requiring_rename(input_directory_pat
             )
     except Exception as e:
         return_value.update_sep(
-            False, "Failed to find host families with exception: ".format(e)
+            False, "Failed to find host families with exception: {}".format(e)
         )
     return return_value

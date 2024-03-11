@@ -137,7 +137,7 @@ def write_changed_family_marker_file(file_name, revit_category_name):
 # ----------------------------------------------------- custom family actions ------------------------------------------
 
 
-def rename_loaded_families(doc):
+def rename_loaded_families_action(doc):
     """
     Renames loaded families based on rename directives in hard coded folder location.
 
@@ -178,7 +178,7 @@ over_all_status_ = Result()
 over_all_status_.status = False
 
 # actions to be executed per family
-family_actions = [rename_loaded_families]
+family_actions = [rename_loaded_families_action]
 
 output(
     "Modifying Revit File.... start",

@@ -45,8 +45,8 @@ FOR %%A IN ("%~dp0.") DO set "_rootFolderPath=%%~dpA"
 
 :: flow report directory
 set projectReportDirectory=%_rootFolderPath%_00_ReportFamilyData\_Users\%USERNAME%\_Output
-REM set reportFamiliesScript="%_rootFolderPath%_00_ReportFamilyData\_Script\Report.2022.FamilyData.NH2.generic.bat"
-set reportFamiliesScript="%_rootFolderPath%_00_ReportFamilyData\_Script\Report.2022.FamilyData.NH2.WithUI.bat"
+:: report script
+set reportFamiliesScript="%_rootFolderPath%_00_ReportFamilyData\_Script\Report.2022.FamilyData.All.WithUI.bat"
 :: default file names for log files
 set logfileReportData="%projectReportDirectory%\%USERNAME%_FamilyReport_%ldt%.log"
 :: source and targets for base data report used in relaod and modify script

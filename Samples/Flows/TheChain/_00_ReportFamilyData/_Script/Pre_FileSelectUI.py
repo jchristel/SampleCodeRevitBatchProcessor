@@ -38,7 +38,7 @@ import sys
 import os
 
 import settings as settings  # sets up all commonly used variables and path locations!
-from duHast.UI.script import main
+from duHast.UI.files_select.files_select_ui import main
 
 # import utility modules
 from duHast.Utilities.console_out import output
@@ -65,8 +65,8 @@ if len(sys.argv) == 2:
     if directory_exists(PROCESS_PATH) == False:
         output("Error: Invalid directory path passed in: {}".format(PROCESS_PATH))
         output("Exiting...")
-        sys.exit(1)
         PROCESS_PATH = settings.REVIT_LIBRARY_PATH
+        sys.exit(1)
     else:
         PROCESS_PATH = settings.REVIT_LIBRARY_PATH
 else:

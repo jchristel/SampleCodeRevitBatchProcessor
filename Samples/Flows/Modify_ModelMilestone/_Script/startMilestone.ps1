@@ -29,7 +29,7 @@ $iron_python_path = "C:\Program Files (x86)\IronPython 2.7\ipy64.exe"
 # Display batch processor path
 Write-ToLogAndConsole -Message "Iron python file path: $iron_python_path"
 # path to UI script allowing individual file selection
-$ui_file_select_path='"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src\duHast\UI\script.py"'
+$ui_file_select_path='"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src\duHast\UI\files_select\files_select_ui.py"'
 # Display the ui file select path
 Write-ToLogAndConsole -Message "UI File select path: $ui_file_select_path"
 # path to script which selects all files in a given directory

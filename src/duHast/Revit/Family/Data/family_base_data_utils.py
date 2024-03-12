@@ -270,6 +270,16 @@ def _cull_data_block(family_base_nested_data_block):
     :rtype: [nested_family]
     """
 
+    print('in cull 1')
+    if isinstance(family_base_nested_data_block, list) == False:
+        print("wrong data type")
+        raise Exception(
+            "Family base nested data block is not a list. It is of type: {}".format(
+                type(family_base_nested_data_block)
+            )
+        )
+    
+    print("here 1")
     culled_family_base_nested_data_blocks = []
     data_blocks_by_length = {}
     # build dic by root path length
@@ -314,33 +324,32 @@ def cull_nested_base_data_blocks(overall_family_base_nested_data):
     :type overall_family_base_nested_data: _type_
     """
 
-    current_root_fam_name = ""
-    family_blocks = []
-    block = []
-    # read families into blocks
-    for nested in overall_family_base_nested_data:
-        if nested.rootPath[0] != current_root_fam_name:
-            # read family block
-            if len(block) > 0:
-                family_blocks.append(block)
-                # reset block
-                block = []
-                block.append(nested)
-                current_root_fam_name = nested.rootPath[0]
-            else:
-                block.append(nested)
-                current_root_fam_name = nested.rootPath[0]
-        else:
-            block.append(nested)
+    # storage for data blocks
+    family_blocks_by_root = {}
 
+    # read families into blocks
+    for nested_family_data in overall_family_base_nested_data:
+
+        # check if a data block for this family already exists
+        if(nested_family_data.rootPath[0] in family_blocks_by_root):
+            # add new nested family data to existing block
+            family_blocks_by_root[nested_family_data.rootPath[0]].append(nested_family_data)
+        else:
+            # create new block
+            family_blocks_by_root[nested_family_data.rootPath[0]] = [nested_family_data]
+    
+    # storage for culled data
     retained_family_base_nested_data = []
+
     # cull data per block
-    for family_block in family_blocks:
+    for root_path, family_block in family_blocks_by_root.items():
+        # if the data block only contains one item skip culling
         if(len(family_block) == 1):
             # no need to do any culling
             retained_family_base_nested_data.append(family_block[0])
             continue
         else:
+            # attempt to cull data block
             d = _cull_data_block(family_block)
             retained_family_base_nested_data = retained_family_base_nested_data + d
 

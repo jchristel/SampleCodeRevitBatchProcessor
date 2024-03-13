@@ -202,9 +202,9 @@ docs/_build/
 *.pbix
 
 # duHast sample flow files
-/_Analysis/*.csv
-/_Analysis/*.log
-/_Analysis/*.txt
+_Analysis/*.csv
+_Analysis/*.log
+_Analysis/*.txt
 
-/_LogMarker/*.*
-/_Output/*.*
+_LogMarker/*.*
+_Output/*.*

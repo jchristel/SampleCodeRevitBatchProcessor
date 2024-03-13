@@ -206,5 +206,5 @@ _Analysis/*.csv
 _Analysis/*.log
 _Analysis/*.txt
 
-_LogMarker/*.*
-_Output/*.*
+_LogMarker/*
+_Output/*

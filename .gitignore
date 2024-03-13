@@ -1,3 +1,8 @@
+
+#duHast repo
+_LogMarker/*
+_Output/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -205,6 +210,3 @@ docs/_build/
 _Analysis/*.csv
 _Analysis/*.log
 _Analysis/*.txt
-
-_LogMarker/*
-_Output/*

@@ -200,3 +200,11 @@ docs/_build/
 /test/_rbp_flow/_LogMarker/*.plist
 /test/_rbp_flow/_Output/*.csv
 *.pbix
+
+# duHast sample flow files
+/_Analysis/*.csv
+/_Analysis/*.log
+/_Analysis/*.txt
+
+/_LogMarker/*.*
+/_Output/*.*

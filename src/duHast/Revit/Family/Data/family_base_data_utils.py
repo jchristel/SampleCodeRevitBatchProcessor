@@ -270,29 +270,38 @@ def _cull_data_block(family_base_nested_data_block):
     :rtype: [nested_family]
     """
 
-    print('in cull 1')
+    culled_family_base_nested_data_blocks = []
+    
     if isinstance(family_base_nested_data_block, list) == False:
-        print("wrong data type")
         raise Exception(
             "Family base nested data block is not a list. It is of type: {}".format(
                 type(family_base_nested_data_block)
             )
         )
     
-    print("here 1")
     culled_family_base_nested_data_blocks = []
     data_blocks_by_length = {}
     # build dic by root path length
     # start at 1 because for nesting level ( 1 based rather then 0 based )
     for family in family_base_nested_data_block:
-        if len(family.rootPath) - 1 in data_blocks_by_length:
-            data_blocks_by_length[len(family.rootPath) - 1].append(family)
-        else:
-            data_blocks_by_length[len(family.rootPath) - 1] = [family]
 
+        # root path is a list of family names representing the nesting tree
+        # subtract 1 to get the nesting level minus the root family itself
+        split_root_path_length = len(family.rootPath)-1
+
+        # add family to dictionary
+        if split_root_path_length in data_blocks_by_length:
+            data_blocks_by_length[split_root_path_length].append(family)
+        else:
+            data_blocks_by_length[split_root_path_length] = [family]
+    
     # loop over dictionary and check block entries against next entry up blocks
+    # I need to extend range by 1 since the end value in the range is always exclusive in python for i in range loop
+    # i.e. for i in range (1, 3) will only loop over 1 and 2...
     for i in range(1, len(data_blocks_by_length) + 1):
+
         # last block get automatically added
+        # do not add + 1 here since the loop will stop at the last entry
         if i == len(data_blocks_by_length):
             culled_family_base_nested_data_blocks = (
                 culled_family_base_nested_data_blocks + data_blocks_by_length[i]
@@ -306,6 +315,8 @@ def _cull_data_block(family_base_nested_data_block):
             culled_family_base_nested_data_blocks = (
                 culled_family_base_nested_data_blocks + unique_nodes
             )
+    
+        
     return culled_family_base_nested_data_blocks
 
 

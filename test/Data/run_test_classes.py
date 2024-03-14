@@ -33,6 +33,7 @@ from test.utils.run_tests import RunTest
 from test.Data import (
     data_families_culling_nested_families,
     data_families_reading_overall_report,
+    data_families_find_none_nested_root_families,
 )
 
 
@@ -50,6 +51,7 @@ def run_tests():
     # list of tests to be run
     run_tests = [
         ["Data Read Overall Family Data Report", data_families_reading_overall_report.DataReadFamiliesReport],
+        ["Data Find None Nested Root families", data_families_find_none_nested_root_families.DataFindNoneNestedRootFamilies],
         ["Data Nested Family culling", data_families_culling_nested_families.DataCullingNestedFamilies],
         
     ]

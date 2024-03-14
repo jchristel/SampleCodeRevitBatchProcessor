@@ -319,42 +319,47 @@ def _cull_data_block(family_base_nested_data_block):
     return culled_family_base_nested_data_blocks
 
 
-def cull_nested_base_data_blocks(overall_family_base_nested_data):
+def cull_nested_base_data_blocks(root_families, nested_families):
     """
     Reduce base data families for parent / child finding purposes. Keep the nodes with the root path longes branch only.
 
-    Sample:
+    Sample ( within a single data block)
 
     famA :: famB :: famC
-    famA :: famB
+    FamA :: famB
 
-    The second of the above examples can be culled since the first contains the same information.
+    The second of the above examples can be culled since the path is contained within the first example.
+
+    Sample ( across multiple data blocks)
+
+    famA :: famB :: famC
+    famB :: famC
+
+
+    The second of the above examples can be culled since the first family (famB) in that sample is already in the first example.(nested Family)
 
     :param overall_family_base_nested_data: _description_
     :type overall_family_base_nested_data: _type_
     """
 
-    # storage for data blocks
-    family_blocks_by_root = {}
+    # get root families not found in nested data since they contain the longest unique nesting path
+    non_nested_root_families = find_root_families_not_in_nested_data(
+        root_families, nested_families
+    )
 
-    # read families into blocks
-    for nested_family_data in overall_family_base_nested_data:
-
-        # check if a data block for this family already exists
-        if nested_family_data.rootPath[0] in family_blocks_by_root:
-            # add new nested family data to existing block
-            family_blocks_by_root[nested_family_data.rootPath[0]].append(
-                nested_family_data
-            )
-        else:
-            # create new block
-            family_blocks_by_root[nested_family_data.rootPath[0]] = [nested_family_data]
+    # get nested family data blocks for each root family
+    nested_data_blocks_per_root_family = get_nested_family_data_for_root_family(
+        non_nested_root_families, nested_families
+    )
 
     # storage for culled data
     retained_family_base_nested_data = []
 
     # cull data per block
-    for root_path, family_block in family_blocks_by_root.items():
+    for (
+        root_family_identifier,
+        family_block,
+    ) in nested_data_blocks_per_root_family.items():
         # if the data block only contains one item skip culling
         if len(family_block) == 1:
             # no need to do any culling
@@ -378,7 +383,7 @@ def get_nested_family_data_for_root_family(root_families, nested_families):
     :type nested_families: [nested_family]
 
     :return: A dictionary where:
-    
+
         - key is the root family name and category concatenated and
         - value is a list of tuples containing nested family data.
 
@@ -389,7 +394,10 @@ def get_nested_family_data_for_root_family(root_families, nested_families):
     for root_family in root_families:
         nested_families_for_root_families[root_family.name + root_family.category] = []
         for nested_family in nested_families:
-            if nested_family.rootPath[0] == root_family.name and nested_family.categoryPath[0] == root_family.category:
+            if (
+                nested_family.rootPath[0] == root_family.name
+                and nested_family.categoryPath[0] == root_family.category
+            ):
                 nested_families_for_root_families[
                     root_family.name + root_family.category
                 ].append(nested_family)

@@ -32,7 +32,7 @@ import sys
 
 from test.utils import test
 
-from duHast.Revit.Family.Data.family_base_data_utils import nested_family, _check_data_blocks_for_overlap, _cull_data_block, read_overall_family_data_list_from_directory
+from duHast.Revit.Family.Data.family_base_data_utils import cull_nested_base_data_blocks, read_overall_family_data_list_from_directory
 TEST_REPORT_DIRECTORY = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData"
 
 class DataCullingNestedFamilies(test.Test):
@@ -68,7 +68,7 @@ class DataCullingNestedFamilies(test.Test):
             cull = None
             try:
                 # cull the data block
-                cull = _cull_data_block(family_base_nested_data_block=overall_family_base_nested_data)
+                cull = cull_nested_base_data_blocks(overall_family_base_root_data, overall_family_base_nested_data)
             except Exception as e:
                 message += "\nexception in culling data block\n {} \n".format(e)
             
@@ -77,10 +77,10 @@ class DataCullingNestedFamilies(test.Test):
                 compare_list.append("{}".format(fam))
             
             message += "\nresult from data: {} \nvs \nexpected: {}".format(
-                        sorted(cull), "\n".join(sorted(sorted(compare_list )))
+                       "\n".join(sorted(compare_list)), "\n".join(sorted(expected_result))
             )
             
-            
+            flag = False
             # setup 
         except Exception as e:
             flag = False

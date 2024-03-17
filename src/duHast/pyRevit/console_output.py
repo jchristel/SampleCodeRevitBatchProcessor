@@ -72,4 +72,3 @@ def print_header(header):
     if header != None:
         output.print_md("### {}".format(header))
     
-

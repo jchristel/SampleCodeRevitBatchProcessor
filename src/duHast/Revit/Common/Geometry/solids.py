@@ -69,6 +69,33 @@ def get_2d_points_from_solid(element):
     return all_element_points
 
 
+def get_solid_bounding_box(solid):
+    """
+    Returns a bounding box from a solid.
+
+    :param solid: The solid to get the bounding box from.
+    :type solid: Autodesk.Revit.DB.Solid
+
+    :return: The bounding box of the solid.
+    :rtype: Autodesk.Revit.DB.BoundingBoxXYZ
+    """
+
+    # get the solids bounding box
+    solid_bounding_box = solid.GetBoundingBox()
+
+    # transform the bounding box to the solids transform
+    # which is different from the family instance transform!!
+    solid_transform_min = solid_bounding_box.Transform.OfPoint(solid_bounding_box.Min)
+    solid_transform_max = solid_bounding_box.Transform.OfPoint(solid_bounding_box.Max)
+
+    # create a new bounding box from the transformed points
+    solid_transform_bb = BoundingBoxXYZ()
+    solid_transform_bb.Min = solid_transform_min
+    solid_transform_bb.Max = solid_transform_max
+
+    return solid_transform_bb
+
+
 def get_bounding_box_from_family_geometry(geometry_element):
     """
     Returns a bounding box from the families solid elements geometry only.
@@ -84,6 +111,10 @@ def get_bounding_box_from_family_geometry(geometry_element):
     merged_result = None
     for geometry_obj in geometry_element:
         if geometry_obj is not None:
+            # Instance geometry can also be a Solid
+            if isinstance(geometry_obj, Solid):
+                return get_solid_bounding_box(instance_geometry)
+            # If not a solid, it is a list of geometry objects
             instance_geometry = geometry_obj.GetInstanceGeometry()
             if instance_geometry is not None:
                 for element in instance_geometry:
@@ -93,21 +124,7 @@ def get_bounding_box_from_family_geometry(geometry_element):
                         if element.Id == ElementId.InvalidElementId.IntegerValue:
                             continue
                         # get the solids bounding box
-                        solid_bounding_box = element.GetBoundingBox()
-
-                        # transform the bounding box to the solids transform
-                        # which is different from the family instance transform!!
-                        solid_transform_min = solid_bounding_box.Transform.OfPoint(
-                            solid_bounding_box.Min
-                        )
-                        solid_transform_max = solid_bounding_box.Transform.OfPoint(
-                            solid_bounding_box.Max
-                        )
-
-                        # create a new bounding box from the transformed points
-                        solid_transform_bb = BoundingBoxXYZ()
-                        solid_transform_bb.Min = solid_transform_min
-                        solid_transform_bb.Max = solid_transform_max
+                        solid_transform_bb = get_solid_bounding_box(element)
 
                         # check if this is the first bounding box
                         if merged_result == None:

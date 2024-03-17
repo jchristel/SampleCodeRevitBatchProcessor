@@ -281,6 +281,7 @@ def _cull_data_block(family_base_nested_data_block):
 
     culled_family_base_nested_data_blocks = []
     data_blocks_by_length = {}
+    
     # build dic by root path length
     # start at 1 because for nesting level ( 1 based rather then 0 based )
     for family in family_base_nested_data_block:
@@ -294,10 +295,11 @@ def _cull_data_block(family_base_nested_data_block):
             data_blocks_by_length[split_root_path_length].append(family)
         else:
             data_blocks_by_length[split_root_path_length] = [family]
-
+    
     # loop over dictionary and check block entries against next entry up blocks
     # I need to extend range by 1 since the end value in the range is always exclusive in python for i in range loop
     # i.e. for i in range (1, 3) will only loop over 1 and 2...
+    
     for i in range(1, len(data_blocks_by_length) + 1):
 
         # last block get automatically added
@@ -315,7 +317,7 @@ def _cull_data_block(family_base_nested_data_block):
             culled_family_base_nested_data_blocks = (
                 culled_family_base_nested_data_blocks + unique_nodes
             )
-
+    
     return culled_family_base_nested_data_blocks
 
 

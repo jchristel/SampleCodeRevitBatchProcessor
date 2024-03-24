@@ -1,0 +1,42 @@
+root,rootCategory,familyName,familyFilePath,categoryName
+Sample_Family_Twelf,Generic Annotations,Sample_Family_Twelf,C:\Users\jchristel\dev\test_lib\combined\Generic Annotations\Sample_Family_Twelf.rfa,Generic Annotations
+Sample_Family_Eleven,Generic Models,Sample_Family_Eleven,C:\Users\jchristel\dev\test_lib\combined\Generic Models\Sample_Family_Eleven.rfa,Generic Models
+Sample_Family_Eleven :: Sample_Family_Thirteen,Generic Models :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_One,Plumbing Fixtures,Sample_Family_One,C:\Users\jchristel\dev\test_lib\Sample_Family_One.rfa,Plumbing Fixtures
+Sample_Family_One :: Sample_Family_Thirteen,Plumbing Fixtures :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_One :: Sample_Family_Four,Plumbing Fixtures :: Plumbing Fixtures,Sample_Family_Four,C:\Users\jchristel\dev\test_lib\Sample_Family_Four.rfa,Plumbing Fixtures
+Sample_Family_One :: Sample_Family_Four :: Sample_Family_Thirteen,Plumbing Fixtures :: Plumbing Fixtures :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_Two,Furniture Systems,Sample_Family_Two,C:\Users\jchristel\dev\test_lib\Sample_Family_Two.rfa,Furniture Systems
+Sample_Family_Two :: Sample_Family_Thirteen,Furniture Systems :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_Two :: Sample_Family_Eight,Furniture Systems :: Furniture Systems,Sample_Family_Eight,C:\Users\jchristel\dev\test_lib\Sample_Family_Eight.rfa,Furniture Systems
+Sample_Family_Two :: Sample_Family_Eight :: Sample_Family_Thirteen,Furniture Systems :: Furniture Systems :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_Fourteen,Generic Annotations,Sample_Family_Fourteen,C:\Users\jchristel\dev\test_lib\combined\Generic Annotations\Sample_Family_Fourteen.rfa,Generic Annotations
+Sample_Family_Fourteen :: Sample_Family_Twelf,Generic Annotations :: Generic Annotations,Sample_Family_Twelf,,Generic Annotations
+Sample_Family_Three,Specialty Equipment,Sample_Family_Three,C:\Users\jchristel\dev\test_lib\Sample_Family_Three.rfa,Specialty Equipment
+Sample_Family_Three :: Sample_Family_Thirteen,Specialty Equipment :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_Four,Plumbing Fixtures,Sample_Family_Four,C:\Users\jchristel\dev\test_lib\combined\Plumbing Fixtures\Sample_Family_Four.rfa,Plumbing Fixtures
+Sample_Family_Four :: Sample_Family_Thirteen,Plumbing Fixtures :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_Thirteen,Section Marks,Sample_Family_Thirteen,C:\Users\jchristel\dev\test_lib\combined\Section Marks\Sample_Family_Thirteen.rfa,Section Marks
+Sample_Family_Five,Specialty Equipment,Sample_Family_Five,C:\Users\jchristel\dev\test_lib\Sample_Family_Five.rfa,Specialty Equipment
+Sample_Family_Five :: Sample_Family_Thirteen,Specialty Equipment :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_Six,Specialty Equipment,Sample_Family_Six,C:\Users\jchristel\dev\test_lib\Sample_Family_Six.rfa,Specialty Equipment
+Sample_Family_Six :: Sample_Family_Thirteen,Specialty Equipment :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_Six :: Sample_Family_Eleven,Specialty Equipment :: Generic Models,Sample_Family_Eleven,C:\Users\jchristel\dev\test_lib\Sample_Family_Eleven.rfa,Generic Models
+Sample_Family_Six :: Sample_Family_Eleven :: Sample_Family_Thirteen,Specialty Equipment :: Generic Models :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_Six :: Sample_Family_Seven,Specialty Equipment :: Electrical Fixtures,Sample_Family_Seven,C:\Users\jchristel\dev\test_lib\Sample_Family_Seven.rfa,Electrical Fixtures
+Sample_Family_Six :: Sample_Family_Seven :: Sample_Family_Ten,Specialty Equipment :: Electrical Fixtures :: Generic Annotations,Sample_Family_Ten,C:\Users\jchristel\dev\test_lib\Sample_Family_Ten.rfa,Generic Annotations
+Sample_Family_Six :: Sample_Family_Seven :: Sample_Family_Thirteen,Specialty Equipment :: Electrical Fixtures :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_Six :: Sample_Family_Seven :: Sample_Family_Fourteen,Specialty Equipment :: Electrical Fixtures :: Generic Annotations,Sample_Family_Fourteen,C:\Users\jchristel\dev\test_lib\Sample_Family_Fourteen.rfa,Generic Annotations
+Sample_Family_Six :: Sample_Family_Seven :: Sample_Family_Fourteen :: Sample_Family_Twelf,Specialty Equipment :: Electrical Fixtures :: Generic Annotations :: Generic Annotations,Sample_Family_Twelf,,Generic Annotations
+Sample_Family_Seven,Electrical Fixtures,Sample_Family_Seven,C:\Users\jchristel\dev\test_lib\combined\Electrical Fixtures\Sample_Family_Seven.rfa,Electrical Fixtures
+Sample_Family_Seven :: Sample_Family_Ten,Electrical Fixtures :: Generic Annotations,Sample_Family_Ten,C:\Users\jchristel\dev\test_lib\Sample_Family_Ten.rfa,Generic Annotations
+Sample_Family_Seven :: Sample_Family_Thirteen,Electrical Fixtures :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_Seven :: Sample_Family_Fourteen,Electrical Fixtures :: Generic Annotations,Sample_Family_Fourteen,C:\Users\jchristel\dev\test_lib\Sample_Family_Fourteen.rfa,Generic Annotations
+Sample_Family_Seven :: Sample_Family_Fourteen :: Sample_Family_Twelf,Electrical Fixtures :: Generic Annotations :: Generic Annotations,Sample_Family_Twelf,,Generic Annotations
+Sample_Family_Eight,Furniture Systems,Sample_Family_Eight,C:\Users\jchristel\dev\test_lib\combined\Furniture Systems\Sample_Family_Eight.rfa,Furniture Systems
+Sample_Family_Eight :: Sample_Family_Thirteen,Furniture Systems :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_Nine,Furniture Systems,Sample_Family_Nine,C:\Users\jchristel\dev\test_lib\Sample_Family_Nine.rfa,Furniture Systems
+Sample_Family_Nine :: Sample_Family_Thirteen,Furniture Systems :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_Nine :: Sample_Family_Eight,Furniture Systems :: Furniture Systems,Sample_Family_Eight,C:\Users\jchristel\dev\test_lib\Sample_Family_Eight.rfa,Furniture Systems
+Sample_Family_Nine :: Sample_Family_Eight :: Sample_Family_Thirteen,Furniture Systems :: Furniture Systems :: Section Marks,Sample_Family_Thirteen,,Section Marks
+Sample_Family_Ten,Generic Annotations,Sample_Family_Ten,C:\Users\jchristel\dev\test_lib\combined\Generic Annotations\Sample_Family_Ten.rfa,Generic Annotations

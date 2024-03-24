@@ -80,7 +80,7 @@ class DataCullingNestedFamilies(test.Test):
                        "\n".join(sorted(compare_list)), "\n".join(sorted(expected_result))
             )
             
-            flag = False
+            
             # setup 
         except Exception as e:
             flag = False

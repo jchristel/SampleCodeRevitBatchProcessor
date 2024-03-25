@@ -66,3 +66,36 @@ class MyFileItem(base.Base):
         self.bim_360_file_guid = bim360_file_guid
         self.bim_360_revit_version = bim360_revit_version
         self.is_selected = is_selected
+
+    def __eq__(self, other):
+        """
+        Check if two objects are equal.
+
+        :param other: The other object to compare to.
+        :type other: object
+        :return: True if the objects are equal, False otherwise.
+        :rtype: bool
+        """
+
+        if isinstance(other, MyFileItem) and (
+            self.name,
+            self.size,
+            self.bim_360_project_guid ,
+            self.bim_360_file_guid ,
+            self.bim_360_revit_version ,
+            
+        ) == (
+            other.name,
+            other.size,
+            other.bim_360_project_guid ,
+            other.bim_360_file_guid ,
+            other.bim_360_revit_version ,
+        ):
+            return True
+        else:
+            return False
+    
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)
+        

@@ -41,7 +41,7 @@ from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities.Objects import result as res
 
 # import Autodesk Revit DataBase namespace
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import Transaction
 
 
 def _rename_loaded_families(doc, rename_directives, family_ids):
@@ -117,8 +117,8 @@ def _rename_loaded_families(doc, rename_directives, family_ids):
                             )
                         return action_return_value
 
-                    transaction = rdb.Transaction(
-                        doc, "Renaming: " + rename_directive.name
+                    transaction = Transaction(
+                        doc, "Renaming: {}".format(rename_directive.name)
                     )
                     rename_result = rTran.in_transaction(transaction, action)
                     if rename_result.status:

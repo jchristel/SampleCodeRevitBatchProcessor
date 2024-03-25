@@ -102,18 +102,28 @@ def combine_task_list_files(files):
     """
 
     revit_files = []
-    for task_file_path in files:
-        rows = read_csv_file(task_file_path)
-        for row in rows:
-            # make sure row contains at least one column (hopefully containing a file path)
-            if len(row) >= 1:
-                # does the file still exists?
-                if file_exist(row[0]):
-                    size = os.path.getsize(row[0])
-                    my_file_item = MyFileItem(row[0], size)
-                    # make sure list is of unique files
-                    if my_file_item not in revit_files:
-                        revit_files.append(my_file_item)
+    try:
+        for task_file_path in files:
+            rows = read_csv_file(task_file_path)
+            for row in rows:
+                # make sure row contains at least one column (hopefully containing a file path)
+                if len(row) >= 1:
+                    # does the file still exists?
+                    if file_exist(row[0]):
+                        size = os.path.getsize(row[0])
+                        my_file_item = MyFileItem(row[0], size)
+                        # make sure list is of unique files
+                        if my_file_item not in revit_files:
+                            output("Adding file: {}".format(row[0]))
+                            revit_files.append(my_file_item)
+                        else:  # file already in list
+                            output("File already in list: {}".format(row[0]))
+                    else:
+                        output("File does not exist: {}".format(row[0]))
+                else:
+                    output("Row does not contain any data: {}".format(row))
+    except Exception as e:
+        output("Error reading task file: {}".format(e))
     return revit_files
 
 
@@ -141,6 +151,7 @@ task_list_files = get_task_list_files(PROCESS_PATH)
 if len(task_list_files) > 0:
     output("Found overall task files: {}".format(len(task_list_files)))
     revit_files = combine_task_list_files(task_list_files)
+    output ("Found: {} fils in task files".format(len(revit_files)))
 
     # build bucket list
     buckets = distribute_workload(settings.TASK_FILE_NO, revit_files, get_file_size)

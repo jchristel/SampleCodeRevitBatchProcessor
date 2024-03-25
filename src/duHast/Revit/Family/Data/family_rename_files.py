@@ -74,6 +74,7 @@ def _rename_files(rename_directives):
 
     for rename_directive in rename_directives:
         try:
+            return_value.append_message("rename directive: {}".format(rename_directive))
             # check if rename directive includes a file path ( might be empty if nested families only are to be renamed)
             if rename_directive.filePath != "":
                 # attempt to rename family file
@@ -92,7 +93,7 @@ def _rename_files(rename_directives):
                         )
                     else:
                         return_value.update_sep(
-                            False, "File not found: ".format(rename_directive.name)
+                            False, "File not found: {}".format(rename_directive.name)
                         )
                 except Exception as e:
                     return_value.update_sep(

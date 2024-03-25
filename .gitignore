@@ -1,3 +1,8 @@
+
+#duHast repo
+_LogMarker/*
+_Output/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -200,3 +205,8 @@ docs/_build/
 /test/_rbp_flow/_LogMarker/*.plist
 /test/_rbp_flow/_Output/*.csv
 *.pbix
+
+# duHast sample flow files
+_Analysis/*.csv
+_Analysis/*.log
+_Analysis/*.txt

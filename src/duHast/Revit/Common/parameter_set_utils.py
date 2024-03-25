@@ -332,12 +332,19 @@ def set_parameter_without_transaction_wrapper_by_name(
     """
 
     return_value = res.Result()
+    
     if not isinstance(parameter_value, str):
         parameter_value = str(parameter_value)
+    
     para = element.LookupParameter(parameter_name)
-    return_value = set_parameter_value_simple(
-        para=para, value_as_string=parameter_value
-    )
+    
+    if(para != None):
+        return_value = set_parameter_value_simple(
+            para=para, value_as_string=parameter_value
+        )
+    else:
+        return_value.update_sep(False, "Parameter: {} not found.".format(parameter_name))
+    
     return return_value
 
 
@@ -370,10 +377,17 @@ def set_builtin_parameter_without_transaction_wrapper_by_name(
     """
 
     return_value = res.Result()
+
     if not isinstance(parameter_value, str):
         parameter_value = str(parameter_value)
+    
     para = element.get_Parameter(parameter_definition)
-    return_value = set_parameter_value_simple(
-        para=para, value_as_string=parameter_value
-    )
+    
+    if(para != None):
+        return_value = set_parameter_value_simple(
+            para=para, value_as_string=parameter_value
+        )
+    else:
+        return_value.update_sep(False, "Parameter: {} not found.".format(parameter_definition))
+
     return return_value

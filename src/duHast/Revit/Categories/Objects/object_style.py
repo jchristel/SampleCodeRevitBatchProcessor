@@ -33,23 +33,27 @@ A class used to store category graphics styles.
 import json
 
 from duHast.Utilities.Objects import base
-from duHast.Revit.Views.Objects.Data.override_projection import OverrideProjection
-from duHast.Revit.Views.Objects.Data.override_cut import OverrideCut
+from duHast.Revit.Common.Objects.Data.line_projection import LineProjection
+from duHast.Revit.Common.Objects.Data.line_cut import LineCut
 
 
 class ObjectStyle(base.Base):
-    def __init__(self, data_type="unknown", j=None, **kwargs):
+    def __init__(self, main_category_name="",sub_category_name="",category_id=-1, data_type="object_style", j=None, **kwargs):
         """
         Class constructor.
 
         """
 
         super(ObjectStyle, self).__init__(**kwargs)
-
+        # set defaults ( note other properties are set in base class!)
+        self.data_type = data_type
+        self.main_category_name = main_category_name
+        self.sub_category_name = sub_category_name
+        self.category_id = category_id
         self.data_type = data_type
         self.material_id = -1
-        self.projection = OverrideProjection()
-        self.cut = OverrideCut()
+        self.line_projection = LineProjection()
+        self.line_cut = LineCut()
         
 
         # check if any data was past in with constructor!
@@ -68,11 +72,14 @@ class ObjectStyle(base.Base):
 
             # load values and throw exception if something is missing!
             try:
+                self.main_category_name = j["main_category_name"]
+                self.sub_category_name = j["sub_category_name"]
+                self.category_id = j["category_id"]
                 self.material_id = j["material_id"]
-                self.projection = OverrideProjection(
-                    j=j[OverrideProjection.data_type]
+                self.line_projection = LineProjection(
+                    j=j[LineProjection.data_type]
                 )
-                self.cut = OverrideCut(j=j[OverrideCut.data_type])
+                self.line_cut = LineCut(j=j[LineCut.data_type])
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(
@@ -90,11 +97,11 @@ class ObjectStyle(base.Base):
         :rtype: Bool
         """
         return isinstance(other, ObjectStyle) and (
-            self.projection,
-            self.cut,
+            self.line_projection,
+            self.line_cut,
         ) == (
-            other.projection,
-            other.cut,
+            other.line_projection,
+            other.line_cut,
         )
 
     def __eq__(self, other):
@@ -108,12 +115,12 @@ class ObjectStyle(base.Base):
         """
 
         return isinstance(other, ObjectStyle) and (
-            self.projection,
-            self.cut,
+            self.line_projection,
+            self.line_cut,
             self.material_id,
         ) == (
-            other.projection,
-            other.cut,
+            other.line_projection,
+            other.line_cut,
             other.material_id,
         )
 
@@ -130,8 +137,8 @@ class ObjectStyle(base.Base):
         try:
             return hash(
                 (
-                    self.projection,
-                    self.cut,
+                    self.line_projection,
+                    self.line_cut,
                     self.material_id,
                 )
             )
@@ -140,8 +147,8 @@ class ObjectStyle(base.Base):
                 "Exception {} occurred in {} object style projection: {}, object style cut: {}, object style material id: {}".format(
                     e,
                     self.data_type,
-                    self.projection,
-                    self.cut,
+                    self.line_projection,
+                    self.line_cut,
                     self.material_id
                 )
             )
@@ -158,64 +165,20 @@ class ObjectStyle(base.Base):
 
         # from projection
         if (
-            self.projection.line_projection.line_pattern_settings.name
+            self.line_projection.line_pattern_settings.name
             not in used_line_patterns
         ):
             used_line_patterns[
-                self.projection.line_projection.line_pattern_settings.name
-            ] = self.projection.line_projection.line_pattern_settings
+                self.line_projection.line_pattern_settings.name
+            ] = self.line_projection.line_pattern_settings
 
         # from cut
         if (
-            self.cut.line_cut.line_pattern_settings.name
+            self.line_cut.line_pattern_settings.name
             not in used_line_patterns
         ):
             used_line_patterns[
-                self.cut.line_cut.line_pattern_settings.name
-            ] = self.cut.line_cut.line_pattern_settings
+                self.line_cut.line_pattern_settings.name
+            ] = self.line_cut.line_pattern_settings
 
         return used_line_patterns
-
-    def get_all_used_fill_patterns(self):
-        """
-        Extract dictionary of fill pattern names to fill pattern objects
-
-        :return: Dictionary of fill pattern names to fill pattern objects
-        :rtype: {str: :class:`.FillPatternSettings`}
-        """
-        used_fill_patterns = {}
-        # from projection
-        if (
-            self.projection.pattern_background.fill_pattern_setting.name
-            not in used_fill_patterns
-        ):
-            used_fill_patterns[
-                self.projection.pattern_background.fill_pattern_setting.name
-            ] = self.projection.pattern_background.fill_pattern_setting
-
-        if (
-            self.projection.pattern_foreground.fill_pattern_setting
-            not in used_fill_patterns
-        ):
-            used_fill_patterns[
-                self.projection.pattern_foreground.fill_pattern_setting.name
-            ] = self.projection.pattern_foreground.fill_pattern_setting
-
-        # from cut
-        if (
-            self.cut.pattern_background.fill_pattern_setting.name
-            not in used_fill_patterns
-        ):
-            used_fill_patterns[
-                self.cut.pattern_background.fill_pattern_setting.name
-            ] = self.cut.pattern_background.fill_pattern_setting
-
-        if (
-            self.cut.pattern_foreground.fill_pattern_setting.name
-            not in used_fill_patterns
-        ):
-            used_fill_patterns[
-                self.cut.pattern_foreground.fill_pattern_setting.name
-            ] = self.cut.pattern_foreground.fill_pattern_setting
-
-        return used_fill_patterns

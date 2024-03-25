@@ -158,7 +158,7 @@ output( 'Python pre process script Rename Files ...')
 # check if a folder path was past in...otherwise go with default and exit
 if (len(sys.argv) == 2):
     rename_directives_directory_ = sys.argv[1]
-    output ('Renaming files as per directives saved here: {}',format (rename_directives_directory_))
+    output ('Renaming files as per directives saved here: {}'.format(rename_directives_directory_))
     _result = rename_family_files(rename_directives_directory_)
     output (_result.message)
     output('Renamed files .... status: [{}]'.format(_result.status))

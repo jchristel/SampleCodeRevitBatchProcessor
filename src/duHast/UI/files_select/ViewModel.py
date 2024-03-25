@@ -70,6 +70,9 @@ class ViewModel(ViewModelBase):
         # filter data of data grid view
         self.TextBox_Filter_TextChanged()
 
+        # set the dialog result property to true as a default
+        self.DialogResult = True
+
     @property
     def TextBoxText_SourcePath(self):
         return self.source_path

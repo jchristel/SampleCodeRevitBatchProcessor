@@ -41,7 +41,7 @@ set projectModifyRenameLoadedDirectory=%_rootFolderPath%_01_X_RenameFamilies\_Us
 set logfileRenameFams="%projectModifyRenameLoadedDirectory%\%USERNAME%_RenameFamilies_%ldt%.log"
 set baseDataReportTargetModifyRename="%_rootFolderPath%_01_X_RenameFamilies\_Users\%USERNAME%\_Input"
 :: project modify rename loaded script
-set modifyFamiliesRenameLoaded="%_rootFolderPath%_01_X_RenameFamilies\_Script\Modify.LibraryFamilyRename.NHR_4Parallel.generic.bat"
+set modifyFamiliesRenameLoaded="%_rootFolderPath%_01_X_RenameFamilies\_Script\Modify.LibraryFamilyRename.ALL_4Parallel.generic.bat"
 :: source and target for rename directives in modify family script
 set familyRenameSource="%_rootFolderPath%_01_X_RenameFamilies\_Users\%USERNAME%\_Analysis\actionNow\*.csv"
 set familyRenameTarget="%_rootFolderPath%_01_X_RenameFamilies\_Users\%USERNAME%\_Input"
@@ -59,7 +59,7 @@ if %toggleDebug%==1 (
     %stamp% & echo.
     %stamp% & echo ********************************* DEBUG END *****************************************************
    
-    goto outOfHere
+    
 )
 
 %stamp% & echo.

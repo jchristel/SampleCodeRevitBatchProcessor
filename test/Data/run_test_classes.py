@@ -1,18 +1,9 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Module containing settings used in all flow scripts.
+This module runs all utility related tests . 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- adds the following directories to the environment
-
-    - duHast library
-    - test library
-
-- populates a number of variables used in all flow scripts
 """
-
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+#
 # License:
 #
 #
@@ -32,54 +23,41 @@ Module containing settings used in all flow scripts.
 # In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
+#
+#
 
-# set path to common library
-import sys, os
 
-# get the script location
-SCRIPT_DIRECTORY = os.path.dirname(__file__)
-print ("script directory",SCRIPT_DIRECTORY)
+from test.utils.run_tests import RunTest
 
-# build flow directory name
-FLOW_DIRECTORY = os.path.dirname(SCRIPT_DIRECTORY)
-print ("flow directory",FLOW_DIRECTORY)
+# import test classes
+from test.Data import (
+    data_families_culling_nested_families,
+    data_families_reading_overall_report,
+    data_families_find_none_nested_root_families,
+)
 
-# build duHast and duHast test directories
-DU_HAST_TEST_DIRECTORY = os.path.dirname(os.path.dirname(FLOW_DIRECTORY))
-print("duHast test directory",DU_HAST_TEST_DIRECTORY)
-DU_HAST_DIRECTORY = os.path.join(DU_HAST_TEST_DIRECTORY, r"src")
-print("\nduHast directory",DU_HAST_DIRECTORY)
 
-# add the duHast directory to path at first position
-sys.path.insert(0, DU_HAST_DIRECTORY)
+def run_tests():
+    """
+    Runs all data related tests.
 
-# add the directories to path
-sys.path += [
-    DU_HAST_TEST_DIRECTORY,
-    SCRIPT_DIRECTORY,
-]
+    :return: dictionary containing
+         - the test name as key and as values
+         - a flag (true if test completed successfully, otherwise false)
+         - message string
+    :rtype: {str:bool,str}
+    """
 
-# any data output to go here
-OUTPUT_FOLDER = FLOW_DIRECTORY + r"\_Output"
+    # list of tests to be run
+    run_tests = [
+        ["Data Read Overall Family Data Report", data_families_reading_overall_report.DataReadFamiliesReport],
+        ["Data Find None Nested Root families", data_families_find_none_nested_root_families.DataFindNoneNestedRootFamilies],
+        ["Data Nested Family culling", data_families_culling_nested_families.DataCullingNestedFamilies],
+        
+    ]
 
-# log marker file location
-LOG_MARKER_DIRECTORY = FLOW_DIRECTORY + r"\_LogMarker"
+    # run tests
+    runner = RunTest(run_tests)
+    return_value = runner.run_tests()
 
-# task list directory
-TASK_LIST_DIRECTORY = FLOW_DIRECTORY + r"\_TaskList"
-
-# sample files directory
-SAMPLE_FILES_DIRECTORY = FLOW_DIRECTORY + r"\_sampleFiles"
-
-# WSM marker file location
-WSM_MARKER_DIRECTORY = LOG_MARKER_DIRECTORY
-
-# debug mode revit project file name
-DEBUG_REVIT_FILE_NAME = r"C:\temp\Test_Files.rvt"
-
-# splash sceen sheet name
-SPLASH_SCREEN_SHEET_NAME = "SPLASH SCREEN"
-
-#: revit version used in determining which revit files to add to task list
-#: Revit files will have revit version number applicable to them in their file name
-DEFAULT_REVIT_VERSION = "Revit_2022"
+    return return_value

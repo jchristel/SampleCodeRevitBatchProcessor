@@ -106,7 +106,7 @@ def main(argv):
             '''
             
             # get the dialog result (ok vs cancel buttons)
-            ui_result = xaml.Root.DataContext.DialogResult
+            ui_result = view_model.DialogResult
             if ui_result:
                 # build bucket list
                 buckets = wl.distribute_workload(

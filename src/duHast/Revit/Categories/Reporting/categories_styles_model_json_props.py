@@ -1,14 +1,8 @@
-﻿"""
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Module executed as a pre process script outside the batch processor environment.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- this module writes Revit files to task lists.
-
 """
-
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module contains node names for categories style reports in json format.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""
 #
 # License:
 #
@@ -32,50 +26,5 @@ Module executed as a pre process script outside the batch processor environment.
 #
 #
 
-# this sample shows how to write out a number of task files using bucket distribution
-
-import sys
-import os
-
-import settings as settings  # sets up all commonly used variables and path locations!
-from duHast.UI.files_select.files_select_ui import main
-
-# import utility modules
-from duHast.Utilities.console_out import output
-from duHast.Utilities.directory_io import directory_exists
-from duHast.Utilities.files_io import file_exist
-
-# -------------
-# my code here:
-# -------------
-
-# -------------
-# main:
-# -------------
-
-# will contain either a folder path of where to collect files from or a fully qualified file path to
-# process exceptions file which will contain list of files to process again
-PROCESS_PATH = ""
-
-# check if a folder path was past in...otherwise go with default
-if len(sys.argv) == 2:
-    # build file path
-    PROCESS_PATH = sys.argv[1]
-    # check for valid path
-    if directory_exists(PROCESS_PATH) == False:
-        output("Error: Invalid directory path passed in: {}".format(PROCESS_PATH))
-        output("Exiting...")
-        PROCESS_PATH = settings.REVIT_LIBRARY_PATH
-        sys.exit(1)
-    else:
-        PROCESS_PATH = settings.REVIT_LIBRARY_PATH
-else:
-    PROCESS_PATH = settings.REVIT_LIBRARY_PATH
-
-try:
-    main(["-s", "-i {}".format(PROCESS_PATH), "-o {}".format(settings.TASK_FILE_DIRECTORY), "-n {}".format(settings.NUMBER_OF_TASK_FILES),"-e {}".format(".rfa")])
-    sys.exit(0)
-except  Exception as e:
-    output("Error: {}".format(e))
-    sys.exit(1)
-
+PROP_FILE_NAME = "file_name"
+PROP_CATEGORY_STYLE_DATA = "category_style_data"

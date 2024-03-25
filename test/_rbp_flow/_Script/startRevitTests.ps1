@@ -1,5 +1,12 @@
+# check for arguments (need to be first line , not counting comments, in a script)
+Param (
+    [string]$pre #indication whether only pre revit test scripts should be run
+)
 # load util functions
 . "C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\Samples\PowerShell\BatchProcessorUtils.ps1"
+
+
+Write-ToLogAndConsole -Message "Argument 1: $pre"
 
 # output settings header
 Write-ToLogAndConsole -Message "SETTINGS" -IsHeader $True
@@ -59,44 +66,49 @@ if ($exitCode -eq 0) {
     # give user feedback
     Write-ToLogAndConsole -Message "Non revit tests completed successfully"
 
-    $write_task_files=0
-    # write task lists by Revit version:
-    foreach ($row in $settings_step_one) {
-        $secondValue = $row[1]
-        $process_revit_task_list = start-wrapper -path "$iron_python_3_4_path" -arguments $_pre_step_one_task_script, $secondValue
-        $exitCode = $process_revit_task_list.ExitCode
-        if ($exitCode -ne 0){
-            $write_task_files=1
-            break
+    if($pre.ToLower() -eq "no") {
+        $write_task_files=0
+        # write task lists by Revit version:
+        foreach ($row in $settings_step_one) {
+            $secondValue = $row[1]
+            $process_revit_task_list = start-wrapper -path "$iron_python_3_4_path" -arguments $_pre_step_one_task_script, $secondValue
+            $exitCode = $process_revit_task_list.ExitCode
+            if ($exitCode -ne 0){
+                $write_task_files=1
+                break
+            }
+        }
+
+        if($write_task_files -eq 0){
+            # start batch processor sessions
+            Write-ToLogAndConsole -Message "running Revit tests" -IsHeader $True
+
+            # create new array from 2D array containing just the settings file names
+            $settingsFilesArray = @()
+            foreach ($row in $settings_step_one) {
+                $firstValue = $row[0]
+                $settingsFilesArray += $firstValue
+            }
+
+            # start batch processor sessions with individual settings scripts
+            start-batchProcessor -settings_directory $settings_directory -settings_file_names $settingsFilesArray
+                
+            # clean up script
+            Write-ToLogAndConsole -Message "*" -IsHeader $True
+            Write-ToLogAndConsole -Message "-"
+            Write-ToLogAndConsole -Message "clean up" -IsHeader $True
+                
+            $process_clean_up = start-wrapper -path "$iron_python_path" -arguments $_post_step_one_script
+            $exit_code_clean_up = $process_clean_up.ExitCode
+                
+            Write-ToLogAndConsole -Message "Cean up script finished with code: $exit_code_clean_up"
+            Write-ToLogAndConsole -Message "-"
+        }else {
+            Write-ToLogAndConsole -Message "Failes to create task files with exit code:$write_task_files"
         }
     }
-
-    if($write_task_files -eq 0){
-        # start batch processor sessions
-        Write-ToLogAndConsole -Message "running Revit tests" -IsHeader $True
-
-        # create new array from 2D array containing just the settings file names
-        $settingsFilesArray = @()
-        foreach ($row in $settings_step_one) {
-            $firstValue = $row[0]
-            $settingsFilesArray += $firstValue
-        }
-
-        # start batch processor sessions with individual settings scripts
-        start-batchProcessor -settings_directory $settings_directory -settings_file_names $settingsFilesArray
-            
-        # clean up script
-        Write-ToLogAndConsole -Message "*" -IsHeader $True
-        Write-ToLogAndConsole -Message "-"
-        Write-ToLogAndConsole -Message "clean up" -IsHeader $True
-            
-        $process_clean_up = start-wrapper -path "$iron_python_path" -arguments $_post_step_one_script
-        $exit_code_clean_up = $process_clean_up.ExitCode
-            
-        Write-ToLogAndConsole -Message "Cean up script finished with code: $exit_code_clean_up"
-        Write-ToLogAndConsole -Message "-"
-    }else {
-        Write-ToLogAndConsole -Message "Failes to create task files with exit code:$write_task_files"
+    else {
+        Write-ToLogAndConsole -Message "Only pre Revit tests were run"
     }
 } else {
     Write-ToLogAndConsole -Message "Non Revit tests failed with exit code: $exitCode"

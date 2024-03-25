@@ -1,18 +1,10 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Module containing settings used in all flow scripts.
+A number of helper functions relating to py pyrevit output to console duHast result class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- adds the following directories to the environment
-
-    - duHast library
-    - test library
-
-- populates a number of variables used in all flow scripts
 """
 
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+#
 # License:
 #
 #
@@ -32,54 +24,51 @@ Module containing settings used in all flow scripts.
 # In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
+#
+#
 
-# set path to common library
-import sys, os
+from pyrevit import script
+from duHast.Utilities.Objects.result import Result
 
-# get the script location
-SCRIPT_DIRECTORY = os.path.dirname(__file__)
-print ("script directory",SCRIPT_DIRECTORY)
+def print_result(result, header=None):
+    """
+    Prints a result class instance to the pyRevit console.
 
-# build flow directory name
-FLOW_DIRECTORY = os.path.dirname(SCRIPT_DIRECTORY)
-print ("flow directory",FLOW_DIRECTORY)
 
-# build duHast and duHast test directories
-DU_HAST_TEST_DIRECTORY = os.path.dirname(os.path.dirname(FLOW_DIRECTORY))
-print("duHast test directory",DU_HAST_TEST_DIRECTORY)
-DU_HAST_DIRECTORY = os.path.join(DU_HAST_TEST_DIRECTORY, r"src")
-print("\nduHast directory",DU_HAST_DIRECTORY)
 
-# add the duHast directory to path at first position
-sys.path.insert(0, DU_HAST_DIRECTORY)
+    :param result: The result instance to be printed.
+    :type result: Result
+    :param header: The header to be printed before the result.
+    :type header: str
+    """
 
-# add the directories to path
-sys.path += [
-    DU_HAST_TEST_DIRECTORY,
-    SCRIPT_DIRECTORY,
-]
+    # check if result is of type Result
+    if not isinstance(result, Result):
+        raise TypeError("result must be of type Result")
 
-# any data output to go here
-OUTPUT_FOLDER = FLOW_DIRECTORY + r"\_Output"
+    # print header if it exists
+    if header != None:
+        print_header(header)
+    
+    # print the results message property
+    # split the message by new line and print each line
+    messages = result.message.split("\n")
+    for m in messages:
+        print("...{}".format(m))
+    
+    # print the status of the result
+    print("Finished with status: {}!".format(result.status))
 
-# log marker file location
-LOG_MARKER_DIRECTORY = FLOW_DIRECTORY + r"\_LogMarker"
 
-# task list directory
-TASK_LIST_DIRECTORY = FLOW_DIRECTORY + r"\_TaskList"
+def print_header(header):
+    """
+    Prints a header to the pyRevit console.
 
-# sample files directory
-SAMPLE_FILES_DIRECTORY = FLOW_DIRECTORY + r"\_sampleFiles"
+    :param header: The header to be printed.
+    :type header: str
+    """
 
-# WSM marker file location
-WSM_MARKER_DIRECTORY = LOG_MARKER_DIRECTORY
-
-# debug mode revit project file name
-DEBUG_REVIT_FILE_NAME = r"C:\temp\Test_Files.rvt"
-
-# splash sceen sheet name
-SPLASH_SCREEN_SHEET_NAME = "SPLASH SCREEN"
-
-#: revit version used in determining which revit files to add to task list
-#: Revit files will have revit version number applicable to them in their file name
-DEFAULT_REVIT_VERSION = "Revit_2022"
+    output = script.get_output()
+    if header != None:
+        output.print_md("### {}".format(header))
+    

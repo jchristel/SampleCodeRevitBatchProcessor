@@ -187,18 +187,18 @@ output(
 
 # loop over all family actions and execute them
 # check for each action if family needs to be saved
-for famAction in family_actions:
-    resultFamAction = famAction(doc)
-    if resultFamAction.status:
+for family_action in family_actions:
+    result_family_action = family_action(doc)
+    if result_family_action.status:
         # need to save family
         over_all_status_.status = True
-    over_all_status_.append_message(resultFamAction.message)
+    over_all_status_.append_message(result_family_action.message)
     output(
-        resultFamAction.message,
+        result_family_action.message,
         revit_script_util.Output,
     )
     output(
-        resultFamAction.status,
+        result_family_action.status,
         revit_script_util.Output,
     )
 

@@ -95,9 +95,13 @@ PREDEFINED_TASK_FILE_EXTENSION = ".task"
 # all reports are of this file type
 REPORT_FILE_EXTENSION = ".csv"
 
+# temp file extension
+TEMP_FILE_EXTENSION = ".temp"
+
 # file name of follow up report
 FOLLOW_UP_REPORT_FILE_NAME = "FollowUpReportList" + REPORT_FILE_EXTENSION
-
+# the column index is the 
+FOLLOW_UP_REPORT_FILE_INDEX_FILE_PATH = 1
 
 # location of any input files ( refer docs for details )
 INPUT_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_Input")
@@ -113,3 +117,12 @@ TASK_FILE_NO = 4
 
 # flag indicating whether this is a cloud based project
 IS_CLOUD_PROJECT = False
+
+# temp files to combine
+FILE_DATA_TO_COMBINE = [
+    ["_marker_", "CopyFilesTaskList" + REPORT_FILE_EXTENSION],
+    ["_changed_", "ChangedFilesTaskList" + REPORT_FILE_EXTENSION],
+]
+# index of files to combine in the list
+FILE_DATA_COPY_FILES_INDEX = 0
+FILE_DATA_CHANGED_FILES_INDEX = 1

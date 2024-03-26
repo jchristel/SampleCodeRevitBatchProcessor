@@ -60,12 +60,6 @@ from duHast.Utilities.batch_processor_log_utils import process_log_files
 # my code here:
 # -------------
 
-# temp files to combine
-FILE_DATA_TO_COMBINE = [
-    ["_marker_", "CopyFilesTaskList" + settings.REPORT_FILE_EXTENSION],
-    ["_changed_", "ChangedFilesTaskList" + settings.REPORT_FILE_EXTENSION],
-]
-
 
 def delete_files(directory, file_extension, filter="*", keep_files=[]):
     """
@@ -117,9 +111,12 @@ def delete_temp_files(keep_files):
     """
 
     flag_deleted_all = True
-    for to_delete in FILE_DATA_TO_COMBINE:
+    for to_delete in settings.FILE_DATA_TO_COMBINE:
         flag_delete = delete_files(
-            settings.WORKING_DIRECTORY, ".temp", "*" + to_delete[0], keep_files
+            settings.WORKING_DIRECTORY,
+            settings.TEMP_FILE_EXTENSION,
+            "*" + to_delete[0],
+            keep_files,
         )
         flag_deleted_all = flag_deleted_all & flag_delete
     return flag_deleted_all
@@ -132,11 +129,15 @@ def combine_data_files():
     Files are filter based on FILE_DATA_TO_COMBINE list.
     """
 
-    for to_combine in FILE_DATA_TO_COMBINE:
+    for to_combine in settings.FILE_DATA_TO_COMBINE:
         output("Combining {}  report files.".format(to_combine[0]))
         # combine files
         combine_files(
-            settings.WORKING_DIRECTORY, "", to_combine[0], ".temp", to_combine[1]
+            settings.WORKING_DIRECTORY,
+            "",
+            to_combine[0],
+            settings.TEMP_FILE_EXTENSION,
+            to_combine[1],
         )
 
 
@@ -147,7 +148,10 @@ def move_files():
     """
 
     file_copy_task_list = read_csv_file(
-        os.path.join(settings.WORKING_DIRECTORY, FILE_DATA_TO_COMBINE[0][1])
+        os.path.join(
+            settings.WORKING_DIRECTORY,
+            settings.FILE_DATA_TO_COMBINE[settings.FILE_DATA_COPY_FILES_INDEX][1],
+        )
     )
 
     row_counter = 0
@@ -169,18 +173,27 @@ def create_follow_up_report_data_file():
     :rtype: bool
     """
     rows = read_csv_file(
-        os.path.join(settings.WORKING_DIRECTORY, FILE_DATA_TO_COMBINE[1][1])
+        os.path.join(
+            settings.WORKING_DIRECTORY,
+            settings.FILE_DATA_TO_COMBINE[
+                settings.FOLLOW_UP_REPORT_FILE_INDEX_FILE_PATH
+            ][1],
+        )
     )
     data_file = []
+    # read changed document list
+    # for format refer to docs
     for r in rows:
+        # get the file path from the changed document list
         data = r[1]
-        data_file.append(data)
+        # make sure data written to file is a list in a list
+        data_file.append([data])
 
     # write out file list without header
     header = []
 
+    # write data to file
     try:
-        # write data
         write_report_data_as_csv(
             os.path.join(
                 settings.WORKING_DIRECTORY, settings.FOLLOW_UP_REPORT_FILE_NAME

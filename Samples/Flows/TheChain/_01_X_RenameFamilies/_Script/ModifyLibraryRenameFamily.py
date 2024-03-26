@@ -55,9 +55,9 @@ from duHast.Revit.Common.file_io import save_as_family
 from duHast.Revit.Family.Data.family_rename_loaded_families import (
     rename_loaded_families,
 )
-from  duHast.Utilities.Objects.timer import Timer
+from duHast.Utilities.Objects.timer import Timer
 
-#from Autodesk.Revit.DB import *
+# from Autodesk.Revit.DB import *
 
 import revit_script_util
 import revit_file_util
@@ -82,7 +82,10 @@ def write_copy_marker_file(file_name):
     """
 
     file_name_marker = os.path.join(
-        settings.WORKING_DIRECTORY, file_name + "_marker_.temp"
+        settings.WORKING_DIRECTORY,
+        file_name
+        + settings.FILE_DATA_TO_COMBINE[settings.FILE_DATA_COPY_FILES_INDEX][0]
+        + settings.TEMP_FILE_EXTENSION,
     )
     try:
         write_report_data_as_csv(
@@ -114,7 +117,10 @@ def write_changed_family_marker_file(file_name, revit_category_name):
     """
 
     file_name_marker = os.path.join(
-        settings.WORKING_DIRECTORY, file_name + "_changed_.temp"
+        settings.WORKING_DIRECTORY,
+        file_name
+        + settings.FILE_DATA_TO_COMBINE[settings.FILE_DATA_CHANGED_FILES_INDEX][0]
+        + settings.TEMP_FILE_EXTENSION,
     )
     try:
         write_report_data_as_csv(
@@ -202,7 +208,10 @@ for family_action in family_actions:
         revit_script_util.Output,
     )
 
-output("Modifying Revit File.... completed: {}".format(t.stop()),revit_script_util.Output,)
+output(
+    "Modifying Revit File.... completed: {}".format(t.stop()),
+    revit_script_util.Output,
+)
 
 # -------------
 # Saving file after changes have been made

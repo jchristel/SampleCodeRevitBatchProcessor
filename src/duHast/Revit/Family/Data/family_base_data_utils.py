@@ -55,9 +55,9 @@ from duHast.Utilities import (
 )
 
 # tuples containing base family data read from file
-root_family = namedtuple("root_family", "name category filePath parent child")
+root_family = namedtuple("root_family", "name category filePath parent child report_data")
 nested_family = namedtuple(
-    "nested_family", "name category filePath rootPath categoryPath hostFamily"
+    "nested_family", "name category filePath rootPath categoryPath hostFamily report_data"
 )
 
 # row structure of family base data file
@@ -134,6 +134,7 @@ def read_overall_family_data_list(file_path):
                 rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
                 [],  # set up an empty list for parent families
                 [],  # set up an empty list for child families
+                rows[i],  # set up report data
             )
             return_value_root_family.append(data)
         else:
@@ -149,6 +150,7 @@ def read_overall_family_data_list(file_path):
                     " :: "
                 ),  # split category path into list for ease of searching
                 [],
+                rows[i],  # set up report data
             )
             return_value_nested_family.append(data)
     return return_value_root_family, return_value_nested_family

@@ -209,10 +209,10 @@ def _get_data_rows_from_dictionary(dic):
     for k, v in dic.items():
         # get data rows for root family
         for rootData in v[0]:
-            dataList.append(rootData)
+            dataList.append(rootData.report_data)
         # get data rows for any nested families
         for nestedFamRowValue in v[1]:
-            dataList.append(nestedFamRowValue)
+            dataList.append(nestedFamRowValue.report_data)
     return dataList
 
 

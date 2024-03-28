@@ -185,7 +185,7 @@ def get_file_data_by_file_extension_and_file_name(
     # check aconex doc number property in edge case...
     if found_match == False:
         for fdf in filtered_data_by_file_extension:
-            if export_file_name.startswith(fdf.aconex_doc_number):
+            if fdf.aconex_doc_number.startswith(export_file_name):
                 # update revision to match revit file revision before writing out marker file
                 fdf.revision = current_file_revision
                 return_value = fdf.get_data()

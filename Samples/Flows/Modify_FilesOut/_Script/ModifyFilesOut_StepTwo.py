@@ -90,8 +90,11 @@ def build_export_file_name_from_view_ifc(view_name):
     """
     Creates the ifc file name based on the view the file gets exported from.
 
+    Note:
+
+    - If view name starts with predefined Prefix, that prefix will be removed from the name
+    - Assumes that the view name is part of the Aconex document number property in the file data list ( identical start)
     - Includes revision information
-    - If view starts with predefined Prefix, that prefix will be removed from the name
 
     :param view_name: The view name.
     :type view_name: str
@@ -108,7 +111,7 @@ def build_export_file_name_from_view_ifc(view_name):
         # this is required since the view name does not match the file name required at end of export
         for fd in file_data_:
             if (
-                fd.existing_file_name == view_name
+                view_name.startswith(fd.aconex_doc_number)
                 and fd.file_extension == settings.IFC_FILE_EXTENSION
             ):
                 # may need to update the revision info!
@@ -131,6 +134,7 @@ def build_export_file_name_from_view_nwc(view_name):
 
     - Includes revision information
     - If view starts with predefined Prefix, that prefix will be removed from the name
+    - Assumes that the view name is part of the Aconex document number property in the file data list ( identical start)
 
     :param view_name: The view name.
     :type view_name: str
@@ -148,7 +152,7 @@ def build_export_file_name_from_view_nwc(view_name):
         # this is required since the view name does not match the file name required at end of export
         for fd in file_data_:
             if (
-                fd.existing_file_name == view_name
+                view_name.startswith(fd.aconex_doc_number)
                 and fd.file_extension == settings.NWC_FILE_EXTENSION
             ):
                 # may need to update the revision info!

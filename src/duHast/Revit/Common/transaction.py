@@ -21,8 +21,8 @@ Revit transaction wrapper utility functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -30,6 +30,10 @@ Revit transaction wrapper utility functions.
 # class used for stats reporting
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common.Objects.FailuresPreProcessor import FailuresPreprocessor
+from duHast.Revit.Common.failure_handling import process_failures
+from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
+    FailureHandlingConfig,
+)
 
 # type checker
 # from typing import List, Callable
@@ -81,20 +85,50 @@ def in_transaction(
     return return_value
 
 
-def set_transaction_failure_options(transaction, output, preprocessor):
+def in_transaction_with_failure_handling(
+    transaction,
+    action,
+    failure_config=FailureHandlingConfig(),
+    failure_processing_func=process_failures,
+):
     """
-    Sets a transactions failure options including a custom failure pre-processor
+    Executes an action within a Revit transaction with Revit failure processing enabled.
 
-    :param transaction: _description_
-    :type transaction: _type_
-    :param output: _description_
-    :type output: _type_
-    :param preprocessor: _description_
-    :type preprocessor: _type_
+    Example usage:
+
+    def main(revit_doc, foo, bar):
+
+        fail_config = FailureHandlingConfig()
+        fail_config.print_warnings = False
+
+        def add_func():
+            # Perform actions here
+            return foo + bar
+
+        trans = Transaction(revit_doc, "Add the things together")
+        added_vals = in_transaction_with_failures(trans, add_func, fail_config)
+
+    :param transaction: The executing transaction to apply the failure handling to
+    :type transaction: Transaction
+    :param action: The action to be executed within the transaction
+    :type action: function
+    :param failure_config: Configuration for the failure handling (Optional)
+    :type failure_config: FailureHandlingConfig
+    :param failure_processing_func: The function to process the failures (Optional)
+    :type failure_processing_func: function
+
     """
-    failureOptions = transaction.GetFailureHandlingOptions()
-    failureOptions.SetForcedModalHandling(True)
-    failureOptions.SetClearAfterRollback(True)
-    failureOptions.SetFailuresPreprocessor(FailuresPreprocessor(output, preprocessor))
-    transaction.SetFailureHandlingOptions(failureOptions)
-    return
+    # Establish the failure preprocessor
+    failure_pre_processor = FailuresPreprocessor(
+        failure_processor=failure_processing_func, fail_config=failure_config
+    )
+    # Get and overwrite the failure handling options for the transaction arg
+    failure_opts = transaction.GetFailureHandlingOptions()
+    failure_opts.SetForcedModalHandling(failure_config.set_forced_modal_handling)
+    failure_opts.SetClearAfterRollback(failure_config.set_clear_after_rollback)
+    failure_opts.SetFailuresPreprocessor(failure_pre_processor)
+    transaction.SetFailureHandlingOptions(failure_opts)
+
+    # Execute the action with the updated transaction
+    result = in_transaction(transaction, action)
+    return result

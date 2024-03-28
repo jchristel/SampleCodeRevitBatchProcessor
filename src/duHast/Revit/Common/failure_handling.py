@@ -46,27 +46,10 @@ from Autodesk.Revit.DB import (
 )
 
 
-def Output(message=""):
-    """
-    Default Output function to print to console
-    """
-    print(message)
-
-
-class FailureHandlingConfig:
-    def __init__(
-        self,
-        roll_back_on_warning=False,
-        print_warnings=False,
-        roll_back_on_error=True,
-        print_errors=False,
-        output_function=Output,
-    ):
-        self.roll_back_on_warning = roll_back_on_warning
-        self.print_warnings = print_warnings
-        self.roll_back_on_error = roll_back_on_error
-        self.print_errors = print_errors
-        self.output_function = output_function
+from duHast.Utilities.Objects.result import Result
+from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
+    FailureHandlingConfig,
+)
 
 
 def get_failure_warning_report(failure, failure_definition):
@@ -80,15 +63,18 @@ def get_failure_warning_report(failure, failure_definition):
     :return: The string representation of the failure information
     :rtype: str
     """
-    failure_message = "\n"
 
+    result = Result()
+    failure_message = []
     failure_severity = failure.GetSeverity()
 
     # Log basic failure information
-    failure_message += "\t{} - {} - (GUID: {})".format(
-        str(failure_severity),
-        str(failure.GetDescriptionText()),
-        str(failure.GetFailureDefinitionId().Guid),
+    failure_message.append(
+        "\t{} - {} - (GUID: {})".format(
+            str(failure_severity),
+            str(failure.GetDescriptionText()),
+            str(failure.GetFailureDefinitionId().Guid),
+        )
     )
 
     # Log the failing ids and additional elements (if required)
@@ -98,53 +84,45 @@ def get_failure_warning_report(failure, failure_definition):
     ):
         failing_element_ids = failure.GetFailingElementIds()
         if len(failing_element_ids) > 0:
-            failure_message += "\n"
-            failure_message += "\tFailing element ids: {}".format(
-                element_ids_to_semicolon_delimited_text(failing_element_ids)
+            failure_message.append("\n")
+            failure_message.append(
+                "\tFailing element ids: {}".format(
+                    element_ids_to_semicolon_delimited_text(failing_element_ids)
+                )
             )
 
         additional_elementIds = failure.GetAdditionalElementIds()
         if len(additional_elementIds) > 0:
-            failure_message += "\n"
-            failure_message += "\tAdditional element ids: {}".format(
-                element_ids_to_semicolon_delimited_text(additional_elementIds)
+            failure_message.append("\n")
+            failure_message.append(
+                "\tAdditional element ids: {}".format(
+                    element_ids_to_semicolon_delimited_text(additional_elementIds)
+                )
             )
 
     # If there are resolutions, log them
     if failure_severity == FailureSeverity.Error:
         if failure.HasResolutions():
-            failure_message += "\n\t" + "Applicable resolution types:\n"
+            failure_message.append("\n\t" + "Applicable resolution types:\n")
             default_resolution_type = failure_definition.GetDefaultResolutionType()
             for resolution_type in failure_definition.GetApplicableResolutionTypes():
                 res_type = (
                     " (Default)" if resolution_type == default_resolution_type else ""
                 )
-                failure_message += "\t\t{}{} - '{}'".format(
-                    str(resolution_type),
-                    res_type,
-                    failure_definition.GetResolutionCaption(resolution_type),
+                failure_message.append(
+                    "\t\t{}{} - '{}'".format(
+                        str(resolution_type),
+                        res_type,
+                        failure_definition.GetResolutionCaption(resolution_type),
+                    )
                 )
         else:
-            failure_message += "\n"
-            failure_message += "\t" + "WARNING: no resolutions available"
+            failure_message.append("\n")
+            failure_message.append("\t" + "WARNING: no resolutions available")
 
-    return failure_message
+    result.message = "\n".join(failure_message)
 
-
-def _report_failure_warning(failure, failure_definition):
-    """
-    Reports elements that are failing and the failure description to the output window
-
-    :param failure: The failure to report
-    :type failure: FailureMessage
-    :param failure_definition: The failure definition
-    :type failure_definition: FailureDefinition
-
-    """
-
-    failure_messages = get_failure_warning_report(failure, failure_definition)
-    Output(failure_messages)
-    return failure_messages
+    return result.message
 
 
 def process_failures(failures_accessor, fail_config):
@@ -188,7 +166,7 @@ def process_failures(failures_accessor, fail_config):
                 if failure_severity == FailureSeverity.Warning and roll_back_on_warning:
                     result = FailureProcessingResult.ProceedWithRollBack
                     if print_warnings:
-                        _report_failure_warning(failure, failure_definition)
+                        output(get_failure_warning_report(failure, failure_definition))
                         output("\t" + "Rolled back warning")
 
                 # If warning and not rolling back
@@ -198,14 +176,14 @@ def process_failures(failures_accessor, fail_config):
                 ):
                     failures_accessor.DeleteWarning(failure)
                     if print_warnings:
-                        _report_failure_warning(failure, failure_definition)
+                        output(get_failure_warning_report(failure, failure_definition))
                         output("\t" + "Deleted warning")
 
                 # If error and rolling back
                 elif failure_severity == FailureSeverity.Error and roll_back_on_error:
                     result = FailureProcessingResult.ProceedWithRollBack
                     if print_errors:
-                        _report_failure_warning(failure, failure_definition)
+                        output(get_failure_warning_report(failure, failure_definition))
                         output("\t" + "Rolled back error")
 
                 # If error and attempting resolution
@@ -213,7 +191,7 @@ def process_failures(failures_accessor, fail_config):
                     failure_severity == FailureSeverity.Error and not roll_back_on_error
                 ):
                     if print_errors:
-                        _report_failure_warning(failure, failure_definition)
+                        output(get_failure_warning_report(failure, failure_definition))
 
                     # Check if elements can be modified or if they are locked by another user
                     failure_guid = str(failure.GetFailureDefinitionId().Guid)
@@ -256,7 +234,6 @@ def process_failures(failures_accessor, fail_config):
 
                 # Every other scenario not caught by above
                 else:
-                    # TODO: Decide if this should be the else
                     output("\t" + "No failure configuration match. Rolling back")
                     result = FailureProcessingResult.ProceedWithRollBack
 
@@ -270,37 +247,26 @@ def process_failures(failures_accessor, fail_config):
     return result
 
 
-def set_failures_accessor_failure_options(failures_accessor):
-    """
-    Set the failure handling options for a failures accessor
-
-    The below settings suppress any warning dialogues and automatically clear the failures after a rollback.
-    :param failures_accessor: The failures accessor to set the failure handling options for
-    :type failures_accessor: FailuresAccessor
-    """
-
-    failure_options = failures_accessor.GetFailureHandlingOptions()
-    failure_options.SetForcedModalHandling(True)
-    failure_options.SetClearAfterRollback(True)
-    failures_accessor.SetFailureHandlingOptions(failure_options)
-    return
-
-
 def FailuresProcessingEventHandler(sender, args, fail_config):
     """
     Function to execute when Revit raises the FailuresProcessing event
     """
 
     failures_accessor = args.GetFailuresAccessor()
-    set_failures_accessor_failure_options(failures_accessor)
-    result = process_failures(failures_accessor, fail_config)
-    args.SetProcessingResult(result)
+    failure_options = failures_accessor.GetFailureHandlingOptions()
+    failure_options.SetForcedModalHandling(fail_config.set_forced_modal_handling)
+    failure_options.SetClearAfterRollback(fail_config.set_clear_after_rollback)
+    failures_accessor.SetFailureHandlingOptions(failure_options)
+    failure_process_result = process_failures(failures_accessor, fail_config)
+    args.SetProcessingResult(failure_process_result)
     return
 
 
-def with_failures_processing_handler(app, action, fail_config):
+def with_failures_processing_handler(app, action, fail_config=FailureHandlingConfig()):
     """
-    Execute an action with Revit failure processing enabled
+    Executes an action with Revit failure processing enabled by adding
+    a handler to the FailuresProcessing event. This function will need
+    to be wrapped in a transaction.
 
     :param app: The Revit application to execute the action with
     :type app: Application
@@ -318,59 +284,4 @@ def with_failures_processing_handler(app, action, fail_config):
         result = action()
     finally:
         app.FailuresProcessing -= failure_processing_event_handler
-    return result
-
-
-# -------------------------------------------------------------------------------------------------------------
-# END OF FAILURE HANDLING CODE COPIED FROM REVIT BATCH PROCESSOR
-# -------------------------------------------------------------------------------------------------------------
-
-
-def in_transaction_with_failures_processing(
-    transaction, action, doc, fail_config=FailureHandlingConfig()
-):
-    """
-    Executes an action within a Revit transaction with Revit failure processing enabled. Example usage:
-
-    def main(revit_doc, foo, bar):
-
-        fail_config = FailureHandlingConfig()
-        fail_config.print_warnings = False
-
-        def add_func():
-            # Perform actions here
-            return foo + bar
-
-        trans = Transaction(revit_doc, "Transaction Name")
-        added_vals = in_transaction_with_failures(trans, add_func, revit_doc, fail_config)
-
-    :param transaction: The Revit transaction to execute in
-    :type transaction: Transaction
-    :param action: The action to perform in the transaction
-    :type action: function
-    :param doc: The document to transact with
-    :type doc: Document
-    :param fail_config: The failure handling configuration to use
-    :type fail_config: FailureHandlingConfig
-    :return: The result of the action
-    :rtype: object
-
-    """
-    result = None
-
-    def execute_action():
-        transaction.Start()
-        try:
-
-            result = action()
-
-            transaction.Commit()
-        except Exception as e:
-            Output("Exception: {}".format(e))
-            transaction.RollBack()
-        return result
-
-    result = with_failures_processing_handler(
-        doc.Application, execute_action, fail_config
-    )
     return result

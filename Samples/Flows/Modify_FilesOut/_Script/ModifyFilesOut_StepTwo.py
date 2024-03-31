@@ -109,9 +109,11 @@ def build_export_file_name_from_view_ifc(view_name):
         view_name = view_name[lenPrefix:]
 
         # this is required since the view name does not match the file name required at end of export
+        # assumes that the view name is part of the Aconex document number property in the file data list ( identical start)
+        # this may need to be updated if the view name does not match the doc number on Aconex
         for fd in file_data_:
             if (
-                view_name.startswith(fd.aconex_doc_number)
+                fd.aconex_doc_number.startswith(view_name)
                 and fd.file_extension == settings.IFC_FILE_EXTENSION
             ):
                 # may need to update the revision info!
@@ -150,9 +152,11 @@ def build_export_file_name_from_view_nwc(view_name):
         view_name = view_name[len_prefix:]
 
         # this is required since the view name does not match the file name required at end of export
+        # assumes that the view name is part of the Aconex document number property in the file data list ( identical start)
+        # this may need to be updated if the view name does not match the doc number on Aconex
         for fd in file_data_:
             if (
-                view_name.startswith(fd.aconex_doc_number)
+                fd.aconex_doc_number.startswith(view_name) 
                 and fd.file_extension == settings.NWC_FILE_EXTENSION
             ):
                 # may need to update the revision info!

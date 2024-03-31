@@ -70,9 +70,9 @@ def in_transaction(
         raise ValueError(
             "The transaction parameter must be an instance of Autodesk.Revit.DB.Transaction."
         )
-    if not isinstance(doc, Document):
+    if  doc is not None and not isinstance(doc, Document):
         raise ValueError(
-            "The transaction parameter must be an instance of Autodesk.Revit.DB.Document."
+            "The doc parameter must either be None or an instance of Autodesk.Revit.DB.Document."
         )
     if not callable(action):
         raise ValueError("The action parameter must be a callable function.")

@@ -35,15 +35,14 @@ from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
     FailureHandlingConfig,
 )
 
-# type checker
-# from typing import List, Callable
+from Autodesk.Revit.DB import Document, Transaction
 
 # --------------------------------------------Transactions-----------------------------------------
 
 
 def in_transaction(
     tranny,  #
-    action,  # type: Callable[[], res.Result]
+    action,  # 
     doc=None,  # used as placeholder...
 ):
     # type: (...) -> res.Result
@@ -66,6 +65,18 @@ def in_transaction(
 
     :rtype: :class:`.Result`
     """
+
+    if not isinstance(tranny,Transaction):
+        raise ValueError(
+            "The transaction parameter must be an instance of Autodesk.Revit.DB.Transaction."
+        )
+    if not isinstance(doc, Document):
+        raise ValueError(
+            "The transaction parameter must be an instance of Autodesk.Revit.DB.Document."
+        )
+    if not callable(action):
+        raise ValueError("The action parameter must be a callable function.")
+
 
     return_value = res.Result()
     try:
@@ -118,6 +129,22 @@ def in_transaction_with_failure_handling(
     :type failure_processing_func: function
 
     """
+
+    if not callable(action):
+        raise ValueError("The action parameter must be a callable function.")
+    if not callable(failure_processing_func):
+        raise ValueError(
+            "The failure_processing_func parameter must be a callable function."
+        )
+    if not isinstance(failure_config, FailureHandlingConfig):
+        raise ValueError(
+            "The failure_config parameter must be an instance of FailureHandlingConfig."
+        )
+    if not isinstance(transaction, Transaction):
+        raise ValueError(
+            "The transaction parameter must be an instance of Autodesk.Revit.DB.Transaction."
+        )
+
     # Establish the failure preprocessor
     failure_pre_processor = FailuresPreprocessor(
         failure_processor=failure_processing_func, fail_config=failure_config

@@ -46,8 +46,31 @@ class FailuresPreprocessor(IFailuresPreprocessor):
         result=Result(),
         fail_config=FailureHandlingConfig(),
     ):
-        self.failure_processor = failure_processor
-        self.failure_handling_config = fail_config
+        """
+        Constructor for the FailuresPreprocessor class.
+
+        :param failure_processor: The function to be used to process failures.
+        :type failure_processor: function
+        :param result: The result of the operation.
+        :type result: duHast.Utilities.Objects.result.Result
+        :param fail_config: The failure handling configuration.
+        :type fail_config: duHast.Revit.Common.Objects.FailureHandlingConfiguration.FailureHandlingConfig
+
+        """
+
+        # some checking of the input parameters
+        if callable(failure_processor):
+            self.failure_processor = failure_processor
+        else:
+            raise TypeError("failure_processor must be a callable function")
+
+        if isinstance(fail_config, FailureHandlingConfig):
+            self.failure_handling_config = fail_config
+        else:
+            raise TypeError(
+                "fail_config must be an instance of duHast.Revit.Common.Objects.FailureHandlingConfiguration.FailureHandlingConfig"
+            )
+
         if isinstance(result, Result):
             self.result = result
         else:

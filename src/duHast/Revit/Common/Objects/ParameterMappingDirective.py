@@ -1,4 +1,18 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A parameter mapping class
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Parameter mappings are used to transfer parameter values from one parameter to another. This class is used to define 
+
+- source parameter name
+- source parameter is instance
+- target parameter name
+- parameter value
+- parameter modifier ( of the parameter value retrieved from source parameter)
+- parameter getter ( a function that returns the value of the source parameter)
+
+"""
 # License:
 #
 #

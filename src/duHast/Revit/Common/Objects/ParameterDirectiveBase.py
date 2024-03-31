@@ -1,4 +1,11 @@
-import json
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A parameter directive base class
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Parameter directives are used to modify parameters of elements in a Revit model. This class is the base class for all parameter directives.
+
+"""
 
 # License:
 #
@@ -22,6 +29,7 @@ import json
 #
 #
 
+import json
 from duHast.Utilities.Objects import base
 
 

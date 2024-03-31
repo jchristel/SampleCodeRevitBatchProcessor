@@ -7,11 +7,6 @@ Helps to suppress warning dialogues in Revit.
 
 """
 
-# Python Shell Pad. Write code snippets here and hit F5 to run.
-import clr
-import System
-from duHast.Revit.Common.common import element_ids_to_semicolon_delimited_text
-
 # License:
 #
 #
@@ -34,6 +29,9 @@ from duHast.Revit.Common.common import element_ids_to_semicolon_delimited_text
 #
 #
 
+import clr
+import System
+
 clr.AddReference("System.Core")
 clr.ImportExtensions(System.Linq)
 
@@ -50,6 +48,7 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
     FailureHandlingConfig,
 )
+from duHast.Revit.Common.common import element_ids_to_semicolon_delimited_text
 
 
 def get_failure_warning_report(failure, failure_definition):

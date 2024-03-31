@@ -1,9 +1,38 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A logger class
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+"""
+
+# License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# BSD License
+# Copyright 2024, Peter Smith
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+#
+#
+#
+
 import logging
 import os
 import sys
 
 from duHast.Utilities.directory_io import create_target_directory
-
+from duHast.Utilities.Objects.base import Base
 
 class FilterFile(logging.Filter):
     """
@@ -35,13 +64,28 @@ class FilterConsole(logging.Filter):
         return True
 
 
-class LoggerObject:
+class LoggerObject(Base):
     def __init__(
         self,
         log_name="duHast",
         output_path=os.getenv("APPDATA"),
         log_level=(10, 30),
+        **kwargs
     ):
+        
+        """
+        Constructor for the LoggerObject class.
+
+        :param log_name: The name of the log.
+        :type log_name: str
+        :param output_path: The path to the output directory.
+        :type output_path: str
+        :param log_level: The log levels for the file and console handlers.
+        :type log_level: tuple
+        """
+
+        super(LoggerObject, self).__init__(**kwargs)
+
         # Get log naming and output path
         self.log_name = log_name
         self.output_path = output_path

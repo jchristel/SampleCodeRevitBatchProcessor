@@ -42,9 +42,12 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Revit.Common.failure_handling import (
     get_failure_warning_report,
-    set_failures_accessor_failure_options,
 )
-from duHast.Revit.Common.Objects.FailuresPreProcessor import FailuresPreprocessor
+
+from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
+    FailureHandlingConfig,
+)
+from duHast.Revit.Common.transaction import in_transaction_with_failure_handling
 
 from duHast.Revit.Purge.Objects.ModifierBase import ModifierBase
 from duHast.UI.Objects.ProgressBase import ProgressBase
@@ -184,9 +187,6 @@ def pre_process_failures(failures_accessor, process_result):
     :rtype: FailureProcessingResult
     """
     try:
-        # attempt to set failure accessor options
-        # to suppress any warning dialogues
-        set_failures_accessor_failure_options(failures_accessor)
         # process warnings if any
         result = FailureProcessingResult.Continue
         doc = failures_accessor.GetDocument()
@@ -324,37 +324,51 @@ def purge_unused_elements(
         trans_grp = TransactionGroup(doc, transaction_name)
         trans_grp.Start()
 
-        # Transaction is what we will commit to trigger DocumentChanged
-        # add a custom pre failure processor to suppress any revit warning dialogues
-        failure_pre_processor = FailuresPreprocessor(
-            output=None, failure_processor=pre_process_failures, result=return_value
-        )
-        trans = Transaction(doc, transaction_name)
-        options = trans.GetFailureHandlingOptions()
-        options.SetFailuresPreprocessor(failure_pre_processor)
-        trans.SetFailureHandlingOptions(options)
-
-        trans.Start()
-        # Delete the element
-        # check whether invalid element id or a negative id indicating a built-in element which cannot be deleted
-        # modified_by_delete is at this case 0, which will stop the element from being deleted and the transaction will be rolled back
-        if element_id.IntegerValue < 0:
-            return_value.append_message(
-                "Element {} {} is a built-in element and cannot be deleted".format(
-                    element_id.IntegerValue, element_name
-                )
+        # set up action attempting to delete an element
+        def action():
+            action_return_value = Result()
+            if element_id.IntegerValue < 0:
+                action_return_value.append_message(
+                    "Element {} {} is a built-in element and cannot be deleted".format(
+                        element_id.IntegerValue, element_name
+                    )
             )
-        else:
-            try:
-                doc.Delete(element_id)
-            except Exception as e:
-                return_value.append_message(
-                    "Element {} could not be deleted: {}".format(element_name, e)
-                )
-                # note if an exception is thrown at delete step
-                # the modified_by_delete will remain 0 and the transaction will be rolled back
-                # document change event does not get triggered
-        trans.Commit()
+            else:
+                try:
+                    doc.Delete(element_id)
+                    action_return_value.append_message(
+                        "Attempted to delete element {} :: {}".format(element_id, element_name)
+                    )
+                except Exception as e:
+                    action_return_value.update_sep(False,
+                        "Element {} could not be deleted: {}".format(element_name, e)
+                    )
+                    # note if an exception is thrown at delete step
+                    # the modified_by_delete will remain 0 and the transaction will be rolled back
+                    # document change event does not get triggered
+            return action_return_value
+        
+        # define failure handling for the transaction ( roll back on any warnings or errors )
+        failure_handling_settings = FailureHandlingConfig(
+            roll_back_on_warning=True,
+            print_warnings=False,
+            roll_back_on_error=True,
+            print_errors=False,
+        )
+
+        # set up the transaction
+        trans = Transaction(doc, transaction_name)
+
+        # execute the transaction with failure handling
+        result_transaction = in_transaction_with_failure_handling(
+            transaction=trans,
+            action=action,
+            failure_config=failure_handling_settings,
+            failure_processing_func=pre_process_failures,
+        )
+
+        # update the return value with the result of the transaction
+        return_value.update(result_transaction)
 
         global _modified_by_delete
 

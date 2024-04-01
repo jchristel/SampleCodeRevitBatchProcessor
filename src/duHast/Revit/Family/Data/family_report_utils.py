@@ -479,8 +479,8 @@ def combine_reports(previous_report_path, new_report_path):
         unique_family_data = remove_none_existing_families.result[0]
 
     # get report header row (there should be a previous report file...otherwise this will write an empty header row)
-    header = fileCSV.get_first_row_in_csv_file(previous_report_path)
-    header_row = header.split(",")
+    header_row = fileCSV.get_first_row_in_csv_file(previous_report_path)
+    #header_row = header.split(",")
 
     # build list of data rows
     rows_current = _get_data_rows_from_dictionary(unique_family_data)

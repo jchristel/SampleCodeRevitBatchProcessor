@@ -67,7 +67,7 @@ ROOT_SCRIPT_DIRECTORY_USER = os.path.join(
 DEBUG_REVIT_FILE_NAME = r"C:\temp\Test_Files.rvt"
 
 # revit files library location
-REVIT_LIBRARY_PATH = r"C:\Users\jchristel\dev\test_lib"
+REVIT_LIBRARY_PATH = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData"
 REVIT_LIBRARY_INCLUDE_SUB_DIRS_IN_SEARCH = True
 FILE_EXTENSION_OF_FILES_TO_PROCESS = ".rfa"
 

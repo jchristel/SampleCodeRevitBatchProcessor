@@ -68,7 +68,7 @@ FILE_EXTENSION_OF_FILES_TO_PROCESS = ".rfa"
 
 # Root directory path of files to be processed
 REVIT_FILES_DIRECTORY = (
-    r'C:\Users\jchristel\dev\test_lib'
+    r'C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData'
 )
 
 # log marker file location

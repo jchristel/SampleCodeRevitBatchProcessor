@@ -67,7 +67,7 @@ DEBUG_REVIT_FILE_NAME = r"C:\temp\Test_Files.rvt"
 DEFAULT_NO_GO_DIRECTORY = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_01_X_RenameFamilies\_Users\jchristel\_FamilyOut"
 
 # revit files library location
-REVIT_LIBRARY_PATH = r"C:\Users\jchristel\dev\test_lib"
+REVIT_LIBRARY_PATH = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData"
 REVIT_LIBRARY_INCLUDE_SUB_DIRS_IN_SEARCH = True
 FILE_EXTENSION_OF_FILES_TO_PROCESS = ".rfa"
 

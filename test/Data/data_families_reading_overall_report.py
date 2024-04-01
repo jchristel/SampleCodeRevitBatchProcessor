@@ -33,9 +33,9 @@ import sys
 from test.utils import test
 
 from duHast.Revit.Family.Data.family_base_data_utils import nested_family, read_overall_family_data_list_from_directory
+from duHast.Utilities.files_io import get_directory_path_from_file_path
 
-
-TEST_REPORT_DIRECTORY = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData"
+TEST_REPORT_DIRECTORY = os.path.join(get_directory_path_from_file_path(__file__), "ReadReport_01")
 
 class DataReadFamiliesReport(test.Test):
     

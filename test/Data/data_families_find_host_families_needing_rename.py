@@ -41,10 +41,11 @@ from duHast.Revit.Family.Data.family_base_data_utils import (
 from duHast.Revit.Family.Data.family_rename_find_host_families import (
     find_host_families_with_nested_families_requiring_rename,
 )
+from duHast.Utilities.files_io import get_directory_path_from_file_path
 
-TEST_REPORT_DIRECTORY_ONE = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\RenameTest_01"
-TEST_REPORT_DIRECTORY_TWO = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\RenameTest_02"
-TEST_REPORT_DIRECTORY_THREE = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\RenameTest_03"
+TEST_REPORT_DIRECTORY_ONE = os.path.join(get_directory_path_from_file_path(__file__), "RenameTest_01")
+TEST_REPORT_DIRECTORY_TWO = os.path.join(get_directory_path_from_file_path(__file__), "RenameTest_02")
+TEST_REPORT_DIRECTORY_THREE = os.path.join(get_directory_path_from_file_path(__file__), "RenameTest_03")
 
 
 class DataFindHostFamiliesWithFamiliesToRename(test.Test):

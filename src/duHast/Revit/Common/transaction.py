@@ -35,16 +35,12 @@ from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
     FailureHandlingConfig,
 )
 
-from Autodesk.Revit.DB import Document, Transaction
+from Autodesk.Revit.DB import Transaction
 
 # --------------------------------------------Transactions-----------------------------------------
 
 
-def in_transaction(
-    tranny,  #
-    action,  # 
-):
-    # type: (...) -> res.Result
+def in_transaction(tranny, action, *args, **kwargs):
     """
     Revit transaction wrapper.
 
@@ -56,6 +52,8 @@ def in_transaction(
     :type doc: Autodesk.Revit.DB.Document
     :param action: The action to be nested within the transaction. This needs to return a Result class instance!
     :type action: action().
+    :param *args: is just a placeholder in case this function is called with the same args than in_transaction_with_failure_handling
+    :param **kwargs: is just a placeholder in case this function is called with the same args than in_transaction_with_failure_handling
 
     :return:
         Result class instance.
@@ -65,17 +63,12 @@ def in_transaction(
     :rtype: :class:`.Result`
     """
 
-    if not isinstance(tranny,Transaction):
+    if not isinstance(tranny, Transaction):
         raise ValueError(
             "The transaction parameter must be an instance of Autodesk.Revit.DB.Transaction."
         )
-    if  doc is not None and not isinstance(doc, Document):
-        raise ValueError(
-            "The doc parameter must either be None or an instance of Autodesk.Revit.DB.Document."
-        )
     if not callable(action):
         raise ValueError("The action parameter must be a callable function.")
-
 
     return_value = res.Result()
     try:

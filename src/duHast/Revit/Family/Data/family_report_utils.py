@@ -203,7 +203,7 @@ def _get_data_rows_from_dictionary(dic):
     :return: List of list of strings
     :rtype: [[str]]
     """
-
+    print(dic)
     dataList = []
     # get rows from dictionary
     for k, v in dic.items():
@@ -278,20 +278,20 @@ def _get_nested_families_belonging_to_root_families(root_family, nested_families
     :param nestedFamilies: A list of tuples of all nested families in a report
     :type nestedFamilies: [tuple of type 'nestedFamily']
 
-    :return: _description_
+    :return: 
     :rtype: _type_
     """
 
     nested_families_belonging_to_root_families = []
     for nested_family in nested_families:
-        # split path in order to get to top most root family
-        nested_family_root_path_chunks = nested_family.rootPath.split(" :: ")
-        nested_family_category_path_chunks = nested_family.categoryPath.split(" :: ")
         if (
-            root_family.name == nested_family_root_path_chunks[0]
-            and root_family.category == nested_family_category_path_chunks[0]
+            root_family.name == nested_family.rootPath[0]
+            and root_family.category == nested_family.categoryPath[0]
         ):
             nested_families_belonging_to_root_families.append(nested_families[nested_family][0])
+            print("nested family in list", nested_families[nested_family][0])
+        else:
+            print("root family name: [{}] root family category: [{}] nested family root path: [{}] nested family category path: [{}]".format(root_family.name, root_family.category, nested_family.rootPath[0], nested_family.categoryPath[0]))
     return nested_families_belonging_to_root_families
 
 
@@ -422,6 +422,7 @@ def combine_reports(previous_report_path, new_report_path):
     previous_aggregated_families = {}
     new_aggregated_families = {}
 
+    print( "reading previous")
     # previous report
     try:
         previous_root, previous_nested = read_overall_family_data_list(
@@ -444,7 +445,8 @@ def combine_reports(previous_report_path, new_report_path):
         # check whether empty file exception
         if str(e) != EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES:
             raise e
-
+        
+    print( "reading new")
     # new report
     try:
         new_root, new_nested = read_overall_family_data_list(new_report_path)
@@ -464,6 +466,7 @@ def combine_reports(previous_report_path, new_report_path):
         if str(e) != EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES:
             raise e
 
+    print ("comparing")
     # compare dictionaries: build unique list of families
     unique_family_data_status = _compare_family_dictionaries(
         previous_aggregated_families, new_aggregated_families
@@ -471,6 +474,7 @@ def combine_reports(previous_report_path, new_report_path):
     return_value.update(unique_family_data_status)
     unique_family_data = unique_family_data_status.result[0]
 
+    print( "checking")
     # check whether families still exist on file server
     remove_none_existing_families = _check_families_still_exist(unique_family_data)
     return_value.update(remove_none_existing_families)
@@ -481,7 +485,7 @@ def combine_reports(previous_report_path, new_report_path):
     # get report header row (there should be a previous report file...otherwise this will write an empty header row)
     header_row = fileCSV.get_first_row_in_csv_file(previous_report_path)
     #header_row = header.split(",")
-
+    print( "building")
     # build list of data rows
     rows_current = _get_data_rows_from_dictionary(unique_family_data)
     # sort rows by root ( first entry ) since other code (circ reference checker for instance) expects data sorted

@@ -156,6 +156,26 @@ REPORTS_TO_COMBINE = {
             ],
         ),
     ],
+    TEST_REPORT_DIRECTORY_TWO: [
+        (
+            [
+                "FamilyWarningsCombinedReport_previous.csv",
+                "FamilyWarningsCombinedReport_new.csv",
+            ],
+            [
+                [
+                    "root",
+                    "rootCategory",
+                    "familyName",
+                    "familyFilePath",
+                    "warningText",
+                    "warningGUID",
+                    "warningRelatedIds",
+                    "warningOtherIds",
+                ]
+            ],
+        ),
+    ],
 }
 
 

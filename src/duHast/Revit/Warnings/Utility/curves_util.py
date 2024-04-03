@@ -285,7 +285,7 @@ def _modify_separation_lines(doc, curves, transaction_manager=in_transaction):
             transaction = Transaction(
                 doc, "Updating separation line geometry: {}".format(curve.id)
             )
-            update_curve_geometry = transaction_manager(transaction, action, doc)
+            update_curve_geometry = transaction_manager(transaction, action)
             # update_sep_geo = in_transaction(transaction, action)
             return_value.update(update_curve_geometry)
     return return_value

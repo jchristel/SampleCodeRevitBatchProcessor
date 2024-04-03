@@ -111,7 +111,7 @@ def place_a_family_instance_by_level(
         return action_return_value
 
     transaction = Transaction(doc, "Placing Family")
-    return_value = transaction_manager(transaction, action, doc)
+    return_value = transaction_manager(transaction, action)
 
     return return_value
 
@@ -187,5 +187,5 @@ def place_a_family_instance_in_basic_wall(doc,
         return action_return_value
 
     transaction = Transaction(doc, "Placing Family")
-    return_value = transaction_manager(transaction, action, doc)
+    return_value = transaction_manager(transaction, action)
     return return_value

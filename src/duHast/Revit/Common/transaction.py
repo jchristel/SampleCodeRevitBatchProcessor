@@ -43,7 +43,6 @@ from Autodesk.Revit.DB import Document, Transaction
 def in_transaction(
     tranny,  #
     action,  # 
-    doc=None,  # used as placeholder...
 ):
     # type: (...) -> res.Result
     """

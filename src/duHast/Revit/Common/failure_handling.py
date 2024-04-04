@@ -65,62 +65,68 @@ def get_failure_warning_report(failure, failure_definition):
 
     result = Result()
     failure_message = []
-    failure_severity = failure.GetSeverity()
 
-    # Log basic failure information
-    failure_message.append(
-        "\t{} - {} - (GUID: {})".format(
-            str(failure_severity),
-            str(failure.GetDescriptionText()),
-            str(failure.GetFailureDefinitionId().Guid),
+    try:
+        failure_severity = failure.GetSeverity()
+        # Log basic failure information
+        failure_message.append(
+            "\t{} - {} - (GUID: {})".format(
+                str(failure_severity),
+                str(failure.GetDescriptionText()),
+                str(failure.GetFailureDefinitionId().Guid),
+            )
         )
-    )
 
-    # Log the failing ids and additional elements (if required)
-    if (
-        failure_severity == FailureSeverity.Error
-        or failure_severity == FailureSeverity.Warning
-    ):
-        failing_element_ids = failure.GetFailingElementIds()
-        if len(failing_element_ids) > 0:
-            failure_message.append("\n")
-            failure_message.append(
-                "\tFailing element ids: {}".format(
-                    element_ids_to_semicolon_delimited_text(failing_element_ids)
-                )
-            )
-
-        additional_elementIds = failure.GetAdditionalElementIds()
-        if len(additional_elementIds) > 0:
-            failure_message.append("\n")
-            failure_message.append(
-                "\tAdditional element ids: {}".format(
-                    element_ids_to_semicolon_delimited_text(additional_elementIds)
-                )
-            )
-
-    # If there are resolutions, log them
-    if failure_severity == FailureSeverity.Error:
-        if failure.HasResolutions():
-            failure_message.append("\n\t" + "Applicable resolution types:\n")
-            default_resolution_type = failure_definition.GetDefaultResolutionType()
-            for resolution_type in failure_definition.GetApplicableResolutionTypes():
-                res_type = (
-                    " (Default)" if resolution_type == default_resolution_type else ""
-                )
+        # Log the failing ids and additional elements (if required)
+        if (
+            failure_severity == FailureSeverity.Error
+            or failure_severity == FailureSeverity.Warning
+        ):
+            failing_element_ids = failure.GetFailingElementIds()
+            if len(failing_element_ids) > 0:
+                failure_message.append("\n")
                 failure_message.append(
-                    "\t\t{}{} - '{}'".format(
-                        str(resolution_type),
-                        res_type,
-                        failure_definition.GetResolutionCaption(resolution_type),
+                    "\tFailing element ids: {}".format(
+                        element_ids_to_semicolon_delimited_text(failing_element_ids)
                     )
                 )
-        else:
-            failure_message.append("\n")
-            failure_message.append("\t" + "WARNING: no resolutions available")
 
-    result.message = "\n".join(failure_message)
+            additional_elementIds = failure.GetAdditionalElementIds()
+            if len(additional_elementIds) > 0:
+                failure_message.append("\n")
+                failure_message.append(
+                    "\tAdditional element ids: {}".format(
+                        element_ids_to_semicolon_delimited_text(additional_elementIds)
+                    )
+                )
 
+        # If there are resolutions, log them
+        if failure_severity == FailureSeverity.Error:
+            if failure.HasResolutions():
+                failure_message.append("\n\t" + "Applicable resolution types:\n")
+                default_resolution_type = failure_definition.GetDefaultResolutionType()
+                for (
+                    resolution_type
+                ) in failure_definition.GetApplicableResolutionTypes():
+                    res_type = (
+                        " (Default)"
+                        if resolution_type == default_resolution_type
+                        else ""
+                    )
+                    failure_message.append(
+                        "\t\t{}{} - '{}'".format(
+                            str(resolution_type),
+                            res_type,
+                            failure_definition.GetResolutionCaption(resolution_type),
+                        )
+                    )
+            else:
+                failure_message.append("\n")
+                failure_message.append("\t" + "WARNING: no resolutions available")
+
+        result.message = "\n".join(failure_message)
+    except Exception as e:
+        result.update_sep(False, "Failed to get failure warning report: {}".format(e))
     return result.message
 
 
@@ -159,7 +165,6 @@ def process_failures(failures_accessor, fail_config):
                 failure_definition = failure_registry.FindFailureDefinition(
                     failure.GetFailureDefinitionId()
                 )
-
                 failure_severity = failure.GetSeverity()
                 # If warning and rolling back
                 if failure_severity == FailureSeverity.Warning and roll_back_on_warning:
@@ -167,15 +172,16 @@ def process_failures(failures_accessor, fail_config):
                     if print_warnings:
                         output(get_failure_warning_report(failure, failure_definition))
                         output("\t" + "Rolled back warning")
-
                 # If warning and not rolling back
                 elif (
                     failure_severity == FailureSeverity.Warning
                     and not roll_back_on_warning
                 ):
-                    failures_accessor.DeleteWarning(failure)
                     if print_warnings:
                         output(get_failure_warning_report(failure, failure_definition))
+                    failures_accessor.DeleteWarning(failure)
+                    result = FailureProcessingResult.ProceedWithCommit
+                    if print_warnings:
                         output("\t" + "Deleted warning")
 
                 # If error and rolling back
@@ -198,7 +204,6 @@ def process_failures(failures_accessor, fail_config):
                         output("\t" + "Cannot solve. Element locked by other user")
                         # locked element by other user. Can't do anything but roll back
                         result = FailureProcessingResult.ProceedWithRollBack
-
                     # If the failure has resolutions, attempt to resolve it
                     if failure.HasResolutions():
                         # If Unlock Constraints is a valid resolution type for the current failure, use it.
@@ -211,7 +216,7 @@ def process_failures(failures_accessor, fail_config):
                         elif failure_definition.IsResolutionApplicable(
                             FailureResolutionType.UnlockConstraints
                         ):
-                            # Revit is dumb. Unlock consrtaints cannot actually be used
+                            # Revit is dumb. Unlock constraints cannot actually be used
                             output(
                                 "\tWARNING: UnlockConstraints is not a valid resolution for this failure despite the definition reporting that it is an applicable resolution!"
                             )
@@ -240,9 +245,8 @@ def process_failures(failures_accessor, fail_config):
         else:
             result = FailureProcessingResult.Continue
     except Exception as e:
-        output("ERROR: the failure handler generated an error!")
-        output(e.Message)
-        result = FailureProcessingResult.Continue
+        output("ERROR: the failure handler generated an error! \n{}".format(e))
+        result = FailureProcessingResult.ProceedWithRollBack
     return result
 
 

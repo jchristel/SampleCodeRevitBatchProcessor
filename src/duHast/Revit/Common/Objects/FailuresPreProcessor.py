@@ -84,12 +84,13 @@ class FailuresPreprocessor(IFailuresPreprocessor):
         # If the failure processing function is the default from the failure_handling module
         # Then we need to pass the failure handling configuration to the function
         if self.failure_processor == process_failures:
-            result = self.failure_processor(
-                failures_accessor,
-                self.result,
-                self.failure_processor,
-                self.failure_handling_config,
-            )
+            try:
+                result = self.failure_processor(
+                    failures_accessor,
+                    self.failure_handling_config,
+                )
+            except Exception as e:
+                print("exception in failure preprocessor: {}".format(e))
         else:
             result = self.failure_processor(failures_accessor, self.result)
         return result

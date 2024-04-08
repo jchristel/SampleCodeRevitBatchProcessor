@@ -418,8 +418,7 @@ def find_root_families_not_in_nested_data(root_families, nested_families):
     This is based on two assumptions:
 
     - The provided data set contains all families in the project (no missing families are reported)
-    - As soon as a family is nested into another family, its nesting path will appear in the nested family data set and the root
-    family data set.
+    - As soon as a family is nested into another family, its nesting path will appear in the nested family data set and the root family data set.
 
     :param root_families: A list of tuples containing root family data.
     :type root_families: [root_family]

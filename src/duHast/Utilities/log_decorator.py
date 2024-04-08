@@ -42,8 +42,7 @@ def get_add_logger_decorator(
 
     :param log_obj_inst: An instance of the LoggerObject class from duHast.Utilities.Objects.logger_object.py
     :type log_obj_inst: duHast.Utilities.Objects.logger_object.LoggerObject
-    :param errors_in_console: Whether to output errors to the console. Defaults to True. Turn off to handle
-    in the application code
+    :param errors_in_console: Whether to output errors to the console. Defaults to True. Turn off to handle in the application code
     :type errors_in_console: bool
     :return: A decorator that can be used to add logging to a function
     :rtype: function

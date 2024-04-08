@@ -47,9 +47,9 @@ from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects import result as res
 
 from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDataUtils
-from duHast.Revit.Family.Data import family_reload_advanced_utils as rFamReloadAdvUtils
 
-from family_reload_advanced_utils import (
+from duHast.Revit.Family.Data.family_reload_advanced_utils import (
+    read_change_list,
     write_out_empty_task_list,
     write_reload_list_to_file,
 )
@@ -127,7 +127,7 @@ def build_work_lists(
     t_process.start()
 
     return_value = res.Result()
-    change_list = rFamReloadAdvUtils.read_change_list(change_list_file_path)
+    change_list = read_change_list(change_list_file_path)
     return_value.append_message(
         "{} Change list of length [{}] loaded.".format(
             t_process.stop(), len(change_list)

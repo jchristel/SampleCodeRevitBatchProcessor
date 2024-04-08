@@ -66,13 +66,12 @@ def measure_time_wrapper(func, logger=None, measure=True):
 
 def add_measure_time(func, should_output=True):
     """
-    Decorator function to measure the time a function takes to execute
-    and then print it to the console.
+    Decorator function to measure the time a function takes to execute and then print it to the console.
 
-    Use like:
+    Use like
     @measure_time(should_output = show_benchmarking_output_bool)
     def function_to_measure():
-        do_stuff()
+        
 
     :param should_output: Whether the elapsed time should be printed to the console
     :type should_output: bool

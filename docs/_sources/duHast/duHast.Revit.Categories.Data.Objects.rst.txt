@@ -1,0 +1,29 @@
+duHast.Revit.Categories.Data.Objects package
+============================================
+
+Submodules
+----------
+
+duHast.Revit.Categories.Data.Objects.category\_data module
+----------------------------------------------------------
+
+.. automodule:: duHast.Revit.Categories.Data.Objects.category_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Categories.Data.Objects.category\_data\_processor module
+---------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Categories.Data.Objects.category_data_processor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Categories.Data.Objects
+   :members:
+   :undoc-members:
+   :show-inheritance:

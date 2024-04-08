@@ -1,0 +1,29 @@
+duHast.Revit.SharedParameters.Data package
+==========================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Revit.SharedParameters.Data.Objects
+
+Submodules
+----------
+
+duHast.Revit.SharedParameters.Data.shared\_parameter\_data\_purge\_Unused module
+--------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.SharedParameters.Data.shared_parameter_data_purge_Unused
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.SharedParameters.Data
+   :members:
+   :undoc-members:
+   :show-inheritance:

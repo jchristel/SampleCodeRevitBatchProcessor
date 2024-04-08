@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 0.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
-    <link rel="next" title="duHast.Revit.Railings package" href="duHast.Revit.Railings.html" />
+    <link rel="next" title="duHast.Revit.Purge.Objects package" href="duHast.Revit.Purge.Objects.html" />
     <link rel="prev" title="duHast.Revit.ModelHealth.Reporting.Properties package" href="duHast.Revit.ModelHealth.Reporting.Properties.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
@@ -31,7 +31,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="duHast.Revit.Railings.html" title="duHast.Revit.Railings package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Purge.Objects.html" title="duHast.Revit.Purge.Objects package" accesskey="N">next</a></div>
             <div class="headerButton"><a href="duHast.Revit.ModelHealth.Reporting.Properties.html" title="duHast.Revit.ModelHealth.Reporting.Properties package" accesskey="P">previous</a></div>
         </li>
     </ul>
@@ -46,9 +46,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
@@ -88,6 +90,27 @@
             
   <section id="duhast-revit-purge-package">
 <h1>duHast.Revit.Purge package<a class="headerlink" href="#duhast-revit-purge-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Purge.Objects.html">duHast.Revit.Purge.Objects package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Purge.Objects.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Purge.Objects.html#module-duHast.Revit.Purge.Objects.ModifierBase">duHast.Revit.Purge.Objects.ModifierBase module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Purge.Objects.html#a-class-used-to-implement-deleted-and-modified-element-counts-when-using-purge-by-delete">A class used to implement deleted and modified element counts when using purge by delete.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Purge.Objects.html#duHast.Revit.Purge.Objects.ModifierBase.ModifierBase"><code class="docutils literal notranslate"><span class="pre">ModifierBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Purge.Objects.html#duHast.Revit.Purge.Objects.ModifierBase.ModifierBase.modify_deleted"><code class="docutils literal notranslate"><span class="pre">ModifierBase.modify_deleted()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Purge.Objects.html#duHast.Revit.Purge.Objects.ModifierBase.ModifierBase.modify_modified"><code class="docutils literal notranslate"><span class="pre">ModifierBase.modify_modified()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Purge.Objects.html#module-duHast.Revit.Purge.Objects">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
@@ -151,7 +174,7 @@
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if all purge actions completed successfully. Otherwise False.</p></li>
+<li><p>.status True if all purge actions completed successfully. Otherwise False.</p></li>
 <li><p>.message will be listing each purge action and its status</p></li>
 </ul>
 </p>
@@ -189,13 +212,71 @@
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if all purge actions completed successfully. Otherwise False.</p></li>
+<li><p>.status True if all purge actions completed successfully. Otherwise False.</p></li>
 <li><p>.message will be listing each purge action and its status</p></li>
 </ul>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Purge.purge_unused_by_delete">
+<span id="duhast-revit-purge-purge-unused-by-delete-module"></span><h2>duHast.Revit.Purge.purge_unused_by_delete module<a class="headerlink" href="#module-duHast.Revit.Purge.purge_unused_by_delete" title="Permalink to this heading">¶</a></h2>
+<section id="function-to-purge-unused-elements-by-delete-test">
+<h3>Function to purge unused elements by delete test.<a class="headerlink" href="#function-to-purge-unused-elements-by-delete-test" title="Permalink to this heading">¶</a></h3>
+<p>This purge approach deletes an element from the model and checks whether that deletion changed any other elements. 
+If not, means the element is unused and can be deleted.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Purge.purge_unused_by_delete.document_change_purge_element">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Purge.purge_unused_by_delete.</span></span><span class="sig-name descname"><span class="pre">document_change_purge_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deleted_elements_modifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modified_elements_modifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Purge.purge_unused_by_delete.document_change_purge_element" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to execute on DocumentChanged event and inspect the modified &amp; deleted elements.
+An unused element will have 1 deleted element and 0 modified elements.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Purge.purge_unused_by_delete.pre_process_failures">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Purge.purge_unused_by_delete.</span></span><span class="sig-name descname"><span class="pre">pre_process_failures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failures_accessor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_result</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Purge.purge_unused_by_delete.pre_process_failures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rolls back the processing if any warning is encountered</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>failures_accessor</strong> (<em>FailuresAccessor</em>) – The failures accessor to process</p></li>
+<li><p><strong>process_result</strong> (<a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a>) – A Result class instance used to store any failure messages only</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the failure processing</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FailureProcessingResult</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Purge.purge_unused_by_delete.purge_unused_elements">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Purge.purge_unused_by_delete.</span></span><span class="sig-name descname"><span class="pre">purge_unused_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id_getter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deleted_elements_modifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modified_elements_modifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Purge.purge_unused_by_delete.purge_unused_elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>This script will ascertain elements not used in your model and delete them.
+It deletes the elements one by one and checks if there is modified elements
+which indicates another element was using the element. The transaction is rolled
+back if there is a modified element.</p>
+<p>IMPORTANT: This has flushed out some corrupt families with unresolvable geometry
+so it is advisable to run on a detached copy of your model first and rectify any
+family errors</p>
+<p>Credit for this script goes to Autodesk forum
+user so-chong from the below forum post
+<a class="reference external" href="https://forums.autodesk.com/t5/revit-api-forum/check-if-linepattern-is-in-use/td-p/7435014">https://forums.autodesk.com/t5/revit-api-forum/check-if-linepattern-is-in-use/td-p/7435014</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Document</em>) – The Revit document to purge line patterns from</p></li>
+<li><p><strong>DEBUG</strong> (<em>bool</em>) – Whether to print debug information or not. Optional. Defaults to False</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

@@ -1,0 +1,21 @@
+duHast.pyRevit package
+======================
+
+Submodules
+----------
+
+duHast.pyRevit.console\_output module
+-------------------------------------
+
+.. automodule:: duHast.pyRevit.console_output
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.pyRevit
+   :members:
+   :undoc-members:
+   :show-inheritance:

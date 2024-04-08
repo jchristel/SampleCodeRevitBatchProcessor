@@ -46,9 +46,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
@@ -151,6 +153,7 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#module-duHast.Revit.Common.Geometry.solids">duHast.Revit.Common.Geometry.solids module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#revit-solids-helper-functions">Revit solids helper functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.solids.get_2d_points_from_solid"><code class="docutils literal notranslate"><span class="pre">get_2d_points_from_solid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.solids.get_solid_bounding_box"><code class="docutils literal notranslate"><span class="pre">get_solid_bounding_box()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.solids.get_bounding_box_from_family_geometry"><code class="docutils literal notranslate"><span class="pre">get_bounding_box_from_family_geometry()</span></code></a></li>
 </ul>
 </li>
@@ -175,7 +178,21 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.FailureHandlingConfiguration">duHast.Revit.Common.Objects.FailureHandlingConfiguration module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#an-implementation-of-failur-handling-configuration">An implementation of Failur Handling Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.FailureHandlingConfiguration.FailureHandlingConfig"><code class="docutils literal notranslate"><span class="pre">FailureHandlingConfig</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.FailuresPreProcessor">duHast.Revit.Common.Objects.FailuresPreProcessor module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#an-implementation-of-the-revit-ifailuresprocessor-interface">An implementation of the Revit IFailuresProcessor interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.FailuresPreProcessor.FailuresPreprocessor"><code class="docutils literal notranslate"><span class="pre">FailuresPreprocessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.FailuresPreProcessor.FailuresPreprocessor.PreprocessFailures"><code class="docutils literal notranslate"><span class="pre">FailuresPreprocessor.PreprocessFailures()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.ParameterDirectiveBase">duHast.Revit.Common.Objects.ParameterDirectiveBase module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#a-parameter-directive-base-class">A parameter directive base class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.ParameterDirectiveBase.ParameterDirectiveBase"><code class="docutils literal notranslate"><span class="pre">ParameterDirectiveBase</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.ParameterDirectiveBase.ParameterDirectiveBase.data_type"><code class="docutils literal notranslate"><span class="pre">ParameterDirectiveBase.data_type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.ParameterDirectiveBase.ParameterDirectiveBase.to_json"><code class="docutils literal notranslate"><span class="pre">ParameterDirectiveBase.to_json()</span></code></a></li>
@@ -184,6 +201,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.ParameterMappingDirective">duHast.Revit.Common.Objects.ParameterMappingDirective module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#a-parameter-mapping-class">A parameter mapping class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.ParameterMappingDirective.ParameterMappingDirective"><code class="docutils literal notranslate"><span class="pre">ParameterMappingDirective</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.ParameterMappingDirective.ParameterMappingDirective.data_type"><code class="docutils literal notranslate"><span class="pre">ParameterMappingDirective.data_type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.ParameterMappingDirective.ParameterMappingDirective.to_json"><code class="docutils literal notranslate"><span class="pre">ParameterMappingDirective.to_json()</span></code></a></li>
@@ -1001,21 +1019,32 @@ isPrimary:bool</p>
 <p>Helps to suppress warning dialogues in Revit.</p>
 </section>
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Common.failure_handling.Output">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.failure_handling.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.failure_handling.Output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default Output function to print to console</p>
+<dt class="sig sig-object py" id="duHast.Revit.Common.failure_handling.get_failure_warning_report">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.failure_handling.</span></span><span class="sig-name descname"><span class="pre">get_failure_warning_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failure_definition</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.failure_handling.get_failure_warning_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a string representation of the information attached to a failure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>failure</strong> (<em>FailureMessage</em>) – The failure to report</p></li>
+<li><p><strong>failure_definition</strong> (<em>FailureDefinition</em>) – The failure definition</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The string representation of the failure information</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.failure_handling.process_failures">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.failure_handling.</span></span><span class="sig-name descname"><span class="pre">process_failures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failures_accessor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roll_back_on_warning</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.failure_handling.process_failures" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.failure_handling.</span></span><span class="sig-name descname"><span class="pre">process_failures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failures_accessor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fail_config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.failure_handling.process_failures" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process the failures encountered when transacting with a Revit document</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>failures_accessor</strong> (<em>FailuresAccessor</em>) – The failures accessor to process</p></li>
-<li><p><strong>roll_back_on_warning</strong> (<em>bool</em>) – Whether to roll back the transaction on warnings</p></li>
-</ul>
+<dd class="field-odd"><p><strong>failures_accessor</strong> (<em>FailuresAccessor</em>) – The failures accessor to process</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The result of the failure processing</p>
@@ -1026,63 +1055,23 @@ isPrimary:bool</p>
 </dl>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="duHast.Revit.Common.failure_handling.FailuresPreprocessor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.failure_handling.</span></span><span class="sig-name descname"><span class="pre">FailuresPreprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.failure_handling.FailuresPreprocessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IFailuresPreprocessor</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Common.failure_handling.FailuresPreprocessor.PreprocessFailures">
-<span class="sig-name descname"><span class="pre">PreprocessFailures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failures_accessor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.failure_handling.FailuresPreprocessor.PreprocessFailures" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Common.failure_handling.SetTransactionFailureOptions">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.failure_handling.</span></span><span class="sig-name descname"><span class="pre">SetTransactionFailureOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.failure_handling.SetTransactionFailureOptions" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Common.failure_handling.set_failures_accessor_failure_options">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.failure_handling.</span></span><span class="sig-name descname"><span class="pre">set_failures_accessor_failure_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failures_accessor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.failure_handling.set_failures_accessor_failure_options" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.failure_handling.FailuresProcessingEventHandler">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.failure_handling.</span></span><span class="sig-name descname"><span class="pre">FailuresProcessingEventHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.failure_handling.FailuresProcessingEventHandler" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.failure_handling.</span></span><span class="sig-name descname"><span class="pre">FailuresProcessingEventHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fail_config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.failure_handling.FailuresProcessingEventHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to execute when Revit raises the FailuresProcessing event</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.failure_handling.with_failures_processing_handler">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.failure_handling.</span></span><span class="sig-name descname"><span class="pre">with_failures_processing_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.failure_handling.with_failures_processing_handler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Execute an action with Revit failure processing enabled</p>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.failure_handling.</span></span><span class="sig-name descname"><span class="pre">with_failures_processing_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fail_config=FailureHandlingConfig(roll_back_on_warning=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_warnings=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roll_back_on_error=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_errors=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowable_failures=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_forced_modal_handling=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_clear_after_rollback=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_function=&lt;function</span> <span class="pre">output&gt;)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.failure_handling.with_failures_processing_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes an action with Revit failure processing enabled by adding
+a handler to the FailuresProcessing event. This function will need
+to be wrapped in a transaction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>app</strong> (<em>Application</em>) – The Revit application to execute the action with</p></li>
 <li><p><strong>action</strong> (<em>function</em>) – The action to perform</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The result of the action</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Common.failure_handling.in_transaction_with_failures_processing">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.failure_handling.</span></span><span class="sig-name descname"><span class="pre">in_transaction_with_failures_processing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.failure_handling.in_transaction_with_failures_processing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Executes an action within a Revit transaction with Revit failure processing enabled</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tranny</strong> (<em>Transaction</em>) – The Revit transaction to execute in</p></li>
-<li><p><strong>action</strong> (<em>function</em>) – The action to perform in the transaction</p></li>
-<li><p><strong>doc</strong> (<em>Document</em>) – The document to transact with</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1113,7 +1102,7 @@ isPrimary:bool</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Result class instance.
-- .result = True if successfully synced file. Otherwise False.</p>
+- .status True if successfully synced file. Otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -1139,7 +1128,7 @@ File will bew compacted on save.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Result class instance.
-- .result = True if successfully saved file, otherwise False.</p>
+- .status True if successfully saved file, otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -1165,7 +1154,7 @@ File will bew compacted on save.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>Result class instance.</dt><dd><ul class="simple">
-<li><p>.result = True if successfully saved file, otherwise False.</p></li>
+<li><p>.status True if successfully saved file, otherwise False.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1193,7 +1182,7 @@ File will bew compacted on save.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Result class instance.
-- .result = True if successfully saved file, otherwise False.</p>
+- .status True if successfully saved file, otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -1214,7 +1203,7 @@ File will bew compacted on save.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Result class instance.
-- .result = True if file was saved successfully. Otherwise False.
+- .status True if file was saved successfully. Otherwise False.
 - .message = ‘Saved revit file!’
 On exception:
 - result.status (bool) will be False.
@@ -1239,7 +1228,7 @@ On exception:
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Result class instance.
-- .result = True if worksharing was enabled successfully. Otherwise False.
+- .status True if worksharing was enabled successfully. Otherwise False.
 - .message = ‘Successfully enabled worksharing.’
 On exception:
 - result.status (bool) will be False.
@@ -2320,7 +2309,7 @@ Whether the used or unused type ids depends on the useType value.
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.transaction.in_transaction">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.transaction.</span></span><span class="sig-name descname"><span class="pre">in_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">res.Result</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">res.Result</span></span></span><a class="headerlink" href="#duHast.Revit.Common.transaction.in_transaction" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.transaction.</span></span><span class="sig-name descname"><span class="pre">in_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.transaction.in_transaction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Revit transaction wrapper.</p>
 <p>This function is used to execute any actions requiring a transaction in the Revit api. On exception this will roll back the transaction.</p>
 <dl class="field-list simple">
@@ -2329,17 +2318,50 @@ Whether the used or unused type ids depends on the useType value.
 <li><p><strong>tranny</strong> (<em>Autodesk.Revit.DB.Transaction</em>) – The transaction to be executed.</p></li>
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document. (not used in this function)</p></li>
 <li><p><strong>action</strong> (<em>action</em><em>(</em><em>)</em><em>.</em>) – The action to be nested within the transaction. This needs to return a Result class instance!</p></li>
+<li><p><strong>*args</strong> – <p>is just a placeholder in case this function is called with the same args than in_transaction_with_failure_handling</p>
+</p></li>
+<li><p><strong>**kwargs</strong> – <p>is just a placeholder in case this function is called with the same args than in_transaction_with_failure_handling</p>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if successfully executed transaction, otherwise False.</p></li>
+<li><p>.status True if successfully executed transaction, otherwise False.</p></li>
 </ul>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.transaction.in_transaction_with_failure_handling">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.transaction.</span></span><span class="sig-name descname"><span class="pre">in_transaction_with_failure_handling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failure_config=FailureHandlingConfig(roll_back_on_warning=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_warnings=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roll_back_on_error=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_errors=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowable_failures=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_forced_modal_handling=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_clear_after_rollback=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_function=&lt;function</span> <span class="pre">output&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failure_processing_func=&lt;function</span> <span class="pre">process_failures&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.transaction.in_transaction_with_failure_handling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes an action within a Revit transaction with Revit failure processing enabled.</p>
+<p>Example usage:</p>
+<p>def main(revit_doc, foo, bar):</p>
+<blockquote>
+<div><p>fail_config = FailureHandlingConfig()
+fail_config.print_warnings = False</p>
+<dl class="simple">
+<dt>def add_func():</dt><dd><p># Perform actions here
+return foo + bar</p>
+</dd>
+</dl>
+<p>trans = Transaction(revit_doc, “Add the things together”)
+added_vals = in_transaction_with_failures(trans, add_func, fail_config)</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transaction</strong> (<em>Transaction</em>) – The executing transaction to apply the failure handling to</p></li>
+<li><p><strong>action</strong> (<em>function</em>) – The action to be executed within the transaction</p></li>
+<li><p><strong>failure_config</strong> (<a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.FailureHandlingConfiguration.FailureHandlingConfig" title="duHast.Revit.Common.Objects.FailureHandlingConfiguration.FailureHandlingConfig"><em>FailureHandlingConfig</em></a>) – Configuration for the failure handling (Optional)</p></li>
+<li><p><strong>failure_processing_func</strong> (<em>function</em>) – The function to process the failures (Optional)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -2475,7 +2497,7 @@ Whether the used or unused type ids depends on the useType value.
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if successfully moved all elements to new workset. Otherwise False.</p></li>
+<li><p>.status = True if successfully moved all elements to new workset. Otherwise False.</p></li>
 <li><p>.message will contain stats in format [success :: failure]</p></li>
 </ul>
 </p>
@@ -2574,7 +2596,7 @@ Whether the used or unused type ids depends on the useType value.
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul>
-<li><p>.result = True if:</p>
+<li><p>.status = True if:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>successfully updated all workset default visibility where different to report</p></li>
@@ -2598,6 +2620,53 @@ Whether the used or unused type ids depends on the useType value.
 </div></blockquote>
 </li>
 </ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.worksets.create_workset">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.worksets.</span></span><span class="sig-name descname"><span class="pre">create_workset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workset_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.worksets.create_workset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a workset with a given name in a document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>workset_name</strong> (<em>str</em>) – The name of the workset to be created</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul>
+<li><p>.status = True if:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>successfully created the workset</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Otherwise False:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>An exception occurred.</p></li>
+<li><p>A workset with that name already exists.</p></li>
+<li><p>Document is not workshared</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Common:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>.message will contain each workset</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>.result will contain the workset element in a list if successfully created, otherwise an empty list.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>FilesIn &#8212; Sample Code Revit Batch Processor 0.1.2 documentation</title>
+    <title>Files In &#8212; Sample Code Revit Batch Processor 0.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
     <p>Sample Code Revit Batch Processor 0.1.2 documentation</p>
 </div>
 <div id="header">
-    <div id="title"><h1>FilesIn</h1></div>
+    <div id="title"><h1>Files In</h1></div>
     <ul id="headerButtons">
         <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
         <li id="page_buttons">
@@ -47,8 +47,16 @@
 <li class="toctree-l2"><a class="reference internal" href="flows.AddRevision.html">Add Revision</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flows.MileStone.html">Milestone</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flows.ModelMaintenance.html">Model Maintenance</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">FilesIn</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Files In</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#summary">Summary</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#actions-overview">Actions Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setup">Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="flows.FilesOut.html">Files Out</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flows.TheChain.html">Setting Up - The Chain</a></li>
 </ul>
 </li>
 </ul>
@@ -80,8 +88,195 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="filesin">
-<h1>FilesIn<a class="headerlink" href="#filesin" title="Permalink to this heading">¶</a></h1>
+  <section id="files-in">
+<h1>Files In<a class="headerlink" href="#files-in" title="Permalink to this heading">¶</a></h1>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
+<p>The ‘File In’ flow is aimed at model receiving processes requiring:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Received Revit and other models to be checked and cleaned up before being used in the project.:</dt><dd><ul>
+<li><dl class="simple">
+<dt>Revit files:</dt><dd><ul>
+<li><p>A purge unused elements is under taken.</p></li>
+<li><p>Worksets of levels / grids / scope boxes / reference planes are checked and if required changed to the default value</p></li>
+<li><p>files are saved under a new file name in the prescribed location (by file )</p></li>
+<li><p>files are saved in a prescribed filing location for record keeping</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Other model files:</dt><dd><ul>
+<li><p>Files are saved under a new file name in the prescribed location (by file )</p></li>
+<li><p>Files are saved in a prescribed filing location for record keeping</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<section id="actions-overview">
+<h3>Actions Overview<a class="headerlink" href="#actions-overview" title="Permalink to this heading">¶</a></h3>
+<p>This flow is run through a powershell script which executes:</p>
+<ol class="arabic simple">
+<li><p>A pre-processing script collecting all Revit file info from source directory.</p></li>
+<li><dl class="simple">
+<dt>Main Process: No 3 off parallel running sessions of Revit Batch Processor which:</dt><dd><ol class="arabic simple">
+<li><dl class="simple">
+<dt>Create a detached copy of the Revit file(s) in a given location. (Revit files are opened with all worksets closed)</dt><dd><ol class="arabic simple">
+<li><p>Saves file under a new file name</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><p>Delete any links from the model ( Optional )</p></li>
+<li><p>Workset checking and, if required adjusting, of of worksets of levels / grids / scope boxes / reference planes</p></li>
+<li><p>Create a text file for each new revit file containing meta data for received models tracker in post process</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>A post process which:</dt><dd><ol class="arabic simple">
+<li><p>Updates file recievd list with latest files received information.</p></li>
+<li><p>Checks revit batch processor log files for any exceptions</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this heading">¶</a></h3>
+<p>This chapter describes the flow directory setup.</p>
+<section id="directory-structure">
+<h4>Directory structure<a class="headerlink" href="#directory-structure" title="Permalink to this heading">¶</a></h4>
+<p>This flow expects the following directory structure to be in place:</p>
+<p>├───_docs</p>
+<p>├───_LogMarker</p>
+<p>├───_Output</p>
+<p>├───_sampleFiles</p>
+<p>├───_Script</p>
+<p>│   └───logs</p>
+<p>│   └───utils</p>
+<p>├───_SessionData</p>
+<p>├───_settings</p>
+<p>└───_TaskList</p>
+</section>
+<section id="docs">
+<h4>_docs<a class="headerlink" href="#docs" title="Permalink to this heading">¶</a></h4>
+<p>Directory containing flow related documentation.</p>
+</section>
+<section id="logmarker">
+<h4>_LogMarker<a class="headerlink" href="#logmarker" title="Permalink to this heading">¶</a></h4>
+<p>Directory containing log marker files. Those will be deleted at the end of each flow run.</p>
+</section>
+<section id="output">
+<h4>_Output<a class="headerlink" href="#output" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>empty for this flow</p></li>
+</ul>
+</section>
+<section id="samplefiles">
+<h4>_sampleFiles<a class="headerlink" href="#samplefiles" title="Permalink to this heading">¶</a></h4>
+<p>Any sample files provided.</p>
+</section>
+<section id="script">
+<h4>_Script<a class="headerlink" href="#script" title="Permalink to this heading">¶</a></h4>
+<p>The python and powershell scripts of the flow:</p>
+<ul>
+<li><p>ModifyRevitFileSaveAs.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>task script executed by each Revit Batch Processor session</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Post_FilesOut.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the post script executed by each Revit Batch Processor session</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Pre_MarkerFilesTaskList.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the pre process script executed by each Revit Batch Processor session</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>settings.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a module containing global variables / settings for this flow</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>startAddRevision.ps1</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>The powershell script executing:</dt><dd><ul>
+<li><p>concurrent Revit Batch Processor sessions</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>file_data.csv</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>Revit project meta data file:</dt><dd><ul>
+<li><p>This is a comma separated text files which contains meta data of the revit files to be processed in the following format:</p></li>
+<li><p>header row: yes</p></li>
+<li><p>column 1: The beginning of the file name as received</p></li>
+<li><p>column 2: The new file name to be used for the file</p></li>
+<li><p>column 3: The name of the workset where any levels, grids, scope boxes and reference planes are to be moved to</p></li>
+<li><p>column 4: Default revision ie: -  which will be used in revision tracker doc if no revision was identified on the original file name</p></li>
+<li><p>column 5: file extension in format ie: .rvt</p></li>
+<li><p>column 6: Fully qualified directory path to where incoming files are stored for filing only</p></li>
+<li><p>column 7: Fully qualified directory path to where incoming files are stored to be used in live project</p></li>
+<li><p>column 8: This is a comment column</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="script-logs">
+<h4>_Script/logs<a class="headerlink" href="#script-logs" title="Permalink to this heading">¶</a></h4>
+<p>Log files which cover script outputs outside of Revit Batch Processor log files</p>
+</section>
+<section id="settings">
+<h4>_settings<a class="headerlink" href="#settings" title="Permalink to this heading">¶</a></h4>
+<p>Location of Revit Batch Processor settings files.</p>
+<p>For this flow there is 1 settings files in this folder:</p>
+<ul class="simple">
+<li><p>1 one single session of Revit Batch Processor (OneA)</p></li>
+</ul>
+</section>
+<section id="sessiondata">
+<h4>_SessionData<a class="headerlink" href="#sessiondata" title="Permalink to this heading">¶</a></h4>
+<p>Directory containing Revit Batch Processor session data files. (This sample flow has session data files disabled.)</p>
+</section>
+<section id="tasklist">
+<h4>_TaskList<a class="headerlink" href="#tasklist" title="Permalink to this heading">¶</a></h4>
+<p>Location of task list files processed by Revit Batch Processor.</p>
+<p>For this flow there is 1 task list file in this folder.</p>
+</section>
+</section>
+</section>
 </section>
 
 
@@ -99,7 +294,7 @@
     </div>
         <div id="breadcrumbs">
                 <a href="index.html" accesskey="U">Flows</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
-                FilesIn
+                Files In
         </div>
         <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
   </body>

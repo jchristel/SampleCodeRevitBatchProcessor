@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 0.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.Data package" href="duHast.Data.html" />
-    <link rel="next" title="duHast.Revit package" href="duHast.Revit.html" />
+    <link rel="next" title="duHast.Excel package" href="duHast.Excel.html" />
     <link rel="prev" title="duHast.Data.Objects.Properties.Geometry package" href="duHast.Data.Objects.Properties.Geometry.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
@@ -31,7 +31,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="duHast.Revit.html" title="duHast.Revit package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Excel.html" title="duHast.Excel package" accesskey="N">next</a></div>
             <div class="headerButton"><a href="duHast.Data.Objects.Properties.Geometry.html" title="duHast.Data.Objects.Properties.Geometry package" accesskey="P">previous</a></div>
         </li>
     </ul>
@@ -46,9 +46,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
@@ -159,12 +161,47 @@
 <dt class="sig sig-object py" id="duHast.Data.Utils.data_import.ReadDataFromFile">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Utils.data_import.</span></span><span class="sig-name descname"><span class="pre">ReadDataFromFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Utils.data_import.ReadDataFromFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to read data from a json formatted file and store it in data objects.</p>
+<p>The class supports the following data types:</p>
+<ul class="simple">
+<li><dl class="field-list simple">
+<dt class="field-odd">class<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>.DataRoom</cite></p>
+</dd>
+</dl>
+</li>
+<li><dl class="field-list simple">
+<dt class="field-odd">class<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>.DataCeiling</cite></p>
+</dd>
+</dl>
+</li>
+</ul>
 <p>Class constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filePath</strong> (<em>str</em>) – Fully qualified file path to json formatted data file.</p>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Utils.data_import.ReadDataFromFile.SUPPORTED_DATA_TYPES">
+<span class="sig-name descname"><span class="pre">SUPPORTED_DATA_TYPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ceiling':</span> <span class="pre">&lt;class</span> <span class="pre">'duHast.Data.Objects.data_ceiling.DataCeiling'&gt;,</span> <span class="pre">'room':</span> <span class="pre">&lt;class</span> <span class="pre">'duHast.Data.Objects.data_room.DataRoom'&gt;}</span></em><a class="headerlink" href="#duHast.Data.Utils.data_import.ReadDataFromFile.SUPPORTED_DATA_TYPES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Data.Utils.data_import.ReadDataFromFile.add_debug_message_from_load">
+<span class="sig-name descname"><span class="pre">add_debug_message_from_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Utils.data_import.ReadDataFromFile.add_debug_message_from_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of debug messages from the load process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of debug messages.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Data.Utils.data_import.ReadDataFromFile.load_data">
 <span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Utils.data_import.ReadDataFromFile.load_data" title="Permalink to this definition">¶</a></dt>

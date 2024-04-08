@@ -18,7 +18,7 @@
     <link rel="top" title="Sample Code Revit Batch Processor 0.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
     <link rel="next" title="duHast.Utilities.Objects package" href="duHast.Utilities.Objects.html" />
-    <link rel="prev" title="duHast.UI.Objects package" href="duHast.UI.Objects.html" />
+    <link rel="prev" title="duHast.UI.files_select package" href="duHast.UI.files_select.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
@@ -32,7 +32,7 @@
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
             <div class="headerButton"><a href="duHast.Utilities.Objects.html" title="duHast.Utilities.Objects package" accesskey="N">next</a></div>
-            <div class="headerButton"><a href="duHast.UI.Objects.html" title="duHast.UI.Objects package" accesskey="P">previous</a></div>
+            <div class="headerButton"><a href="duHast.UI.files_select.html" title="duHast.UI.files_select package" accesskey="P">previous</a></div>
         </li>
     </ul>
 </div>
@@ -46,9 +46,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
@@ -101,6 +103,27 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base.string_to_utf"><code class="docutils literal notranslate"><span class="pre">Base.string_to_utf()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base.to_json_utf"><code class="docutils literal notranslate"><span class="pre">Base.to_json_utf()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base.class_to_dict"><code class="docutils literal notranslate"><span class="pre">Base.class_to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Utilities.Objects.html#module-duHast.Utilities.Objects.logger_object">duHast.Utilities.Objects.logger_object module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#a-logger-class">A logger class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.FilterFile"><code class="docutils literal notranslate"><span class="pre">FilterFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.FilterFile.filter"><code class="docutils literal notranslate"><span class="pre">FilterFile.filter()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.FilterConsole"><code class="docutils literal notranslate"><span class="pre">FilterConsole</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.FilterConsole.filter"><code class="docutils literal notranslate"><span class="pre">FilterConsole.filter()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject"><code class="docutils literal notranslate"><span class="pre">LoggerObject</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.get_logger_obj"><code class="docutils literal notranslate"><span class="pre">LoggerObject.get_logger_obj()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.get_standard_formatter"><code class="docutils literal notranslate"><span class="pre">LoggerObject.get_standard_formatter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.get_presentation_formatter"><code class="docutils literal notranslate"><span class="pre">LoggerObject.get_presentation_formatter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.create_file_handler"><code class="docutils literal notranslate"><span class="pre">LoggerObject.create_file_handler()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.create_console_handler"><code class="docutils literal notranslate"><span class="pre">LoggerObject.create_console_handler()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.update_log_level"><code class="docutils literal notranslate"><span class="pre">LoggerObject.update_log_level()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -237,7 +260,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_current_session_ids">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.batch_processor_log_utils.</span></span><span class="sig-name descname"><span class="pre">get_current_session_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_current_session_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.batch_processor_log_utils.</span></span><span class="sig-name descname"><span class="pre">get_current_session_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_marker_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_current_session_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns file names of all text files in a given directory representing session Ids.</p>
 <p>Files will be deleted immediately after reading</p>
 <dl class="field-list simple">
@@ -552,14 +575,10 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.benchmarking.add_measure_time">
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.benchmarking.</span></span><span class="sig-name descname"><span class="pre">add_measure_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">should_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.benchmarking.add_measure_time" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decorator function to measure the time a function takes to execute
-and then print it to the console.</p>
-<p>Use like:
+<dd><p>Decorator function to measure the time a function takes to execute and then print it to the console.</p>
+<p>Use like
 &#64;measure_time(should_output = show_benchmarking_output_bool)
 def function_to_measure():</p>
-<blockquote>
-<div><p>do_stuff()</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>should_output</strong> (<em>bool</em>) – Whether the elapsed time should be printed to the console</p>
@@ -1200,19 +1219,29 @@ value: lit of str</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_get.get_files">
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_get.</span></span><span class="sig-name descname"><span class="pre">get_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.rvt'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_get.get_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a list of files from a given folder with a given file extension
-:param folder_path: Folder path from which to get files to be combined and to which the combined file will be saved.
-:type folder_path: str
-:param file_extension: Filter: File needs to have this file extension, defaults to ‘.rvt’
-:type file_extension: str, optional
-:return: List of file path
-:rtype: list of str</p>
+<dd><p>Gets a list of files from a given folder with a given file extension.
+(Returns the full path for each file!)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – Folder path from which to get files to be combined and to which the combined file will be saved.</p></li>
+<li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>optional</em>) – Filter: File needs to have this file extension, defaults to ‘.rvt’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of file path</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_get.get_files_with_filter">
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_get.</span></span><span class="sig-name descname"><span class="pre">get_files_with_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.rvt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_get.get_files_with_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a list of files from a given folder with a given file extension and a matching a file name filter.</p>
+<dd><p>Gets a list of files from a given folder with a given file extension and a matching a file name filter.
+(Returns the full path for each file!)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1321,6 +1350,18 @@ value: lit of str</p>
 :param new_name: Fully qualified path to new file location and name.
 :type new_name: str
 :return: True file copied, otherwise False
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.file_move">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_io.</span></span><span class="sig-name descname"><span class="pre">file_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.file_move" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves a file
+:param old_name: Fully qualified file path to file to be moved.
+:type old_name: str
+:param new_name: Fully qualified path to new file location and name.
+:type new_name: str
+:return: True file moved, otherwise False
 :rtype: bool</p>
 </dd></dl>
 
@@ -1661,6 +1702,35 @@ Assumes:</p>
 </dd></dl>
 
 </section>
+<section id="module-duHast.Utilities.log_decorator">
+<span id="duhast-utilities-log-decorator-module"></span><h2>duHast.Utilities.log_decorator module<a class="headerlink" href="#module-duHast.Utilities.log_decorator" title="Permalink to this heading">¶</a></h2>
+<section id="a-decorator-factory-that-returns-a-decorator-that-can-be-used-to-add-logging-to-a-function">
+<h3>A decorator factory that returns a decorator that can be used to add logging to a function<a class="headerlink" href="#a-decorator-factory-that-returns-a-decorator-that-can-be-used-to-add-logging-to-a-function" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.log_decorator.get_add_logger_decorator">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.log_decorator.</span></span><span class="sig-name descname"><span class="pre">get_add_logger_decorator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_obj_inst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errors_in_console</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.log_decorator.get_add_logger_decorator" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a decorator factory that returns a decorator that can be used to add logging to a function.
+Pass this function an instance of the LoggerObject class from duHast.Utilities.Objects.logger_object.py.
+Inherit and extend this class to the needs of your application. This will connect the decorator to
+the logger object application wide. Assign the return value to a variable called log or add_logger etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log_obj_inst</strong> (<a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject" title="duHast.Utilities.Objects.logger_object.LoggerObject"><em>duHast.Utilities.Objects.logger_object.LoggerObject</em></a>) – An instance of the LoggerObject class from duHast.Utilities.Objects.logger_object.py</p></li>
+<li><p><strong>errors_in_console</strong> (<em>bool</em>) – Whether to output errors to the console. Defaults to True. Turn off to handle in the application code</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A decorator that can be used to add logging to a function</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>function</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Utilities.padding">
 <span id="duhast-utilities-padding-module"></span><h2>duHast.Utilities.padding module<a class="headerlink" href="#module-duHast.Utilities.padding" title="Permalink to this heading">¶</a></h2>
 <section id="this-module-contains-string-padding-functions-for-message-formatting">
@@ -1850,6 +1920,17 @@ If message is longer then 70-2 characters it will be returned un-changed.</p>
 </dd>
 </dl>
 </dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.sub_process">
+<span id="duhast-utilities-sub-process-module"></span><h2>duHast.Utilities.sub_process module<a class="headerlink" href="#module-duHast.Utilities.sub_process" title="Permalink to this heading">¶</a></h2>
+<section id="start-a-sub-process-in-a-python-version-of-choice">
+<h3>Start a sub process in a python version of choice.<a class="headerlink" href="#start-a-sub-process-in-a-python-version-of-choice" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.sub_process.start_sub_process">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.sub_process.</span></span><span class="sig-name descname"><span class="pre">start_sub_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">python_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">script_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.sub_process.start_sub_process" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </section>
 <section id="module-duHast.Utilities.system_process">
@@ -2257,6 +2338,23 @@ If message is longer then 70-2 characters it will be returned un-changed.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.flatten_list">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.utility.</span></span><span class="sig-name descname"><span class="pre">flatten_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.flatten_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to flatten a nested list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>lst</strong> (<em>list</em>) – The list to be flattened</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The flattened list</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>

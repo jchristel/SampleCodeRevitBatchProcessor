@@ -108,6 +108,14 @@ duHast.Utilities.files\_tab module
    :undoc-members:
    :show-inheritance:
 
+duHast.Utilities.log\_decorator module
+--------------------------------------
+
+.. automodule:: duHast.Utilities.log_decorator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Utilities.padding module
 -------------------------------
 
@@ -120,6 +128,14 @@ duHast.Utilities.solibri\_ifc\_optimizer module
 -----------------------------------------------
 
 .. automodule:: duHast.Utilities.solibri_ifc_optimizer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Utilities.sub\_process module
+------------------------------------
+
+.. automodule:: duHast.Utilities.sub_process
    :members:
    :undoc-members:
    :show-inheritance:

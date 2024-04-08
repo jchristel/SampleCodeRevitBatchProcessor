@@ -8,9 +8,11 @@ Subpackages
    :maxdepth: 4
 
    duHast.Data
+   duHast.Excel
    duHast.Revit
    duHast.UI
    duHast.Utilities
+   duHast.pyRevit
 
 Module contents
 ---------------

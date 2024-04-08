@@ -1,0 +1,21 @@
+duHast.Excel package
+====================
+
+Submodules
+----------
+
+duHast.Excel.excel\_io module
+-----------------------------
+
+.. automodule:: duHast.Excel.excel_io
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Excel
+   :members:
+   :undoc-members:
+   :show-inheritance:

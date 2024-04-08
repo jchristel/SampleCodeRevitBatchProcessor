@@ -20,6 +20,22 @@ duHast.Revit.Categories.Reporting.categories\_report\_utils module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Categories.Reporting.categories\_styles\_model\_io module
+----------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Categories.Reporting.categories_styles_model_io
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Categories.Reporting.categories\_styles\_model\_json\_props module
+-------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Categories.Reporting.categories_styles_model_json_props
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

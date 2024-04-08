@@ -18,7 +18,7 @@
     <link rel="top" title="Sample Code Revit Batch Processor 0.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
     <link rel="next" title="duHast.Revit.Annotation package" href="duHast.Revit.Annotation.html" />
-    <link rel="prev" title="duHast.Data.Utils package" href="duHast.Data.Utils.html" />
+    <link rel="prev" title="duHast.Excel package" href="duHast.Excel.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
@@ -32,7 +32,7 @@
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
             <div class="headerButton"><a href="duHast.Revit.Annotation.html" title="duHast.Revit.Annotation package" accesskey="N">next</a></div>
-            <div class="headerButton"><a href="duHast.Data.Utils.html" title="duHast.Data.Utils package" accesskey="P">previous</a></div>
+            <div class="headerButton"><a href="duHast.Excel.html" title="duHast.Excel package" accesskey="P">previous</a></div>
         </li>
     </ul>
 </div>
@@ -46,9 +46,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
@@ -313,17 +315,24 @@
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Categories.html">duHast.Revit.Categories package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Data.html">duHast.Revit.Categories.Data package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.html#module-duHast.Revit.Categories.Data.category_data">duHast.Revit.Categories.Data.category_data module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.html#module-duHast.Revit.Categories.Data.category_data_processor">duHast.Revit.Categories.Data.category_data_processor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.html#module-duHast.Revit.Categories.Data.category_data_purge_unused">duHast.Revit.Categories.Data.category_data_purge_unused module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.html#module-duHast.Revit.Categories.Data">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Objects.html">duHast.Revit.Categories.Objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Objects.html#module-duHast.Revit.Categories.Objects.object_style">duHast.Revit.Categories.Objects.object_style module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Objects.html#module-duHast.Revit.Categories.Objects">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html">duHast.Revit.Categories.Reporting package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html#module-duHast.Revit.Categories.Reporting.categories_report_header">duHast.Revit.Categories.Reporting.categories_report_header module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html#module-duHast.Revit.Categories.Reporting.categories_report_utils">duHast.Revit.Categories.Reporting.categories_report_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html#module-duHast.Revit.Categories.Reporting.categories_styles_model_io">duHast.Revit.Categories.Reporting.categories_styles_model_io module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html#module-duHast.Revit.Categories.Reporting.categories_styles_model_json_props">duHast.Revit.Categories.Reporting.categories_styles_model_json_props module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Reporting.html#module-duHast.Revit.Categories.Reporting">Module contents</a></li>
 </ul>
 </li>
@@ -364,8 +373,22 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#duHast.Revit.Categories.categories_model.get_categories_in_model"><code class="docutils literal notranslate"><span class="pre">get_categories_in_model()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#duHast.Revit.Categories.categories_model.get_category_from_builtInCategory"><code class="docutils literal notranslate"><span class="pre">get_category_from_builtInCategory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#duHast.Revit.Categories.categories_model.get_builtInCategory_from_category"><code class="docutils literal notranslate"><span class="pre">get_builtInCategory_from_category()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#duHast.Revit.Categories.categories_model.get_category_by_names"><code class="docutils literal notranslate"><span class="pre">get_category_by_names()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#duHast.Revit.Categories.categories_model.get_builtin_category_by_name"><code class="docutils literal notranslate"><span class="pre">get_builtin_category_by_name()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.html#module-duHast.Revit.Categories.categories_styles_model">duHast.Revit.Categories.categories_styles_model module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#revit-category-graphics-helper-functions-for-project-files">Revit category graphics helper functions for project files.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#duHast.Revit.Categories.categories_styles_model.set_cut_style"><code class="docutils literal notranslate"><span class="pre">set_cut_style()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#duHast.Revit.Categories.categories_styles_model.get_cut_style"><code class="docutils literal notranslate"><span class="pre">get_cut_style()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#duHast.Revit.Categories.categories_styles_model.set_projection_style"><code class="docutils literal notranslate"><span class="pre">set_projection_style()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#duHast.Revit.Categories.categories_styles_model.get_projection_style"><code class="docutils literal notranslate"><span class="pre">get_projection_style()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#duHast.Revit.Categories.categories_styles_model.set_category_material_by_material_id"><code class="docutils literal notranslate"><span class="pre">set_category_material_by_material_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#duHast.Revit.Categories.categories_styles_model.set_category_style"><code class="docutils literal notranslate"><span class="pre">set_category_style()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#duHast.Revit.Categories.categories_styles_model.get_category_styles"><code class="docutils literal notranslate"><span class="pre">get_category_styles()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#duHast.Revit.Categories.categories_styles_model.get_all_used_line_patterns_ids_from_categories"><code class="docutils literal notranslate"><span class="pre">get_all_used_line_patterns_ids_from_categories()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Categories.html#duHast.Revit.Categories.categories_styles_model.get_not_equal_category_styles"><code class="docutils literal notranslate"><span class="pre">get_not_equal_category_styles()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Categories.html#module-duHast.Revit.Categories.change_family_category">duHast.Revit.Categories.change_family_category module</a><ul>
@@ -457,6 +480,8 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html">duHast.Revit.Common.Objects package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.FailureHandlingConfiguration">duHast.Revit.Common.Objects.FailureHandlingConfiguration module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.FailuresPreProcessor">duHast.Revit.Common.Objects.FailuresPreProcessor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.ParameterDirectiveBase">duHast.Revit.Common.Objects.ParameterDirectiveBase module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.ParameterMappingDirective">duHast.Revit.Common.Objects.ParameterMappingDirective module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects">Module contents</a></li>
@@ -548,17 +573,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.html#module-duHast.Revit.Common.failure_handling">duHast.Revit.Common.failure_handling module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#a-number-of-helper-functions-regarding-advanced-failure-handling">A number of helper functions regarding advanced failure handling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.failure_handling.Output"><code class="docutils literal notranslate"><span class="pre">Output()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.failure_handling.get_failure_warning_report"><code class="docutils literal notranslate"><span class="pre">get_failure_warning_report()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.failure_handling.process_failures"><code class="docutils literal notranslate"><span class="pre">process_failures()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.failure_handling.FailuresPreprocessor"><code class="docutils literal notranslate"><span class="pre">FailuresPreprocessor</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.failure_handling.FailuresPreprocessor.PreprocessFailures"><code class="docutils literal notranslate"><span class="pre">FailuresPreprocessor.PreprocessFailures()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.failure_handling.SetTransactionFailureOptions"><code class="docutils literal notranslate"><span class="pre">SetTransactionFailureOptions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.failure_handling.set_failures_accessor_failure_options"><code class="docutils literal notranslate"><span class="pre">set_failures_accessor_failure_options()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.failure_handling.FailuresProcessingEventHandler"><code class="docutils literal notranslate"><span class="pre">FailuresProcessingEventHandler()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.failure_handling.with_failures_processing_handler"><code class="docutils literal notranslate"><span class="pre">with_failures_processing_handler()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.failure_handling.in_transaction_with_failures_processing"><code class="docutils literal notranslate"><span class="pre">in_transaction_with_failures_processing()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.html#module-duHast.Revit.Common.file_io">duHast.Revit.Common.file_io module</a><ul>
@@ -651,6 +669,7 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.html#module-duHast.Revit.Common.transaction">duHast.Revit.Common.transaction module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#revit-transaction-wrapper-utility-functions">Revit transaction wrapper utility functions.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.transaction.in_transaction"><code class="docutils literal notranslate"><span class="pre">in_transaction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.transaction.in_transaction_with_failure_handling"><code class="docutils literal notranslate"><span class="pre">in_transaction_with_failure_handling()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.html#module-duHast.Revit.Common.worksets">duHast.Revit.Common.worksets module</a><ul>
@@ -667,6 +686,7 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.worksets.is_element_on_workset_by_name"><code class="docutils literal notranslate"><span class="pre">is_element_on_workset_by_name()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.worksets.get_element_workset_name"><code class="docutils literal notranslate"><span class="pre">get_element_workset_name()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.worksets.update_workset_default_visibility_from_report"><code class="docutils literal notranslate"><span class="pre">update_workset_default_visibility_from_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.html#duHast.Revit.Common.worksets.create_workset"><code class="docutils literal notranslate"><span class="pre">create_workset()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.html#module-duHast.Revit.Common">Module contents</a></li>
@@ -720,6 +740,15 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Doors.html">duHast.Revit.Doors package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Doors.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Doors.Export.html">duHast.Revit.Doors.Export package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Doors.Export.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Doors.Export.html#module-duHast.Revit.Doors.Export.to_data_door">duHast.Revit.Doors.Export.to_data_door module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Doors.Export.html#module-duHast.Revit.Doors.Export">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Doors.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Doors.html#module-duHast.Revit.Doors.doors">duHast.Revit.Doors.doors module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Doors.html#this-module-contains-a-number-of-functions-around-revit-doors">This module contains a number of functions around Revit doors.</a></li>
@@ -792,23 +821,18 @@
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Family.html">duHast.Revit.Family package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Data.html">duHast.Revit.Family.Data package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.family_base_data">duHast.Revit.Family.Data.family_base_data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.family_base_data_circular_referencing">duHast.Revit.Family.Data.family_base_data_circular_referencing module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.family_base_data_missing_families">duHast.Revit.Family.Data.family_base_data_missing_families module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.family_base_data_processor">duHast.Revit.Family.Data.family_base_data_processor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.family_base_data_reload_advanced">duHast.Revit.Family.Data.family_base_data_reload_advanced module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#duhast-revit-family-data-family-base-data-reload-advanced-module">duHast.Revit.Family.Data.family_base_data_reload_advanced module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.family_base_data_utils">duHast.Revit.Family.Data.family_base_data_utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.family_category_data_utils">duHast.Revit.Family.Data.family_category_data_utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.family_data_collector">duHast.Revit.Family.Data.family_data_collector module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.family_reload_advanced_utils">duHast.Revit.Family.Data.family_reload_advanced_utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.family_rename_files">duHast.Revit.Family.Data.family_rename_files module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.family_rename_find_host_families">duHast.Revit.Family.Data.family_rename_find_host_families module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.family_rename_loaded_families">duHast.Revit.Family.Data.family_rename_loaded_families module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.family_report_utils">duHast.Revit.Family.Data.family_report_utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.ifamily_action">duHast.Revit.Family.Data.ifamily_action module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.ifamily_data">duHast.Revit.Family.Data.ifamily_data module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data.ifamily_processor">duHast.Revit.Family.Data.ifamily_processor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.html#module-duHast.Revit.Family.Data">Module contents</a></li>
 </ul>
 </li>
@@ -842,6 +866,7 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.html#module-duHast.Revit.Family.family_instance_create">duHast.Revit.Family.family_instance_create module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.html#revit-family-instance-placement-helper-functions">Revit family instance placement helper functions.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.html#duHast.Revit.Family.family_instance_create.place_a_family_instance_by_level"><code class="docutils literal notranslate"><span class="pre">place_a_family_instance_by_level()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.html#duHast.Revit.Family.family_instance_create.place_a_family_instance_in_basic_wall"><code class="docutils literal notranslate"><span class="pre">place_a_family_instance_in_basic_wall()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.html#module-duHast.Revit.Family.family_load_option">duHast.Revit.Family.family_load_option module</a><ul>
@@ -1044,6 +1069,8 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Levels.html#duHast.Revit.Levels.levels.get_all_level_types_by_category"><code class="docutils literal notranslate"><span class="pre">get_all_level_types_by_category()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Levels.html#duHast.Revit.Levels.levels.get_all_level_type_ids_by_category"><code class="docutils literal notranslate"><span class="pre">get_all_level_type_ids_by_category()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Levels.html#duHast.Revit.Levels.levels.get_all_level_head_family_type_ids"><code class="docutils literal notranslate"><span class="pre">get_all_level_head_family_type_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Levels.html#duHast.Revit.Levels.levels.get_nearest_level_absolute"><code class="docutils literal notranslate"><span class="pre">get_nearest_level_absolute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Levels.html#duHast.Revit.Levels.levels.get_nearest_lowest_level"><code class="docutils literal notranslate"><span class="pre">get_nearest_lowest_level()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Levels.html#module-duHast.Revit.Levels.levels_appearance">duHast.Revit.Levels.levels_appearance module</a><ul>
@@ -1070,8 +1097,16 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.LinePattern.html">duHast.Revit.LinePattern package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.LinePattern.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.Data.html">duHast.Revit.LinePattern.Data package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.Data.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.Data.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.Data.html#module-duHast.Revit.LinePattern.Data.line_pattern_data_purge_unused">duHast.Revit.LinePattern.Data.line_pattern_data_purge_unused module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.Data.html#module-duHast.Revit.LinePattern.Data">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.Objects.html">duHast.Revit.LinePattern.Objects package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.Objects.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.Objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.Objects.html#module-duHast.Revit.LinePattern.Objects.LineStylePurgeModifier">duHast.Revit.LinePattern.Objects.LineStylePurgeModifier module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.Objects.html#module-duHast.Revit.LinePattern.Objects">Module contents</a></li>
 </ul>
 </li>
@@ -1082,28 +1117,7 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#revit-fill-patterns-helper-functions">Revit fill patterns helper functions.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.fill_patterns.get_all_fill_pattern"><code class="docutils literal notranslate"><span class="pre">get_all_fill_pattern()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.fill_patterns.pattern_ids_by_name"><code class="docutils literal notranslate"><span class="pre">pattern_ids_by_name()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.LinePattern.html#module-duHast.Revit.LinePattern.line_pattern_data">duHast.Revit.LinePattern.line_pattern_data module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#family-line-pattern-data-class">Family line pattern data class.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.line_pattern_data.LinePatternData"><code class="docutils literal notranslate"><span class="pre">LinePatternData</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.line_pattern_data.LinePatternData.process"><code class="docutils literal notranslate"><span class="pre">LinePatternData.process()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.line_pattern_data.LinePatternData.get_data"><code class="docutils literal notranslate"><span class="pre">LinePatternData.get_data()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.LinePattern.html#module-duHast.Revit.LinePattern.line_pattern_data_processor">duHast.Revit.LinePattern.line_pattern_data_processor module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#family-line-pattern-data-processor-class">Family line pattern data processor class.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.line_pattern_data_processor.LinePatternProcessor"><code class="docutils literal notranslate"><span class="pre">LinePatternProcessor</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.line_pattern_data_processor.LinePatternProcessor.process"><code class="docutils literal notranslate"><span class="pre">LinePatternProcessor.process()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.LinePattern.html#module-duHast.Revit.LinePattern.line_pattern_data_purge_unused">duHast.Revit.LinePattern.line_pattern_data_purge_unused module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#family-line-pattern-purge-unused-utilities">Family line pattern purge unused utilities.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.line_pattern_data_purge_unused.purge_unused"><code class="docutils literal notranslate"><span class="pre">purge_unused()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.fill_patterns.get_used_pattern_ids_in_filled_region_types"><code class="docutils literal notranslate"><span class="pre">get_used_pattern_ids_in_filled_region_types()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.LinePattern.html#module-duHast.Revit.LinePattern.line_patterns">duHast.Revit.LinePattern.line_patterns module</a><ul>
@@ -1125,11 +1139,24 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#revit-line-line-styles-helper-functions">Revit line line styles helper functions.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.line_styles.delete_line_styles_starts_with"><code class="docutils literal notranslate"><span class="pre">delete_line_styles_starts_with()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.line_styles.get_all_line_style_ids"><code class="docutils literal notranslate"><span class="pre">get_all_line_style_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.line_styles.get_all_graphics_style_ids_by_line_style_id"><code class="docutils literal notranslate"><span class="pre">get_all_graphics_style_ids_by_line_style_id()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.LinePattern.html#module-duHast.Revit.LinePattern.purge_unused_line_patterns">duHast.Revit.LinePattern.purge_unused_line_patterns module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#function-to-purge-revit-line-patterns">Function to purge Revit line patterns.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.purge_unused_line_patterns.purge_unused_line_patterns"><code class="docutils literal notranslate"><span class="pre">purge_unused_line_patterns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.LinePattern.html#module-duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete">duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#revit-purging-not-used-fill-pattern-styles-using-purge-by-delete-helper-functions">Revit purging not used fill pattern styles using purge by delete helper functions.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete.get_fill_pattern_ids"><code class="docutils literal notranslate"><span class="pre">get_fill_pattern_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete.purge_fill_pattern_by_delete"><code class="docutils literal notranslate"><span class="pre">purge_fill_pattern_by_delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.LinePattern.html#module-duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete">duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#revit-purging-not-used-line-pattern-styles-using-purge-by-delete-helper-functions">Revit purging not used line pattern styles using purge by delete helper functions.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete.get_line_pattern_ids"><code class="docutils literal notranslate"><span class="pre">get_line_pattern_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete.purge_line_pattern_by_delete"><code class="docutils literal notranslate"><span class="pre">purge_line_pattern_by_delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.LinePattern.html#module-duHast.Revit.LinePattern.purge_unused_line_styles_by_delete">duHast.Revit.LinePattern.purge_unused_line_styles_by_delete module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#revit-purging-not-used-line-styles-by-using-the-purge-by-delete-helper-functions">Revit purging not used line styles by using the purge by delete helper functions.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.LinePattern.html#duHast.Revit.LinePattern.purge_unused_line_styles_by_delete.purge_line_styles_by_delete"><code class="docutils literal notranslate"><span class="pre">purge_line_styles_by_delete()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.LinePattern.html#module-duHast.Revit.LinePattern">Module contents</a></li>
@@ -1376,6 +1403,15 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Purge.html">duHast.Revit.Purge package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Purge.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Purge.Objects.html">duHast.Revit.Purge.Objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Purge.Objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Purge.Objects.html#module-duHast.Revit.Purge.Objects.ModifierBase">duHast.Revit.Purge.Objects.ModifierBase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Purge.Objects.html#module-duHast.Revit.Purge.Objects">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Purge.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Purge.html#module-duHast.Revit.Purge.purge_action">duHast.Revit.Purge.purge_action module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Purge.html#purge-action-storage-class-for-revit-purge-unused">Purge action storage class for Revit purge unused.</a></li>
@@ -1388,6 +1424,13 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Purge.html#duHast.Revit.Purge.purge_unused.PURGE_ACTIONS"><code class="docutils literal notranslate"><span class="pre">PURGE_ACTIONS</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Purge.html#duHast.Revit.Purge.purge_unused.SPACER"><code class="docutils literal notranslate"><span class="pre">SPACER</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Purge.html#duHast.Revit.Purge.purge_unused.purge_unused"><code class="docutils literal notranslate"><span class="pre">purge_unused()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Purge.html#module-duHast.Revit.Purge.purge_unused_by_delete">duHast.Revit.Purge.purge_unused_by_delete module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Purge.html#function-to-purge-unused-elements-by-delete-test">Function to purge unused elements by delete test.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Purge.html#duHast.Revit.Purge.purge_unused_by_delete.document_change_purge_element"><code class="docutils literal notranslate"><span class="pre">document_change_purge_element()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Purge.html#duHast.Revit.Purge.purge_unused_by_delete.pre_process_failures"><code class="docutils literal notranslate"><span class="pre">pre_process_failures()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Purge.html#duHast.Revit.Purge.purge_unused_by_delete.purge_unused_elements"><code class="docutils literal notranslate"><span class="pre">purge_unused_elements()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Purge.html#module-duHast.Revit.Purge.purge_unused_e_transmit">duHast.Revit.Purge.purge_unused_e_transmit module</a><ul>
@@ -1630,6 +1673,13 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.SharedParameters.html">duHast.Revit.SharedParameters package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.SharedParameters.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.html">duHast.Revit.SharedParameters.Data package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.html#module-duHast.Revit.SharedParameters.Data.shared_parameter_data_purge_Unused">duHast.Revit.SharedParameters.Data.shared_parameter_data_purge_Unused module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.html#module-duHast.Revit.SharedParameters.Data">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.Reporting.html">duHast.Revit.SharedParameters.Reporting package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.SharedParameters.Reporting.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.SharedParameters.Reporting.html#module-duHast.Revit.SharedParameters.Reporting.shared_parameter_report">duHast.Revit.SharedParameters.Reporting.shared_parameter_report module</a></li>
@@ -1640,11 +1690,18 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.SharedParameters.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.SharedParameters.html#module-duHast.Revit.SharedParameters.purge_unused_shared_parameters_by_delete">duHast.Revit.SharedParameters.purge_unused_shared_parameters_by_delete module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.html#revit-purging-not-used-shared-parameters-using-purge-by-delete-helper-functions">Revit purging not used shared parameters using purge by delete helper functions.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.html#duHast.Revit.SharedParameters.purge_unused_shared_parameters_by_delete.get_shared_parameter_ids"><code class="docutils literal notranslate"><span class="pre">get_shared_parameter_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.html#duHast.Revit.SharedParameters.purge_unused_shared_parameters_by_delete.purge_shared_parameters_by_delete"><code class="docutils literal notranslate"><span class="pre">purge_shared_parameters_by_delete()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.SharedParameters.html#module-duHast.Revit.SharedParameters.shared_parameter_add">duHast.Revit.SharedParameters.shared_parameter_add module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.html#this-module-contains-a-function-to-bind-a-shared-parameter-to-a-category">This module contains a function to bind a shared parameter to a category.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.html#duHast.Revit.SharedParameters.shared_parameter_add.load_shared_parameter_file"><code class="docutils literal notranslate"><span class="pre">load_shared_parameter_file()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.html#duHast.Revit.SharedParameters.shared_parameter_add.bind_shared_parameter"><code class="docutils literal notranslate"><span class="pre">bind_shared_parameter()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.html#duHast.Revit.SharedParameters.shared_parameter_add.add_shared_parameter_to_family"><code class="docutils literal notranslate"><span class="pre">add_shared_parameter_to_family()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.html#duHast.Revit.SharedParameters.shared_parameter_add.bind_shared_parameters_to_new_category"><code class="docutils literal notranslate"><span class="pre">bind_shared_parameters_to_new_category()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.SharedParameters.html#module-duHast.Revit.SharedParameters.shared_parameter_data">duHast.Revit.SharedParameters.shared_parameter_data module</a><ul>
@@ -1671,6 +1728,7 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.SharedParameters.html#module-duHast.Revit.SharedParameters.shared_parameters">duHast.Revit.SharedParameters.shared_parameters module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.html#this-module-contains-a-number-of-helper-functions-relating-to-revit-shared-parameters">This module contains a number of helper functions relating to Revit shared parameters.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.html#duHast.Revit.SharedParameters.shared_parameters.get_all_shared_parameters"><code class="docutils literal notranslate"><span class="pre">get_all_shared_parameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.html#duHast.Revit.SharedParameters.shared_parameters.get_all_shared_parameters_from_file"><code class="docutils literal notranslate"><span class="pre">get_all_shared_parameters_from_file()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.html#duHast.Revit.SharedParameters.shared_parameters.get_family_shared_parameters"><code class="docutils literal notranslate"><span class="pre">get_family_shared_parameters()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.html#duHast.Revit.SharedParameters.shared_parameters.get_family_parameters"><code class="docutils literal notranslate"><span class="pre">get_family_parameters()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.html#duHast.Revit.SharedParameters.shared_parameters.check_whether_shared_parameters_are_in_file"><code class="docutils literal notranslate"><span class="pre">check_whether_shared_parameters_are_in_file()</span></code></a></li>
@@ -2073,9 +2131,7 @@
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Warnings.html">duHast.Revit.Warnings package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Warnings.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Warnings.Data.html">duHast.Revit.Warnings.Data package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#module-duHast.Revit.Warnings.Data.warnings_data">duHast.Revit.Warnings.Data.warnings_data module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#module-duHast.Revit.Warnings.Data.warnings_data_processor">duHast.Revit.Warnings.Data.warnings_data_processor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#module-duHast.Revit.Warnings.Data">Module contents</a></li>
 </ul>
 </li>
@@ -2130,6 +2186,7 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Warnings.html#duplicate-mark-warnings-solver-class">Duplicate mark warnings solver class.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Warnings.html#duHast.Revit.Warnings.solver_duplicate_mark.RevitWarningsSolverDuplicateMark"><code class="docutils literal notranslate"><span class="pre">RevitWarningsSolverDuplicateMark</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.html#duHast.Revit.Warnings.solver_duplicate_mark.RevitWarningsSolverDuplicateMark.GUID"><code class="docutils literal notranslate"><span class="pre">RevitWarningsSolverDuplicateMark.GUID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.html#duHast.Revit.Warnings.solver_duplicate_mark.RevitWarningsSolverDuplicateMark.IGNORED_WARNINGS"><code class="docutils literal notranslate"><span class="pre">RevitWarningsSolverDuplicateMark.IGNORED_WARNINGS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.html#duHast.Revit.Warnings.solver_duplicate_mark.RevitWarningsSolverDuplicateMark.solve_warnings"><code class="docutils literal notranslate"><span class="pre">RevitWarningsSolverDuplicateMark.solve_warnings()</span></code></a></li>
 </ul>
 </li>
@@ -2157,6 +2214,7 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Warnings.html#this-module-contains-a-number-of-helper-functions-relating-to-revit-warnings">This module contains a number of helper functions relating to Revit warnings.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Warnings.html#duHast.Revit.Warnings.warnings.get_warnings"><code class="docutils literal notranslate"><span class="pre">get_warnings()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Warnings.html#duHast.Revit.Warnings.warnings.get_warnings_by_guid"><code class="docutils literal notranslate"><span class="pre">get_warnings_by_guid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Warnings.html#duHast.Revit.Warnings.warnings.get_warnings_grouped_by_relation"><code class="docutils literal notranslate"><span class="pre">get_warnings_grouped_by_relation()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Warnings.html#module-duHast.Revit.Warnings">Module contents</a></li>

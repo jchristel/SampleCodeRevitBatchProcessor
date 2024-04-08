@@ -1,0 +1,45 @@
+duHast.Revit.LinePattern.Data.Objects package
+=============================================
+
+Submodules
+----------
+
+duHast.Revit.LinePattern.Data.Objects.fill\_pattern\_settings module
+--------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.LinePattern.Data.Objects.fill_pattern_settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.LinePattern.Data.Objects.line\_pattern\_data module
+----------------------------------------------------------------
+
+.. automodule:: duHast.Revit.LinePattern.Data.Objects.line_pattern_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.LinePattern.Data.Objects.line\_pattern\_data\_processor module
+---------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.LinePattern.Data.Objects.line\_pattern\_settings module
+--------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.LinePattern.Data.Objects.line_pattern_settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.LinePattern.Data.Objects
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 0.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.UI package" href="duHast.UI.html" />
-    <link rel="next" title="duHast.Utilities package" href="duHast.Utilities.html" />
+    <link rel="next" title="duHast.UI.files_select package" href="duHast.UI.files_select.html" />
     <link rel="prev" title="duHast.UI package" href="duHast.UI.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
@@ -31,7 +31,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="duHast.Utilities.html" title="duHast.Utilities package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.UI.files_select.html" title="duHast.UI.files_select package" accesskey="N">next</a></div>
             <div class="headerButton"><a href="duHast.UI.html" title="duHast.UI package" accesskey="P">previous</a></div>
         </li>
     </ul>
@@ -46,9 +46,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
@@ -91,6 +93,112 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
+<section id="module-duHast.UI.Objects.Command">
+<span id="duhast-ui-objects-command-module"></span><h2>duHast.UI.Objects.Command module<a class="headerlink" href="#module-duHast.UI.Objects.Command" title="Permalink to this heading">¶</a></h2>
+<section id="a-class-to-handle-wpf-command-bindings">
+<h3>A class to handle wpf command bindings.<a class="headerlink" href="#a-class-to-handle-wpf-command-bindings" title="Permalink to this heading">¶</a></h3>
+<p>Based on:</p>
+<p><a class="reference external" href="https://markheath.net/post/wpf-and-mvvm-in-ironpython">https://markheath.net/post/wpf-and-mvvm-in-ironpython</a></p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.UI.Objects.Command.Command">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.UI.Objects.Command.</span></span><span class="sig-name descname"><span class="pre">Command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.Command.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ICommand</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.Command.Command.Execute">
+<span class="sig-name descname"><span class="pre">Execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.Command.Command.Execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.Command.Command.add_CanExecuteChanged">
+<span class="sig-name descname"><span class="pre">add_CanExecuteChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.Command.Command.add_CanExecuteChanged" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.Command.Command.remove_CanExecuteChanged">
+<span class="sig-name descname"><span class="pre">remove_CanExecuteChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.Command.Command.remove_CanExecuteChanged" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.Command.Command.CanExecute">
+<span class="sig-name descname"><span class="pre">CanExecute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.Command.Command.CanExecute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.UI.Objects.ProgressBase">
+<span id="duhast-ui-objects-progressbase-module"></span><h2>duHast.UI.Objects.ProgressBase module<a class="headerlink" href="#module-duHast.UI.Objects.ProgressBase" title="Permalink to this heading">¶</a></h2>
+<section id="a-class-used-to-wrap-a-progress-form-into-a-call-back-function">
+<h3>A class used to wrap a progress form into a call back function.<a class="headerlink" href="#a-class-used-to-wrap-a-progress-form-into-a-call-back-function" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.UI.Objects.ProgressBase.ProgressBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.UI.Objects.ProgressBase.</span></span><span class="sig-name descname"><span class="pre">ProgressBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">form</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.ProgressBase.ProgressBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Class constructor.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>form: The progress form to wrap</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.ProgressBase.ProgressBase.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.ProgressBase.ProgressBase.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base implementation to update the progress form.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>count: The current count
+total: The total count
+message: The message to display</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.UI.Objects.ViewModelBase">
+<span id="duhast-ui-objects-viewmodelbase-module"></span><h2>duHast.UI.Objects.ViewModelBase module<a class="headerlink" href="#module-duHast.UI.Objects.ViewModelBase" title="Permalink to this heading">¶</a></h2>
+<section id="a-base-class-for-wpf-view-models">
+<h3>A base class for WPF view models.<a class="headerlink" href="#a-base-class-for-wpf-view-models" title="Permalink to this heading">¶</a></h3>
+<p>Based on:</p>
+<p><a class="reference external" href="https://markheath.net/post/wpf-and-mvvm-in-ironpython">https://markheath.net/post/wpf-and-mvvm-in-ironpython</a></p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.UI.Objects.ViewModelBase.ViewModelBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.UI.Objects.ViewModelBase.</span></span><span class="sig-name descname"><span class="pre">ViewModelBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.ViewModelBase.ViewModelBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">INotifyPropertyChanged</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.ViewModelBase.ViewModelBase.RaisePropertyChanged">
+<span class="sig-name descname"><span class="pre">RaisePropertyChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">propertyName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.ViewModelBase.ViewModelBase.RaisePropertyChanged" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.ViewModelBase.ViewModelBase.add_PropertyChanged">
+<span class="sig-name descname"><span class="pre">add_PropertyChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.ViewModelBase.ViewModelBase.add_PropertyChanged" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.ViewModelBase.ViewModelBase.remove_PropertyChanged">
+<span class="sig-name descname"><span class="pre">remove_PropertyChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.ViewModelBase.ViewModelBase.remove_PropertyChanged" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.UI.Objects.XamlLoader">
+<span id="duhast-ui-objects-xamlloader-module"></span><h2>duHast.UI.Objects.XamlLoader module<a class="headerlink" href="#module-duHast.UI.Objects.XamlLoader" title="Permalink to this heading">¶</a></h2>
+<section id="a-class-to-load-xaml-files">
+<h3>A class to load xaml files.<a class="headerlink" href="#a-class-to-load-xaml-files" title="Permalink to this heading">¶</a></h3>
+<p>Based on:</p>
+<p><a class="reference external" href="https://markheath.net/post/wpf-and-mvvm-in-ironpython">https://markheath.net/post/wpf-and-mvvm-in-ironpython</a></p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.UI.Objects.XamlLoader.XamlLoader">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.UI.Objects.XamlLoader.</span></span><span class="sig-name descname"><span class="pre">XamlLoader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xamlPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.XamlLoader.XamlLoader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+</section>
 <section id="module-duHast.UI.Objects.common_ui">
 <span id="duhast-ui-objects-common-ui-module"></span><h2>duHast.UI.Objects.common_ui module<a class="headerlink" href="#module-duHast.UI.Objects.common_ui" title="Permalink to this heading">¶</a></h2>
 <section id="a-collection-of-common-ui-elements">
@@ -115,6 +223,95 @@ output
 :type exitscript: bool, optional
 :param additional_content: Additional content to be put in an expander, defaults to None
 :type additional_content: str, optional</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.UI.Objects.file_item">
+<span id="duhast-ui-objects-file-item-module"></span><h2>duHast.UI.Objects.file_item module<a class="headerlink" href="#module-duHast.UI.Objects.file_item" title="Permalink to this heading">¶</a></h2>
+<section id="a-class-to-store-file-information">
+<h3>A class to store file information.<a class="headerlink" href="#a-class-to-store-file-information" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.UI.Objects.file_item.MyFileItem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.UI.Objects.file_item.</span></span><span class="sig-name descname"><span class="pre">MyFileItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bim360_project_guid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bim360_file_guid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bim360_revit_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_selected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.file_item.MyFileItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Class constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The fully qualified file path.</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – The file size.</p></li>
+<li><p><strong>bim360_project_guid</strong> (<em>str</em><em>, </em><em>optional</em>) – The BIM360 project GUID, defaults to None</p></li>
+<li><p><strong>bim360_file_guid</strong> (<em>str</em><em>, </em><em>optional</em>) – The BIM360 file GUID, defaults to None</p></li>
+<li><p><strong>bim360_revit_version</strong> (<em>str</em><em>, </em><em>optional</em>) – The revit file version (year only), defaults to ‘-’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.UI.Objects.file_select_settings">
+<span id="duhast-ui-objects-file-select-settings-module"></span><h2>duHast.UI.Objects.file_select_settings module<a class="headerlink" href="#module-duHast.UI.Objects.file_select_settings" title="Permalink to this heading">¶</a></h2>
+<section id="a-class-to-store-file-select-ui-settings">
+<h3>A class to store file select UI settings.<a class="headerlink" href="#a-class-to-store-file-select-ui-settings" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.UI.Objects.file_select_settings.FileSelectionSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.UI.Objects.file_select_settings.</span></span><span class="sig-name descname"><span class="pre">FileSelectionSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_sub_dirs_in_search</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_file_extension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.file_select_settings.FileSelectionSettings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Class constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputDirectory</strong> (<em>str</em>) – A fully qualified directory path containing files to be shown in UI.</p></li>
+<li><p><strong>include_sub_dirs_in_search</strong> (<em>bool</em>) – If True include subdirectories in file search, otherwise just root directory.</p></li>
+<li><p><strong>output_directory</strong> (<em>str</em>) – A fully qualified directory path to where task files will be written.</p></li>
+<li><p><strong>output_file_number</strong> (<em>int</em>) – The number of task files to be written out.</p></li>
+<li><p><strong>revitFileExtension</strong> (<em>str</em>) – A file extension filter applied to directory search.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.UI.Objects.workload_bucket">
+<span id="duhast-ui-objects-workload-bucket-module"></span><h2>duHast.UI.Objects.workload_bucket module<a class="headerlink" href="#module-duHast.UI.Objects.workload_bucket" title="Permalink to this heading">¶</a></h2>
+<section id="a-work-load-bucket">
+<h3>A work load bucket.<a class="headerlink" href="#a-work-load-bucket" title="Permalink to this heading">¶</a></h3>
+<p>Workload buckets are used to distribute file processing evenly between parallel running batch processor    sessions based on Revit file size.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.UI.Objects.workload_bucket.WorkloadBucket">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.UI.Objects.workload_bucket.</span></span><span class="sig-name descname"><span class="pre">WorkloadBucket</span></span><a class="headerlink" href="#duHast.UI.Objects.workload_bucket.WorkloadBucket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Class constructor.</p>
+<p>Initializes this class with:</p>
+<ul class="simple">
+<li><p>.workload_value = 0</p></li>
+<li><p>.items = []</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.workload_bucket.WorkloadBucket.set_workload_value">
+<span class="sig-name descname"><span class="pre">set_workload_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.workload_bucket.WorkloadBucket.set_workload_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the buckets overall workload value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em>) – An integer representing the workload value of this bucket.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.workload_bucket.WorkloadBucket.add_item">
+<span class="sig-name descname"><span class="pre">add_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.workload_bucket.WorkloadBucket.add_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an item to the workload list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>foo</em>) – Adds an item to the workload list.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>

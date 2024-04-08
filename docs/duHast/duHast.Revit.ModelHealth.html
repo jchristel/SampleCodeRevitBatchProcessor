@@ -46,9 +46,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
@@ -209,7 +211,7 @@ This is a faster filter in terms of performance then LINQ query refer to:
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if all parameters where found on the family and got updated successfully or no update at all was required. Otherwise False.</p></li>
+<li><p>.status True if all parameters where found on the family and got updated successfully or no update at all was required. Otherwise False.</p></li>
 <li><p>.message will be ‘Failed to get value for’</p></li>
 </ul>
 </p>
@@ -246,7 +248,7 @@ This is a faster filter in terms of performance then LINQ query refer to:
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if all model key health metric where updated successfully. Otherwise False.</p></li>
+<li><p>.status True if all model key health metric where updated successfully. Otherwise False.</p></li>
 <li><p>.message will be listing each parameter update: old value to new value</p></li>
 </ul>
 </p>
@@ -273,7 +275,7 @@ This is a faster filter in terms of performance then LINQ query refer to:
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if data was written to files successfully. Otherwise False.</p></li>
+<li><p>.status True if data was written to files successfully. Otherwise False.</p></li>
 <li><p>.message will be contain data file path for each file.</p></li>
 </ul>
 </p>

@@ -33,7 +33,7 @@ This will delete all shared parameter definitions which are not used by any fami
 
 # class used for stats reporting
 from duHast.Utilities.Objects import result as res
-from duHast.Revit.Family.Data import ifamily_data as IFamData
+from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Revit.SharedParameters import shared_parameter_data as rSharedParaData
 from duHast.Revit.Categories import categories as rCat
 from duHast.Revit.Common import delete as rDel
@@ -78,7 +78,7 @@ def purge_unused(doc, processor):
     if fam_cat_name != "Generic Annotations" and fam_cat_name.endswith("Tags") == False:
         ids_to_delete = []
         # get categories found in root processor data only
-        root_fam_data = processor._findRootFamilyData()
+        root_fam_data = processor._find_root_family_data()
         # get all root line pattern entries where usage counter == 0.
         for root_fam in root_fam_data:
             if root_fam[IFamData.USAGE_COUNTER] == 0:

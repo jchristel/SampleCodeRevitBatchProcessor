@@ -1,0 +1,935 @@
+{
+  "name": "G",
+  "directed": true,
+  "strict": false,
+  "_draw_": 
+  [
+    {
+      "op": "c",
+      "grad": "none",
+      "color": "#fffffe00"
+    },
+    {
+      "op": "C",
+      "grad": "none",
+      "color": "#ffffff"
+    },
+    {
+      "op": "P",
+      "points": [[0.000,0.000],[0.000,308.800],[1294.000,308.800],[1294.000,0.000]]
+    }
+  ],
+  "_ldraw_": 
+  [
+    {
+      "op": "F",
+      "size": 14.000,
+      "face": "Times-Roman"
+    },
+    {
+      "op": "c",
+      "grad": "none",
+      "color": "#000000"
+    },
+    {
+      "op": "T",
+      "pt": [647.000,8.200],
+      "align": "c",
+      "width": 265.570,
+      "text": "Sample family nesting structure - bottom to top"
+    }
+  ],
+  "bb": "0,0,1294,308.8",
+  "label": "Sample family nesting structure - bottom to top",
+  "lheight": "0.23",
+  "lp": "647,12.4",
+  "lwidth": "3.69",
+  "xdotversion": "1.7",
+  "_subgraph_cnt": 1,
+  "objects": [
+    {
+      "name": "cluster_0",
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "p",
+          "points": [[8.000,32.800],[8.000,300.800],[1286.000,300.800],[1286.000,32.800]]
+        }
+      ],
+      "bb": "8,32.8,1286,300.8",
+      "color": "black",
+      "label": "",
+      "_gvid": 0,
+      "nodes": [
+        1,2,3,4,5,6,7,8,9
+      ],
+      "edges": [
+        0,1,2,3,4,5,6,7,8,9,10
+      ]
+    },
+    {
+      "_gvid": 1,
+      "name": "Section Tail - Upgrade",
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "E",
+          "rect": [863.000,202.800,99.020,18.000]
+        }
+      ],
+      "_ldraw_": 
+      [
+        {
+          "op": "F",
+          "size": 14.000,
+          "face": "Times-Roman"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "T",
+          "pt": [863.000,198.600],
+          "align": "c",
+          "width": 127.900,
+          "text": "Section Tail - Upgrade"
+        }
+      ],
+      "color": "grey",
+      "height": "0.5",
+      "label": "\\N",
+      "pos": "863,202.8",
+      "style": "filled",
+      "width": "2.7572"
+    },
+    {
+      "_gvid": 2,
+      "name": "Symbol_Outlet_GPO_Double_ANN",
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "E",
+          "rect": [590.000,202.800,153.380,18.000]
+        }
+      ],
+      "_ldraw_": 
+      [
+        {
+          "op": "F",
+          "size": 14.000,
+          "face": "Times-Roman"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "T",
+          "pt": [590.000,198.600],
+          "align": "c",
+          "width": 206.080,
+          "text": "Symbol_Outlet_GPO_Double_ANN"
+        }
+      ],
+      "color": "grey",
+      "height": "0.5",
+      "label": "\\N",
+      "pos": "590,202.8",
+      "style": "filled",
+      "width": "4.2553"
+    },
+    {
+      "_gvid": 3,
+      "name": "Symbol_Outlet_Data_Triple_ANN",
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "E",
+          "rect": [1128.000,202.800,147.050,18.000]
+        }
+      ],
+      "_ldraw_": 
+      [
+        {
+          "op": "F",
+          "size": 14.000,
+          "face": "Times-Roman"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "T",
+          "pt": [1128.000,198.600],
+          "align": "c",
+          "width": 197.510,
+          "text": "Symbol_Outlet_Data_Triple_ANN"
+        }
+      ],
+      "color": "grey",
+      "height": "0.5",
+      "label": "\\N",
+      "pos": "1128,202.8",
+      "style": "filled",
+      "width": "4.091"
+    },
+    {
+      "_gvid": 4,
+      "name": "Label_Text_1_5mm_ANN",
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "E",
+          "rect": [260.000,274.800,115.760,18.000]
+        }
+      ],
+      "_ldraw_": 
+      [
+        {
+          "op": "F",
+          "size": 14.000,
+          "face": "Times-Roman"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "T",
+          "pt": [260.000,270.600],
+          "align": "c",
+          "width": 151.630,
+          "text": "Label_Text_1_5mm_ANN"
+        }
+      ],
+      "color": "grey",
+      "height": "0.5",
+      "label": "\\N",
+      "pos": "260,274.8",
+      "style": "filled",
+      "width": "3.2119"
+    },
+    {
+      "_gvid": 5,
+      "name": "Label_Text_Rotation_1_5mm_ANN",
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "E",
+          "rect": [260.000,202.800,153.940,18.000]
+        }
+      ],
+      "_ldraw_": 
+      [
+        {
+          "op": "F",
+          "size": 14.000,
+          "face": "Times-Roman"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "T",
+          "pt": [260.000,198.600],
+          "align": "c",
+          "width": 206.850,
+          "text": "Label_Text_Rotation_1_5mm_ANN"
+        }
+      ],
+      "color": "grey",
+      "height": "0.5",
+      "label": "\\N",
+      "pos": "260,202.8",
+      "style": "filled",
+      "width": "4.27"
+    },
+    {
+      "_gvid": 6,
+      "name": "GPO_EmergencyPower_Double_WallMounted_ELGP_223",
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "E",
+          "rect": [260.000,130.800,243.640,18.000]
+        }
+      ],
+      "_ldraw_": 
+      [
+        {
+          "op": "F",
+          "size": 14.000,
+          "face": "Times-Roman"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "T",
+          "pt": [260.000,126.600],
+          "align": "c",
+          "width": 337.470,
+          "text": "GPO_EmergencyPower_Double_WallMounted_ELGP_223"
+        }
+      ],
+      "color": "grey",
+      "height": "0.5",
+      "label": "\\N",
+      "pos": "260,130.8",
+      "style": "filled",
+      "width": "6.7728"
+    },
+    {
+      "_gvid": 7,
+      "name": "Bollard_Services_Laboratory_BenchMounted_3Sided_FIJO_646",
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "E",
+          "rect": [786.000,58.800,264.990,18.000]
+        }
+      ],
+      "_ldraw_": 
+      [
+        {
+          "op": "F",
+          "size": 14.000,
+          "face": "Times-Roman"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "T",
+          "pt": [786.000,54.600],
+          "align": "c",
+          "width": 367.810,
+          "text": "Bollard_Services_Laboratory_BenchMounted_3Sided_FIJO_646"
+        }
+      ],
+      "color": "grey",
+      "height": "0.5",
+      "label": "\\N",
+      "pos": "786,58.8",
+      "style": "filled",
+      "width": "7.354"
+    },
+    {
+      "_gvid": 8,
+      "name": "GPO_Double_WallMounted_ELGP_208",
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "E",
+          "rect": [692.000,130.800,170.200,18.000]
+        }
+      ],
+      "_ldraw_": 
+      [
+        {
+          "op": "F",
+          "size": 14.000,
+          "face": "Times-Roman"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "T",
+          "pt": [692.000,126.600],
+          "align": "c",
+          "width": 230.960,
+          "text": "GPO_Double_WallMounted_ELGP_208"
+        }
+      ],
+      "color": "grey",
+      "height": "0.5",
+      "label": "\\N",
+      "pos": "692,130.8",
+      "style": "filled",
+      "width": "4.7319"
+    },
+    {
+      "_gvid": 9,
+      "name": "Outlet_Data_Triple_WallMounted_ITIN_036",
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#c0c0c0"
+        },
+        {
+          "op": "E",
+          "rect": [1089.000,130.800,188.630,18.000]
+        }
+      ],
+      "_ldraw_": 
+      [
+        {
+          "op": "F",
+          "size": 14.000,
+          "face": "Times-Roman"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "T",
+          "pt": [1089.000,126.600],
+          "align": "c",
+          "width": 257.370,
+          "text": "Outlet_Data_Triple_WallMounted_ITIN_036"
+        }
+      ],
+      "color": "grey",
+      "height": "0.5",
+      "label": "\\N",
+      "pos": "1089,130.8",
+      "style": "filled",
+      "width": "5.2379"
+    }
+  ],
+  "edges": [
+    {
+      "_gvid": 0,
+      "tail": 1,
+      "head": 7,
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "b",
+          "points": [[870.280,184.670],[876.700,165.570],[883.310,135.210],[871.000,112.800],[863.950,99.980],[852.430,89.770],[840.110,81.830]]
+        }
+      ],
+      "_hdraw_": 
+      [
+        {
+          "op": "S",
+          "style": "solid"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "P",
+          "points": [[841.880,78.810],[831.500,76.700],[838.300,84.830]]
+        }
+      ],
+      "color": "blue",
+      "pos": "e,831.5,76.698 870.28,184.67 876.7,165.57 883.31,135.21 871,112.8 863.95,99.977 852.43,89.767 840.11,81.832"
+    },
+    {
+      "_gvid": 1,
+      "tail": 1,
+      "head": 8,
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "b",
+          "points": [[823.340,186.100],[799.350,176.000],[768.530,163.020],[742.770,152.180]]
+        }
+      ],
+      "_hdraw_": 
+      [
+        {
+          "op": "S",
+          "style": "solid"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "P",
+          "points": [[744.110,148.940],[733.530,148.290],[741.390,155.390]]
+        }
+      ],
+      "color": "blue",
+      "pos": "e,733.53,148.29 823.34,186.1 799.35,176 768.53,163.02 742.77,152.18"
+    },
+    {
+      "_gvid": 2,
+      "tail": 1,
+      "head": 9,
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "b",
+          "points": [[912.320,187.090],[945.320,176.570],[989.090,162.630],[1024.800,151.250]]
+        }
+      ],
+      "_hdraw_": 
+      [
+        {
+          "op": "S",
+          "style": "solid"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "P",
+          "points": [[1026.180,154.490],[1034.640,148.120],[1024.050,147.820]]
+        }
+      ],
+      "color": "blue",
+      "pos": "e,1034.6,148.12 912.32,187.09 945.32,176.57 989.09,162.63 1024.8,151.25"
+    },
+    {
+      "_gvid": 3,
+      "tail": 2,
+      "head": 6,
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "b",
+          "points": [[517.170,186.910],[467.420,176.060],[401.210,161.610],[348.430,150.090]]
+        }
+      ],
+      "_hdraw_": 
+      [
+        {
+          "op": "S",
+          "style": "solid"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "P",
+          "points": [[348.920,146.620],[338.400,147.910],[347.430,153.460]]
+        }
+      ],
+      "pos": "e,338.4,147.91 517.17,186.91 467.42,176.06 401.21,161.61 348.43,150.09"
+    },
+    {
+      "_gvid": 4,
+      "tail": 2,
+      "head": 8,
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "b",
+          "points": [[615.210,185.000],[628.210,175.830],[644.240,164.520],[658.280,154.600]]
+        }
+      ],
+      "_hdraw_": 
+      [
+        {
+          "op": "S",
+          "style": "solid"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "P",
+          "points": [[660.570,157.270],[666.720,148.640],[656.530,151.550]]
+        }
+      ],
+      "pos": "e,666.72,148.64 615.21,185 628.21,175.83 644.24,164.52 658.28,154.6"
+    },
+    {
+      "_gvid": 5,
+      "tail": 3,
+      "head": 9,
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "b",
+          "points": [[1118.160,184.630],[1113.800,176.590],[1108.590,166.970],[1103.780,158.090]]
+        }
+      ],
+      "_hdraw_": 
+      [
+        {
+          "op": "S",
+          "style": "solid"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "P",
+          "points": [[1106.810,156.340],[1098.970,149.210],[1100.660,159.670]]
+        }
+      ],
+      "pos": "e,1099,149.21 1118.2,184.63 1113.8,176.59 1108.6,166.97 1103.8,158.09"
+    },
+    {
+      "_gvid": 6,
+      "tail": 4,
+      "head": 5,
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "b",
+          "points": [[260.000,256.630],[260.000,248.930],[260.000,239.770],[260.000,231.220]]
+        }
+      ],
+      "_hdraw_": 
+      [
+        {
+          "op": "S",
+          "style": "solid"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "P",
+          "points": [[263.500,231.210],[260.000,221.210],[256.500,231.210]]
+        }
+      ],
+      "pos": "e,260,221.21 260,256.63 260,248.93 260,239.77 260,231.22"
+    },
+    {
+      "_gvid": 7,
+      "tail": 5,
+      "head": 6,
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "b",
+          "points": [[260.000,184.630],[260.000,176.930],[260.000,167.770],[260.000,159.220]]
+        }
+      ],
+      "_hdraw_": 
+      [
+        {
+          "op": "S",
+          "style": "solid"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "P",
+          "points": [[263.500,159.210],[260.000,149.210],[256.500,159.210]]
+        }
+      ],
+      "pos": "e,260,149.21 260,184.63 260,176.93 260,167.77 260,159.22"
+    },
+    {
+      "_gvid": 8,
+      "tail": 6,
+      "head": 7,
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "b",
+          "points": [[375.760,114.950],[459.120,103.540],[571.600,88.150],[657.690,76.360]]
+        }
+      ],
+      "_hdraw_": 
+      [
+        {
+          "op": "S",
+          "style": "solid"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#000000"
+        },
+        {
+          "op": "P",
+          "points": [[658.360,79.800],[667.790,74.980],[657.410,72.870]]
+        }
+      ],
+      "pos": "e,667.79,74.98 375.76,114.95 459.12,103.54 571.6,88.148 657.69,76.363"
+    },
+    {
+      "_gvid": 9,
+      "tail": 8,
+      "head": 7,
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "b",
+          "points": [[715.720,112.630],[727.410,103.680],[741.670,92.760],[754.280,83.100]]
+        }
+      ],
+      "_hdraw_": 
+      [
+        {
+          "op": "S",
+          "style": "solid"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "P",
+          "points": [[756.480,85.820],[762.290,76.960],[752.220,80.270]]
+        }
+      ],
+      "color": "blue",
+      "pos": "e,762.29,76.963 715.72,112.63 727.41,103.68 741.67,92.756 754.28,83.095"
+    },
+    {
+      "_gvid": 10,
+      "tail": 9,
+      "head": 7,
+      "_draw_": 
+      [
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "b",
+          "points": [[1018.340,114.010],[973.610,103.380],[915.580,89.590],[868.700,78.450]]
+        }
+      ],
+      "_hdraw_": 
+      [
+        {
+          "op": "S",
+          "style": "solid"
+        },
+        {
+          "op": "c",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "C",
+          "grad": "none",
+          "color": "#0000ff"
+        },
+        {
+          "op": "P",
+          "points": [[869.420,75.020],[858.880,76.120],[867.800,81.830]]
+        }
+      ],
+      "color": "blue",
+      "pos": "e,858.88,76.118 1018.3,114.01 973.61,103.38 915.58,89.591 868.7,78.452"
+    }
+  ]
+}

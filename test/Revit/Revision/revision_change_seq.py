@@ -49,7 +49,7 @@ class ChangeRevSeq(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if revision sequence was changed successfully, otherwise False
+                - .status True if revision sequence was changed successfully, otherwise False
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 

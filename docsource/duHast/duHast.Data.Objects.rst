@@ -20,6 +20,22 @@ duHast.Data.Objects.data\_ceiling module
    :undoc-members:
    :show-inheritance:
 
+duHast.Data.Objects.data\_door module
+-------------------------------------
+
+.. automodule:: duHast.Data.Objects.data_door
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.data\_family\_base module
+---------------------------------------------
+
+.. automodule:: duHast.Data.Objects.data_family_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Data.Objects.data\_room module
 -------------------------------------
 

@@ -12,20 +12,20 @@ Helper functions for the file selection GUI.
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2021  Jan Christel
+# BSD License
+# Copyright 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
 
@@ -37,18 +37,156 @@ import os
 
 
 # import file item class
-from duHast.UI import file_item as fi
+from duHast.UI.Objects import file_item as fi
 
 # import workloader utils
 from duHast.UI import workloader as wl
 
 # custom result class
 from duHast.Utilities.Objects import result as res
-from duHast.Utilities.files_io import is_back_up_file
+from duHast.Utilities.files_io import is_back_up_file, get_file_size as files_io_get_file_size, FILE_SIZE_IN_KB
+from duHast.Utilities.files_get import (
+    get_files,
+    get_files_from_directory_walker_with_filters_simple,
+)
+from duHast.Utilities.files_csv import get_first_row_in_csv_file, read_csv_file
+from duHast.Utilities.files_tab import get_first_row_in_file_no_strip
+from duHast.Revit.BIM360.util_bim_360 import get_bim_360_file_data
+
 
 # -------------
 # my code here:
 # -------------
+
+
+def get_revit_files_for_processing(location, include_sub_dirs, file_extension):
+    """
+    Extracts file data from varies sources:
+        - bim 360 task text file
+        - files on a local server directory
+        - files on a local server directory and it's subdirectories
+        - local server based files provided through a task text file
+
+    :param location: Can either be a directory, or a fully qualified file path.
+    :type location: str
+    :param includeSubDirs: If true and location is a directory, subdirectories will be included in file search.
+    :type includeSubDirs: bool
+    :param fileExtension: File type filter in '.ext'
+    :type fileExtension: str
+
+    :return: List of MyFileItem objects.
+    :rtype: :class:`.MyFileItem`
+    """
+
+    revit_files = []
+    try:
+        if os.path.isfile(location):
+            # got a text file...could either be BIM360 data or a file task list
+            revit_files = _get_file_data_from_text_file(location)
+        elif os.path.isdir(location):
+            # check a to search for files is to include sub dirs
+            revit_files_unfiltered = []
+            if include_sub_dirs:
+                # get revit files in input dir and subdirs (with backup files removed already)
+                revit_files_unfiltered = get_revit_files_incl_sub_dirs(
+                    location, file_extension
+                )
+            else:
+                # get revit files in input dir (with backup files removed already)
+                revit_files_unfiltered = get_revit_files(location, file_extension)
+            # check for max path violations!
+            # The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, \
+            # and the directory name must be less than 248 characters.
+            for revit_file in revit_files_unfiltered:
+                # remove any back up files from selection
+                if (
+                    len(os.path.dirname(os.path.abspath(revit_file.name))) < 248
+                    and len(revit_file.name) < 260
+                ):
+                    revit_files.append(revit_file)
+    except Exception as e:
+        # return an empty list which will cause this script to abort
+        revit_files = []
+    return revit_files
+
+
+def _get_files_from_list_file(file_path_csv):
+    """
+    Reads server based file data, the fully qualified file path, from a task file list file in csv format.
+
+    :param filePathCSV: The fully qualified file path to the task list file.
+    :type filePathCSV: str
+
+    :return: A list of MyFileitem objects. If an exception occured an empty list will be returned.
+    :rtype: :class:`.MyFileItem`
+    """
+
+    revit_files = []
+    try:
+        # read the CSV into rows
+        rows = read_csv_file(file_path_csv)
+        # check whether anything came back
+        if len(rows) > 0:
+            # process rows
+            for row_data in rows:
+                if len(row_data) > 0:
+                    file_size = files_io_get_file_size (row_data[0], FILE_SIZE_IN_KB)
+                    dummy = fi.MyFileItem(row_data[0], file_size)
+                    revit_files.append(dummy)
+    except Exception as e:
+        # return an empty list which will cause this script to abort
+        revit_files = []
+    return revit_files
+
+
+def get_files_from_csv_list_file(file_path_csv, file_extension):
+    """
+    Reads server based file data, the fully qualified file path, from a task file list file in csv format.
+
+    :param filePathCSV: The fully qualified file path to the task list file.
+    :type filePathCSV: str
+    :param fileExtension: The file extension filter in format '.ext'
+    :type fileExtension: str
+    :return: A list of MyFileitem objects. If an exception occured an empty list will be returned.
+    :rtype: :class:`.MyFileItem`
+    """
+
+    revit_files = _get_files_from_list_file(file_path_csv)
+    # filter out files with wrong extension
+    revit_files = [f for f in revit_files if f.name.lower().endswith(file_extension)]
+    return revit_files
+
+
+def _get_file_data_from_text_file(file_path):
+    """
+    Reads a file server based task list file. This file can either be a BIM360 task list file or \
+        a task list file containing file server based file path in a single column.
+
+    :param filePath: The fully qualified file path to the task list file.
+    :type filePath: str
+    :return: A list of MyFileitem objects.
+    :rtype: :class:`.MyFileItem`
+    """
+
+    files = []
+
+    # if file is empty an empty list will be returned
+    # also need to check whether this is a csv file...
+    if file_path.lower().endswith(".csv"):
+        # list of entries in first row
+        row = get_first_row_in_csv_file(file_path)
+    else:
+        row = get_first_row_in_file_no_strip(file_path)
+        # make sure we get a list of entries
+        if row is not None:
+            row = row.split("\t")
+    if row is not None:
+        # bim 360 or autodesk construction cloud files have at least 3 entries
+        if len(row) > 2:
+            files = get_bim_360_file_data(file_path)
+        else:
+            files = _get_files_from_list_file(file_path)
+    return files
 
 
 def get_revit_files(directory, file_extension):
@@ -65,17 +203,13 @@ def get_revit_files(directory, file_extension):
     """
 
     files = []
-    list_of_files = os.listdir(directory)
+    list_of_files = get_files(directory, file_extension)
     for f in list_of_files:
-        # check for file extension match
-        if f.lower().endswith(file_extension.lower()):
-            # check if this is a back up file
-            if is_back_up_file(f) == False:
-                # Use join to get full file path.
-                location = os.path.join(directory, f)
-                # Get size and add to list of files.
-                size = os.path.getsize(location)
-                files.append(fi.MyFileItem(location, size))
+        # check if this is a back up file
+        if is_back_up_file(f) == False:
+            # Get size and add to list of files.
+            size = os.path.getsize(f)
+            files.append(fi.MyFileItem(f, size))
     return files
 
 
@@ -94,17 +228,16 @@ def get_revit_files_incl_sub_dirs(directory, file_extension):
 
     files = []
     # Get the list of all files in directory tree at given path
-    list_of_files = list()
-    for dirpath, dirnames, filenames in os.walk(directory):
-        list_of_files += [os.path.join(dirpath, file) for file in filenames]
+    list_of_files = get_files_from_directory_walker_with_filters_simple(
+        directory, file_extension
+    )
+
     for f in list_of_files:
-        # check for file extension match
-        if f.lower().endswith(file_extension.lower()):
-            # check if this is a back up file,
-            if is_back_up_file(f) == False:
-                # Get size and add to list of files.
-                size = os.path.getsize(f)
-                files.append(fi.MyFileItem(f, size))
+        # check if this is a back up file,
+        if is_back_up_file(f) == False:
+            # Get size and add to list of files.
+            size = os.path.getsize(f)
+            files.append(fi.MyFileItem(f, size))
     return files
 
 
@@ -195,6 +328,7 @@ def write_revit_task_file(file_name, bucket, get_data=bucket_to_task_list_file_s
             f.write(data.encode("utf-8").decode("utf-8"))
         f.close()
         return_value.append_message("wrote task list: {} [TRUE]".format(file_name))
+        return_value.result.append(file_name)
     except Exception as e:
         return_value.update_sep(
             False,
@@ -260,4 +394,57 @@ def write_file_list(
         return_value.append_message("Finished writing out task files")
     except Exception as e:
         return_value.update_sep(False, "Failed to save file list! " + str(e))
+    return return_value
+
+
+def get_task_file_name(task_list_directory, counter):
+    """
+    Builds a fully qualified task file path.
+
+    :param taskListDirectory: The fully qualified directory where the task file is (to be) located
+    :type taskListDirectory: str
+    :param counter: A counter to be added to the task file name
+    :type counter: int
+
+    :return: A fully qualified task file path
+    :rtype: str
+    """
+
+    file_name = os.path.join(task_list_directory, "Tasklist_" + str(counter) + ".txt")
+    return file_name
+
+
+def write_empty_task_list(file_name):
+    """
+    Writes out an empty task list.
+
+    :param fileName: Fully qualified file path of the task file name including extension.
+    :type fileName: str
+
+    :return:
+        Result class instance.
+
+        - Write file status (bool) returned in result.status. False if an exception occurred, otherwise True.
+        - Result.message property contains fully qualified file path to empty task list file.
+
+        On exception:
+
+        - .status (bool) will be False.
+        - .message will contain the exception message.
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+    try:
+        f = open(file_name, "w")
+        f.close()
+        return_value.append_message("wrote empty task list: {} [TRUE]".format(file_name))
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to write empty task list: {} with exception: {}".format(
+                file_name, e
+            ),
+        )
     return return_value

@@ -116,7 +116,7 @@ class RevitWarningsSolver(base.Base):
         :return:
             Result class instance.
 
-            - .result = True if all warnings could be solved. Otherwise False.
+            - .status True if all warnings could be solved. Otherwise False.
             - .message will contain all messages solver returned.
 
         :rtype: :class:`.Result`

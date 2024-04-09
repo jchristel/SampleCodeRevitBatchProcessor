@@ -9,20 +9,20 @@ This module contains a number of helper functions relating to Revit shared param
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2021  Jan Christel
+# BSD License
+# Copyright 2023, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
 
@@ -31,10 +31,12 @@ import System
 
 # import common library modules
 from duHast.Revit.Common.revit_version import get_revit_version_number
+from duHast.Revit.SharedParameters.shared_parameter_add import (
+    load_shared_parameter_file,
+)
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-
 
 # --------------------------------------------- utility functions ------------------
 
@@ -52,6 +54,32 @@ def get_all_shared_parameters(doc):
 
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.SharedParameterElement)
     return collector
+
+
+def get_all_shared_parameters_from_file(rvt_doc, shared_param_file_path=None):
+    """
+    Gets all the shared parameter definitions from a shared parameter file. Can
+    either be set manually or will be loaded from the default location which Revit
+    is pointing at
+    :param rvt_doc: Current Revit model document.
+    :type rvt_doc: Autodesk.Revit.DB.Document
+    :param shared_param_file_path: (Optional) The path to the shared parameter file.
+    :type shared_param_file_path: str
+    :return: A flat list of shared parameter definitions
+    :rtype: list
+    """
+    def_file = load_shared_parameter_file(rvt_doc, shared_param_file_path)
+    shared_params = []
+
+    if def_file:
+        sp_groups = def_file.Groups
+        for sp_gp in sp_groups:
+            for sp_def in sp_gp.Definitions:
+                shared_params.append(sp_def)
+
+        return shared_params
+    else:
+        return None
 
 
 def get_family_shared_parameters(doc):
@@ -120,12 +148,12 @@ def check_whether_shared_parameters_are_in_file(doc, parameter_gui_ds):
     :rtype: list str
     """
 
-    filtered_gui_ds = []
+    filtered_guids = []
     paras = get_all_shared_parameters(doc)
     for p in paras:
         if p.GuidValue.ToString() in parameter_gui_ds:
-            filtered_gui_ds.append(p.GuidValue.ToString())
-    return filtered_gui_ds
+            filtered_guids.append(p.GuidValue.ToString())
+    return filtered_guids
 
 
 def check_whether_shared_parameters_by_name_is_family_parameter(doc, parameter_name):
@@ -146,7 +174,7 @@ def check_whether_shared_parameters_by_name_is_family_parameter(doc, parameter_n
     for fam_para in paras:
         if fam_para.Definition.Name == parameter_name:
             try:
-                # only shared parameters hav .GUID property...
+                # only shared parameters have .GUID property...
                 if str(fam_para.GUID) != "":
                     para = fam_para
                     break

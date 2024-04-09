@@ -155,7 +155,7 @@ def delete_area_lines_by_level_name(
             return action_return_value
 
         tranny = Transaction(doc, "Deleting area lines on level: {}".format(level_name))
-        result_delete = transaction_manager(tranny, action, doc)
+        result_delete = transaction_manager(tranny, action)
         return_value.update(result_delete)
 
         # return list of lines not deleted!
@@ -206,7 +206,7 @@ def create_new_area_outlines(doc, curves, view, transaction_manager=in_transacti
     tranny = Transaction(
         doc, "Creating new area separation line(s) in view ".format(view.Name)
     )
-    result_create = transaction_manager(tranny, action, doc)
+    result_create = transaction_manager(tranny, action)
     return_value.update(result_create)
     return return_value
 

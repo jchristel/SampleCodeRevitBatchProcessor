@@ -12,6 +12,22 @@ Subpackages
 Submodules
 ----------
 
+duHast.Revit.Common.Objects.FailureHandlingConfiguration module
+---------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Common.Objects.FailureHandlingConfiguration
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Common.Objects.FailuresPreProcessor module
+-------------------------------------------------------
+
+.. automodule:: duHast.Revit.Common.Objects.FailuresPreProcessor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Common.Objects.ParameterDirectiveBase module
 ---------------------------------------------------------
 

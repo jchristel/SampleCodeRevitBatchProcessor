@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    duHast.Revit.Categories.Data
+   duHast.Revit.Categories.Objects
    duHast.Revit.Categories.Reporting
    duHast.Revit.Categories.Utility
 
@@ -26,6 +27,14 @@ duHast.Revit.Categories.categories\_model module
 ------------------------------------------------
 
 .. automodule:: duHast.Revit.Categories.categories_model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Categories.categories\_styles\_model module
+--------------------------------------------------------
+
+.. automodule:: duHast.Revit.Categories.categories_styles_model
    :members:
    :undoc-members:
    :show-inheritance:

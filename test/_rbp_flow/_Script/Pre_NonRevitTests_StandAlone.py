@@ -47,6 +47,7 @@ import settings as settings  # sets up all commonly used variables and path loca
 from duHast.Utilities.console_out import output
 from test.Utility import run_test_classes as run_util_tests
 from test.UI import run_test_classes as run_ui_tests
+from test.Data import run_test_classes as run_data_tests
 
 def time_stamp():
         """
@@ -63,6 +64,7 @@ def time_stamp():
 all_tests = [
         run_util_tests,
         run_ui_tests,
+        run_data_tests,
     ]
 
 #: will contain the outcome of all tests

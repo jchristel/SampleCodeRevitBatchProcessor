@@ -46,9 +46,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
@@ -116,6 +118,16 @@ First nested list is the outer loop, any other following lists describe holes wi
 Arcs, circles will be tessellated to polygons.
 :param solid: A solid.
 :type solid: Autodesk.Revit.DB.Solid
+:return: A list of data geometry instances.
+:rtype: list of <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryPolygon</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.Geometry.from_revit_conversion.convert_bounding_box_to_flattened_2d_points">
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Properties.Geometry.from_revit_conversion.</span></span><span class="sig-name descname"><span class="pre">convert_bounding_box_to_flattened_2d_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounding_box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Properties.Geometry.from_revit_conversion.convert_bounding_box_to_flattened_2d_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a bounding box into a 2D polygon by projecting it onto a plane.( Removes Z values…)
+:param bounding_box: A bounding box.
+:type bounding_box: Autodesk.Revit.DB.BoundingBoxXYZ
 :return: A list of data geometry instances.
 :rtype: list of <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryPolygon</span></code></p>
 </dd></dl>

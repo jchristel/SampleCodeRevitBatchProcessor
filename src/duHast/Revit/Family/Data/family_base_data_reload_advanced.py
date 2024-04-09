@@ -35,8 +35,8 @@ Family Base data analysis module containing functions to build a reload tree.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -45,99 +45,14 @@ Family Base data analysis module containing functions to build a reload tree.
 
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects import result as res
-from duHast.Utilities import (
-    files_get as fileGet,
-    files_io as fileIO,
-    files_tab as fileTab,
-)
+
 from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDataUtils
-from duHast.Revit.Family.Data import family_reload_advanced_utils as rFamReloadAdvUtils
 
-_TASK_COUNTER_FILE_PREFIX = "TaskOutput"
-
-
-def _write_reload_list_to_file(reload_families, directory_path, counter=0):
-    """
-    Writes task list file to disk. File contains single column of fully qualified file path.
-
-    :param reload_families: List of tuples representing families requiring their nested families to be re-loaded.
-    :type reload_families: [rootFamily]
-    :param directory_path: Fully qualified directory path to which the task files will be written.
-    :type directory_path: str
-    :param counter: Task file name suffix, defaults to 0
-    :type counter: int, optional
-
-    :return: True if file was written successfully, otherwise False.
-    :rtype: bool
-    """
-
-    # write out file list without header
-    header = []
-    # data to be written to file
-    overall_data = []
-    file_name = (
-        directory_path + "\\" + _TASK_COUNTER_FILE_PREFIX + str(counter) + ".txt"
-    )
-    # loop over families to get file path
-    for r in reload_families:
-        # row data
-        data = []
-        data.append(r.filePath)
-        overall_data.append(data)
-    try:
-        # write data
-        fileTab.write_report_data(file_name, header, overall_data, writeType="w")
-        return True
-    except Exception:
-        return False
-
-
-def _delete_old_task_lists(directory_path):
-    """
-    Deletes all overall task files in given directory.
-
-    :param directory_path: Fully qualified directory path containing the task files to be deleted.
-    :type directory_path: str
-    :return: True if all files got deleted successfully, otherwise False.
-    :rtype: bool
-    """
-
-    flag = True
-    # find all files in folder starting with and delete them
-    files = fileGet.get_files(directory_path, ".txt")
-    if len(files) > 0:
-        for f in files:
-            if fileIO.get_file_name_without_ext(f).startswith(
-                _TASK_COUNTER_FILE_PREFIX
-            ):
-                flag = flag & fileIO.file_delete(f)
-    return flag
-
-
-def _write_out_empty_task_list(directory_path, counter=0):
-    """
-    Writes out an empty task list in case nothing is to be reloaded.
-
-    :param directory_path: Fully qualified directory path to which the task files will be written.
-    :type directory_path: str
-    :param counter: Task file name suffix, defaults to 0
-    :type counter: int, optional
-
-    :return: True if file was written successfully, otherwise False.
-    :rtype: bool
-    """
-
-    file_name = directory_path + "\\" + "TaskOutput" + str(counter) + ".txt"
-    # write out file list without header
-    header = []
-    # write out empty data
-    overall_data = []
-    try:
-        # write data
-        fileTab.write_report_data(file_name, header, overall_data, writeType="w")
-        return True
-    except Exception:
-        return False
+from duHast.Revit.Family.Data.family_reload_advanced_utils import (
+    read_change_list,
+    write_out_empty_task_list,
+    write_reload_list_to_file,
+)
 
 
 def _remove_duplicates(list_one, list_two):
@@ -212,12 +127,11 @@ def build_work_lists(
     t_process.start()
 
     return_value = res.Result()
-    change_list = rFamReloadAdvUtils.read_change_list(change_list_file_path)
+    change_list = read_change_list(change_list_file_path)
     return_value.append_message(
-        t_process.stop()
-        + " Change list of length ["
-        + str(len(change_list))
-        + "] loaded."
+        "{} Change list of length [{}] loaded.".format(
+            t_process.stop(), len(change_list)
+        )
     )
 
     t_process.start()
@@ -229,10 +143,9 @@ def build_work_lists(
         family_base_data_report_file_path
     )
     return_value.append_message(
-        t_process.stop()
-        + " Nested base data list of length ["
-        + str(len(overall_family_base_nested_data))
-        + "] loaded."
+        "{} Nested base data list of length [{}] loaded.".format(
+            t_process.stop(), len(overall_family_base_nested_data)
+        )
     )
 
     if len(change_list) > 0:
@@ -246,10 +159,9 @@ def build_work_lists(
             change_list, overall_family_base_nested_data, overall_family_base_root_data
         )
         return_value.append_message(
-            t_process.stop()
-            + " Direct hosts ["
-            + str(len(task_current_level))
-            + "] found."
+            "{} Direct hosts [{}] found.".format(
+                t_process.stop(), len(task_current_level)
+            )
         )
 
         t_process.start()
@@ -259,10 +171,9 @@ def build_work_lists(
             overall_family_base_root_data,
         )
         return_value.append_message(
-            t_process.stop()
-            + " Next level hosts ["
-            + str(len(task_next_level))
-            + "] found."
+            "{} Next level hosts [{}] found.".format(
+                t_process.stop(), len(task_next_level)
+            )
         )
 
         # loop until no more entries in current level tasks
@@ -276,33 +187,33 @@ def build_work_lists(
             # write out cleaned up list:
             if len(cleaned_current_tasks) > 0:
                 t_process.start()
-                result_write_to_disk = _write_reload_list_to_file(
+                result_write_to_disk = write_reload_list_to_file(
                     cleaned_current_tasks,
                     load_lists_output_directory_path,
                     task_list_counter,
                 )
                 return_value.update_sep(
                     result_write_to_disk,
-                    t_process.stop()
-                    + " Wrote task list to file with status: "
-                    + str(result_write_to_disk),
+                    "{} Wrote task list to file with status: {}".format(
+                        t_process.stop(), result_write_to_disk
+                    ),
                 )
             else:
                 # write out an empty task list!
-                empty_task_list_flag = _write_out_empty_task_list(
+                empty_task_list_flag = write_out_empty_task_list(
                     load_lists_output_directory_path, task_list_counter
                 )
                 return_value.update_sep(
                     empty_task_list_flag,
-                    "Wrote empty task list at counter [" + str(task_list_counter),
+                    "Wrote empty task list at counter [{}]".format(task_list_counter),
                 )
 
             # swap lists to get to next level of loading
             task_current_level = list(task_next_level)
             return_value.append_message(
-                "Swapping next level hosts to direct hosts ["
-                + str(len(task_current_level))
-                + "]"
+                "Swapping next level hosts to direct hosts [{}]".format(
+                    len(task_current_level)
+                )
             )
 
             t_process.start()
@@ -313,10 +224,9 @@ def build_work_lists(
                 overall_family_base_root_data,
             )
             return_value.append_message(
-                t_process.stop()
-                + " Next level hosts ["
-                + str(len(task_next_level))
-                + "] found."
+                "{} Next level hosts [{}]".format(
+                    t_process.stop(), len(task_next_level)
+                )
             )
 
             # increase task list counter to be used in file name

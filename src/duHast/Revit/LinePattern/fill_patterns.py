@@ -26,8 +26,9 @@ Revit fill patterns helper functions.
 #
 #
 
-from Autodesk.Revit.DB import FilteredElementCollector, FillPatternElement
+from Autodesk.Revit.DB import ElementId, FilteredElementCollector, FillPatternElement
 
+from duHast.Revit.DetailItems.detail_items import get_all_filled_region_type_ids_available
 
 def get_all_fill_pattern(doc):
     """
@@ -61,3 +62,35 @@ def pattern_ids_by_name(doc):
         else:
             pattern_dic[pattern_name] = [fill_pattern.Id]
     return pattern_dic
+
+def get_used_pattern_ids_in_filled_region_types(doc):
+    """
+    Returns a list of all fill pattern ids used in filled region types in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of all fill pattern ids used in filled region types in the model.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    """
+    
+    fill_pattern_ids = []
+    # get all filled region types in model
+    filled_region_type_ids =  get_all_filled_region_type_ids_available(doc)
+    
+    # return an empty list of no filled region types are available
+    if(len(filled_region_type_ids)==0):
+        return fill_pattern_ids
+        
+    for filled_region_type_id in filled_region_type_ids:
+        # get the filled region type and its fill pattern ids for fore and background
+        filled_region_type = doc.GetElement(filled_region_type_id)
+        fore_ground_pattern_id = filled_region_type.ForegroundPatternId
+        background_pattern_id = filled_region_type.BackgroundPatternId
+        # check if already in unique list of fill pattern ids
+        if(fore_ground_pattern_id not in fill_pattern_ids and fore_ground_pattern_id != ElementId.InvalidElementId):
+            fill_pattern_ids.append(fore_ground_pattern_id)
+        if(background_pattern_id not in fill_pattern_ids and background_pattern_id != ElementId.InvalidElementId):
+            fill_pattern_ids.append(background_pattern_id)
+
+    return fill_pattern_ids

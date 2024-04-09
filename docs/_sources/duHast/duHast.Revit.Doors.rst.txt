@@ -1,6 +1,14 @@
 duHast.Revit.Doors package
 ==========================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Revit.Doors.Export
+
 Submodules
 ----------
 

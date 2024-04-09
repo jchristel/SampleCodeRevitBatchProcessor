@@ -1,0 +1,21 @@
+duHast.Revit.Purge.Objects package
+==================================
+
+Submodules
+----------
+
+duHast.Revit.Purge.Objects.ModifierBase module
+----------------------------------------------
+
+.. automodule:: duHast.Revit.Purge.Objects.ModifierBase
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Purge.Objects
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 0.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.Utilities package" href="duHast.Utilities.html" />
-    <link rel="next" title="Flows" href="../flows/index.html" />
+    <link rel="next" title="duHast.pyRevit package" href="duHast.pyRevit.html" />
     <link rel="prev" title="duHast.Utilities package" href="duHast.Utilities.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
@@ -31,7 +31,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="../flows/index.html" title="Flows" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.pyRevit.html" title="duHast.pyRevit package" accesskey="N">next</a></div>
             <div class="headerButton"><a href="duHast.Utilities.html" title="duHast.Utilities package" accesskey="P">previous</a></div>
         </li>
     </ul>
@@ -46,9 +46,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
@@ -163,6 +165,106 @@
 <dd class="field-even"><p>{str:var,}</p>
 </dd>
 </dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.Objects.logger_object">
+<span id="duhast-utilities-objects-logger-object-module"></span><h2>duHast.Utilities.Objects.logger_object module<a class="headerlink" href="#module-duHast.Utilities.Objects.logger_object" title="Permalink to this heading">¶</a></h2>
+<section id="a-logger-class">
+<h3>A logger class<a class="headerlink" href="#a-logger-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.FilterFile">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Utilities.Objects.logger_object.</span></span><span class="sig-name descname"><span class="pre">FilterFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.FilterFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></p>
+<p>Filter to stop logs to file handler.</p>
+<p>To use change your log call to something like:
+my_logger.info(“This is a console only output”, extra={“block”: “file”})</p>
+<p>Initialize a filter.</p>
+<p>Initialize with the name of the logger which, together with its
+children, will have its events allowed through the filter. If no
+name is specified, allow every event.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.FilterFile.filter">
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.FilterFile.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the specified record is to be logged.</p>
+<p>Returns True if the record should be logged, or False otherwise.
+If deemed appropriate, the record may be modified in-place.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.FilterConsole">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Utilities.Objects.logger_object.</span></span><span class="sig-name descname"><span class="pre">FilterConsole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.FilterConsole" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></p>
+<p>Filter to stop logs to console handler.</p>
+<p>To use change your log call to something like:
+my_logger.info(“This is a file only output”, extra={“block”: “console”})</p>
+<p>Initialize a filter.</p>
+<p>Initialize with the name of the logger which, together with its
+children, will have its events allowed through the filter. If no
+name is specified, allow every event.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.FilterConsole.filter">
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.FilterConsole.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the specified record is to be logged.</p>
+<p>Returns True if the record should be logged, or False otherwise.
+If deemed appropriate, the record may be modified in-place.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Utilities.Objects.logger_object.</span></span><span class="sig-name descname"><span class="pre">LoggerObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'duHast'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">30)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Constructor for the LoggerObject class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log_name</strong> (<em>str</em>) – The name of the log.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – The path to the output directory.</p></li>
+<li><p><strong>log_level</strong> (<em>tuple</em>) – The log levels for the file and console handlers.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject.get_logger_obj">
+<span class="sig-name descname"><span class="pre">get_logger_obj</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject.get_logger_obj" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject.get_standard_formatter">
+<span class="sig-name descname"><span class="pre">get_standard_formatter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject.get_standard_formatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard output formatting for console and file handlers</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject.get_presentation_formatter">
+<span class="sig-name descname"><span class="pre">get_presentation_formatter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject.get_presentation_formatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output formatting for presentation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject.create_file_handler">
+<span class="sig-name descname"><span class="pre">create_file_handler</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject.create_file_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create file handler to self.log_file_path location</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject.create_console_handler">
+<span class="sig-name descname"><span class="pre">create_console_handler</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject.create_console_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a console handler to output to stdout (console)
+displaying only the message as default</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject.update_log_level">
+<span class="sig-name descname"><span class="pre">update_log_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject.update_log_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the log levels for the file and console handlers</p>
 </dd></dl>
 
 </dd></dl>

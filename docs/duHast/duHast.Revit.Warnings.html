@@ -46,9 +46,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
@@ -93,20 +95,12 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Warnings.Data.html">duHast.Revit.Warnings.Data package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#module-duHast.Revit.Warnings.Data.warnings_data">duHast.Revit.Warnings.Data.warnings_data module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#family-warnings-data-class">Family warnings data class.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#duHast.Revit.Warnings.Data.warnings_data.WarningsData"><code class="docutils literal notranslate"><span class="pre">WarningsData</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#duHast.Revit.Warnings.Data.warnings_data.WarningsData.process"><code class="docutils literal notranslate"><span class="pre">WarningsData.process()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#duHast.Revit.Warnings.Data.warnings_data.WarningsData.get_data"><code class="docutils literal notranslate"><span class="pre">WarningsData.get_data()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#module-duHast.Revit.Warnings.Data.warnings_data_processor">duHast.Revit.Warnings.Data.warnings_data_processor module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#family-warnings-data-processor-class">Family warnings data processor class.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#duHast.Revit.Warnings.Data.warnings_data_processor.WarningsProcessor"><code class="docutils literal notranslate"><span class="pre">WarningsProcessor</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#duHast.Revit.Warnings.Data.warnings_data_processor.WarningsProcessor.process"><code class="docutils literal notranslate"><span class="pre">WarningsProcessor.process()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Warnings.Data.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Warnings.Data.Objects.html">duHast.Revit.Warnings.Data.Objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.Data.Objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.Data.Objects.html#module-duHast.Revit.Warnings.Data.Objects.warnings_data">duHast.Revit.Warnings.Data.Objects.warnings_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.Data.Objects.html#module-duHast.Revit.Warnings.Data.Objects.warnings_data_processor">duHast.Revit.Warnings.Data.Objects.warnings_data_processor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.Data.Objects.html#module-duHast.Revit.Warnings.Data.Objects">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -247,7 +241,7 @@
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if all warnings could be solved. Otherwise False.</p></li>
+<li><p>.status True if all warnings could be solved. Otherwise False.</p></li>
 <li><p>.message will contain all messages solver returned.</p></li>
 </ul>
 </p>
@@ -315,7 +309,7 @@ print(result.message)</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if all area separation lines could be deleted / modified without an exception. Otherwise False.</p></li>
+<li><p>.status True if all area separation lines could be deleted / modified without an exception. Otherwise False.</p></li>
 <li><p>.message will be ‘moved tag to area xyz’</p></li>
 </ul>
 </p>
@@ -353,6 +347,11 @@ print(result.message)</p>
 <dd><p>guid identifying this specific warning</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Warnings.solver_duplicate_mark.RevitWarningsSolverDuplicateMark.IGNORED_WARNINGS">
+<span class="sig-name descname"><span class="pre">IGNORED_WARNINGS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Type</span> <span class="pre">Mark']</span></em><a class="headerlink" href="#duHast.Revit.Warnings.solver_duplicate_mark.RevitWarningsSolverDuplicateMark.IGNORED_WARNINGS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Revit.Warnings.solver_duplicate_mark.RevitWarningsSolverDuplicateMark.solve_warnings">
 <span class="sig-name descname"><span class="pre">solve_warnings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warnings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Warnings.solver_duplicate_mark.RevitWarningsSolverDuplicateMark.solve_warnings" title="Permalink to this definition">¶</a></dt>
@@ -367,7 +366,7 @@ print(result.message)</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if all duplicate mark warnings could be solved. Otherwise False.</p></li>
+<li><p>.status True if all duplicate mark warnings could be solved. Otherwise False.</p></li>
 <li><p>.message will contain stats in format parameter value set to ‘’</p></li>
 </ul>
 </p>
@@ -433,7 +432,7 @@ print(result.message)</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if all room separation lines could be deleted / modified without an exception. Otherwise False.</p></li>
+<li><p>.status True if all room separation lines could be deleted / modified without an exception. Otherwise False.</p></li>
 <li><p>.message will be ‘moved tag to room xyz’</p></li>
 </ul>
 </p>
@@ -477,7 +476,7 @@ print(result.message)</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if all room tags within warnings could be moved to room location point. Otherwise False.</p></li>
+<li><p>.status True if all room tags within warnings could be moved to room location point. Otherwise False.</p></li>
 <li><p>.message will be ‘moved tag to room xyz’</p></li>
 </ul>
 </p>
@@ -529,6 +528,29 @@ print(result.message)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.FailureMessage</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Warnings.warnings.get_warnings_grouped_by_relation">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Warnings.warnings.</span></span><span class="sig-name descname"><span class="pre">get_warnings_grouped_by_relation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Warnings.warnings.get_warnings_grouped_by_relation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of warnings where all warnings specified by guid related to each other are grouped together.
+Key will be the element with the lowest element id, value will be a list of element ids, in ascending order, of all warnings in the group (including the key!)</p>
+<p>Note:
+Revit must report exactly two elements per warning for this to work</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>guid</strong> (<em>Autodesk.Revit.DB.Guid</em>) – Filter: Identifying a specific failure of which the corresponding messages are to be returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of warnings grouped by element id</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>

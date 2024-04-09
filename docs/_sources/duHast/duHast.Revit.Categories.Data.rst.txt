@@ -1,24 +1,16 @@
 duHast.Revit.Categories.Data package
 ====================================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Revit.Categories.Data.Objects
+
 Submodules
 ----------
-
-duHast.Revit.Categories.Data.category\_data module
---------------------------------------------------
-
-.. automodule:: duHast.Revit.Categories.Data.category_data
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.Categories.Data.category\_data\_processor module
--------------------------------------------------------------
-
-.. automodule:: duHast.Revit.Categories.Data.category_data_processor
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 duHast.Revit.Categories.Data.category\_data\_purge\_unused module
 -----------------------------------------------------------------

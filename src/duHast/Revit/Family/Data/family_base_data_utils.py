@@ -39,8 +39,8 @@ nested_family:
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -55,9 +55,9 @@ from duHast.Utilities import (
 )
 
 # tuples containing base family data read from file
-root_family = namedtuple("root_family", "name category filePath parent child")
+root_family = namedtuple("root_family", "name category filePath parent child report_data")
 nested_family = namedtuple(
-    "nested_family", "name category filePath rootPath categoryPath hostFamily"
+    "nested_family", "name category filePath rootPath categoryPath hostFamily report_data"
 )
 
 # row structure of family base data file
@@ -134,6 +134,7 @@ def read_overall_family_data_list(file_path):
                 rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
                 [],  # set up an empty list for parent families
                 [],  # set up an empty list for child families
+                rows[i],  # set up report data
             )
             return_value_root_family.append(data)
         else:
@@ -149,6 +150,7 @@ def read_overall_family_data_list(file_path):
                     " :: "
                 ),  # split category path into list for ease of searching
                 [],
+                rows[i],  # set up report data
             )
             return_value_nested_family.append(data)
     return return_value_root_family, return_value_nested_family
@@ -271,18 +273,39 @@ def _cull_data_block(family_base_nested_data_block):
     """
 
     culled_family_base_nested_data_blocks = []
+
+    if isinstance(family_base_nested_data_block, list) == False:
+        raise Exception(
+            "Family base nested data block is not a list. It is of type: {}".format(
+                type(family_base_nested_data_block)
+            )
+        )
+
+    culled_family_base_nested_data_blocks = []
     data_blocks_by_length = {}
+    
     # build dic by root path length
     # start at 1 because for nesting level ( 1 based rather then 0 based )
     for family in family_base_nested_data_block:
-        if len(family.rootPath) - 1 in data_blocks_by_length:
-            data_blocks_by_length[len(family.rootPath) - 1].append(family)
-        else:
-            data_blocks_by_length[len(family.rootPath) - 1] = [family]
 
+        # root path is a list of family names representing the nesting tree
+        # subtract 1 to get the nesting level minus the root family itself
+        split_root_path_length = len(family.rootPath) - 1
+
+        # add family to dictionary
+        if split_root_path_length in data_blocks_by_length:
+            data_blocks_by_length[split_root_path_length].append(family)
+        else:
+            data_blocks_by_length[split_root_path_length] = [family]
+    
     # loop over dictionary and check block entries against next entry up blocks
+    # I need to extend range by 1 since the end value in the range is always exclusive in python for i in range loop
+    # i.e. for i in range (1, 3) will only loop over 1 and 2...
+    
     for i in range(1, len(data_blocks_by_length) + 1):
+
         # last block get automatically added
+        # do not add + 1 here since the loop will stop at the last entry
         if i == len(data_blocks_by_length):
             culled_family_base_nested_data_blocks = (
                 culled_family_base_nested_data_blocks + data_blocks_by_length[i]
@@ -296,50 +319,136 @@ def _cull_data_block(family_base_nested_data_block):
             culled_family_base_nested_data_blocks = (
                 culled_family_base_nested_data_blocks + unique_nodes
             )
+    
     return culled_family_base_nested_data_blocks
 
 
-def cull_nested_base_data_blocks(overall_family_base_nested_data):
+def cull_nested_base_data_blocks(root_families, nested_families):
     """
     Reduce base data families for parent / child finding purposes. Keep the nodes with the root path longes branch only.
 
-    Sample:
+    Sample ( within a single data block)
 
     famA :: famB :: famC
-    famA :: famB
+    FamA :: famB
 
-    The second of the above examples can be culled since the first contains the same information.
+    The second of the above examples can be culled since the path is contained within the first example.
+
+    Sample ( across multiple data blocks)
+
+    famA :: famB :: famC
+    famB :: famC
+
+
+    The second of the above examples can be culled since the first family (famB) in that sample is already in the first example.(nested Family)
 
     :param overall_family_base_nested_data: _description_
     :type overall_family_base_nested_data: _type_
     """
 
-    current_root_fam_name = ""
-    family_blocks = []
-    block = []
-    # read families into blocks
-    for nested in overall_family_base_nested_data:
-        if nested.rootPath[0] != current_root_fam_name:
-            # read family block
-            if len(block) > 0:
-                family_blocks.append(block)
-                # reset block
-                block = []
-                block.append(nested)
-                current_root_fam_name = nested.rootPath[0]
-            else:
-                block.append(nested)
-                current_root_fam_name = nested.rootPath[0]
-        else:
-            block.append(nested)
+    # get root families not found in nested data since they contain the longest unique nesting path
+    non_nested_root_families = find_root_families_not_in_nested_data(
+        root_families, nested_families
+    )
 
+    # get nested family data blocks for each root family
+    nested_data_blocks_per_root_family = get_nested_family_data_for_root_family(
+        non_nested_root_families, nested_families
+    )
+
+    # storage for culled data
     retained_family_base_nested_data = []
+
     # cull data per block
-    for family_block in family_blocks:
-        d = _cull_data_block(family_block)
-        retained_family_base_nested_data = retained_family_base_nested_data + d
+    for (
+        root_family_identifier,
+        family_block,
+    ) in nested_data_blocks_per_root_family.items():
+        # if the data block only contains one item skip culling
+        if len(family_block) == 1:
+            # no need to do any culling
+            retained_family_base_nested_data.append(family_block[0])
+            continue
+        else:
+            # attempt to cull data block
+            d = _cull_data_block(family_block)
+            retained_family_base_nested_data = retained_family_base_nested_data + d
 
     return retained_family_base_nested_data
+
+
+def get_nested_family_data_for_root_family(root_families, nested_families):
+    """
+    Returns a list of nested families for each root family.
+
+    :param root_families: A list of tuples containing root family data.
+    :type root_families: [root_family]
+    :param nested_families: A list of tuples containing nested family data.
+    :type nested_families: [nested_family]
+
+    :return: A dictionary where:
+
+        - key is the root family name and category concatenated and
+        - value is a list of tuples containing nested family data.
+
+    :rtype: {str: [nested_family]}
+    """
+
+    nested_families_for_root_families = {}
+    for root_family in root_families:
+        nested_families_for_root_families[root_family.name + root_family.category] = []
+        for nested_family in nested_families:
+            if (
+                nested_family.rootPath[0] == root_family.name
+                and nested_family.categoryPath[0] == root_family.category
+            ):
+                nested_families_for_root_families[
+                    root_family.name + root_family.category
+                ].append(nested_family)
+    return nested_families_for_root_families
+
+
+def find_root_families_not_in_nested_data(root_families, nested_families):
+    """
+    Returns a list of root families not found in the nested family data set.
+
+    In order to reduce the number of families to be processed, this function can be used to find the root families which are not nested into any other family and therefore do contain the
+    longest nesting path.
+
+    This is based on two assumptions:
+
+    - The provided data set contains all families in the project (no missing families are reported)
+    - As soon as a family is nested into another family, its nesting path will appear in the nested family data set and the root family data set.
+
+    :param root_families: A list of tuples containing root family data.
+    :type root_families: [root_family]
+    :param nested_families: A list of tuples containing nested family data.
+    :type nested_families: [nested_family]
+
+    :return: A list of tuples containing root family data.
+    :rtype: [root_family]
+
+    """
+
+    # storage for root families not found in nested data
+    root_families_not_in_nested_data = []
+
+    # check each root family
+    for root_family in root_families:
+        found = False
+        for nested_family in nested_families:
+            # check if the root family name is in the nested family root path on first position
+            # only interested in matches which are not the first entry in the list since that indicates nesting
+            index_match_root = util.index_of(nested_family.rootPath, root_family.name)
+            if index_match_root > 0:
+                # check if the categories are also a match!
+                if nested_family.categoryPath[index_match_root] == root_family.category:
+                    # found a match
+                    found = True
+                    break
+        if found == False:
+            root_families_not_in_nested_data.append(root_family)
+    return root_families_not_in_nested_data
 
 
 # --------------------------------------------  find families in nesting tree data ------------------------------------

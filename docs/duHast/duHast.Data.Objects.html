@@ -46,9 +46,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
@@ -187,6 +189,52 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="duHast.Data.Objects.data_ceiling.DataCeiling.data_type">
 <span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ceiling'</span></em><a class="headerlink" href="#duHast.Data.Objects.data_ceiling.DataCeiling.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Data.Objects.data_door">
+<span id="duhast-data-objects-data-door-module"></span><h2>duHast.Data.Objects.data_door module<a class="headerlink" href="#module-duHast.Data.Objects.data_door" title="Permalink to this heading">¶</a></h2>
+<section id="data-storage-class-for-revit-door-properties">
+<h3>Data storage class for Revit door properties.<a class="headerlink" href="#data-storage-class-for-revit-door-properties" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Data.Objects.data_door.DataDoor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.data_door.</span></span><span class="sig-name descname"><span class="pre">DataDoor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.data_door.DataDoor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Data.Objects.data_family_base.DataFamilyBase" title="duHast.Data.Objects.data_family_base.DataFamilyBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFamilyBase</span></code></a></p>
+<p>Class constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – A json formatted dictionary of this class, defaults to {}</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.data_door.DataDoor.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'door'</span></em><a class="headerlink" href="#duHast.Data.Objects.data_door.DataDoor.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Data.Objects.data_family_base">
+<span id="duhast-data-objects-data-family-base-module"></span><h2>duHast.Data.Objects.data_family_base module<a class="headerlink" href="#module-duHast.Data.Objects.data_family_base" title="Permalink to this heading">¶</a></h2>
+<section id="data-base-storage-class-for-revit-family-properties">
+<h3>Data base storage class for Revit family properties.<a class="headerlink" href="#data-base-storage-class-for-revit-family-properties" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Data.Objects.data_family_base.DataFamilyBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.data_family_base.</span></span><span class="sig-name descname"><span class="pre">DataFamilyBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.data_family_base.DataFamilyBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Data.Utils.html#duHast.Data.Utils.data_base.DataBase" title="duHast.Data.Utils.data_base.DataBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataBase</span></code></a>, <a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_element_geometry.DataElementGeometryBase" title="duHast.Data.Objects.Properties.data_element_geometry.DataElementGeometryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataElementGeometryBase</span></code></a></p>
+<p>Class constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – A json formatted dictionary of this class, defaults to {}</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.data_family_base.DataFamilyBase.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'family_instance'</span></em><a class="headerlink" href="#duHast.Data.Objects.data_family_base.DataFamilyBase.data_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

@@ -1,13 +1,16 @@
 duHast.Revit.LinePattern.Objects package
 ========================================
 
-Subpackages
------------
+Submodules
+----------
 
-.. toctree::
-   :maxdepth: 4
+duHast.Revit.LinePattern.Objects.LineStylePurgeModifier module
+--------------------------------------------------------------
 
-   duHast.Revit.LinePattern.Objects.Data
+.. automodule:: duHast.Revit.LinePattern.Objects.LineStylePurgeModifier
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Module contents
 ---------------

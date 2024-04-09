@@ -4,10 +4,66 @@ duHast.UI.Objects package
 Submodules
 ----------
 
+duHast.UI.Objects.Command module
+--------------------------------
+
+.. automodule:: duHast.UI.Objects.Command
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.UI.Objects.ProgressBase module
+-------------------------------------
+
+.. automodule:: duHast.UI.Objects.ProgressBase
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.UI.Objects.ViewModelBase module
+--------------------------------------
+
+.. automodule:: duHast.UI.Objects.ViewModelBase
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.UI.Objects.XamlLoader module
+-----------------------------------
+
+.. automodule:: duHast.UI.Objects.XamlLoader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.UI.Objects.common\_ui module
 -----------------------------------
 
 .. automodule:: duHast.UI.Objects.common_ui
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.UI.Objects.file\_item module
+-----------------------------------
+
+.. automodule:: duHast.UI.Objects.file_item
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.UI.Objects.file\_select\_settings module
+-----------------------------------------------
+
+.. automodule:: duHast.UI.Objects.file_select_settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.UI.Objects.workload\_bucket module
+-----------------------------------------
+
+.. automodule:: duHast.UI.Objects.workload_bucket
    :members:
    :undoc-members:
    :show-inheritance:

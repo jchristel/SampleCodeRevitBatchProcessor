@@ -1,0 +1,21 @@
+duHast.Revit.Categories.Objects package
+=======================================
+
+Submodules
+----------
+
+duHast.Revit.Categories.Objects.object\_style module
+----------------------------------------------------
+
+.. automodule:: duHast.Revit.Categories.Objects.object_style
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Categories.Objects
+   :members:
+   :undoc-members:
+   :show-inheritance:

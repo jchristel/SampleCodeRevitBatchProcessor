@@ -46,9 +46,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
@@ -242,6 +244,54 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Levels.levels.get_nearest_level_absolute">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels.</span></span><span class="sig-name descname"><span class="pre">get_nearest_level_absolute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_level_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_nearest_level_absolute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the nearest level matching the Z value and the offset adjustment from the level (in metric!!) in a tuple.</p>
+<p>Note:
+Will return None if the placement level could not be determined.
+Nearest level is the level with the shortest absolute distance to the Z value and which is not in the ignore_level_names list.
+If the Z value is below the lowest level elevation in the model the lowest level will be returned.
+If the Z value is above the highest level elevation in the model the highest level will be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>float</em>) – The Z coordinate (metric!)</p></li>
+<li><p><strong>levels</strong> (<em>list</em>) – List of levels in the model. (sorted ascending)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns the level and the offset adjustment (in metric) from the source family instance level.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Levels.levels.get_nearest_lowest_level">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels.</span></span><span class="sig-name descname"><span class="pre">get_nearest_lowest_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_level_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_nearest_lowest_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the nearest lowest level below the Z value and the offset adjustment from the level (in metric) in a tuple.</p>
+<p>Note:
+Will return None if the placement level could not be determined.
+Nearest level is the level below or at the Z value and which is not in the ignore_level_names list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>float</em>) – The Z coordinate (metric!)</p></li>
+<li><p><strong>levels</strong> (<em>list</em>) – List of levels in the model. (needs to be sorted ascending)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns the level and the offset adjustment (in metric) from the source family instance level.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 </dd></dl>

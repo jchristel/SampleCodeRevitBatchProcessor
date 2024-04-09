@@ -1,0 +1,15 @@
+digraph G {
+  subgraph cluster_0 {
+    node [style=filled,color=grey];
+    "Section Tail - Upgrade" Symbol_Outlet_GPO_Double_ANN Symbol_Outlet_Data_Triple_ANN Label_Text_1_5mm_ANN
+    Label_Text_1_5mm_ANN -> Label_Text_Rotation_1_5mm_ANN -> GPO_EmergencyPower_Double_WallMounted_ELGP_223 -> Bollard_Services_Laboratory_BenchMounted_3Sided_FIJO_646
+    Symbol_Outlet_GPO_Double_ANN -> GPO_EmergencyPower_Double_WallMounted_ELGP_223
+    "Section Tail - Upgrade" -> GPO_Double_WallMounted_ELGP_208 -> Bollard_Services_Laboratory_BenchMounted_3Sided_FIJO_646 [color=blue]
+    "Section Tail - Upgrade" -> Outlet_Data_Triple_WallMounted_ITIN_036 -> Bollard_Services_Laboratory_BenchMounted_3Sided_FIJO_646 [color=blue]
+    "Section Tail - Upgrade" -> Bollard_Services_Laboratory_BenchMounted_3Sided_FIJO_646 [color=blue]
+    Symbol_Outlet_Data_Triple_ANN -> Outlet_Data_Triple_WallMounted_ITIN_036
+    Symbol_Outlet_GPO_Double_ANN -> GPO_Double_WallMounted_ELGP_208
+    color=black
+    }
+  label = "Sample family nesting structure - bottom to top";
+}

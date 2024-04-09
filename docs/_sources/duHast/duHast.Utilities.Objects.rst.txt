@@ -12,6 +12,14 @@ duHast.Utilities.Objects.base module
    :undoc-members:
    :show-inheritance:
 
+duHast.Utilities.Objects.logger\_object module
+----------------------------------------------
+
+.. automodule:: duHast.Utilities.Objects.logger_object
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Utilities.Objects.result module
 --------------------------------------
 

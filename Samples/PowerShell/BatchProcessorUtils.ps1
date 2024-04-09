@@ -117,16 +117,31 @@ function start-wrapper {
         [Parameter(Mandatory = $true)]
         [string[]]$arguments
     )
-    # create a temp file to capture output of the ui file selection script
+    # Create a temp file to capture output of the ui file selection script
     $tempFile = New-TemporaryFile
-    # stat the process and wait for it to finish
+
+    # Start the process and wait for it to finish
     $process_result = Start-Process $path -ArgumentList $arguments -NoNewWindow -PassThru -RedirectStandardOutput $tempFile.FullName -Wait
+ 
     # Read the contents of the temporary file into a variable
     $output_temp_file = Get-Content $tempFile.FullName
+ 
+    # Convert array of strings to single string with preserved formatting
+    $output_string = $output_temp_file | Out-String
+
+    # Write the contents of the temporary file to the console
+    Write-Host $output_string 
+ 
+    # Flush the output buffer to ensure all output is immediately visible
+    [Console]::Out.Flush()
+ 
+    # Append the contents of the temporary file to the log file
     $output_temp_file | Tee-Object -FilePath $log_file_path -Append
+ 
     # Remove the temporary file
     Remove-Item $tempFile.FullName
-    # return the process result object (checking for errors...)
+ 
+    # Return the process result object
     return $process_result
 }
 

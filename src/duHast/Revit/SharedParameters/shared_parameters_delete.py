@@ -123,12 +123,12 @@ def delete_shared_parameter_by_guid(doc, guid):
         )
     else:
         return_value.update_sep(
-            False, "parameter with guid: " + guid + " does not exist in file."
+            False, "parameter with guid: {} does not exist in file.".format(guid)
         )
     return return_value
 
 
-def delete_shared_parameters(doc, parameter_gui_ds):
+def delete_shared_parameters(doc, parameter_guids):
     """
     Deletes shared parameters by GUID from document.
 
@@ -151,9 +151,9 @@ def delete_shared_parameters(doc, parameter_gui_ds):
 
     return_value = res.Result()
     one_got_deleted = False
-    delete_gui_ds = check_whether_shared_parameters_are_in_file(doc, parameter_gui_ds)
-    if len(delete_gui_ds) > 0:
-        for delete_guid in delete_gui_ds:
+    delete_guids = check_whether_shared_parameters_are_in_file(doc, parameter_guids)
+    if len(delete_guids) > 0:
+        for delete_guid in delete_guids:
             delete_status = delete_shared_parameter_by_guid(doc, delete_guid)
             # preserve TRUE value!
             if delete_status.status == True:

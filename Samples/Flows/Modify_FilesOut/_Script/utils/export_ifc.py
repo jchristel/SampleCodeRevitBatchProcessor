@@ -171,13 +171,16 @@ def export_views_to_ifc(doc, export_view_prefix, export_directory, view_name_mod
     """
 
     return_value = res.Result()
-    ifc_export_config = get_ifc_third_party_export_config(doc)
-    return_value = export_3d_views_to_ifc(
-        doc=doc,
-        view_filter=export_view_prefix,
-        ifc_export_config=ifc_export_config,
-        directory_path=export_directory,
-        ifc_coordinates_system=IFCCoords.shared_coordinates,
-        do_something_with_view_name=view_name_modifier,
-    )
+    try:
+        ifc_export_config = get_ifc_third_party_export_config(doc)
+        return_value = export_3d_views_to_ifc(
+            doc=doc,
+            view_filter=export_view_prefix,
+            ifc_export_config=ifc_export_config,
+            directory_path=export_directory,
+            ifc_coordinates_system=IFCCoords.shared_coordinates,
+            do_something_with_view_name=view_name_modifier,
+        )
+    except Exception as e:
+        return_value.update_sep(False, "Error exporting views to IFC: {}".format(e))
     return return_value

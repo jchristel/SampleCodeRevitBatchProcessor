@@ -63,7 +63,7 @@ from Autodesk.Revit.DB import (
     Revision,
     RevisionNumberType,
     RevisionVisibility,
-    View,
+    ViewSheet,
 )
 import revit_script_util
 import revit_file_util
@@ -97,7 +97,7 @@ def get_splash_sheet(doc):
 
     collector = (
         FilteredElementCollector(doc)
-        .OfClass(View)
+        .OfClass(ViewSheet)
         .Where(lambda e: e.Name == settings.SPLASH_SCREEN_SHEET_NAME)
     )
     results = collector.ToList()

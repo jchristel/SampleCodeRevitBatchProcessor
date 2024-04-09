@@ -34,31 +34,31 @@ This will delete all subcategories which are user created ( id greater then 0) a
 # class used for stats reporting
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import delete as rDel
-from duHast.Revit.Family.Data import ifamily_data as IFamData
-from duHast.Revit.Categories.Data import category_data as rCatData
+from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
+from duHast.Revit.Categories.Data.Objects import category_data as rCatData
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import ElementId
 
 
 def purge_unused_sub_categories(doc, processor):
     """
-This function deletes all user-created subcategories (with IDs greater than 0) that are not used by any element in the family or nested families.
+    This function deletes all user-created subcategories (with IDs greater than 0) that are not used by any element in the family or nested families.
 
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:param processor: A CategoryProcessor object containing all subcategory information of the family document and any nested families.
-:type processor: :class:`.CategoryProcessor`
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param processor: A CategoryProcessor object containing all subcategory information of the family document and any nested families.
+    :type processor: :class:`.CategoryProcessor`
 
-:return: Result class instance.
-    - `result.status` (bool): True if all unused subcategories were deleted successfully or none needed to be deleted, otherwise False.
-    - `result.message` (str): Property updated in the format: "Found unused subcategory: family category Name : subcategory Name [subcategory Id]"
+    :return: Result class instance.
+        - `result.status` (bool): True if all unused subcategories were deleted successfully or none needed to be deleted, otherwise False.
+        - `result.message` (str): Property updated in the format: "Found unused subcategory: family category Name : subcategory Name [subcategory Id]"
 
-On exception:
-    - `status` (bool): False.
-    - `message` (str): Contains the exception message.
+    On exception:
+        - `status` (bool): False.
+        - `message` (str): Contains the exception message.
 
-:rtype: :class:`.Result`
-"""
+    :rtype: :class:`.Result`
+    """
 
     # from processor instance get all root category entries where usage counter == 0 and subCategoryId > 0 (pointing to a custom sub category and not a built in one).
     # delete those subcategories by id
@@ -67,7 +67,7 @@ On exception:
 
     ids_to_delete = []
     # get categories found in root processor data only
-    root_fam_data = processor._findRootFamilyData()
+    root_fam_data = processor._find_root_family_data()
     # get all root category entries where usage counter == 0 and subCategoryId > 0 (pointing to a custom sub category and not a built in one).
     for root_fam in root_fam_data:
         if (
@@ -81,7 +81,7 @@ On exception:
                     (root_fam[rCatData.SUB_CATEGORY_ID]),
                 )
             )
-            ids_to_delete.append(rdb.ElementId(root_fam[rCatData.SUB_CATEGORY_ID]))
+            ids_to_delete.append(ElementId(root_fam[rCatData.SUB_CATEGORY_ID]))
     # delete any subcategories found
     if len(ids_to_delete) > 0:
         result_delete = rDel.delete_by_element_ids(

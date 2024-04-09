@@ -36,10 +36,18 @@ from System import Linq
 clr.ImportExtensions(Linq)
 
 # import common library modules
-from duHast.Revit.Common import common as com
+from duHast.Revit.Common.common import get_ids_from_element_collector
+
+from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import (
+    BuiltInCategory,
+    ElementCategoryFilter,
+    FamilySymbol,
+    FilteredElementCollector,
+    Level,
+)
 
 
 def get_levels_in_model(doc):
@@ -52,7 +60,7 @@ def get_levels_in_model(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.Level)
+    collector = FilteredElementCollector(doc).OfClass(Level)
     return collector
 
 
@@ -72,8 +80,8 @@ def get_levels_list_ascending(doc):
     """
 
     collector = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_Levels)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_Levels)
         .WhereElementIsNotElementType()
         .ToList()
         .OrderBy(lambda l: l.ProjectElevation)
@@ -125,8 +133,8 @@ def get_all_level_heads_by_category(doc):
     """
 
     collector = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_LevelHeads)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_LevelHeads)
         .WhereElementIsElementType()
     )
     return collector
@@ -146,8 +154,8 @@ def get_all_level_types_by_category(doc):
     """
 
     collector = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_Levels)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_Levels)
         .WhereElementIsElementType()
     )
     return collector
@@ -165,11 +173,11 @@ def get_all_level_type_ids_by_category(doc):
     """
 
     collector = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_Levels)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_Levels)
         .WhereElementIsElementType()
     )
-    ids = com.get_ids_from_element_collector(collector)
+    ids = get_ids_from_element_collector(collector)
     return ids
 
 
@@ -188,9 +196,93 @@ def get_all_level_head_family_type_ids(doc):
     """
 
     ids = []
-    filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_LevelHeads)
-    col = (
-        rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(filter)
-    )
-    ids = com.get_ids_from_element_collector(col)
+    filter = ElementCategoryFilter(BuiltInCategory.OST_LevelHeads)
+    col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
+    ids = get_ids_from_element_collector(col)
     return ids
+
+
+def get_nearest_level_absolute(z, levels, ignore_level_names):
+    """
+    Returns the nearest level matching the Z value and the offset adjustment from the level (in metric!!) in a tuple.
+
+    Note:
+    Will return None if the placement level could not be determined.
+    Nearest level is the level with the shortest absolute distance to the Z value and which is not in the ignore_level_names list.
+    If the Z value is below the lowest level elevation in the model the lowest level will be returned.
+    If the Z value is above the highest level elevation in the model the highest level will be returned.
+
+    :param z: The Z coordinate (metric!)
+    :type z: float
+    :param levels: List of levels in the model. (sorted ascending)
+    :type levels: list
+    :return: Returns the level and the offset adjustment (in metric) from the source family instance level.
+    :rtype: tuple
+    """
+
+    # distance placeholder
+    absolute_distance_to_level = None
+    nearest_level = None
+    for level in levels:
+        # check if level is to be ignored
+        if level.Name in ignore_level_names:
+            continue
+        # get the absolute distance
+        distance_to_level = abs(z - convert_imperial_feet_to_metric_mm(level.Elevation))
+        # store the first level as the nearest level
+        if absolute_distance_to_level is None:
+            absolute_distance_to_level = distance_to_level
+            nearest_level = level
+        # check if the distance is shorter than the current shortest distance
+        if distance_to_level < absolute_distance_to_level:
+            absolute_distance_to_level = distance_to_level
+            nearest_level = level
+
+    if nearest_level == None:
+        return None, None
+    else:
+        offset_from_level = z - convert_imperial_feet_to_metric_mm(
+            nearest_level.Elevation
+        )
+        return nearest_level, offset_from_level
+
+
+def get_nearest_lowest_level(z, levels, ignore_level_names):
+    """
+    Returns the nearest lowest level below the Z value and the offset adjustment from the level (in metric) in a tuple.
+
+    Note:
+    Will return None if the placement level could not be determined.
+    Nearest level is the level below or at the Z value and which is not in the ignore_level_names list.
+
+    :param z: The Z coordinate (metric!)
+    :type z: float
+    :param levels: List of levels in the model. (needs to be sorted ascending)
+    :type levels: list
+    :return: Returns the level and the offset adjustment (in metric) from the source family instance level.
+    :rtype: tuple
+    """
+
+    # get level by Z coordinate of family
+    nearest_level = None
+    for level in levels:
+        # check if level is to be ignored
+        if level.Name in ignore_level_names:
+            continue
+        # store the lowest level for later
+        if nearest_level == None:
+            nearest_level = level
+        # get the level by height
+        if round(convert_imperial_feet_to_metric_mm(level.Elevation), 2) <= round(z, 2):
+            nearest_level = level
+        else:
+            break
+
+    # check if matching level was found and calc any offset
+    if nearest_level != None:
+        offset_from_level_adjustment = z - convert_imperial_feet_to_metric_mm(
+            nearest_level.Elevation
+        )
+        return nearest_level, offset_from_level_adjustment
+    else:
+        return None, None

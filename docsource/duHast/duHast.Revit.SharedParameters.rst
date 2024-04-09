@@ -7,10 +7,19 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   duHast.Revit.SharedParameters.Data
    duHast.Revit.SharedParameters.Reporting
 
 Submodules
 ----------
+
+duHast.Revit.SharedParameters.purge\_unused\_shared\_parameters\_by\_delete module
+----------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.SharedParameters.purge_unused_shared_parameters_by_delete
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 duHast.Revit.SharedParameters.shared\_parameter\_add module
 -----------------------------------------------------------

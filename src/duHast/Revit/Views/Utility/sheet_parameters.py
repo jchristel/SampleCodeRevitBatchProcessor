@@ -37,6 +37,7 @@ def get_sheet_number(sht):
     :return: The sheet number
     :rtype: str
     """
+
     try:
         return sht.get_Parameter(BuiltInParameter.SHEET_NUMBER).AsString()
     except:
@@ -51,6 +52,7 @@ def get_sheet_name(sht):
     :return: The sheet name
     :rtype: str
     """
+
     try:
         return sht.get_Parameter(BuiltInParameter.SHEET_NAME).AsString()
     except:
@@ -63,15 +65,15 @@ def get_sheet_num_name_comb(sht, num_first=True, separator=" - "):
     of the two. Typically helpful for logging/printing.
 
     :type sht: ViewSheet
-    :param num_first: Whether the sheet number should be first in the string.
-    Defaults to True
+    :param num_first: Whether the sheet number should be first in the string. Defaults to True
     :type num_first: bool
-    :param splitter: The string to split the sheet number and name with. Defaults
-    to ' - '
+    :param splitter: The string to split the sheet number and name with. Defaults to ' - '
     :type splitter: str
     :return: The sheet number and name
     :rtype: str
+
     """
+
     num = get_sheet_number(sht)
     name = get_sheet_name(sht)
 

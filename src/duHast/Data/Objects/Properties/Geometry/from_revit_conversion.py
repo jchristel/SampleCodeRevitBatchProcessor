@@ -3,6 +3,7 @@
 Revit Geometry to data geometry conversion helper functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -29,7 +30,9 @@ Revit Geometry to data geometry conversion helper functions.
 from duHast.Data.Objects.Properties.Geometry import geometry_polygon as dGeometryPoly
 from duHast.Revit.Common.Geometry import geometry as rGeo
 from collections import namedtuple
-from duHast.Revit.Common.Geometry.points import get_point_as_doubles
+from duHast.Revit.Common.Geometry.points import get_point_as_doubles, flatten_xyz_point
+
+from Autodesk.Revit.DB import XYZ
 
 
 def convert_xyz_in_data_geometry_polygons(doc, dgObject):
@@ -140,3 +143,24 @@ def convert_solid_to_flattened_2d_points(solid):
                 dataGeometry.inner_loops = []
             ceilingGeos.append(dataGeometry)
     return ceilingGeos
+
+
+def convert_bounding_box_to_flattened_2d_points(bounding_box):
+    """
+    Converts a bounding box into a 2D polygon by projecting it onto a plane.( Removes Z values...)
+    :param bounding_box: A bounding box.
+    :type bounding_box: Autodesk.Revit.DB.BoundingBoxXYZ
+    :return: A list of data geometry instances.
+    :rtype: list of :class:`.DataGeometryPolygon`
+    """
+    # get points from bounding box and project them onto a plane ( Z value of bounding box min point)
+    bounding_box_points = [
+        bounding_box.Min,
+        XYZ(bounding_box.Max.X, bounding_box.Min.Y, bounding_box.Min.Z),
+        XYZ(bounding_box.Max.X, bounding_box.Max.Y, bounding_box.Min.Z),
+        XYZ(bounding_box.Min.X, bounding_box.Max.Y, bounding_box.Min.Z),
+    ]
+    # set up data class object and store points in outer loop property
+    dataGeometry = dGeometryPoly.DataPolygon()
+    dataGeometry.outer_loop = bounding_box_points
+    return dataGeometry

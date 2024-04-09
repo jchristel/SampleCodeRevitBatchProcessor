@@ -132,7 +132,7 @@ class GridsToggleBubbleVisibilityAtZeroEnd(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if grid visibility of bubble at zero end was successfully toggled, otherwise False
+                - .status True if grid visibility of bubble at zero end was successfully toggled, otherwise False
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 

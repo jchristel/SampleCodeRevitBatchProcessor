@@ -147,7 +147,7 @@ class GridsToggleBubbleVisibilityAtEnd(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if all grids bubble(s) visibility was set successfully, otherwise False.
+                - .status True if all grids bubble(s) visibility was set successfully, otherwise False.
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 

@@ -1,0 +1,29 @@
+duHast.UI.files\_select package
+===============================
+
+Submodules
+----------
+
+duHast.UI.files\_select.ViewModel module
+----------------------------------------
+
+.. automodule:: duHast.UI.files_select.ViewModel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.UI.files\_select.files\_select\_ui module
+------------------------------------------------
+
+.. automodule:: duHast.UI.files_select.files_select_ui
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.UI.files_select
+   :members:
+   :undoc-members:
+   :show-inheritance:

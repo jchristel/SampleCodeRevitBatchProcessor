@@ -145,7 +145,7 @@ def delete_cad_links(doc):
     :type doc: Autodesk.Revit.DB.Document
     :return: Result class instance.
 
-        - .result = True if all CAD links got deleted. Otherwise False.
+        - .status True if all CAD links got deleted. Otherwise False.
         - .message will contain status of deletion.
 
     :rtype: :class:`.Result`
@@ -179,7 +179,7 @@ def reload_cad_links(
     :type do_something_with_link_name: func(str) -> str
     :return: Result class instance.
 
-        - .result = True if all CAD links got reloaded successfully. Otherwise False.
+        - .status True if all CAD links got reloaded successfully. Otherwise False.
         - .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
     
     :rtype: :class:`.Result`

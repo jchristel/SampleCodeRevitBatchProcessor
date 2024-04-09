@@ -169,7 +169,7 @@ def delete_sheets(doc, view_rules, collector_views):
     :type collector_views: Autodesk.Revit.DB.FilteredElementCollector
     :return:
         Result class instance.
-        - .result = True if all sheets matching filter where deleted. Otherwise False.
+        - .status True if all sheets matching filter where deleted. Otherwise False.
         - .message will contain deletion status.
     :rtype: :class:`.Result`
     """
@@ -200,7 +200,7 @@ def delete_all_sheets(doc):
     :type doc: Autodesk.Revit.DB.Document
     :return:
         Result class instance.
-        - .result = True if all sheets where deleted. Otherwise False.
+        - .status True if all sheets where deleted. Otherwise False.
         - .message will contain deletion status.
     :rtype: :class:`.Result`
     """

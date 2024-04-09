@@ -23,13 +23,13 @@ This module provides utility functions to read and write reload task lists for t
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
-
+import os
 from collections import namedtuple
 
 from duHast.Utilities import (
@@ -69,7 +69,9 @@ def write_reload_list_to_file(reload_families, directory_path, counter=0):
     header = []
     # data to be written to file
     overall_data = []
-    file_name = directory_path + "\\" + TASK_COUNTER_FILE_PREFIX + str(counter) + ".txt"
+    file_name = os.path.join(
+        directory_path, "{} {}.txt".format(TASK_COUNTER_FILE_PREFIX, counter)
+    )
     # loop over families to get file path
     for r in reload_families:
         # row data
@@ -116,7 +118,9 @@ def write_out_empty_task_list(directory_path, counter=0):
     :rtype: bool
     """
 
-    file_name = directory_path + "\\" + "TaskOutput" + str(counter) + ".txt"
+    file_name = os.path.join(
+        directory_path, "{} {}.txt".format(TASK_COUNTER_FILE_PREFIX, counter)
+    )
     # write out file list without header
     header = []
     # write out empty data

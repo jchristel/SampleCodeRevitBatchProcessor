@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 0.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Family package" href="duHast.Revit.Family.html" />
-    <link rel="next" title="duHast.Revit.Family.Utility package" href="duHast.Revit.Family.Utility.html" />
+    <link rel="next" title="duHast.Revit.Family.Data.Objects package" href="duHast.Revit.Family.Data.Objects.html" />
     <link rel="prev" title="duHast.Revit.Family package" href="duHast.Revit.Family.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
@@ -31,7 +31,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="duHast.Revit.Family.Utility.html" title="duHast.Revit.Family.Utility package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Family.Data.Objects.html" title="duHast.Revit.Family.Data.Objects package" accesskey="N">next</a></div>
             <div class="headerButton"><a href="duHast.Revit.Family.html" title="duHast.Revit.Family package" accesskey="P">previous</a></div>
         </li>
     </ul>
@@ -46,9 +46,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
@@ -88,45 +90,78 @@
             
   <section id="duhast-revit-family-data-package">
 <h1>duHast.Revit.Family.Data package<a class="headerlink" href="#duhast-revit-family-data-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html">duHast.Revit.Family.Data.Objects package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#module-duHast.Revit.Family.Data.Objects.family_base_data">duHast.Revit.Family.Data.Objects.family_base_data module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#family-base-data-class">Family base data class.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_base_data.FamilyBaseData"><code class="docutils literal notranslate"><span class="pre">FamilyBaseData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_base_data.FamilyBaseData.process"><code class="docutils literal notranslate"><span class="pre">FamilyBaseData.process()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_base_data.FamilyBaseData.get_data"><code class="docutils literal notranslate"><span class="pre">FamilyBaseData.get_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#module-duHast.Revit.Family.Data.Objects.family_base_data_processor">duHast.Revit.Family.Data.Objects.family_base_data_processor module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#family-base-data-processor-class">Family base data processor class.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_base_data_processor.FamilyBaseProcessor"><code class="docutils literal notranslate"><span class="pre">FamilyBaseProcessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_base_data_processor.FamilyBaseProcessor.process"><code class="docutils literal notranslate"><span class="pre">FamilyBaseProcessor.process()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#module-duHast.Revit.Family.Data.Objects.family_data_collector">duHast.Revit.Family.Data.Objects.family_data_collector module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#family-data-collector-class">Family data collector class.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_data_collector.RevitFamilyDataCollector"><code class="docutils literal notranslate"><span class="pre">RevitFamilyDataCollector</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_data_collector.RevitFamilyDataCollector.process_family"><code class="docutils literal notranslate"><span class="pre">RevitFamilyDataCollector.process_family()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#module-duHast.Revit.Family.Data.Objects.ifamily_action">duHast.Revit.Family.Data.Objects.ifamily_action module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#interface-for-family-data-storage-processing-class">Interface for family data storage / processing class.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_action.IFamilyAction"><code class="docutils literal notranslate"><span class="pre">IFamilyAction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_action.IFamilyAction.process"><code class="docutils literal notranslate"><span class="pre">IFamilyAction.process()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_action.IFamilyAction.get_data"><code class="docutils literal notranslate"><span class="pre">IFamilyAction.get_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#module-duHast.Revit.Family.Data.Objects.ifamily_data">duHast.Revit.Family.Data.Objects.ifamily_data module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#id1">Interface for family data storage / processing class.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_data.IFamilyData"><code class="docutils literal notranslate"><span class="pre">IFamilyData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_data.IFamilyData.process"><code class="docutils literal notranslate"><span class="pre">IFamilyData.process()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_data.IFamilyData.get_data"><code class="docutils literal notranslate"><span class="pre">IFamilyData.get_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_data.IFamilyData.update_data"><code class="docutils literal notranslate"><span class="pre">IFamilyData.update_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_data.IFamilyData.add_data"><code class="docutils literal notranslate"><span class="pre">IFamilyData.add_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#module-duHast.Revit.Family.Data.Objects.ifamily_processor">duHast.Revit.Family.Data.Objects.ifamily_processor module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#interface-for-family-processing-class">Interface for family processing class.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_processor.IFamilyProcessor"><code class="docutils literal notranslate"><span class="pre">IFamilyProcessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_processor.IFamilyProcessor.pre_process_actions"><code class="docutils literal notranslate"><span class="pre">IFamilyProcessor.pre_process_actions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_processor.IFamilyProcessor.process"><code class="docutils literal notranslate"><span class="pre">IFamilyProcessor.process()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_processor.IFamilyProcessor.post_process_actions"><code class="docutils literal notranslate"><span class="pre">IFamilyProcessor.post_process_actions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_processor.IFamilyProcessor.get_data"><code class="docutils literal notranslate"><span class="pre">IFamilyProcessor.get_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_processor.IFamilyProcessor.get_data_json"><code class="docutils literal notranslate"><span class="pre">IFamilyProcessor.get_data_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_processor.IFamilyProcessor.get_data_string_list"><code class="docutils literal notranslate"><span class="pre">IFamilyProcessor.get_data_string_list()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#module-duHast.Revit.Family.Data.Objects">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
-</section>
-<section id="module-duHast.Revit.Family.Data.family_base_data">
-<span id="duhast-revit-family-data-family-base-data-module"></span><h2>duHast.Revit.Family.Data.family_base_data module<a class="headerlink" href="#module-duHast.Revit.Family.Data.family_base_data" title="Permalink to this heading">¶</a></h2>
-<section id="family-base-data-class">
-<h3>Family base data class.<a class="headerlink" href="#family-base-data-class" title="Permalink to this heading">¶</a></h3>
-</section>
-<dl class="py class">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data.FamilyBaseData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_base_data.</span></span><span class="sig-name descname"><span class="pre">FamilyBaseData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data.FamilyBaseData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#duHast.Revit.Family.Data.ifamily_data.IFamilyData" title="duHast.Revit.Family.Data.ifamily_data.IFamilyData"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyData</span></code></a></p>
-<p>Class constructor</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>rootPath</strong> (<em>str</em>) – The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo            This includes the actual family name as the last node.</p></li>
-<li><p><strong>dataType</strong> (<em>str</em>) – Human readable data type descriptor</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data.FamilyBaseData.process">
-<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_out_directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data.FamilyBaseData.process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Collects all base data from the document and stores it in the class property .data</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current family document</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data.FamilyBaseData.get_data">
-<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data.FamilyBaseData.get_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </section>
 <section id="module-duHast.Revit.Family.Data.family_base_data_circular_referencing">
 <span id="duhast-revit-family-data-family-base-data-circular-referencing-module"></span><h2>duHast.Revit.Family.Data.family_base_data_circular_referencing module<a class="headerlink" href="#module-duHast.Revit.Family.Data.family_base_data_circular_referencing" title="Permalink to this heading">¶</a></h2>
@@ -337,34 +372,6 @@ if so extract families higher up the root path tree as parents and families furt
 </dd></dl>
 
 </section>
-<section id="module-duHast.Revit.Family.Data.family_base_data_processor">
-<span id="duhast-revit-family-data-family-base-data-processor-module"></span><h2>duHast.Revit.Family.Data.family_base_data_processor module<a class="headerlink" href="#module-duHast.Revit.Family.Data.family_base_data_processor" title="Permalink to this heading">¶</a></h2>
-<section id="family-base-data-processor-class">
-<h3>Family base data processor class.<a class="headerlink" href="#family-base-data-processor-class" title="Permalink to this heading">¶</a></h3>
-</section>
-<dl class="py class">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data_processor.FamilyBaseProcessor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_base_data_processor.</span></span><span class="sig-name descname"><span class="pre">FamilyBaseProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference_file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_out_directory_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_processor.FamilyBaseProcessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor" title="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyProcessor</span></code></a></p>
-<p>Class constructor.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data_processor.FamilyBaseProcessor.process">
-<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_processor.FamilyBaseProcessor.process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls processor instance with the document and root path provided and adds processor instance to class property .data</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current family document.</p></li>
-<li><p><strong>rootPath</strong> (<em>str</em>) – The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo            This includes the actual family name as the last node.</p></li>
-<li><p><strong>rootCategoryPath</strong> (<em>str</em>) – The path of the nested family in in terms of category in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory            This includes the actual family category as the last node.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
 <section id="module-duHast.Revit.Family.Data.family_base_data_reload_advanced">
 <span id="duhast-revit-family-data-family-base-data-reload-advanced-module"></span><h2>duHast.Revit.Family.Data.family_base_data_reload_advanced module<a class="headerlink" href="#module-duHast.Revit.Family.Data.family_base_data_reload_advanced" title="Permalink to this heading">¶</a></h2>
 <section id="family-base-data-analysis-module-containing-functions-to-build-a-reload-tree">
@@ -438,9 +445,9 @@ if so extract families higher up the root path tree as parents and families furt
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data_utils.root_family">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_base_data_utils.</span></span><span class="sig-name descname"><span class="pre">root_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_utils.root_family" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_base_data_utils.</span></span><span class="sig-name descname"><span class="pre">root_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_utils.root_family" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
-<p>Create new instance of root_family(name, category, filePath, parent, child)</p>
+<p>Create new instance of root_family(name, category, filePath, parent, child, report_data)</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data_utils.root_family.category">
 <span class="sig-name descname"><span class="pre">category</span></span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_utils.root_family.category" title="Permalink to this definition">¶</a></dt>
@@ -471,13 +478,19 @@ if so extract families higher up the root path tree as parents and families furt
 <dd><p>Alias for field number 3</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data_utils.root_family.report_data">
+<span class="sig-name descname"><span class="pre">report_data</span></span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_utils.root_family.report_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 5</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data_utils.nested_family">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_base_data_utils.</span></span><span class="sig-name descname"><span class="pre">nested_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rootPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categoryPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostFamily</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_utils.nested_family" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_base_data_utils.</span></span><span class="sig-name descname"><span class="pre">nested_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rootPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categoryPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostFamily</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_utils.nested_family" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
-<p>Create new instance of nested_family(name, category, filePath, rootPath, categoryPath, hostFamily)</p>
+<p>Create new instance of nested_family(name, category, filePath, rootPath, categoryPath, hostFamily, report_data)</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data_utils.nested_family.category">
 <span class="sig-name descname"><span class="pre">category</span></span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_utils.nested_family.category" title="Permalink to this definition">¶</a></dt>
@@ -506,6 +519,12 @@ if so extract families higher up the root path tree as parents and families furt
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data_utils.nested_family.name">
 <span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_utils.nested_family.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data_utils.nested_family.report_data">
+<span class="sig-name descname"><span class="pre">report_data</span></span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_utils.nested_family.report_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 6</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -600,15 +619,71 @@ Note: This method calls ReadOverallFamilyIntoNestedDataList(filePath) which will
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data_utils.cull_nested_base_data_blocks">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_base_data_utils.</span></span><span class="sig-name descname"><span class="pre">cull_nested_base_data_blocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overall_family_base_nested_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_utils.cull_nested_base_data_blocks" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_base_data_utils.</span></span><span class="sig-name descname"><span class="pre">cull_nested_base_data_blocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_families</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nested_families</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_utils.cull_nested_base_data_blocks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reduce base data families for parent / child finding purposes. Keep the nodes with the root path longes branch only.</p>
-<p>Sample:</p>
+<p>Sample ( within a single data block)</p>
 <p>famA :: famB :: famC
-famA :: famB</p>
-<p>The second of the above examples can be culled since the first contains the same information.</p>
+FamA :: famB</p>
+<p>The second of the above examples can be culled since the path is contained within the first example.</p>
+<p>Sample ( across multiple data blocks)</p>
+<p>famA :: famB :: famC
+famB :: famC</p>
+<p>The second of the above examples can be culled since the first family (famB) in that sample is already in the first example.(nested Family)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>overall_family_base_nested_data</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data_utils.get_nested_family_data_for_root_family">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_base_data_utils.</span></span><span class="sig-name descname"><span class="pre">get_nested_family_data_for_root_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_families</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nested_families</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_utils.get_nested_family_data_for_root_family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of nested families for each root family.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_families</strong> (<em>[</em><a class="reference internal" href="#duHast.Revit.Family.Data.family_base_data_utils.root_family" title="duHast.Revit.Family.Data.family_base_data_utils.root_family"><em>root_family</em></a><em>]</em>) – A list of tuples containing root family data.</p></li>
+<li><p><strong>nested_families</strong> (<em>[</em><a class="reference internal" href="#duHast.Revit.Family.Data.family_base_data_utils.nested_family" title="duHast.Revit.Family.Data.family_base_data_utils.nested_family"><em>nested_family</em></a><em>]</em>) – A list of tuples containing nested family data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A dictionary where:</p>
+<ul class="simple">
+<li><p>key is the root family name and category concatenated and</p></li>
+<li><p>value is a list of tuples containing nested family data.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{str: [<a class="reference internal" href="#duHast.Revit.Family.Data.family_base_data_utils.nested_family" title="duHast.Revit.Family.Data.family_base_data_utils.nested_family">nested_family</a>]}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_base_data_utils.find_root_families_not_in_nested_data">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_base_data_utils.</span></span><span class="sig-name descname"><span class="pre">find_root_families_not_in_nested_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_families</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nested_families</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_base_data_utils.find_root_families_not_in_nested_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of root families not found in the nested family data set.</p>
+<p>In order to reduce the number of families to be processed, this function can be used to find the root families which are not nested into any other family and therefore do contain the
+longest nesting path.</p>
+<p>This is based on two assumptions:</p>
+<ul class="simple">
+<li><p>The provided data set contains all families in the project (no missing families are reported)</p></li>
+<li><p>As soon as a family is nested into another family, its nesting path will appear in the nested family data set and the root family data set.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_families</strong> (<em>[</em><a class="reference internal" href="#duHast.Revit.Family.Data.family_base_data_utils.root_family" title="duHast.Revit.Family.Data.family_base_data_utils.root_family"><em>root_family</em></a><em>]</em>) – A list of tuples containing root family data.</p></li>
+<li><p><strong>nested_families</strong> (<em>[</em><a class="reference internal" href="#duHast.Revit.Family.Data.family_base_data_utils.nested_family" title="duHast.Revit.Family.Data.family_base_data_utils.nested_family"><em>nested_family</em></a><em>]</em>) – A list of tuples containing nested family data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of tuples containing root family data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[<a class="reference internal" href="#duHast.Revit.Family.Data.family_base_data_utils.root_family" title="duHast.Revit.Family.Data.family_base_data_utils.root_family">root_family</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1131,54 +1206,6 @@ Note: This method calls ReadOverallFamilyDataList(filePath) which will raise exc
 </dd></dl>
 
 </section>
-<section id="module-duHast.Revit.Family.Data.family_data_collector">
-<span id="duhast-revit-family-data-family-data-collector-module"></span><h2>duHast.Revit.Family.Data.family_data_collector module<a class="headerlink" href="#module-duHast.Revit.Family.Data.family_data_collector" title="Permalink to this heading">¶</a></h2>
-<section id="family-data-collector-class">
-<h3>Family data collector class.<a class="headerlink" href="#family-data-collector-class" title="Permalink to this heading">¶</a></h3>
-<ul class="simple">
-<li><p>Collects data from current family document and then recursively from any nested family.</p></li>
-</ul>
-</section>
-<dl class="py class">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_data_collector.RevitFamilyDataCollector">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_data_collector.</span></span><span class="sig-name descname"><span class="pre">RevitFamilyDataCollector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_processors</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_data_collector.RevitFamilyDataCollector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
-<p>Class constructor taking a list of processor instances as argument.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data_processors</strong> (<em>[</em><a class="reference internal" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor" title="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor"><em>IFamilyProcessor</em></a><em>]</em>) – List of processor instances</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_data_collector.RevitFamilyDataCollector.process_family">
-<span class="sig-name descname"><span class="pre">process_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_data_collector.RevitFamilyDataCollector.process_family" title="Permalink to this definition">¶</a></dt>
-<dd><p>Entry point for recursive family looper.</p>
-<p>Processes root family as well as actions any post processing.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p></li>
-<li><p><strong>root_name</strong> (<em>str</em>) – The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo            This includes the actual family name as the last node.</p></li>
-<li><p><strong>root_category</strong> (<em>str</em>) – The path of the nested family category in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory            This includes the actual family category as the last node.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Result class instance.</p>
-<ul class="simple">
-<li><p>.result = True if all data processor instances ran without an exception. Otherwise False.</p></li>
-<li><p>.message will contain each processor type and its processing status’</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
 <section id="module-duHast.Revit.Family.Data.family_reload_advanced_utils">
 <span id="duhast-revit-family-data-family-reload-advanced-utils-module"></span><h2>duHast.Revit.Family.Data.family_reload_advanced_utils module<a class="headerlink" href="#module-duHast.Revit.Family.Data.family_reload_advanced_utils" title="Permalink to this heading">¶</a></h2>
 <section id="reload-using-advanced-tools-collection">
@@ -1510,64 +1537,8 @@ loaded families accordingly.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_report_utils.read_unique_families_from_report">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_report_utils.</span></span><span class="sig-name descname"><span class="pre">read_unique_families_from_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_report_utils.read_unique_families_from_report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads list of families from any report file into list of unique named tuples.
-Reports needs:</p>
-<ul class="simple">
-<li><p>to contain the following columns (in this order):  root path, category path , family name, family file path</p></li>
-<li><p>a tab separated file</p></li>
-</ul>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filePath</strong> (<em>str</em>) – Fully qualified file path to family base data report file.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>Exception</strong> – “Families base data list files does not exist.”</p></li>
-<li><p><strong>Exception</strong> – “Empty Families base data list file!”</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Two lists: first list of named tuples contain family root data, second list contains family nested data.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>[<a class="reference internal" href="#duHast.Revit.Family.Data.family_report_utils.rootFamily" title="duHast.Revit.Family.Data.family_report_utils.rootFamily">rootFamily</a>], [<a class="reference internal" href="#duHast.Revit.Family.Data.family_report_utils.nestedFamily" title="duHast.Revit.Family.Data.family_report_utils.nestedFamily">nestedFamily</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_report_utils.read_unique_families_with_row_data_from_report">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_report_utils.</span></span><span class="sig-name descname"><span class="pre">read_unique_families_with_row_data_from_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_report_utils.read_unique_families_with_row_data_from_report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads list of families from any report file into dictionaries where key is a named tuple and values are the rows associated with that family
-Reports needs:</p>
-<ul class="simple">
-<li><p>to contain the following columns (in this order):  root path, category path , family name, family file path</p></li>
-<li><p>a tab separated file</p></li>
-</ul>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filePath</strong> (<em>str</em>) – Fully qualified file path to family base data report file.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>Exception</strong> – “Families base data list files does not exist.”</p></li>
-<li><p><strong>Exception</strong> – “Empty Families base data list file!”</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Two dictionaries: first dictionary contain family root data, second dictionary contains family nested data.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>{rootFamily:[[str]]}, {nestedFamily:[[str]]}</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_report_utils.combine_reports">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_report_utils.</span></span><span class="sig-name descname"><span class="pre">combine_reports</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previousReportPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newReportPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_report_utils.combine_reports" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.family_report_utils.</span></span><span class="sig-name descname"><span class="pre">combine_reports</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_report_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_report_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_report_utils.combine_reports" title="Permalink to this definition">¶</a></dt>
 <dd><p>This combines two reports by:</p>
 <ul class="simple">
 <li><p>building an aggregate data dictionary of each report (key root family file path, values lists containing the row data read from file for the root family as well as any nested families)</p></li>
@@ -1584,11 +1555,12 @@ Reports needs:</p>
 root        rootCategory</p>
 <p>First entry (after split at separator) in each of these columns identifies root family uniquely.
 Assume that new report only ever adds or substitutes entries in previous report but does not delete from it!</p>
+<p>This function checks at the end whether families still exist on file server. If not, they will be removed from the data set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>previousReportPath</strong> (<em>str</em>) – A fully qualified file path to the previous report file.</p></li>
-<li><p><strong>newReportPath</strong> (<em>str</em>) – A fully qualified file path to the new report file.</p></li>
+<li><p><strong>previous_report_path</strong> (<em>str</em>) – A fully qualified file path to the previous report file.</p></li>
+<li><p><strong>new_report_path</strong> (<em>str</em>) – A fully qualified file path to the new report file.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1598,164 +1570,6 @@ Assume that new report only ever adds or substitutes entries in previous report 
 <dd class="field-odd"><p>[[str]]</p>
 </dd>
 </dl>
-</dd></dl>
-
-</section>
-<section id="module-duHast.Revit.Family.Data.ifamily_action">
-<span id="duhast-revit-family-data-ifamily-action-module"></span><h2>duHast.Revit.Family.Data.ifamily_action module<a class="headerlink" href="#module-duHast.Revit.Family.Data.ifamily_action" title="Permalink to this heading">¶</a></h2>
-<section id="interface-for-family-data-storage-processing-class">
-<h3>Interface for family data storage / processing class.<a class="headerlink" href="#interface-for-family-data-storage-processing-class" title="Permalink to this heading">¶</a></h3>
-</section>
-<dl class="py class">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_action.IFamilyAction">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.ifamily_action.</span></span><span class="sig-name descname"><span class="pre">IFamilyAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action_type</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_action.IFamilyAction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
-<p>Class constructor</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_action.IFamilyAction.process">
-<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_action.IFamilyAction.process" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_action.IFamilyAction.get_data">
-<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_action.IFamilyAction.get_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="module-duHast.Revit.Family.Data.ifamily_data">
-<span id="duhast-revit-family-data-ifamily-data-module"></span><h2>duHast.Revit.Family.Data.ifamily_data module<a class="headerlink" href="#module-duHast.Revit.Family.Data.ifamily_data" title="Permalink to this heading">¶</a></h2>
-<section id="id1">
-<h3>Interface for family data storage / processing class.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
-</section>
-<dl class="py class">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_data.IFamilyData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.ifamily_data.</span></span><span class="sig-name descname"><span class="pre">IFamilyData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_data.IFamilyData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
-<p>Class constructor</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_data.IFamilyData.process">
-<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_data.IFamilyData.process" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_data.IFamilyData.get_data">
-<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_data.IFamilyData.get_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_data.IFamilyData.update_data">
-<span class="sig-name descname"><span class="pre">update_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identify_by_this_property_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identify_by_this_property_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_data.IFamilyData.update_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_data.IFamilyData.add_data">
-<span class="sig-name descname"><span class="pre">add_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_data.IFamilyData.add_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="module-duHast.Revit.Family.Data.ifamily_processor">
-<span id="duhast-revit-family-data-ifamily-processor-module"></span><h2>duHast.Revit.Family.Data.ifamily_processor module<a class="headerlink" href="#module-duHast.Revit.Family.Data.ifamily_processor" title="Permalink to this heading">¶</a></h2>
-<section id="interface-for-family-processing-class">
-<h3>Interface for family processing class.<a class="headerlink" href="#interface-for-family-processing-class" title="Permalink to this heading">¶</a></h3>
-</section>
-<dl class="py class">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.ifamily_processor.</span></span><span class="sig-name descname"><span class="pre">IFamilyProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'not</span> <span class="pre">declared'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string_report_headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
-<p>Class constructor</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.pre_process_actions">
-<span class="sig-name descname"><span class="pre">pre_process_actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.pre_process_actions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Actions any pre processing before family data will be collected.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>_description_</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_type_</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.process">
-<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gather data on the root family and any nested families</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p></li>
-<li><p><strong>root_path</strong> (<em>str</em>) – The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo            This includes the actual family name as the last node.</p></li>
-<li><p><strong>root_category_path</strong> (<em>str</em>) – The path of the nested family category in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory            This includes the actual family category as the last node.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.post_process_actions">
-<span class="sig-name descname"><span class="pre">post_process_actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.post_process_actions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Actions any post processing after family data has been collected.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.get_data">
-<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.get_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns list of flattened dictionaries. One dictionary for each document processed.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of dictionaries.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>[{}]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.get_data_json">
-<span class="sig-name descname"><span class="pre">get_data_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.get_data_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns data objects as JSON formatted strings.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>JSON formatted string.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.get_data_string_list">
-<span class="sig-name descname"><span class="pre">get_data_string_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.get_data_string_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns data objects as list of strings in order of headers list of this class.</p>
-<ul class="simple">
-<li><p>Strings are UTF 8 encoded</p></li>
-<li><p>Unknown header values are marked as ‘null’</p></li>
-</ul>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of string.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>[str]</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </section>

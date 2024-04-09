@@ -1,0 +1,1 @@
+call "\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\04 BatchP\_01_Z_ChangeFamilySubCategory\_Script\Debug.bat" >> "\\bvn\data\studio\SharedAssets\Revit\RevitContent\CentralHealthLibrary\04 BatchP\_01_Z_ChangeFamilySubCategory\_Script\Debug.log"

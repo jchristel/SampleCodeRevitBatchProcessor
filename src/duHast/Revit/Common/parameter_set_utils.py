@@ -107,7 +107,7 @@ def set_parameter_value(
             return action_return_value
 
         transaction = rdb.Transaction(doc, transaction_name)
-        return_value = in_transaction(transaction, action, doc)
+        return_value = in_transaction(transaction, action)
     elif para.StorageType == rdb.StorageType.Double:
         # THIS IS THE KEY:  Use SetValueString instead of Set.  Set requires your data to be in
         # whatever internal units of measure Revit uses. SetValueString expects your value to
@@ -129,7 +129,7 @@ def set_parameter_value(
             return action_return_value
 
         transaction = rdb.Transaction(doc, transaction_name)
-        return_value = in_transaction(transaction, action, doc)
+        return_value = in_transaction(transaction, action)
     elif para.StorageType == rdb.StorageType.Integer:
 
         def action():
@@ -146,7 +146,7 @@ def set_parameter_value(
             return action_return_value
 
         transaction = rdb.Transaction(doc, transaction_name)
-        return_value = in_transaction(transaction, action, doc)
+        return_value = in_transaction(transaction, action)
     elif para.StorageType == rdb.StorageType.String:
 
         def action():
@@ -163,7 +163,7 @@ def set_parameter_value(
             return action_return_value
 
         transaction = rdb.Transaction(doc, transaction_name)
-        return_value = in_transaction(transaction, action, doc)
+        return_value = in_transaction(transaction, action)
     else:
         # dead end
         return_value.update_sep(
@@ -332,12 +332,19 @@ def set_parameter_without_transaction_wrapper_by_name(
     """
 
     return_value = res.Result()
+    
     if not isinstance(parameter_value, str):
         parameter_value = str(parameter_value)
+    
     para = element.LookupParameter(parameter_name)
-    return_value = set_parameter_value_simple(
-        para=para, value_as_string=parameter_value
-    )
+    
+    if(para != None):
+        return_value = set_parameter_value_simple(
+            para=para, value_as_string=parameter_value
+        )
+    else:
+        return_value.update_sep(False, "Parameter: {} not found.".format(parameter_name))
+    
     return return_value
 
 
@@ -370,10 +377,17 @@ def set_builtin_parameter_without_transaction_wrapper_by_name(
     """
 
     return_value = res.Result()
+
     if not isinstance(parameter_value, str):
         parameter_value = str(parameter_value)
+    
     para = element.get_Parameter(parameter_definition)
-    return_value = set_parameter_value_simple(
-        para=para, value_as_string=parameter_value
-    )
+    
+    if(para != None):
+        return_value = set_parameter_value_simple(
+            para=para, value_as_string=parameter_value
+        )
+    else:
+        return_value.update_sep(False, "Parameter: {} not found.".format(parameter_definition))
+
     return return_value

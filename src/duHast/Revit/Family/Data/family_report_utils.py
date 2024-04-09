@@ -38,8 +38,8 @@ nestedFamily:
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -48,6 +48,9 @@ from collections import namedtuple
 
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities import files_csv as fileCSV, files_io as fileIO
+from duHast.Revit.Family.Data.family_base_data_utils import (
+    read_overall_family_data_list,
+)
 
 # tuples containing base family data read from file
 rootFamily = namedtuple("rootFamily", "name category filePath")
@@ -65,125 +68,6 @@ BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH = 3
 EXCEPTION_NO_FAMILY_BASE_DATA_FILES = "Report data list files do not exist."
 EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES = "Empty report data list file!"
 
-
-def read_unique_families_from_report(filePath):
-    """
-    Reads list of families from any report file into list of unique named tuples.
-    Reports needs:
-
-    - to contain the following columns (in this order):  root path, category path , family name, family file path
-    - a tab separated file
-
-    :param filePath: Fully qualified file path to family base data report file.
-    :type filePath: str
-    :raises Exception: "Families base data list files does not exist."
-    :raises Exception: "Empty Families base data list file!"
-    :return: Two lists: first list of named tuples contain family root data, second list contains family nested data.
-    :rtype: [rootFamily], [nestedFamily]
-    """
-
-    rows = []
-    if fileIO.file_exist(filePath):
-        rows = fileCSV.read_csv_file(filePath)
-    else:
-        raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
-    if len(rows) > 0:
-        pass
-    else:
-        raise Exception(EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES)
-
-    returnValueRootFamily = []
-    returnValueNestedFamily = []
-    for i in range(1, len(rows)):
-        # check if root family
-        if "::" not in rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH]:
-            data = rootFamily(
-                rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME],
-                rows[i][BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH],
-                rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
-            )
-            # only add unique occurrences
-            if data not in returnValueRootFamily:
-                returnValueRootFamily.append(data)
-        else:
-            # the category is the last entry in the category root path
-            categories = rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH].split(" :: ")
-            category = categories[len(categories) - 1]
-            # found a child family
-            data = nestedFamily(
-                rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME],
-                category,
-                rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
-                rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH].split(
-                    " :: "
-                ),  # split root path into list for ease of searching
-                rows[i][BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH].split(
-                    " :: "
-                ),  # split category path into list for ease of searching
-            )
-            # only add unique occurrences
-            if data not in returnValueNestedFamily:
-                returnValueNestedFamily.append(data)
-    return returnValueRootFamily, returnValueNestedFamily
-
-
-def read_unique_families_with_row_data_from_report(filePath):
-    """
-    Reads list of families from any report file into dictionaries where key is a named tuple and values are the rows associated with that family
-    Reports needs:
-
-    - to contain the following columns (in this order):  root path, category path , family name, family file path
-    - a tab separated file
-
-    :param filePath: Fully qualified file path to family base data report file.
-    :type filePath: str
-    :raises Exception: "Families base data list files does not exist."
-    :raises Exception: "Empty Families base data list file!"
-    :return: Two dictionaries: first dictionary contain family root data, second dictionary contains family nested data.
-    :rtype: {rootFamily:[[str]]}, {nestedFamily:[[str]]}
-    """
-
-    rows = []
-    if fileIO.file_exist(filePath):
-        rows = fileCSV.read_csv_file(filePath, True)
-    else:
-        raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
-    if len(rows) > 0:
-        pass
-    else:
-        raise Exception(EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES)
-
-    returnValueRootFamily = {}
-    returnValueNestedFamily = {}
-    for i in range(1, len(rows)):
-        # check if root family
-        if "::" not in rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH]:
-            data = rootFamily(
-                rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME],
-                rows[i][BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH],
-                rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
-            )
-            # add row to dictionary
-            if data not in returnValueRootFamily:
-                returnValueRootFamily[data] = [rows[i]]
-            else:
-                returnValueRootFamily[data].append(rows[i])
-        else:
-            # the category is the last entry in the category root path
-            categories = rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH].split(" :: ")
-            category = categories[len(categories) - 1]
-            # found a child family
-            data = nestedFamily(
-                rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME],
-                category,
-                rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
-                rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH],
-                rows[i][BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH],
-            )
-            returnValueNestedFamily[data] = [rows[i]]
-    return returnValueRootFamily, returnValueNestedFamily
-
-
 # ------------------------------------- combining reports --------------------------------------------
 
 
@@ -199,73 +83,73 @@ def _get_data_rows_from_dictionary(dic):
     :return: List of list of strings
     :rtype: [[str]]
     """
-
+    print(dic)
     dataList = []
     # get rows from dictionary
     for k, v in dic.items():
         # get data rows for root family
         for rootData in v[0]:
-            dataList.append(rootData)
+            dataList.append(rootData.report_data)
         # get data rows for any nested families
         for nestedFamRowValue in v[1]:
-            dataList.append(nestedFamRowValue)
+            dataList.append(nestedFamRowValue.report_data)
     return dataList
 
 
-def _compare_family_dictionaries(previousAgData, newAgData):
+def _compare_family_dictionaries(previous_aggregated_data, new_aggregated_data):
     """
     Compares two aggregate data dictionaries. Any new root family from newAgData ( root family occurring in newAgData only) will be add to the previousAgData dictionary.
     Any existing root family (root family occurring in previous and new aggregate data dictionaries) will be updated in the previousAgData dictionary with row data from the newAgData data dictionary.
 
 
-    :param previousAgData: A dictionary containing aggregated family data from the previous report.
-    :type previousAgData: {key:str, value ([str],[str])}
-    :param newAgData: A dictionary containing aggregated family data from the new report.
-    :type newAgData: {key:str, value ([str],[str])}
+    :param previous_aggregated_data: A dictionary containing aggregated family data from the previous report.
+    :type previous_aggregated_data: {key:str, value ([str],[str])}
+    :param new_aggregated_data: A dictionary containing aggregated family data from the new report.
+    :type new_aggregated_data: {key:str, value ([str],[str])}
     :return:
 
-        If previousAgData is empty and newAgData contains data, newAgData will be returned unchanged.
-        If newAgData is empty and previousAgData contains data, previousAgData will be returned unchanged.
+        If previous_aggregated_data is empty and new_aggregated_data contains data, new_aggregated_data will be returned unchanged.
+        If new_aggregated_data is empty and previous_aggregated_data contains data, previous_aggregated_data will be returned unchanged.
         if both dictionary are empty an empty dictionary will be returned.
 
     :rtype: {key:str, value ([str],[str])}
     """
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # check corner cases:
-    if len(newAgData) == 0 and len(previousAgData) > 0:
+    if len(new_aggregated_data) == 0 and len(previous_aggregated_data) > 0:
         # new is empty, but previous has data
-        returnValue.update_sep(
+        return_value.update_sep(
             True, "New report data is empty, using previous report data only"
         )
-        returnValue.result.append(previousAgData)
-    elif len(newAgData) > 0 and len(previousAgData) == 0:
+        return_value.result.append(previous_aggregated_data)
+    elif len(new_aggregated_data) > 0 and len(previous_aggregated_data) == 0:
         # new has data, but previous is empty
-        returnValue.update_sep(
+        return_value.update_sep(
             True, "Previous report data is empty, using new report data only"
         )
-        returnValue.result.append(newAgData)
-    elif len(newAgData) == 0 and len(previousAgData) == 0:
+        return_value.result.append(new_aggregated_data)
+    elif len(new_aggregated_data) == 0 and len(previous_aggregated_data) == 0:
         # new is empty, previous is empty
-        returnValue.update_sep(
+        return_value.update_sep(
             True, "Previous report data and new report data are empty!"
         )
-        returnValue.result.append({})
+        return_value.result.append({})
     else:
         # other and current have data
-        for newData in newAgData:
-            if newData in previousAgData:
-                returnValue.append_message(
-                    "Substituting family data: {}".format(newData)
+        for family_path, family_data in new_aggregated_data.items():
+            if family_path in previous_aggregated_data:
+                return_value.append_message(
+                    "Substituting family data: {}".format(family_path)
                 )
             else:
-                returnValue.append_message("Adding new family data: {}".format(newData))
-            previousAgData[newData] = newAgData[newData]
-        returnValue.result.append(previousAgData)
-    return returnValue
+                return_value.append_message("Adding new family data: {}".format(family_path))
+            previous_aggregated_data[family_path] = new_aggregated_data[family_path]
+        return_value.result.append(previous_aggregated_data)
+    return return_value
 
 
-def _get_nested_families_belonging_to_root_families(rootFam, nestedFamilies):
+def _get_nested_families_belonging_to_root_families(root_family, nested_families):
     """
     Returns a list of all row data of nested families belonging to a given root family.
 
@@ -274,24 +158,24 @@ def _get_nested_families_belonging_to_root_families(rootFam, nestedFamilies):
     :param nestedFamilies: A list of tuples of all nested families in a report
     :type nestedFamilies: [tuple of type 'nestedFamily']
 
-    :return: _description_
+    :return: 
     :rtype: _type_
     """
 
-    nestedFamiliesBelongingToRootFamRowData = []
-    for nf in nestedFamilies:
-        # split path in order to get to top most root family
-        nestedFamRootPath = nf.rootPath.split(" :: ")
-        nestedFamCatPath = nf.categoryPath.split(" :: ")
+    nested_families_belonging_to_root_families = []
+    for nested_family in nested_families:
         if (
-            rootFam.name == nestedFamRootPath[0]
-            and rootFam.category == nestedFamCatPath[0]
+            root_family.name == nested_family.rootPath[0]
+            and root_family.category == nested_family.categoryPath[0]
         ):
-            nestedFamiliesBelongingToRootFamRowData.append(nestedFamilies[nf][0])
-    return nestedFamiliesBelongingToRootFamRowData
+            nested_families_belonging_to_root_families.append(nested_families[nested_family][0])
+            print("nested family in list", nested_families[nested_family][0])
+        else:
+            print("root family name: [{}] root family category: [{}] nested family root path: [{}] nested family category path: [{}]".format(root_family.name, root_family.category, nested_family.rootPath[0], nested_family.categoryPath[0]))
+    return nested_families_belonging_to_root_families
 
 
-def _aggregate_family_data(rootFamilies, nestedFamilies):
+def _aggregate_family_data(root_families, nested_families):
     """
     Returns a dictionary where key are all the root family file path from a report and value is a tuple of two list of strings containing
     the row data read from report file for the root family itself (first list) and the row data read from report file for any nested families (second list).
@@ -301,26 +185,26 @@ def _aggregate_family_data(rootFamilies, nestedFamilies):
     :param nestedFamilies: A list of tuples of all nested families in a report
     :type nestedFamilies: [tuple of type 'nestedFamily']
 
-    :return: Returns a dictionary where key is the root family file path and value is a tuple of two list of strings containing the row data for root family itself (first list) and the row data for any nested families (second list)
-    :rtype: {key:str, value ([str],[str])}
+    :return: Returns a dictionary where key is the root family file path and value is a tuple of root family at index zero and nested families at index 1
+    :rtype: {key:str, value (root family,[nested families])}
     """
 
     # key is root family, value is tuple of csv row representing the root family data and list of rows each representing a nested family data
-    aggregatedFamilyData = {}
-    for rf in rootFamilies:
-        nestedFamiliesOfRootFamilyRowData = (
-            _get_nested_families_belonging_to_root_families(rf, nestedFamilies)
+    aggregated_family_data = {}
+    for root_family in root_families:
+        nested_families_of_root_family_row_data = (
+            _get_nested_families_belonging_to_root_families(root_family, nested_families)
         )
         # key is the unique family file path of the root family
-        # value is a tuple of two lists : root data rows at index 0, nested fam data rows at index 1
-        aggregatedFamilyData[rf.filePath] = (
-            rootFamilies[rf],
-            nestedFamiliesOfRootFamilyRowData,
+        # value is a tuple of two lists : root  at index 0, nested fam at index 1
+        aggregated_family_data[root_family.filePath] = (
+            root_family,
+            nested_families_of_root_family_row_data,
         )
-    return aggregatedFamilyData
+    return aggregated_family_data
 
 
-def _check_families_still_exist(famData):
+def _check_families_still_exist(family_data):
     """
     Checks whether families still exist on file server.
 
@@ -335,7 +219,7 @@ def _check_families_still_exist(famData):
     :return:
         Result class instance.
 
-        - .result = True if successfully removed any outdated family data or None needed removing. Otherwise False.
+        - .status True if successfully removed any outdated family data or None needed removing. Otherwise False.
         - .message will contain list of families removed or message nothing needed to be removed.
         - . result will contain past in dictionary at index 0
 
@@ -347,44 +231,44 @@ def _check_families_still_exist(famData):
     :rtype: :class:`.Result`
     """
 
-    returnValue = res.Result()
+    return_value = res.Result()
     try:
-        removeKeys = []
+        remove_keys = []
         # get keys from dic as a list
         # check which ones do not exist anymore
-        for filePath in famData.keys():
-            if fileIO.file_exist(filePath) == False:
-                removeKeys.append(filePath)
+        for file_path in family_data.keys():
+            if fileIO.file_exist(file_path) == False:
+                remove_keys.append(file_path)
 
         # check if any family requires to be removed from the data set
-        if len(removeKeys) > 0:
+        if len(remove_keys) > 0:
             # remove those keys from dictionary
-            for dKey in removeKeys:
-                removeSingleKey = famData.pop(dKey, None)
-                if removeSingleKey != None:
-                    returnValue.append_message(
-                        "Removed family from data: {}".format(dKey)
+            for key in remove_keys:
+                remove_single_key = family_data.pop(key, None)
+                if remove_single_key != None:
+                    return_value.append_message(
+                        "Removed family from data: {}".format(key)
                     )
                 else:
-                    returnValue.append_message(
-                        "Failed to removed family from data: {}".format(dKey)
+                    return_value.append_message(
+                        "Failed to removed family from data: {}".format(key)
                     )
         else:
-            returnValue.append_message("No family required removing from data.")
+            return_value.append_message("No family required removing from data.")
 
         # update return data
-        returnValue.update_sep(True, "Successfully updated family data.")
-        returnValue.result.append(famData)
+        return_value.update_sep(True, "Successfully updated family data.")
+        return_value.result.append(family_data)
 
     except Exception as e:
-        returnValue.update_sep(
+        return_value.update_sep(
             False,
             "Failed to check whether families still exist with exception: {}".format(e),
         )
-    return returnValue
+    return return_value
 
 
-def combine_reports(previousReportPath, newReportPath):
+def combine_reports(previous_report_path, new_report_path):
     """
     This combines two reports by:
 
@@ -399,85 +283,95 @@ def combine_reports(previousReportPath, newReportPath):
     First entry (after split at separator) in each of these columns identifies root family uniquely.
     Assume that new report only ever adds or substitutes entries in previous report but does not delete from it!
 
-    :param previousReportPath: A fully qualified file path to the previous report file.
-    :type previousReportPath: str
-    :param newReportPath: A fully qualified file path to the new report file.
-    :type newReportPath: str
+    This function checks at the end whether families still exist on file server. If not, they will be removed from the data set.
+
+    :param previous_report_path: A fully qualified file path to the previous report file.
+    :type previous_report_path: str
+    :param new_report_path: A fully qualified file path to the new report file.
+    :type new_report_path: str
 
     :return: list of lists of report rows
     :rtype: [[str]]
     """
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # read families from both reports
     # ...compare them:
     # take all families from current report and all none matching families from the other report
 
-    previousAggregatedFamilies = {}
-    newAggregatedFamilies = {}
+    previous_aggregated_families = {}
+    new_aggregated_families = {}
 
+    print( "reading previous")
     # previous report
     try:
-        previousRoot, previousNested = read_unique_families_with_row_data_from_report(
-            previousReportPath
+        previous_root, previous_nested = read_overall_family_data_list(
+            previous_report_path
         )
-        returnValue.append_message(
-            "Previous report: found {} root families.".format(len(previousRoot))
+        # previous_root, previous_nested = read_unique_families_with_row_data_from_report(
+        #    previous_report_path
+        # )
+        return_value.append_message(
+            "Previous report: found {} root families.".format(len(previous_root))
         )
-        returnValue.append_message(
-            "Previous report: found {} nested families.".format(len(previousNested))
+        return_value.append_message(
+            "Previous report: found {} nested families.".format(len(previous_nested))
         )
         # build dictionary containing all family data per root family
-        previousAggregatedFamilies = _aggregate_family_data(
-            previousRoot, previousNested
+        previous_aggregated_families = _aggregate_family_data(
+            previous_root, previous_nested
         )
     except Exception as e:
         # check whether empty file exception
         if str(e) != EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES:
             raise e
-
+        
+    print( "reading new")
     # new report
     try:
-        newRoot, newNested = read_unique_families_with_row_data_from_report(
-            newReportPath
-        )
+        new_root, new_nested = read_overall_family_data_list(new_report_path)
+        # new_root, new_nested = read_unique_families_with_row_data_from_report(
+        #    new_report_path
+        # )
         # build dictionary containing all family data per root family
-        newAggregatedFamilies = _aggregate_family_data(newRoot, newNested)
-        returnValue.append_message(
-            "New report: found {} root families.".format(len(newRoot)) + ""
+        new_aggregated_families = _aggregate_family_data(new_root, new_nested)
+        return_value.append_message(
+            "New report: found {} root families.".format(len(new_root)) + ""
         )
-        returnValue.append_message(
-            "New report: found {} nested families.".format(len(newNested)) + ""
+        return_value.append_message(
+            "New report: found {} nested families.".format(len(new_nested)) + ""
         )
     except Exception as e:
         # check whether empty file exception
         if str(e) != EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES:
             raise e
 
+    print ("comparing")
     # compare dictionaries: build unique list of families
-    uniqueFamDataStatus = _compare_family_dictionaries(
-        previousAggregatedFamilies, newAggregatedFamilies
+    unique_family_data_status = _compare_family_dictionaries(
+        previous_aggregated_families, new_aggregated_families
     )
-    returnValue.update(uniqueFamDataStatus)
-    uniqueFamData = uniqueFamDataStatus.result[0]
+    return_value.update(unique_family_data_status)
+    unique_family_data = unique_family_data_status.result[0]
 
+    print( "checking")
     # check whether families still exist on file server
-    removeNoneExistingFamilies = _check_families_still_exist(uniqueFamData)
-    returnValue.update(removeNoneExistingFamilies)
+    remove_none_existing_families = _check_families_still_exist(unique_family_data)
+    return_value.update(remove_none_existing_families)
     # only update family data if culling occurred without any exceptions
-    if removeNoneExistingFamilies.status:
-        uniqueFamData = removeNoneExistingFamilies.result[0]
+    if remove_none_existing_families.status:
+        unique_family_data = remove_none_existing_families.result[0]
 
     # get report header row (there should be a previous report file...otherwise this will write an empty header row)
-    header = fileCSV.get_first_row_in_csv_file(previousReportPath)
-    headerRow = header.split(",")
-
+    header_row = fileCSV.get_first_row_in_csv_file(previous_report_path)
+    #header_row = header.split(",")
+    print( "building")
     # build list of data rows
-    rowsCurrent = _get_data_rows_from_dictionary(uniqueFamData)
+    rows_current = _get_data_rows_from_dictionary(unique_family_data)
     # sort rows by root ( first entry ) since other code (circ reference checker for instance) expects data sorted
-    rowsCurrent.sort()
+    rows_current.sort()
     # start with header row
-    rowsCurrent.insert(0, headerRow)
+    rows_current.insert(0, header_row)
     # overwrite return result value since it is already containing data from previous operations
-    returnValue.result = rowsCurrent
-    return returnValue
+    return_value.result = rows_current
+    return return_value

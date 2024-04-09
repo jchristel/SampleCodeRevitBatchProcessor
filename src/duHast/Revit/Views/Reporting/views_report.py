@@ -141,7 +141,7 @@ def write_views_data(doc, file_name, current_file_name):
     :type current_file_name: str
     :return:
         Result class instance.
-        - .result = True if data was written successfully. Otherwise False.
+        - .status True if data was written successfully. Otherwise False.
         - .message will contain write status.
     :rtype: :class:`.Result`
     """
@@ -178,7 +178,7 @@ def write_view_data_by_property_names(
     :type sheet_properties: list of str
     :return:
         Result class instance.
-        - .result = True if data was written successfully. Otherwise False.
+        - .status True if data was written successfully. Otherwise False.
         - .message will contain write status.
     :rtype: :class:`.Result`
     """

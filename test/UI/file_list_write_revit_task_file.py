@@ -32,9 +32,9 @@ from test.utils import test
 
 
 from duHast.UI.workloader import distribute_workload
-from duHast.UI.file_item import MyFileItem
-from duHast.UI.file_list import get_file_size
+from duHast.UI.Objects.file_item import MyFileItem
 from duHast.UI.file_list import (
+    get_file_size,
     write_revit_task_file,
     bucket_to_task_list_file_system,
     bucket_to_task_list_bim_360,

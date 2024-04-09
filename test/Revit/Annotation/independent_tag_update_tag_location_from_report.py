@@ -112,7 +112,7 @@ class IndependentTagUpdateLocationFromReport(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if all tag instance where moved to 0,0,0 successfully, otherwise False
+                - .status True if all tag instance where moved to 0,0,0 successfully, otherwise False
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 

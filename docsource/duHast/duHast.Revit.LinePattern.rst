@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   duHast.Revit.LinePattern.Data
    duHast.Revit.LinePattern.Objects
 
 Submodules
@@ -16,30 +17,6 @@ duHast.Revit.LinePattern.fill\_patterns module
 ----------------------------------------------
 
 .. automodule:: duHast.Revit.LinePattern.fill_patterns
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.LinePattern.line\_pattern\_data module
----------------------------------------------------
-
-.. automodule:: duHast.Revit.LinePattern.line_pattern_data
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.LinePattern.line\_pattern\_data\_processor module
---------------------------------------------------------------
-
-.. automodule:: duHast.Revit.LinePattern.line_pattern_data_processor
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.LinePattern.line\_pattern\_data\_purge\_unused module
-------------------------------------------------------------------
-
-.. automodule:: duHast.Revit.LinePattern.line_pattern_data_purge_unused
    :members:
    :undoc-members:
    :show-inheritance:
@@ -60,10 +37,26 @@ duHast.Revit.LinePattern.line\_styles module
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.LinePattern.purge\_unused\_line\_patterns module
--------------------------------------------------------------
+duHast.Revit.LinePattern.purge\_unused\_fill\_patterns\_by\_delete module
+-------------------------------------------------------------------------
 
-.. automodule:: duHast.Revit.LinePattern.purge_unused_line_patterns
+.. automodule:: duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.LinePattern.purge\_unused\_line\_patterns\_by\_delete module
+-------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.LinePattern.purge\_unused\_line\_styles\_by\_delete module
+-----------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.LinePattern.purge_unused_line_styles_by_delete
    :members:
    :undoc-members:
    :show-inheritance:

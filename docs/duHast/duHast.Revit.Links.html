@@ -18,7 +18,7 @@
     <link rel="top" title="Sample Code Revit Batch Processor 0.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Links.Reporting package" href="duHast.Revit.Links.Reporting.html" />
-    <link rel="prev" title="duHast.Revit.LinePattern.Objects.Data package" href="duHast.Revit.LinePattern.Objects.Data.html" />
+    <link rel="prev" title="duHast.Revit.LinePattern.Objects package" href="duHast.Revit.LinePattern.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
@@ -32,7 +32,7 @@
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
             <div class="headerButton"><a href="duHast.Revit.Links.Reporting.html" title="duHast.Revit.Links.Reporting package" accesskey="N">next</a></div>
-            <div class="headerButton"><a href="duHast.Revit.LinePattern.Objects.Data.html" title="duHast.Revit.LinePattern.Objects.Data package" accesskey="P">previous</a></div>
+            <div class="headerButton"><a href="duHast.Revit.LinePattern.Objects.html" title="duHast.Revit.LinePattern.Objects package" accesskey="P">previous</a></div>
         </li>
     </ul>
 </div>
@@ -46,9 +46,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="duHast.html">duHast package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.html">duHast.pyRevit package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.html#module-duHast">Module contents</a></li>
@@ -218,7 +220,7 @@ Filters by class and check whether the element is an external file reference (Tr
 :return: Result class instance.</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>.result = True if all CAD links got deleted. Otherwise False.</p></li>
+<li><p>.status True if all CAD links got deleted. Otherwise False.</p></li>
 <li><p>.message will contain status of deletion.</p></li>
 </ul>
 </div></blockquote>
@@ -245,7 +247,7 @@ Filters by class and check whether the element is an external file reference (Tr
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if all CAD links got reloaded successfully. Otherwise False.</p></li>
+<li><p>.status True if all CAD links got reloaded successfully. Otherwise False.</p></li>
 <li><p>.message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p></li>
 </ul>
 </p>
@@ -452,7 +454,7 @@ Filters by category.
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if all revit links got deleted successfully. Otherwise False.</p></li>
+<li><p>.status True if all revit links got deleted successfully. Otherwise False.</p></li>
 <li><p>.message will contain deletion status. On exception it will also include the exception message.</p></li>
 </ul>
 </p>
@@ -480,7 +482,7 @@ Filters by category.
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if all revit links got reloaded successfully. Otherwise False.</p></li>
+<li><p>.status True if all revit links got reloaded successfully. Otherwise False.</p></li>
 <li><p>.message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p></li>
 </ul>
 </p>
@@ -509,7 +511,7 @@ Filters by category.
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if all revit links got reloaded successfully. Otherwise False.</p></li>
+<li><p>.status True if all revit links got reloaded successfully. Otherwise False.</p></li>
 <li><p>.message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p></li>
 </ul>
 </p>

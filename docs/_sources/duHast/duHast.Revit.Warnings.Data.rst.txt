@@ -1,24 +1,13 @@
 duHast.Revit.Warnings.Data package
 ==================================
 
-Submodules
-----------
+Subpackages
+-----------
 
-duHast.Revit.Warnings.Data.warnings\_data module
-------------------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: duHast.Revit.Warnings.Data.warnings_data
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.Warnings.Data.warnings\_data\_processor module
------------------------------------------------------------
-
-.. automodule:: duHast.Revit.Warnings.Data.warnings_data_processor
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   duHast.Revit.Warnings.Data.Objects
 
 Module contents
 ---------------

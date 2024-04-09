@@ -1,0 +1,58 @@
+{
+  "pre script": [
+    {
+      "python version": "IronPython",
+      "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\empty.py",
+      "script arguments": ""
+    },
+    {
+      "python version": "IronPython",
+      "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\no_args.py",
+      "script arguments": ["arg1 value 1", "arg2 value 2"]
+    }
+  ],
+  "batch processor scripts": [
+    {
+      "start_interval": 20,
+      "pre script": {
+        "python version": "IronPython",
+        "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\empty.py"
+      },
+      "post script": {
+        "python version": "IronPython",
+        "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\empty.py"
+      },
+      "setting files": [
+        "my/file/path",
+        "my/file/path",
+        "my/file/path"
+      ]
+    },
+    {
+      "start_interval": 20,
+      "pre script": {
+        "python version": "IronPython",
+        "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\empty.py"
+      },
+      "post script": {
+        "python version": "3.10",
+        "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\empty.py"
+      },
+      "setting files": [
+        "my/file/path",
+        "my/file/path"
+      ]
+    }
+  ],
+  "post script": [
+    {
+      "python version": "3.10",
+      "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\empty.py"
+    },
+    {
+      "python version": "3.10",
+      "script file path": "C:\\Users\\janchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\VS\\RBP Launcher\\Tests\\PythonScripts\\no_args.py",
+      "script arguments": [ "arg1 value 1", "arg2 value 2" ]
+    }
+  ]
+}

@@ -14,7 +14,7 @@ fsspec==2023.9.0
 GH-IO-stubs==7.7.21140
 GH-Util-stubs==7.7.21140
 Grasshopper-stubs==7.7.21140
-idna==3.4
+idna==3.7
 imagesize==1.4.1
 importlib-metadata==6.8.0
 jaraco.classes==3.3.0

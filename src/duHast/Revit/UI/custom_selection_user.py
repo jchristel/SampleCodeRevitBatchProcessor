@@ -30,6 +30,7 @@ from Autodesk.Revit.UI.Selection import ObjectType
 
 from duHast.Revit.UI.Objects.CustomSelectionFilter import CustomSelectionFilter
 from duHast.Revit.UI.custom_selection_filter_element import selection_filter_floors
+from duHast.Utilities.Objects.result import Result
 
 def get_user_selection(doc, uidoc, ui_text, selection_filter=selection_filter_floors):
     """
@@ -45,8 +46,11 @@ def get_user_selection(doc, uidoc, ui_text, selection_filter=selection_filter_fl
     :rtype: (list, list)
     """
 
+    return_value = Result()
     elements_selected = []
     elements_selected_ids = []
+
+    # wrap in try catch since pressing cancel in the Revit UI will raise an exception
     try:
         # get the selected elements
         sel_filter = CustomSelectionFilter(selection_filter)
@@ -60,6 +64,7 @@ def get_user_selection(doc, uidoc, ui_text, selection_filter=selection_filter_fl
             element = doc.GetElement(e.ElementId)
             elements_selected.append(element)
 
+        return_value.result=[elements_selected, elements_selected_ids]
     except Exception as e:
-        print(e)
-    return elements_selected, elements_selected_ids
+        return_value.update_sep(False, "User selection failed with exception: {}".format(e))
+    return return_value 

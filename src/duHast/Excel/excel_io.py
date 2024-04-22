@@ -138,8 +138,6 @@ def save_excel_file_as_csv(file_path_excel, file_path_csv, tab_name=None):
             ws.Activate()
 
         wb.SaveAs(file_path_csv, Excel.XlFileFormat.xlCSV)
-        wb.Close(False)
-        excel.Quit()
         return_value.update_sep(True, "Successfully saved Excel file as CSV.")
     except Exception as e:
         return_value.update_sep(

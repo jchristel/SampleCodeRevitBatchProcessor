@@ -38,12 +38,15 @@ from duHast.Utilities.Objects import base
 
 
 class IFamilyProcessor(base.Base):
+
+    data_type_header = "Data Type"	# Data type header
+
     def __init__(
         self,
         data_type="not declared",
         pre_actions=None,
         post_actions=None,
-        string_report_headers=[],
+        string_report_headers=None,
         **kwargs
     ):
 
@@ -53,7 +56,18 @@ class IFamilyProcessor(base.Base):
 
         self.data = []
         self.data_type = data_type
+
+        # check what past in as headers
+        if(string_report_headers == None):
+            string_report_headers = []
+        elif not isinstance(string_report_headers, list):
+            raise ValueError(
+                "IFamilyProcessor: string_report_headers must be a list of strings"
+            )
+        # add the data type to the headers
+        string_report_headers.insert(0, IFamilyProcessor.data_type_header)
         self.string_report_headers = string_report_headers
+
         self.pre_actions = pre_actions
         self.post_actions = post_actions
 
@@ -246,6 +260,7 @@ class IFamilyProcessor(base.Base):
         out_value = []
         flattened_data = self.get_data()
         for d in flattened_data:
+            # add data type to row
             row = []
             for header_key in self.string_report_headers:
                 if header_key in d:
@@ -256,6 +271,8 @@ class IFamilyProcessor(base.Base):
                     else:
                         value = str(d[header_key])
                     row.append(value)
+                elif header_key == IFamilyProcessor.data_type_header:
+                    row.append(self.data_type)
                 else:
                     row.append("null")
             out_value.append(row)

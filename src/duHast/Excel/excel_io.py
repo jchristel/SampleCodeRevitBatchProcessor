@@ -76,8 +76,6 @@ def get_excel_tab_names(file_path):
             False,  # corrupt load (False = don't load, True = load)
         )
         tab_names = [ws.Name for ws in wb.Worksheets]
-        wb.Close(False)
-        excel.Quit()
         return_value.update_sep(True, "Successfully read Excel file.")
         return_value.result = tab_names
     except Exception as e:

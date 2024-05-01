@@ -31,6 +31,7 @@ from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities import directory_io as dirIO, files_io as fileIO
 from duHast.Revit.Common import file_io as rFile
 from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDataUtils
+from duHast.Revit.Family.Data.Objects.family_base_data_storage import FamilyBaseDataStorage
 
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
@@ -175,13 +176,13 @@ class FamilyBaseData(IFamData.IFamilyData):
 
         # build data
         self.data.append(
-            {
-                IFamData.ROOT: self.root_path,
-                IFamData.ROOT_CATEGORY: self.root_category_path,
-                IFamData.FAMILY_NAME: self._strip_file_extension(doc.Title),
-                IFamData.FAMILY_FILE_PATH: doc.PathName,  # this property will often be an empty string in nested families
-                CATEGORY_NAME: self.category,
-            }
+            FamilyBaseDataStorage(
+                data_type=self.data_type,
+                root_name_path=self.root_path,
+                root_category_path=self.root_category_path,
+                family_name=self._strip_file_extension(doc.Title),
+                family_file_path=doc.PathName,
+            )
         )
 
     def get_data(self):

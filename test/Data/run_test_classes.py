@@ -36,6 +36,7 @@ from test.Data import (
     data_families_find_none_nested_root_families,
     data_families_find_host_families_needing_rename,
     data_families_combine_reports,
+    data_families_processor_base,
 )
 
 
@@ -52,12 +53,12 @@ def run_tests():
 
     # list of tests to be run
     run_tests = [
+        ["Data Processor Base", data_families_processor_base.DataProcessorBaseData],
         ["Data Read Overall Family Data Report", data_families_reading_overall_report.DataReadFamiliesReport],
         ["Data Find None Nested Root families", data_families_find_none_nested_root_families.DataFindNoneNestedRootFamilies],
         ["Data Nested Family culling", data_families_culling_nested_families.DataCullingNestedFamilies],
         ["Data Find Host Families With Families To Rename", data_families_find_host_families_needing_rename.DataFindHostFamiliesWithFamiliesToRename],
         ["Data Combine Reports", data_families_combine_reports.DataCombineFamiliesReports],
-        
     ]
 
     # run tests

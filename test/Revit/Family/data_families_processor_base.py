@@ -30,14 +30,18 @@ This module contains data read from file tests .
 import os
 import sys
 
-from test.utils import test
+from test.Revit.TestUtils import revit_test
 from duHast.Revit.Family.Data.Objects.family_base_data_processor import FamilyBaseProcessor
 from duHast.Revit.Family.Data.Objects.family_base_data_storage import FamilyBaseDataStorage
-class DataProcessorBaseData(test.Test):
+from duHast.Utilities.Objects import result as res
+
+class DataProcessorBaseData(revit_test.RevitTest):
     
-    def __init__(self):
+    def __init__(self, doc):
         # store document in base class
-        super(DataProcessorBaseData, self).__init__(test_name="read overall family data report")
+        super(DataProcessorBaseData, self).__init__(
+            doc=doc, test_name="read overall family data report"
+        )
 
     def test(self):
         """
@@ -47,8 +51,8 @@ class DataProcessorBaseData(test.Test):
         :rtype: _bool
         """
 
-        flag = True
-        message = "\n-"
+        return_value = res.Result()
+        
         try:
 
             # test family base data storage retrieval from processor
@@ -74,14 +78,10 @@ class DataProcessorBaseData(test.Test):
 
 
             # test output
-            print(dummy.get_data())
-            print(dummy.get_data_string_list())
+            return_value.append_message(dummy.get_data())
+            return_value.append_message(dummy.get_data_string_list())
             
         except Exception as e:
-            flag = False
-            message = (
-                message
-                + "\n"
-                + ("An exception occurred in function {} : {}".format(self.test_name,e))
-            )
-        return flag, message
+            return_value.update_sep(False, "An exception occurred in function {} : {}".format(self.test_name,e))
+            
+        return return_value

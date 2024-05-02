@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module runs all utility related tests . 
+This module runs all revit grids related tests . 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -10,7 +10,7 @@ This module runs all utility related tests .
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -27,40 +27,33 @@ This module runs all utility related tests .
 #
 
 
-from test.utils.run_tests import RunTest
+from test.Revit.TestUtils.run_revit_tests import RevitRunTest
+from duHast.Utilities.Objects import result as res
 
 # import test classes
-from test.Data import (
-    data_families_culling_nested_families,
-    data_families_reading_overall_report,
-    data_families_find_none_nested_root_families,
-    data_families_find_host_families_needing_rename,
-    data_families_combine_reports,
-)
+from test.Revit.Family.data_families_processor_base import DataProcessorBaseData
 
-
-def run_tests():
+def run_family_tests(doc):
     """
-    Runs all data related tests.
+    Runs all grids related tests.
 
-    :return: dictionary containing
-         - the test name as key and as values
-         - a flag (true if test completed successfully, otherwise false)
-         - message string
-    :rtype: {str:bool,str}
+    :param doc: Current Revit document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: True if all tests completed successfully, otherwise False.
+    :rtype: bool
     """
 
-    # list of tests to be run
+    return_value = res.Result()
+
+    # start tests -> should run ... tests first since they form
+    # part of ... tests
+
     run_tests = [
-        ["Data Read Overall Family Data Report", data_families_reading_overall_report.DataReadFamiliesReport],
-        ["Data Find None Nested Root families", data_families_find_none_nested_root_families.DataFindNoneNestedRootFamilies],
-        ["Data Nested Family culling", data_families_culling_nested_families.DataCullingNestedFamilies],
-        ["Data Find Host Families With Families To Rename", data_families_find_host_families_needing_rename.DataFindHostFamiliesWithFamiliesToRename],
-        ["Data Combine Reports", data_families_combine_reports.DataCombineFamiliesReports],
+        ["Family Base Data", DataProcessorBaseData],
     ]
 
-    # run tests
-    runner = RunTest(run_tests)
-    return_value = runner.run_tests()
+    runner = RevitRunTest(run_tests)
+    return_value = runner.run_tests(doc)
 
     return return_value

@@ -76,3 +76,6 @@ class IFamilyDataStorage(base.Base):
         """
 
         return {key: value for key, value in self.__dict__.items()}
+
+    def get_property_names(self):
+        return  self.__dict__.keys()

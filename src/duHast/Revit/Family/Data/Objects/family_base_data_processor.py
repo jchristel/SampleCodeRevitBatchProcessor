@@ -28,8 +28,8 @@ Family base data processor class.
 
 from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
 from duHast.Revit.Family.Data.Objects import family_base_data as rFamData
-from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities import util_batch_p as uBP
+from duHast.Revit.Family.Data.Objects.family_base_data_storage import FamilyBaseDataStorage
 
 
 class FamilyBaseProcessor(IFamilyProcessor):
@@ -45,14 +45,9 @@ class FamilyBaseProcessor(IFamilyProcessor):
         Class constructor.
         """
 
-        # store data type  in base class
-        string_report_headers = [
-            IFamData.ROOT,
-            IFamData.ROOT_CATEGORY,
-            IFamData.FAMILY_NAME,
-            IFamData.FAMILY_FILE_PATH,
-            rFamData.CATEGORY_NAME,
-        ]
+        dummy = FamilyBaseDataStorage("", "","","","",)
+        # store report headers
+        string_report_headers = dummy.get_property_names()
 
         # store data type  in base class
         super(FamilyBaseProcessor, self).__init__(

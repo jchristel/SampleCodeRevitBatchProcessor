@@ -30,7 +30,7 @@ Interface for family processing class.
 #
 
 import System
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import ElementId
 import json
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities.Objects import result as res
@@ -64,8 +64,7 @@ class IFamilyProcessor(base.Base):
             raise ValueError(
                 "IFamilyProcessor: string_report_headers must be a list of strings"
             )
-        # add the data type to the headers
-        string_report_headers.insert(0, IFamilyProcessor.data_type_header)
+        # assign headers
         self.string_report_headers = string_report_headers
 
         self.pre_actions = pre_actions
@@ -151,7 +150,7 @@ class IFamilyProcessor(base.Base):
 
         dic = {}
         for key in flattened_dic:
-            if type(flattened_dic[key]) is rdb.ElementId:
+            if type(flattened_dic[key]) is ElementId:
                 dic[key] = flattened_dic[key].IntegerValue
             elif type(flattened_dic[key]) is System.Byte:
                 dic[key] = str(flattened_dic[key])
@@ -227,8 +226,8 @@ class IFamilyProcessor(base.Base):
 
         data_out = []
         for data in self.data:
-            for d in data.get_data():
-                data_out.append(d)
+            data_stored =data.get_data()
+            data_out.append(data_stored)
         return data_out
 
     def get_data_json(self):

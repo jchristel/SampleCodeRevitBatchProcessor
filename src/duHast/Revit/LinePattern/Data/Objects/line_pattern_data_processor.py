@@ -31,6 +31,7 @@ from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
 from duHast.Revit.LinePattern.Data.Objects import line_pattern_data as rLinePatData
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities.Objects import result as res
+from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage import FamilyLinePatternDataStorage
 
 
 class LinePatternProcessor(IFamilyProcessor):
@@ -39,17 +40,20 @@ class LinePatternProcessor(IFamilyProcessor):
         Class constructor.
         """
 
+        dummy = FamilyLinePatternDataStorage(
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+        )
+
         # setup report header
-        string_report_headers = [
-            IFamData.ROOT,
-            IFamData.ROOT_CATEGORY,
-            IFamData.FAMILY_NAME,
-            IFamData.FAMILY_FILE_PATH,
-            IFamData.USAGE_COUNTER,
-            IFamData.USED_BY,
-            rLinePatData.PATTERN_NAME,
-            rLinePatData.PATTERN_ID,
-        ]
+        string_report_headers = dummy.get_property_names()
 
         # store data type  in base class
         super(LinePatternProcessor, self).__init__(

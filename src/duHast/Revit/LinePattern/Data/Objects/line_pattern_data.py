@@ -3,6 +3,7 @@
 Family line pattern data class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ Family line pattern data class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -35,6 +36,9 @@ from duHast.Revit.LinePattern.line_patterns import (
     PROPERTY_PATTERN_ID,
 )
 from duHast.Revit.Levels.levels import get_levels_list_ascending
+from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage import (
+    FamilyLinePatternDataStorage,
+)
 
 
 # import Autodesk
@@ -63,24 +67,6 @@ class LinePatternData(IFamData.IFamilyData):
             data_type=data_type,
         )
         # super(CategoryData, self).__init__(rootPath, dataType)
-        """
-        self.data = []
-        
-        if(dataType != None):
-            self.dataType = dataType
-        else:
-            self.dataType = 'not declared'
-        
-        if(rootPath != None):
-            self.rootPath = rootPath
-        else:
-            self.rootPath = '-'
-
-        if(rootCategoryPath != None):
-            self.rootCategoryPath = rootCategoryPath
-        else:
-            self.rootCategoryPath = '-'
-        """
 
     def _add_category_to_dic(self, line_pattern_ids, pattern_id, category):
         """
@@ -293,18 +279,27 @@ class LinePatternData(IFamData.IFamilyData):
             usage_all = pattern_names + pattern_names_level
 
             # build data
-            self.data.append(
-                {
-                    IFamData.ROOT: self.root_path,
-                    IFamData.ROOT_CATEGORY: self.root_category_path,
-                    IFamData.FAMILY_NAME: self._strip_file_extension(doc.Title),
-                    IFamData.FAMILY_FILE_PATH: doc.PathName,
-                    IFamData.USAGE_COUNTER: counter,
-                    IFamData.USED_BY: usage_all,
-                    PATTERN_NAME: element_name,
-                    PATTERN_ID: element.Id.IntegerValue,
-                }
+            storage = FamilyLinePatternDataStorage(
+                data_type=self.data_type,
+                root_name_path=self.root_path,
+                root_category_path=self.root_category_path,
+                family_name=self._strip_file_extension(doc.Title),
+                family_file_path=doc.PathName,
+                use_counter=counter,
+                used_by=usage_all,
+                pattern_name=element_name,
+                pattern_id=element.Id.IntegerValue,
             )
+
+            self.add_data(storage_instance=storage)
 
     def get_data(self):
         return self.data
+
+    def add_data(self, storage_instance):
+        if isinstance(storage_instance, FamilyLinePatternDataStorage):
+            self.data.append(storage_instance)
+        else:
+            raise ValueError(
+                "storage instance must be an instance of FamilyLinePatternDataStorage"
+            )

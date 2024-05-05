@@ -3,6 +3,7 @@
 Family category data processor class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ Family category data processor class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -31,6 +32,9 @@ from duHast.Revit.Categories.Data.Objects import category_data as rCatData
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Categories.Utility import category_property_names as rCatPropNames
+from duHast.Revit.Categories.Data.Objects.category_data_storage import (
+    FamilyCategoryDataStorage,
+)
 
 
 class CategoryProcessor(IFamilyProcessor):
@@ -39,32 +43,30 @@ class CategoryProcessor(IFamilyProcessor):
         Class constructor.
         """
 
-        # setup report header
-        key_prefix = (
-            rCatData.GRAPHIC_PROPERTY_KEY_PREFIX
-            + rCatData.GRAPHIC_PROPERTY_KEY_PREFIX_DELIMITER
+        dummy = FamilyCategoryDataStorage(
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
         )
-        string_report_headers = [
-            IFamData.ROOT,
-            IFamData.ROOT_CATEGORY,
-            IFamData.FAMILY_NAME,
-            IFamData.FAMILY_FILE_PATH,
-            IFamData.USAGE_COUNTER,
-            IFamData.USED_BY,
-            rCatData.CATEGORY_NAME,
-            rCatData.SUB_CATEGORY_NAME,
-            rCatData.SUB_CATEGORY_ID,
-            key_prefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_3D,
-            key_prefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_CUT,
-            key_prefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_PROJECTION,
-            key_prefix + rCatPropNames.PROPERTY_MATERIAL_NAME,
-            key_prefix + rCatPropNames.PROPERTY_MATERIAL_ID,
-            key_prefix + rCatPropNames.PROPERTY_LINE_WEIGHT_CUT_NAME,
-            key_prefix + rCatPropNames.PROPERTY_LINE_WEIGHT_PROJECTION_NAME,
-            key_prefix + rCatPropNames.PROPERTY_LINE_COLOUR_RED_NAME,
-            key_prefix + rCatPropNames.PROPERTY_LINE_COLOUR_GREEN_NAME,
-            key_prefix + rCatPropNames.PROPERTY_LINE_COLOUR_BLUE_NAME,
-        ]
+
+        # setup report header
+        string_report_headers = dummy.get_property_names()
 
         # store data type  in base class
         super(CategoryProcessor, self).__init__(
@@ -108,52 +110,6 @@ class CategoryProcessor(IFamilyProcessor):
         self.data.append(dummy)
 
     # --------------------------------------------- post action ----------------------------------------------------------
-
-    def _add_data(
-        self,
-        processor,
-        root,
-        root_category_path,
-        fam_name,
-        fam_path,
-        use_counter,
-        used_by,
-        fam_cat_name,
-        sub_cat_name,
-        sub_cat_id,
-        cat_gra_style_three_d,
-        cat_gra_style_cut,
-        cat_gra_style_pro,
-        prop_mat_name,
-        prop_mat_id,
-        prop_line_weight_cut_name,
-        prop_line_weight_projection_name,
-        prop_line_col_red,
-        prop_line_col_green,
-        prop_line_col_blue,
-    ):
-
-        processor.add_Data(
-            root,
-            root_category_path,
-            fam_name,
-            fam_path,
-            use_counter,
-            used_by,
-            fam_cat_name,
-            sub_cat_name,
-            sub_cat_id,
-            cat_gra_style_three_d,
-            cat_gra_style_cut,
-            cat_gra_style_pro,
-            prop_mat_name,
-            prop_mat_id,
-            prop_line_weight_cut_name,
-            prop_line_weight_projection_name,
-            prop_line_col_red,
-            prop_line_col_green,
-            prop_line_col_blue,
-        )
 
     def _is_sub_category_present(self, root_family_data, nested_family_sub_category):
         match = None

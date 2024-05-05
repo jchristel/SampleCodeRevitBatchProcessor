@@ -3,6 +3,7 @@
 Family shared parameter data class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ Family shared parameter data class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -29,6 +30,9 @@ Family shared parameter data class.
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities import utility as util
 from duHast.Revit.SharedParameters import shared_parameters as rSharedPara
+from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage import (
+    FamilySharedParameterDataStorage,
+)
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
@@ -90,36 +94,44 @@ class SharedParameterData(IFamData.IFamilyData):
                 }
 
             # build data
-            self.data.append(
-                {
-                    IFamData.ROOT: self.root_path,
-                    IFamData.ROOT_CATEGORY: self.root_category_path,
-                    IFamData.FAMILY_NAME: self._strip_file_extension(doc.Title),
-                    IFamData.FAMILY_FILE_PATH: doc.PathName,
-                    PARAMETER_GUID: para.GuidValue.ToString(),
-                    PARAMETER_NAME: parameter_name,
-                    PARAMETER_ID: para.Id.IntegerValue,
-                    IFamData.USAGE_COUNTER: use_counter,
-                    IFamData.USED_BY: [used_by_data],
-                }
+            storage = FamilySharedParameterDataStorage(
+                data_type=self.data_type,
+                root_name_path=self.root_path,
+                root_category_path=self.root_category_path,
+                family_name=self._strip_file_extension(doc.Title),
+                family_file_path=doc.PathName,
+                parameter_guid=para.GuidValue.ToString(),
+                parameter_name=parameter_name,
+                parameter_id=para.Id.IntegerValue,
+                use_counter=use_counter,
+                used_by=[used_by_data],
             )
+            self.add_data(storage)
 
         # check if any shared parameter was found
         if len(self.data) == 0:
             # add message no shared parameter found
-            self.data.append(
-                {
-                    IFamData.ROOT: self.root_path,
-                    IFamData.ROOT_CATEGORY: self.root_category_path,
-                    IFamData.FAMILY_NAME: self._strip_file_extension(doc.Title),
-                    IFamData.FAMILY_FILE_PATH: doc.PathName,
-                    PARAMETER_GUID: "",
-                    PARAMETER_NAME: "No shared parameter present in family.",
-                    PARAMETER_ID: -1,
-                    IFamData.USAGE_COUNTER: 0,
-                    IFamData.USED_BY: [],
-                }
+            storage = FamilySharedParameterDataStorage(
+                data_type=self.data_type,
+                root_name_path=self.root_path,
+                root_category_path=self.root_category_path,
+                family_name=self._strip_file_extension(doc.Title),
+                family_file_path=doc.PathName,
+                parameter_guid="",
+                parameter_name="No shared parameter present in family.",
+                parameter_id=-1,
+                use_counter=0,
+                used_by=[],
             )
+            self.add_data(storage)
 
     def get_data(self):
         return self.data
+
+    def add_data(self, storage_instance):
+        if isinstance(storage_instance, FamilySharedParameterDataStorage):
+            self.data.append(storage_instance)
+        else:
+            raise ValueError(
+                "storage instance must be an instance of FamilySharedParameterDataStorage"
+            )

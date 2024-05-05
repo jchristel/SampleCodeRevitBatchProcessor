@@ -20,8 +20,8 @@ Family base data class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -31,7 +31,9 @@ from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities import directory_io as dirIO, files_io as fileIO
 from duHast.Revit.Common import file_io as rFile
 from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDataUtils
-from duHast.Revit.Family.Data.Objects.family_base_data_storage import FamilyBaseDataStorage
+from duHast.Revit.Family.Data.Objects.family_base_data_storage import (
+    FamilyBaseDataStorage,
+)
 
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
@@ -175,15 +177,23 @@ class FamilyBaseData(IFamData.IFamilyData):
             )
 
         # build data
-        self.data.append(
-            FamilyBaseDataStorage(
-                data_type=self.data_type,
-                root_name_path=self.root_path,
-                root_category_path=self.root_category_path,
-                family_name=self._strip_file_extension(doc.Title),
-                family_file_path=doc.PathName,
-            )
+        storage = FamilyBaseDataStorage(
+            data_type=self.data_type,
+            root_name_path=self.root_path,
+            root_category_path=self.root_category_path,
+            family_name=self._strip_file_extension(doc.Title),
+            family_file_path=doc.PathName,
         )
+
+        self.add_data(storage_instance=storage)
 
     def get_data(self):
         return self.data
+
+    def add_data(self, storage_instance):
+        if isinstance(storage_instance, FamilyBaseDataStorage):
+            self.data.append(storage_instance)
+        else:
+            raise ValueError(
+                "storage instance must be an instance of FamilyBaseDataStorage"
+            )

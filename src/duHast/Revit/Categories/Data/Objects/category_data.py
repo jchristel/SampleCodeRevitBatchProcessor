@@ -3,6 +3,7 @@
 Family category data class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,22 +20,23 @@ Family category data class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
-from duHast.Utilities import utility as util
 from duHast.Revit.Categories import categories as rCat
 from duHast.Revit.Categories.Utility import category_properties_get_utils as rCatPropGet
-from duHast.Revit.Categories.Utility import category_property_names as rCatPropNames
 from duHast.Revit.Categories.Utility import (
     elements_by_category_utils as rElementByCatUtils,
 )
-from duHast.Revit.Categories.Data.Objects.category_data_storage import FamilyCategoryDataStorage
+from duHast.Revit.Categories.Data.Objects.category_data_storage import (
+    FamilyCategoryDataStorage,
+)
+
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
 
@@ -44,6 +46,19 @@ SUB_CATEGORY_NAME = "subCategoryName"
 SUB_CATEGORY_ID = "subCategoryId"
 GRAPHIC_PROPERTY_KEY_PREFIX = "graphicProperty"
 GRAPHIC_PROPERTY_KEY_PREFIX_DELIMITER = "_"
+
+from duHast.Revit.Categories.Utility.category_property_names import (
+    CATEGORY_GRAPHIC_STYLE_3D,
+    CATEGORY_GRAPHIC_STYLE_CUT,
+    CATEGORY_GRAPHIC_STYLE_PROJECTION,
+    PROPERTY_LINE_COLOUR_BLUE_NAME,
+    PROPERTY_LINE_COLOUR_GREEN_NAME,
+    PROPERTY_LINE_COLOUR_RED_NAME,
+    PROPERTY_LINE_WEIGHT_CUT_NAME,
+    PROPERTY_LINE_WEIGHT_PROJECTION_NAME,
+    PROPERTY_MATERIAL_ID,
+    PROPERTY_MATERIAL_NAME,
+)
 
 
 class CategoryData(IFamData.IFamilyData):
@@ -64,54 +79,6 @@ class CategoryData(IFamData.IFamilyData):
             root_category_path=root_category_path,
             data_type=data_type,
         )
-
-    def add_data(
-        self,
-        root,
-        root_category_path,
-        fam_name,
-        fam_path,
-        use_counter,
-        used_by,
-        fam_cat_name,
-        sub_cat_name,
-        sub_cat_id,
-        cat_gra_style_three_d,
-        cat_gra_style_cut,
-        cat_gra_style_pro,
-        prop_mat_name,
-        prop_mat_id,
-        prop_line_weight_cut_name,
-        prop_line_weight_projection_name,
-        prop_line_col_red,
-        prop_line_col_green,
-        prop_line_col_blue,
-    ):
-
-        dummy = FamilyCategoryDataStorage(
-            data_type=self.data_type,
-            root_name_path= root,
-            root_category_path= root_category_path,
-            family_name= fam_name,
-            family_file_path= fam_path,
-            use_counter= use_counter,
-            used_by= used_by,
-            category_name= fam_cat_name,
-            sub_category_name= sub_cat_name,
-            sub_category_id= sub_cat_id,
-            category_graphics_style_three_d= cat_gra_style_three_d,
-            category_graphics_style_cut= cat_gra_style_cut,
-            category_graphics_style_projection= cat_gra_style_pro,
-            property_material_name= prop_mat_name,
-            property_material_id= prop_mat_id,
-            property_line_weight_cut_name= prop_line_weight_cut_name,
-            property_line_weight_projection_name= prop_line_weight_projection_name,
-            property_line_colour_red_name= prop_line_col_red,
-            property_line_colour_green_name= prop_line_col_green,
-            property_line_colour_blue= prop_line_col_blue,
-        )
-        
-        self.data.append(dummy)
 
     def _create_data(
         self,
@@ -157,26 +124,72 @@ class CategoryData(IFamData.IFamilyData):
         :rtype: dict
         """
 
-        dic = {
-            IFamData.ROOT: root,
-            IFamData.ROOT_CATEGORY: root_category_path,
-            IFamData.FAMILY_NAME: fam_name,
-            IFamData.FAMILY_FILE_PATH: fam_path,
-            IFamData.USAGE_COUNTER: use_counter,
-            IFamData.USED_BY: used_by,
-            CATEGORY_NAME: fam_cat_name,
-            SUB_CATEGORY_NAME: sub_cat_name,
-            SUB_CATEGORY_ID: sub_cat_id,
-        }
+        dummy = FamilyCategoryDataStorage(
+            data_type=self.data_type,
+            root_name_path=root,
+            root_category_path=root_category_path,
+            family_name=fam_name,
+            family_file_path=fam_path,
+            use_counter=use_counter,
+            used_by=used_by,
+            category_name=fam_cat_name,
+            sub_category_name=sub_cat_name,
+            sub_category_id=sub_cat_id,
+            category_graphics_style_three_d=rCatPropGet.get_saved_category_property_by_name(
+                properties=category_graphic_properties,
+                prop_names=[CATEGORY_GRAPHIC_STYLE_3D],
+            )[
+                0
+            ],
+            category_graphics_style_cut=rCatPropGet.get_saved_category_property_by_name(
+                properties=category_graphic_properties,
+                prop_names=[CATEGORY_GRAPHIC_STYLE_CUT],
+            )[0],
+            category_graphics_style_projection=rCatPropGet.get_saved_category_property_by_name(
+                properties=category_graphic_properties,
+                prop_names=[CATEGORY_GRAPHIC_STYLE_PROJECTION],
+            )[
+                0
+            ],
+            property_material_name=rCatPropGet.get_saved_category_property_by_name(
+                properties=category_graphic_properties,
+                prop_names=[PROPERTY_MATERIAL_NAME],
+            )[0],
+            property_material_id=rCatPropGet.get_saved_category_property_by_name(
+                properties=category_graphic_properties,
+                prop_names=[PROPERTY_MATERIAL_ID],
+            )[0],
+            property_line_weight_cut_name=rCatPropGet.get_saved_category_property_by_name(
+                properties=category_graphic_properties,
+                prop_names=[PROPERTY_LINE_WEIGHT_CUT_NAME],
+            )[
+                0
+            ],
+            property_line_weight_projection_name=rCatPropGet.get_saved_category_property_by_name(
+                properties=category_graphic_properties,
+                prop_names=[PROPERTY_LINE_WEIGHT_PROJECTION_NAME],
+            )[
+                0
+            ],
+            property_line_colour_red_name=rCatPropGet.get_saved_category_property_by_name(
+                properties=category_graphic_properties,
+                prop_names=[PROPERTY_LINE_COLOUR_RED_NAME],
+            )[
+                0
+            ],
+            property_line_colour_green_name=rCatPropGet.get_saved_category_property_by_name(
+                properties=category_graphic_properties,
+                prop_names=[PROPERTY_LINE_COLOUR_GREEN_NAME],
+            )[
+                0
+            ],
+            property_line_colour_blue=rCatPropGet.get_saved_category_property_by_name(
+                properties=category_graphic_properties,
+                prop_names=[PROPERTY_LINE_COLOUR_BLUE_NAME],
+            )[0],
+        )
 
-        # flatten dictionary
-        for d in category_graphic_properties:
-            dummy = util.flatten(
-                d, GRAPHIC_PROPERTY_KEY_PREFIX, GRAPHIC_PROPERTY_KEY_PREFIX_DELIMITER
-            )
-            dic.update(dummy)
-
-        return dic
+        return dummy
 
     def _build_data(self, main_sub_cats, main_cat_name, doc):
         """
@@ -207,7 +220,7 @@ class CategoryData(IFamData.IFamilyData):
                     used_by_ids.append(id.IntegerValue)
 
             # build data dictionary
-            dic = self._create_data(
+            storage = self._create_data(
                 self.root_path,
                 self.root_category_path,
                 self._strip_file_extension(doc.Title),
@@ -219,7 +232,7 @@ class CategoryData(IFamData.IFamilyData):
                 subCat.Id.IntegerValue,
                 cat_props,
             )
-            self.data.append(dic)
+            self.add_data(storage_instance=storage)
 
     def _build_data_non_main_sub_cats(self, main_sub_cats, main_cat_name, doc):
         """
@@ -259,7 +272,7 @@ class CategoryData(IFamData.IFamilyData):
                     used_by_ids.append(id.IntegerValue)
 
             # build data dictionary
-            dic = self._create_data(
+            storage = self._create_data(
                 self.root_path,
                 self.root_category_path,
                 self._strip_file_extension(doc.Title),
@@ -271,7 +284,7 @@ class CategoryData(IFamData.IFamilyData):
                 sub_category.Id.IntegerValue,
                 cat_props,
             )
-            self.data.append(dic)
+            self.add_data(storage_instance=storage)
 
     def process(self, doc):
         """
@@ -301,3 +314,11 @@ class CategoryData(IFamData.IFamilyData):
 
     def get_data(self):
         return self.data
+
+    def add_data(self, storage_instance):
+        if isinstance(storage_instance, FamilyCategoryDataStorage):
+            self.data.append(storage_instance)
+        else:
+            raise ValueError(
+                "storage instance must be an instance of FamilyCategoryDataStorage"
+            )

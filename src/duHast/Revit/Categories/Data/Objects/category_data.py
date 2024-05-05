@@ -34,8 +34,7 @@ from duHast.Revit.Categories.Utility import category_property_names as rCatPropN
 from duHast.Revit.Categories.Utility import (
     elements_by_category_utils as rElementByCatUtils,
 )
-
-
+from duHast.Revit.Categories.Data.Objects.category_data_storage import FamilyCategoryDataStorage
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
 
@@ -89,29 +88,30 @@ class CategoryData(IFamData.IFamilyData):
         prop_line_col_blue,
     ):
 
-        dic = {
-            IFamData.ROOT: root,
-            IFamData.ROOT_CATEGORY: root_category_path,
-            IFamData.FAMILY_NAME: fam_name,
-            IFamData.FAMILY_FILE_PATH: fam_path,
-            IFamData.USAGE_COUNTER: use_counter,
-            IFamData.USED_BY: used_by,
-            CATEGORY_NAME: fam_cat_name,
-            SUB_CATEGORY_NAME: sub_cat_name,
-            SUB_CATEGORY_ID: sub_cat_id,
-            rCatPropNames.CATEGORY_GRAPHIC_STYLE_3D: cat_gra_style_three_d,
-            rCatPropNames.CATEGORY_GRAPHIC_STYLE_CUT: cat_gra_style_cut,
-            rCatPropNames.CATEGORY_GRAPHIC_STYLE_PROJECTION: cat_gra_style_pro,
-            rCatPropNames.PROPERTY_MATERIAL_NAME: prop_mat_name,
-            rCatPropNames.PROPERTY_MATERIAL_ID: prop_mat_id,
-            rCatPropNames.PROPERTY_LINE_WEIGHT_CUT_NAME: prop_line_weight_cut_name,
-            rCatPropNames.PROPERTY_LINE_WEIGHT_PROJECTION_NAME: prop_line_weight_projection_name,
-            rCatPropNames.PROPERTY_LINE_COLOUR_RED_NAME: prop_line_col_red,
-            rCatPropNames.PROPERTY_LINE_COLOUR_GREEN_NAME: prop_line_col_green,
-            rCatPropNames.PROPERTY_LINE_COLOUR_BLUE_NAME: prop_line_col_blue,
-        }
-
-        self.data.append(dic)
+        dummy = FamilyCategoryDataStorage(
+            data_type=self.data_type,
+            root_name_path= root,
+            root_category_path= root_category_path,
+            family_name= fam_name,
+            family_file_path= fam_path,
+            use_counter= use_counter,
+            used_by= used_by,
+            category_name= fam_cat_name,
+            sub_category_name= sub_cat_name,
+            sub_category_id= sub_cat_id,
+            category_graphics_style_three_d= cat_gra_style_three_d,
+            category_graphics_style_cut= cat_gra_style_cut,
+            category_graphics_style_projection= cat_gra_style_pro,
+            property_material_name= prop_mat_name,
+            property_material_id= prop_mat_id,
+            property_line_weight_cut_name= prop_line_weight_cut_name,
+            property_line_weight_projection_name= prop_line_weight_projection_name,
+            property_line_colour_red_name= prop_line_col_red,
+            property_line_colour_green_name= prop_line_col_green,
+            property_line_colour_blue= prop_line_col_blue,
+        )
+        
+        self.data.append(dummy)
 
     def _create_data(
         self,

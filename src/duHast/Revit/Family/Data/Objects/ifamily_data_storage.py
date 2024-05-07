@@ -28,6 +28,8 @@ Interface for family data storage class.
 #
 
 from duHast.Utilities.Objects import base
+from AutoDesk.Revit.DB import ElementId
+import System
 
 
 class IFamilyDataStorage(base.Base):
@@ -70,19 +72,60 @@ class IFamilyDataStorage(base.Base):
         else:
             raise ValueError("family_file_path must be a string")
 
+
+    def _fix_data_types(self, value):
+        """
+        Replace any ElementId and Byte values with int or string respectively to have JSON working ok.
+        Encodes any string in utf-8 and decodes it back to utf-8 to avoid encoding issues.
+        Will do the same for list items!
+
+        Any other type of values are not changed.
+
+        :param flattened_dic: Dictionary of which values are to be converted.
+        :type flattened_dic: {}
+        :return: Dictionary with converted values.
+        :rtype: {}
+        """
+
+        if isinstance(value,str):
+            value = value.encode("utf-8").decode("utf-8")
+        elif isinstance(value, ElementId):
+           value = value.IntegerValue
+        elif isinstance(value, System.Byte):
+           value = str(value)
+        elif isinstance(value, list):
+            value = [self._fix_data_types(item) for item in value]
+
+
+        return value
+        
+    
     def get_data(self):
         """
         Get the data from the object als dictionary.
+
+        Note data type fixing is applied to:
+
+        - ElementIds
+        - System.Byte values
         """
 
-        return {key: value for key, value in self.__dict__.items()}
+        dict = {}
+        for key, value in self.__dict__.items():
+            dict[key] = self._fix_data_types(value)
+        return dict
     
     def get_data_values_as_list(self):
         data_list = []
         for key, value in self.__dict__.items():
             # encode all values to utf-8??
             # make sure lists are joined to strings
-            data_list.append(value)
+            value_updated = self._fix_data_types(value)
+
+            #TODO: check if I need to do anything to a list of values...
+            # ie. the used by property is a list
+
+            data_list.append(value_updated)
         return data_list
 
 

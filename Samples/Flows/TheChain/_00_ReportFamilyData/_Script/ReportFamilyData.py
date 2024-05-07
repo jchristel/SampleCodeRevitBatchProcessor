@@ -187,7 +187,7 @@ def report_data(processor, file_name_prefix):
         try:
             write_report_data_as_csv(
                 file_name,
-                processor.string_report_headers,
+                processor.get_data_headers(),
                 processor.get_data_string_list(),
             )
             result.update_sep(

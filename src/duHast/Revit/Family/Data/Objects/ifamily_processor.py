@@ -208,7 +208,7 @@ class IFamilyProcessor(base.Base):
 
     def get_data(self):
         """
-        Returns list of flattened dictionaries. One dictionary for each document processed.
+        Returns list of data storage instances.
 
         :return: List of iFamilyStorage instances.
         :rtype: [iFamilyStorage]

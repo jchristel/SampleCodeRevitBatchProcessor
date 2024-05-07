@@ -33,6 +33,7 @@ import System
 from Autodesk.Revit.DB import ElementId
 import json
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
+from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.Objects import base
 
@@ -46,7 +47,6 @@ class IFamilyProcessor(base.Base):
         data_type="not declared",
         pre_actions=None,
         post_actions=None,
-        string_report_headers=None,
         **kwargs
     ):
 
@@ -56,16 +56,6 @@ class IFamilyProcessor(base.Base):
 
         self.data = []
         self.data_type = data_type
-
-        # check what past in as headers
-        if(string_report_headers == None):
-            string_report_headers = []
-        elif not isinstance(string_report_headers, list):
-            raise ValueError(
-                "IFamilyProcessor: string_report_headers must be a list of strings"
-            )
-        # assign headers
-        self.string_report_headers = string_report_headers
 
         self.pre_actions = pre_actions
         self.post_actions = post_actions
@@ -220,14 +210,24 @@ class IFamilyProcessor(base.Base):
         """
         Returns list of flattened dictionaries. One dictionary for each document processed.
 
-        :return: List of dictionaries.
-        :rtype: [{}]
+        :return: List of iFamilyStorage instances.
+        :rtype: [iFamilyStorage]
         """
 
         data_out = []
         for data in self.data:
-            data_stored =data.get_data()
-            data_out.append(data_stored)
+            if isinstance(data,  IFamData.IFamilyData):
+                data_stored = data.get_data()
+                if isinstance(data_stored, list):
+                    for storage_entry in data_stored:
+                        if isinstance(storage_entry, IFamilyDataStorage):
+                            data_out.append(storage_entry)
+                        else:
+                            raise ValueError("Data must be of type IFamilyDataStorage but is of type: [{}]".format(type(storage_entry)))
+                else:
+                    raise ValueError("Data must be of type list but is of type: [{}]".format(type(data_stored)))
+            else:
+                raise ValueError("Data must be of type IFamilyData but is of type: [{}]".format(type(data)))
         return data_out
 
     def get_data_json(self):
@@ -248,31 +248,34 @@ class IFamilyProcessor(base.Base):
 
     def get_data_string_list(self):
         """
-        Returns data objects as list of strings in order of headers list of this class.
+        Returns data storage objects as nested list of strings, where each inner list represents the values of a data storage object.
 
         - Strings are UTF 8 encoded
-        - Unknown header values are marked as 'null'
+        
 
-        :return: list of string.
+        :return: list of list of strings.
         :rtype: [str]
         """
         out_value = []
-        flattened_data = self.get_data()
-        for d in flattened_data:
-            # add data type to row
-            row = []
-            for header_key in self.string_report_headers:
-                if header_key in d:
-                    value = None
-                    if type(d[header_key]) == str:
-                        # make sure string is utf-8 encoded
-                        value = d[header_key].encode("utf-8", "ignore")
-                    else:
-                        value = str(d[header_key])
-                    row.append(value)
-                elif header_key == IFamilyProcessor.data_type_header:
-                    row.append(self.data_type)
-                else:
-                    row.append("null")
-            out_value.append(row)
+
+        flattened_storage_data = self.get_data()
+        for storage in flattened_storage_data:
+            out_value.append(storage.get_data_values_as_list())
+        
         return out_value
+    
+    def get_data_headers(self):
+        """
+        Returns the headers of the data storage objects.
+
+        :return: list of strings.
+        :rtype: [str]
+        """
+
+        # get the first storage object
+        if len(self.data) > 0:
+            data_instance = self.data[0]
+            return data_instance.get_property_names()
+        else:
+            return []
+

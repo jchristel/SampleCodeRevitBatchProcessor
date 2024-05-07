@@ -31,9 +31,6 @@ from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
 from duHast.Revit.SharedParameters import shared_parameter_data as rSharedData
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities.Objects import result as res
-from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage import (
-    FamilySharedParameterDataStorage,
-)
 
 
 class SharedParameterProcessor(IFamilyProcessor):
@@ -42,28 +39,11 @@ class SharedParameterProcessor(IFamilyProcessor):
         Class constructor.
         """
 
-        # setup report header
-        dummy = FamilySharedParameterDataStorage(
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-        )
-
-        string_report_headers = dummy.get_property_names()
-
         # store data type  in base class
         super(SharedParameterProcessor, self).__init__(
             pre_actions=pre_actions,
             post_actions=[self._post_action_update_used_shared_parameters],
             data_type="SharedParameter",
-            string_report_headers=string_report_headers,
         )
 
         # add any other post actions

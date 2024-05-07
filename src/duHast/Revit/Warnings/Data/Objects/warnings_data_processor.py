@@ -29,7 +29,6 @@ Family warnings data processor class.
 
 from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
 from duHast.Revit.Warnings.Data.Objects import warnings_data as rWarnData
-from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 
 
 class WarningsProcessor(IFamilyProcessor):
@@ -38,24 +37,11 @@ class WarningsProcessor(IFamilyProcessor):
         Class constructor.
         """
 
-        # setup report header
-        string_report_headers = [
-            IFamData.ROOT,
-            IFamData.ROOT_CATEGORY,
-            IFamData.FAMILY_NAME,
-            IFamData.FAMILY_FILE_PATH,
-            rWarnData.WARNING_TEXT,
-            rWarnData.WARNING_GUID,
-            rWarnData.WARNING_RELATED_IDS,
-            rWarnData.WARNING_OTHER_IDS,
-        ]
-
         # store data type  in base class
         super(WarningsProcessor, self).__init__(
             pre_actions=pre_actions,
             post_actions=post_actions,
             data_type="Warnings",
-            string_report_headers=string_report_headers,
         )
 
     def process(self, doc, root_path, root_category_path):

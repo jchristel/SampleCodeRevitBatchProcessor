@@ -76,6 +76,15 @@ class IFamilyDataStorage(base.Base):
         """
 
         return {key: value for key, value in self.__dict__.items()}
+    
+    def get_data_values_as_list(self):
+        data_list = []
+        for key, value in self.__dict__.items():
+            # encode all values to utf-8??
+            # make sure lists are joined to strings
+            data_list.append(value)
+        return data_list
+
 
     def get_property_names(self):
         return  self.__dict__.keys()

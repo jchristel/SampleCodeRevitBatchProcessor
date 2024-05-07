@@ -68,6 +68,21 @@ class IFamilyData(base.Base):
     def get_data(self):
         pass
 
+    def get_property_names(self):
+        """
+        Get the property names of the storage object.
+
+        :return: The property names.
+        :rtype: list
+        """
+
+        # get the first storage object
+        if len(self.data) > 0:
+            storage_instance = self.data[0]
+            return storage_instance.get_property_names()
+        else:
+            return []
+
     def update_data(
         self,
         identify_by_this_property_name,

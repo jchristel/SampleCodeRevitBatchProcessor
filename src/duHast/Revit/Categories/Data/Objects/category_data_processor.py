@@ -31,10 +31,6 @@ from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
 from duHast.Revit.Categories.Data.Objects import category_data as rCatData
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities.Objects import result as res
-from duHast.Revit.Categories.Utility import category_property_names as rCatPropNames
-from duHast.Revit.Categories.Data.Objects.category_data_storage import (
-    FamilyCategoryDataStorage,
-)
 
 
 class CategoryProcessor(IFamilyProcessor):
@@ -43,37 +39,11 @@ class CategoryProcessor(IFamilyProcessor):
         Class constructor.
         """
 
-        dummy = FamilyCategoryDataStorage(
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-        )
-
-        # setup report header
-        string_report_headers = dummy.get_property_names()
-
         # store data type  in base class
         super(CategoryProcessor, self).__init__(
             pre_actions=pre_actions,
             post_actions=[self._post_action_update_used_subcategories],
             data_type="Category",
-            string_report_headers=string_report_headers,
         )
 
         # self.data = []

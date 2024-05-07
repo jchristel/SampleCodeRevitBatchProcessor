@@ -62,24 +62,6 @@ class FamilyBaseData(IFamData.IFamilyData):
         )
         # super(CategoryData, self).__init__(rootPath, dataType)
 
-        """
-        self.data = []
-        
-        if(dataType != None):
-            self.dataType = dataType
-        else:
-            self.dataType = 'not declared'
-        
-        if(rootPath != None):
-            self.rootPath = rootPath
-        else:
-            self.rootPath = '-'
-
-        if(rootCategoryPath != None):
-            self.rootCategoryPath = rootCategoryPath
-        else:
-            self.rootCategoryPath = '-'
-        """
 
         if root_category_path != None:
             category_chunks = root_category_path.split(" :: ")

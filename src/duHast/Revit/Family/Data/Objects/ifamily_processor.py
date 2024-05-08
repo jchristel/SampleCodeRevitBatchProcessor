@@ -22,8 +22,8 @@ Interface for family processing class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -40,14 +40,10 @@ from duHast.Utilities.Objects import base
 
 class IFamilyProcessor(base.Base):
 
-    data_type_header = "Data Type"	# Data type header
+    data_type_header = "Data Type"  # Data type header
 
     def __init__(
-        self,
-        data_type="not declared",
-        pre_actions=None,
-        post_actions=None,
-        **kwargs
+        self, data_type="not declared", pre_actions=None, post_actions=None, **kwargs
     ):
 
         # forwards all unused arguments
@@ -78,75 +74,118 @@ class IFamilyProcessor(base.Base):
         )
         return update_status
 
-    def _find_root_family_processor(self):
+    def _find_first_root_family_data(self):
         """
-        Finds the processor instance which processed the root family.
+        Finds the data instance which contains the processed the root family.
 
-        :return: Processor instance
-        :rtype: IFamilyProcessor
+        :return: data instance
+        :rtype: IFamilyData
         """
 
-        for processor in self.data:
-            for d in processor.get_data():
-                if " :: " not in d[IFamData.ROOT]:
-                    return processor
+        for data in self.data:
+            if isinstance(data, IFamData.IFamilyData):
+
+                data_stored = data.get_data()
+                if isinstance(data_stored, list):
+                    for storage_entry in data_stored:
+                        if isinstance(storage_entry, IFamilyDataStorage):
+                            if " :: " not in storage_entry.root_name_path:
+                                return data
+                        else:
+                            raise ValueError(
+                                "Data must be of type IFamilyDataStorage but is of type: [{}]".format(
+                                    type(storage_entry)
+                                )
+                            )
+                else:
+                    raise ValueError(
+                        "Data must be of type list but is of type: [{}]".format(
+                            type(data_stored)
+                        )
+                    )
+            else:
+                raise ValueError(
+                    "Data must be of type IFamilyData but is of type: [{}]".format(
+                        type(data)
+                    )
+                )
 
     def _find_root_family_data(self):
         """
-        Returns all data from root families (top most in tree) from all processor instances.
+        Returns all data from root families (top most in tree) .
 
-        :param data: List of dictionaries.
-        :type data: [{}]
-
-        :return: List of dictionaries.
-        :rtype: [{}]
+        :return: List of data instances.
+        :rtype: [IFamilyData]
         """
-
         family_data = []
-        for processor in self.data:
-            for d in processor.get_data():
-                if " :: " not in d[IFamData.ROOT]:
-                    family_data.append(d)
+        for data in self.data:
+            if isinstance(data, IFamData.IFamilyData):
+
+                data_stored = data.get_data()
+                if isinstance(data_stored, list):
+                    for storage_entry in data_stored:
+                        if isinstance(storage_entry, IFamilyDataStorage):
+                            if " :: " not in storage_entry.root_name_path:
+                                family_data.append(data)
+                        else:
+                            raise ValueError(
+                                "Data must be of type IFamilyDataStorage but is of type: [{}]".format(
+                                    type(storage_entry)
+                                )
+                            )
+                else:
+                    raise ValueError(
+                        "Data must be of type list but is of type: [{}]".format(
+                            type(data_stored)
+                        )
+                    )
+            else:
+                raise ValueError(
+                    "Data must be of type IFamilyData but is of type: [{}]".format(
+                        type(data)
+                    )
+                )
         return family_data
 
     def _find_nested_families_data(self):
         """
         Returns all data from nested families from each processor instances.
 
-        :param data: List of dictionaries.
-        :type data: [{}]
-
         :return: List of dictionaries.
-        :rtype: [{}]
+        :rtype: [IFamilyData]
         """
 
         nested_family_data = []
-        for processor in self.data:
-            for d in processor.get_data():
-                if " :: " in d[IFamData.ROOT]:
-                    nested_family_data.append(d)
-        return nested_family_data
 
-    def _fix_data_types(self, flattened_dic):
-        """
-        Replace any ElementId and Byte values with int or string respectively to have JSON working ok.
-        Any other type of values are not changed.
+        for data in self.data:
+            if isinstance(data, IFamData.IFamilyData):
 
-        :param flattened_dic: Dictionary of which values are to be converted.
-        :type flattened_dic: {}
-        :return: Dictionary with converted values.
-        :rtype: {}
-        """
-
-        dic = {}
-        for key in flattened_dic:
-            if type(flattened_dic[key]) is ElementId:
-                dic[key] = flattened_dic[key].IntegerValue
-            elif type(flattened_dic[key]) is System.Byte:
-                dic[key] = str(flattened_dic[key])
+                data_stored = data.get_data()
+                if isinstance(data_stored, list):
+                    for storage_entry in data_stored:
+                        if isinstance(storage_entry, IFamilyDataStorage):
+                            if " :: " in storage_entry.root_name_path:
+                                nested_family_data.append(data)
+                        else:
+                            raise ValueError(
+                                "Data must be of type IFamilyDataStorage but is of type: [{}]".format(
+                                    type(storage_entry)
+                                )
+                            )
+                else:
+                    raise ValueError(
+                        "Data must be of type list but is of type: [{}]".format(
+                            type(data_stored)
+                        )
+                    )
             else:
-                dic[key] = flattened_dic[key]
-        return dic
+                raise ValueError(
+                    "Data must be of type IFamilyData but is of type: [{}]".format(
+                        type(data)
+                    )
+                )
+
+        return nested_family_data
 
     # -------------------------------------- pre process actions ----------------------
 
@@ -216,18 +255,30 @@ class IFamilyProcessor(base.Base):
 
         data_out = []
         for data in self.data:
-            if isinstance(data,  IFamData.IFamilyData):
+            if isinstance(data, IFamData.IFamilyData):
                 data_stored = data.get_data()
                 if isinstance(data_stored, list):
                     for storage_entry in data_stored:
                         if isinstance(storage_entry, IFamilyDataStorage):
                             data_out.append(storage_entry)
                         else:
-                            raise ValueError("Data must be of type IFamilyDataStorage but is of type: [{}]".format(type(storage_entry)))
+                            raise ValueError(
+                                "Data must be of type IFamilyDataStorage but is of type: [{}]".format(
+                                    type(storage_entry)
+                                )
+                            )
                 else:
-                    raise ValueError("Data must be of type list but is of type: [{}]".format(type(data_stored)))
+                    raise ValueError(
+                        "Data must be of type list but is of type: [{}]".format(
+                            type(data_stored)
+                        )
+                    )
             else:
-                raise ValueError("Data must be of type IFamilyData but is of type: [{}]".format(type(data)))
+                raise ValueError(
+                    "Data must be of type IFamilyData but is of type: [{}]".format(
+                        type(data)
+                    )
+                )
         return data_out
 
     def get_data_json(self):
@@ -239,10 +290,9 @@ class IFamilyProcessor(base.Base):
         """
 
         out_value = ""
-        flattened_data = self.get_data()
-        for d in flattened_data:
-            d_fixed_types = self._fix_data_types(d)
-            json_object = json.dumps(dict(d_fixed_types))
+        flattened_storage_data = self.get_data()
+        for storage in flattened_storage_data:
+            json_object = storage.to_json()
             out_value = out_value + "\n" + json_object
         return out_value
 
@@ -251,7 +301,7 @@ class IFamilyProcessor(base.Base):
         Returns data storage objects as nested list of strings, where each inner list represents the values of a data storage object.
 
         - Strings are UTF 8 encoded
-        
+
 
         :return: list of list of strings.
         :rtype: [str]
@@ -261,9 +311,9 @@ class IFamilyProcessor(base.Base):
         flattened_storage_data = self.get_data()
         for storage in flattened_storage_data:
             out_value.append(storage.get_data_values_as_list())
-        
+
         return out_value
-    
+
     def get_data_headers(self):
         """
         Returns the headers of the data storage objects.
@@ -278,4 +328,3 @@ class IFamilyProcessor(base.Base):
             return data_instance.get_property_names()
         else:
             return []
-

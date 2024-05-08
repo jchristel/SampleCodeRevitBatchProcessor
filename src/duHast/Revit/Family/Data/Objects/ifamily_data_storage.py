@@ -28,8 +28,9 @@ Interface for family data storage class.
 #
 
 from duHast.Utilities.Objects import base
-from AutoDesk.Revit.DB import ElementId
+from Autodesk.Revit.DB import ElementId
 import System
+import json
 
 
 class IFamilyDataStorage(base.Base):
@@ -72,7 +73,6 @@ class IFamilyDataStorage(base.Base):
         else:
             raise ValueError("family_file_path must be a string")
 
-
     def _fix_data_types(self, value):
         """
         Replace any ElementId and Byte values with int or string respectively to have JSON working ok.
@@ -87,19 +87,17 @@ class IFamilyDataStorage(base.Base):
         :rtype: {}
         """
 
-        if isinstance(value,str):
+        if isinstance(value, str):
             value = value.encode("utf-8").decode("utf-8")
         elif isinstance(value, ElementId):
-           value = value.IntegerValue
+            value = value.IntegerValue
         elif isinstance(value, System.Byte):
-           value = str(value)
+            value = str(value)
         elif isinstance(value, list):
             value = [self._fix_data_types(item) for item in value]
 
-
         return value
-        
-    
+
     def get_data(self):
         """
         Get the data from the object als dictionary.
@@ -114,20 +112,34 @@ class IFamilyDataStorage(base.Base):
         for key, value in self.__dict__.items():
             dict[key] = self._fix_data_types(value)
         return dict
-    
+
     def get_data_values_as_list(self):
         data_list = []
         for key, value in self.__dict__.items():
-            # encode all values to utf-8??
-            # make sure lists are joined to strings
+            # encode all values to utf-8
+            # System.Byte to string, ElementId to int
             value_updated = self._fix_data_types(value)
 
-            #TODO: check if I need to do anything to a list of values...
+            # TODO: check if I need to do anything to a list of values...
             # ie. the used by property is a list
-
+            if isinstance(value_updated, list):
+                value_updated = "[{}]", format(",".join(value_updated))
             data_list.append(value_updated)
         return data_list
 
-
     def get_property_names(self):
-        return  self.__dict__.keys()
+        return self.__dict__.keys()
+
+    def to_json(self):
+        """
+        Convert the instance of this class to json.
+
+        :return: A Json object.
+        :rtype: json
+        """
+
+        data_cleaned = self.get_data()
+        json_object = json.dumps(
+            dict(data_cleaned), indent=None, default=lambda o: o.__dict__
+        )
+        return json_object

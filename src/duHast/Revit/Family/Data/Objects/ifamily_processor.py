@@ -310,7 +310,7 @@ class IFamilyProcessor(base.Base):
 
         flattened_storage_data = self.get_data()
         for storage in flattened_storage_data:
-            out_value.append(storage.get_data_values_as_list())
+            out_value.append(storage.get_data_values_as_list_of_strings())
 
         return out_value
 

@@ -123,21 +123,49 @@ class CategoryProcessor(IFamilyProcessor):
                 # nothing to do if that category has not been reported to start off with
                 # this category could, for example, belong to the section marker family present in most 3d families
 
-    def _get_used_subcategories(self, data):
+    def _get_used_subcategories(self, data_instances):
+
+        # data_instances should be a list of IFamilyData objects
+        if isinstance(data_instances, list) == False:
+            raise ValueError(
+                "Data must be a list but is type: {}".format(type(data_instances))
+            )
+
         used_subcategories = []
-        for d in data:
-            if d[IFamData.USAGE_COUNTER] > 0:
-                # get the family category
-                category_path = d[IFamData.ROOT_CATEGORY].split(" :: ")
-                # which is the last entry in the root category path
-                category = category_path[len(category_path) - 1]
-                # select only items which either belong to the category of the family or
-                # are corner cases like imports in families or Reference planes ... ( english language specific!! )
-                if (
-                    category == d[rCatData.CATEGORY_NAME]
-                    or d[rCatData.CATEGORY_NAME] in self.category_check_corner_cases
-                ):
-                    used_subcategories.append(d)
+        for d in data_instances:
+
+            # check what is being processed...should be an IFamilyData object
+            if isinstance(d, IFamData.IFamilyData) == False:
+                raise ValueError(
+                    "Data must be an instance of IFamilyData but is type: {}".format(
+                        type(d)
+                    )
+                )
+
+            # TODO: check if the root category path is correct
+            # should I get the first or last entry?? Might need to be the first?
+            # i'm not entirely sure why I'm checking this here...
+            # is this so I only delete sub categories in the root family which are not in use any where in the nested families of the same category?
+            # i.e Furniture.OverHead assumes the host family is of Category Furniture and I am checking whether the sub category OverHead is in use in any
+            # of the nested families as well as the host family?
+
+            # The report (storage data ) also contains two fields: Category and SubCategory. Category in this case can well be different to the category of the family!
+
+            # loop over storage of the data instance
+            data_storage_instances = d.get_data()
+            for storage in data_storage_instances:
+                if storage.usage_counter > 0:
+                    # get the family category
+                    category_path = storage.root_category.split(" :: ")
+                    # which is the last entry in the root category path
+                    category_storage = category_path[len(category_path) - 1]
+                    # select only items which either belong to the category of the family or
+                    # are corner cases like imports in families or Reference planes ... ( english language specific!! )
+                    if (
+                        category_storage == storage.category_name
+                        or storage.category_name in self.category_check_corner_cases
+                    ):
+                        used_subcategories.append(storage)
         return used_subcategories
 
     def _post_action_update_used_subcategories(self, doc):
@@ -147,7 +175,7 @@ class CategoryProcessor(IFamilyProcessor):
             nested_family_data = self._find_nested_families_data()
             # get used sub categories from nested data
             nested_family_used_sub_categories = self._get_used_subcategories(
-                nested_family_data
+                data_instances=nested_family_data
             )
             # update root family data only
             root_family_data = self._find_root_family_data()

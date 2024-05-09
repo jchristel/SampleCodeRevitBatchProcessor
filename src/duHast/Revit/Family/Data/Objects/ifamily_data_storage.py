@@ -113,17 +113,21 @@ class IFamilyDataStorage(base.Base):
             dict[key] = self._fix_data_types(value)
         return dict
 
-    def get_data_values_as_list(self):
+    def get_data_values_as_list_of_strings(self):
         data_list = []
         for key, value in self.__dict__.items():
             # encode all values to utf-8
             # System.Byte to string, ElementId to int
             value_updated = self._fix_data_types(value)
-
-            # TODO: check if I need to do anything to a list of values...
-            # ie. the used by property is a list
-            if isinstance(value_updated, list):
-                value_updated = "[{}]", format(",".join(value_updated))
+            # convert to string if not already and not a list
+            if(isinstance(value_updated, str) == False and isinstance(value_updated, list) == False):
+                value_updated = str(value_updated)
+            elif(isinstance(value_updated, list)):
+                # check if I need to do anything to a list of values...
+                # ie. the used by property is a list
+                # convert individual values to string
+                list_string = [str(item) for item in value_updated]
+                value_updated = "[{}]".format(",".join(list_string))
             data_list.append(value_updated)
         return data_list
 

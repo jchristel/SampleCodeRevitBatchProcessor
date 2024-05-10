@@ -30,6 +30,7 @@ Family category data processor class.
 from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
 from duHast.Revit.Categories.Data.Objects import category_data as rCatData
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
+from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 from duHast.Utilities.Objects import result as res
 
 
@@ -81,49 +82,123 @@ class CategoryProcessor(IFamilyProcessor):
 
     # --------------------------------------------- post action ----------------------------------------------------------
 
-    def _is_sub_category_present(self, root_family_data, nested_family_sub_category):
+    def _is_sub_category_present(self, root_family_data, nested_family_sub_category_storage):
+        """
+        Check if sub category is present in root family data.
+
+        :param root_family_data: List of IFamilyData objects.
+        :type root_family_data: list
+        :param nested_family_sub_category_storage: IFamilyDataStorage object.
+        :type nested_family_sub_category_storage: IFamilyDataStorage
+        :return: IFamilyData object.
+        :rtype: IFamilyData
+        """
+
+        # check what came is a list
+        if isinstance(root_family_data, list) == False:
+            raise ValueError(
+                "Root family data must be a list but is type: {}".format(
+                    type(root_family_data)
+                )
+            )
+        if isinstance(nested_family_sub_category_storage, IFamilyDataStorage) == False:
+            raise ValueError(
+                "Nested family sub category storage must be an instance of IFamilyDataStorage but is type: {}".format(
+                    type(nested_family_sub_category_storage)
+                )
+            )
+        
         match = None
         # check whether sub category is present
         for root_fam in root_family_data:
-            if (
-                root_fam[rCatData.CATEGORY_NAME]
-                == nested_family_sub_category[rCatData.CATEGORY_NAME]
-                and root_fam[rCatData.SUB_CATEGORY_NAME]
-                == nested_family_sub_category[rCatData.SUB_CATEGORY_NAME]
-            ):
-                match = root_fam
-                break
+            if isinstance(root_fam, IFamData.IFamilyData) == False:
+                raise ValueError(
+                    "Root family data must be a list of IFamilyData objects but is type: {}".format(
+                        type(root_fam)
+                    )
+                )
+            storage_instances = root_fam.get_data()
+            for storage_root in storage_instances:
+                if (
+                    storage_root.category_name == nested_family_sub_category_storage.category_name
+                    and storage_root.sub_category_name == nested_family_sub_category_storage.sub_category_name
+                    
+                ):
+                    match = root_fam
+                    break
         return match
 
     def _update_root_family_data(
         self, root_family_data, nested_families_sub_categories
     ):
-        # loop over nested family subcategory data
-        for nested_sub_category in nested_families_sub_categories:
-            # check if sub category is already in root family
-            matching_root_fam_category = self._is_sub_category_present(
-                root_family_data, nested_sub_category
+        """
+        Update root family data with used subcategories from nested families.
+
+        :param root_family_data: List of IFamilyData objects.
+        :type root_family_data: list
+        :param nested_families_sub_categories: List of IFamilyDataStorage objects.
+        :type nested_families_sub_categories: list
+        """
+
+        # check what came is a list
+        if isinstance(root_family_data, list) == False:
+            raise ValueError(
+                "Root family data must be a list but is type: {}".format(
+                    type(root_family_data)
+                )
             )
-            if matching_root_fam_category != None:
-                # update used by list
-                if (
-                    nested_sub_category[IFamData.FAMILY_NAME]
-                    not in matching_root_fam_category[IFamData.USED_BY]
-                ):
-                    # add the root path to the used by list for ease of identification of the origin of this subcategory usage
-                    matching_root_fam_category[IFamData.USED_BY].append(
-                        nested_sub_category[IFamData.ROOT]
+        if isinstance(nested_families_sub_categories, list) == False:
+            raise ValueError(
+                "Nested families sub categories must be a list but is type: {}".format(
+                    type(nested_families_sub_categories)
+                )
+            )
+        
+        # loop over nested family subcategory storage data
+        for nested_sub_category_storage in nested_families_sub_categories:
+
+            if isinstance(nested_sub_category_storage, IFamilyDataStorage) == False:
+                raise ValueError(
+                    "Nested family sub category must be an instance of IFamilyDataStorage but is type: {}".format(
+                        type(nested_sub_category_storage)
                     )
-                    # update used by counter
-                    matching_root_fam_category[IFamData.USAGE_COUNTER] = (
-                        matching_root_fam_category[IFamData.USAGE_COUNTER] + 1
-                    )
+                )
+            
+            # check if sub category is already in root family
+            matching_root_fam_category_data = self._is_sub_category_present(
+                root_family_data, nested_sub_category_storage
+            )
+            if matching_root_fam_category_data != None:
+                root_storage_all = matching_root_fam_category_data.get_root_storage()
+                
+                # some data instances might have more than one root storage instance to represent multiple categories present in the family
+                for root_storage in root_storage_all:
+                    if (nested_sub_category_storage.category_name == root_storage.category_name) and (nested_sub_category_storage.sub_category_name == root_storage.sub_category_name):
+                        # update used by list
+                        if (
+                            nested_sub_category_storage.family_name
+                            not in root_storage.used_by
+                        ):
+                            # add the root path to the used by list for ease of identification of the origin of this subcategory usage
+                            root_storage.used_by.append(
+                                nested_sub_category_storage.root_name_path
+                            )
+                            # update used by counter
+                            root_storage.use_counter = root_storage.use_counter + 1
             else:
                 pass
                 # nothing to do if that category has not been reported to start off with
                 # this category could, for example, belong to the section marker family present in most 3d families
 
     def _get_used_subcategories(self, data_instances):
+        """
+        Get used subcategories from nested families data as list of IFamilyDataStorage objects.
+
+        :param data_instances: List of IFamilyData objects.
+        :type data_instances: list
+        :return: List of IFamilyDataStorage objects.
+        :rtype: list
+        """
 
         # data_instances should be a list of IFamilyData objects
         if isinstance(data_instances, list) == False:
@@ -154,9 +229,9 @@ class CategoryProcessor(IFamilyProcessor):
             # loop over storage of the data instance
             data_storage_instances = d.get_data()
             for storage in data_storage_instances:
-                if storage.usage_counter > 0:
+                if storage.use_counter > 0:
                     # get the family category
-                    category_path = storage.root_category.split(" :: ")
+                    category_path = storage.root_category_path.split(" :: ")
                     # which is the last entry in the root category path
                     category_storage = category_path[len(category_path) - 1]
                     # select only items which either belong to the category of the family or

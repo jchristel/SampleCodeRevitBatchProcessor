@@ -2,6 +2,14 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Interface for family data storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Notes:
+
+- any revit specific data types i.e. ElementId need to be converted to int or string for JSON to work and in order for these classes to be used outside the Revit API!
+- any string values need to be encoded to utf-8 and decoded back to utf-8 to avoid encoding issues
+
+
 """
 
 #
@@ -28,7 +36,6 @@ Interface for family data storage class.
 #
 
 from duHast.Utilities.Objects import base
-from Autodesk.Revit.DB import ElementId
 import System
 import json
 
@@ -89,8 +96,6 @@ class IFamilyDataStorage(base.Base):
 
         if isinstance(value, str):
             value = value.encode("utf-8").decode("utf-8")
-        elif isinstance(value, ElementId):
-            value = value.IntegerValue
         elif isinstance(value, System.Byte):
             value = str(value)
         elif isinstance(value, list):

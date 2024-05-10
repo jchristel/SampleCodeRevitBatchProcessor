@@ -112,7 +112,7 @@ class IFamilyProcessor(base.Base):
 
     def _find_root_family_data(self):
         """
-        Returns all data from root families (top most in tree) .
+        Returns all data instances from root families (top most in tree) .
 
         :return: List of data instances.
         :rtype: [IFamilyData]
@@ -149,7 +149,7 @@ class IFamilyProcessor(base.Base):
 
     def _find_nested_families_data(self):
         """
-        Returns all data from nested families from each processor instances.
+        Returns all data instances from nested families from each processor instances.
 
         :return: List of dictionaries.
         :rtype: [IFamilyData]

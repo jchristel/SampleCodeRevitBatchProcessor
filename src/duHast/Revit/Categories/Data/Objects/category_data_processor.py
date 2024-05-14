@@ -179,12 +179,7 @@ class CategoryProcessor(IFamilyProcessor):
                             nested_sub_category_storage.family_name
                             not in root_storage.used_by
                         ):
-                            # add the root path to the used by list for ease of identification of the origin of this subcategory usage
-                            root_storage.used_by.append(
-                                nested_sub_category_storage.root_name_path
-                            )
-                            # update used by counter
-                            root_storage.use_counter = root_storage.use_counter + 1
+                            root_storage.update_usage(nested_sub_category_storage)
             else:
                 pass
                 # nothing to do if that category has not been reported to start off with

@@ -209,16 +209,17 @@ class CategoryData(IFamData.IFamilyData):
             element_dic = rElementByCatUtils.get_elements_by_category(doc, subCat)
             # get category property
             cat_props = rCatPropGet.get_category_properties(subCat, doc)
+            
             # add element counter for 3D, Cut, Elevation style
             use_counter = 0
-            for key in element_dic:
-                use_counter = use_counter + len(element_dic[key])
-            # add element ids integer value in 3D, Cut, Elevation style
             used_by_ids = []
-            for key in element_dic:
-                for id in element_dic[key]:
+            for key_elements in element_dic:
+                # update usage counter
+                use_counter = use_counter + len(element_dic[key_elements])
+                # add element ids integer value in 3D, Cut, Elevation style
+                for id in element_dic[key_elements]:
                     used_by_ids.append(id.IntegerValue)
-
+           
             # build data dictionary
             storage = self._create_data(
                 self.root_path,

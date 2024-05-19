@@ -30,6 +30,7 @@ Family shared parameter data processor class.
 from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
 from duHast.Revit.SharedParameters import shared_parameter_data as rSharedData
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
+from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 from duHast.Utilities.Objects import result as res
 
 
@@ -72,48 +73,102 @@ class SharedParameterProcessor(IFamilyProcessor):
         self.data.append(dummy)
 
     def _is_shared_parameter_present(
-        self, root_family_data, nested_family_line_pattern
+        self, root_family_data, nested_family_shared_parameter_storage
     ):
+        # check what came is a list
+        if isinstance(root_family_data, list) == False:
+            raise ValueError(
+                "Root family data must be a list but is type: {}".format(
+                    type(root_family_data)
+                )
+            )
+
+        if (
+            isinstance(nested_family_shared_parameter_storage, IFamilyDataStorage)
+            == False
+        ):
+            raise ValueError(
+                "Nested family shared parameter storage must be an instance of IFamilyDataStorage but is type: {}".format(
+                    type(nested_family_shared_parameter_storage)
+                )
+            )
+
         match = None
         for root_fam in root_family_data:
-            if (
-                root_fam[rSharedData.PARAMETER_GUID]
-                == nested_family_line_pattern[rSharedData.PARAMETER_GUID]
-            ):
-                match = root_fam
-                break
+            if isinstance(root_fam, IFamData.IFamilyData) == False:
+                raise ValueError(
+                    "Root family data must be a list of IFamilyData objects but is type: {}".format(
+                        type(root_fam)
+                    )
+                )
+            storage_instances = root_fam.get_data()
+            for storage_root in storage_instances:
+
+                if (
+                    storage_root.parameter_guid
+                    == nested_family_shared_parameter_storage.parameter_guid
+                ):
+                    match = root_fam
+                    break
         return match
 
-    def _update_root_family_data(self, root_family_data, nested_families_data):
-        # loop over nested family data
-        for nested_item in nested_families_data:
-            # check if item is already in root family
-            matching_root_fam_pattern = self._is_shared_parameter_present(
-                root_family_data, nested_item
+    def _update_root_family_data(self, root_family_data, nested_families_shared_parameters):
+        # check what came is a list
+        if isinstance(root_family_data, list) == False:
+            raise ValueError(
+                "Root family data must be a list but is type: {}".format(
+                    type(root_family_data)
+                )
             )
-            if matching_root_fam_pattern != None:
-                # update used by list
-                # TODO: this check looks odd!! ( guid vs a dictionary?)
-                if (
-                    nested_item[rSharedData.PARAMETER_GUID]
-                    not in matching_root_fam_pattern[IFamData.USED_BY]
-                ):
-                    # add the root path to the used by list for ease of identification of the origin of this shared parameter
-                    matching_root_fam_pattern[IFamData.USED_BY].append(
-                        {
-                            rSharedData.PARAMETER_GUID: nested_item[
-                                rSharedData.PARAMETER_GUID
-                            ],
-                            rSharedData.PARAMETER_NAME: nested_item[
-                                rSharedData.PARAMETER_NAME
-                            ],
-                            IFamData.ROOT: nested_item[IFamData.ROOT],
-                        }
+        if isinstance(nested_families_shared_parameters, list) == False:
+            raise ValueError(
+                "Nested families shared parameters must be a list but is type: {}".format(
+                    type(nested_families_shared_parameters)
+                )
+            )
+        
+        # loop over nested family data
+        for nested_shared_parameter_storage in nested_families_shared_parameters:
+            
+            if isinstance(nested_shared_parameter_storage, IFamilyDataStorage) == False:
+                raise ValueError(
+                    "Nested family sub category must be an instance of IFamilyDataStorage but is type: {}".format(
+                        type(nested_shared_parameter_storage)
                     )
-                    # update used by counter
-                    matching_root_fam_pattern[IFamData.USAGE_COUNTER] = (
-                        matching_root_fam_pattern[IFamData.USAGE_COUNTER] + 1
-                    )
+                )
+            
+            # check if item is already in root family
+            matching_root_fam_parameter_data = self._is_shared_parameter_present(
+                root_family_data, nested_shared_parameter_storage
+            )
+            if matching_root_fam_parameter_data != None:
+                root_storage_all = matching_root_fam_parameter_data.get_root_storage()
+                
+                # some data instances might have more than one root storage instance to represent multiple categories present in the family
+                for root_storage in root_storage_all:
+                    # update used by list
+                    # TODO: this check looks odd!! ( guid vs a dictionary?)
+                    # used by is a list of dictionaries where one value is the guid
+                    if (
+                        nested_shared_parameter_storage.parameter_guid 
+                        not in root_storage.used_by
+                    ):
+                        # add the root path to the used by list for ease of identification of the origin of this shared parameter
+                        matching_root_fam_parameter_data[IFamData.USED_BY].append(
+                            {
+                                rSharedData.PARAMETER_GUID: nested_shared_parameter_storage[
+                                    rSharedData.PARAMETER_GUID
+                                ],
+                                rSharedData.PARAMETER_NAME: nested_shared_parameter_storage[
+                                    rSharedData.PARAMETER_NAME
+                                ],
+                                IFamData.ROOT: nested_shared_parameter_storage[IFamData.ROOT],
+                            }
+                        )
+                        # update used by counter
+                        matching_root_fam_parameter_data[IFamData.USAGE_COUNTER] = (
+                            matching_root_fam_parameter_data[IFamData.USAGE_COUNTER] + 1
+                        )
             else:
                 pass
                 # nothing to do if that shared parameter has not been reported to start off with

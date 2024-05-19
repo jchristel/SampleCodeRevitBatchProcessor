@@ -58,7 +58,22 @@ class FamilySharedParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
 
         self.parameter_guid = parameter_guid
         self.parameter_name = parameter_name
-        self.parameter_id =parameter_id
+        self.parameter_id = parameter_id
         self.use_counter = use_counter
         self.used_by = used_by
 
+    def _used_by_contains(self, guid):
+        if isinstance(self.used_by, list) == False:
+            raise ValueError(
+                "used by must be an instance of list but is type: {}".format(
+                    type(self.used_by)
+                )
+            )
+        for entry in self.used_by:
+            if isinstance(entry, dict) == False:
+                raise ValueError(
+                    "used by item must be an instance of dictionary but is type: {}".format(
+                        type(entry)
+                    )
+                )
+            

@@ -229,10 +229,10 @@ if RESULT_DIRECTORY:
     # get the family category
     family_category_name = doc.OwnerFamily.FamilyCategory.Name
     # does folder exist?
-    result_category = create_target_directory(
+    result_output_dir = create_target_directory(
         root_path=ROOT_PATH, folder_name=family_category_name
     )
-    if result_category:
+    if result_output_dir:
         # update root path:
         ROOT_PATH = path.join(ROOT_PATH, family_category_name)
         # process family

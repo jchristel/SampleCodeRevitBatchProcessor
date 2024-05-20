@@ -36,6 +36,7 @@ from duHast.Revit.Categories.Utility import (
 from duHast.Revit.Categories.Data.Objects.category_data_storage import (
     FamilyCategoryDataStorage,
 )
+from duHast.Revit.Categories.Data.Objects.category_data_storage_used_by import FamilyCategoryDataStorageUsedBy
 
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
@@ -124,6 +125,17 @@ class CategoryData(IFamData.IFamilyData):
         :rtype: dict
         """
 
+        used_by_list = []
+        for id in used_by:
+            dummy = FamilyCategoryDataStorageUsedBy(
+                family_name=fam_name,
+                element_id=id,
+            )
+            used_by_list.append(dummy)
+
+
+
+
         dummy = FamilyCategoryDataStorage(
             data_type=self.data_type,
             root_name_path=root,
@@ -131,7 +143,7 @@ class CategoryData(IFamData.IFamilyData):
             family_name=fam_name,
             family_file_path=fam_path,
             use_counter=use_counter,
-            used_by=used_by,
+            used_by=used_by_list, # assign used by list
             category_name=fam_cat_name,
             sub_category_name=sub_cat_name,
             sub_category_id=sub_cat_id,

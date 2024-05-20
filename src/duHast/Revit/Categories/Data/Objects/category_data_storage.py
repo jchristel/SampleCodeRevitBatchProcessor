@@ -28,7 +28,7 @@ Class for family base data storage class.
 #
 
 from duHast.Revit.Family.Data.Objects import ifamily_data_storage as IFamDataStorage
-
+from duHast.Revit.Categories.Data.Objects.category_data_storage_used_by import FamilyCategoryDataStorageUsedBy
 
 class FamilyCategoryDataStorage(IFamDataStorage.IFamilyDataStorage):
 
@@ -94,7 +94,8 @@ class FamilyCategoryDataStorage(IFamDataStorage.IFamilyDataStorage):
 
         if (isinstance(other_storage, FamilyCategoryDataStorage)):
             self.use_counter = self.use_counter + other_storage.use_counter
-            # rather than appending the ids of items using the category, just append the root name path of the family
-            self.used_by.append(other_storage.root_name_path)
+            # just append the used by storage class
+            for dummy in other_storage.used_by:
+                self.used_by.append(dummy)
         else:
             raise ValueError("other_storage is not of type FamilyCategoryDataStorage but of type: {}".format(type(other_storage)))

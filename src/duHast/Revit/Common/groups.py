@@ -3,6 +3,7 @@
 Revit groups helper functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ Revit groups helper functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -98,6 +99,30 @@ def get_model_group_instances_by_type(doc):
         else:
             model_groups_by_type_id[type_id] = [instance]
     return model_groups_by_type_id
+
+
+def get_model_group_instances_by_names(doc, group_names):
+    """
+    Get all elements from group instances in the model.
+    :
+    param doc: The Revit document.
+    :type doc: :class:`.Document`
+    :param group_names: The names of the groups to get elements from.
+    :type group_names: list[str]
+    :return: A list of group instances.
+    :rtype: list[:class:`Autodesk.Revit.DB.Group`]
+    """
+
+    group_instances = []
+    col = (
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_IOSModelGroups)
+        .WhereElementIsNotElementType()
+    )
+    for c in col:
+        if c.Name in group_names:
+            group_instances.append(c)
+    return group_instances
 
 
 def get_detail_groups(doc):
@@ -328,3 +353,22 @@ def get_unplaced_model_group_ids(doc):
     for unplaced in unplaced_groups:
         ids.append(unplaced.Id)
     return ids
+
+
+def get_group_elements(doc, group):
+    """
+    Get all elements from group.
+
+    :param doc: The Revit document.
+    :type doc: :class:`.Document`
+    :param group: The group to get elements from.
+    :type group: :class:`Autodesk.Revit.DB.Group`
+    :return: A list of elements.
+    :rtype: list[:class:`Autodesk.Revit.DB.Element`]
+    """
+
+    elements_in_groups = []
+
+    for element_id in group.GetMemberIds():
+        elements_in_groups.append(doc.GetElement(element_id))
+    return elements_in_groups

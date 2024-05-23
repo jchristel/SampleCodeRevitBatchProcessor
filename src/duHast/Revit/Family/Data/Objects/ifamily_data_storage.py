@@ -36,6 +36,7 @@ Notes:
 #
 
 from duHast.Utilities.Objects import base
+from duHast.Revit.Family.Data.Objects.family_base_data_storage_used_by import FamilyBaseDataStorageUsedBy
 import System
 import json
 
@@ -121,6 +122,15 @@ class IFamilyDataStorage(base.Base):
     def get_data_values_as_list_of_strings(self):
         data_list = []
         for key, value in self.__dict__.items():
+
+            # check if a value is a list of FamilyBaseDataStorageUsedBy objects
+            # if so convert them to list of json dictionaries
+            
+            if(isinstance(value, list) and isinstance(value[0], FamilyBaseDataStorageUsedBy)):
+                list_string = [item for item in value.to_json()]
+                value_updated = "[{}]".format(",".join(list_string))
+            
+            
             # encode all values to utf-8
             # System.Byte to string, ElementId to int
             value_updated = self._fix_data_types(value)

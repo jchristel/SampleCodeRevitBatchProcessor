@@ -69,11 +69,14 @@ class FamilySharedParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
                     type(self.used_by)
                 )
             )
+        # might either be a dictionary or a family name
         for entry in self.used_by:
-            if isinstance(entry, dict) == False:
+            if isinstance(entry, dict) == False and isinstance(entry, str) == False:
                 raise ValueError(
-                    "used by item must be an instance of dictionary but is type: {}".format(
+                    "used by item must be an instance of dictionary or a string but is type: {}".format(
                         type(entry)
                     )
                 )
+            if isinstance(entry, dict):
+                
             

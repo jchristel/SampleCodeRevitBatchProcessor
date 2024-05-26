@@ -309,9 +309,12 @@ class IFamilyProcessor(base.Base):
         out_value = []
 
         flattened_storage_data = self.get_data()
+        #print("flattened_storage_data: ", flattened_storage_data)
         for storage in flattened_storage_data:
             out_value.append(storage.get_data_values_as_list_of_strings())
+            #print("out_value: ", out_value)
 
+        print("out_value: ", out_value)
         return out_value
 
     def get_data_headers(self):

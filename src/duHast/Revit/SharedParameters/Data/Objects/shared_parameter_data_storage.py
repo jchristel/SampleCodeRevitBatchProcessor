@@ -28,6 +28,7 @@ Class for family shared parameter data storage class.
 #
 
 from duHast.Revit.Family.Data.Objects import ifamily_data_storage as IFamDataStorage
+from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_storage_used_by import FamilySharedParameterDataStorageUsedBy
 
 
 class FamilySharedParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
@@ -62,6 +63,7 @@ class FamilySharedParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
         self.use_counter = use_counter
         self.used_by = used_by
 
+
     def _used_by_contains(self, guid):
         if isinstance(self.used_by, list) == False:
             raise ValueError(
@@ -71,12 +73,11 @@ class FamilySharedParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
             )
         # might either be a dictionary or a family name
         for entry in self.used_by:
-            if isinstance(entry, dict) == False and isinstance(entry, str) == False:
+            if isinstance(entry, FamilySharedParameterDataStorageUsedBy) == False:
                 raise ValueError(
-                    "used by item must be an instance of dictionary or a string but is type: {}".format(
+                    "used by item must be an instance of FamilySharedParameterDataStorageUsedBy but is type: {}".format(
                         type(entry)
                     )
                 )
-            if isinstance(entry, dict):
-                
-            
+            else:
+                pass

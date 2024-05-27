@@ -61,7 +61,7 @@ class SharedParameterProcessor(IFamilyProcessor):
         :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type rootPath: str
-        :param rootCategoryPath: The categroy path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+        :param rootCategoryPath: The category path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
         :type rootCategoryPath: str
         """
@@ -112,7 +112,9 @@ class SharedParameterProcessor(IFamilyProcessor):
                     break
         return match
 
-    def _update_root_family_data(self, root_family_data, nested_families_shared_parameters):
+    def _update_root_family_data(
+        self, root_family_data, nested_families_shared_parameters
+    ):
         # check what came is a list
         if isinstance(root_family_data, list) == False:
             raise ValueError(
@@ -126,31 +128,31 @@ class SharedParameterProcessor(IFamilyProcessor):
                     type(nested_families_shared_parameters)
                 )
             )
-        
+
         # loop over nested family data
         for nested_shared_parameter_storage in nested_families_shared_parameters:
-            
+
             if isinstance(nested_shared_parameter_storage, IFamilyDataStorage) == False:
                 raise ValueError(
                     "Nested family sub category must be an instance of IFamilyDataStorage but is type: {}".format(
                         type(nested_shared_parameter_storage)
                     )
                 )
-            
-            # check if item is already in root family
+
+            # check if parameter is in root family already
             matching_root_fam_parameter_data = self._is_shared_parameter_present(
                 root_family_data, nested_shared_parameter_storage
             )
             if matching_root_fam_parameter_data != None:
                 root_storage_all = matching_root_fam_parameter_data.get_root_storage()
-                
+
                 # some data instances might have more than one root storage instance to represent multiple categories present in the family
                 for root_storage in root_storage_all:
                     # update used by list
                     # TODO: this check looks odd!! ( guid vs a dictionary?)
                     # used by is a list of dictionaries where one value is the guid
                     if (
-                        nested_shared_parameter_storage.parameter_guid 
+                        nested_shared_parameter_storage.parameter_guid
                         not in root_storage.used_by
                     ):
                         # add the root path to the used by list for ease of identification of the origin of this shared parameter
@@ -162,7 +164,9 @@ class SharedParameterProcessor(IFamilyProcessor):
                                 rSharedData.PARAMETER_NAME: nested_shared_parameter_storage[
                                     rSharedData.PARAMETER_NAME
                                 ],
-                                IFamData.ROOT: nested_shared_parameter_storage[IFamData.ROOT],
+                                IFamData.ROOT: nested_shared_parameter_storage[
+                                    IFamData.ROOT
+                                ],
                             }
                         )
                         # update used by counter
@@ -173,14 +177,50 @@ class SharedParameterProcessor(IFamilyProcessor):
                 pass
                 # nothing to do if that shared parameter has not been reported to start off with
 
-    def _get_used_shared_parameters(self, data):
+    def _get_used_shared_parameters(self, data_instances):
+        """
+        Get used shared parameters from nested family data.
+
+        :param data_instances: List of IFamilyData objects.
+        :type data_instances: list
+
+        :return: List of storage instances representing used shared parameters.
+        :rtype: list
+        """
+
+        # data_instances should be a list of IFamilyData objects
+        if isinstance(data_instances, list) == False:
+            raise ValueError(
+                "Data must be a list but is type: {}".format(type(data_instances))
+            )
+
         used_shared_paras = []
-        for d in data:
-            if d[IFamData.USAGE_COUNTER] > 0:
-                used_shared_paras.append(d)
+        for d in data_instances:
+            # check what is being processed...should be an IFamilyData object
+            if isinstance(d, IFamData.IFamilyData) == False:
+                raise ValueError(
+                    "Data must be an instance of IFamilyData but is type: {}".format(
+                        type(d)
+                    )
+                )
+            # loop over storage of the data instance
+            data_storage_instances = d.get_data()
+            for storage in data_storage_instances:
+                if storage.use_counter > 0:
+                    used_shared_paras.append(storage)
         return used_shared_paras
 
     def _post_action_update_used_shared_parameters(self, doc):
+        """
+        Post action to update shared parameters data in the root family data object.
+
+        :param doc: Current family document.
+        :type doc: Autodesk.Revit.DB.Document
+
+        :return: Result object with success or failure message.
+        :rtype: duHast.Utilities.Objects.result.Result
+        """
+
         return_value = res.Result()
         try:
             # find all shared parameters of nested families
@@ -201,7 +241,8 @@ class SharedParameterProcessor(IFamilyProcessor):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "Post Action Update shared parameters data failed with exception: "
-                + str(e),
+                "Post Action Update shared parameters data failed with exception: {}".format(
+                    e
+                ),
             )
         return return_value

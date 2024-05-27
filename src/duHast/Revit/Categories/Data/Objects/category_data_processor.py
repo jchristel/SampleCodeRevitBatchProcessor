@@ -239,6 +239,15 @@ class CategoryProcessor(IFamilyProcessor):
         return used_subcategories
 
     def _post_action_update_used_subcategories(self, doc):
+        """
+        Post action to update used subcategories data in the root family data object.
+
+        :param doc: Current family document.
+        :type doc: Autodesk.Revit.DB.Document
+        :return: Result object.
+        :rtype: Result
+        """
+
         return_value = res.Result()
         try:
             # find all subcategories of nested families

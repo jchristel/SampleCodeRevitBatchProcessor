@@ -36,6 +36,7 @@ class FamilyCategoryDataStorageUsedBy(IFamDataStorageUsedBy.IFamilyDataStorageUs
     def __init__(self,family_name, element_id, **kwargs):
          
         # store args in base class
+        # id refers to the element in the family using this category
         super(FamilyCategoryDataStorageUsedBy, self).__init__(
             data_type = FamilyCategoryDataStorageUsedBy.data_type,
             family_name = family_name,

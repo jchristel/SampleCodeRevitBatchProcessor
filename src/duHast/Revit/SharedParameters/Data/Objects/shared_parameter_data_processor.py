@@ -28,7 +28,9 @@ Family shared parameter data processor class.
 #
 
 from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
-from duHast.Revit.SharedParameters.Data.Objects import shared_parameter_data as rSharedData
+from duHast.Revit.SharedParameters.Data.Objects import (
+    shared_parameter_data as rSharedData,
+)
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 from duHast.Utilities.Objects import result as res
@@ -75,6 +77,18 @@ class SharedParameterProcessor(IFamilyProcessor):
     def _is_shared_parameter_present(
         self, root_family_data, nested_family_shared_parameter_storage
     ):
+        """
+        Check if shared parameter is present in the root family data.
+
+        :param root_family_data: List of root family data instances.
+        :type root_family_data: list
+        :param nested_family_shared_parameter_storage: Nested family shared parameter storage instance.
+        :type nested_family_shared_parameter_storage: IFamilyDataStorage
+
+        :return: Matched root family data instance.
+        :rtype: IFamilyData
+        """
+
         # check what came is a list
         if isinstance(root_family_data, list) == False:
             raise ValueError(
@@ -115,6 +129,15 @@ class SharedParameterProcessor(IFamilyProcessor):
     def _update_root_family_data(
         self, root_family_data, nested_families_shared_parameters
     ):
+        """
+        Update the root family data with the shared parameters from nested families.
+
+        :param root_family_data: List of root family data instances. (one per shared parameter in the root family)
+        :type root_family_data: list
+        :param nested_families_shared_parameters: List of nested families shared parameters.
+        :type nested_families_shared_parameters: list
+        """
+
         # check what came is a list
         if isinstance(root_family_data, list) == False:
             raise ValueError(
@@ -129,9 +152,10 @@ class SharedParameterProcessor(IFamilyProcessor):
                 )
             )
 
-        # loop over nested family data
+        # loop over nested family storage instances and check whether any parameter listed exists in the the root family
         for nested_shared_parameter_storage in nested_families_shared_parameters:
 
+            # check this is an instance of IFamilyDataStorage
             if isinstance(nested_shared_parameter_storage, IFamilyDataStorage) == False:
                 raise ValueError(
                     "Nested family sub category must be an instance of IFamilyDataStorage but is type: {}".format(
@@ -149,13 +173,14 @@ class SharedParameterProcessor(IFamilyProcessor):
                 # some data instances might have more than one root storage instance to represent multiple shared parameters present in the family
                 for root_storage in root_storage_all:
                     # update used by list
-                    # TODO: this check looks odd!! ( guid vs a dictionary?)
-                    # used by is a list of used by instance where value is the guid
+                    # by parameter guid
                     if (
                         nested_shared_parameter_storage.parameter_guid
                         == root_storage.parameter_guid
                     ):
                         root_storage.update_usage(nested_shared_parameter_storage)
+                        # can stop looping at this point since there will be ever only one match
+                        break
             else:
                 pass
                 # nothing to do if that shared parameter has not been reported to start off with
@@ -213,10 +238,11 @@ class SharedParameterProcessor(IFamilyProcessor):
                 nested_family_data
             )
             # update root family data only
-            rootFamilyData = self._find_root_family_data()
+            # this will return a list of root family data instances, should be one only per processor
+            root_family_data = self._find_root_family_data()
             # update root processor data as required
             self._update_root_family_data(
-                rootFamilyData, nested_family_shared_parameters
+                root_family_data, nested_family_shared_parameters
             )
             return_value.update_sep(
                 True, "Post Action Update shared parameters data successful completed."

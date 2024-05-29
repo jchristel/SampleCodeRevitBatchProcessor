@@ -82,20 +82,3 @@ class FamilyCategoryDataStorage(IFamDataStorage.IFamilyDataStorage):
         self.property_line_colour_red_name = property_line_colour_red_name
         self.property_line_colour_green_name = property_line_colour_green_name
         self.property_line_colour_blue_name = property_line_colour_blue
-
-    def update_usage(self, other_storage):
-        """
-        Update the usage of this storage object with the usage of another storage object by:
-
-        - adding the use counter of the other storage object to this storage object's use counter
-        - appending the root name path of the other storage object to this storage object's used_by list
-        
-        """
-
-        if (isinstance(other_storage, FamilyCategoryDataStorage)):
-            self.use_counter = self.use_counter + other_storage.use_counter
-            # just append the used by storage class
-            for dummy in other_storage.used_by:
-                self.used_by.append(dummy)
-        else:
-            raise ValueError("other_storage is not of type FamilyCategoryDataStorage but of type: {}".format(type(other_storage)))

@@ -36,7 +36,9 @@ Notes:
 #
 
 from duHast.Utilities.Objects import base
-from duHast.Revit.Family.Data.Objects.family_base_data_storage_used_by import FamilyBaseDataStorageUsedBy
+from duHast.Revit.Family.Data.Objects.ifamily_data_storage_used_by import (
+    IFamilyDataStorageUsedBy,
+)
 import System
 import json
 
@@ -81,6 +83,27 @@ class IFamilyDataStorage(base.Base):
         else:
             raise ValueError("family_file_path must be a string")
 
+    def update_usage(self, other_storage):
+        """
+        Update the usage of this storage object with the usage of another storage object by:
+
+        - adding the use counter of the other storage object to this storage object's use counter
+        - appending the root name path of the other storage object to this storage object's used_by list
+
+        """
+
+        if isinstance(other_storage, IFamilyDataStorage):
+            self.use_counter = self.use_counter + other_storage.use_counter
+            # just append the used by storage class
+            for dummy in other_storage.used_by:
+                self.used_by.append(dummy)
+        else:
+            raise ValueError(
+                "other_storage is not of type IFamilyDataStorage but of type: {}".format(
+                    type(other_storage)
+                )
+            )
+
     def _fix_data_types(self, value):
         """
         Replace any ElementId and Byte values with int or string respectively to have JSON working ok.
@@ -123,16 +146,15 @@ class IFamilyDataStorage(base.Base):
         data_list = []
         for key, value in self.__dict__.items():
 
-           
             value_updated = "None"
-            if(isinstance(value, list)):
-                # check if a value is a list of FamilyBaseDataStorageUsedBy objects
+            if isinstance(value, list):
+                # check if a value is a list of IFamilyDataStorageUsedBy objects
                 # if so convert them to list of json dictionaries
-                if len(value)> 0 :
+                if len(value) > 0:
                     # check if list of used by instances
-                    if isinstance(value[0], FamilyBaseDataStorageUsedBy):
+                    if isinstance(value[0], IFamilyDataStorageUsedBy):
                         # list of used by instances
-                        list_string = [item for item in value.to_json()]
+                        list_string = [item.to_json() for item in value]
                         value_updated = "[{}]".format(",".join(list_string))
                     else:
                         # list of standard values
@@ -146,20 +168,22 @@ class IFamilyDataStorage(base.Base):
                 # encode all values to utf-8
                 # System.Byte to string, ElementId to int
                 value_updated = self._fix_data_types(value)
-                if(isinstance(value_updated, str) == False and isinstance(value_updated, list) == False):
+                if (
+                    isinstance(value_updated, str) == False
+                    and isinstance(value_updated, list) == False
+                ):
                     value_updated = str(value_updated)
-            
-            
+
             # encode all values to utf-8
             # System.Byte to string, ElementId to int
             # value_updated = self._fix_data_types(value)
             # convert to string if not already and not a list
-            #if(isinstance(value_updated, str) == False and isinstance(value_updated, list) == False):
+            # if(isinstance(value_updated, str) == False and isinstance(value_updated, list) == False):
             #    value_updated = str(value_updated)
-            #elif(isinstance(value_updated, list)):
-                # check if I need to do anything to a list of values...
-                # ie. the used by property is a list
-                # convert individual values to string
+            # elif(isinstance(value_updated, list)):
+            # check if I need to do anything to a list of values...
+            # ie. the used by property is a list
+            # convert individual values to string
             #    list_string = [str(item) for item in value_updated]
             #    value_updated = "[{}]".format(",".join(list_string))
             data_list.append(value_updated)

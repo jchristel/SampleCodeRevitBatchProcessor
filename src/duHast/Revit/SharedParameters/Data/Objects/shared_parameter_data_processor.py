@@ -28,7 +28,7 @@ Family shared parameter data processor class.
 #
 
 from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
-from duHast.Revit.SharedParameters import shared_parameter_data as rSharedData
+from duHast.Revit.SharedParameters.Data.Objects import shared_parameter_data as rSharedData
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 from duHast.Utilities.Objects import result as res
@@ -146,33 +146,16 @@ class SharedParameterProcessor(IFamilyProcessor):
             if matching_root_fam_parameter_data != None:
                 root_storage_all = matching_root_fam_parameter_data.get_root_storage()
 
-                # some data instances might have more than one root storage instance to represent multiple categories present in the family
+                # some data instances might have more than one root storage instance to represent multiple shared parameters present in the family
                 for root_storage in root_storage_all:
                     # update used by list
                     # TODO: this check looks odd!! ( guid vs a dictionary?)
-                    # used by is a list of dictionaries where one value is the guid
+                    # used by is a list of used by instance where value is the guid
                     if (
                         nested_shared_parameter_storage.parameter_guid
-                        not in root_storage.used_by
+                        == root_storage.parameter_guid
                     ):
-                        # add the root path to the used by list for ease of identification of the origin of this shared parameter
-                        matching_root_fam_parameter_data[IFamData.USED_BY].append(
-                            {
-                                rSharedData.PARAMETER_GUID: nested_shared_parameter_storage[
-                                    rSharedData.PARAMETER_GUID
-                                ],
-                                rSharedData.PARAMETER_NAME: nested_shared_parameter_storage[
-                                    rSharedData.PARAMETER_NAME
-                                ],
-                                IFamData.ROOT: nested_shared_parameter_storage[
-                                    IFamData.ROOT
-                                ],
-                            }
-                        )
-                        # update used by counter
-                        matching_root_fam_parameter_data[IFamData.USAGE_COUNTER] = (
-                            matching_root_fam_parameter_data[IFamData.USAGE_COUNTER] + 1
-                        )
+                        root_storage.update_usage(nested_shared_parameter_storage)
             else:
                 pass
                 # nothing to do if that shared parameter has not been reported to start off with

@@ -120,25 +120,8 @@ class IFamilyProcessor(base.Base):
         family_data = []
         for data in self.data:
             if isinstance(data, IFamData.IFamilyData):
-
-                data_stored = data.get_data()
-                if isinstance(data_stored, list):
-                    for storage_entry in data_stored:
-                        if isinstance(storage_entry, IFamilyDataStorage):
-                            if " :: " not in storage_entry.root_name_path:
-                                family_data.append(data)
-                        else:
-                            raise ValueError(
-                                "Data must be of type IFamilyDataStorage but is of type: [{}]".format(
-                                    type(storage_entry)
-                                )
-                            )
-                else:
-                    raise ValueError(
-                        "Data must be of type list but is of type: [{}]".format(
-                            type(data_stored)
-                        )
-                    )
+                if " :: " not in data.root_path:
+                    family_data.append(data)
             else:
                 raise ValueError(
                     "Data must be of type IFamilyData but is of type: [{}]".format(
@@ -159,25 +142,8 @@ class IFamilyProcessor(base.Base):
 
         for data in self.data:
             if isinstance(data, IFamData.IFamilyData):
-
-                data_stored = data.get_data()
-                if isinstance(data_stored, list):
-                    for storage_entry in data_stored:
-                        if isinstance(storage_entry, IFamilyDataStorage):
-                            if " :: " in storage_entry.root_name_path:
-                                nested_family_data.append(data)
-                        else:
-                            raise ValueError(
-                                "Data must be of type IFamilyDataStorage but is of type: [{}]".format(
-                                    type(storage_entry)
-                                )
-                            )
-                else:
-                    raise ValueError(
-                        "Data must be of type list but is of type: [{}]".format(
-                            type(data_stored)
-                        )
-                    )
+                if " :: " in data.root_path:
+                    nested_family_data.append(data)
             else:
                 raise ValueError(
                     "Data must be of type IFamilyData but is of type: [{}]".format(

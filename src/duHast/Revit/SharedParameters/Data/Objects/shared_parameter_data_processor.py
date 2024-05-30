@@ -74,6 +74,7 @@ class SharedParameterProcessor(IFamilyProcessor):
         dummy.process(doc)
         self.data.append(dummy)
 
+    # TODO: this could go into a base class function
     def _is_shared_parameter_present(
         self, root_family_data, nested_family_shared_parameter_storage
     ):
@@ -126,6 +127,7 @@ class SharedParameterProcessor(IFamilyProcessor):
                     break
         return match
 
+    # TODO: this could go into a base class function
     def _update_root_family_data(
         self, root_family_data, nested_families_shared_parameters
     ):
@@ -202,7 +204,7 @@ class SharedParameterProcessor(IFamilyProcessor):
                 "Data must be a list but is type: {}".format(type(data_instances))
             )
 
-        used_shared_paras = []
+        used_items = []
         for d in data_instances:
             # check what is being processed...should be an IFamilyData object
             if isinstance(d, IFamData.IFamilyData) == False:
@@ -215,8 +217,8 @@ class SharedParameterProcessor(IFamilyProcessor):
             data_storage_instances = d.get_data()
             for storage in data_storage_instances:
                 if storage.use_counter > 0:
-                    used_shared_paras.append(storage)
-        return used_shared_paras
+                    used_items.append(storage)
+        return used_items
 
     def _post_action_update_used_shared_parameters(self, doc):
         """

@@ -35,10 +35,10 @@ from duHast.Revit.Warnings.Data.Objects.warnings_data_storage import FamilyWarni
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
 
-WARNING_TEXT = "warningText"
-WARNING_GUID = "warningGUID"
-WARNING_RELATED_IDS = "warningRelatedIds"
-WARNING_OTHER_IDS = "warningOtherIds"
+#WARNING_TEXT = "warningText"
+#WARNING_GUID = "warningGUID"
+#WARNING_RELATED_IDS = "warningRelatedIds"
+#WARNING_OTHER_IDS = "warningOtherIds"
 
 
 class WarningsData(IFamData.IFamilyData):

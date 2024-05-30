@@ -187,6 +187,7 @@ class SharedParameterProcessor(IFamilyProcessor):
                 pass
                 # nothing to do if that shared parameter has not been reported to start off with
 
+    # TODO: this could go into a base class function
     def _get_used_shared_parameters(self, data_instances):
         """
         Get used shared parameters from nested family data.

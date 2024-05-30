@@ -39,6 +39,9 @@ from duHast.Revit.Levels.levels import get_levels_list_ascending
 from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage import (
     FamilyLinePatternDataStorage,
 )
+from duHast.Revit.LinePattern.Data.Objects.line_pattern_storage_used_by import (
+    FamilyLinePatternDataStorageUsedBy,
+)
 
 
 # import Autodesk
@@ -66,7 +69,6 @@ class LinePatternData(IFamData.IFamilyData):
             root_category_path=root_category_path,
             data_type=data_type,
         )
-        # super(CategoryData, self).__init__(rootPath, dataType)
 
     def _add_category_to_dic(self, line_pattern_ids, pattern_id, category):
         """
@@ -188,7 +190,7 @@ class LinePatternData(IFamData.IFamilyData):
         try:
             element_name = util.encode_ascii(rdb.Element.Name.GetValue(element))
         except Exception as ex:
-            element_name = element_name + " Exception: " + str(ex)
+            element_name = "{} Exception: {}".format(element_name, ex)
         return element_name
 
     def _get_pattern_usage_data_from_categories(self, line_pattern_ids, element):
@@ -211,7 +213,10 @@ class LinePatternData(IFamData.IFamilyData):
             counter = len(line_pattern_ids[element.Id])
             for pat in line_pattern_ids[element.Id]:
                 pattern_names.append(
-                    {"categoryId": pat.Id.IntegerValue, "categoryName": pat.Name}
+                    FamilyLinePatternDataStorageUsedBy(
+                        family_name=self.root_path,
+                        element_id=pat.Id.IntegerValue,
+                    )
                 )
         return counter, pattern_names
 
@@ -236,10 +241,10 @@ class LinePatternData(IFamData.IFamilyData):
             counter = len(line_pattern_ids[element.Id])
             for pat in line_pattern_ids[element.Id]:
                 pattern_names.append(
-                    {
-                        "levelId": pat.Id.IntegerValue,
-                        "levelTypeName": rdb.Element.Name.GetValue(pat),
-                    }
+                    FamilyLinePatternDataStorageUsedBy(
+                        family_name=self.root_path,
+                        element_id=pat.Id.IntegerValue,
+                    )
                 )
         return counter, pattern_names
 
@@ -258,25 +263,28 @@ class LinePatternData(IFamData.IFamilyData):
         line_pattern_ids_by_from_level = self._get_pattern_from_level_element(doc)
 
         collector = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement)
+
+        pattern_use_counter = 0
+        pattern_usage_all = []
         for element in collector:
             # just in case parameter name is not unicode
             element_name = self._get_pattern_name(element)
             # get usage data from categories
-            counter, pattern_names = self._get_pattern_usage_data_from_categories(
+            pattern_use_counter, pattern_categories_used_by_data = self._get_pattern_usage_data_from_categories(
                 line_pattern_ids_by_category, element
             )
             # get usage data from levels
             (
                 counter_level,
-                pattern_names_level,
+                pattern_levels_used_by_data,
             ) = self._get_pattern_usage_data_from_level(
                 line_pattern_ids_by_from_level, element
             )
 
             # get overall count
-            counter = counter + counter_level
+            pattern_use_counter = pattern_use_counter + counter_level
             # get overall usage data
-            usage_all = pattern_names + pattern_names_level
+            pattern_usage_all = pattern_categories_used_by_data + pattern_levels_used_by_data
 
             # build data
             storage = FamilyLinePatternDataStorage(
@@ -285,8 +293,8 @@ class LinePatternData(IFamData.IFamilyData):
                 root_category_path=self.root_category_path,
                 family_name=self._strip_file_extension(doc.Title),
                 family_file_path=doc.PathName,
-                use_counter=counter,
-                used_by=usage_all,
+                use_counter=pattern_use_counter,
+                used_by=pattern_usage_all,
                 pattern_name=element_name,
                 pattern_id=element.Id.IntegerValue,
             )

@@ -32,9 +32,14 @@ from duHast.Revit.Categories.Data.Objects.category_data_storage_used_by import F
 
 class FamilyCategoryDataStorage(IFamDataStorage.IFamilyDataStorage):
 
+    # data type for this class ( used in reports as first entry per row )
+    data_type = "Category"
+
+    # number of properties in this class ( used in report reader function )
+    number_of_properties = 20
+
     def __init__(
         self,
-        data_type,
         root_name_path,
         root_category_path,
         family_name,
@@ -59,7 +64,7 @@ class FamilyCategoryDataStorage(IFamDataStorage.IFamilyDataStorage):
 
         # store args in base class
         super(FamilyCategoryDataStorage, self).__init__(
-            data_type=data_type,
+            data_type=FamilyCategoryDataStorage.data_type,
             root_name_path=root_name_path,
             root_category_path=root_category_path,
             family_name=family_name,

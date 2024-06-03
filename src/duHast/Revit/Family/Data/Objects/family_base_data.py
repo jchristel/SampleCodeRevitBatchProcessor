@@ -43,22 +43,22 @@ CATEGORY_NAME = "categoryName"
 
 
 class FamilyBaseData(IFamData.IFamilyData):
-    def __init__(self, root_path=None, root_category_path=None, data_type=None):
+    def __init__(self, root_path=None, root_category_path=None):
         """
         Class constructor
 
         :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type rootPath: str
-        :param dataType: Human readable data type descriptor
-        :type dataType: str
+        :param rootCategoryPath: The path of the family category in a tree: rootCategoryName::nestedCategoryNameOne::nestedCategoryTwo\
+            This includes the actual category name as the last node.
+        :type rootCategoryPath: str
         """
 
         # store data type  in base class
         super(FamilyBaseData, self).__init__(
             root_path=root_path,
             root_category_path=root_category_path,
-            data_type=data_type,
         )
         # super(CategoryData, self).__init__(rootPath, dataType)
 
@@ -160,7 +160,6 @@ class FamilyBaseData(IFamData.IFamilyData):
 
         # build data
         storage = FamilyBaseDataStorage(
-            data_type=self.data_type,
             root_name_path=self.root_path,
             root_category_path=self.root_category_path,
             family_name=self._strip_file_extension(doc.Title),

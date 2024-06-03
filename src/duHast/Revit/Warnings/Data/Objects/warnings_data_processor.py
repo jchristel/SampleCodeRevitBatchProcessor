@@ -41,7 +41,6 @@ class WarningsProcessor(IFamilyProcessor):
         super(WarningsProcessor, self).__init__(
             pre_actions=pre_actions,
             post_actions=post_actions,
-            data_type="Warnings",
         )
 
     def process(self, doc, root_path, root_category_path):
@@ -58,6 +57,6 @@ class WarningsProcessor(IFamilyProcessor):
         :type rootCategoryPath: str
         """
 
-        dummy = rWarnData.WarningsData(root_path, root_category_path, self.data_type)
+        dummy = rWarnData.WarningsData(root_path, root_category_path)
         dummy.process(doc)
         self.data.append(dummy)

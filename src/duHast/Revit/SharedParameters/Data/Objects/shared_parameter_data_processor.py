@@ -46,7 +46,6 @@ class SharedParameterProcessor(IFamilyProcessor):
         super(SharedParameterProcessor, self).__init__(
             pre_actions=pre_actions,
             post_actions=[self._post_action_update_used_shared_parameters],
-            data_type="SharedParameter",
         )
 
         # add any other post actions
@@ -69,7 +68,7 @@ class SharedParameterProcessor(IFamilyProcessor):
         """
 
         dummy = rSharedData.SharedParameterData(
-            root_path, root_category_path, self.data_type
+            root_path, root_category_path
         )
         dummy.process(doc)
         self.data.append(dummy)

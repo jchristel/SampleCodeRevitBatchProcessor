@@ -31,11 +31,19 @@ from duHast.Revit.Family.Data.Objects import ifamily_data_storage as IFamDataSto
 
 class FamilyBaseDataStorage(IFamDataStorage.IFamilyDataStorage):
     
-    def __init__(self, data_type, root_name_path, root_category_path, family_name, family_file_path, **kwargs):
-         
+    # data type for this class ( used in reports as first entry per row )
+    data_type = "FamilyBase"
+
+    # number of properties in this class ( used in report reader function )
+    number_of_properties = 5
+
+    def __init__(self, root_name_path, root_category_path, family_name, family_file_path, **kwargs):
+        
+        # data type is an argument but not used...
+
         # store args in base class
         super(FamilyBaseDataStorage, self).__init__(
-            data_type = data_type,
+            data_type = FamilyBaseDataStorage.data_type,
             root_name_path = root_name_path,
             root_category_path = root_category_path,
             family_name = family_name,

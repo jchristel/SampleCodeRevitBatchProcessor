@@ -173,19 +173,7 @@ class IFamilyDataStorage(base.Base):
                     and isinstance(value_updated, list) == False
                 ):
                     value_updated = str(value_updated)
-
-            # encode all values to utf-8
-            # System.Byte to string, ElementId to int
-            # value_updated = self._fix_data_types(value)
-            # convert to string if not already and not a list
-            # if(isinstance(value_updated, str) == False and isinstance(value_updated, list) == False):
-            #    value_updated = str(value_updated)
-            # elif(isinstance(value_updated, list)):
-            # check if I need to do anything to a list of values...
-            # ie. the used by property is a list
-            # convert individual values to string
-            #    list_string = [str(item) for item in value_updated]
-            #    value_updated = "[{}]".format(",".join(list_string))
+                    
             data_list.append(value_updated)
         return data_list
 

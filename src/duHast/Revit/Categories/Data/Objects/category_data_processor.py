@@ -44,7 +44,6 @@ class CategoryProcessor(IFamilyProcessor):
         super(CategoryProcessor, self).__init__(
             pre_actions=pre_actions,
             post_actions=[self._post_action_update_used_subcategories],
-            data_type="Category",
         )
 
         # self.data = []

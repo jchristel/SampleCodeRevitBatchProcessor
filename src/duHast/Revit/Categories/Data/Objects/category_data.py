@@ -63,22 +63,22 @@ from duHast.Revit.Categories.Utility.category_property_names import (
 
 
 class CategoryData(IFamData.IFamilyData):
-    def __init__(self, root_path=None, root_category_path=None, data_type=None):
+    def __init__(self, root_path=None, root_category_path=None):
         """
         Class constructor
 
         :param root_path: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type root_path: str
-        :param data_type: Human readable data type descriptor
-        :type data_type: str
+        :param root_category_path: The category path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+            This includes the actual family category as the last node.
+        :type root_category_path: str
         """
 
         # store data type  in base class
         super(CategoryData, self).__init__(
             root_path=root_path,
             root_category_path=root_category_path,
-            data_type=data_type,
         )
 
     def _create_data(
@@ -137,7 +137,6 @@ class CategoryData(IFamData.IFamilyData):
 
 
         dummy = FamilyCategoryDataStorage(
-            data_type=self.data_type,
             root_name_path=root,
             root_category_path=root_category_path,
             family_name=fam_name,

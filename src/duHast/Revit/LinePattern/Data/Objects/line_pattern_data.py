@@ -53,21 +53,21 @@ PATTERN_ID = "patternId"
 
 
 class LinePatternData(IFamData.IFamilyData):
-    def __init__(self, root_path=None, root_category_path=None, data_type=None):
+    def __init__(self, root_path=None, root_category_path=None):
         """
         Class constructor
 
         :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type rootPath: str
-        :param dataType: Human readable data type descriptor
-        :type dataType: str
+        :param rootCategoryPath: The category path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+            This includes the actual family category as the last node.
+        :type rootCategoryPath: str
         """
 
         super(LinePatternData, self).__init__(
             root_path=root_path,
             root_category_path=root_category_path,
-            data_type=data_type,
         )
 
     def _add_category_to_dic(self, line_pattern_ids, pattern_id, category):
@@ -288,7 +288,6 @@ class LinePatternData(IFamData.IFamilyData):
 
             # build data
             storage = FamilyLinePatternDataStorage(
-                data_type=self.data_type,
                 root_name_path=self.root_path,
                 root_category_path=self.root_category_path,
                 family_name=self._strip_file_extension(doc.Title),

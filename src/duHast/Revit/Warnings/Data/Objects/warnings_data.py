@@ -42,12 +42,19 @@ from duHast.Revit.Warnings.Data.Objects.warnings_data_storage import FamilyWarni
 
 
 class WarningsData(IFamData.IFamilyData):
-    def __init__(self, root_path=None, root_category_path=None, data_type=None):
+    def __init__(self, root_path=None, root_category_path=None):
+        """
+        Constructor for warnings data class.
+
+        :param root_path: root path for data
+        :type root_path: str
+        :param root_category_path: root category path for data
+        :type root_category_path: str
+        """
 
         super(WarningsData, self).__init__(
             root_path=root_path,
             root_category_path=root_category_path,
-            data_type=data_type,
         )
 
     def process(self, doc):
@@ -84,7 +91,6 @@ class WarningsData(IFamData.IFamilyData):
 
             # build data
             storage = FamilyWarningsDataStorage(
-                data_type=self.data_type,
                 root_name_path=self.root_path,
                 root_category_path=self.root_category_path,
                 family_name=self._strip_file_extension(doc.Title),
@@ -101,7 +107,6 @@ class WarningsData(IFamData.IFamilyData):
             # add message no warnings found
             # build data
             storage = FamilyWarningsDataStorage(
-                data_type=self.data_type,
                 root_name_path=self.root_path,
                 root_category_path=self.root_category_path,
                 family_name=self._strip_file_extension(doc.Title),

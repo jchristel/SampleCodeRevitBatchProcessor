@@ -45,7 +45,6 @@ class LinePatternProcessor(IFamilyProcessor):
         super(LinePatternProcessor, self).__init__(
             pre_actions=pre_actions,
             post_actions=[self._post_action_update_used_line_patterns],
-            data_type="LinePattern",
         )
 
         # set default post action to updated line patterns used in root processor with any line patterns found in nested

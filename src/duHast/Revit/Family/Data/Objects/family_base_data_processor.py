@@ -47,7 +47,6 @@ class FamilyBaseProcessor(IFamilyProcessor):
 
         # store data type  in base class
         super(FamilyBaseProcessor, self).__init__(
-            data_type="FamilyBase",
             pre_actions=pre_actions,
             post_actions=post_actions,
         )

@@ -32,9 +32,14 @@ from duHast.Revit.Family.Data.Objects import ifamily_data_storage as IFamDataSto
 
 class FamilyWarningsDataStorage(IFamDataStorage.IFamilyDataStorage):
 
+    # data type for this class ( used in reports as first entry per row )
+    data_type = "Warnings"
+
+    # number of properties in this class ( used in report reader function )
+    number_of_properties = 9
+
     def __init__(
         self,
-        data_type,
         root_name_path,
         root_category_path,
         family_name,
@@ -48,7 +53,7 @@ class FamilyWarningsDataStorage(IFamDataStorage.IFamilyDataStorage):
 
         # store args in base class
         super(FamilyWarningsDataStorage, self).__init__(
-            data_type=data_type,
+            data_type=FamilyWarningsDataStorage.data_type,
             root_name_path=root_name_path,
             root_category_path=root_category_path,
             family_name=family_name,

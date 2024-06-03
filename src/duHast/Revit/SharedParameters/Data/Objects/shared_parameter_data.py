@@ -48,22 +48,19 @@ from Autodesk.Revit.DB import Element
 
 
 class SharedParameterData(IFamData.IFamilyData):
-    def __init__(self, root_path=None, root_category_path=None, data_type=None):
+    def __init__(self, root_path=None, root_category_path=None):
         """
         Initialize the shared parameter data object.
 
         :param root_path: Root path of the family.
         :type root_path: str
-        :param root_category_path: Root category path of the family.
+        :param root_category_path: Root category path of the family. 
         :type root_category_path: str
-        :param data_type: Data type.
-        :type data_type: str
         """
 
         super(SharedParameterData, self).__init__(
             root_path=root_path,
             root_category_path=root_category_path,
-            data_type=data_type,
         )
         # super(CategoryData, self).__init__(rootPath, dataType)
 
@@ -100,7 +97,6 @@ class SharedParameterData(IFamData.IFamilyData):
             
             # build data
             storage = FamilySharedParameterDataStorage(
-                data_type=self.data_type,
                 root_name_path=self.root_path,
                 root_category_path=self.root_category_path,
                 family_name=self._strip_file_extension(doc.Title),
@@ -117,7 +113,6 @@ class SharedParameterData(IFamData.IFamilyData):
         if len(self.data) == 0:
             # add message no shared parameter found
             storage = FamilySharedParameterDataStorage(
-                data_type=self.data_type,
                 root_name_path=self.root_path,
                 root_category_path=self.root_category_path,
                 family_name=self._strip_file_extension(doc.Title),

@@ -4,6 +4,7 @@ This module contains post reporting analysis utility functions:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -52,23 +53,48 @@ from duHast.Utilities.date_stamps import get_folder_date_stamp
 from duHast.Utilities.files_combine import combine_files
 
 from duHast.Revit.Family.Data.family_report_utils import combine_reports
+
+
+from duHast.Revit.Family.Data.Objects.family_base_data_processor import (
+    FamilyBaseProcessor,
+)
+from duHast.Revit.Categories.Data.Objects.category_data_processor import (
+    CategoryProcessor,
+)
+from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor import (
+    LinePatternProcessor,
+)
+from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor import (
+    SharedParameterProcessor,
+)
+from duHast.Revit.Warnings.Data.Objects.warnings_data_processor import WarningsProcessor
+
 # -------------
 # my code here:
 # -------------
 
 # list containing file name prefixes and the associated combined report file names
 FILE_DATA_TO_COMBINE = [
-    ["Category", "FamilyCategoriesCombinedReport" + settings.REPORT_FILE_EXTENSION],
     [
-        "SharedParameter",
+        CategoryProcessor.data_type,
+        "FamilyCategoriesCombinedReport" + settings.REPORT_FILE_EXTENSION,
+    ],
+    [
+        SharedParameterProcessor.data_type,
         "FamilySharedParametersCombinedReport" + settings.REPORT_FILE_EXTENSION,
     ],
     [
-        "LinePattern",
+        LinePatternProcessor.data_type,
         "FamilyLinePatternsCombinedReport" + settings.REPORT_FILE_EXTENSION,
     ],
-    ["FamilyBase", "FamilyBaseDataCombinedReport" + settings.REPORT_FILE_EXTENSION],
-    ["Warnings", "FamilyWarningsCombinedReport" + settings.REPORT_FILE_EXTENSION],
+    [
+        FamilyBaseProcessor.data_type,
+        "FamilyBaseDataCombinedReport" + settings.REPORT_FILE_EXTENSION,
+    ],
+    [
+        WarningsProcessor.data_type,
+        "FamilyWarningsCombinedReport" + settings.REPORT_FILE_EXTENSION,
+    ],
 ]
 
 
@@ -240,7 +266,9 @@ def combine_current_with_previous_report_files(previous_report_root_directory):
                 "Found match for current report file: {}".format(current_report_file)
             )
         else:
-            output("No match found for: {} current output folder.".format(to_combine[1]))
+            output(
+                "No match found for: {} current output folder.".format(to_combine[1])
+            )
 
         if file_exist(os.path.join(previous_report_root_directory, to_combine[1])):
             previous_report_file = os.path.join(

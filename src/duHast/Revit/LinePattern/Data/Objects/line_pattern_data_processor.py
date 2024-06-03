@@ -36,6 +36,9 @@ from duHast.Utilities.Objects import result as res
 
 
 class LinePatternProcessor(IFamilyProcessor):
+
+    data_type="LinePatternProcessor",
+
     def __init__(self, pre_actions=None, post_actions=None):
         """
         Class constructor.
@@ -45,6 +48,7 @@ class LinePatternProcessor(IFamilyProcessor):
         super(LinePatternProcessor, self).__init__(
             pre_actions=pre_actions,
             post_actions=[self._post_action_update_used_line_patterns],
+            data_type=LinePatternProcessor.data_type,
         )
 
         # set default post action to updated line patterns used in root processor with any line patterns found in nested

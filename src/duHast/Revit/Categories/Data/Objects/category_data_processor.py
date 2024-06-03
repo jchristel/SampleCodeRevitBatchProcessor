@@ -35,6 +35,9 @@ from duHast.Utilities.Objects import result as res
 
 
 class CategoryProcessor(IFamilyProcessor):
+     
+    data_type="CategoryProcessor"
+
     def __init__(self, pre_actions=None, post_actions=None):
         """
         Class constructor.
@@ -44,6 +47,7 @@ class CategoryProcessor(IFamilyProcessor):
         super(CategoryProcessor, self).__init__(
             pre_actions=pre_actions,
             post_actions=[self._post_action_update_used_subcategories],
+            data_type=CategoryProcessor.data_type,
         )
 
         # self.data = []

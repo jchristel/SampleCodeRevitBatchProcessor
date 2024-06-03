@@ -37,6 +37,9 @@ from duHast.Utilities.Objects import result as res
 
 
 class SharedParameterProcessor(IFamilyProcessor):
+
+    data_type="SharedParameterProcessor"
+
     def __init__(self, pre_actions=None, post_actions=None):
         """
         Class constructor.
@@ -46,6 +49,7 @@ class SharedParameterProcessor(IFamilyProcessor):
         super(SharedParameterProcessor, self).__init__(
             pre_actions=pre_actions,
             post_actions=[self._post_action_update_used_shared_parameters],
+            data_type=SharedParameterProcessor.data_type,
         )
 
         # add any other post actions

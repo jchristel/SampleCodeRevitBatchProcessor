@@ -43,7 +43,7 @@ class IFamilyProcessor(base.Base):
     data_type_header = "Data Type"  # Data type header
 
     def __init__(
-        self, pre_actions=None, post_actions=None, **kwargs
+        self, data_type=None, pre_actions=None, post_actions=None, **kwargs
     ):
 
         # forwards all unused arguments
@@ -51,6 +51,12 @@ class IFamilyProcessor(base.Base):
         super(IFamilyProcessor, self).__init__(**kwargs)
 
         self.data = []
+
+        # check if data type is set
+        if data_type != None:
+            self.data_type = data_type
+        else:
+            self.data_type = "not declared"
 
         self.pre_actions = pre_actions
         self.post_actions = post_actions

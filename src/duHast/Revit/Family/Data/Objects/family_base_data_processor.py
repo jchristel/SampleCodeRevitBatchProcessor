@@ -33,6 +33,9 @@ from duHast.Utilities import util_batch_p as uBP
 
 
 class FamilyBaseProcessor(IFamilyProcessor):
+
+    data_type = "FamilyBaseProcessor"
+
     def __init__(
         self,
         reference_file_path=None,
@@ -49,6 +52,7 @@ class FamilyBaseProcessor(IFamilyProcessor):
         super(FamilyBaseProcessor, self).__init__(
             pre_actions=pre_actions,
             post_actions=post_actions,
+            data_type=FamilyBaseProcessor.data_type,
         )
 
         # self.data = []

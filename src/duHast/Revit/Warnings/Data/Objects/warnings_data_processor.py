@@ -32,6 +32,9 @@ from duHast.Revit.Warnings.Data.Objects import warnings_data as rWarnData
 
 
 class WarningsProcessor(IFamilyProcessor):
+
+    data_type="WarningsProcessor"
+
     def __init__(self, pre_actions=None, post_actions=None):
         """
         Class constructor.
@@ -41,6 +44,7 @@ class WarningsProcessor(IFamilyProcessor):
         super(WarningsProcessor, self).__init__(
             pre_actions=pre_actions,
             post_actions=post_actions,
+            data_type=WarningsProcessor.data_type,
         )
 
     def process(self, doc, root_path, root_category_path):

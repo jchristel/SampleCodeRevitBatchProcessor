@@ -61,14 +61,13 @@ class DataProcessorBaseData(revit_test.RevitTest):
 
             # test data format data_type, root_name_path, root_category_path, family_name, family_file_path
             storage_test_data = [
-                [dummy.data_type,  "sample_root", "sample_category", "sample_family_name","sample_file_path"],
-                [dummy.data_type,  "sample_root::sample_root_nested", "sample_category::sample_category_nested", "sample_family_name_nested","sample_file_path_nested"],
+                ["sample_root", "sample_category", "sample_family_name","sample_file_path"],
+                ["sample_root::sample_root_nested", "sample_category::sample_category_nested", "sample_family_name_nested","sample_file_path_nested"],
             ]
 
             # populate processor with sample data
             for sample_data in storage_test_data:
                 sample_storage = FamilyBaseDataStorage(
-                    data_type=sample_data[0],
                     root_name_path=sample_data[1],
                     root_category_path=sample_data[2],
                     family_name=sample_data[3],

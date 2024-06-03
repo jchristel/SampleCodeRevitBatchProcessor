@@ -38,7 +38,7 @@ from duHast.Utilities.Objects import result as res
 
 class SharedParameterProcessor(IFamilyProcessor):
 
-    data_type="SharedParameterProcessor"
+    data_type = "SharedParameterProcessor"
 
     def __init__(self, pre_actions=None, post_actions=None):
         """
@@ -71,9 +71,7 @@ class SharedParameterProcessor(IFamilyProcessor):
         :type rootCategoryPath: str
         """
 
-        dummy = rSharedData.SharedParameterData(
-            root_path, root_category_path
-        )
+        dummy = rSharedData.SharedParameterData(root_path, root_category_path)
         dummy.process(doc)
         self.data.append(dummy)
 

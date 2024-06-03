@@ -50,13 +50,11 @@ class FamilyBaseProcessor(IFamilyProcessor):
 
         # store data type  in base class
         super(FamilyBaseProcessor, self).__init__(
+            data_type=FamilyBaseProcessor.data_type,
             pre_actions=pre_actions,
             post_actions=post_actions,
-            data_type=FamilyBaseProcessor.data_type,
         )
 
-        # self.data = []
-        # self.dataType = 'FamilyBase'
         self.reference_file_path = reference_file_path
         self.family_out_directory_path = family_out_directory_path
         if session_id != None:
@@ -81,7 +79,7 @@ class FamilyBaseProcessor(IFamilyProcessor):
         :type rootCategoryPath: str
         """
 
-        dummy = rFamData.FamilyBaseData(root_path, root_category_path, self.data_type)
+        dummy = rFamData.FamilyBaseData(root_path, root_category_path)
         dummy.process(
             doc,
             self.reference_file_path,

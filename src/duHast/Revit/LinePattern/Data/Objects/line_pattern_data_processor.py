@@ -37,7 +37,7 @@ from duHast.Utilities.Objects import result as res
 
 class LinePatternProcessor(IFamilyProcessor):
 
-    data_type="LinePatternProcessor",
+    data_type = "LinePatternProcessor"
 
     def __init__(self, pre_actions=None, post_actions=None):
         """
@@ -73,9 +73,7 @@ class LinePatternProcessor(IFamilyProcessor):
         :type rootCategoryPath: str
         """
 
-        dummy = rLinePatData.LinePatternData(
-            root_path, root_category_path, self.data_type
-        )
+        dummy = rLinePatData.LinePatternData(root_path, root_category_path)
         dummy.process(doc)
         self.data.append(dummy)
 

@@ -35,8 +35,8 @@ from duHast.Utilities.Objects import result as res
 
 
 class CategoryProcessor(IFamilyProcessor):
-     
-    data_type="CategoryProcessor"
+
+    data_type = "CategoryProcessor"
 
     def __init__(self, pre_actions=None, post_actions=None):
         """
@@ -79,13 +79,15 @@ class CategoryProcessor(IFamilyProcessor):
         :type root_category_path: str
         """
 
-        dummy = rCatData.CategoryData(root_path, root_category_path, self.data_type)
+        dummy = rCatData.CategoryData(root_path, root_category_path)
         dummy.process(doc)
         self.data.append(dummy)
 
     # --------------------------------------------- post action ----------------------------------------------------------
 
-    def _is_sub_category_present(self, root_family_data, nested_family_sub_category_storage):
+    def _is_sub_category_present(
+        self, root_family_data, nested_family_sub_category_storage
+    ):
         """
         Check if sub category is present in root family data.
 
@@ -110,7 +112,7 @@ class CategoryProcessor(IFamilyProcessor):
                     type(nested_family_sub_category_storage)
                 )
             )
-        
+
         match = None
         # check whether sub category is present
         for root_fam in root_family_data:
@@ -123,9 +125,10 @@ class CategoryProcessor(IFamilyProcessor):
             storage_instances = root_fam.get_data()
             for storage_root in storage_instances:
                 if (
-                    storage_root.category_name == nested_family_sub_category_storage.category_name
-                    and storage_root.sub_category_name == nested_family_sub_category_storage.sub_category_name
-                    
+                    storage_root.category_name
+                    == nested_family_sub_category_storage.category_name
+                    and storage_root.sub_category_name
+                    == nested_family_sub_category_storage.sub_category_name
                 ):
                     match = root_fam
                     break
@@ -156,7 +159,7 @@ class CategoryProcessor(IFamilyProcessor):
                     type(nested_families_sub_categories)
                 )
             )
-        
+
         # loop over nested family subcategory storage data
         for nested_sub_category_storage in nested_families_sub_categories:
 
@@ -166,17 +169,23 @@ class CategoryProcessor(IFamilyProcessor):
                         type(nested_sub_category_storage)
                     )
                 )
-            
+
             # check if sub category is already in root family
             matching_root_fam_category_data = self._is_sub_category_present(
                 root_family_data, nested_sub_category_storage
             )
             if matching_root_fam_category_data != None:
                 root_storage_all = matching_root_fam_category_data.get_root_storage()
-                
+
                 # some data instances might have more than one root storage instance to represent multiple categories present in the family
                 for root_storage in root_storage_all:
-                    if (nested_sub_category_storage.category_name == root_storage.category_name) and (nested_sub_category_storage.sub_category_name == root_storage.sub_category_name):
+                    if (
+                        nested_sub_category_storage.category_name
+                        == root_storage.category_name
+                    ) and (
+                        nested_sub_category_storage.sub_category_name
+                        == root_storage.sub_category_name
+                    ):
                         # update used by list
                         if (
                             nested_sub_category_storage.family_name

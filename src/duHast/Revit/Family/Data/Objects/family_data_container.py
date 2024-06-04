@@ -63,19 +63,33 @@ class FamilyDataContainer(base.Base):
         # ini super class to allow multi inheritance in children!
         super(FamilyDataContainer, self).__init__(**kwargs)
 
+        # set some base properties to their default values
+        self.family_name = None
+        self.family_nesting_path = None
+        self.family_category = None
+        self.family_category_nesting_path = None
+        self.is_root_family = False
+        self.family_file_path = None
+
         # populate class from past in data
         # start with family base data storage
+        self.family_base_data_storage = []
         if family_base_data_storage is None:
-            self.family_base_data_storage = []
+            # no change required 
+            pass
         else:
             if isinstance(family_base_data_storage, list):
                 # check if every member of the list is an instance of FamilyBaseDataStorage
                 if all(isinstance(x, FamilyBaseDataStorage) for x in family_base_data_storage):
-                    self.family_base_data_storage = family_base_data_storage
+                    # should only ever be one entry!
+                    if(len(family_base_data_storage)>1):
+                        raise ValueError ("family_base_data_storage can only ever have one entry")
+                    else:
+                        self.add_family_base_data_storage(family_base_data_storage)
                 else:
                     raise ValueError("family_base_data_storage must be a list of FamilyBaseDataStorage")
             elif isinstance(family_base_data_storage, FamilyBaseDataStorage):
-                self.family_base_data_storage = [family_base_data_storage]
+                self.add_family_base_data_storage(family_base_data_storage)
             else:
                 raise ValueError("family_base_data_storage must be a list or FamilyBaseDataStorage")
         
@@ -135,4 +149,38 @@ class FamilyDataContainer(base.Base):
             self.warnings_data_storage = [warnings_data_storage]
         else:
             raise ValueError("warnings_data_storage must be a list or FamilyWarningsDataStorage")
+    
+    def add_family_base_data_storage(self, other):
+        """
+        Will add a family base data storage instance and infere some other class properties from it.
+
+        Note: if storage data properties root_name_path and root_category_path are different to the current values
+        all other storage properties will be wiped to avoid mismatches!
+
+        :param other: _description_
+        :type other: _type_
+        :raises ValueError: _description_
+        """
+        # check is correct object type
+        if isinstance(other, FamilyBaseDataStorage)==False:
+            raise ValueError("other must be a list of FamilyBaseDataStorage")
+        
+        # there is always only going to be one entry in list!
+        if (len(self.family_base_data_storage)>0):
+            self.family_base_data_storage.pop()
+        
+        # add to class property
+        self.family_base_data_storage.append(other)
+
+        # set other class properties based on storage:
+        # check if nesting path and category nesting path are different to the current values
+        # if so wipe the other storage properties to avoid mismatches!
+        
+
+        self.family_name = other.family_name
+        self.family_file_path = other.family_file_path
+        self.family_nesting_path = other.root_name_path
+        self.family_category_nesting_path = other.root_category_path
+        
+        
         

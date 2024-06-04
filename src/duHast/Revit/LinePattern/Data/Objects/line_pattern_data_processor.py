@@ -30,6 +30,7 @@ Family line pattern data processor class.
 
 from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
 from duHast.Revit.LinePattern.Data.Objects import line_pattern_data as rLinePatData
+from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor_defaults import DATA_TYPE_PROCESSOR as data_type_line_pattern_processor
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 from duHast.Utilities.Objects import result as res
@@ -37,7 +38,7 @@ from duHast.Utilities.Objects import result as res
 
 class LinePatternProcessor(IFamilyProcessor):
 
-    data_type = "LinePatternProcessor"
+    data_type = data_type_line_pattern_processor
 
     def __init__(self, pre_actions=None, post_actions=None):
         """

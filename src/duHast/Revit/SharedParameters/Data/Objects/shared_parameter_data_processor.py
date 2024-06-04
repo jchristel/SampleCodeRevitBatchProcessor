@@ -31,6 +31,7 @@ from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
 from duHast.Revit.SharedParameters.Data.Objects import (
     shared_parameter_data as rSharedData,
 )
+from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_defaults import DATA_TYPE_PROCESSOR as data_type_shared_parameter_processor
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 from duHast.Utilities.Objects import result as res
@@ -38,7 +39,7 @@ from duHast.Utilities.Objects import result as res
 
 class SharedParameterProcessor(IFamilyProcessor):
 
-    data_type = "SharedParameterProcessor"
+    data_type = data_type_shared_parameter_processor
 
     def __init__(self, pre_actions=None, post_actions=None):
         """

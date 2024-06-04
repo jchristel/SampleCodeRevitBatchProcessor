@@ -9,4 +9,4 @@ The DuHast is now available as a pip install:
 pip install DuHast
 ```
 
-This is currently still experimental only. The sample flows will be upgraded to use this package once its considered stable. 
+The sample flows provided in /Sample in this repository use this package. 

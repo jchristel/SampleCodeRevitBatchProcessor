@@ -55,19 +55,21 @@ from duHast.Utilities.files_combine import combine_files
 from duHast.Revit.Family.Data.family_report_utils import combine_reports
 
 
-from duHast.Revit.Family.Data.Objects.family_base_data_processor import (
-    FamilyBaseProcessor,
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_family_base_processor,
 )
-from duHast.Revit.Categories.Data.Objects.category_data_processor import (
-    CategoryProcessor,
+from duHast.Revit.Categories.Data.Objects.category_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_category_processor,
 )
-from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor import (
-    LinePatternProcessor,
+from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_line_pattern_processor,
 )
-from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor import (
-    SharedParameterProcessor,
+from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_shared_parameter_processor,
 )
-from duHast.Revit.Warnings.Data.Objects.warnings_data_processor import WarningsProcessor
+from duHast.Revit.Warnings.Data.Objects.warnings_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_warnings_processor,
+)
 
 # -------------
 # my code here:
@@ -76,23 +78,23 @@ from duHast.Revit.Warnings.Data.Objects.warnings_data_processor import WarningsP
 # list containing file name prefixes and the associated combined report file names
 FILE_DATA_TO_COMBINE = [
     [
-        CategoryProcessor.data_type,
+        data_type_category_processor,
         "FamilyCategoriesCombinedReport" + settings.REPORT_FILE_EXTENSION,
     ],
     [
-        SharedParameterProcessor.data_type,
+        data_type_shared_parameter_processor,
         "FamilySharedParametersCombinedReport" + settings.REPORT_FILE_EXTENSION,
     ],
     [
-        LinePatternProcessor.data_type,
+        data_type_line_pattern_processor,
         "FamilyLinePatternsCombinedReport" + settings.REPORT_FILE_EXTENSION,
     ],
     [
-        FamilyBaseProcessor.data_type,
+        data_type_family_base_processor,
         "FamilyBaseDataCombinedReport" + settings.REPORT_FILE_EXTENSION,
     ],
     [
-        WarningsProcessor.data_type,
+        data_type_warnings_processor,
         "FamilyWarningsCombinedReport" + settings.REPORT_FILE_EXTENSION,
     ],
 ]

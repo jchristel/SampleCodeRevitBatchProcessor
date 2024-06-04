@@ -309,69 +309,73 @@ def check_missing_families():
 # -------------
 # main:
 # -------------
-# check whether any families where processed (possible that in follow up mode nothing was needed to be processed!)
-if check_temp_reports_exist():
-    # set up a folder with the current date in the analysis folder to store some data
-    (
-        dated_analysis_folder_created_,
-        dated_analysis_dated_directory_path_,
-    ) = setup_dated_directory_in_analysis()
-    # combine temporary, by family, reports
-    combine_temp_reports()
-    # delete the working by session id directories
-    pCleanUp.delete_working_directories()
+try:
+    # check whether any families where processed (possible that in follow up mode nothing was needed to be processed!)
+    if check_temp_reports_exist():
+        # set up a folder with the current date in the analysis folder to store some data
+        (
+            dated_analysis_folder_created_,
+            dated_analysis_dated_directory_path_,
+        ) = setup_dated_directory_in_analysis()
+        # combine temporary, by family, reports
+        combine_temp_reports()
+        # delete the working by session id directories
+        pCleanUp.delete_working_directories()
 
-    # check whether report files need to be combined / merged with previous  (older) report files before progressing
-    combine_report_files, previous_report_root_directory = combine_report_files_check()
-    if combine_report_files:
-        combine_current_with_previous_report_files(previous_report_root_directory)
+        # check whether report files need to be combined / merged with previous  (older) report files before progressing
+        combine_report_files, previous_report_root_directory = combine_report_files_check()
+        if combine_report_files:
+            combine_current_with_previous_report_files(previous_report_root_directory)
 
-    # check processed files for any circular references
-    check_circular_references()
-    # check processed files for any missing families
-    check_missing_families()
+        # check processed files for any circular references
+        check_circular_references()
+        # check processed files for any missing families
+        check_missing_families()
 
-    # copy log files first if data folder was created
-    # log file markers will be removed once the log files are processed
-    # therefore those log files need to be copied first
-    if dated_analysis_folder_created_:
-        flag_copy_log_one_ = copy_log_files_to_marker_dir(dated_analysis_dated_directory_path_)
-        output(
-            "Copied all log files to Analysis dated folder with status: {}".format(
-                flag_copy_log_one_
+        # copy log files first if data folder was created
+        # log file markers will be removed once the log files are processed
+        # therefore those log files need to be copied first
+        if dated_analysis_folder_created_:
+            flag_copy_log_one_ = copy_log_files_to_marker_dir(dated_analysis_dated_directory_path_)
+            output(
+                "Copied all log files to Analysis dated folder with status: {}".format(
+                    flag_copy_log_one_
+                )
             )
-        )
-        flag_copy_log_two_ = copy_log_files_to_marker_dir(settings.ANALYSIS_CURRENT_FOLDER)
-        output(
-            "Copied all log files to Analysis current folder with status: {}".format(
-                flag_copy_log_two_
+            flag_copy_log_two_ = copy_log_files_to_marker_dir(settings.ANALYSIS_CURRENT_FOLDER)
+            output(
+                "Copied all log files to Analysis current folder with status: {}".format(
+                    flag_copy_log_two_
+                )
             )
-        )
 
-    # check log files for any exceptions or warnings ( do this last since log marker files are required to copy logs for \
-    # analysis in powerBi)
-    # this will also remove any log file marker files
-    process_all_log_files()
+        # check log files for any exceptions or warnings ( do this last since log marker files are required to copy logs for \
+        # analysis in powerBi)
+        # this will also remove any log file marker files
+        process_all_log_files()
 
-    # copy report files
-    if dated_analysis_folder_created_:
-        flag_copy_result_one_ = copy_results_into_analysis(
-            dated_analysis_dated_directory_path_
-        )
-        output(
-            "Copied all report files to Analysis dated folder with status: {}".format(
-                flag_copy_result_one_
+        # copy report files
+        if dated_analysis_folder_created_:
+            flag_copy_result_one_ = copy_results_into_analysis(
+                dated_analysis_dated_directory_path_
             )
-        )
-        flag_copy_result_two_ = copy_results_into_analysis(
-            settings.ANALYSIS_CURRENT_FOLDER
-        )
-        output(
-            "Copied all report files to Analysis current folder with status: {}".format(
-                flag_copy_result_two_
+            output(
+                "Copied all report files to Analysis dated folder with status: {}".format(
+                    flag_copy_result_one_
+                )
             )
-        )
-else:
-    output("No temp report files where found, indicating no families where processed.")
-# delete any files in Input directory
-pCleanUp.delete_file_in_input_directory()
+            flag_copy_result_two_ = copy_results_into_analysis(
+                settings.ANALYSIS_CURRENT_FOLDER
+            )
+            output(
+                "Copied all report files to Analysis current folder with status: {}".format(
+                    flag_copy_result_two_
+                )
+            )
+    else:
+        output("No temp report files where found, indicating no families where processed.")
+    # delete any files in Input directory
+    pCleanUp.delete_file_in_input_directory()
+except Exception as e:
+    output("Failed post processing with exception: {}".format(e))
+    sys.exit(1)

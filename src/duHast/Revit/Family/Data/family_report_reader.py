@@ -28,18 +28,18 @@ def read_family_base_data(file_path):
 
         # check what was past in
         if not isinstance(file_path, str):
-            raise TypeError("Invalid file path type. Expected str.")
+            raise TypeError("Invalid file path type. Expected str, got {}".format(type(file_path)))
 
         # Check if the file exists
         if not os.path.exists(file_path):
-            raise FileNotFoundError(f"File not found: {file_path}")
+            raise FileNotFoundError("File not found: {}".format(file_path))
 
         # Read the data from the file
         data = read_csv_file(file_path)
 
         # Check if the data is empty
         if not data or len(data) <= 1:
-            raise ValueError(f"Empty data in the file: {file_path}")
+            raise ValueError("Empty data in the file: {}".format(file_path))
 
         # check data type is what we expect
         # first column in second row contains the report data type
@@ -57,13 +57,13 @@ def read_family_base_data(file_path):
         for row in data[1:]:
             try:
                 # check if the row has the correct number of columns
-                if len(row) != len(FamilyBaseDataStorage.number_of_properties):
+                if len(row) != FamilyBaseDataStorage.number_of_properties:
                     raise ValueError(
                         "Invalid data in the file: {}.\nrow{}".format(file_path, row)
                     )
                 # initialise the storage object without the data type
                 dummy = FamilyBaseDataStorage(*row[1:])
-                return_value.result(dummy)
+                return_value.result.append(dummy)
             except Exception as e:
                 return_value.append_message("Failed to read data row with exception: {}".format(e))
 

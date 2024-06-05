@@ -186,6 +186,12 @@ class FamilyDataContainer(base.Base):
             self.add_warnings_data_storage(warnings_data_storage)
 
     def _update_base_properties_from_storage(self, storage_instance):
+        """
+        Will update the base properties of the class from a family base data storage instance.
+
+        :param storage_instance: a family data storage instance
+        :type storage_instance: IFamilyDataStorage
+        """
 
         # set other class properties based on storage
         self.family_name = storage_instance.family_name
@@ -254,7 +260,7 @@ class FamilyDataContainer(base.Base):
             raise ValueError("other must be a list of FamilyCategoryDataStorage")
 
         # check if nesting path and category nesting path are different to the current values but not None!
-        # if so wipe throw error!
+        # if so  throw error!
         if (
             self.family_nesting_path != other.root_name_path
             and self.family_nesting_path != None
@@ -287,7 +293,7 @@ class FamilyDataContainer(base.Base):
             raise ValueError("other must be a list of FamilyLinePatternDataStorage")
 
         # check if nesting path and category nesting path are different to the current values but not None!
-        # if so wipe throw error!
+        # if so throw error!
         if (
             self.family_nesting_path != other.root_name_path
             and self.family_nesting_path != None
@@ -297,6 +303,10 @@ class FamilyDataContainer(base.Base):
             raise ValueError(
                 "other root_name_path and root_category_path must match current values"
             )
+        elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
+            # looks like this might be the only storage class added or 
+            # family base data storage is absent and this is the first storage class added
+            self._update_base_properties_from_storage(other)
 
         # add to class property
         self.line_pattern_data_storage.append(other)
@@ -326,6 +336,10 @@ class FamilyDataContainer(base.Base):
             raise ValueError(
                 "other root_name_path and root_category_path must match current values"
             )
+        elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
+            # looks like this might be the only storage class added or 
+            # family base data storage is absent and this is the first storage class added
+            self._update_base_properties_from_storage(other)
 
         # add to class property
         self.shared_parameter_data_storage.append(other)
@@ -355,6 +369,10 @@ class FamilyDataContainer(base.Base):
             raise ValueError(
                 "other root_name_path and root_category_path must match current values"
             )
+        elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
+            # looks like this might be the only storage class added or 
+            # family base data storage is absent and this is the first storage class added
+            self._update_base_properties_from_storage(other)
 
         # add to class property
         self.warnings_data_storage.append(other)

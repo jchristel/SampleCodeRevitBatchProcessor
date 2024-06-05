@@ -185,6 +185,21 @@ class FamilyDataContainer(base.Base):
         else:
             self.add_warnings_data_storage(warnings_data_storage)
 
+    def _update_base_properties_from_storage(self, storage_instance):
+
+        # set other class properties based on storage
+        self.family_name = storage_instance.family_name
+        self.family_file_path = storage_instance.family_file_path
+        self.family_nesting_path = storage_instance.root_name_path
+        self.family_category_nesting_path = storage_instance.root_category_path
+
+        # check if this is a root family
+        if "::" in storage_instance.root_name_path:
+            self.is_root_family = False
+        else:
+            self.is_root_family = True
+
+
     def add_family_base_data_storage(self, other):
         """
         Will add a family base data storage instance and infer some other class properties from it.
@@ -221,16 +236,8 @@ class FamilyDataContainer(base.Base):
             self.warnings_data_storage = []
 
         # set other class properties based on storage
-        self.family_name = other.family_name
-        self.family_file_path = other.family_file_path
-        self.family_nesting_path = other.root_name_path
-        self.family_category_nesting_path = other.root_category_path
-
-        # check if this is a root family
-        if "::" in other.root_name_path:
-            self.is_root_family = False
-        else:
-            self.is_root_family = True
+        self._update_base_properties_from_storage(other)
+        
 
     def add_category_data_storage(self, other):
         """
@@ -257,6 +264,10 @@ class FamilyDataContainer(base.Base):
             raise ValueError(
                 "other root_name_path and root_category_path must match current values"
             )
+        elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
+            # looks like this might be the only storage class added or 
+            # family base data storage is absent and this is the first storage class added
+            self._update_base_properties_from_storage(other)
 
         # add to class property
         self.category_data_storage.append(other)

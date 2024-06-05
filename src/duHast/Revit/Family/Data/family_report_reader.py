@@ -23,6 +23,38 @@ from duHast.Revit.Warnings.Data.Objects.warnings_data_storage import (
 )
 
 from duHast.Utilities.Objects.result import Result
+from duHast.Utilities.files_io import is_directory, file_exist
+from duHast.Utilities.files_get import get_files_single_directory
+from duHast.Utilities.files_csv import read_csv_file
+
+
+def convert_data_rows_to_family_base_data_storage(data_rows):
+    pass
+
+
+def convert_data_rows_to_family_category_data_storage(data_rows):
+    pass
+
+
+def convert_data_rows_to_family_line_pattern_data_storage(data_rows):
+    pass
+
+
+def convert_data_rows_to_family_shared_parameter_data_storage(data_rows):
+    pass
+
+
+def convert_data_rows_to_family_warnings_data_storage(data_rows):
+    pass
+
+
+DATA_CONVERSION = {
+    FamilyBaseDataStorage.data_type: convert_data_rows_to_family_base_data_storage,
+    FamilyCategoryDataStorage.data_type: convert_data_rows_to_family_category_data_storage,
+    FamilyLinePatternDataStorage.data_type: convert_data_rows_to_family_line_pattern_data_storage,
+    FamilySharedParameterDataStorage.data_type: convert_data_rows_to_family_shared_parameter_data_storage,
+    FamilyWarningsDataStorage.data_type: convert_data_rows_to_family_warnings_data_storage,
+}
 
 
 def read_family_base_data(file_path):
@@ -144,7 +176,7 @@ def read_family_warnings_data(file_path):
     pass
 
 
-def read_data_into_family_containers(directory_path):
+def read_data_into_family_containers(path_to_data):
     """
     Get all csv files in directory provided and attempts to read them into varies lists of data storage objects:
 
@@ -158,18 +190,73 @@ def read_data_into_family_containers(directory_path):
 
     Note: The content of multiple csv files of the same data type will be combined into a single list of objects.
 
-    :param directory_path: The path to the directory containing the csv files.
+    :param path_to_data: The path to the directory containing the csv files or fully qualified file path to a single data file.
     :type directory_path: str
 
     """
 
-    # get all csf files in the given directory
-    # read the data from each file into rows
-    # check the first entry in the second row, since it contains the storage data type
-    # convert row into storage object depending on the data type
-    # group storage containers by family root path and category root path identifying unique families
-    # set up a family container file for each grouping
-    # populate the family container with the storage objects
-    # return the family containers
+    files = []
+    return_value = Result()
+    try:
+        # check if path_to_data is a string
+        if isinstance(path_to_data, str) == False:
+            raise TypeError(
+                "Invalid path type. Expected str, got {}".format(type(path_to_data))
+            )
 
-    pass
+        # check if past in path is a directory or file
+        # if it is a directory, get all csv files in the directory
+        if is_directory(path_to_data):
+            # get all csv files in the directory
+            files = get_files_single_directory(path_to_data, file_extension=".csv")
+        else:
+            # if it is a file, check if it is a csv file
+            if path_to_data.endswith(".csv"):
+                # check if file exists
+                if file_exist(path_to_data) == False:
+                    raise FileNotFoundError("File not found: {}".format(path_to_data))
+                else:
+                    files.append(path_to_data)
+
+        # read the data from each file into rows
+        data_read = []
+        for data_file in files:
+            try:
+                # read the data from the file
+                data = read_csv_file(data_file)
+                if not data or len(data) <= 1:
+                    raise ValueError("Empty data in the file: {}".format(data_file))
+                else:
+                    data_read.append(data)
+            except Exception as e:
+                return_value.append_message(
+                    "Failed to read data file with exception: {}".format(e)
+                )
+
+        # convert the data rows into storage objects depending on the data type
+        data_converted = []
+        for data in data_read:
+            # check the first entry in the second row, since it contains the storage data type
+            if len(data[1]) == 0:
+                raise ValueError("Data type missing in the file.")
+            else:
+                if not (data[1][0] in DATA_CONVERSION.keys()):
+                    raise TypeError("Invalid data type.Got: {}.".format(data[1][0]))
+                else:
+                    # convert row into storage object depending on the data type
+                    data_type = data[1][0]
+                    # call the conversion function for the data type
+                    data_conversion = DATA_CONVERSION[data_type]
+                    data_storage = data_conversion(data[1:])
+                    data_converted.append(data_storage)
+
+        # group storage containers by family root path and category root path identifying unique families
+        # set up a family container file for each grouping
+        # populate the family container with the storage objects
+        # return the family containers
+
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to read data with exception: {}".format(e)
+        )
+    return return_value

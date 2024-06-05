@@ -156,6 +156,8 @@ def read_data_into_family_containers(directory_path):
 
     These are then added to a family container object and returned.
 
+    Note: The content of multiple csv files of the same data type will be combined into a single list of objects.
+
     :param directory_path: The path to the directory containing the csv files.
     :type directory_path: str
 

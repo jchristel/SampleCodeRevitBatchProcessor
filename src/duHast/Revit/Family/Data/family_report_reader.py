@@ -21,6 +21,8 @@ from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage im
 from duHast.Revit.Warnings.Data.Objects.warnings_data_storage import (
     FamilyWarningsDataStorage,
 )
+from duHast.Revit.Family.Data.Objects.family_data_container import FamilyDataContainer
+
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_io import is_directory, file_exist
@@ -28,49 +30,41 @@ from duHast.Utilities.files_get import get_files_single_directory
 from duHast.Utilities.files_csv import read_csv_file
 
 
-def convert_data_rows_to_family_base_data_storage(data_rows):
-    pass
-
-
-def convert_data_rows_to_family_category_data_storage(data_rows):
-    pass
-
-
-def convert_data_rows_to_family_line_pattern_data_storage(data_rows):
-    pass
-
-
-def convert_data_rows_to_family_shared_parameter_data_storage(data_rows):
-    pass
-
-
-def convert_data_rows_to_family_warnings_data_storage(data_rows):
-    pass
-
-
 DATA_CONVERSION = {
-    FamilyBaseDataStorage.data_type: convert_data_rows_to_family_base_data_storage,
-    FamilyCategoryDataStorage.data_type: convert_data_rows_to_family_category_data_storage,
-    FamilyLinePatternDataStorage.data_type: convert_data_rows_to_family_line_pattern_data_storage,
-    FamilySharedParameterDataStorage.data_type: convert_data_rows_to_family_shared_parameter_data_storage,
-    FamilyWarningsDataStorage.data_type: convert_data_rows_to_family_warnings_data_storage,
+    FamilyBaseDataStorage.data_type: FamilyBaseDataStorage,
+    FamilyCategoryDataStorage.data_type: FamilyCategoryDataStorage,
+    FamilyLinePatternDataStorage.data_type: FamilyLinePatternDataStorage,
+    FamilySharedParameterDataStorage.data_type: FamilySharedParameterDataStorage,
+    FamilyWarningsDataStorage.data_type: FamilyWarningsDataStorage,
 }
 
 
-def read_family_base_data(file_path):
-    """
-    Read the family base data from the file and return a list of FamilyBaseDataStorage objects.
-
-    :param file_path: The path to the file to read the data from.
-    :type file_path: str
-    :return: A Result object containing the list of FamilyBaseDataStorage objects if successful.
-    :rtype: Result
-
-    """
-
+def convert_data_rows_to_data_storage(data_rows, target_type):
     return_value = Result()
     try:
+        # loop over all rows but the first (header row) extracted and set up objects
+        for row in data_rows[1:]:
+            try:
+                # check if the row has the correct number of columns
+                if len(row) != target_type.number_of_properties:
+                    raise ValueError("Invalid data row{}".format(row))
+                # initialise the storage object without the data type
+                dummy = target_type(*row[1:])
+                return_value.result.append(dummy)
+            except Exception as e:
+                return_value.append_message(
+                    "Failed to convert data row with exception: {}".format(e)
+                )
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to convert rows into {}: {}".format(type(target_type), e)
+        )
+    return return_value
 
+
+def read_base_data(file_path, data_type):
+    return_value = Result()
+    try:
         # check what was past in
         if not isinstance(file_path, str):
             raise TypeError(
@@ -93,29 +87,49 @@ def read_family_base_data(file_path):
         if len(data[1]) == 0:
             raise ValueError("Data type missing in the file.")
         else:
-            if not (data[1][0] == FamilyBaseDataStorage.data_type):
+            if not (data[1][0] == data_type.data_type):
                 raise TypeError(
                     "Invalid data type.Got: {}, expected {}.".format(
-                        data[1][0], FamilyBaseDataStorage.data_type
+                        data[1][0], data_type.data_type
                     )
                 )
 
-        # loop over all rows but the first (header row) extracted and set up objects
-        for row in data[1:]:
-            try:
-                # check if the row has the correct number of columns
-                if len(row) != FamilyBaseDataStorage.number_of_properties:
-                    raise ValueError(
-                        "Invalid data in the file: {}.\nrow{}".format(file_path, row)
-                    )
-                # initialise the storage object without the data type
-                dummy = FamilyBaseDataStorage(*row[1:])
-                return_value.result.append(dummy)
-            except Exception as e:
-                return_value.append_message(
-                    "Failed to read data row with exception: {}".format(e)
-                )
+        # convert rows read into data storage objects
+        data_storage_conversion_result = convert_data_rows_to_data_storage(
+            data_rows=data, target_type=data_type
+        )
+        # check what came back before adding to converted data
+        if data_storage_conversion_result.status:
+            return_value.result = data_storage_conversion_result.result
 
+        # just append the log message
+        return_value.append_message(data_storage_conversion_result.message)
+
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to read data file with exception: {}".format(e)
+        )
+
+    return return_value
+
+
+def read_family_base_data(file_path):
+    """
+    Read the family base data from the file and return a list of FamilyBaseDataStorage objects.
+
+    :param file_path: The path to the file to read the data from.
+    :type file_path: str
+    :return: A Result object containing the list of FamilyBaseDataStorage objects if successful.
+    :rtype: Result
+
+    """
+
+    return_value = Result()
+    try:
+
+        return_value = read_base_data(
+            file_path=file_path, data_type=FamilyBaseDataStorage
+        )
     except Exception as e:
         return_value.update_sep(
             False, "Failed to read data file with exception: {}".format(e)
@@ -134,7 +148,18 @@ def read_category_base_data(file_path):
     :rtype: Result
 
     """
-    pass
+    return_value = Result()
+    try:
+
+        return_value = read_base_data(
+            file_path=file_path, data_type=FamilyCategoryDataStorage
+        )
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to read data file with exception: {}".format(e)
+        )
+
+    return return_value
 
 
 def read_family_line_pattern_base_data(file_path):
@@ -147,7 +172,18 @@ def read_family_line_pattern_base_data(file_path):
     :rtype: Result
 
     """
-    pass
+    return_value = Result()
+    try:
+
+        return_value = read_base_data(
+            file_path=file_path, data_type=FamilyLinePatternDataStorage
+        )
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to read data file with exception: {}".format(e)
+        )
+
+    return return_value
 
 
 def read_family_shared_parameter_data(file_path):
@@ -160,7 +196,18 @@ def read_family_shared_parameter_data(file_path):
     :rtype: Result
 
     """
-    pass
+    return_value = Result()
+    try:
+
+        return_value = read_base_data(
+            file_path=file_path, data_type=FamilySharedParameterDataStorage
+        )
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to read data file with exception: {}".format(e)
+        )
+
+    return return_value
 
 
 def read_family_warnings_data(file_path):
@@ -173,7 +220,18 @@ def read_family_warnings_data(file_path):
     :rtype: Result
 
     """
-    pass
+    return_value = Result()
+    try:
+
+        return_value = read_base_data(
+            file_path=file_path, data_type=FamilyWarningsDataStorage
+        )
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to read data file with exception: {}".format(e)
+        )
+
+    return return_value
 
 
 def read_data_into_family_containers(path_to_data):
@@ -234,6 +292,7 @@ def read_data_into_family_containers(path_to_data):
                 )
 
         # convert the data rows into storage objects depending on the data type
+        # this will end up containing lists of storage objects, one list per file read
         data_converted = []
         for data in data_read:
             # check the first entry in the second row, since it contains the storage data type
@@ -244,16 +303,39 @@ def read_data_into_family_containers(path_to_data):
                     raise TypeError("Invalid data type.Got: {}.".format(data[1][0]))
                 else:
                     # convert row into storage object depending on the data type
-                    data_type = data[1][0]
-                    # call the conversion function for the data type
-                    data_conversion = DATA_CONVERSION[data_type]
-                    data_storage = data_conversion(data[1:])
-                    data_converted.append(data_storage)
+                    data_type_name = data[1][0]
+                    data_conversion_type = DATA_CONVERSION[data_type_name]
+                    data_storage_conversion_result = convert_data_rows_to_data_storage(
+                        data_rows=data, target_type=data_conversion_type
+                    )
+                    # check what came back before adding to converted data
+                    if data_storage_conversion_result.status:
+                        data_converted.append(data_storage_conversion_result.result)
+                    # just append the log message
+                    return_value.append_message(data_storage_conversion_result.message)
 
         # group storage containers by family root path and category root path identifying unique families
-        # set up a family container file for each grouping
-        # populate the family container with the storage objects
-        # return the family containers
+        containers_grouped_by_family_data = {}
+        # loop over all storage lists and assign data to container
+        for storage_list in data_converted:
+            for storage_instance in storage_list:
+                if (
+                    storage_instance.root_name_path
+                    + storage_instance.root_category_path
+                    not in containers_grouped_by_family_data
+                ):
+                    # set up a new container for this family
+                    container_instance = FamilyDataContainer()
+                    # add the storage
+                    container_instance.add_data_storage(storage_instance)
+                    containers_grouped_by_family_data[
+                        storage_instance.root_name_path
+                        + storage_instance.root_category_path
+                    ] = container_instance
+
+        # add list of containers to return object
+        for key,value in containers_grouped_by_family_data.items():
+            return_value.result.append(value)
 
     except Exception as e:
         return_value.update_sep(

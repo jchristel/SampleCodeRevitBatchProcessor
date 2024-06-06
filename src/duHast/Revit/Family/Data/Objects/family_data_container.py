@@ -56,6 +56,7 @@ from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage im
 from duHast.Revit.Warnings.Data.Objects.warnings_data_storage import (
     FamilyWarningsDataStorage,
 )
+from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 
 
 class FamilyDataContainer(base.Base):
@@ -356,7 +357,7 @@ class FamilyDataContainer(base.Base):
         """
         # check is correct object type
         if isinstance(other, FamilyWarningsDataStorage) == False:
-            raise ValueError("other must be a list of FamilyWarningsDataStorage")
+            raise ValueError("other must be type of FamilyWarningsDataStorage")
 
         # check if nesting path and category nesting path are different to the current values but not None!
         # if so wipe throw error!
@@ -376,3 +377,23 @@ class FamilyDataContainer(base.Base):
 
         # add to class property
         self.warnings_data_storage.append(other)
+
+    def add_data_storage(self,other):
+         # check is correct object type
+        if isinstance(other, IFamilyDataStorage) == False:
+            raise ValueError("other must be a type of IFamilyDataStorage but is: {}".format(type(other)))
+
+        if other.data_type == FamilyBaseDataStorage.data_type:
+            self.add_family_base_data_storage(other=other)
+        elif other.data_type == FamilyCategoryDataStorage.data_type:
+            self.add_category_data_storage(other=other)
+        elif other.data_type == FamilyLinePatternDataStorage.data_type:
+            self.add_line_pattern_data_storage(other=other)
+        elif other.data_type == FamilySharedParameterDataStorage.data_type:
+            self.add_shared_parameter_data_storage(other=other)
+        elif other.data_type == FamilyWarningsDataStorage.data_type:
+            self.add_warnings_data_storage(other=other)
+        else:
+            raise TypeError("Data storage type : {} is not supported.".format(other.data_type))               
+                            
+

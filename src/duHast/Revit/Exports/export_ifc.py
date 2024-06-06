@@ -57,6 +57,10 @@ from duHast.Revit.Exports.Utility.export_ifc_config_2023 import (
     ifc_get_third_party_export_config_by_view_2023,
 )
 
+from duHast.Revit.Exports.Utility.export_ifc_config_2024 import (
+    ifc_get_third_party_export_config_by_model_2024,
+    ifc_get_third_party_export_config_by_view_2024,
+)
 
 def ifc_get_export_config_by_view(
     ifc_version, ifc_space_bounds=IFCSpaceBoundaries.no_boundaries
@@ -359,6 +363,10 @@ def ifc_get_third_party_export_config_by_model(doc, ifc_version, ifc_settings=No
         ifc_config = ifc_get_third_party_export_config_by_model_2023(
             ifc_version=ifc_version, ifc_settings=ifc_settings
         )
+    elif revit_version == 2024:
+        ifc_config = ifc_get_third_party_export_config_by_model_2024(
+            ifc_version=ifc_version, ifc_settings=ifc_settings
+        )
     else:
         # this is a non supported revit version!
         raise ValueError(
@@ -402,6 +410,10 @@ def ifc_get_third_party_export_config_by_view(doc, ifc_version, ifc_settings=Non
         )
     elif revit_version == 2023:
         ifc_config = ifc_get_third_party_export_config_by_view_2023(
+            ifc_version=ifc_version, ifc_settings=ifc_settings
+        )
+    elif revit_version == 2024:
+        ifc_config = ifc_get_third_party_export_config_by_view_2024(
             ifc_version=ifc_version, ifc_settings=ifc_settings
         )
     else:

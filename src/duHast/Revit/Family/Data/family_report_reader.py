@@ -6,6 +6,7 @@ Family report data utility module containing functions to read the data from fil
 
 import os
 from duHast.Utilities.files_csv import read_csv_file
+from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 from duHast.Revit.Family.Data.Objects.family_base_data_storage import (
     FamilyBaseDataStorage,
 )
@@ -40,8 +41,32 @@ DATA_CONVERSION = {
 
 
 def convert_data_rows_to_data_storage(data_rows, target_type):
+    """
+    Convert the data rows into the target type of data storage object.
+
+    :param data_rows: The data rows to be converted into the target type of data storage object.
+    :type data_rows: list
+    :param target_type: The target type of data storage object to convert the data rows into.
+    :type target_type: IFamilyDataStorage
+    :return: A Result object containing the list of IFamilyDataStorage objects if successful.
+    :rtype: Result
+
+    """
+
     return_value = Result()
     try:
+        if not issubclass(target_type, IFamilyDataStorage):
+            raise TypeError(
+                "Invalid target type. Expected IFamilyDataStorage, got {}".format(
+                    type(target_type)
+                )
+            )
+        # check if the data rows is a list
+        if not isinstance(data_rows, list):
+            raise TypeError(
+                "Invalid data rows type. Expected list, got {}".format(type(data_rows))
+            )
+
         # loop over all rows but the first (header row) extracted and set up objects
         for row in data_rows[1:]:
             try:
@@ -63,12 +88,31 @@ def convert_data_rows_to_data_storage(data_rows, target_type):
 
 
 def read_base_data(file_path, data_type):
+    """
+    Read the base data from the file and return a list of IFamilyDataStorage objects.
+
+    :param file_path: The path to the file to read the data from.
+    :type file_path: str
+    :param data_type: The type of data storage the file data is to be converted to.
+    :type data_type: IFamilyDataStorage
+    :return: A Result object containing the list of IFamilyDataStorage objects if successful.
+    :rtype: Result
+
+    """
+
     return_value = Result()
     try:
         # check what was past in
         if not isinstance(file_path, str):
             raise TypeError(
                 "Invalid file path type. Expected str, got {}".format(type(file_path))
+            )
+
+        if not issubclass(data_type, IFamilyDataStorage):
+            raise TypeError(
+                "Invalid data type. Expected IFamilyDataStorage, got {}".format(
+                    type(data_type)
+                )
             )
 
         # Check if the file exists
@@ -334,7 +378,7 @@ def read_data_into_family_containers(path_to_data):
                     ] = container_instance
 
         # add list of containers to return object
-        for key,value in containers_grouped_by_family_data.items():
+        for key, value in containers_grouped_by_family_data.items():
             return_value.result.append(value)
 
     except Exception as e:

@@ -26,9 +26,10 @@ from duHast.Revit.Family.Data.Objects.family_data_container import FamilyDataCon
 
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Utilities.files_io import is_directory, file_exist
+from duHast.Utilities.files_io import file_exist
 from duHast.Utilities.files_get import get_files_single_directory
 from duHast.Utilities.files_csv import read_csv_file
+from duHast.Utilities.directory_io import is_directory
 
 
 DATA_CONVERSION = {

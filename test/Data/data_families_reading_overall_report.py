@@ -58,16 +58,26 @@ class DataReadFamiliesReport(test.Test):
         try:
             
             # 4 test files
-            test_files = [
-                "FamilyBaseDataCombinedReport_empty_file.csv",
-                "FamilyBaseDataCombinedReport_empty.csv",
-                "FamilyBaseDataCombinedReport_multiple.csv",
-                "FamilyBaseDataCombinedReport_single.csv",
-            ]
-            # read overall family data
-            family_base_data_result = read_family_base_data(TEST_REPORT_DIRECTORY)
+            test_files = {
+                "FamilyBaseDataCombinedReport_empty_file.csv":(False,0,[]),
+                "FamilyBaseDataCombinedReport_empty.csv":(False,0,[]),
+                "FamilyBaseDataCombinedReport_multiple.csv":(True,4,[
+                    ["Sample_Family_Eight,Furniture Systems,Sample_Family_Eight,C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa"],
+                    [],
+                    [],
+                    [],
+                ]),
+                "FamilyBaseDataCombinedReport_single.csv":(True,1,[
+                    ["Sample_Family_Eight,Furniture Systems,Sample_Family_Eight,C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa"]
+                ]),
+            }
+
+            for test_file, test_result in test_files.items():
+                # read overall family data
+                family_base_data_result = read_family_base_data(os.path.join(TEST_REPORT_DIRECTORY, test_file))
+                message = message + "\n" + family_base_data_result.message
             flag = False
-            message = family_base_data_result.message
+                
 
             
             

@@ -33,16 +33,15 @@ import sys
 from test.utils import test
 
 from duHast.Revit.Family.Data.family_report_reader import read_family_base_data
-from duHast.Revit.Family.Data.family_base_data_utils import nested_family, read_overall_family_data_list_from_directory
 from duHast.Utilities.files_io import get_directory_path_from_file_path
 
 TEST_REPORT_DIRECTORY = os.path.join(get_directory_path_from_file_path(__file__), "ReadReport_01")
 
-class DataReadFamiliesReport(test.Test):
+class DataReadFamiliesBaseReport(test.Test):
     
     def __init__(self):
         # store document in base class
-        super(DataReadFamiliesReport, self).__init__(test_name="read overall family data report")
+        super(DataReadFamiliesBaseReport, self).__init__(test_name="read overall family data report")
 
 
     def test(self):
@@ -61,14 +60,15 @@ class DataReadFamiliesReport(test.Test):
             test_files = {
                 "FamilyBaseDataCombinedReport_empty_file.csv":(False,0,[]),
                 "FamilyBaseDataCombinedReport_empty.csv":(False,0,[]),
-                "FamilyBaseDataCombinedReport_multiple.csv":(True,4,[
-                    ["Sample_Family_Eight,Furniture Systems,Sample_Family_Eight,C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa"],
-                    [],
-                    [],
-                    [],
+                "FamilyBaseDataCombinedReport_multiple.csv":(True,5,[
+                    ["FamilyBase","Sample_Family_Eight","Furniture Systems","Sample_Family_Eight",r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa"],
+                    ["FamilyBase","Sample_Family_Eight :: Sample_Family_Thirteen","Furniture Systems :: Section Marks","Sample_Family_Thirteen","-"],
+                    ["FamilyBase","Sample_Family_Ten","Generic Annotations","Sample_Family_Ten",r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Generic Annotations\Sample_Family_Ten.rfa"],
+                    ["FamilyBase","Sample_Family_Six","Specialty Equipment","Sample_Family_Six",r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\Sample_Family_Six.rfa"],
+                    ["FamilyBase","Sample_Family_Six :: Sample_Family_Thirteen","Specialty Equipment :: Section Marks","Sample_Family_Thirteen","-"]
                 ]),
                 "FamilyBaseDataCombinedReport_single.csv":(True,1,[
-                    ["Sample_Family_Eight,Furniture Systems,Sample_Family_Eight,C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa"]
+                    ["FamilyBase","Sample_Family_Eight","Furniture Systems","Sample_Family_Eight",r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa"]
                 ]),
             }
 
@@ -76,14 +76,18 @@ class DataReadFamiliesReport(test.Test):
                 # read overall family data
                 family_base_data_result = read_family_base_data(os.path.join(TEST_REPORT_DIRECTORY, test_file))
                 message = message + "\n" + family_base_data_result.message
-            flag = False
-                
 
-            
-            
-            #assert "\n".join(sorted(compare_family_base_root_data))=="\n".join(sorted(expected_result_family_root_data))
-            #assert "\n".join(sorted(compare_family_base_nested_data))=="\n".join(sorted(expected_result_family_nested_data))
-            
+                message = message + "\n" + "...expecting status {} and got {}".format(test_result[0], family_base_data_result.status)
+                assert family_base_data_result.status == test_result[0]
+                message = message + "\n" + "...expecting number of entries {} and got {}".format(test_result[1], len(family_base_data_result.result))
+                assert len(family_base_data_result.result) == test_result[1]
+                
+                # check conversion to storage data was successful
+                if len(family_base_data_result.result) > 0:
+                    for i in range(len(family_base_data_result.result)):
+                        message = message + "\n" + "...expecting data {} in list but no match".format(family_base_data_result.result[i].get_data_values_as_list_of_strings())
+                        assert family_base_data_result.result[i].get_data_values_as_list_of_strings() in test_result[2]
+
         except Exception as e:
             flag = False
             message = (

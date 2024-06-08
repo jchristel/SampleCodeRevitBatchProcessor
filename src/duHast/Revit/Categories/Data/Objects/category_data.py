@@ -36,7 +36,9 @@ from duHast.Revit.Categories.Utility import (
 from duHast.Revit.Categories.Data.Objects.category_data_storage import (
     FamilyCategoryDataStorage,
 )
-from duHast.Revit.Categories.Data.Objects.category_data_storage_used_by import FamilyCategoryDataStorageUsedBy
+from duHast.Revit.Categories.Data.Objects.category_data_storage_used_by import (
+    FamilyCategoryDataStorageUsedBy,
+)
 
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
@@ -133,8 +135,9 @@ class CategoryData(IFamData.IFamilyData):
             )
             used_by_list.append(dummy)
 
-
-
+        # make sure to get a value for the file path which is not empty if the document has not been saved
+        if fam_path == "":
+            fam_path = "-"
 
         dummy = FamilyCategoryDataStorage(
             root_name_path=root,
@@ -142,7 +145,7 @@ class CategoryData(IFamData.IFamilyData):
             family_name=fam_name,
             family_file_path=fam_path,
             use_counter=use_counter,
-            used_by=used_by_list, # assign used by list
+            used_by=used_by_list,  # assign used by list
             category_name=fam_cat_name,
             sub_category_name=sub_cat_name,
             sub_category_id=sub_cat_id,
@@ -220,7 +223,7 @@ class CategoryData(IFamData.IFamilyData):
             element_dic = rElementByCatUtils.get_elements_by_category(doc, subCat)
             # get category property
             cat_props = rCatPropGet.get_category_properties(subCat, doc)
-            
+
             # add element counter for 3D, Cut, Elevation style
             use_counter = 0
             used_by_ids = []
@@ -230,7 +233,7 @@ class CategoryData(IFamData.IFamilyData):
                 # add element ids integer value in 3D, Cut, Elevation style
                 for id in element_dic[key_elements]:
                     used_by_ids.append(id.IntegerValue)
-           
+
             # build data dictionary
             storage = self._create_data(
                 self.root_path,

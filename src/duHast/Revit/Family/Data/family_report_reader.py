@@ -55,6 +55,8 @@ def convert_data_rows_to_data_storage(data_rows, target_type):
     """
 
     return_value = Result()
+    # flag checking whether an exception occurred when converting the data rows
+    an_exception_occurred_counter = 0
     try:
         if not issubclass(target_type, IFamilyDataStorage):
             raise TypeError(
@@ -81,6 +83,14 @@ def convert_data_rows_to_data_storage(data_rows, target_type):
                 return_value.append_message(
                     "Failed to convert data row with exception: {}".format(e)
                 )
+                an_exception_occurred_counter = an_exception_occurred_counter + 1
+        
+        # check if an exception occurred
+        if an_exception_occurred_counter == 0:
+            return_value.update_sep(True, "Successfully converted rows: {} into {}".format(len(data_rows)-1, type(target_type)))
+        else:
+            return_value.update_sep(False, "Failed to convert rows into {}: {} rows failed to convert".format(type(target_type), an_exception_occurred_counter))
+
     except Exception as e:
         return_value.update_sep(
             False, "Failed to convert rows into {}: {}".format(type(target_type), e)

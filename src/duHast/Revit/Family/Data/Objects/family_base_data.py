@@ -62,7 +62,6 @@ class FamilyBaseData(IFamData.IFamilyData):
         )
         # super(CategoryData, self).__init__(rootPath, dataType)
 
-
         if root_category_path != None:
             category_chunks = root_category_path.split(" :: ")
             self.category = category_chunks[-1]
@@ -158,12 +157,17 @@ class FamilyBaseData(IFamData.IFamilyData):
                 session_id,
             )
 
+        # make sure to get a value for the file path which is not empty if the document has not been saved
+        saved_file_name = "-"
+        if doc.PathName != "":
+            saved_file_name = doc.PathName
+
         # build data
         storage = FamilyBaseDataStorage(
             root_name_path=self.root_path,
             root_category_path=self.root_category_path,
             family_name=self._strip_file_extension(doc.Title),
-            family_file_path=doc.PathName,
+            family_file_path=saved_file_name,
         )
 
         self.add_data(storage_instance=storage)

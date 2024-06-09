@@ -193,7 +193,7 @@ def read_family_base_data(file_path):
     return return_value
 
 
-def read_category_base_data(file_path):
+def read_family_category_base_data(file_path):
     """
     Read the family category data from the file and return a list of FamilyCategoryDataStorage objects as part of a result object
 

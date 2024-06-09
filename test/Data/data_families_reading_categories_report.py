@@ -32,7 +32,7 @@ import sys
 
 from test.utils import test
 
-from duHast.Revit.Family.Data.family_report_reader import read_category_base_data
+from duHast.Revit.Family.Data.family_report_reader import read_family_category_base_data
 from duHast.Utilities.files_io import get_directory_path_from_file_path
 
 TEST_REPORT_DIRECTORY = os.path.join(get_directory_path_from_file_path(__file__), "ReadReport_02")
@@ -76,7 +76,7 @@ class DataReadFamiliesCategoriesReport(test.Test):
 
             for test_file, test_result in test_files.items():
                 # read overall family data
-                family_base_data_result = read_category_base_data(os.path.join(TEST_REPORT_DIRECTORY, test_file))
+                family_base_data_result = read_family_category_base_data(os.path.join(TEST_REPORT_DIRECTORY, test_file))
                 message = message + "\n" + family_base_data_result.message
 
                 message = message + "\n" + "...expecting status {} and got {}".format(test_result[0], family_base_data_result.status)

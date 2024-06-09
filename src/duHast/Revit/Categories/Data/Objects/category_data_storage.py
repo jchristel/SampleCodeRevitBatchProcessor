@@ -27,8 +27,13 @@ Class for family base data storage class.
 #
 #
 
+import json
+
 from duHast.Revit.Family.Data.Objects import ifamily_data_storage as IFamDataStorage
-from duHast.Revit.Categories.Data.Objects.category_data_storage_used_by import FamilyCategoryDataStorageUsedBy
+from duHast.Revit.Categories.Data.Objects.category_data_storage_used_by import (
+    FamilyCategoryDataStorageUsedBy,
+)
+
 
 class FamilyCategoryDataStorage(IFamDataStorage.IFamilyDataStorage):
 
@@ -70,6 +75,48 @@ class FamilyCategoryDataStorage(IFamDataStorage.IFamilyDataStorage):
             family_name=family_name,
             family_file_path=family_file_path,
         )
+
+        # check whether used by is a json list as a string
+        if used_by is not None and used_by != "None":
+            # check type of data that came in:
+            # check if string was passed in
+            if isinstance(used_by, str):
+                # a string
+                used_by_json = json.loads(used_by)
+                # if used by was converted into a json object successfully it should now be a list of dictionaries!
+                converted_used_by = []
+                if isinstance(used_by_json, list):
+                    for i in range(len(used_by_json)):
+                        try:
+                            # convert to FamilyCategoryDataStorageUsedBy object
+                            dummy = FamilyCategoryDataStorageUsedBy(j=used_by_json[i])
+                            converted_used_by.append(dummy)
+                        except Exception as e:
+                            raise ValueError(
+                                "Failed to convert string {} to FamilyCategoryDataStorageUsedBy object: {}".format(
+                                    used_by_json[i], e
+                                )
+                            )
+                    # override string with converted data
+                    used_by = converted_used_by
+            # check if a list of family category data storage used by objects was passed in
+            elif isinstance(used_by, list):
+                # check if every list item is of type FamilyCategoryDataStorageUsedBy
+                for i in range(len(used_by)):
+                    if not isinstance(used_by[i], FamilyCategoryDataStorageUsedBy):
+                        raise ValueError(
+                            "used_by list must contain only FamilyCategoryDataStorageUsedBy objects"
+                        )
+            elif isinstance(used_by, FamilyCategoryDataStorageUsedBy):
+                # convert to a list
+                used_by = [used_by]
+            else:
+                raise ValueError(
+                    "used_by argument supplied must be of type string or type FamilyCategoryDataStorageUsedBy or a list of FamilyCategoryDataStorageUsedBy"
+                )
+        else:
+            # default is an empty list
+            used_by = []
 
         # store other args in this class
         self.use_counter = use_counter

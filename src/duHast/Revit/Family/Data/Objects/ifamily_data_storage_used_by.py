@@ -44,6 +44,7 @@ class IFamilyDataStorageUsedBy(base.Base):
         data_type,
         family_name,
         element_id,
+        j,
         **kwargs
     ):
 
@@ -64,5 +65,19 @@ class IFamilyDataStorageUsedBy(base.Base):
         if isinstance(element_id, int):
             self.element_id = element_id
         else:
-            raise ValueError("element_id must be an int")
+            raise ValueError("element_id [{}] must be an int but is {}".format(element_id, type(element_id)))
+        
+        # ini using JSON data
+        if(isinstance(j, dict)):
+            try:
+                self.root_name_path = j.get("root_name_path", self.root_name_path)
+                self.element_id = j.get("element_id", self.element_id)
+                self.data_type = j.get("data_type", self.data_type)
+            except Exception as e:
+                print("Failed to initialise object with JSON data: {}".format(e))
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(
+                        self.data_type, e
+                    )
+                )
         

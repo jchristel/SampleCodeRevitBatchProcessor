@@ -134,3 +134,61 @@ class FamilyCategoryDataStorage(IFamDataStorage.IFamilyDataStorage):
         self.property_line_colour_red_name = property_line_colour_red_name
         self.property_line_colour_green_name = property_line_colour_green_name
         self.property_line_colour_blue_name = property_line_colour_blue
+
+    def __eq__(self, other):
+        """
+        Custom compare is equal override.
+
+        :param other: Another instance of IFamilyDataStorage base class
+        :type other: :class:`.IFamilyDataStorage`
+        :return: True if all properties of compared class instances are equal, otherwise False.
+        :rtype: Bool
+        """
+
+        return isinstance(other, FamilyCategoryDataStorage) and (
+            self.data_type,
+            self.root_name_path,
+            self.root_category_path,
+            self.family_name,
+            self.family_file_path,
+            self.use_counter,
+            self.used_by,
+            self.category_name,
+            self.sub_category_name,
+            self.sub_category_id,
+            self.category_graphics_style_three_d,
+            self.category_graphics_style_cut,
+            self.category_graphics_style_projection,
+            self.property_material_name,
+            self.property_material_id,
+            self.property_line_weight_cut_name,
+            self.property_line_weight_projection_name,
+            self.property_line_colour_red_name,
+            self.property_line_colour_green_name,
+            self.property_line_colour_blue,
+        ) == (
+            other.data_type,
+            other.root_name_path,
+            other.root_category_path,
+            other.family_name,
+            other.family_file_path,
+            other.use_counter,
+            other.used_by,
+            other.category_name,
+            other.sub_category_name,
+            other.sub_category_id,
+            other.category_graphics_style_three_d,
+            other.category_graphics_style_cut,
+            other.category_graphics_style_projection,
+            other.property_material_name,
+            other.property_material_id,
+            other.property_line_weight_cut_name,
+            other.property_line_weight_projection_name,
+            other.property_line_colour_red_name,
+            other.property_line_colour_green_name,
+            other.property_line_colour_blue,
+        )
+    
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)

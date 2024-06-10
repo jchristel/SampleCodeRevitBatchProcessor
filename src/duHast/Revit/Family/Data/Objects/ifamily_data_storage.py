@@ -83,6 +83,35 @@ class IFamilyDataStorage(base.Base):
         else:
             raise ValueError("family_file_path must be a string")
 
+
+    def __eq__(self, other):
+        """
+        Custom compare is equal override.
+
+        :param other: Another instance of IFamilyDataStorage base class
+        :type other: :class:`.IFamilyDataStorage`
+        :return: True if all properties of compared class instances are equal, otherwise False.
+        :rtype: Bool
+        """
+
+        return isinstance(other, IFamilyDataStorage) and (
+            self.data_type,
+            self.root_name_path,
+            self.root_category_path,
+            self.family_name,
+            self.family_file_path,
+        ) == (
+            other.data_type,
+            other.root_name_path,
+            other.root_category_path,
+            other.family_name,
+            other.family_file_path,
+        )
+
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)
+    
     def update_usage(self, other_storage):
         """
         Update the usage of this storage object with the usage of another storage object by:

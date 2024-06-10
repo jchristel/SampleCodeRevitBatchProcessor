@@ -306,6 +306,8 @@ def read_data_into_family_containers(path_to_data):
     :param path_to_data: The path to the directory containing the csv files or fully qualified file path to a single data file.
     :type directory_path: str
 
+    :return: A Result object containing the list of Family Containers objects if successful.
+    :rtype: Result
     """
 
     files = []

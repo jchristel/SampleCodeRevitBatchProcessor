@@ -34,6 +34,8 @@ from test.Data import (
     data_families_culling_nested_families,
     data_families_reading_family_base_report,
     data_families_reading_categories_report,
+    data_families_reading_line_patterns_report,
+    data_families_reading_shared_parameters_report,
     data_families_find_none_nested_root_families,
     data_families_find_host_families_needing_rename,
     data_families_combine_reports,
@@ -55,6 +57,8 @@ def run_tests():
     run_tests = [
         ["Data Read Overall Family Data Report", data_families_reading_family_base_report.DataReadFamiliesBaseReport],
         ["Data Read Families Categories Report", data_families_reading_categories_report.DataReadFamiliesCategoriesReport],
+        ["Data Read Families line patterns Report", data_families_reading_line_patterns_report.DataReadFamiliesLinePatternsReport],
+        ["Data Read Families Shared Parameters Report", data_families_reading_shared_parameters_report.DataReadFamiliesSharedParametersReport],
         #["Data Find None Nested Root families", data_families_find_none_nested_root_families.DataFindNoneNestedRootFamilies],
         #["Data Nested Family culling", data_families_culling_nested_families.DataCullingNestedFamilies],
         #["Data Find Host Families With Families To Rename", data_families_find_host_families_needing_rename.DataFindHostFamiliesWithFamiliesToRename],

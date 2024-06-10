@@ -286,12 +286,17 @@ class LinePatternData(IFamData.IFamilyData):
             # get overall usage data
             pattern_usage_all = pattern_categories_used_by_data + pattern_levels_used_by_data
 
+            # make sure to get a value for the file path which is not empty if the document has not been saved
+            saved_file_name = "-"
+            if doc.PathName != "":
+                saved_file_name = doc.PathName
+
             # build data
             storage = FamilyLinePatternDataStorage(
                 root_name_path=self.root_path,
                 root_category_path=self.root_category_path,
                 family_name=self._strip_file_extension(doc.Title),
-                family_file_path=doc.PathName,
+                family_file_path=saved_file_name,
                 use_counter=pattern_use_counter,
                 used_by=pattern_usage_all,
                 pattern_name=element_name,

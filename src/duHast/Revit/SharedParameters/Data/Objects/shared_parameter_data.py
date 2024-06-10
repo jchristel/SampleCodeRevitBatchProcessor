@@ -74,6 +74,11 @@ class SharedParameterData(IFamData.IFamilyData):
         :return: None
         """
 
+        # make sure to get a value for the file path which is not empty if the document has not been saved
+        saved_file_name = "-"
+        if doc.PathName != "":
+            saved_file_name = doc.PathName
+
         collector = rSharedPara.get_all_shared_parameters(doc)
         for para in collector:
             # just in case parameter name is not unicode
@@ -94,13 +99,13 @@ class SharedParameterData(IFamData.IFamilyData):
                     element_id=para.Id.IntegerValue,
                 )
                 used_by_list.append(used_by_data)
-            
+
             # build data
             storage = FamilySharedParameterDataStorage(
                 root_name_path=self.root_path,
                 root_category_path=self.root_category_path,
                 family_name=self._strip_file_extension(doc.Title),
-                family_file_path=doc.PathName,
+                family_file_path=saved_file_name,
                 parameter_guid=para.GuidValue.ToString(),
                 parameter_name=parameter_name,
                 parameter_id=para.Id.IntegerValue,
@@ -116,7 +121,7 @@ class SharedParameterData(IFamData.IFamilyData):
                 root_name_path=self.root_path,
                 root_category_path=self.root_category_path,
                 family_name=self._strip_file_extension(doc.Title),
-                family_file_path=doc.PathName,
+                family_file_path=saved_file_name,
                 parameter_guid="",
                 parameter_name="No shared parameter present in family.",
                 parameter_id=-1,

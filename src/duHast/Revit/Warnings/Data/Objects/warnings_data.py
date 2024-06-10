@@ -58,6 +58,12 @@ class WarningsData(IFamData.IFamilyData):
         )
 
     def process(self, doc):
+
+        # make sure to get a value for the file path which is not empty if the document has not been saved
+        saved_file_name = "-"
+        if doc.PathName != "":
+            saved_file_name = doc.PathName
+        
         # get all warnings in document
         warnings = rWarn.get_warnings(doc)
         # loop over warnings and extract data
@@ -94,7 +100,7 @@ class WarningsData(IFamData.IFamilyData):
                 root_name_path=self.root_path,
                 root_category_path=self.root_category_path,
                 family_name=self._strip_file_extension(doc.Title),
-                family_file_path=doc.PathName,
+                family_file_path=saved_file_name,
                 warning_text=war_text,
                 warning_guid=war_guid,
                 warning_related_ids=war_element_ids_as_integer,
@@ -110,7 +116,7 @@ class WarningsData(IFamData.IFamilyData):
                 root_name_path=self.root_path,
                 root_category_path=self.root_category_path,
                 family_name=self._strip_file_extension(doc.Title),
-                family_file_path=doc.PathName,
+                family_file_path=saved_file_name,
                 warning_text="No warnings present in family.",
                 warning_guid="",
                 warning_related_ids=[],

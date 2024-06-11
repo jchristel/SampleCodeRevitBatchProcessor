@@ -39,14 +39,7 @@ from duHast.Utilities.Objects import base
 
 
 class IFamilyDataStorageUsedBy(base.Base):
-    def __init__(
-        self,
-        data_type,
-        family_name,
-        element_id,
-        j,
-        **kwargs
-    ):
+    def __init__(self, data_type, family_name, element_id, j, **kwargs):
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
@@ -61,14 +54,18 @@ class IFamilyDataStorageUsedBy(base.Base):
             self.root_name_path = family_name
         else:
             raise ValueError("family_name must be a string")
-        
+
         if isinstance(element_id, int):
             self.element_id = element_id
         else:
-            raise ValueError("element_id [{}] must be an int but is {}".format(element_id, type(element_id)))
-        
+            raise ValueError(
+                "element_id [{}] must be an int but is {}".format(
+                    element_id, type(element_id)
+                )
+            )
+
         # ini using JSON data
-        if(isinstance(j, dict)):
+        if isinstance(j, dict):
             try:
                 self.root_name_path = j.get("root_name_path", self.root_name_path)
                 self.element_id = j.get("element_id", self.element_id)
@@ -76,8 +73,29 @@ class IFamilyDataStorageUsedBy(base.Base):
             except Exception as e:
                 print("Failed to initialise object with JSON data: {}".format(e))
                 raise ValueError(
-                    "Node {} failed to initialise with: {}".format(
-                        self.data_type, e
-                    )
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
-        
+
+    def __eq__(self, other):
+        """
+        Custom compare is equal override.
+
+        :param other: Another instance of IFamilyDataStorageUsedBy base class
+        :type other: :class:`.IFamilyDataStorageUsedBy`
+        :return: True if all properties of compared class instances are equal, otherwise False.
+        :rtype: Bool
+        """
+
+        return isinstance(other, IFamilyDataStorageUsedBy) and (
+            self.data_type,
+            self.root_name_path,
+            self.element_id,
+        ) == (
+            other.data_type,
+            other.root_name_path,
+            other.element_id,
+        )
+
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)

@@ -37,6 +37,7 @@ from test.utils import test
 from duHast.Revit.Family.Data.family_report_reader import (
     read_data_into_family_containers,
 )
+from duHast.Revit.Family.Data.Objects.family_data_container import FamilyDataContainer
 from duHast.Utilities.files_io import get_directory_path_from_file_path
 
 TEST_REPORT_DIRECTORY = os.path.join(
@@ -51,6 +52,35 @@ class DataReadFamiliesIntoContainer(test.Test):
         super(DataReadFamiliesIntoContainer, self).__init__(
             test_name="read family data into container"
         )
+
+    def _single_common_asserts(self, container, test_data):
+        try:
+            assert container.family_name == test_data[0]
+            assert container.family_nesting_path == test_data[1]
+            assert container.family_category == test_data[2]
+            assert container.family_category_nesting_path == test_data[3]
+            assert container.is_root_family == True
+            assert container.family_file_path == test_data[4]
+        except Exception:
+            return False
+        return True
+
+    def single_family_base_01(self, container):
+        if isinstance(container, FamilyDataContainer)==False:
+            raise TypeError("container is of type {} but expect {}".format(type(container), FamilyDataContainer))
+        # container should have one entry
+        test_data = ["FamilyBase","Sample_Family_Eight","Furniture Systems","Sample_Family_Eight",r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa"]
+        
+        # check basics:
+        assert self._single_common_asserts(container=container, test_data=test_data) == True
+        
+        # check specifics
+        # should have one entry on;ly
+        assert len(container.family_base_data_storage) == 1
+        assert len(container.category_data_storage) ==0
+        assert len(container.line_pattern_data_storage)==0
+        assert len(container.shared_parameter_data_storage)==0
+        assert len(container.warnings_data_storage)==0
 
     def test(self):
         """
@@ -67,7 +97,7 @@ class DataReadFamiliesIntoContainer(test.Test):
             # 4 test files
             test_files = {
                 "": (True, 1, []),
-                "FamilyBaseDataCombinedReport_single.csv": (True, 1, []),
+                "FamilyBaseDataCombinedReport_single.csv": (True, 1, [self.single_family_base_01]),
                 "FamilyCategoriesCombinedReport_single.csv": (True, 1, []),
                 "FamilyLinePatternsCombinedReport_single.csv": (True, 1, []),
                 "FamilySharedParametersCombinedReport_single.csv": (True, 1, []),

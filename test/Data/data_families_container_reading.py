@@ -66,20 +66,21 @@ class DataReadFamiliesIntoContainer(test.Test):
 
             # 4 test files
             test_files = {
-                "": (False, 0, []),
-                "FamilyBaseDataCombinedReport_single.csv":(True,1,[]),
-                "FamilyCategoriesCombinedReport_single.csv":(True,1,[]),
-                "FamilyLinePatternsCombinedReport_single":(True,1,[]),
-                "FamilySharedParametersCombinedReport_single.csv":(True,1,[]),
-                "FamilyWarningsCombinedReport_single.csv":(True,1,[]),
-               }
+                "": (True, 1, []),
+                "FamilyBaseDataCombinedReport_single.csv": (True, 1, []),
+                "FamilyCategoriesCombinedReport_single.csv": (True, 1, []),
+                "FamilyLinePatternsCombinedReport_single.csv": (True, 1, []),
+                "FamilySharedParametersCombinedReport_single.csv": (True, 1, []),
+                "FamilyWarningsCombinedReport_single.csv": (True, 1, []),
+            }
 
             for test_file, test_result in test_files.items():
+                message = message + "\n" + "Reading test file: {}".format(test_file)
                 # read overall family data
                 family_base_data_result = read_data_into_family_containers(
                     os.path.join(TEST_REPORT_DIRECTORY, test_file)
                 )
-                message = message + "\n" + family_base_data_result.message
+                message = message + "\n" + "..." + family_base_data_result.message
 
                 message = (
                     message

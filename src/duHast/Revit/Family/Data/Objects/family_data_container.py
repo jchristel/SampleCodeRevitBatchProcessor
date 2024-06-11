@@ -222,28 +222,30 @@ class FamilyDataContainer(base.Base):
         if isinstance(other, FamilyBaseDataStorage) == False:
             raise ValueError("other must be a list of FamilyBaseDataStorage")
 
-        # there is always only going to be one entry in list, pop the existing one if there is one
-        if len(self.family_base_data_storage) > 0:
-            self.family_base_data_storage.pop()
+        # only add if not already in list
+        if other not in self.family_base_data_storage:
+            # there is always only going to be one entry in list, pop the existing one if there is one
+            if len(self.family_base_data_storage) > 0:
+                self.family_base_data_storage.pop()
 
-        # add new one to class property
-        self.family_base_data_storage.append(other)
+            # add new one to class property
+            self.family_base_data_storage.append(other)
 
-        # check if nesting path and category nesting path are different to the current values but not None!
-        # if so wipe the other storage properties to avoid mismatches!
-        if (
-            self.family_nesting_path != other.root_name_path
-            and self.family_nesting_path != None
-            or self.family_category_nesting_path != other.root_category_path
-            and self.family_category_nesting_path != None
-        ):
-            self.category_data_storage = []
-            self.line_pattern_data_storage = []
-            self.shared_parameter_data_storage = []
-            self.warnings_data_storage = []
+            # check if nesting path and category nesting path are different to the current values but not None!
+            # if so wipe the other storage properties to avoid mismatches!
+            if (
+                self.family_nesting_path != other.root_name_path
+                and self.family_nesting_path != None
+                or self.family_category_nesting_path != other.root_category_path
+                and self.family_category_nesting_path != None
+            ):
+                self.category_data_storage = []
+                self.line_pattern_data_storage = []
+                self.shared_parameter_data_storage = []
+                self.warnings_data_storage = []
 
-        # set other class properties based on storage
-        self._update_base_properties_from_storage(other)
+            # set other class properties based on storage
+            self._update_base_properties_from_storage(other)
         
 
     def add_category_data_storage(self, other):
@@ -260,24 +262,26 @@ class FamilyDataContainer(base.Base):
         if isinstance(other, FamilyCategoryDataStorage) == False:
             raise ValueError("other must be a list of FamilyCategoryDataStorage")
 
-        # check if nesting path and category nesting path are different to the current values but not None!
-        # if so  throw error!
-        if (
-            self.family_nesting_path != other.root_name_path
-            and self.family_nesting_path != None
-            or self.family_category_nesting_path != other.root_category_path
-            and self.family_category_nesting_path != None
-        ):
-            raise ValueError(
-                "other root_name_path and root_category_path must match current values"
-            )
-        elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
-            # looks like this might be the only storage class added or 
-            # family base data storage is absent and this is the first storage class added
-            self._update_base_properties_from_storage(other)
+        # only add if not already in list
+        if other not in self.category_data_storage:
+            # check if nesting path and category nesting path are different to the current values but not None!
+            # if so  throw error!
+            if (
+                self.family_nesting_path != other.root_name_path
+                and self.family_nesting_path != None
+                or self.family_category_nesting_path != other.root_category_path
+                and self.family_category_nesting_path != None
+            ):
+                raise ValueError(
+                    "other root_name_path and root_category_path must match current values"
+                )
+            elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
+                # looks like this might be the only storage class added or 
+                # family base data storage is absent and this is the first storage class added
+                self._update_base_properties_from_storage(other)
 
-        # add to class property
-        self.category_data_storage.append(other)
+            # add to class property
+            self.category_data_storage.append(other)
 
     def add_line_pattern_data_storage(self, other):
         """
@@ -293,24 +297,26 @@ class FamilyDataContainer(base.Base):
         if isinstance(other, FamilyLinePatternDataStorage) == False:
             raise ValueError("other must be a list of FamilyLinePatternDataStorage")
 
-        # check if nesting path and category nesting path are different to the current values but not None!
-        # if so throw error!
-        if (
-            self.family_nesting_path != other.root_name_path
-            and self.family_nesting_path != None
-            or self.family_category_nesting_path != other.root_category_path
-            and self.family_category_nesting_path != None
-        ):
-            raise ValueError(
-                "other root_name_path and root_category_path must match current values"
-            )
-        elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
-            # looks like this might be the only storage class added or 
-            # family base data storage is absent and this is the first storage class added
-            self._update_base_properties_from_storage(other)
+        # only add if not already in list
+        if other not in self.line_pattern_data_storage:
+            # check if nesting path and category nesting path are different to the current values but not None!
+            # if so throw error!
+            if (
+                self.family_nesting_path != other.root_name_path
+                and self.family_nesting_path != None
+                or self.family_category_nesting_path != other.root_category_path
+                and self.family_category_nesting_path != None
+            ):
+                raise ValueError(
+                    "other root_name_path and root_category_path must match current values"
+                )
+            elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
+                # looks like this might be the only storage class added or 
+                # family base data storage is absent and this is the first storage class added
+                self._update_base_properties_from_storage(other)
 
-        # add to class property
-        self.line_pattern_data_storage.append(other)
+            # add to class property
+            self.line_pattern_data_storage.append(other)
 
     def add_shared_parameter_data_storage(self, other):
         """
@@ -326,24 +332,26 @@ class FamilyDataContainer(base.Base):
         if isinstance(other, FamilySharedParameterDataStorage) == False:
             raise ValueError("other must be a list of FamilySharedParameterDataStorage")
 
-        # check if nesting path and category nesting path are different to the current values but not None!
-        # if so wipe throw error!
-        if (
-            self.family_nesting_path != other.root_name_path
-            and self.family_nesting_path != None
-            or self.family_category_nesting_path != other.root_category_path
-            and self.family_category_nesting_path != None
-        ):
-            raise ValueError(
-                "other root_name_path and root_category_path must match current values"
-            )
-        elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
-            # looks like this might be the only storage class added or 
-            # family base data storage is absent and this is the first storage class added
-            self._update_base_properties_from_storage(other)
+        # only add if not already in list
+        if other not in self.shared_parameter_data_storage:
+            # check if nesting path and category nesting path are different to the current values but not None!
+            # if so wipe throw error!
+            if (
+                self.family_nesting_path != other.root_name_path
+                and self.family_nesting_path != None
+                or self.family_category_nesting_path != other.root_category_path
+                and self.family_category_nesting_path != None
+            ):
+                raise ValueError(
+                    "other root_name_path and root_category_path must match current values"
+                )
+            elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
+                # looks like this might be the only storage class added or 
+                # family base data storage is absent and this is the first storage class added
+                self._update_base_properties_from_storage(other)
 
-        # add to class property
-        self.shared_parameter_data_storage.append(other)
+            # add to class property
+            self.shared_parameter_data_storage.append(other)
 
     def add_warnings_data_storage(self, other):
         """
@@ -359,24 +367,26 @@ class FamilyDataContainer(base.Base):
         if isinstance(other, FamilyWarningsDataStorage) == False:
             raise ValueError("other must be type of FamilyWarningsDataStorage")
 
-        # check if nesting path and category nesting path are different to the current values but not None!
-        # if so wipe throw error!
-        if (
-            self.family_nesting_path != other.root_name_path
-            and self.family_nesting_path != None
-            or self.family_category_nesting_path != other.root_category_path
-            and self.family_category_nesting_path != None
-        ):
-            raise ValueError(
-                "other root_name_path and root_category_path must match current values"
-            )
-        elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
-            # looks like this might be the only storage class added or 
-            # family base data storage is absent and this is the first storage class added
-            self._update_base_properties_from_storage(other)
+        # only add if not already in list
+        if other not in self.warnings_data_storage:
+            # check if nesting path and category nesting path are different to the current values but not None!
+            # if so wipe throw error!
+            if (
+                self.family_nesting_path != other.root_name_path
+                and self.family_nesting_path != None
+                or self.family_category_nesting_path != other.root_category_path
+                and self.family_category_nesting_path != None
+            ):
+                raise ValueError(
+                    "other root_name_path and root_category_path must match current values"
+                )
+            elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
+                # looks like this might be the only storage class added or 
+                # family base data storage is absent and this is the first storage class added
+                self._update_base_properties_from_storage(other)
 
-        # add to class property
-        self.warnings_data_storage.append(other)
+            # add to class property
+            self.warnings_data_storage.append(other)
 
     def add_data_storage(self,other):
          # check is correct object type

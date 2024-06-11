@@ -139,8 +139,8 @@ class FamilyCategoryDataStorage(IFamDataStorage.IFamilyDataStorage):
         """
         Custom compare is equal override.
 
-        :param other: Another instance of IFamilyDataStorage base class
-        :type other: :class:`.IFamilyDataStorage`
+        :param other: Another instance of FamilyCategoryDataStorage base class
+        :type other: :class:`.FamilyCategoryDataStorage`
         :return: True if all properties of compared class instances are equal, otherwise False.
         :rtype: Bool
         """

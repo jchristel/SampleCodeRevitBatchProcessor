@@ -78,7 +78,9 @@ class FamilySharedParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
                     for i in range(len(used_by_json)):
                         try:
                             # convert to FamilySharedParameterDataStorageUsedBy object
-                            dummy = FamilySharedParameterDataStorageUsedBy(j=used_by_json[i])
+                            dummy = FamilySharedParameterDataStorageUsedBy(
+                                j=used_by_json[i]
+                            )
                             converted_used_by.append(dummy)
                         except Exception as e:
                             raise ValueError(
@@ -92,7 +94,9 @@ class FamilySharedParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
             elif isinstance(used_by, list):
                 # check if every list item is of type FamilySharedParameterDataStorageUsedBy
                 for i in range(len(used_by)):
-                    if not isinstance(used_by[i], FamilySharedParameterDataStorageUsedBy):
+                    if not isinstance(
+                        used_by[i], FamilySharedParameterDataStorageUsedBy
+                    ):
                         raise ValueError(
                             "used_by list must contain only FamilySharedParameterDataStorageUsedBy objects"
                         )
@@ -112,3 +116,41 @@ class FamilySharedParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
         self.parameter_id = parameter_id
         self.use_counter = use_counter
         self.used_by = used_by
+
+    def __eq__(self, other):
+        """
+        Custom compare is equal override.
+
+        :param other: Another instance of FamilySharedParameterDataStorage base class
+        :type other: :class:`.FamilySharedParameterDataStorage`
+        :return: True if all properties of compared class instances are equal, otherwise False.
+        :rtype: Bool
+        """
+
+        return isinstance(other, FamilySharedParameterDataStorage) and (
+            self.data_type,
+            self.root_name_path,
+            self.root_category_path,
+            self.family_name,
+            self.family_file_path,
+            self.parameter_guid,
+            self.parameter_name,
+            self.parameter_id,
+            self.use_counter,
+            self.used_by,
+        ) == (
+            other.data_type,
+            other.root_name_path,
+            other.root_category_path,
+            other.family_name,
+            other.family_file_path,
+            other.parameter_guid,
+            other.parameter_name,
+            other.parameter_id,
+            other.use_counter,
+            other.used_by,
+        )
+
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)

@@ -64,3 +64,39 @@ class FamilyWarningsDataStorage(IFamDataStorage.IFamilyDataStorage):
         self.warning_guid = warning_guid
         self.warning_related_ids = warning_related_ids
         self.warning_other_ids = warning_other_ids
+
+    def __eq__(self, other):
+        """
+        Custom compare is equal override.
+
+        :param other: Another instance of FamilyWarningsDataStorage base class
+        :type other: :class:`.FamilyWarningsDataStorage`
+        :return: True if all properties of compared class instances are equal, otherwise False.
+        :rtype: Bool
+        """
+
+        return isinstance(other, FamilyWarningsDataStorage) and (
+            self.data_type,
+            self.root_name_path,
+            self.root_category_path,
+            self.family_name,
+            self.family_file_path,
+            self.warning_text,
+            self.warning_guid,
+            self.warning_related_ids,
+            self.warning_other_ids,
+        ) == (
+            other.data_type,
+            other.root_name_path,
+            other.root_category_path,
+            other.family_name,
+            other.family_file_path,
+            other.warning_text,
+            other.warning_guid,
+            other.warning_related_ids,
+            other.warning_other_ids,
+        )
+
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)

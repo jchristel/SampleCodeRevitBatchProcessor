@@ -114,3 +114,39 @@ class FamilyLinePatternDataStorage(IFamDataStorage.IFamilyDataStorage):
         self.used_by = used_by
         self.pattern_name = pattern_name
         self.pattern_id = pattern_id
+
+    def __eq__(self, other):
+        """
+        Custom compare is equal override.
+
+        :param other: Another instance of FamilyLinePatternDataStorage base class
+        :type other: :class:`.FamilyLinePatternDataStorage`
+        :return: True if all properties of compared class instances are equal, otherwise False.
+        :rtype: Bool
+        """
+
+        return isinstance(other, FamilyLinePatternDataStorage) and (
+            self.data_type,
+            self.root_name_path,
+            self.root_category_path,
+            self.family_name,
+            self.family_file_path,
+            self.use_counter,
+            self.used_by,
+            self.pattern_name,
+            self.pattern_id,
+        ) == (
+            other.data_type,
+            other.root_name_path,
+            other.root_category_path,
+            other.family_name,
+            other.family_file_path,
+            other.use_counter,
+            other.used_by,
+            other.pattern_name,
+            other.pattern_id,
+        )
+    
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)

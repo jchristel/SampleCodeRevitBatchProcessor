@@ -73,15 +73,15 @@ class FamilyDataContainer(base.Base):
         Family data container class.
 
         Contains all instances of the following storage classes from reports read from files:
-            
+
                 - FamilyBaseDataStorage
                 - CategoryDataStorage
                 - WarningsDataStorage
                 - LinePatternDataStorage
                 - SharedParameterDataStorage
-        
+
         Note: There is the possibility that only one of the storage classes is populated, this is due to the fact that the data is read from separate files and not all data is always present in each file.
-        
+
         :param family_base_data_storage: a list of FamilyBaseDataStorage instances
         :type family_base_data_storage: list
         :param category_data_storage: a list of FamilyCategoryDataStorage instances
@@ -200,12 +200,15 @@ class FamilyDataContainer(base.Base):
         self.family_nesting_path = storage_instance.root_name_path
         self.family_category_nesting_path = storage_instance.root_category_path
 
+        # set the category property based on the last entry in root category path
+        category_chunks = storage_instance.root_category_path.split("::")
+        self.family_category = category_chunks[-1]
+
         # check if this is a root family
         if "::" in storage_instance.root_name_path:
             self.is_root_family = False
         else:
             self.is_root_family = True
-
 
     def add_family_base_data_storage(self, other):
         """
@@ -246,7 +249,6 @@ class FamilyDataContainer(base.Base):
 
             # set other class properties based on storage
             self._update_base_properties_from_storage(other)
-        
 
     def add_category_data_storage(self, other):
         """
@@ -275,8 +277,11 @@ class FamilyDataContainer(base.Base):
                 raise ValueError(
                     "other root_name_path and root_category_path must match current values"
                 )
-            elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
-                # looks like this might be the only storage class added or 
+            elif (
+                self.family_nesting_path == None
+                and self.family_category_nesting_path == None
+            ):
+                # looks like this might be the only storage class added or
                 # family base data storage is absent and this is the first storage class added
                 self._update_base_properties_from_storage(other)
 
@@ -310,8 +315,11 @@ class FamilyDataContainer(base.Base):
                 raise ValueError(
                     "other root_name_path and root_category_path must match current values"
                 )
-            elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
-                # looks like this might be the only storage class added or 
+            elif (
+                self.family_nesting_path == None
+                and self.family_category_nesting_path == None
+            ):
+                # looks like this might be the only storage class added or
                 # family base data storage is absent and this is the first storage class added
                 self._update_base_properties_from_storage(other)
 
@@ -345,8 +353,11 @@ class FamilyDataContainer(base.Base):
                 raise ValueError(
                     "other root_name_path and root_category_path must match current values"
                 )
-            elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
-                # looks like this might be the only storage class added or 
+            elif (
+                self.family_nesting_path == None
+                and self.family_category_nesting_path == None
+            ):
+                # looks like this might be the only storage class added or
                 # family base data storage is absent and this is the first storage class added
                 self._update_base_properties_from_storage(other)
 
@@ -380,18 +391,25 @@ class FamilyDataContainer(base.Base):
                 raise ValueError(
                     "other root_name_path and root_category_path must match current values"
                 )
-            elif(self.family_nesting_path == None and self.family_category_nesting_path == None):
-                # looks like this might be the only storage class added or 
+            elif (
+                self.family_nesting_path == None
+                and self.family_category_nesting_path == None
+            ):
+                # looks like this might be the only storage class added or
                 # family base data storage is absent and this is the first storage class added
                 self._update_base_properties_from_storage(other)
 
             # add to class property
             self.warnings_data_storage.append(other)
 
-    def add_data_storage(self,other):
-         # check is correct object type
+    def add_data_storage(self, other):
+        # check is correct object type
         if isinstance(other, IFamilyDataStorage) == False:
-            raise ValueError("other must be a type of IFamilyDataStorage but is: {}".format(type(other)))
+            raise ValueError(
+                "other must be a type of IFamilyDataStorage but is: {}".format(
+                    type(other)
+                )
+            )
 
         if other.data_type == FamilyBaseDataStorage.data_type:
             self.add_family_base_data_storage(other=other)
@@ -404,6 +422,6 @@ class FamilyDataContainer(base.Base):
         elif other.data_type == FamilyWarningsDataStorage.data_type:
             self.add_warnings_data_storage(other=other)
         else:
-            raise TypeError("Data storage type : {} is not supported.".format(other.data_type))               
-                            
-
+            raise TypeError(
+                "Data storage type : {} is not supported.".format(other.data_type)
+            )

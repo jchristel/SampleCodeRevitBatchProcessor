@@ -61,7 +61,7 @@ def convert_data_rows_to_data_storage(data_rows, target_type):
         if not issubclass(target_type, IFamilyDataStorage):
             raise TypeError(
                 "Invalid target type. Expected IFamilyDataStorage, got {}".format(
-                    type(target_type)
+                    target_type.__name__
                 )
             )
         # check if the data rows is a list
@@ -84,16 +84,26 @@ def convert_data_rows_to_data_storage(data_rows, target_type):
                     "Failed to convert data row with exception: {}".format(e)
                 )
                 an_exception_occurred_counter = an_exception_occurred_counter + 1
-        
+
         # check if an exception occurred
         if an_exception_occurred_counter == 0:
-            return_value.update_sep(True, "Successfully converted rows: {} into {}".format(len(data_rows)-1, type(target_type)))
+            return_value.update_sep(
+                True,
+                "Successfully converted rows: {} into {}".format(
+                    len(data_rows) - 1, target_type.__name__
+                ),
+            )
         else:
-            return_value.update_sep(False, "Failed to convert rows into {}: {} rows failed to convert".format(type(target_type), an_exception_occurred_counter))
+            return_value.update_sep(
+                False,
+                "Failed to convert rows into {}: {} rows failed to convert".format(
+                    target_type.__name__, an_exception_occurred_counter
+                ),
+            )
 
     except Exception as e:
         return_value.update_sep(
-            False, "Failed to convert rows into {}: {}".format(type(target_type), e)
+            False, "Failed to convert rows into {}: {}".format(target_type.__name__, e)
         )
     return return_value
 
@@ -323,7 +333,12 @@ def read_data_into_family_containers(path_to_data):
         # if it is a directory, get all csv files in the directory
         if is_directory(path_to_data):
             # get all csv files in the directory
-            files = get_files_single_directory(path_to_data, file_extension=".csv")
+            files = get_files_single_directory(
+                folder_path=path_to_data,
+                file_prefix="",
+                file_suffix="",
+                file_extension=".csv",
+            )
         else:
             # if it is a file, check if it is a csv file
             if path_to_data.endswith(".csv"):
@@ -347,6 +362,7 @@ def read_data_into_family_containers(path_to_data):
                 return_value.append_message(
                     "Failed to read data file with exception: {}".format(e)
                 )
+        return_value.append_message("Read {} files".format(len( data_read)))
 
         # convert the data rows into storage objects depending on the data type
         # this will end up containing lists of storage objects, one list per file read
@@ -371,6 +387,7 @@ def read_data_into_family_containers(path_to_data):
                     # just append the log message
                     return_value.append_message(data_storage_conversion_result.message)
 
+        return_value.append_message("Converted {} data entries".format(len(data_converted)))
         # group storage containers by family root path and category root path identifying unique families
         containers_grouped_by_family_data = {}
         # loop over all storage lists and assign data to container

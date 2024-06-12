@@ -406,6 +406,12 @@ def read_data_into_family_containers(path_to_data):
                         storage_instance.root_name_path
                         + storage_instance.root_category_path
                     ] = container_instance
+                else:
+                    # add the storage to the existing container
+                    containers_grouped_by_family_data[
+                        storage_instance.root_name_path
+                        + storage_instance.root_category_path
+                    ].add_data_storage(storage_instance)
 
         # add list of containers to return object
         for key, value in containers_grouped_by_family_data.items():

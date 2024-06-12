@@ -250,17 +250,19 @@ class DataReadFamiliesIntoContainer(test.Test):
             )
         # container should have one entry
         test_data = [
-            "FamilyBase",
-            "Sample_Family_Eight",
-            "Furniture Systems",
-            "Sample_Family_Eight",
-            r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+            [
+                "FamilyBase",
+                "Sample_Family_Eight",
+                "Furniture Systems",
+                "Sample_Family_Eight",
+                r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+            ]
         ]
 
         try:
             # check basics:
             check_basics_result = self._single_common_asserts(
-                container=container, test_data=test_data
+                container=container, test_data=test_data[0]
             )
             return_value.update(check_basics_result)
             try:
@@ -283,7 +285,7 @@ class DataReadFamiliesIntoContainer(test.Test):
             # check specifics
             return_value.append_message("...Checking specific properties.")
             # should have one entry only
-            return_value.update(self._number_of_base_entries(container, 1))
+            return_value.update(self._number_of_base_entries(container, len(test_data)))
 
             # check category data
             return_value.update(self._number_of_category_entries(container, 0))
@@ -309,7 +311,7 @@ class DataReadFamiliesIntoContainer(test.Test):
 
     def single_family_category_01(self, container):
         """
-        Test family data container with single category data entry.
+        Test family data container with single family category data entry.
 
         :param container: FamilyDataContainer
         :type container: FamilyDataContainer
@@ -324,7 +326,7 @@ class DataReadFamiliesIntoContainer(test.Test):
                     type(container), FamilyDataContainer
                 )
             )
-        # container should have one entry
+        # container should have two entries
         test_data = (
             [
                 [
@@ -405,7 +407,9 @@ class DataReadFamiliesIntoContainer(test.Test):
             return_value.update(self._number_of_base_entries(container, 0))
 
             # check category data
-            return_value.update(self._number_of_category_entries(container, 2))
+            return_value.update(
+                self._number_of_category_entries(container, len(test_data[0]))
+            )
 
             # check line pattern data
             return_value.update(self._number_of_line_pattern_entries(container, 0))
@@ -415,6 +419,593 @@ class DataReadFamiliesIntoContainer(test.Test):
 
             # check warnings data
             return_value.update(self._number_of_warnings_entries(container, 0))
+
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "...An exception occurred in function {} when testing specific properties: {}".format(
+                    self.test_name, e
+                ),
+            )
+
+        return return_value
+
+    def single_family_line_pattern_01(self, container):
+        """
+        Test family data container with single family line pattern data entry.
+
+        :param container: FamilyDataContainer
+        :type container: FamilyDataContainer
+        :return: True if all tests past, otherwise False
+        :rtype: _bool
+        """
+
+        return_value = Result()
+        if isinstance(container, FamilyDataContainer) == False:
+            raise TypeError(
+                "container is of type {} but expect {}".format(
+                    type(container), FamilyDataContainer
+                )
+            )
+        # container should have five entries
+        test_data = (
+            [
+                [
+                    "LinePattern",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilyLinePatternDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": -2009518,
+                        }
+                    ],
+                    "Hidden 04_BVN",
+                    "1428068",
+                ],
+                [
+                    "LinePattern",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "2",
+                    [
+                        {
+                            "data_type": "FamilyLinePatternDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": -2000530,
+                        },
+                        {
+                            "data_type": "FamilyLinePatternDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight :: Sample_Family_Thirteen",
+                            "element_id": -2000530,
+                        },
+                    ],
+                    "Reference Plane 02_BVN",
+                    "1428069",
+                ],
+                [
+                    "LinePattern",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "2",
+                    [
+                        {
+                            "data_type": "FamilyLinePatternDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": -2000083,
+                        },
+                        {
+                            "data_type": "FamilyLinePatternDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight :: Sample_Family_Thirteen",
+                            "element_id": -2000083,
+                        },
+                    ],
+                    "Dash 06_BVN",
+                    "1436489",
+                ],
+                [
+                    "LinePattern",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilyLinePatternDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 10600768,
+                        }
+                    ],
+                    "Dash dot",
+                    "1499753",
+                ],
+            ],
+        )
+
+        try:
+            # check basics:
+            check_basics_result = self._single_common_asserts(
+                container=container,
+                test_data=test_data[0][0],  # check against first entry
+            )
+            return_value.update(check_basics_result)
+            try:
+                assert check_basics_result.status == True
+                return_value.append_message("...Common properties are as expected.")
+            except Exception as e:
+                return_value.update_sep(
+                    False, "Expected true , got: {}".format(check_basics_result.status)
+                )
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "An exception occurred in function {} when testing base properties: {}".format(
+                    self.test_name, e
+                ),
+            )
+
+        try:
+            # check specifics
+            return_value.append_message("...Checking specific properties.")
+            # should have one entry only
+
+            return_value.update(self._number_of_base_entries(container, 0))
+
+            # check category data
+            return_value.update(self._number_of_category_entries(container, 0))
+
+            # check line pattern data
+            return_value.update(
+                self._number_of_line_pattern_entries(container, len(test_data[0]))
+            )
+
+            # check shared parameter data
+            return_value.update(self._number_of_shared_parameter_entries(container, 0))
+
+            # check warnings data
+            return_value.update(self._number_of_warnings_entries(container, 0))
+
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "...An exception occurred in function {} when testing specific properties: {}".format(
+                    self.test_name, e
+                ),
+            )
+
+        return return_value
+
+    def single_family_shared_parameters_01(self, container):
+        """
+        Test family data container with single family shared parameter data entry.
+
+        :param container: FamilyDataContainer
+        :type container: FamilyDataContainer
+        :return: True if all tests past, otherwise False
+        :rtype: _bool
+        """
+
+        return_value = Result()
+        if isinstance(container, FamilyDataContainer) == False:
+            raise TypeError(
+                "container is of type {} but expect {}".format(
+                    type(container), FamilyDataContainer
+                )
+            )
+        # container should have five entries
+        test_data = (
+            [
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "94e25b89-289e-43d7-bba9-c1c23be396e9",
+                    "Author",
+                    "118408",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 118408,
+                        }
+                    ],
+                ],
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "3091b658-a4ec-4130-98c3-f9e7dfd4c071",
+                    "ItemCode",
+                    "1640398",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 1640398,
+                        }
+                    ],
+                ],
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "81cfdf2f-1f17-4a3e-a245-37a65b7b16a0",
+                    "ItemDescription",
+                    "1640399",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 1640399,
+                        }
+                    ],
+                ],
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "be50f510-c92c-4c52-9dcf-b152201710df",
+                    "ItemGroup",
+                    "1640401",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 1640401,
+                        }
+                    ],
+                ],
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "1d88889c-80d2-4aad-acbe-11076796e986",
+                    "Copyright",
+                    "1642131",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 1642131,
+                        }
+                    ],
+                ],
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "0e397bbd-a378-4824-b08a-3c03423f5545",
+                    "HEIGHT_BVN",
+                    "1642132",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 1642132,
+                        }
+                    ],
+                ],
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "980aef7a-c409-4f02-acb2-895aed435f26",
+                    "DEPTH_BVN",
+                    "1642133",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 1642133,
+                        }
+                    ],
+                ],
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "10fc5a92-3d94-4deb-b74a-23825ebce640",
+                    "WIDTH_BVN",
+                    "1642135",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 1642135,
+                        }
+                    ],
+                ],
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "6a99c82d-821c-4726-8c75-a4e0097f4441",
+                    "DetailedCategory",
+                    "1698538",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 1698538,
+                        }
+                    ],
+                ],
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "a65f6d59-9c87-44bc-866b-5644e8412a3f",
+                    "ModifiedIssue",
+                    "1698539",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 1698539,
+                        }
+                    ],
+                ],
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "bf4c7aa0-8e21-4b5c-922b-204d48970e70",
+                    "Responsibility",
+                    "1698541",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 1698541,
+                        }
+                    ],
+                ],
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "9fb538e8-0a21-47d8-aa80-79ca7db6dccc",
+                    "UniqueID",
+                    "1698542",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 1698542,
+                        }
+                    ],
+                ],
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "6cc0c155-4ff7-44e0-9ed0-2b7e49c17aeb",
+                    "MOUNTING_HEIGHT_TOP_BVN",
+                    "1698543",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 1698543,
+                        }
+                    ],
+                ],
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "f074bc9a-c650-42f4-aeb1-29de0255343f",
+                    "MOUNTING_HEIGHT_US_BVN",
+                    "1698544",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 1698544,
+                        }
+                    ],
+                ],
+                [
+                    "SharedParameter",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "c26b60fc-38e7-410b-97ce-ab7c4c36ea01",
+                    "CEILING_HEIGHT_BVN",
+                    "1721566",
+                    "1",
+                    [
+                        {
+                            "data_type": "FamilySharedParameterDataStorageUsedBy",
+                            "root_name_path": "Sample_Family_Eight",
+                            "element_id": 1721566,
+                        }
+                    ],
+                ],
+            ],
+        )
+
+        try:
+            # check basics:
+            check_basics_result = self._single_common_asserts(
+                container=container,
+                test_data=test_data[0][0],  # check against first entry
+            )
+            return_value.update(check_basics_result)
+            try:
+                assert check_basics_result.status == True
+                return_value.append_message("...Common properties are as expected.")
+            except Exception as e:
+                return_value.update_sep(
+                    False, "Expected true , got: {}".format(check_basics_result.status)
+                )
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "An exception occurred in function {} when testing base properties: {}".format(
+                    self.test_name, e
+                ),
+            )
+
+        try:
+            # check specifics
+            return_value.append_message("...Checking specific properties.")
+            # should have one entry only
+
+            return_value.update(self._number_of_base_entries(container, 0))
+
+            # check category data
+            return_value.update(self._number_of_category_entries(container, 0))
+
+            # check line pattern data
+            return_value.update(self._number_of_line_pattern_entries(container, 0))
+
+            # check shared parameter data
+            return_value.update(
+                self._number_of_shared_parameter_entries(container, len(test_data[0]))
+            )
+
+            # check warnings data
+            return_value.update(self._number_of_warnings_entries(container, 0))
+
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "...An exception occurred in function {} when testing specific properties: {}".format(
+                    self.test_name, e
+                ),
+            )
+
+        return return_value
+
+    def single_family_warnings_01(self, container):
+        """
+        Test family data container with single family warnings data entry.
+
+        :param container: FamilyDataContainer
+        :type container: FamilyDataContainer
+        :return: True if all tests past, otherwise False
+        :rtype: _bool
+        """
+
+        return_value = Result()
+        if isinstance(container, FamilyDataContainer) == False:
+            raise TypeError(
+                "container is of type {} but expect {}".format(
+                    type(container), FamilyDataContainer
+                )
+            )
+        # container should have five entries
+        test_data = (
+            [
+                [
+                    "Warnings",
+                    "Sample_Family_Eight",
+                    "Furniture Systems",
+                    "Sample_Family_Eight",
+                    r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                    "No warnings present in family.",
+                    "",
+                    "None",
+                    "None",
+                ],
+            ],
+        )
+
+        try:
+            # check basics:
+            check_basics_result = self._single_common_asserts(
+                container=container,
+                test_data=test_data[0][0],  # check against first entry
+            )
+            return_value.update(check_basics_result)
+            try:
+                assert check_basics_result.status == True
+                return_value.append_message("...Common properties are as expected.")
+            except Exception as e:
+                return_value.update_sep(
+                    False, "Expected true , got: {}".format(check_basics_result.status)
+                )
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "An exception occurred in function {} when testing base properties: {}".format(
+                    self.test_name, e
+                ),
+            )
+
+        try:
+            # check specifics
+            return_value.append_message("...Checking specific properties.")
+            # should have one entry only
+
+            return_value.update(self._number_of_base_entries(container, 0))
+
+            # check category data
+            return_value.update(self._number_of_category_entries(container, 0))
+
+            # check line pattern data
+            return_value.update(self._number_of_line_pattern_entries(container, 0))
+
+            # check shared parameter data
+            return_value.update(
+                self._number_of_shared_parameter_entries(container, 0)
+            )
+
+            # check warnings data
+            return_value.update(self._number_of_warnings_entries(container, len(test_data[0])))
 
         except Exception as e:
             return_value.update_sep(
@@ -451,9 +1042,17 @@ class DataReadFamiliesIntoContainer(test.Test):
                     1,
                     [self.single_family_category_01],
                 ),
-                # "FamilyLinePatternsCombinedReport_single.csv": (True, 1, []),
-                # "FamilySharedParametersCombinedReport_single.csv": (True, 1, []),
-                # "FamilyWarningsCombinedReport_single.csv": (True, 1, []),
+                "FamilyLinePatternsCombinedReport_single.csv": (
+                    True,
+                    1,
+                    [self.single_family_line_pattern_01],
+                ),
+                "FamilySharedParametersCombinedReport_single.csv": (
+                    True,
+                    1,
+                    [self.single_family_shared_parameters_01],
+                ),
+                "FamilyWarningsCombinedReport_single.csv": (True, 1, []),
             }
 
             for test_file, test_result in test_files.items():

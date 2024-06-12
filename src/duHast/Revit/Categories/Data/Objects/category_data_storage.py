@@ -156,7 +156,7 @@ class FamilyCategoryDataStorage(IFamDataStorage.IFamilyDataStorage):
             self.category_name,
             self.sub_category_name,
             self.sub_category_id,
-            self.category_graphics_style_three_d,
+            self.category_graphics_style_3d,
             self.category_graphics_style_cut,
             self.category_graphics_style_projection,
             self.property_material_name,
@@ -165,7 +165,7 @@ class FamilyCategoryDataStorage(IFamDataStorage.IFamilyDataStorage):
             self.property_line_weight_projection_name,
             self.property_line_colour_red_name,
             self.property_line_colour_green_name,
-            self.property_line_colour_blue,
+            self.property_line_colour_blue_name,
         ) == (
             other.data_type,
             other.root_name_path,
@@ -177,7 +177,7 @@ class FamilyCategoryDataStorage(IFamDataStorage.IFamilyDataStorage):
             other.category_name,
             other.sub_category_name,
             other.sub_category_id,
-            other.category_graphics_style_three_d,
+            other.category_graphics_style_3d,
             other.category_graphics_style_cut,
             other.category_graphics_style_projection,
             other.property_material_name,
@@ -186,7 +186,7 @@ class FamilyCategoryDataStorage(IFamDataStorage.IFamilyDataStorage):
             other.property_line_weight_projection_name,
             other.property_line_colour_red_name,
             other.property_line_colour_green_name,
-            other.property_line_colour_blue,
+            other.property_line_colour_blue_name,
         )
     
     # python 2.7 needs custom implementation of not equal

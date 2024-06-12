@@ -54,72 +54,194 @@ class DataReadFamiliesIntoContainer(test.Test):
             test_name="read family data into container"
         )
 
-    def _single_common_asserts(self, container, test_data):
-        # print("test data", test_data)
-        message = "\n-"
+    def _number_of_base_entries(self, container, expected_number):
+        return_value = Result()
+        return_value.append_message(
+            "Expecting {} family base data entries and got {}".format(
+                expected_number, len(container.family_base_data_storage)
+            )
+        )
         try:
-            message = message + "\n" + "Testing common properties."
-            message = (
-                message
-                + "\n"
-                + "...Expecting family name {} and got {}".format(
+            assert len(container.family_base_data_storage) == expected_number
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "An exception occurred when checking family base data entry length: {}".format(
+                    e
+                ),
+            )
+        return return_value
+
+    def _number_of_category_entries(self, container, expected_number):
+        return_value = Result()
+        return_value.append_message(
+            "Expecting {} category data entries and got {}".format(
+                expected_number, len(container.category_data_storage)
+            )
+        )
+        try:
+            assert len(container.category_data_storage) == expected_number
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "An exception occurred when checking category data entry length: {}".format(
+                    e
+                ),
+            )
+        return return_value
+
+    def _number_of_line_pattern_entries(self, container, expected_number):
+        return_value = Result()
+        return_value.append_message(
+            "Expecting {} line pattern data entries and got {}".format(
+                expected_number, len(container.line_pattern_data_storage)
+            )
+        )
+        try:
+            assert len(container.line_pattern_data_storage) == expected_number
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "An exception occurred when checking line pattern data entry length: {}".format(
+                    e
+                ),
+            )
+        return return_value
+
+    def _number_of_shared_parameter_entries(self, container, expected_number):
+        return_value = Result()
+        return_value.append_message(
+            "Expecting {} shared parameter data entries and got {}".format(
+                expected_number, len(container.shared_parameter_data_storage)
+            )
+        )
+        try:
+            assert len(container.shared_parameter_data_storage) == expected_number
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "An exception occurred when checking shared parameter data entry length: {}".format(
+                    e
+                ),
+            )
+        return return_value
+
+    def _number_of_warnings_entries(self, container, expected_number):
+        return_value = Result()
+        return_value.append_message(
+            "Expecting {} warnings data entries and got {}".format(
+                expected_number, len(container.warnings_data_storage)
+            )
+        )
+        try:
+            assert len(container.warnings_data_storage) == expected_number
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "An exception occurred when checking warnings data entry length: {}".format(
+                    e
+                ),
+            )
+        return return_value
+
+    def _single_common_asserts(self, container, test_data):
+        return_value = Result()
+        # print("test data", test_data)
+
+        try:
+            return_value.append_message("...Testing common properties.")
+
+            # check family name
+            return_value.append_message(
+                "......Expecting family name {} and got {}".format(
                     test_data[3], container.family_name
                 )
             )
-            assert container.family_name == test_data[3]
+            try:
+                assert container.family_name == test_data[3]
+            except Exception as e:
+                return_value.update_sep(
+                    False, "Exception in family name assessment: {}".format(e)
+                )
 
-            message = (
-                message
-                + "\n"
-                + "...Expecting family nesting path {} and got {}".format(
+            # check family nesting path
+            return_value.append_message(
+                "......Expecting family nesting path {} and got {}".format(
                     test_data[1], container.family_nesting_path
                 )
             )
-            assert container.family_nesting_path == test_data[1]
+            try:
+                assert container.family_nesting_path == test_data[1]
+            except Exception as e:
+                return_value.update_sep(
+                    False, "Exception in family nesting path assessment: {}".format(e)
+                )
 
-            message = (
-                message
-                + "\n"
-                + "...Expecting family category nesting path {} and got {}".format(
+            # check family category nesting path
+            return_value.append_message(
+                "......Expecting family category nesting path {} and got {}".format(
                     test_data[2], container.family_category_nesting_path
                 )
             )
-            assert container.family_category == test_data[2]
+            try:
+                assert container.family_category == test_data[2]
+            except Exception as e:
+                return_value.update_sep(
+                    False,
+                    "Exception in family category nesting path assessment: {}".format(
+                        e
+                    ),
+                )
 
-            message = (
-                message
-                + "\n"
-                + "...Expecting is root family {} and got {}".format(
+            # check is root family
+            return_value.append_message(
+                "......Expecting is root family {} and got {}".format(
                     True, container.is_root_family
                 )
             )
-            assert container.is_root_family == True
+            try:
+                assert container.is_root_family == True
+            except Exception as e:
+                return_value.update_sep(
+                    False, "Exception in is root family assessment: {}".format(e)
+                )
 
-            message = (
-                message
-                + "\n"
-                + "...Expecting family file path {} and got {}".format(
+            # check family file path
+            return_value.append_message(
+                "......Expecting family file path {} and got {}".format(
                     test_data[4], container.family_file_path
                 )
             )
-            assert container.family_file_path == test_data[4]
+            try:
+                assert container.family_file_path == test_data[4]
+            except Exception as e:
+                return_value.update_sep(
+                    False, "Exception in family file path assessment: {}".format(e)
+                )
 
+            # check family category
             category_chunks = test_data[2].split("::")
-            message = (
-                message
-                + "\n"
-                + "...Expecting category {} and got {}".format(
+            return_value.append_message(
+                "......Expecting category {} and got {}".format(
                     category_chunks[-1], container.family_category
                 )
             )
-            assert container.family_category == category_chunks[-1]
+            try:
+                assert container.family_category == category_chunks[-1]
+            except Exception as e:
+                return_value.update_sep(
+                    False, "Exception in family category assessment: {}".format(e)
+                )
         except Exception as e:
-            message = message + "\n" + "Exception {}".format(e)
-            return False, message
-        return True, message
+            return_value.update_sep(
+                False, "Exception in basic properties assessment: {}".format(e)
+            )
+
+        return return_value
 
     def single_family_base_01(self, container):
-        message = "\n-"
+        return_value = Result()
+
         if isinstance(container, FamilyDataContainer) == False:
             raise TypeError(
                 "container is of type {} but expect {}".format(
@@ -137,81 +259,65 @@ class DataReadFamiliesIntoContainer(test.Test):
 
         try:
             # check basics:
-            check_basics_result, message_basics = self._single_common_asserts(
+            check_basics_result = self._single_common_asserts(
                 container=container, test_data=test_data
             )
-            message = message + "\n" + message_basics
-            assert check_basics_result == True
-            message = message + "\n" + "Common properties are as expected."
-        except Exception as e:
-            message = (
-                message
-                + "\n"
-                + "An exception occurred in function {} when testing base properties: {}".format(
-                    self.test_name, e
+            return_value.update(check_basics_result)
+            try:
+                assert check_basics_result.status == True
+                return_value.append_message("...Common properties are as expected.")
+            except Exception as e:
+                return_value.update_sep(
+                    False, "Expected true , got: {}".format(check_basics_result.status)
                 )
+
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "An exception occurred in function {} when testing base properties: {}".format(
+                    self.test_name, e
+                ),
             )
 
         try:
             # check specifics
+            return_value.append_message("...Checking specific properties.")
             # should have one entry only
-            message = (
-                message
-                + "\n"
-                + "Expecting 1 family base data entry and got {}".format(
-                    len(container.family_base_data_storage)
-                )
-            )
-            assert len(container.family_base_data_storage) == 1
+            return_value.update(self._number_of_base_entries(container, 1))
 
-            message = (
-                message
-                + "\n"
-                + "Expecting 0 category data entry and got {}".format(
-                    len(container.category_data_storage)
-                )
-            )
-            assert len(container.category_data_storage) == 0
+            # check category data
+            return_value.update(self._number_of_category_entries(container, 0))
 
-            message = (
-                message
-                + "\n"
-                + "Expecting 0 line pattern data entry and got {}".format(
-                    len(container.line_pattern_data_storage)
-                )
-            )
-            assert len(container.line_pattern_data_storage) == 0
+            # check line pattern data
+            return_value.update(self._number_of_line_pattern_entries(container, 0))
 
-            message = (
-                message
-                + "\n"
-                + "Expecting 0 shared parameter data entry and got {}".format(
-                    len(container.shared_parameter_data_storage)
-                )
-            )
-            assert len(container.shared_parameter_data_storage) == 0
+            # check shared parameter data
+            return_value.update(self._number_of_shared_parameter_entries(container, 0))
 
-            message = (
-                message
-                + "\n"
-                + "Expecting 0 warnings data entry and got {}".format(
-                    len(container.warnings_data_storage)
-                )
-            )
-            assert len(container.warnings_data_storage) == 0
+            # check warnings data
+            return_value.update(self._number_of_warnings_entries(container, 0))
+
         except Exception as e:
-            message = (
-                message
-                + "\n"
-                + "An exception occurred in function {} when testing specific properties: {}".format(
+            return_value.update_sep(
+                False,
+                "An exception occurred in function {} when testing specific properties: {}".format(
                     self.test_name, e
-                )
+                ),
             )
-            return False, message
-        return True, message
+
+        return return_value
 
     def single_family_category_01(self, container):
-        message = "\n-"
+        """
+        Test family data container with single category data entry.
+
+        :param container: FamilyDataContainer
+        :type container: FamilyDataContainer
+        :return: True if all tests past, otherwise False
+        :rtype: _bool
+        """
+
+        return_value = Result()
         if isinstance(container, FamilyDataContainer) == False:
             raise TypeError(
                 "container is of type {} but expect {}".format(
@@ -276,80 +382,49 @@ class DataReadFamiliesIntoContainer(test.Test):
 
         try:
             # check basics:
-            print("test data 0", test_data[0][0])
-            check_basics_result, message_basics = self._single_common_asserts(
+            check_basics_result = self._single_common_asserts(
                 container=container,
                 test_data=test_data[0][0],  # check against first entry
             )
-            message = message + "\n" + message_basics
-            assert check_basics_result == True
-            message = message + "\n" + "Common properties are as expected."
+            return_value.update(check_basics_result)
+            assert check_basics_result.status == True
+            return_value.append_message("...Common properties are as expected.")
         except Exception as e:
-            message = (
-                message
-                + "\n"
-                + "An exception occurred in function {} when testing base properties: {}".format(
+            return_value.update_sep(
+                False,
+                "An exception occurred in function {} when testing base properties: {}".format(
                     self.test_name, e
-                )
+                ),
             )
 
         try:
             # check specifics
+            return_value.append_message("...Checking specific properties.")
             # should have one entry only
-            message = (
-                message
-                + "\n"
-                + "Expecting 0 family base data entry and got {}".format(
-                    len(container.family_base_data_storage)
-                )
-            )
-            assert len(container.family_base_data_storage) == 0
 
-            message = (
-                message
-                + "\n"
-                + "Expecting 2 category data entry and got {}".format(
-                    len(container.category_data_storage)
-                )
-            )
-            assert len(container.category_data_storage) == 2
+            return_value.update(self._number_of_base_entries(container, 0))
 
-            message = (
-                message
-                + "\n"
-                + "Expecting 0 line pattern data entry and got {}".format(
-                    len(container.line_pattern_data_storage)
-                )
-            )
-            assert len(container.line_pattern_data_storage) == 0
+            # check category data
+            return_value.update(self._number_of_category_entries(container, 2))
 
-            message = (
-                message
-                + "\n"
-                + "Expecting 0 shared parameter data entry and got {}".format(
-                    len(container.shared_parameter_data_storage)
-                )
-            )
-            assert len(container.shared_parameter_data_storage) == 0
+            # check line pattern data
+            return_value.update(self._number_of_line_pattern_entries(container, 0))
 
-            message = (
-                message
-                + "\n"
-                + "Expecting 0 warnings data entry and got {}".format(
-                    len(container.warnings_data_storage)
-                )
-            )
-            assert len(container.warnings_data_storage) == 0
+            # check shared parameter data
+            return_value.update(self._number_of_shared_parameter_entries(container, 0))
+
+            # check warnings data
+            return_value.update(self._number_of_warnings_entries(container, 0))
+
         except Exception as e:
-            message = (
-                message
-                + "\n"
-                + "An exception occurred in function {} when testing specific properties: {}".format(
+            return_value.update_sep(
+                False,
+                "...An exception occurred in function {} when testing specific properties: {}".format(
                     self.test_name, e
-                )
+                ),
             )
-            return False, message
-        return True, message
+
+        return return_value
 
     def test(self):
         """
@@ -360,18 +435,17 @@ class DataReadFamiliesIntoContainer(test.Test):
         """
 
         return_value = Result()
-        flag = True
         message = "\n-"
         try:
 
             # 4 test files
             test_files = {
-                # "": (True, 1, []),
-                # "FamilyBaseDataCombinedReport_single.csv": (
-                #    True,
-                #    1,
-                #    [self.single_family_base_01],
-                # ),
+                "": (True, 1, []),
+                "FamilyBaseDataCombinedReport_single.csv": (
+                    True,
+                    1,
+                    [self.single_family_base_01],
+                ),
                 "FamilyCategoriesCombinedReport_single.csv": (
                     True,
                     1,
@@ -383,29 +457,21 @@ class DataReadFamiliesIntoContainer(test.Test):
             }
 
             for test_file, test_result in test_files.items():
-                print("[[test_file items]]", len(test_files.items()))
                 return_value.append_message(
                     "\n" + "Reading test file: [{}]".format(test_file)
                 )
-                print("[[test_file]]", test_file)
                 try:
                     # read overall family data
                     family_base_data_result = read_data_into_family_containers(
                         os.path.join(TEST_REPORT_DIRECTORY, test_file)
                     )
-                    print(
-                        "[[read result containers]]",
-                        len(family_base_data_result.result),
-                    )
-                    # print("[[read result]]", family_base_data_result)
                     return_value.append_message("..." + family_base_data_result.message)
                 except Exception as e:
-                    print("[[exception in reader]]", e)
-                    flag = False
-                    return_value.append_message(
+                    return_value.update_sep(
+                        False,
                         "An exception occurred when reading test file {} {}".format(
                             test_file, e
-                        )
+                        ),
                     )
                     continue
 
@@ -414,41 +480,33 @@ class DataReadFamiliesIntoContainer(test.Test):
                         test_result[0], family_base_data_result.status
                     )
                 )
-                print("[[status]]", family_base_data_result.status)
                 assert family_base_data_result.status == test_result[0]
                 return_value.append_message(
-                    "...expecting number of entries: {} and got: {}".format(
+                    "...expecting number of containers: {} and got: {}".format(
                         test_result[1], len(family_base_data_result.result)
                     )
                 )
-                # print("[[entries]]", len(family_base_data_result.result))
                 assert len(family_base_data_result.result) == test_result[1]
 
                 # run specific tests
-                print("[[specific tests]]", test_result[2])
                 if len(test_result[2]) > 0:
                     test_counter = 0
                     for test_function in test_result[2]:
                         test_counter += 1
-                        print("[[test function]]", test_counter, "\n")
                         return_value.append_message(
-                            "Running specific tests. {} of {} for {}".format(
+                            "Running specific tests. \n...{} of {} for {}".format(
                                 test_counter, len(test_result[2]), test_file
                             )
                         )
                         container_counter = 0
                         for container in family_base_data_result.result:
                             container_counter += 1
-                            print("[[container]]", container_counter, "\n")
-                            test_result, message = test_function(container)
-                            if test_result == False:
-                                flag = False
-                                return_value.append_message(
-                                    "An exception occurred in function {} : {}".format(
-                                        self.test_name, message
-                                    )
-                                )
-                            else:
+                            return_value.append_message(
+                                "...[[container counter]] {}".format(container_counter)
+                            )
+                            test_result = test_function(container)
+                            return_value.update(test_result)
+                            if test_result.status:
                                 return_value.append_message(
                                     "Specific tests passed for [{}].".format(test_file)
                                 )
@@ -458,10 +516,8 @@ class DataReadFamiliesIntoContainer(test.Test):
                     )
             # flag = False
         except Exception as e:
-            flag = False
-            return_value.append_message(
-                    "An exception occurred in function {} : {}".format(
-                        self.test_name, e
-                    )
-                )
-        return flag, return_value.message
+            return_value.update_sep(
+                False,
+                "An exception occurred in function {} : {}".format(self.test_name, e),
+            )
+        return return_value.status, return_value.message

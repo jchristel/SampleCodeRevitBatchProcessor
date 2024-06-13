@@ -126,8 +126,14 @@ def _setup_config_from_settings_2024(ifc_export_config, ifc_settings):
     """
 
     ifc_third_party_folder_path_enums_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2024\Revit.IFC.Common.dll"
+    # new in Revit 2024
+    ifc_export_links_enum_path = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2024\Revit.IFC.Export.dll"
+    
     clr.AddReferenceToFileAndPath(ifc_third_party_folder_path_enums_)
+    clr.AddReferenceToFileAndPath(ifc_export_links_enum_path)
     from Revit.IFC.Common.Enums import SiteTransformBasis
+    # from Revit 2024
+    from Revit.IFC.Export.Utility import LinkedFileExportAs
 
     ifc_export_config.Name = ifc_settings.name
     # set up IFC version
@@ -156,7 +162,13 @@ def _setup_config_from_settings_2024(ifc_export_config, ifc_settings):
 
     ifc_export_config.SpaceBoundaries = ifc_settings.space_boundaries
     ifc_export_config.ActivePhaseId = ifc_settings.active_phase_id
-    ifc_export_config.ActiveViewId = ifc_settings.active_view_id
+
+    # revit 2024 ifc wants an element id for the active view
+    view_id = ifc_settings.active_view_id
+    if isinstance(ifc_settings.active_view_id, int):
+        view_id = rdb.ElementId(ifc_settings.active_view_id)
+    ifc_export_config.ActiveViewId = view_id
+
     ifc_export_config.ExportBaseQuantities = ifc_settings.export_base_quantities
     ifc_export_config.SplitWallsAndColumns = ifc_settings.split_walls_and_columns
     ifc_export_config.VisibleElementsOfCurrentView = (
@@ -185,7 +197,20 @@ def _setup_config_from_settings_2024(ifc_export_config, ifc_settings):
     ifc_export_config.ExportUserDefinedPsetsFileName = (
         ifc_settings.export_user_defined_psets_file_name
     )
-    ifc_export_config.ExportLinkedFiles = ifc_settings.export_linked_files
+
+    # new in Revit 2024, appears to drive how linked files are exported...can be one big file!
+    # enum options are:
+    #   - DontExport,
+    #   - ExportAsSeparate,
+    #   - ExportSameProject,
+    #   - ExportSameSite
+
+    export_linked_files = LinkedFileExportAs.DontExport
+    if(ifc_settings.export_linked_files):
+        export_linked_files = LinkedFileExportAs.ExportAsSeparate
+
+    ifc_export_config.ExportLinkedFiles = export_linked_files
+
     ifc_export_config.IncludeSiteElevation = ifc_settings.include_site_elevation
     ifc_export_config.UseActiveViewGeometry = ifc_settings.use_active_view_geometry
     ifc_export_config.ExportSpecificSchedules = ifc_settings.export_specific_schedules
@@ -244,6 +269,11 @@ def _setup_config_default_values_2024(ifc_export_config, ifc_version, export_by_
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     """
 
+    # new in Revit 2024
+    ifc_export_links_enum_path = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2024.bundle\Contents\2024\Revit.IFC.Export.dll"
+    clr.AddReferenceToFileAndPath(ifc_export_links_enum_path)
+    from Revit.IFC.Export.Utility import LinkedFileExportAs
+
     ifc_export_config.Name = "DefaultIFCByModelSetup"
 
     # set up IFC version
@@ -268,7 +298,17 @@ def _setup_config_default_values_2024(ifc_export_config, ifc_version, export_by_
     ifc_export_config.ExportSchedulesAsPsets = False
     ifc_export_config.ExportUserDefinedPsets = False
     ifc_export_config.ExportUserDefinedPsetsFileName = ""
-    ifc_export_config.ExportLinkedFiles = False
+
+    # new in Revit 2024, appears to drive how linked files are exported...can be one big file!
+    # enum options are:
+    #   - DontExport,
+    #   - ExportAsSeparate,
+    #   - ExportSameProject,
+    #   - ExportSameSite
+
+    export_linked_files = LinkedFileExportAs.DontExport
+    ifc_export_config.ExportLinkedFiles = export_linked_files
+
     ifc_export_config.IncludeSiteElevation = True
     ifc_export_config.UseActiveViewGeometry = False  # by model
     ifc_export_config.ExportSpecificSchedules = False

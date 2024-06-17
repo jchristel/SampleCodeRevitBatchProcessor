@@ -345,7 +345,6 @@ class DataReadFamiliesIntoContainers(test.Test):
         # container should be amongst these entries
         test_data = DATA.TEST_DATA_FAMILY_CATEGORIES[0]
 
-        print("test data", test_data)
         # get comparison string from container.
         if len(container.category_data_storage) == 0:
             raise ValueError(
@@ -427,50 +426,60 @@ class DataReadFamiliesIntoContainers(test.Test):
         """
 
         return_value = Result()
+
         if isinstance(container, FamilyDataContainer) == False:
             raise TypeError(
                 "container is of type {} but expect {}".format(
                     type(container), FamilyDataContainer
                 )
             )
-        # container should have five entries
-        # the test data list can contain dummy (empty) lists, since I am only test base properties and number of entries from the first entry
-        test_data = (
-            [
-                DATA.TEST_DATA_FAMILY_LINE_PATTERNS[0][0],
-                [],
-                [],
-                [],
-            ],
-        )
+        # container should be amongst these entries
+        test_data = DATA.TEST_DATA_FAMILY_LINE_PATTERNS[0]
 
-        try:
-            # check basics:
-            check_basics_result = self._multiple_common_asserts(
-                container=container,
-                test_data=test_data[0][0],  # check against first entry
-            )
-            return_value.update(check_basics_result)
-            try:
-                assert check_basics_result.status == True
-                return_value.append_message("...Common properties are as expected.")
-            except Exception as e:
-                return_value.update_sep(
-                    False, "Expected true , got: {}".format(check_basics_result.status)
+        # get comparison string from container.
+        if len(container.line_pattern_data_storage) == 0:
+            raise ValueError(
+                "wrong number of line pattern data storage in container: [{}]".format(
+                    len(container.line_pattern_data_storage)
                 )
-        except Exception as e:
+            )
+
+        # check if comparison string is in test data
+        comp_row = container.line_pattern_data_storage[
+            0
+        ].get_data_values_as_list_of_strings()
+
+        # just get the first few entries
+        comp_row_string = "".join(comp_row[:4])
+
+        # check if comparison string is in test data
+        # and count the rows that match
+        found_match = False
+        # row counter is later on used to check number of storage entries
+        row_counter = 0
+        for row in test_data:
+            # just get the first few entries
+            row_string = "".join(row[:4])
+            if row_string == comp_row_string:
+                row_counter += 1
+                found_match = True
+
+        if found_match:
+            return_value.append_message("Found match for container")
+        else:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {} when testing base properties: {}".format(
-                    self.test_name, e
+                "Container {} {} has no match in test data.".format(
+                    container.family_nesting_path,
+                    container.family_category_nesting_path,
                 ),
             )
 
+        #  check other container properties
         try:
             # check specifics
             return_value.append_message("...Checking specific properties.")
             # should have one entry only
-
             return_value.update(self._number_of_base_entries(container, 0))
 
             # check category data
@@ -478,7 +487,7 @@ class DataReadFamiliesIntoContainers(test.Test):
 
             # check line pattern data
             return_value.update(
-                self._number_of_line_pattern_entries(container, len(test_data[0]))
+                self._number_of_line_pattern_entries(container, row_counter)
             )
 
             # check shared parameter data
@@ -508,73 +517,72 @@ class DataReadFamiliesIntoContainers(test.Test):
         """
 
         return_value = Result()
+
         if isinstance(container, FamilyDataContainer) == False:
             raise TypeError(
                 "container is of type {} but expect {}".format(
                     type(container), FamilyDataContainer
                 )
             )
-        # container should have five entries
-        # the test data list can contain dummy (empty) lists, since I am only test base properties and number of entries from the first entry
-        test_data = (
-            [
-                DATA.TEST_DATA_SHARED_PARAMETERS[0][0],
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-            ],
-        )
+        # container should be amongst these entries
+        test_data = DATA.TEST_DATA_FAMILY_SHARED_PARAMETERS[0]
 
-        try:
-            # check basics:
-            check_basics_result = self._multiple_common_asserts(
-                container=container,
-                test_data=test_data[0][0],  # check against first entry
-            )
-            return_value.update(check_basics_result)
-            try:
-                assert check_basics_result.status == True
-                return_value.append_message("...Common properties are as expected.")
-            except Exception as e:
-                return_value.update_sep(
-                    False, "Expected true , got: {}".format(check_basics_result.status)
+        # get comparison string from container.
+        if len(container.shared_parameter_data_storage) == 0:
+            raise ValueError(
+                "wrong number of line pattern data storage in container: [{}]".format(
+                    len(container.shared_parameter_data_storage)
                 )
-        except Exception as e:
+            )
+
+        # check if comparison string is in test data
+        comp_row = container.shared_parameter_data_storage[
+            0
+        ].get_data_values_as_list_of_strings()
+
+        # just get the first few entries
+        comp_row_string = "".join(comp_row[:4])
+
+        # check if comparison string is in test data
+        # and count the rows that match
+        found_match = False
+        # row counter is later on used to check number of storage entries
+        row_counter = 0
+        for row in test_data:
+            # just get the first few entries
+            row_string = "".join(row[:4])
+            if row_string == comp_row_string:
+                row_counter += 1
+                found_match = True
+
+        if found_match:
+            return_value.append_message("Found match for container")
+        else:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {} when testing base properties: {}".format(
-                    self.test_name, e
+                "Container {} {} has no match in test data.".format(
+                    container.family_nesting_path,
+                    container.family_category_nesting_path,
                 ),
             )
 
+        #  check other container properties
         try:
             # check specifics
             return_value.append_message("...Checking specific properties.")
             # should have one entry only
-
             return_value.update(self._number_of_base_entries(container, 0))
 
             # check category data
             return_value.update(self._number_of_category_entries(container, 0))
 
             # check line pattern data
-            return_value.update(self._number_of_line_pattern_entries(container, 0))
+            return_value.update(
+                self._number_of_line_pattern_entries(container, 0)
+            )
 
             # check shared parameter data
-            return_value.update(
-                self._number_of_shared_parameter_entries(container, len(test_data[0]))
-            )
+            return_value.update(self._number_of_shared_parameter_entries(container, row_counter))
 
             # check warnings data
             return_value.update(self._number_of_warnings_entries(container, 0))
@@ -600,47 +608,55 @@ class DataReadFamiliesIntoContainers(test.Test):
         """
 
         return_value = Result()
+
         if isinstance(container, FamilyDataContainer) == False:
             raise TypeError(
                 "container is of type {} but expect {}".format(
                     type(container), FamilyDataContainer
                 )
             )
-        # container should have five entries
-        # the test data list can contain dummy (empty) lists, since I am only test base properties and number of entries from the first entry
-        test_data = (
-            [
-                DATA.TEST_DATA_FAMILY_WARNINGS[0][0],
-            ],
-        )
+        # container should be amongst these entries
+        test_data = DATA.TEST_DATA_FAMILY_WARNINGS
 
-        try:
-            # check basics:
-            check_basics_result = self._multiple_common_asserts(
-                container=container,
-                test_data=test_data[0][0],  # check against first entry
-            )
-            return_value.update(check_basics_result)
-            try:
-                assert check_basics_result.status == True
-                return_value.append_message("...Common properties are as expected.")
-            except Exception as e:
-                return_value.update_sep(
-                    False, "Expected true , got: {}".format(check_basics_result.status)
+        # get comparison string from container.
+        if len(container.warnings_data_storage) == 0:
+            raise ValueError(
+                "wrong number of base data storage in container: [{}]".format(
+                    len(container.warnings_data_storage)
                 )
-        except Exception as e:
+            )
+
+        # check if comparison string is in test data
+        comp_string = container.warnings_data_storage[
+            0
+        ].get_data_values_as_list_of_strings()
+
+        # check if comparison string is in test data
+        # and count the rows that match
+        found_match = False
+        # row counter is later on used to check number of storage entries
+        row_counter = 0
+        for row in test_data:
+            if "".join(row) == "".join(comp_string):
+                row_counter += 1
+                found_match = True
+
+        if found_match:
+            return_value.append_message("Found match for container")
+        else:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {} when testing base properties: {}".format(
-                    self.test_name, e
+                "Container {} {} has no match in test data.".format(
+                    container.family_nesting_path,
+                    container.family_category_nesting_path,
                 ),
             )
 
+        #  check other container properties
         try:
             # check specifics
             return_value.append_message("...Checking specific properties.")
             # should have one entry only
-
             return_value.update(self._number_of_base_entries(container, 0))
 
             # check category data
@@ -653,9 +669,95 @@ class DataReadFamiliesIntoContainers(test.Test):
             return_value.update(self._number_of_shared_parameter_entries(container, 0))
 
             # check warnings data
-            return_value.update(
-                self._number_of_warnings_entries(container, len(test_data[0]))
+            return_value.update(self._number_of_warnings_entries(container, row_counter))
+
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "...An exception occurred in function {} when testing specific properties: {}".format(
+                    self.test_name, e
+                ),
             )
+
+        return return_value
+    
+    def multiple_family_all_01(self, container):
+        """
+        Test family data container with multiple data entries for all properties.
+
+        :param container: FamilyDataContainer
+        :type container: FamilyDataContainer
+        :return: True if all tests past, otherwise False
+        :rtype: _bool
+        """
+
+        return_value = Result()
+
+        if isinstance(container, FamilyDataContainer) == False:
+            raise TypeError(
+                "container is of type {} but expect {}".format(
+                    type(container), FamilyDataContainer
+                )
+            )
+        # container should be amongst these entries
+        test_data_warnings = DATA.TEST_DATA_FAMILY_WARNINGS
+        test_data_shared_parameters = DATA.TEST_DATA_FAMILY_SHARED_PARAMETERS[0]
+        test_data_line_patterns = DATA.TEST_DATA_FAMILY_LINE_PATTERNS[0]
+        test_data_categories = DATA.TEST_DATA_FAMILY_CATEGORIES[0]
+        test_data_base = DATA.TEST_DATA_FAMILY_BASE
+
+        # get comparison string from container.
+        if len(container.warnings_data_storage) == 0:
+            raise ValueError(
+                "wrong number of base data storage in container: [{}]".format(
+                    len(container.warnings_data_storage)
+                )
+            )
+
+        # check if comparison string is in test data
+        comp_string = container.warnings_data_storage[
+            0
+        ].get_data_values_as_list_of_strings()
+
+        # check if comparison string is in test data
+        # and count the rows that match
+        found_match = False
+        # row counter is later on used to check number of storage entries
+        row_counter = 0
+        for row in test_data:
+            if "".join(row) == "".join(comp_string):
+                row_counter += 1
+                found_match = True
+
+        if found_match:
+            return_value.append_message("Found match for container")
+        else:
+            return_value.update_sep(
+                False,
+                "Container {} {} has no match in test data.".format(
+                    container.family_nesting_path,
+                    container.family_category_nesting_path,
+                ),
+            )
+
+        #  check other container properties
+        try:
+            # check specifics
+            return_value.append_message("...Checking specific properties.")
+            # should have one entry only
+            return_value.update(self._number_of_base_entries(container, 0))
+
+            # check category data
+            return_value.update(self._number_of_category_entries(container, 0))
+
+            # check line pattern data
+            return_value.update(self._number_of_line_pattern_entries(container, 0))
+
+            # check shared parameter data
+            return_value.update(self._number_of_shared_parameter_entries(container, 0))
+
+            # check warnings data
+            return_value.update(self._number_of_warnings_entries(container, row_counter))
 
         except Exception as e:
             return_value.update_sep(
@@ -770,14 +872,16 @@ class DataReadFamiliesIntoContainers(test.Test):
                 "FamilyLinePatternsCombinedReport_multiple.csv": (
                     True,
                     4,
-                    [],
+                    [self.multiple_family_line_pattern_01],
                 ),
                 "FamilySharedParametersCombinedReport_multiple.csv": (
                     True,
                     4,
-                    [],
+                    [self.multiple_family_shared_parameters_01],
                 ),
-                "FamilyWarningsCombinedReport_multiple.csv": (True, 5, []),
+                "FamilyWarningsCombinedReport_multiple.csv": (True, 5, [
+                    self.multiple_family_warnings_01
+                ]),
             }
 
             # run tests

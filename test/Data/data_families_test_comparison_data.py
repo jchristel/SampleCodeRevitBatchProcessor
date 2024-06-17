@@ -617,7 +617,7 @@ TEST_DATA_FAMILY_LINE_PATTERNS = (
 )
 
 # family shared parameters
-TEST_DATA_SHARED_PARAMETERS = (
+TEST_DATA_FAMILY_SHARED_PARAMETERS = (
     [
         [
             "SharedParameter",

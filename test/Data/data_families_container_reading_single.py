@@ -492,7 +492,7 @@ class DataReadFamiliesIntoContainer(test.Test):
         # the test data list can contain dummy (empty) lists, since I am only test base properties and number of entries from the first entry
         test_data = (
             [
-                DATA.TEST_DATA_SHARED_PARAMETERS[0][0],
+                DATA.TEST_DATA_FAMILY_SHARED_PARAMETERS[0][0],
                 [],
                 [],
                 [],

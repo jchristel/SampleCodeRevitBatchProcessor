@@ -45,6 +45,14 @@ TEST_REPORT_DIRECTORY_SINGLE = os.path.join(
     get_directory_path_from_file_path(__file__), "ReadContainer_01"
 )
 
+# required to import a module from the same directory
+TEST_DIR = os.path.join(
+    get_directory_path_from_file_path(__file__)
+)
+sys.path += [
+    TEST_DIR,
+]
+
 import data_families_test_comparison_data as DATA
 
 
@@ -53,7 +61,7 @@ class DataReadFamiliesIntoContainer(test.Test):
     def __init__(self):
         # store document in base class
         super(DataReadFamiliesIntoContainer, self).__init__(
-            test_name="read family data into container"
+            test_name="read single family data into container"
         )
 
     def _number_of_base_entries(self, container, expected_number):
@@ -250,15 +258,18 @@ class DataReadFamiliesIntoContainer(test.Test):
                     type(container), FamilyDataContainer
                 )
             )
+    
         # container should have one entry
-        test_data = [
-            DATA.TEST_DATA_FAMILY_BASE[0][0],
-        ]
+        test_data = (
+            [
+                DATA.TEST_DATA_FAMILY_BASE[0],
+            ],
+        )
 
         try:
             # check basics:
             check_basics_result = self._single_common_asserts(
-                container=container, test_data=test_data[0]
+                container=container, test_data=test_data[0][0]
             )
             return_value.update(check_basics_result)
             try:
@@ -573,7 +584,7 @@ class DataReadFamiliesIntoContainer(test.Test):
         # the test data list can contain dummy (empty) lists, since I am only test base properties and number of entries from the first entry
         test_data = (
             [
-                DATA.TEST_DATA_FAMILY_WARNINGS[0][0],
+                DATA.TEST_DATA_FAMILY_WARNINGS[0],
             ],
         )
 
@@ -694,7 +705,8 @@ class DataReadFamiliesIntoContainer(test.Test):
                 return_value.append_message(
                     "No specific tests to run for [{}].".format(test_file)
                 )
-
+        return return_value
+    
     def test(self):
         """
         Reads family data reports into container.
@@ -730,7 +742,7 @@ class DataReadFamiliesIntoContainer(test.Test):
                     1,
                     [self.single_family_shared_parameters_01],
                 ),
-                "FamilyWarningsCombinedReport_single.csv": (True, 1, []),
+                "FamilyWarningsCombinedReport_single.csv": (True, 1, [self.single_family_warnings_01]),
             }
 
             # run tests

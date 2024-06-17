@@ -46,6 +46,13 @@ TEST_REPORT_DIRECTORY_MULTIPLE = os.path.join(
     get_directory_path_from_file_path(__file__), "ReadContainer_02"
 )
 
+# required to import a module from the same directory
+TEST_DIR = os.path.join(get_directory_path_from_file_path(__file__))
+sys.path += [
+    TEST_DIR,
+]
+
+# test data
 import data_families_test_comparison_data as DATA
 
 
@@ -54,7 +61,7 @@ class DataReadFamiliesIntoContainers(test.Test):
     def __init__(self):
         # store document in base class
         super(DataReadFamiliesIntoContainers, self).__init__(
-            test_name="read family data into multiple container instances"
+            test_name="read multiple family data into multiple container instances"
         )
 
     def _number_of_base_entries(self, container, expected_number):
@@ -251,38 +258,49 @@ class DataReadFamiliesIntoContainers(test.Test):
                     type(container), FamilyDataContainer
                 )
             )
-        # container should have one entry
-        test_data = [
-            DATA.TEST_DATA_FAMILY_BASE[0][0],
-        ]
+        # container should be amongst these entries
+        test_data = DATA.TEST_DATA_FAMILY_BASE
 
-        try:
-            # check basics:
-            check_basics_result = self._multiple_common_asserts(
-                container=container, test_data=test_data[0]
-            )
-            return_value.update(check_basics_result)
-            try:
-                assert check_basics_result.status == True
-                return_value.append_message("...Common properties are as expected.")
-            except Exception as e:
-                return_value.update_sep(
-                    False, "Expected true , got: {}".format(check_basics_result.status)
+        # get comparison string from container.
+        if len(container.family_base_data_storage) != 1:
+            raise ValueError(
+                "wrong number of base data storage in container: [{}]".format(
+                    len(container.family_base_data_storage)
                 )
+            )
 
-        except Exception as e:
+        # check if comparison string is in test data
+        comp_string = container.family_base_data_storage[
+            0
+        ].get_data_values_as_list_of_strings()
+
+        # check if comparison string is in test data
+        # and count the rows that match
+        found_match = False
+        # row counter is later on used to check number of storage entries
+        row_counter = 0
+        for row in test_data:
+            if "".join(row) == "".join(comp_string):
+                row_counter += 1
+                found_match = True
+
+        if found_match:
+            return_value.append_message("Found match for container")
+        else:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {} when testing base properties: {}".format(
-                    self.test_name, e
+                "Container {} {} has no match in test data.".format(
+                    container.family_nesting_path,
+                    container.family_category_nesting_path,
                 ),
             )
 
+        #  check other container properties
         try:
             # check specifics
             return_value.append_message("...Checking specific properties.")
             # should have one entry only
-            return_value.update(self._number_of_base_entries(container, len(test_data)))
+            return_value.update(self._number_of_base_entries(container, row_counter))
 
             # check category data
             return_value.update(self._number_of_category_entries(container, 0))
@@ -299,7 +317,7 @@ class DataReadFamiliesIntoContainers(test.Test):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {} when testing specific properties: {}".format(
+                "...An exception occurred in function {} when testing specific properties: {}".format(
                     self.test_name, e
                 ),
             )
@@ -317,48 +335,66 @@ class DataReadFamiliesIntoContainers(test.Test):
         """
 
         return_value = Result()
+
         if isinstance(container, FamilyDataContainer) == False:
             raise TypeError(
                 "container is of type {} but expect {}".format(
                     type(container), FamilyDataContainer
                 )
             )
-        # container should have two entries
-        # the test data list can contain dummy (empty) lists, since I am only test base properties and number of entries from the first entry
-        test_data = (
-            [
-                DATA.TEST_DATA_FAMILY_CATEGORIES[0][0],
-                [],
-            ],
-        )
+        # container should be amongst these entries
+        test_data = DATA.TEST_DATA_FAMILY_CATEGORIES[0]
 
-        try:
-            # check basics:
-            check_basics_result = self._multiple_common_asserts(
-                container=container,
-                test_data=test_data[0][0],  # check against first entry
+        print("test data", test_data)
+        # get comparison string from container.
+        if len(container.category_data_storage) == 0:
+            raise ValueError(
+                "wrong number of category data storage in container: [{}]".format(
+                    len(container.category_data_storage)
+                )
             )
-            return_value.update(check_basics_result)
-            assert check_basics_result.status == True
-            return_value.append_message("...Common properties are as expected.")
-        except Exception as e:
+
+        # check if comparison string is in test data
+        comp_row = container.category_data_storage[
+            0
+        ].get_data_values_as_list_of_strings()
+
+        # just get the first few entries
+        comp_row_string = "".join(comp_row[:4])
+
+        # check if comparison string is in test data
+        # and count the rows that match
+        found_match = False
+        # row counter is later on used to check number of storage entries
+        row_counter = 0
+        for row in test_data:
+            # just get the first few entries
+            row_string = "".join(row[:4])
+            if row_string == comp_row_string:
+                row_counter += 1
+                found_match = True
+
+        if found_match:
+            return_value.append_message("Found match for container")
+        else:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {} when testing base properties: {}".format(
-                    self.test_name, e
+                "Container {} {} has no match in test data.".format(
+                    container.family_nesting_path,
+                    container.family_category_nesting_path,
                 ),
             )
 
+        #  check other container properties
         try:
             # check specifics
             return_value.append_message("...Checking specific properties.")
             # should have one entry only
-
             return_value.update(self._number_of_base_entries(container, 0))
 
             # check category data
             return_value.update(
-                self._number_of_category_entries(container, len(test_data[0]))
+                self._number_of_category_entries(container, row_counter)
             )
 
             # check line pattern data
@@ -631,138 +667,80 @@ class DataReadFamiliesIntoContainers(test.Test):
 
         return return_value
 
-    def multiple_family_base_01(self, container):
-        return_value = Result()
-
-        if isinstance(container, FamilyDataContainer) == False:
-            raise TypeError(
-                "container is of type {} but expect {}".format(
-                    type(container), FamilyDataContainer
-                )
-            )
-        # container should be amongst these entries
-        test_data = DATA.TEST_DATA_FAMILY_BASE
-
-        # get comparison string from container.
-        if len(container.family_base_data_storage) != 1:
-            raise ValueError(
-                "wrong number of base data storage in container: [{}]".format(
-                    len(container.family_base_data_storage)
-                )
-            )
-
-        comp_string = container.family_base_data_storage[
-            0
-        ].get_data_values_as_list_of_strings()
-
-        # check if comparison string is in test data
-        if comp_string in test_data[0]:
-            return_value.append_message("Found match for container")
-        else:
-            return_value.update_sep(
-                False,
-                "Container {} {} has no match in test data.".format(
-                    container.family_nesting_path,
-                    container.family_category_nesting_path,
-                ),
-            )
-
-        #  check other container properties
-        try:
-            # check specifics
-            return_value.append_message("...Checking specific properties.")
-            # should have one entry only
-            return_value.update(self._number_of_base_entries(container, 1))
-
-            # check category data
-            return_value.update(self._number_of_category_entries(container, 0))
-
-            # check line pattern data
-            return_value.update(self._number_of_line_pattern_entries(container, 0))
-
-            # check shared parameter data
-            return_value.update(self._number_of_shared_parameter_entries(container, 0))
-
-            # check warnings data
-            return_value.update(self._number_of_warnings_entries(container, 0))
-
-        except Exception as e:
-            return_value.update_sep(
-                False,
-                "...An exception occurred in function {} when testing specific properties: {}".format(
-                    self.test_name, e
-                ),
-            )
-
-        return return_value
-
     def _run_tests(self, test_data, test_files_directory):
         """
         actual test runner
         """
         return_value = Result()
         # test reports
-        for test_file, test_result in test_data.items():
-            return_value.append_message(
-                "\n" + "Reading test file: [{}]".format(test_file)
-            )
-            try:
-                # read overall family data
-                family_base_data_result = read_data_into_family_containers(
-                    os.path.join(test_files_directory, test_file)
-                )
-                return_value.append_message("..." + family_base_data_result.message)
-            except Exception as e:
-                return_value.update_sep(
-                    False,
-                    "An exception occurred when reading test file {} {}".format(
-                        test_file, e
-                    ),
-                )
-                continue
-
-            # processing status
-            return_value.append_message(
-                "...expecting status: {} and got: {}".format(
-                    test_result[0], family_base_data_result.status
-                )
-            )
-            assert family_base_data_result.status == test_result[0]
-
-            # number of container instances
-            return_value.append_message(
-                "...expecting number of containers: {} and got: {}".format(
-                    test_result[1], len(family_base_data_result.result)
-                )
-            )
-            assert len(family_base_data_result.result) == test_result[1]
-
-            # run specific tests
-            if len(test_result[2]) > 0:
-                test_counter = 0
-                for test_function in test_result[2]:
-                    test_counter += 1
-                    return_value.append_message(
-                        "Running specific tests. \n...{} of {} for {}".format(
-                            test_counter, len(test_result[2]), test_file
-                        )
-                    )
-                    container_counter = 0
-                    for container in family_base_data_result.result:
-                        container_counter += 1
-                        return_value.append_message(
-                            "...[[container counter]] {}".format(container_counter)
-                        )
-                        test_result = test_function(container)
-                        return_value.update(test_result)
-                        if test_result.status:
-                            return_value.append_message(
-                                "Specific tests passed for [{}].".format(test_file)
-                            )
-            else:
+        try:
+            for test_file, test_result in test_data.items():
                 return_value.append_message(
-                    "No specific tests to run for [{}].".format(test_file)
+                    "\n" + "Reading test file: [{}]".format(test_file)
                 )
+                try:
+                    # read overall family data
+                    family_base_data_result = read_data_into_family_containers(
+                        os.path.join(test_files_directory, test_file)
+                    )
+                    return_value.append_message("..." + family_base_data_result.message)
+                except Exception as e:
+                    return_value.update_sep(
+                        False,
+                        "An exception occurred when reading test file {} {}".format(
+                            test_file, e
+                        ),
+                    )
+                    continue
+
+                # processing status
+                return_value.append_message(
+                    "...expecting status: {} and got: {}".format(
+                        test_result[0], family_base_data_result.status
+                    )
+                )
+                assert family_base_data_result.status == test_result[0]
+
+                # number of container instances
+                return_value.append_message(
+                    "...expecting number of containers: {} and got: {}".format(
+                        test_result[1], len(family_base_data_result.result)
+                    )
+                )
+                assert len(family_base_data_result.result) == test_result[1]
+
+                # run specific tests
+                if len(test_result[2]) > 0:
+                    test_counter = 0
+                    for test_function in test_result[2]:
+                        test_counter += 1
+                        return_value.append_message(
+                            "Running specific tests. \n...{} of {} for {}".format(
+                                test_counter, len(test_result[2]), test_file
+                            )
+                        )
+                        container_counter = 0
+                        for container in family_base_data_result.result:
+                            container_counter += 1
+                            return_value.append_message(
+                                "...[[container counter]] {}".format(container_counter)
+                            )
+                            test_result = test_function(container)
+                            return_value.update(test_result)
+                            if test_result.status:
+                                return_value.append_message(
+                                    "Specific tests passed for [{}].".format(test_file)
+                                )
+                else:
+                    return_value.append_message(
+                        "No specific tests to run for [{}].".format(test_file)
+                    )
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "An exception occurred in function run tests : {}".format(e),
+            )
+        return return_value
 
     def test(self):
         """
@@ -778,7 +756,7 @@ class DataReadFamiliesIntoContainers(test.Test):
             # test multiple families per report
             # 4 test files
             test_files_multiple = {
-                "": (True, 1, []),
+                "": (True, 5, []),
                 "FamilyBaseDataCombinedReport_multiple.csv": (
                     True,
                     5,
@@ -787,7 +765,7 @@ class DataReadFamiliesIntoContainers(test.Test):
                 "FamilyCategoriesCombinedReport_multiple.csv": (
                     True,
                     3,
-                    [],
+                    [self.multiple_family_category_01],
                 ),
                 "FamilyLinePatternsCombinedReport_multiple.csv": (
                     True,

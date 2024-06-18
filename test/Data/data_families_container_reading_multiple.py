@@ -41,6 +41,21 @@ from duHast.Revit.Family.Data.family_report_reader import (
 from duHast.Revit.Family.Data.Objects.family_data_container import FamilyDataContainer
 from duHast.Utilities.files_io import get_directory_path_from_file_path
 
+from duHast.Revit.Family.Data.Objects.family_base_data_storage import (
+    FamilyBaseDataStorage,
+)
+from duHast.Revit.Categories.Data.Objects.category_data_storage import (
+    FamilyCategoryDataStorage,
+)
+from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage import (
+    FamilyLinePatternDataStorage,
+)
+from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage import (
+    FamilySharedParameterDataStorage,
+)
+from duHast.Revit.Warnings.Data.Objects.warnings_data_storage import (
+    FamilyWarningsDataStorage,
+)
 
 TEST_REPORT_DIRECTORY_MULTIPLE = os.path.join(
     get_directory_path_from_file_path(__file__), "ReadContainer_02"
@@ -259,7 +274,7 @@ class DataReadFamiliesIntoContainers(test.Test):
                 )
             )
         # container should be amongst these entries
-        test_data = DATA.TEST_DATA_FAMILY_BASE
+        test_data = DATA.TEST_DATA_FAMILY_BASE[0]
 
         # get comparison string from container.
         if len(container.family_base_data_storage) != 1:
@@ -577,12 +592,12 @@ class DataReadFamiliesIntoContainers(test.Test):
             return_value.update(self._number_of_category_entries(container, 0))
 
             # check line pattern data
-            return_value.update(
-                self._number_of_line_pattern_entries(container, 0)
-            )
+            return_value.update(self._number_of_line_pattern_entries(container, 0))
 
             # check shared parameter data
-            return_value.update(self._number_of_shared_parameter_entries(container, row_counter))
+            return_value.update(
+                self._number_of_shared_parameter_entries(container, row_counter)
+            )
 
             # check warnings data
             return_value.update(self._number_of_warnings_entries(container, 0))
@@ -616,7 +631,7 @@ class DataReadFamiliesIntoContainers(test.Test):
                 )
             )
         # container should be amongst these entries
-        test_data = DATA.TEST_DATA_FAMILY_WARNINGS
+        test_data = DATA.TEST_DATA_FAMILY_WARNINGS[0]
 
         # get comparison string from container.
         if len(container.warnings_data_storage) == 0:
@@ -669,7 +684,9 @@ class DataReadFamiliesIntoContainers(test.Test):
             return_value.update(self._number_of_shared_parameter_entries(container, 0))
 
             # check warnings data
-            return_value.update(self._number_of_warnings_entries(container, row_counter))
+            return_value.update(
+                self._number_of_warnings_entries(container, row_counter)
+            )
 
         except Exception as e:
             return_value.update_sep(
@@ -680,7 +697,7 @@ class DataReadFamiliesIntoContainers(test.Test):
             )
 
         return return_value
-    
+
     def multiple_family_all_01(self, container):
         """
         Test family data container with multiple data entries for all properties.
@@ -699,73 +716,202 @@ class DataReadFamiliesIntoContainers(test.Test):
                     type(container), FamilyDataContainer
                 )
             )
-        # container should be amongst these entries
-        test_data_warnings = DATA.TEST_DATA_FAMILY_WARNINGS
-        test_data_shared_parameters = DATA.TEST_DATA_FAMILY_SHARED_PARAMETERS[0]
-        test_data_line_patterns = DATA.TEST_DATA_FAMILY_LINE_PATTERNS[0]
-        test_data_categories = DATA.TEST_DATA_FAMILY_CATEGORIES[0]
-        test_data_base = DATA.TEST_DATA_FAMILY_BASE
 
-        # get comparison string from container.
-        if len(container.warnings_data_storage) == 0:
+        # get all the test data as a dictionary
+        data_dict = DATA.build_data_dict_all()
+
+        # get the container key
+        container_key = container.family_nesting_path
+        if container_key not in data_dict:
             raise ValueError(
-                "wrong number of base data storage in container: [{}]".format(
-                    len(container.warnings_data_storage)
+                "Container key {} not found in test data.".format(container_key)
+            )
+
+        # get all the test data as a dictionary for this container
+        test_data_container = data_dict[container_key]
+
+        # check base data
+        if FamilyBaseDataStorage.data_type in test_data_container:
+            test_data_base = test_data_container[FamilyBaseDataStorage.data_type]
+            try:
+                assert len(container.family_base_data_storage) == len(test_data_base)
+
+                return_value.append_message(
+                    "Expecting {} family base data entries and got {}".format(
+                        len(test_data_base),
+                        len(container.family_base_data_storage),
+                    )
                 )
-            )
-
-        # check if comparison string is in test data
-        comp_string = container.warnings_data_storage[
-            0
-        ].get_data_values_as_list_of_strings()
-
-        # check if comparison string is in test data
-        # and count the rows that match
-        found_match = False
-        # row counter is later on used to check number of storage entries
-        row_counter = 0
-        for row in test_data:
-            if "".join(row) == "".join(comp_string):
-                row_counter += 1
-                found_match = True
-
-        if found_match:
-            return_value.append_message("Found match for container")
+            except Exception as e:
+                return_value.update_sep(
+                    False,
+                    "An exception occurred when checking base data entry length: {}. Expecting {} family base data entries and got {}".format(
+                        e,
+                        len(test_data_base),
+                        len(container.family_base_data_storage),
+                    ),
+                ),
         else:
-            return_value.update_sep(
-                False,
-                "Container {} {} has no match in test data.".format(
-                    container.family_nesting_path,
-                    container.family_category_nesting_path,
-                ),
-            )
+            try:
+                assert len(container.family_base_data_storage) == 0
+                return_value.append_message(
+                    "Expecting 0 family base data entries and got {}".format(
+                        len(container.family_base_data_storage)
+                    )
+                )
+            except Exception as e:
+                return_value.update_sep(
+                    False,
+                    "An exception occurred when checking base data entry length: {}. Expecting 0 family base data entries and got {}".format(
+                        e, len(container.family_base_data_storage)
+                    ),
+                )
 
-        #  check other container properties
-        try:
-            # check specifics
-            return_value.append_message("...Checking specific properties.")
-            # should have one entry only
-            return_value.update(self._number_of_base_entries(container, 0))
+        # check category data
+        if FamilyCategoryDataStorage.data_type in test_data_container:
+            test_data_categories = test_data_container[
+                FamilyCategoryDataStorage.data_type
+            ]
+            try:
+                assert len(container.category_data_storage) == len(test_data_categories)
+                return_value.append_message(
+                    "Expecting {} category data entries and got {}".format(
+                        len(test_data_categories), len(container.category_data_storage)
+                    )
+                )
+            except Exception as e:
+                return_value.update_sep(
+                    False,
+                    "An exception occurred when checking category data entry length: {}".format(
+                        e
+                    ),
+                )
+        else:
+            try:
+                assert len(container.category_data_storage) == 0
+                return_value.append_message(
+                    "Expecting 0 category data entries and got {}".format(
+                        len(container.category_data_storage)
+                    )
+                )
+            except Exception as e:
+                return_value.update_sep(
+                    False,
+                    "An exception occurred when checking category data entry length: {}".format(
+                        e
+                    ),
+                )
 
-            # check category data
-            return_value.update(self._number_of_category_entries(container, 0))
+        # check line pattern data
+        if FamilyLinePatternDataStorage.data_type in test_data_container:
+            test_data_line_patterns = test_data_container[
+                FamilyLinePatternDataStorage.data_type
+            ]
+            try:
+                assert len(container.line_pattern_data_storage) == len(
+                    test_data_line_patterns
+                )
+                return_value.append_message(
+                    "Expecting {} line pattern data entries and got {}".format(
+                        len(test_data_line_patterns),
+                        len(container.line_pattern_data_storage),
+                    )
+                )
+            except Exception as e:
+                return_value.update_sep(
+                    False,
+                    "An exception occurred when checking line pattern data entry length: {}".format(
+                        e
+                    ),
+                )
+        else:
+            try:
+                assert len(container.line_pattern_data_storage) == 0
+                return_value.append_message(
+                    "Expecting 0 line pattern data entries and got {}".format(
+                        len(container.line_pattern_data_storage)
+                    )
+                )
+            except Exception as e:
+                return_value.update_sep(
+                    False,
+                    "An exception occurred when checking line pattern data entry length: {}".format(
+                        e
+                    ),
+                )
 
-            # check line pattern data
-            return_value.update(self._number_of_line_pattern_entries(container, 0))
+        # check shared parameter data
+        if FamilySharedParameterDataStorage.data_type in test_data_container:
+            test_data_shared_parameters = test_data_container[
+                FamilySharedParameterDataStorage.data_type
+            ]
+            try:
+                assert len(container.shared_parameter_data_storage) == len(
+                    test_data_shared_parameters
+                )
+                return_value.append_message(
+                    "Expecting {} shared parameter data entries and got {}".format(
+                        len(test_data_shared_parameters),
+                        len(container.shared_parameter_data_storage),
+                    )
+                )
+            except Exception as e:
+                return_value.update_sep(
+                    False,
+                    "An exception occurred when checking shared parameter data entry length: {}".format(
+                        e
+                    ),
+                )
+        else:
+            try:
+                assert len(container.shared_parameter_data_storage) == 0
+                return_value.append_message(
+                    "Expecting 0 shared parameter data entries and got {}".format(
+                        len(container.shared_parameter_data_storage)
+                    )
+                )
+            except Exception as e:
+                return_value.update_sep(
+                    False,
+                    "An exception occurred when checking shared parameter data entry length: {}".format(
+                        e
+                    ),
+                )
 
-            # check shared parameter data
-            return_value.update(self._number_of_shared_parameter_entries(container, 0))
-
-            # check warnings data
-            return_value.update(self._number_of_warnings_entries(container, row_counter))
-
-        except Exception as e:
-            return_value.update_sep(
-                False,
-                "...An exception occurred in function {} when testing specific properties: {}".format(
-                    self.test_name, e
-                ),
-            )
+        # check warnings data
+        if FamilyWarningsDataStorage.data_type in test_data_container:
+            test_data_warnings = test_data_container[
+                FamilyWarningsDataStorage.data_type
+            ]
+            try:
+                assert len(container.warnings_data_storage) == len(test_data_warnings)
+                return_value.append_message(
+                    "Expecting {} warnings data entries and got {}".format(
+                        len(test_data_warnings), len(container.warnings_data_storage)
+                    )
+                )
+            except Exception as e:
+                return_value.update_sep(
+                    False,
+                    "An exception occurred when checking warnings data entry length: {}".format(
+                        e
+                    ),
+                )
+        else:
+            try:
+                assert len(container.warnings_data_storage) == 0
+                return_value.append_message(
+                    "Expecting 0 warnings data entries and got {}".format(
+                        len(container.warnings_data_storage)
+                    )
+                )
+            except Exception as e:
+                return_value.update_sep(
+                    False,
+                    "An exception occurred when checking warnings data entry length: {}".format(
+                        e
+                    ),
+                )
 
         return return_value
 
@@ -858,7 +1004,7 @@ class DataReadFamiliesIntoContainers(test.Test):
             # test multiple families per report
             # 4 test files
             test_files_multiple = {
-                "": (True, 5, []),
+                "": (True, 5, [self.multiple_family_all_01]),
                 "FamilyBaseDataCombinedReport_multiple.csv": (
                     True,
                     5,
@@ -879,9 +1025,11 @@ class DataReadFamiliesIntoContainers(test.Test):
                     4,
                     [self.multiple_family_shared_parameters_01],
                 ),
-                "FamilyWarningsCombinedReport_multiple.csv": (True, 5, [
-                    self.multiple_family_warnings_01
-                ]),
+                "FamilyWarningsCombinedReport_multiple.csv": (
+                    True,
+                    5,
+                    [self.multiple_family_warnings_01],
+                ),
             }
 
             # run tests
@@ -892,6 +1040,7 @@ class DataReadFamiliesIntoContainers(test.Test):
 
             return_value.update(test_result_multiple)
 
+            return_value.status = False
         except Exception as e:
             return_value.update_sep(
                 False,

@@ -262,7 +262,7 @@ class DataReadFamiliesIntoContainer(test.Test):
         # container should have one entry
         test_data = (
             [
-                DATA.TEST_DATA_FAMILY_BASE[0],
+                DATA.TEST_DATA_FAMILY_BASE[0][0],
             ],
         )
 
@@ -584,7 +584,7 @@ class DataReadFamiliesIntoContainer(test.Test):
         # the test data list can contain dummy (empty) lists, since I am only test base properties and number of entries from the first entry
         test_data = (
             [
-                DATA.TEST_DATA_FAMILY_WARNINGS[0],
+                DATA.TEST_DATA_FAMILY_WARNINGS[0][0],
             ],
         )
 

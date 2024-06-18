@@ -249,6 +249,12 @@ class FamilyDataContainer(base.Base):
 
             # set other class properties based on storage
             self._update_base_properties_from_storage(other)
+        else:
+            raise ValueError(
+                "Base storage is not unique: family nesting path: {} category nesting path: {}".format(
+                    other.root_name_path, other.root_category_path
+                )
+            )
 
     def add_category_data_storage(self, other):
         """
@@ -285,8 +291,37 @@ class FamilyDataContainer(base.Base):
                 # family base data storage is absent and this is the first storage class added
                 self._update_base_properties_from_storage(other)
 
-            # add to class property
-            self.category_data_storage.append(other)
+            # add to class property only if unique (unique is if category name, sub category name and sub category id are unique)
+            if len(self.category_data_storage) == 0:
+                # add to class property
+                self.category_data_storage.append(other)
+            else:
+                found_match = False
+                for entry in self.category_data_storage:
+                    if (
+                        entry.category_name == other.category_name
+                        and entry.sub_category_name == other.sub_category_name
+                        and entry.sub_category_id == other.sub_category_id
+                    ):
+                        found_match = True
+                        break
+                if not found_match:
+                    # add to class property
+                    self.category_data_storage.append(other)
+                else:
+                    raise ValueError(
+                        "Category storage is not unique: category: {} sub category: {} id: {}".format(
+                            other.category_name,
+                            other.sub_category_name,
+                            other.sub_category_id,
+                        )
+                    )
+        else:
+            raise ValueError(
+                "Category storage is not unique: category: {} sub category: {} id: {}".format(
+                    other.category_name, other.sub_category_name, other.sub_category_id
+                )
+            )
 
     def add_line_pattern_data_storage(self, other):
         """
@@ -323,8 +358,34 @@ class FamilyDataContainer(base.Base):
                 # family base data storage is absent and this is the first storage class added
                 self._update_base_properties_from_storage(other)
 
-            # add to class property
-            self.line_pattern_data_storage.append(other)
+            # add to class property only if unique (unique is if pattern name and pattern id are unique)
+            if len(self.line_pattern_data_storage) == 0:
+                # add to class property
+                self.line_pattern_data_storage.append(other)
+            else:
+                found_match = False
+                for entry in self.line_pattern_data_storage:
+                    if (
+                        entry.pattern_name == other.pattern_name
+                        and entry.pattern_id == other.pattern_id
+                    ):
+                        found_match = True
+                        break
+                if not found_match:
+                    # add to class property
+                    self.line_pattern_data_storage.append(other)
+                else:
+                    raise ValueError(
+                        "Line pattern storage is not unique: name: {} id: {}".format(
+                            other.pattern_name, other.pattern_id
+                        )
+                    )
+        else:
+            raise ValueError(
+                "Line pattern storage is not unique: name: {} id: {}".format(
+                    other.pattern_name, other.pattern_id
+                )
+            )
 
     def add_shared_parameter_data_storage(self, other):
         """
@@ -361,8 +422,34 @@ class FamilyDataContainer(base.Base):
                 # family base data storage is absent and this is the first storage class added
                 self._update_base_properties_from_storage(other)
 
-            # add to class property
-            self.shared_parameter_data_storage.append(other)
+            # add to class property only if unique (unique is if parameter name and parameter id are unique)
+            if len(self.shared_parameter_data_storage) == 0:
+                # add to class property
+                self.shared_parameter_data_storage.append(other)
+            else:
+                found_match = False
+                for entry in self.shared_parameter_data_storage:
+                    if (
+                        entry.parameter_name == other.parameter_name
+                        and entry.parameter_id == other.parameter_id
+                    ):
+                        found_match = True
+                        break
+                if not found_match:
+                    # add to class property
+                    self.shared_parameter_data_storage.append(other)
+                else:
+                    raise ValueError(
+                        "Shared parameter storage is not unique: name: {} id: {}".format(
+                            other.parameter_name, other.parameter_id
+                        )
+                    )
+        else:
+            raise ValueError(
+                "Shared parameter storage is not unique: name: {} id: {}".format(
+                    other.parameter_name, other.parameter_id
+                )
+            )
 
     def add_warnings_data_storage(self, other):
         """
@@ -399,8 +486,34 @@ class FamilyDataContainer(base.Base):
                 # family base data storage is absent and this is the first storage class added
                 self._update_base_properties_from_storage(other)
 
-            # add to class property
-            self.warnings_data_storage.append(other)
+            # add to class property only if unique (unique is if warning text and warning guid are unique)
+            if len(self.warnings_data_storage) == 0:
+                # add to class property
+                self.warnings_data_storage.append(other)
+            else:
+                found_match = False
+                for entry in self.warnings_data_storage:
+                    if (
+                        entry.warning_text == other.warning_text
+                        and entry.warning_guid == other.warning_guid
+                    ):
+                        found_match = True
+                        break
+                if not found_match:
+                    # add to class property
+                    self.warnings_data_storage.append(other)
+                else:
+                    raise ValueError(
+                        "Warnings storage is not unique: text: {} guid: {}".format(
+                            other.warning_text, other.warning_guid
+                        )
+                    )
+        else:
+            raise ValueError(
+                "Warnings storage is not unique: text: {} guid: {}".format(
+                    other.warning_text, other.warning_guid
+                )
+            )
 
     def add_data_storage(self, other):
         # check is correct object type

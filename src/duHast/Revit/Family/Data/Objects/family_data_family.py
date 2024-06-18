@@ -50,8 +50,26 @@ class FamilyDataFamily(base.Base):
         if isinstance(family_name, str) or family_name == None:
             self.family_name = None
         else:
-            raise TypeError("family_name must either be a string or None")
-        
-        
-        self.family_category = None
-        self.family_file_path = None
+            raise TypeError(
+                "family_name must either be a string or None. Got: {}".format(
+                    type(family_name)
+                )
+            )
+
+        if isinstance(family_category, str) or family_category == None:
+            self.family_category = None
+        else:
+            raise TypeError(
+                "family_category must either be a string or None. Got: {}".format(
+                    type(family_category)
+                )
+            )
+
+        if isinstance(family_file_path, str) or family_file_path == None:
+            self.family_file_path = None
+        else:
+            raise TypeError(
+                "family_file_path must either be a string or None. Got {}".format(
+                    type(family_file_path)
+                )
+            )

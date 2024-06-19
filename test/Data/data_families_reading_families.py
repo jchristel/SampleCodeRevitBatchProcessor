@@ -41,6 +41,7 @@ TEST_REPORT_DIRECTORY_MULTIPLE = os.path.join(
     get_directory_path_from_file_path(__file__), "ReadFamilies_01"
 )
 
+
 class DataReadFamiliesIntoFamilyInstances(test.Test):
 
     def __init__(self):
@@ -48,7 +49,65 @@ class DataReadFamiliesIntoFamilyInstances(test.Test):
         super(DataReadFamiliesIntoFamilyInstances, self).__init__(
             test_name="read multiple family data into multiple family instances"
         )
-    
+
+    def _run_tests(self, test_data, test_files_directory):
+        """
+        actual test runner
+        """
+        return_value = Result()
+        # test reports
+        try:
+            # run tests
+            test_result_multiple = read_data_into_families(
+                TEST_REPORT_DIRECTORY_MULTIPLE
+            )
+            return_value.update(test_result_multiple)
+            return_value.append_message(
+                "Number of family instances: {} vs expected: ".format(
+                    len(test_result_multiple.result), len(test_data)
+                )
+            )
+            # expecting 14 family instances
+            assert len(test_result_multiple.result) == len(test_data)
+
+            # check if all families are accounted for and have the right number of containers loaded
+            for family_name, expected_number_of_containers in test_data.items():
+                found_match = False
+                for family_instance in test_result_multiple.result:
+                    if family_instance.family_name == family_name:
+                        found_match = True
+                        return_value.append_message(
+                            "Family {} found in loaded family instances".format(
+                                family_name
+                            )
+                        )
+                        return_value.append_message(
+                            "Family {} has {} containers loaded. Expected: {}".format(
+                                family_name,
+                                len(family_instance.data_containers),
+                                expected_number_of_containers[0],
+                            )
+                        )
+                        assert (
+                            len(family_instance.data_containers)
+                            == expected_number_of_containers[0]
+                        )
+                        break
+                if not found_match:
+                    return_value.update_sep(
+                        False,
+                        "Family {} not found in loaded family instances".format(
+                            family_name
+                        ),
+                    )
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "An exception occurred in function {} : {}".format(self.test_name, e),
+            )
+
+        return return_value
+
     def test(self):
         """
         Reads family data reports into multiple containers.
@@ -64,39 +123,29 @@ class DataReadFamiliesIntoFamilyInstances(test.Test):
             # test multiple families per report
             # 4 test files
             test_files_multiple = {
-                "": (True, 5, []),
-                "FamilyBaseDataCombinedReport_multiple.csv": (
-                    True,
-                    5,
-                    [],
-                ),
-                "FamilyCategoriesCombinedReport_multiple.csv": (
-                    True,
-                    3,
-                    [],
-                ),
-                "FamilyLinePatternsCombinedReport_multiple.csv": (
-                    True,
-                    4,
-                    [],
-                ),
-                "FamilySharedParametersCombinedReport_multiple.csv": (
-                    True,
-                    4,
-                    [],
-                ),
-                "FamilyWarningsCombinedReport_multiple.csv": (
-                    True,
-                    5,
-                    [],
-                ),
+                "Sample_Family_One": (4,),
+                "Sample_Family_Two": (4,),
+                "Sample_Family_Three": (2,),
+                "Sample_Family_Four": (2,),
+                "Sample_Family_Five": (2,),
+                "Sample_Family_Six": (9,),
+                "Sample_Family_Seven": (5,),
+                "Sample_Family_Eight": (2,),
+                "Sample_Family_Nine": (4,),
+                "Sample_Family_Ten": (1,),
+                "Sample_Family_Eleven": (2,),
+                "Sample_Family_Twelve": (1,),
+                "Sample_Family_Thirteen": (1,),
+                "Sample_Family_Fourteen": (2,),
             }
 
+            # make sure all families are accounted for and got the right number of containers loaded
             # run tests
-            test_result_multiple = read_data_into_families(TEST_REPORT_DIRECTORY_MULTIPLE)
+            test_result_multiple = self._run_tests(
+                test_data=test_files_multiple,
+                test_files_directory=TEST_REPORT_DIRECTORY_MULTIPLE,
+            )
             return_value.update(test_result_multiple)
-            # expecting 14 family instances
-            assert len(test_result_multiple.result) == 14
         except Exception as e:
             return_value.update_sep(
                 False,

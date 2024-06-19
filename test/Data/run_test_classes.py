@@ -31,6 +31,7 @@ from test.utils.run_tests import RunTest
 
 # import test classes
 from test.Data import (
+    data_families_reading_families,
     data_families_container_reading_single,
     data_families_container_reading_multiple,
     data_families_culling_nested_families,
@@ -65,6 +66,7 @@ def run_tests():
         ["Data Read Families Warnings Report", data_families_reading_family_warnings_report.DataReadFamiliesWarningsReport],
         ["Data Read Families Container-single", data_families_container_reading_single.DataReadFamiliesIntoContainer],
         ["Data Read Families Container-multiple", data_families_container_reading_multiple.DataReadFamiliesIntoContainers],
+        ["Data Read Families Into Family Instances", data_families_reading_families.DataReadFamiliesIntoFamilyInstances],
         #["Data Find None Nested Root families", data_families_find_none_nested_root_families.DataFindNoneNestedRootFamilies],
         #["Data Nested Family culling", data_families_culling_nested_families.DataCullingNestedFamilies],
         #["Data Find Host Families With Families To Rename", data_families_find_host_families_needing_rename.DataFindHostFamiliesWithFamiliesToRename],

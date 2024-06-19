@@ -1040,7 +1040,6 @@ class DataReadFamiliesIntoContainers(test.Test):
 
             return_value.update(test_result_multiple)
 
-            return_value.status = False
         except Exception as e:
             return_value.update_sep(
                 False,

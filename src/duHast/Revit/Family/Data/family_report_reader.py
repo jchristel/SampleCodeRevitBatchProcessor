@@ -462,9 +462,9 @@ def read_data_into_families (path_to_data):
                 compare_family_name = container.family_nesting_path
                 compare_family_category = container.family_category_nesting_path
             else:
-                root_name_path_chunks = container.family_nesting_path.split("::")
+                root_name_path_chunks = container.family_nesting_path.split(" :: ")
                 compare_family_name = root_name_path_chunks[0]
-                category_name_path_chunks = container.family_category_nesting_path.split("::")
+                category_name_path_chunks = container.family_category_nesting_path.split(" :: ")
                 compare_family_category = category_name_path_chunks[0]
             # check if the family is already in the list
             family_found = False
@@ -472,12 +472,14 @@ def read_data_into_families (path_to_data):
                 if family.family_name == compare_family_name and family.family_category == compare_family_category:
                     family_found = True
                     family.add_data_container(container)
+                    return_value.append_message("Added container to family: {} - {}".format(compare_family_name, compare_family_category))
                     break
             # if the family is not in the list, add it
             if family_found == False:
                 new_family = FamilyDataFamily(family_name=compare_family_name, family_category=compare_family_category, family_file_path=container.family_file_path)
                 new_family.add_data_container(container)
                 families.append(new_family)
+                return_value.append_message("Added new family: {} - {}".format(compare_family_name, compare_family_category))
     except Exception as e:
         return_value.update_sep(False, "Failed to convert containers into families: {}".format(e))
     

@@ -31,11 +31,10 @@ Family data class.
 #
 
 from duHast.Utilities.Objects import base
-
-import System
-
+from duHast.Revit.Family.Data.Objects.family_data_container import FamilyDataContainer
 
 class FamilyDataFamily(base.Base):
+
     def __init__(self, family_name=None, family_category=None, family_file_path=None):
         """
         Family data class.
@@ -73,3 +72,23 @@ class FamilyDataFamily(base.Base):
                     type(family_file_path)
                 )
             )
+        
+        # default value for data containers
+        self.data_containers = []
+
+    
+    def add_data_container(self, data_container):
+        """
+        Add a data container to the family data.
+
+        """
+
+        if not isinstance(data_container, FamilyDataContainer):
+            raise TypeError(
+                "data_container must be an instance of FamilyDataContainer. Got: {}".format(
+                    type(data_container)
+                )
+            )
+
+        
+        self.data_containers.append(data_container)

@@ -47,7 +47,7 @@ class FamilyDataFamily(base.Base):
 
         # set some base properties to their default values
         if isinstance(family_name, str) or family_name == None:
-            self.family_name = None
+            self.family_name = family_name
         else:
             raise TypeError(
                 "family_name must either be a string or None. Got: {}".format(
@@ -56,7 +56,7 @@ class FamilyDataFamily(base.Base):
             )
 
         if isinstance(family_category, str) or family_category == None:
-            self.family_category = None
+            self.family_category = family_category
         else:
             raise TypeError(
                 "family_category must either be a string or None. Got: {}".format(
@@ -65,7 +65,7 @@ class FamilyDataFamily(base.Base):
             )
 
         if isinstance(family_file_path, str) or family_file_path == None:
-            self.family_file_path = None
+            self.family_file_path = family_file_path
         else:
             raise TypeError(
                 "family_file_path must either be a string or None. Got {}".format(

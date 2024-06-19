@@ -76,7 +76,37 @@ class FamilyDataFamily(base.Base):
         # default value for data containers
         self.data_containers = []
 
-    
+        # default value for nesting by name path
+        self.nesting_by_name_path = {}
+
+        self.nesting_by_level = {}
+
+    def _build_nesting_by_name(self):
+        """
+        Build the nesting name for the family data.
+
+        """
+        self.nesting_by_name_path = {
+        }
+
+        for data_container in self.data_containers:
+           self.nesting_by_name_path[data_container.family_nesting_path]
+
+    def _build_nesting_by_level(self):
+
+        self.nesting_by_level = {}
+        # start at 1 because for nesting level ( 1 based rather then 0 based )
+        for data_container in self.data_containers:
+            nesting_chunks = data_container.family_nesting_path.split(" :: ")
+           
+            if len(nesting_chunks) - 1 in self.nesting_by_level:
+                self.nesting_by_level[len(nesting_chunks) - 1].append(data_container)
+            else:
+                self.nesting_by_level[len(nesting_chunks) - 1] = [data_container]
+
+    def _get_longest_unique_nesting_path(self):
+        pass
+
     def add_data_container(self, data_container):
         """
         Add a data container to the family data.
@@ -92,3 +122,20 @@ class FamilyDataFamily(base.Base):
 
         
         self.data_containers.append(data_container)
+
+    def has_circular_nesting(self):
+        """
+        Check if the family data has circular nesting.
+
+        Circular nesting is defined as a situation where a nesting path property of a container contains the same family more than once.
+        """
+
+        # build the nesting by level
+        self._build_nesting_by_level(self)
+
+        longest_unique_nesting_path = self._get_longest_unique_nesting_path()
+
+        # loop over these path and check for multiple occurrence
+        
+
+        return False

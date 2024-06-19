@@ -95,7 +95,8 @@ class DataReadFamiliesIntoFamilyInstances(test.Test):
             # run tests
             test_result_multiple = read_data_into_families(TEST_REPORT_DIRECTORY_MULTIPLE)
             return_value.update(test_result_multiple)
-            
+            # expecting 14 family instances
+            assert len(test_result_multiple.result) == 14
         except Exception as e:
             return_value.update_sep(
                 False,

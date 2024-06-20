@@ -33,11 +33,21 @@ Family data class.
 from duHast.Utilities.Objects import base
 from duHast.Revit.Family.Data.Objects.family_data_container import FamilyDataContainer
 
+
 class FamilyDataFamily(base.Base):
 
     def __init__(self, family_name=None, family_category=None, family_file_path=None):
         """
         Family data class.
+
+        - contains an entire family nesting tree structure represented as family data container instances
+
+        :param family_name: The name of the family.
+        :type family_name: str
+        :param family_category: The Revit category of the family.
+        :type family_category: str
+        :param family_file_path: The file path of the family.
+        :type family_file_path: str
 
         """
 
@@ -72,7 +82,7 @@ class FamilyDataFamily(base.Base):
                     type(family_file_path)
                 )
             )
-        
+
         # default value for data containers
         self.data_containers = []
 
@@ -81,31 +91,102 @@ class FamilyDataFamily(base.Base):
 
         self.nesting_by_level = {}
 
+        # flag indicating whether nodes have been processed
+        self.is_processed = False
+
     def _build_nesting_by_name(self):
         """
         Build the nesting name for the family data.
 
         """
-        self.nesting_by_name_path = {
-        }
+        self.nesting_by_name_path = {}
 
         for data_container in self.data_containers:
-           self.nesting_by_name_path[data_container.family_nesting_path]
+            self.nesting_by_name_path[data_container.family_nesting_path]
 
     def _build_nesting_by_level(self):
+        """
+        Build the nesting by level for the family data.
+
+        """
 
         self.nesting_by_level = {}
         # start at 1 because for nesting level ( 1 based rather then 0 based )
         for data_container in self.data_containers:
             nesting_chunks = data_container.family_nesting_path.split(" :: ")
-           
+
             if len(nesting_chunks) - 1 in self.nesting_by_level:
                 self.nesting_by_level[len(nesting_chunks) - 1].append(data_container)
             else:
                 self.nesting_by_level[len(nesting_chunks) - 1] = [data_container]
 
     def _get_longest_unique_nesting_path(self):
-        pass
+        """
+        Get the longest unique nesting path of the family data.
+
+        :return: The longest unique nesting path as a list. or None if family is not processed.
+        :rtype: list or None
+        """
+
+        unique_nesting_paths = []
+        if self.is_processed == False:
+            return
+
+        # loop over nesting by level property and get the longest unique nesting path (multiple)
+        # nesting by level has the nesting depth as key and the data containers as value
+        # start from the highest nesting level and check whether the next level down overlaps with the current level
+        # all path in the highest level are unique
+        # if the next level down overlaps with the current level, the path in the next level down is not unique
+        # if the next level down does not overlap with the current level, the path in the next level down is unique
+
+        # get the highest nesting level
+        highest_nesting_level = max(self.nesting_by_level.keys())
+
+        # get the data containers at the highest nesting level
+        data_containers = self.nesting_by_level[highest_nesting_level]
+        # add their nesting path to the unique nesting paths
+        for data_container in data_containers:
+            unique_nesting_paths.append(data_container.family_nesting_path)
+
+        # loop over the nesting levels from the highest to the lowest
+        for nesting_level in range(highest_nesting_level - 1, 0, -1):
+            # get the data containers at the current nesting level
+            data_containers = self.nesting_by_level[nesting_level]
+            # loop over the data containers at the current nesting level
+            for data_container in data_containers:
+                # get the nesting path of the current data container
+                nesting_path_current_level = data_container.family_nesting_path
+                for unique_nesting_path in unique_nesting_paths:
+                    found_match = False
+                    # check if the current nesting path overlaps with the unique nesting path
+                    if nesting_path_current_level in unique_nesting_path:
+                        # if it overlaps, remove it from the unique nesting paths
+                        found_match = True
+                        break
+                if not found_match:
+                    unique_nesting_paths.append(nesting_path_current_level)
+        # return the unique nesting paths
+        return unique_nesting_paths
+
+    def process(self):
+        """
+        Process the family data.
+
+        - build the nesting by name path
+        - build the nesting by level
+
+        """
+
+        # check if processed
+        if self.is_processed:
+            return
+
+        # build internal data structures
+        self._build_nesting_by_name()
+        self._build_nesting_by_level()
+
+        # set processed flag
+        self.is_processed = True
 
     def add_data_container(self, data_container):
         """
@@ -120,8 +201,10 @@ class FamilyDataFamily(base.Base):
                 )
             )
 
-        
         self.data_containers.append(data_container)
+
+        # set flag indicating that the family data has changed and needs to be processed again
+        self.is_processed = False
 
     def has_circular_nesting(self):
         """
@@ -130,12 +213,22 @@ class FamilyDataFamily(base.Base):
         Circular nesting is defined as a situation where a nesting path property of a container contains the same family more than once.
         """
 
-        # build the nesting by level
-        self._build_nesting_by_level(self)
+        # check if processed and if not process the family data
+        self.process(self)
 
+        # get the longest unique nesting path ( can be multiple )
         longest_unique_nesting_path = self._get_longest_unique_nesting_path()
 
-        # loop over these path and check for multiple occurrence
-        
+        # loop over these path and check for multiple occurrence of a family name
+        for nesting_path in longest_unique_nesting_path:
+            # split path at nesting separator
+            nesting_chunks = nesting_path.split(" :: ")
+            # check if a chunk is already in the list, indicating a circular nesting
+            node_names = []
+            for nesting_chunk in nesting_chunks:
+                if nesting_chunk in node_names:
+                    return True
+                else:
+                    node_names.append(nesting_chunk)
 
         return False

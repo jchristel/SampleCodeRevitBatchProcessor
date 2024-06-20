@@ -49,8 +49,8 @@ class RunTest(base.Base):
         :param doc: Current Revit document.
         :type doc: Autodesk.Revit.DB.Document
 
-        :return: True if all tests completed successfully, otherwise False.
-        :rtype: bool
+        :return: A dictionary where key is the test name and value is the test result.
+        :rtype: {str:(bool,str)}
         """
         test_data = {}
         for test in self.tests:

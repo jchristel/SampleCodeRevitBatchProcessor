@@ -84,12 +84,12 @@ class DataReadFamiliesIntoFamilyInstances(test.Test):
                         return_value.append_message(
                             "Family {} has {} containers loaded. Expected: {}".format(
                                 family_name,
-                                len(family_instance.data_containers),
+                                len(family_instance.data_containers_unsorted),
                                 expected_number_of_containers[0],
                             )
                         )
                         assert (
-                            len(family_instance.data_containers)
+                            len(family_instance.data_containers_unsorted)
                             == expected_number_of_containers[0]
                         )
                         break

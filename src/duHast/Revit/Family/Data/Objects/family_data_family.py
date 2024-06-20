@@ -36,7 +36,7 @@ from duHast.Revit.Family.Data.Objects.family_data_container import FamilyDataCon
 
 class FamilyDataFamily(base.Base):
 
-    def __init__(self, family_name=None, family_category=None, family_file_path=None):
+    def __init__(self, family_name=None, family_category=None, family_file_path=None, nested_families=None):
         """
         Family data class.
 
@@ -82,18 +82,30 @@ class FamilyDataFamily(base.Base):
                     type(family_file_path)
                 )
             )
+        
+        # nested family tree
+        self.nested_families = []
+        if nested_families is not None:
+            for nested in nested_families:
+                if(not isinstance(nested, FamilyDataFamily)):
+                    raise ValueError("nested_families must be a list of FamilyDataFamily instances. Got: {}".format(type(nested)))
+                self.nested_families.append(nested)
 
         # default value for data containers
-        self.data_containers = []
+        self.data_containers_unsorted = []
 
         # default value for nesting by name path
         self.nesting_by_name_path = {}
 
+        # default value for nesting by level
         self.nesting_by_level = {}
 
         # flag indicating whether nodes have been processed
         self.is_processed = False
 
+    def __repr__(self):
+        return "{}<{}>".format(self.family_name, self.family_category)
+    
     def _build_nesting_by_name(self):
         """
         Build the nesting name for the family data.
@@ -101,8 +113,8 @@ class FamilyDataFamily(base.Base):
         """
         self.nesting_by_name_path = {}
 
-        for data_container in self.data_containers:
-            self.nesting_by_name_path[data_container.family_nesting_path]
+        for data_container in self.data_containers_unsorted:
+            self.nesting_by_name_path[data_container.family_nesting_path] = data_container
 
     def _build_nesting_by_level(self):
         """
@@ -112,13 +124,18 @@ class FamilyDataFamily(base.Base):
 
         self.nesting_by_level = {}
         # start at 1 because for nesting level ( 1 based rather then 0 based )
-        for data_container in self.data_containers:
-            nesting_chunks = data_container.family_nesting_path.split(" :: ")
-
-            if len(nesting_chunks) - 1 in self.nesting_by_level:
-                self.nesting_by_level[len(nesting_chunks) - 1].append(data_container)
+        for data_container in self.data_containers_unsorted:
+            if data_container.family_nesting_path == None:
+                raise ValueError("Family nesting path is None. Cannot build nesting by level.")
+            elif data_container.family_nesting_path == "":
+                raise ValueError("Family nesting path is empty. Cannot build nesting by level.")
             else:
-                self.nesting_by_level[len(nesting_chunks) - 1] = [data_container]
+                nesting_chunks = data_container.family_nesting_path.split(" :: ")
+
+                if len(nesting_chunks) - 1 in self.nesting_by_level:
+                    self.nesting_by_level[len(nesting_chunks) - 1].append(data_container)
+                else:
+                    self.nesting_by_level[len(nesting_chunks) - 1] = [data_container]
 
     def _get_longest_unique_nesting_path(self):
         """
@@ -144,6 +161,9 @@ class FamilyDataFamily(base.Base):
 
         # get the data containers at the highest nesting level
         data_containers = self.nesting_by_level[highest_nesting_level]
+        if data_containers == None:
+            raise ValueError("No data containers found at highest nesting level.")
+        
         # add their nesting path to the unique nesting paths
         for data_container in data_containers:
             unique_nesting_paths.append(data_container.family_nesting_path)
@@ -152,6 +172,8 @@ class FamilyDataFamily(base.Base):
         for nesting_level in range(highest_nesting_level - 1, 0, -1):
             # get the data containers at the current nesting level
             data_containers = self.nesting_by_level[nesting_level]
+            if data_containers == None:
+                raise ValueError("No data containers found at nesting level: {}".format(nesting_level))
             # loop over the data containers at the current nesting level
             for data_container in data_containers:
                 # get the nesting path of the current data container
@@ -201,7 +223,7 @@ class FamilyDataFamily(base.Base):
                 )
             )
 
-        self.data_containers.append(data_container)
+        self.data_containers_unsorted.append(data_container)
 
         # set flag indicating that the family data has changed and needs to be processed again
         self.is_processed = False

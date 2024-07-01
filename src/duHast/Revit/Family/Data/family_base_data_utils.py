@@ -54,6 +54,8 @@ from duHast.Utilities import (
     utility as util,
 )
 
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
+
 # tuples containing base family data read from file
 root_family = namedtuple("root_family", "name category filePath parent child report_data")
 nested_family = namedtuple(
@@ -127,7 +129,7 @@ def read_overall_family_data_list(file_path):
     return_value_nested_family = []
     for i in range(1, len(rows)):
         # check if root family
-        if "::" not in rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH]:
+        if NESTING_SEPARATOR not in rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH]:
             data = root_family(
                 rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME],
                 rows[i][BASE_DATA_LIST_INDEX_CATEGORY],
@@ -144,10 +146,10 @@ def read_overall_family_data_list(file_path):
                 rows[i][BASE_DATA_LIST_INDEX_CATEGORY],
                 rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
                 rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH].split(
-                    " :: "
+                    NESTING_SEPARATOR
                 ),  # split root path into list for ease of searching
                 rows[i][BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH].split(
-                    " :: "
+                    NESTING_SEPARATOR
                 ),  # split category path into list for ease of searching
                 [],
                 rows[i],  # set up report data
@@ -202,10 +204,10 @@ def read_overall_family_data_list_into_nested(file_path):
             rows[i][BASE_DATA_LIST_INDEX_CATEGORY],
             rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
             rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH].split(
-                " :: "
+                NESTING_SEPARATOR
             ),  # split root path into list for ease of searching
             rows[i][BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH].split(
-                " :: "
+                NESTING_SEPARATOR
             ),  # split category path into list for ease of searching
             [],
         )
@@ -251,7 +253,7 @@ def _check_data_blocks_for_overlap(block_one, block_two):
     for fam in block_one:
         match = False
         for fam_up in block_two:
-            if " :: ".join(fam_up.rootPath).startswith(" :: ".join(fam.rootPath)):
+            if NESTING_SEPARATOR.join(fam_up.rootPath).startswith(NESTING_SEPARATOR.join(fam.rootPath)):
                 match = True
                 break
         if match == False:
@@ -261,7 +263,7 @@ def _check_data_blocks_for_overlap(block_one, block_two):
 
 def _cull_data_block(family_base_nested_data_block):
     """
-    Sorts family data blocks into a dictionary where key, from 1 onwards, is the level of nesting indicated by number of '::' in root path string.
+    Sorts family data blocks into a dictionary where key, from 1 onwards, is the level of nesting indicated by number of ' :: ' in root path string.
 
     After sorting it compares adjacent blocks in the dictionary (key and key + 1) for overlaps in the root path string. Only unique families will be returned.
 

@@ -72,10 +72,10 @@ class FamilyBaseProcessor(IFamilyProcessor):
 
         :param doc: Current family document.
         :type doc: Autodesk.Revit.DB.Document
-        :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+        :param rootPath: The path of the nested family in a tree: rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type rootPath: str
-        :param rootCategoryPath: The path of the nested family in in terms of category in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+        :param rootCategoryPath: The path of the nested family in in terms of category in a tree: rootFamilyCategory :: nestedFamilyOneCategory :: nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
         :type rootCategoryPath: str
         """

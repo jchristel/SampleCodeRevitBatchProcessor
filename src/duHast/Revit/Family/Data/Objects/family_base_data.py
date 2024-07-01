@@ -34,6 +34,7 @@ from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDataUtils
 from duHast.Revit.Family.Data.Objects.family_base_data_storage import (
     FamilyBaseDataStorage,
 )
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
 
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
@@ -47,10 +48,10 @@ class FamilyBaseData(IFamData.IFamilyData):
         """
         Class constructor
 
-        :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+        :param rootPath: The path of the nested family in a tree: rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type rootPath: str
-        :param rootCategoryPath: The path of the family category in a tree: rootCategoryName::nestedCategoryNameOne::nestedCategoryTwo\
+        :param rootCategoryPath: The path of the family category in a tree: rootCategoryName :: nestedCategoryNameOne :: nestedCategoryTwo\
             This includes the actual category name as the last node.
         :type rootCategoryPath: str
         """
@@ -63,7 +64,7 @@ class FamilyBaseData(IFamData.IFamilyData):
         # super(CategoryData, self).__init__(rootPath, dataType)
 
         if root_category_path != None:
-            category_chunks = root_category_path.split(" :: ")
+            category_chunks = root_category_path.split(NESTING_SEPARATOR)
             self.category = category_chunks[-1]
         else:
             self.category = "unknown"

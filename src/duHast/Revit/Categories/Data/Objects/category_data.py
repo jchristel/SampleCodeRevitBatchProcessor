@@ -69,10 +69,10 @@ class CategoryData(IFamData.IFamilyData):
         """
         Class constructor
 
-        :param root_path: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+        :param root_path: The path of the nested family in a tree: rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type root_path: str
-        :param root_category_path: The category path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+        :param root_category_path: The category path of the nested family in a tree: rootFamilyCategory :: nestedFamilyOneCategory :: nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
         :type root_category_path: str
         """
@@ -101,7 +101,7 @@ class CategoryData(IFamData.IFamilyData):
 
         CategoryGraphicProperties will be flattened with prefix 'graphicProperty'
 
-        :param root: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+        :param root: The path of the nested family in a tree: rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type root: str
         :param root_category_path: The path of the nested family in a tree of categories. This includes the actual family category as the last node.

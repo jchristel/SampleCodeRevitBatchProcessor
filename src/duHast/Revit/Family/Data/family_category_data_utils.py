@@ -63,6 +63,8 @@ from duHast.Utilities import (
     files_io as fileIO,
 )
 
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
+
 # tuples containing change family category data read from file
 change_family_category = namedtuple(
     "change_family_category", "filePath newCategoryName"
@@ -224,10 +226,10 @@ def _create_nested_family_from_data(data_row):
         data_row[CATEGORY_DATA_LIST_INDEX_CATEGORY_NAME],
         data_row[CATEGORY_DATA_LIST_INDEX_FAMILY_FILE_PATH],
         data_row[CATEGORY_DATA_LIST_INDEX_ROOT_PATH].split(
-            " :: "
+            NESTING_SEPARATOR
         ),  # split root path into list for ease of searching
         data_row[CATEGORY_DATA_LIST_INDEX_ROOT_CATEGORY_PATH].split(
-            " :: "
+            NESTING_SEPARATOR
         ),  # split category path into list for ease of searching
         [],  # set up an empty list for host families
         [],  # set up empty list for sub-categories
@@ -247,7 +249,7 @@ def _setup_family_from_data(data_row):
     """
 
     fam = None
-    if "::" not in data_row[CATEGORY_DATA_LIST_INDEX_ROOT_PATH]:
+    if NESTING_SEPARATOR not in data_row[CATEGORY_DATA_LIST_INDEX_ROOT_PATH]:
         fam = _create_root_family_from_data(data_row)
     else:
         # found a child family

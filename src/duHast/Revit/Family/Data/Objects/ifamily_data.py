@@ -28,6 +28,7 @@ Interface for family data storage / processing class.
 #
 
 from duHast.Utilities.Objects import base
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
 
 # common data dictionary keys
 ROOT = "root"
@@ -78,7 +79,7 @@ class IFamilyData(base.Base):
 
         root_data_storage = []
         for storage in self.data:
-            if " :: " not in storage.root_name_path:
+            if NESTING_SEPARATOR not in storage.root_name_path:
                 root_data_storage.append(storage)
         return root_data_storage
 

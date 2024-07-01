@@ -32,7 +32,7 @@ Family data class.
 
 from duHast.Utilities.Objects import base
 from duHast.Revit.Family.Data.Objects.family_data_container import FamilyDataContainer
-
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
 
 class FamilyDataFamily(base.Base):
 
@@ -130,7 +130,7 @@ class FamilyDataFamily(base.Base):
             elif data_container.family_nesting_path == "":
                 raise ValueError("Family nesting path is empty. Cannot build nesting by level.")
             else:
-                nesting_chunks = data_container.family_nesting_path.split(" :: ")
+                nesting_chunks = data_container.family_nesting_path.split(NESTING_SEPARATOR)
 
                 if len(nesting_chunks) - 1 in self.nesting_by_level:
                     self.nesting_by_level[len(nesting_chunks) - 1].append(data_container)
@@ -244,7 +244,7 @@ class FamilyDataFamily(base.Base):
         # loop over these path and check for multiple occurrence of a family name
         for nesting_path in longest_unique_nesting_path:
             # split path at nesting separator
-            nesting_chunks = nesting_path.split(" :: ")
+            nesting_chunks = nesting_path.split(NESTING_SEPARATOR)
             # check if a chunk is already in the list, indicating a circular nesting
             node_names = []
             for nesting_chunk in nesting_chunks:

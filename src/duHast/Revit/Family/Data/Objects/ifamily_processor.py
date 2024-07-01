@@ -36,7 +36,7 @@ from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.Objects import base
-
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
 
 class IFamilyProcessor(base.Base):
 
@@ -94,7 +94,7 @@ class IFamilyProcessor(base.Base):
                 if isinstance(data_stored, list):
                     for storage_entry in data_stored:
                         if isinstance(storage_entry, IFamilyDataStorage):
-                            if " :: " not in storage_entry.root_name_path:
+                            if NESTING_SEPARATOR not in storage_entry.root_name_path:
                                 return data
                         else:
                             raise ValueError(
@@ -125,7 +125,7 @@ class IFamilyProcessor(base.Base):
         family_data = []
         for data in self.data:
             if isinstance(data, IFamData.IFamilyData):
-                if " :: " not in data.root_path:
+                if NESTING_SEPARATOR not in data.root_path:
                     family_data.append(data)
             else:
                 raise ValueError(
@@ -147,7 +147,7 @@ class IFamilyProcessor(base.Base):
 
         for data in self.data:
             if isinstance(data, IFamData.IFamilyData):
-                if " :: " in data.root_path:
+                if NESTING_SEPARATOR in data.root_path:
                     nested_family_data.append(data)
             else:
                 raise ValueError(
@@ -187,10 +187,10 @@ class IFamilyProcessor(base.Base):
         :param doc: The family document. 
         :type doc: Autodesk.Revit.DB.Document
 
-        :param root_path: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+        :param root_path: The path of the nested family in a tree: rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type root_path: str
-        :param root_category_path: The path of the nested family category in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+        :param root_category_path: The path of the nested family category in a tree: rootFamilyCategory :: nestedFamilyOneCategory :: nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
         :type root_category_path: str
         """

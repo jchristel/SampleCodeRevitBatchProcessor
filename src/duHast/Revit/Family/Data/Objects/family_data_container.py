@@ -57,7 +57,7 @@ from duHast.Revit.Warnings.Data.Objects.warnings_data_storage import (
     FamilyWarningsDataStorage,
 )
 from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
-
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
 
 class FamilyDataContainer(base.Base):
     def __init__(
@@ -201,11 +201,11 @@ class FamilyDataContainer(base.Base):
         self.family_category_nesting_path = storage_instance.root_category_path
 
         # set the category property based on the last entry in root category path
-        category_chunks = storage_instance.root_category_path.split("::")
+        category_chunks = storage_instance.root_category_path.split(NESTING_SEPARATOR)
         self.family_category = category_chunks[-1]
 
         # check if this is a root family
-        if "::" in storage_instance.root_name_path:
+        if NESTING_SEPARATOR in storage_instance.root_name_path:
             self.is_root_family = False
         else:
             self.is_root_family = True

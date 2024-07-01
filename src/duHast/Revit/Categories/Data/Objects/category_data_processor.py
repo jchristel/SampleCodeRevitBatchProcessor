@@ -29,7 +29,12 @@ Family category data processor class.
 
 from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
 from duHast.Revit.Categories.Data.Objects import category_data as rCatData
-from duHast.Revit.Categories.Data.Objects.category_data_processor_defaults import DATA_TYPE_PROCESSOR as data_type_category_processor
+from duHast.Revit.Categories.Data.Objects.category_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_category_processor,
+)
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    NESTING_SEPARATOR,
+)
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 from duHast.Utilities.Objects import result as res
@@ -72,10 +77,10 @@ class CategoryProcessor(IFamilyProcessor):
 
         :param doc: Current family document.
         :type doc: Autodesk.Revit.DB.Document
-        :param root_path: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+        :param root_path: The path of the nested family in a tree: rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type root_path: str
-        :param root_category_path: The category path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+        :param root_category_path: The category path of the nested family in a tree: rootFamilyCategory :: nestedFamilyOneCategory :: nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
         :type root_category_path: str
         """
@@ -239,7 +244,7 @@ class CategoryProcessor(IFamilyProcessor):
             for storage in data_storage_instances:
                 if storage.use_counter > 0:
                     # get the family category
-                    category_path = storage.root_category_path.split(" :: ")
+                    category_path = storage.root_category_path.split(NESTING_SEPARATOR)
                     # which is the last entry in the root category path
                     category_storage = category_path[len(category_path) - 1]
                     # select only items which either belong to the category of the family or

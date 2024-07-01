@@ -29,3 +29,6 @@ Family base data default names.
 
 
 DATA_TYPE_PROCESSOR = "FamilyBaseProcessor"
+
+# indicates a nesting level
+NESTING_SEPARATOR = " :: "

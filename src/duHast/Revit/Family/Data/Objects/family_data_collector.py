@@ -34,6 +34,7 @@ from duHast.Utilities.Objects import result as res
 # import Autodesk
 from Autodesk.Revit.DB import Element, FamilySymbol, FilteredElementCollector
 from duHast.Utilities.Objects import base
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
 
 
 class RevitFamilyDataCollector(base.Base):
@@ -79,7 +80,7 @@ class RevitFamilyDataCollector(base.Base):
 
         :param doc: The family document. 
         :type doc: Autodesk.Revit.DB.Document
-        :param root_name: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+        :param root_name: The path of the nested family in a tree: rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type root_name: str
         :param is_root: Indicates whether document is that of the root family, defaults to False
@@ -126,8 +127,8 @@ class RevitFamilyDataCollector(base.Base):
                             # go recursive
                             dive_result = self._dive(
                                 family_doc,
-                                root_name + " :: " + fam_name,
-                                root_category + " :: " + fam_category_name,
+                                root_name +  NESTING_SEPARATOR + fam_name,
+                                root_category +  NESTING_SEPARATOR + fam_category_name,
                             )
                             return_value.update(dive_result)
                     except Exception as e:
@@ -169,10 +170,10 @@ class RevitFamilyDataCollector(base.Base):
 
         :param doc: The family document. 
         :type doc: Autodesk.Revit.DB.Document
-        :param root_name: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+        :param root_name: The path of the nested family in a tree: rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type root_name: str
-        :param root_category: The path of the nested family category in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+        :param root_category: The path of the nested family category in a tree: rootFamilyCategory :: nestedFamilyOneCategory :: nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
         :type root_category: str
 

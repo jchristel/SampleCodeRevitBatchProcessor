@@ -24,6 +24,9 @@ from duHast.Revit.Warnings.Data.Objects.warnings_data_storage import (
 )
 from duHast.Revit.Family.Data.Objects.family_data_container import FamilyDataContainer
 from duHast.Revit.Family.Data.Objects.family_data_family import FamilyDataFamily
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    NESTING_SEPARATOR,
+)
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_io import file_exist
@@ -362,7 +365,7 @@ def read_data_into_family_containers(path_to_data):
                 return_value.append_message(
                     "Failed to read data file with exception: {}".format(e)
                 )
-        return_value.append_message("Read {} files".format(len( data_read)))
+        return_value.append_message("Read {} files".format(len(data_read)))
 
         # convert the data rows into storage objects depending on the data type
         # this will end up containing lists of storage objects, one list per file read
@@ -387,7 +390,9 @@ def read_data_into_family_containers(path_to_data):
                     # just append the log message
                     return_value.append_message(data_storage_conversion_result.message)
 
-        return_value.append_message("Converted {} data entries".format(len(data_converted)))
+        return_value.append_message(
+            "Converted {} data entries".format(len(data_converted))
+        )
         # group storage containers by family root path and category root path identifying unique families
         containers_grouped_by_family_data = {}
         # loop over all storage lists and assign data to container
@@ -424,7 +429,7 @@ def read_data_into_family_containers(path_to_data):
     return return_value
 
 
-def read_data_into_families (path_to_data):
+def read_data_into_families(path_to_data):
     """
     Read the data from the csv files in the directory and return a list of FamilyDataFamily objects.
 
@@ -438,20 +443,24 @@ def read_data_into_families (path_to_data):
     return_value = Result()
     families = []
 
-    try: 
+    try:
         # first read reports into containers
         container_read_result = read_data_into_family_containers(path_to_data)
         return_value.update(container_read_result)
-        
+
         # check if the read was successful
         if container_read_result.status == False:
-            raise ValueError("Failed to read data from: {} into family containers: {} ".format(path_to_data, container_read_result.message))
-        
+            raise ValueError(
+                "Failed to read data from: {} into family containers: {} ".format(
+                    path_to_data, container_read_result.message
+                )
+            )
+
         # cycle over all containers and assign the data to the family objects
         # unique root families are identified by the following container properties
         # - the family name
         # - the family category
-    
+
         containers = container_read_result.result
         # loop over containers and assign to families
         for container in containers:
@@ -462,26 +471,47 @@ def read_data_into_families (path_to_data):
                 compare_family_name = container.family_nesting_path
                 compare_family_category = container.family_category_nesting_path
             else:
-                root_name_path_chunks = container.family_nesting_path.split(" :: ")
+                root_name_path_chunks = container.family_nesting_path.split(
+                    NESTING_SEPARATOR
+                )
                 compare_family_name = root_name_path_chunks[0]
-                category_name_path_chunks = container.family_category_nesting_path.split(" :: ")
+                category_name_path_chunks = (
+                    container.family_category_nesting_path.split(NESTING_SEPARATOR)
+                )
                 compare_family_category = category_name_path_chunks[0]
             # check if the family is already in the list
             family_found = False
             for family in families:
-                if family.family_name == compare_family_name and family.family_category == compare_family_category:
+                if (
+                    family.family_name == compare_family_name
+                    and family.family_category == compare_family_category
+                ):
                     family_found = True
                     family.add_data_container(container)
-                    return_value.append_message("Added container to family: {} - {}".format(compare_family_name, compare_family_category))
+                    return_value.append_message(
+                        "Added container to family: {} - {}".format(
+                            compare_family_name, compare_family_category
+                        )
+                    )
                     break
             # if the family is not in the list, add it
             if family_found == False:
-                new_family = FamilyDataFamily(family_name=compare_family_name, family_category=compare_family_category, family_file_path=container.family_file_path)
+                new_family = FamilyDataFamily(
+                    family_name=compare_family_name,
+                    family_category=compare_family_category,
+                    family_file_path=container.family_file_path,
+                )
                 new_family.add_data_container(container)
                 families.append(new_family)
-                return_value.append_message("Added new family: {} - {}".format(compare_family_name, compare_family_category))
+                return_value.append_message(
+                    "Added new family: {} - {}".format(
+                        compare_family_name, compare_family_category
+                    )
+                )
     except Exception as e:
-        return_value.update_sep(False, "Failed to convert containers into families: {}".format(e))
-    
+        return_value.update_sep(
+            False, "Failed to convert containers into families: {}".format(e)
+        )
+
     return_value.result = families
     return return_value

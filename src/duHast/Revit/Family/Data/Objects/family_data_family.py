@@ -139,7 +139,7 @@ class FamilyDataFamily(base.Base):
 
     def _get_longest_unique_nesting_path(self):
         """
-        Get the longest unique nesting path of the family data.
+        Get the longest unique nesting path(s) of the family data.
 
         :return: The longest unique nesting path as a list. or None if family is not processed.
         :rtype: list or None
@@ -152,9 +152,10 @@ class FamilyDataFamily(base.Base):
         # loop over nesting by level property and get the longest unique nesting path (multiple)
         # nesting by level has the nesting depth as key and the data containers as value
         # start from the highest nesting level and check whether the next level down overlaps with the current level
-        # all path in the highest level are unique
+        # all path in the highest (deepest) level of nesting are unique
         # if the next level down overlaps with the current level, the path in the next level down is not unique
         # if the next level down does not overlap with the current level, the path in the next level down is unique
+        # as soon as there is a nested family, the root path of a family (no nesting) is not unique anymore.
 
         # get the highest nesting level
         highest_nesting_level = max(self.nesting_by_level.keys())

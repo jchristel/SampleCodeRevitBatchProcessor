@@ -100,10 +100,15 @@ class DataCullingNestedFamilies(test.Test):
                                 unique_longest_path_from_test_data[0],
                             )
                         )
-                        assert (
-                            len(unique_longest_path_from_family)
-                            == unique_longest_path_from_test_data[0]
-                        )
+
+                        try:
+                            assert (
+                                len(unique_longest_path_from_family)
+                                == unique_longest_path_from_test_data[0]
+                            )
+                        except Exception as e:
+                            return_value.update_sep(
+                                False, "Longest unique path found \n...{}:".format("\n...".join(unique_longest_path_from_family)))
 
                         break
                 if not found_match:

@@ -39,6 +39,8 @@ from duHast.Revit.Family.Data.family_report_reader import (
     read_data_into_family_containers,
 )
 from duHast.Revit.Family.Data.Objects.family_data_container import FamilyDataContainer
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
+
 from duHast.Utilities.files_io import get_directory_path_from_file_path
 
 from duHast.Revit.Family.Data.Objects.family_base_data_storage import (
@@ -245,7 +247,7 @@ class DataReadFamiliesIntoContainers(test.Test):
                 )
 
             # check family category
-            category_chunks = test_data[2].split("::")
+            category_chunks = test_data[2].split(NESTING_SEPARATOR)
             return_value.append_message(
                 "......Expecting category {} and got {}".format(
                     category_chunks[-1], container.family_category

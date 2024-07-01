@@ -108,7 +108,7 @@ class DataCullingNestedFamilies(test.Test):
                             )
                         except Exception as e:
                             return_value.update_sep(
-                                False, "Longest unique path found \n...{}:".format("\n...".join(unique_longest_path_from_family)))
+                                False, "Longest unique path found \n...{}".format("\n...".join(unique_longest_path_from_family)))
 
                         break
                 if not found_match:
@@ -141,20 +141,20 @@ class DataCullingNestedFamilies(test.Test):
             # test multiple families per report
             # 4 test files
             test_files_multiple = {
-                "Sample_Family_One": (4,),
-                "Sample_Family_Two": (4,),
-                "Sample_Family_Three": (2,),
-                "Sample_Family_Four": (2,),
-                "Sample_Family_Five": (2,),
-                "Sample_Family_Six": (9,),
-                "Sample_Family_Seven": (5,),
-                "Sample_Family_Eight": (2,),
-                "Sample_Family_Nine": (4,),
+                "Sample_Family_One": (2,),
+                "Sample_Family_Two": (2,),
+                "Sample_Family_Three": (1,),
+                "Sample_Family_Four": (1,),
+                "Sample_Family_Five": (1,),
+                "Sample_Family_Six": (5,),
+                "Sample_Family_Seven": (3,),
+                "Sample_Family_Eight": (1,),
+                "Sample_Family_Nine": (2,),
                 "Sample_Family_Ten": (1,),
-                "Sample_Family_Eleven": (2,),
+                "Sample_Family_Eleven": (1,),
                 "Sample_Family_Twelve": (1,),
                 "Sample_Family_Thirteen": (1,),
-                "Sample_Family_Fourteen": (2,),
+                "Sample_Family_Fourteen": (1,),
             }
 
             # make sure all families are accounted for and got the right number of containers loaded

@@ -560,6 +560,8 @@ def delete_workset(doc, delete_workset_name, move_elements_to_workset_name=None)
                         delete_workset_name
                     )
                 )
+            else:
+                return_value.append_message("workset {} found in model.".format(delete_workset_name))
 
             # set up delete setting
             delete_workset_settings = None
@@ -596,6 +598,9 @@ def delete_workset(doc, delete_workset_name, move_elements_to_workset_name=None)
             if WorksetTable.CanDeleteWorkset(
                 doc, workset_id_delete, delete_workset_settings
             ):
+                return_value.append_message(
+                    "Revit allows to delete workset: {}".format(delete_workset_name)
+                )
                 # set up the delete action
                 def action():
                     action_return_value = res.Result()
@@ -614,25 +619,21 @@ def delete_workset(doc, delete_workset_name, move_elements_to_workset_name=None)
                             ),
                         )
                     return action_return_value
-
-                # set up failure handling
-                failure_handling_config = FailureHandlingConfig(
-                    roll_back_on_error=True,
-                )
-
+                
                 # execute the delete action
                 transaction = Transaction(
                     doc, "Deleting workset {}".format(delete_workset_name)
                 )
+                # delete the workset at all costs. (attempt to swallow up any warnings / errors revit may produce)
                 tranny_status = rTran.in_transaction_with_failure_handling(
-                    transaction, action, failure_handling_config
+                    transaction, action
                 )
                 return_value.update(tranny_status)
 
             else:
                 return_value.update_sep(
                     False,
-                    "Cant delete workset {} with settings: {}. (Revit says NO!)".format(
+                    "Can't delete workset {} with settings: {}. (Revit says NO!)".format(
                         delete_workset_name, delete_workset_settings
                     ),
                 )

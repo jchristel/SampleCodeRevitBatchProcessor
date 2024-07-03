@@ -63,7 +63,7 @@ class DataReadFamiliesIntoFamilyInstances(test.Test):
             )
             return_value.update(test_result_multiple)
             return_value.append_message(
-                "Number of family instances: {} vs expected: ".format(
+                "Number of family instances: {} vs expected: {}".format(
                     len(test_result_multiple.result), len(test_data)
                 )
             )

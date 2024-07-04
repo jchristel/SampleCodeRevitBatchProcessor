@@ -46,24 +46,39 @@ from duHast.Utilities.Objects import result as res
 from duHast.Revit.Family.Data.family_report_reader import read_data_into_families
 
 
-def find_circular_reference(
-   family_data, result_list
-):
+def find_circular_reference(family_data, result_list):
     """
     Function to find circular references in families.
+
+    :param family_data: list of family data objects
+    :type family_data: list
+    :param result_list: list to store families with circular references
+    :type result_list: list
+
+    :return: list of families with circular references
     """
 
-    
-   
+    # loop over all family data
+    for family in family_data:
+        # process each family and check for circular references
+        circular_families = family.has_circular_nesting()
+        if len(circular_families) > 0:
+            result_list.append(family)
     return result_list
 
 
 def check_families_have_circular_references(family_base_data_report_file_path):
+    """
+    Function to check if families have circular references.
+
+    :param family_base_data_report_file_path: path to family base data report file
+    :type family_base_data_report_file_path: str
+
+    :return: result object
+    """
 
     # read families into data family objects
-    # process them ( to get the internal nesting set up)
-    # get the shortest path from each family
-    # check for duplicates in those paths ( may need to get unique path for name and category!)
+    # check for duplicate family names in nesting tree
 
     return_value = res.Result()
 
@@ -73,14 +88,13 @@ def check_families_have_circular_references(family_base_data_report_file_path):
 
     try:
         # read families into data
-        read_result = read_data_into_families(
-            family_base_data_report_file_path
-        )
+        read_result = read_data_into_families(family_base_data_report_file_path)
 
         return_value.update(read_result)
         return_value.append_message(
             "Number of family instances: {} read {}.".format(
-                len(read_result.result), t_process.stop(),
+                len(read_result.result),
+                t_process.stop(),
             )
         )
 
@@ -91,7 +105,11 @@ def check_families_have_circular_references(family_base_data_report_file_path):
         if not read_result.status:
             raise ValueError(read_result.message)
         elif len(read_result.result) == 0:
-            raise ValueError("No family data found in file: {}".format(family_base_data_report_file_path))
+            raise ValueError(
+                "No family data found in file: {}".format(
+                    family_base_data_report_file_path
+                )
+            )
 
         # process each family so unique path are created
         # results will be stored in here:
@@ -110,9 +128,7 @@ def check_families_have_circular_references(family_base_data_report_file_path):
                 t = threading.Thread(
                     target=find_circular_reference,
                     args=(
-                        read_result.result[
-                            i * chunk_size : (i + 1) * chunk_size
-                        ],
+                        read_result.result[i * chunk_size : (i + 1) * chunk_size],
                         families_with_circular_nesting,
                     ),
                 )
@@ -138,6 +154,11 @@ def check_families_have_circular_references(family_base_data_report_file_path):
             return_value.result = families_with_circular_nesting
 
     except Exception as e:
-        return_value.update_sep(False, "An error occurred while reading the families into data objects.{}".format(e))
-    
+        return_value.update_sep(
+            False,
+            "An error occurred while reading the families into data objects.{}".format(
+                e
+            ),
+        )
+
     return return_value

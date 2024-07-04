@@ -242,6 +242,8 @@ class FamilyDataFamily(base.Base):
         # get the longest unique nesting path ( can be multiple )
         longest_unique_nesting_path = self._get_longest_unique_nesting_path()
 
+        # keep record of duplicated family names
+        duplicated_family_names = []
         # loop over these path and check for multiple occurrence of a family name
         for nesting_path in longest_unique_nesting_path:
             # split path at nesting separator
@@ -250,8 +252,8 @@ class FamilyDataFamily(base.Base):
             node_names = []
             for nesting_chunk in nesting_chunks:
                 if nesting_chunk in node_names:
-                    return True
+                    duplicated_family_names.append(nesting_chunk)
                 else:
                     node_names.append(nesting_chunk)
 
-        return False
+        return duplicated_family_names

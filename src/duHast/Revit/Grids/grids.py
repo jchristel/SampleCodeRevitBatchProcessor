@@ -43,6 +43,7 @@ from duHast.Revit.Common import parameter_get_utils as rParaGet
 # import Autodesk
 from Autodesk.Revit.DB import (
     BuiltInCategory,
+    DatumExtentType,
     Element,
     ElementCategoryFilter,
     ElementId,
@@ -365,3 +366,50 @@ def get_all_grid_head_family_type_ids(doc):
     col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
     ids = com.get_ids_from_element_collector(col)
     return ids
+
+
+def get_grid_curves_from_view(grid, view):
+    """
+    Gets grid curve (line from a view. Will return none if grid is out of view scope
+
+    :param grid: The grid element.
+    :type grid: Autodesk.Revit.DB.Grid
+    :param view: The view of which the get the grid extend from.
+    :type view: Autodesk.Revit.DB.View
+
+    :return: A curve object if grid is visible in view, otherwise None
+    :rtype: [Autodesk.Revit.DB.Curve] or None
+    """
+
+    try:
+        curves = grid.GetCurvesInView(DatumExtentType.ViewSpecific, view)
+        return curves
+    except Exception as e:
+        pass
+    return None
+
+
+def get_grid_plane_z_value(grids, view):
+    """
+    Get the z value of Grid plane by view based on first grid found visible in view.
+
+    :param grids: Grids in the model
+    :type grids: [Autodesk.Revit.DB.Grid]
+    :param view: the view
+    :type view: Autodesk.Revit.DB.View
+
+    :return: The view plane Z value or 0.0 if no grid found in view.
+    :rtype: float
+    """
+
+    z = 0.0
+    try:
+        for grid in grids:
+            curve = get_curve_from_view(grid, view)
+            if curve != None:
+                if len(curve) > 0:
+                    z = curve[0].GetEndPoint(0).Z
+                    break
+    except Exception as e:
+        pass
+    return z

@@ -11,7 +11,7 @@ Revit propagate grids extend visibility, and graphics to other views.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -37,8 +37,6 @@ clr.ImportExtensions(Linq)
 
 from collections import namedtuple
 
-# from duHast.APISamples import RevitCommonAPI as com
-from duHast.Revit.Views import views as rView
 from duHast.Revit.Grids import grids as rGrids
 from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities.Objects import result as res
@@ -105,7 +103,7 @@ def get_active_view_grid_data(active_view, grids_in_model):
 
     return_value = res.Result()
 
-    gridData = {}
+    grid_visibility_data = {}
     for grid in grids_in_model:
         try:
             # a grid can either be:
@@ -115,12 +113,12 @@ def get_active_view_grid_data(active_view, grids_in_model):
             grid_curve = get_grid_curves_from_view(grid=grid, view=active_view)
             # check whether grid is in scope (has a curve object for a given view)
             if grid_curve == None:
-                gridData[grid.Id] = grid_properties(
+                grid_visibility_data[grid.Id] = grid_properties(
                     False, None, None, None, None, None, False
                 )
             else:
                 # store grid properties
-                gridData[grid.Id] = grid_properties(
+                grid_visibility_data[grid.Id] = grid_properties(
                     True,
                     grid.GetDatumExtentTypeInView(DatumEnds.End0, active_view),
                     grid.GetDatumExtentTypeInView(DatumEnds.End1, active_view),
@@ -135,8 +133,8 @@ def get_active_view_grid_data(active_view, grids_in_model):
                     SPACER, SPACER, grid.Name, active_view.Name, e
                 )
             )
-            gridData[id] = grid_properties(False, None, None, None, None, None, False)
-    return_value.result.append(gridData)
+            grid_visibility_data[id] = grid_properties(False, None, None, None, None, None, False)
+    return_value.result.append(grid_visibility_data)
     return return_value
 
 
@@ -150,8 +148,8 @@ def change_grid_extends_in_views(
     :type doc: Autodesk.Revit.DB.Document
     :param grids_in_model: Grids in the model
     :type grids_in_model:  [Autodesk.Revit.DB.Grid]
-    :param templateData: A dictionary describing the appearance of each grid in the template view
-    :type templateData:  A named tuple: grid_properties
+    :param grid_template_data: A dictionary describing the appearance of each grid in the template view
+    :type grid_template_data:  A named tuple: grid_properties
         bool, is the grid in scope (inside the crop region)
         # Datum Extent type at End 0,
         # Datum Extend type at End 1,
@@ -159,8 +157,8 @@ def change_grid_extends_in_views(
         bool, # bubble visible at zero end
         bool, # bubble visible at 1 end
         bool # is the grid visible
-    :param viewsToChangeGridElements: A list of views in which to update the grid graphics
-    :type viewsToChangeGridElements: [Autodesk.Revit.DB.View]
+    :param views_to_change_grid_elements: A list of views in which to update the grid graphics
+    :type views_to_change_grid_elements: [Autodesk.Revit.DB.View]
     """
     return_value = res.Result()
     try:
@@ -238,7 +236,7 @@ def change_grid_extends_in_views(
                                     )
                                 )
                                 # get the nested old curve from list
-                                oldCurve = item.grid_curve[0]
+                                old_grid_curve = item.grid_curve[0]
 
                                 # set extend types to match
                                 grid_element.SetDatumExtentType(
@@ -259,19 +257,19 @@ def change_grid_extends_in_views(
                                     grid_element.HideBubbleInView(DatumEnds.End1, view)
 
                                 # set grid extend
-                                startPoint = XYZ(
-                                    oldCurve.GetEndPoint(0).X,
-                                    oldCurve.GetEndPoint(0).Y,
+                                start_point = XYZ(
+                                    old_grid_curve.GetEndPoint(0).X,
+                                    old_grid_curve.GetEndPoint(0).Y,
                                     new_grid_z_plane,
                                 )
-                                endPoint = XYZ(
-                                    oldCurve.GetEndPoint(1).X,
-                                    oldCurve.GetEndPoint(1).Y,
+                                end_point = XYZ(
+                                    old_grid_curve.GetEndPoint(1).X,
+                                    old_grid_curve.GetEndPoint(1).Y,
                                     new_grid_z_plane,
                                 )
-                                newCurve = Line.CreateBound(startPoint, endPoint)
+                                new_grid_curve = Line.CreateBound(start_point, end_point)
                                 grid_element.SetCurveInView(
-                                    DatumExtentType.ViewSpecific, view, newCurve
+                                    DatumExtentType.ViewSpecific, view, new_grid_curve
                                 )
                         else:
                             # grid is not in scope of this view

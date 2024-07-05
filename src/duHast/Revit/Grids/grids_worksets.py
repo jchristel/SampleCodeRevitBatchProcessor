@@ -111,8 +111,8 @@ def modify_grid_worksets_by_parameter_value(doc, worksetRules):
     
     [['model name', [[ModifyGridWorkSetsByParameterValue, [['workset name', util.ConTwoStartWithOne, 'Name', 'name starts with value']]]]]]
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
     :param worksetRules: _description_
     :type worksetRules: _type_
 
@@ -148,15 +148,26 @@ def modify_grids_worksets(doc, revitFileName, worksetRules):
       
     [['model name', [[ModifyGridWorkSetsDefault, [['default workset name']  # There should only be one per model]]]]]
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
     :param revitFileName: _description_
     :type revitFileName: _type_
     :param worksetRules: _description_
     :type worksetRules: _type_
 
     :return: returns a result object
-    :rtype: _type_
+    :return: Result class instance.
+
+        - result.status: View deletion status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message: will contain the fully qualified file path of the exported file
+        - result.result: will be an empty list
+        
+        On exception
+        
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+
+    :rtype: :class:`.Result`
     """
 
     gridsResults = res.Result()

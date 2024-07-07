@@ -40,6 +40,7 @@ from test.Data import (
     data_families_reading_line_patterns_report,
     data_families_reading_shared_parameters_report,
     data_families_reading_family_warnings_report,
+    data_families_circular_nesting,
     data_families_find_none_nested_root_families,
     data_families_find_host_families_needing_rename,
     data_families_combine_reports,
@@ -70,6 +71,7 @@ def run_tests():
         ["Data Read Families Into Family Instances", data_families_reading_families.DataReadFamiliesIntoFamilyInstances],
         #["Data Find None Nested Root families", data_families_find_none_nested_root_families.DataFindNoneNestedRootFamilies],
         ["Data Nested Family culling", data_families_culling_nested_families.DataCullingNestedFamilies],
+        ["Data find circular nesting", data_families_circular_nesting.DataCircularNestingFamilies],
         #["Data Find Host Families With Families To Rename", data_families_find_host_families_needing_rename.DataFindHostFamiliesWithFamiliesToRename],
         #["Data Combine Reports", data_families_combine_reports.DataCombineFamiliesReports],
     ]

@@ -38,12 +38,9 @@ Algorithm description:
 #
 #
 
-import threading
-import os
-
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects import result as res
-from duHast.Revit.Family.Data.family_report_reader import read_data_into_families
+from duHast.Revit.Family.Data.family_data_family_processor_utils import process_data
 
 
 def find_circular_reference(family_data, result_list):
@@ -102,61 +99,20 @@ def check_families_have_circular_references(family_base_data_report_file_path):
     t_process.start()
 
     try:
-        # read families into data
-        read_result = read_data_into_families(family_base_data_report_file_path)
 
-        return_value.update(read_result)
-        return_value.append_message(
-            "Number of family instances: {} read {}.".format(
-                len(read_result.result),
-                t_process.stop(),
-            )
+        # load and process families
+        families_processed = process_data(
+            family_base_data_report_file_path=family_base_data_report_file_path,
+            do_this=find_circular_reference,
         )
 
-        # start timer again
-        t_process.start()
+        # check if processing was successful, otherwise get out
+        if families_processed.status == False:
+            raise ValueError(families_processed.message)
 
-        # check if something went wrong
-        if not read_result.status:
-            raise ValueError(read_result.message)
-        elif len(read_result.result) == 0:
-            raise ValueError(
-                "No family data found in file: {}".format(
-                    family_base_data_report_file_path
-                )
-            )
-
-        # process each family so unique path are created
-        # results will be stored in here:
-        families_with_circular_nesting = []
-
-        # set up some multithreading
-        core_count = int(os.environ["NUMBER_OF_PROCESSORS"])
-        if core_count > 2:
-            return_value.append_message("cores: ".format(core_count))
-            # leave some room for other processes
-            core_count = core_count - 1
-            chunk_size = len(read_result.result) / core_count
-            threads = []
-            # set up threads
-            for i in range(core_count):
-                t = threading.Thread(
-                    target=find_circular_reference,
-                    args=(
-                        read_result.result[i * chunk_size : (i + 1) * chunk_size],
-                        families_with_circular_nesting,
-                    ),
-                )
-                threads.append(t)
-            # start up threads
-            for t in threads:
-                t.start()
-            # wait for results
-            for t in threads:
-                t.join()
-        else:
-            # no threading
-            families_with_circular_nesting = find_circular_reference(read_result.result)
+        # get results
+        families = families_processed.result[0]
+        families_with_circular_nesting = families_processed.result[1]
 
         return_value.append_message(
             "{} Found: {} circular references in families.".format(

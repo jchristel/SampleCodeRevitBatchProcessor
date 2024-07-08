@@ -53,9 +53,14 @@ def find_circular_reference(family_data, result_list):
     :param family_data: list of family data objects
     :type family_data: list
     :param result_list: list to store families with circular references
-    :type result_list: list
+    :type result_list: list of tuples with two entries (
+        0 index the family_data_family object, 
+        1 index list of tuples with two entries in format 
+            0 index the nesting level as integer at which the circular nesting occurs
+            1 index a string in format  family name :: family category
+            )
 
-    :return: list of families with circular references
+    :return: list of tuples containing family with circular references at 0 and circular family data at 1 
     """
 
     # loop over all family data
@@ -63,7 +68,7 @@ def find_circular_reference(family_data, result_list):
         # process each family and check for circular references
         circular_families = family.has_circular_nesting()
         if len(circular_families) > 0:
-            result_list.append(family)
+            result_list.append((family,circular_families))
     return result_list
 
 
@@ -74,7 +79,17 @@ def check_families_have_circular_references(family_base_data_report_file_path):
     :param family_base_data_report_file_path: path to family base data report file
     :type family_base_data_report_file_path: str
 
-    :return: result object
+    :return: A result object with the success status and the circular reference check result
+
+        . result is a list of tuples with two entries (
+            0 index the family_data_family object, 
+            1 index list of tuples with two entries in format 
+                0 index the nesting level as integer at which the circular nesting occurs
+                1 index a string in format  family name :: family category
+                )
+
+    :rtype: :class:`.Result`
+
     """
 
     # read families into data family objects

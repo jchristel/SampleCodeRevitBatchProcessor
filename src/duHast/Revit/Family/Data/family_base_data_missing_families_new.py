@@ -34,28 +34,63 @@ Algorithm description:
 #
 #
 
-import threading
-import os
-
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects import result as res
-from duHast.Revit.Family.Data.family_report_reader import read_data_into_families
+from duHast.Revit.Family.Data.family_data_family_processor_utils import process_data
 
 
 def get_unique_nested_families_from_path_data(path_data):
-    pass
+    # path data is a list of tuples list[(family_name_nesting, family_category_nesting)] or None
+
+    # will be a list of tuples 0: family name, 1 family category
+    unique_nested_families = []
+
+    # loop over all unique nesting path
+    for entry in path_data:
+        family_name_nesting = entry[0]
+        category_name_nesting = entry[1]
+        if len(family_name_nesting) != len(category_name_nesting):
+            raise ValueError(
+                "Name path length: {} is different to category path length: {}".format(
+                    len(family_name_nesting), len(category_name_nesting)
+                )
+            )
+        # loop over each entry in path ignoring the first entry (root family)
+        for i in range(1, len(entry[0])):
+            test_value = (family_name_nesting[i], category_name_nesting[i])
+            if test_value not in unique_nested_families:
+                unique_nested_families.append(test_value)
+
+    return unique_nested_families
 
 
 def get_unique_root_families_from_family_data(family_data):
-    pass
+    # family data is a list of family_data_family instances
+
+    # will be a list of tuples 0: family name, 1 family category
+    unique_root_families = []
+
+    for family in family_data:
+        test_data = (family.family_name, family.family_category)
+        if test_data not in unique_root_families:
+            unique_root_families.append(test_data)
+        else:
+            raise ValueError("Duplicated root family found: {}".format(test_data))
+
+    return unique_root_families
 
 
 def get_missing_families(root_families, nested_families):
-    pass
+    # root_families and nested_families is a list of tuples in format 0: family name, 1: family category
 
+    missing_families = []
 
-def process_data():
-    pass
+    for nested in nested_families:
+        if nested not in root_families:
+            missing_families.append(nested)
+
+    return missing_families
+
 
 def process_families(family_data, result_list):
     """
@@ -92,7 +127,7 @@ def check_families_missing_from_library(family_base_data_report_file_path):
 
         - result.status. True if missing families where found without an exception occurring.
         - result.message will contain the summary messages of the process including time stamps.
-        - result.result [nestedFamily]
+        - result.result [(nested_family_name, nested_family_category)]
         
         On exception:
         
@@ -113,61 +148,23 @@ def check_families_missing_from_library(family_base_data_report_file_path):
     t_process.start()
 
     try:
-        # read families into data
-        read_result = read_data_into_families(family_base_data_report_file_path)
-
-        return_value.update(read_result)
-        return_value.append_message(
-            "Number of family instances: {} read {}.".format(
-                len(read_result.result),
-                t_process.stop(),
-            )
-        )
 
         # start timer again
         t_process.start()
 
-        # check if something went wrong
-        if not read_result.status:
-            raise ValueError(read_result.message)
-        elif len(read_result.result) == 0:
-            raise ValueError(
-                "No family data found in file: {}".format(
-                    family_base_data_report_file_path
-                )
-            )
+        # load and process families
+        families_processed = process_data(
+            family_base_data_report_file_path=family_base_data_report_file_path,
+            do_this=process_families,
+        )
 
-        # process each family so unique path are created
-        # results will be stored in here:
-        families_longest_path = []
+        # check if processing was successful, otherwise get out
+        if families_processed.status == False:
+            raise ValueError(families_processed.message)
 
-        # set up some multithreading
-        core_count = int(os.environ["NUMBER_OF_PROCESSORS"])
-        if core_count > 2:
-            return_value.append_message("cores: ".format(core_count))
-            # leave some room for other processes
-            core_count = core_count - 1
-            chunk_size = len(read_result.result) / core_count
-            threads = []
-            # set up threads
-            for i in range(core_count):
-                t = threading.Thread(
-                    target=process_families,
-                    args=(
-                        read_result.result[i * chunk_size : (i + 1) * chunk_size],
-                        families_longest_path,
-                    ),
-                )
-                threads.append(t)
-            # start up threads
-            for t in threads:
-                t.start()
-            # wait for results
-            for t in threads:
-                t.join()
-        else:
-            # no threading
-            families_longest_path = process_families(read_result.result)
+        # get results
+        families = families_processed.result[0]
+        families_longest_path = families_processed.result[1]
 
         return_value.append_message(
             "{} Found: {} unique longest path in families.".format(
@@ -181,25 +178,23 @@ def check_families_missing_from_library(family_base_data_report_file_path):
         )
 
         # process family data and get unique names+ categories
-        unique_root_families = get_unique_root_families_from_family_data(
-            read_result.result
-        )
+        unique_root_families = get_unique_root_families_from_family_data(families)
 
         # check which nested families do not exist as root families
         missing_families = get_missing_families(
             root_families=unique_root_families, nested_families=unique_nested_families
         )
 
-        return_value.append_message("Found {} missing families".format(len(missing_families)))
+        return_value.append_message(
+            "Found {} missing families".format(len(missing_families))
+        )
         if len(missing_families) > 0:
             return_value.result = missing_families
 
     except Exception as e:
         return_value.update_sep(
             False,
-            "An error occurred while finding missing families: {}".format(
-                e
-            ),
+            "An error occurred while finding missing families: {}".format(e),
         )
 
     return return_value

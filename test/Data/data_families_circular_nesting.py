@@ -32,6 +32,9 @@ from test.utils import test
 
 from duHast.Utilities.files_io import get_directory_path_from_file_path
 from duHast.Utilities.Objects.result import Result
+from duHast.Revit.Family.Data.family_base_data_circular_referencing_new import (
+    check_families_have_circular_references,
+)
 from duHast.Revit.Family.Data.family_report_reader import read_data_into_families
 
 TEST_REPORT_DIRECTORY_MULTIPLE = os.path.join(
@@ -57,31 +60,52 @@ class DataCircularNestingFamilies(test.Test):
         # test reports
         try:
             # run tests
-            test_result_multiple = read_data_into_families(test_files_directory)
-            return_value.update(test_result_multiple)
+            test_result_circular = check_families_have_circular_references(
+                test_files_directory
+            )
+            return_value.update(test_result_circular)
             return_value.append_message(
-                "Number of family instances: {} vs expected: {}".format(
-                    len(test_result_multiple.result), len(test_data)
+                "Number of family instances with circular references: {} vs expected: {}".format(
+                    len(test_result_circular.result), len(test_data)
                 )
             )
-            # expecting 14 family instances
-            assert len(test_result_multiple.result) == len(test_data)
+            # expecting 1 family instances
+            assert len(test_result_circular.result) == len(test_data)
 
-            return_value.append_message("Processing families...")
-            # check for circular nesting
-            for family_instance in test_result_multiple.result:
-                try:
-                    circular_families = family_instance.has_circular_nesting()
-                    return_value.append_message(
-                        "found circular referencing no: {} in host family: {}".format(
-                            len(circular_families), family_instance.family_name
+            # check if circular reference was identified correctly
+            for family_name, circular_reference in test_data.items():
+                found_match = False
+                for family_instance_data in test_result_circular.result:
+                    if family_instance_data[0].family_name == family_name:
+                        found_match = True
+                        return_value.append_message(
+                            "Family {} found in family with circular references ".format(
+                                family_name
+                            )
                         )
-                    )
-                except Exception as e:
+
+                        return_value.append_message(
+                            "circular referencing found {}: vs expected: {}".format(
+                                sorted(family_instance_data[0]),
+                                sorted(circular_reference[0]),
+                            )
+                        )
+                        try:
+                            assert sorted(family_instance_data[0]) == sorted(
+                                circular_reference[0]
+                            )
+                        except Exception as e:
+                            return_value.update_sep(
+                                False,
+                                "Circular referencing found does not match expected...",
+                            )
+
+                        break
+                if not found_match:
                     return_value.update_sep(
                         False,
-                        "An exception occurred in function process family : {}".format(
-                            e
+                        "Family {} not found in loaded family instances".format(
+                            family_name
                         ),
                     )
         except Exception as e:
@@ -106,23 +130,10 @@ class DataCircularNestingFamilies(test.Test):
 
         try:
 
-            # test multiple families per report
-            # 4 test files
+            # test families for circular referencing
+            # should be one...
             test_files_multiple = {
-                "Sample_Family_One": (2,),
-                "Sample_Family_Two": (2,),
-                "Sample_Family_Three": (1,),
-                "Sample_Family_Four": (1,),
-                "Sample_Family_Five": (1,),
-                "Sample_Family_Six": (5,),
-                "Sample_Family_Seven": (3,),
-                "Sample_Family_Eight": (1,),
-                "Sample_Family_Nine": (2,),
-                "Sample_Family_Ten": (1,),
-                "Sample_Family_Eleven": (1,),
-                "Sample_Family_Twelve": (1,),
-                "Sample_Family_Thirteen": (1,),
-                "Sample_Family_Fourteen": (1,),
+                "Sample_Family_Six": ["Sample_Family_Seven :: Electrical Fixtures"],
             }
 
             # make sure all families are accounted for and got the right number of containers loaded

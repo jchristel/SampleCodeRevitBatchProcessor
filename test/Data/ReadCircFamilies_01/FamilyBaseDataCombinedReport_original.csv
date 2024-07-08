@@ -11,6 +11,7 @@ FamilyBase,Sample_Family_Six :: Sample_Family_Seven :: Symbol_Outlet_GPO_Single_
 FamilyBase,Sample_Family_Six :: Sample_Family_Seven :: Section Tail - Upgrade,Specialty Equipment :: Electrical Fixtures :: Section Marks,Section Tail - Upgrade,-
 FamilyBase,Sample_Family_Six :: Sample_Family_Seven :: Label_Text_Rotation_1_5mm_ANN,Specialty Equipment :: Electrical Fixtures :: Generic Annotations,Label_Text_Rotation_1_5mm_ANN,P:\19\1903020.000\Design\BIM\_Revit\2.0 Project Library\Annotations\Label_Text_Rotation_1_5mm_ANN.rfa
 FamilyBase,Sample_Family_Six :: Sample_Family_Seven :: Label_Text_Rotation_1_5mm_ANN :: Label_Text_1_5mm_ANN,Specialty Equipment :: Electrical Fixtures :: Generic Annotations :: Generic Annotations,Label_Text_1_5mm_ANN,-
+FamilyBase,Sample_Family_Six :: Sample_Family_Seven :: Label_Text_Rotation_1_5mm_ANN :: Label_Text_1_5mm_ANN :: Sample_Family_Seven,Specialty Equipment :: Electrical Fixtures :: Generic Annotations :: Generic Annotations :: Electrical Fixtures,Sample_Family_Seven,-
 FamilyBase,Sample_Family_Fourteen,Generic Annotations,Sample_Family_Fourteen,C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Generic Annotations\Sample_Family_Fourteen.rfa
 FamilyBase,Sample_Family_Fourteen :: Sample_Family_Twelve,Generic Annotations :: Generic Annotations,Sample_Family_Twelve,-
 FamilyBase,Sample_Family_One,Plumbing Fixtures,Sample_Family_One,C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\Sample_Family_One.rfa

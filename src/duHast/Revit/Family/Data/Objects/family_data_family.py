@@ -160,7 +160,7 @@ class FamilyDataFamily(base.Base):
                 else:
                     self.nesting_by_level[len(nesting_chunks) - 1] = [data_container]
 
-    def _get_longest_unique_nesting_path(self):
+    def get_longest_unique_nesting_path(self):
         """
         Get the longest unique family name nesting path(s) and family category nesting path(s) of the family data.
 
@@ -295,7 +295,7 @@ class FamilyDataFamily(base.Base):
         self.process(self)
 
         # get the longest unique nesting path ( can be multiple )
-        longest_unique_nesting_path = self._get_longest_unique_nesting_path()
+        longest_unique_nesting_path = self.get_longest_unique_nesting_path()
 
         # keep record of duplicated family names
         duplicated_family_names = []

@@ -203,8 +203,27 @@ def check_families_missing_from_library(family_base_data_report_file_path):
 # ----------------------------missing families: direct host files -----------------------------------------
 
 
+def get_direct_root_families(families, missing_families):
+
+    # return value
+    direct_host_families = []
+    
+    # loop over families and check for match at nesting level 01
+    for family in families:
+        # families at nesting level 1 
+        if 1 in family.nesting_by_level:
+            for family_at_level_one in family.nesting_by_level[1]:
+                # build test value: a tuple made up of the family name and family category
+                test_value = (family_at_level_one.family_name, family_at_level_one.family_category)
+                if test_value in missing_families:
+                    # match found...
+                    direct_host_families.append(family_at_level_one)
+
+    return direct_host_families
+
+
 def find_missing_families_direct_host_families(
-    familyBaseDataReportFilePath, missingFamilies
+    family_base_data_report_file_path, missing_families
 ):
     """
     Returns a list of root family tuples which represent the direct parents (host families) of the missing families.
@@ -230,58 +249,58 @@ def find_missing_families_direct_host_families(
     :rtype: :class:`.Result`
     """
 
-    # loop over missing families
-    # loop over base nested data
-    #   - check if missing fam is in root path (name and category) if so:
-    #   - get the direct parent (make sure missing family isn't first entry!)
-    #   - check if direct parent is already in dictionary (key is name + category) ? if not:
-    #       - add direct parent to dictionary
-    #
-    # loop over direct host data:
-    #   - loop over root fam data and check for match in name and category; If so:
-    #       - add to root family data to be returned.
+    # read families into data family objects
+    # check for duplicate family names in nesting tree
 
-    returnValue = res.Result()
+    return_value = res.Result()
+
+    # set up a timer
+    t_process = Timer()
+    t_process.start()
+
     try:
-        # set up a timer
-        tProcess = Timer()
-        tProcess.start()
 
-        returnValue = res.Result()
-        # read overall family base data from file
-        (
-            overallFamilyBaseRootData,
-            overallFamilyBaseNestedData,
-        ) = rFamBaseDataUtils.read_overall_family_data_list(
-            familyBaseDataReportFilePath
+        # start timer again
+        t_process.start()
+
+        # load and process families
+        families_processed = process_data(
+            family_base_data_report_file_path=family_base_data_report_file_path,
+            do_this=process_families,
         )
-        returnValue.append_message(
-            "{} Read overall family base data report. {} root entries found and {} nested entries found.".format(
-                tProcess.stop(),
-                len(overallFamilyBaseRootData),
-                len(overallFamilyBaseNestedData),
+
+        # check if processing was successful, otherwise get out
+        if families_processed.status == False:
+            raise ValueError(families_processed.message)
+
+        # get results
+        families = families_processed.result[0]
+        families_longest_path = families_processed.result[1]
+
+        return_value.append_message(
+            "{} Found: {} unique longest path in families.".format(
+                t_process.stop(), len(families_longest_path)
             )
         )
 
-        tProcess.start()
-        hostFamilies = rFamBaseDataUtils.find_all_direct_host_families(
-            missingFamilies, overallFamilyBaseNestedData
+        # loop over longest path and find the ones where the second entry in the nesting path is a missing family
+        direct_root_families = get_direct_root_families(
+            families=families,
+            missing_families=missing_families,
         )
-        # get the root families from host family data
-        rootHosts = rFamBaseDataUtils.find_root_families_from_hosts(
-            hostFamilies, overallFamilyBaseRootData
-        )
-        returnValue.result = rootHosts
-        returnValue.append_message(
-            "{} Found direct host families of missing families: {}".format(
-                tProcess.stop(), len(rootHosts)
+
+        return_value.append_message(
+            "Found {} direct hosts to missing families".format(
+                len(direct_root_families)
             )
         )
+        if len(direct_root_families) > 0:
+            return_value.result = direct_root_families
+
     except Exception as e:
-        returnValue.update_sep(
+        return_value.update_sep(
             False,
-            "Failed to retrieve host families of missing families with exception: ".format(
-                e
-            ),
+            "An error occurred while finding missing families direct host families: {}".format(e),
         )
-    return returnValue
+
+    return return_value

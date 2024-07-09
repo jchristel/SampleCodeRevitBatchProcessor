@@ -30,6 +30,7 @@ Revit file operations utility functions.
 from Autodesk.Revit.DB import (
     RelinquishOptions,
     TransactWithCentralOptions,
+    SaveOptions,
     SaveAsOptions,
     SimpleWorksetConfiguration,
     SynchronizeWithCentralOptions,

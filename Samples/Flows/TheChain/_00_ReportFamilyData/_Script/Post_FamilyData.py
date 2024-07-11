@@ -21,6 +21,7 @@ This module contains post reporting functions:
 
 
 """
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -129,7 +130,9 @@ def user_out_and_log_file(processing_results, file_name, header=[]):
         )
         write_empty_report_file(file_name, header)
 
+
 # -------------------------------------------- log files --------------------------------------------
+
 
 def process_all_log_files():
     """
@@ -166,6 +169,7 @@ def process_all_log_files():
             file_name=settings.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT,
         )
 
+
 # ------------------------------------------- Report analysis -------------------------------------------
 
 
@@ -188,16 +192,29 @@ def check_circular_references():
                 check_circular_ref_result.status
             )
         )
-        if check_circular_ref_result.result != None:
+
+        # check whether any circular references where found
+        if (
+            check_circular_ref_result.result != None
+            and len(check_circular_ref_result.result) > 0
+        ):
             # re-format output data
             data_to_file = []
             for data in check_circular_ref_result.result:
-                row = [
-                    data.filePath,
-                    "[" + ",".join(data.parent) + "]",
-                    "[" + ",".join(data.child) + "]",
-                ]
-                data_to_file.append(row)
+                # write one row per circular nesting found
+                for i in range (len(data[1])):
+
+                    file_path_root = data[0].family_file_path
+                    index_circular_nesting = data[1][i][0]
+                    circular_nested_family = data[1][i][1]
+                    nesting_path = data[1][i][2]
+                    row = [
+                        file_path_root,
+                        str(index_circular_nesting),
+                        circular_nested_family,
+                        nesting_path,
+                    ]
+                    data_to_file.append(row)
             check_circular_ref_result.result = data_to_file
         user_out_and_log_file(
             check_circular_ref_result, settings.FILE_NAME_CIRCULAR_REFERENCE_REPORT
@@ -227,22 +244,21 @@ def check_missing_families():
             )
         )
         # provide more feedback as to what went wrong
-        if(check_missing_families.status == False):
-            output("Missing families from library check.... message: {}".format(
-                check_missing_families.message
-            ))
-        # initialise missing families list
-        missing_families = []
+        if check_missing_families.status == False:
+            output(
+                "Missing families from library check.... message: {}".format(
+                    check_missing_families.message
+                )
+            )
+        
+        # check if any missing families found
         if len(check_missing_families.result) > 0:
-            # duplicate data for later (to find the host families)
-            missing_families = list(check_missing_families.result)
-
             # re-format output data for missing family text file
             data_to_file = []
             for data in check_missing_families.result:
                 try:
-                    # missing fams data
-                    row = [data.name, data.category]
+                    # missing family data
+                    row = [data[0], data[1]]
                     data_to_file.append(row)
                 except Exception as e:
                     output(
@@ -263,7 +279,7 @@ def check_missing_families():
 
         # get host families of those missing families
         missing_families_host_families = find_missing_families_direct_host_families(
-            data_file_path, missing_families
+            data_file_path
         )
 
         output(
@@ -272,18 +288,19 @@ def check_missing_families():
             )
         )
         # provide more feedback as to what went wrong
-        if(missing_families_host_families.status == False):
-            output("Missing families hosts.... message: {}".format(
-                missing_families_host_families.message
-            ))
-
+        if missing_families_host_families.status == False:
+            output(
+                "Missing families hosts.... message: {}".format(
+                    missing_families_host_families.message
+                )
+            )
 
         if len(missing_families_host_families.result) > 0:
             # re-format output data
             data_to_file = []
             for data in missing_families_host_families.result:
                 try:
-                    row = [data.filePath, data.name, data.category]
+                    row = [data.family_file_path, data.family_name, data.family_category]
                     data_to_file.append(row)
                 except Exception as e:
                     output(
@@ -323,7 +340,9 @@ try:
         pCleanUp.delete_working_directories()
 
         # check whether report files need to be combined / merged with previous  (older) report files before progressing
-        combine_report_files, previous_report_root_directory = combine_report_files_check()
+        combine_report_files, previous_report_root_directory = (
+            combine_report_files_check()
+        )
         if combine_report_files:
             combine_current_with_previous_report_files(previous_report_root_directory)
 
@@ -336,13 +355,17 @@ try:
         # log file markers will be removed once the log files are processed
         # therefore those log files need to be copied first
         if dated_analysis_folder_created_:
-            flag_copy_log_one_ = copy_log_files_to_marker_dir(dated_analysis_dated_directory_path_)
+            flag_copy_log_one_ = copy_log_files_to_marker_dir(
+                dated_analysis_dated_directory_path_
+            )
             output(
                 "Copied all log files to Analysis dated folder with status: {}".format(
                     flag_copy_log_one_
                 )
             )
-            flag_copy_log_two_ = copy_log_files_to_marker_dir(settings.ANALYSIS_CURRENT_FOLDER)
+            flag_copy_log_two_ = copy_log_files_to_marker_dir(
+                settings.ANALYSIS_CURRENT_FOLDER
+            )
             output(
                 "Copied all log files to Analysis current folder with status: {}".format(
                     flag_copy_log_two_
@@ -373,7 +396,9 @@ try:
                 )
             )
     else:
-        output("No temp report files where found, indicating no families where processed.")
+        output(
+            "No temp report files where found, indicating no families where processed."
+        )
     # delete any files in Input directory
     pCleanUp.delete_file_in_input_directory()
 except Exception as e:

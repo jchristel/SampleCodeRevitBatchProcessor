@@ -288,6 +288,7 @@ class FamilyDataFamily(base.Base):
 
             - 0 index the nesting level at which the circular nesting occurs
             - 1 index a string in format: family name :: family category
+            - 2 the entire family name nesting path this circular reference appeared on
             
         """
 
@@ -328,7 +329,7 @@ class FamilyDataFamily(base.Base):
                 # check if test value is already in list...indicating a circular nesting reference
                 if test_value in node_names:
                     # add family name and category to duplicated list including the nesting level
-                    duplicated_family_names.append("{},{}".format(i, test_value))
+                    duplicated_family_names.append((i, test_value, nesting_path[0]))
                 else:
                     # add test value to nodes list 
                     node_names.append(test_value)

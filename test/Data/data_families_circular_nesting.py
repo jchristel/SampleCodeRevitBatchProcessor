@@ -32,10 +32,9 @@ from test.utils import test
 
 from duHast.Utilities.files_io import get_directory_path_from_file_path
 from duHast.Utilities.Objects.result import Result
-from duHast.Revit.Family.Data.family_base_data_circular_referencing_new import (
+from duHast.Revit.Family.Data.family_base_data_circular_referencing import (
     check_families_have_circular_references,
 )
-from duHast.Revit.Family.Data.family_report_reader import read_data_into_families
 
 TEST_REPORT_DIRECTORY_MULTIPLE = os.path.join(
     get_directory_path_from_file_path(__file__), "ReadCircFamilies_01"

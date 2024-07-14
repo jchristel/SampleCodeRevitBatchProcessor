@@ -51,7 +51,7 @@ Algorithm description:
 import threading
 import os
 
-from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDataUtils
+from duHast.Revit.Family.Data import family_base_data_utils_deprecated as rFamBaseDataUtils
 from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects import result as res

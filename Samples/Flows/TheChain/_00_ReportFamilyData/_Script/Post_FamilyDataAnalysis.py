@@ -52,7 +52,7 @@ from duHast.Utilities.directory_io import create_directory, directory_exists
 from duHast.Utilities.date_stamps import get_folder_date_stamp
 from duHast.Utilities.files_combine import combine_files
 
-from duHast.Revit.Family.Data.family_report_utils import combine_reports
+from duHast.Revit.Family.Data.family_report_utils_deprecated import combine_reports
 
 
 from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (

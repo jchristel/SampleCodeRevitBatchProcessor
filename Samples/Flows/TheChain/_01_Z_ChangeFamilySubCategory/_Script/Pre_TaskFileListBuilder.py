@@ -49,7 +49,7 @@ import sys, os
 import settings as settings  # sets up all commonly used variables and path locations!
 
 from duHast.Utilities.console_out import output
-from duHast.Revit.Family.Data.family_category_data_utils import (
+from duHast.Revit.Family.Data.family_category_data_utils_deprecated import (
     read_overall_family_category_data_from_directory,
     read_overall_family_sub_category_change_directives_from_directory,
     get_families_requiring_sub_category_change,

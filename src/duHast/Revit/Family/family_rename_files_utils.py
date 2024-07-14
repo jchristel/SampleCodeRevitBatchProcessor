@@ -47,7 +47,7 @@ from duHast.Utilities.Objects.timer import Timer
 
 from duHast.Utilities import files_csv as fileCSV, files_get as fileGet
 from duHast.Utilities.Objects import result as res
-from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDUtils
+from duHast.Revit.Family.Data import family_base_data_utils_deprecated as rFamBaseDUtils
 
 
 # tuples containing rename directive read from file

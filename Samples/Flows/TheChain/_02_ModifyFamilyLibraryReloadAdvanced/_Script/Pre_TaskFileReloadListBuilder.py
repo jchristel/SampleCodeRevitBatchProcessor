@@ -33,7 +33,7 @@ import sys, os
 import settings as settings  # sets up all commonly used variables and path locations!
 
 from duHast.Utilities.console_out import output
-from duHast.Revit.Family.Data.family_base_data_reload_advanced import build_work_lists
+from duHast.Revit.Family.Data.family_base_data_reload_advanced_deprecated import build_work_lists
 
 
 # -------------

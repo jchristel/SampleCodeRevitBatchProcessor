@@ -547,7 +547,6 @@ class FamilyDataContainer(base.Base):
                 "Data storage type : {} is not supported.".format(other.data_type)
             )
 
-
     def _get_storage_of_type(storage_property):
         """
         Loops of the storage instances saved in the storage property of this class and returns their string values
@@ -613,7 +612,6 @@ class FamilyDataContainer(base.Base):
         data = self._get_storage_of_type(storage_property = self.warnings_data_storage)
         return {FamilyWarningsDataStorage.data_type:data}
     
-
     def get_data_string_list(self):
         """
         returns a dictionary where key is the storage data type and value is a list of string representing the data storage

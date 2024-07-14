@@ -334,7 +334,8 @@ def read_data_into_family_containers(path_to_data):
     - FamilySharedParameterDataStorage
     - FamilyWarningsDataStorage
 
-    These are then added to a family container object and returned.
+    These are then added to a family container object and returned. The family container object contains all storage instances of a specific root or nested family
+    identified by a unique family name nesting path + family category nesting path
 
     Note: The content of multiple csv files of the same data type will be combined into a single list of objects.
 
@@ -451,6 +452,81 @@ def read_data_into_family_containers(path_to_data):
     return return_value
 
 
+def _get_root_families(families):
+    """
+    Returns all families which root families from past in list
+
+    :param families: _description_
+    :type families: _type_
+    :return: _description_
+    :rtype: _type_
+    """
+    root_families = []
+
+    # do a type check
+    if isinstance(families, list) == False:
+        raise TypeError(
+            "families needs to be of type list. Got: {} instead".format(type(families))
+        )
+
+    for family in families:
+        # do a type check
+        if isinstance(family, FamilyDataFamily) == False:
+            raise TypeError(
+                "All instances in families needs to be of type FamilyDataFamily. Got: {} instead".format(
+                    type(family)
+                )
+            )
+
+        if family.is_root_family:
+            root_families.append(family)
+    return root_families
+
+
+def _assign_nested_families_to_root_families(root_families, families):
+    """
+    Adds nested families to their respective root families ( root family here is the top most family in the nesting tree)
+
+    :param root_families: List of roo
+    :type root_families: _type_
+    :param families: _description_
+    :type families: _type_
+    :raises ValueError: _description_
+    :return: _description_
+    :rtype: _type_
+    """
+    for family in families:
+        # check if this is a nested family ( not a root family )
+        if family.is_root_family == False:
+            # get the root family name and category
+            root_name_path_chunks = family.family_nesting_path.split(NESTING_SEPARATOR)
+            compare_family_name = root_name_path_chunks[0]
+            category_name_path_chunks = family.family_category_nesting_path.split(
+                NESTING_SEPARATOR
+            )
+            compare_family_category = category_name_path_chunks[0]
+
+            # loop over root families and find the host
+            found_root_family = False
+            for root_family in root_families:
+                if (
+                    root_family.family_name == compare_family_name
+                    and root_family.family_category == compare_family_category
+                ):
+                    root_family.add_nested_family_instance(family)
+                    found_root_family = True
+                    break
+
+            # do a sanity check
+            if found_root_family == False:
+                raise ValueError(
+                    "Cant find root family for {} {}".format(
+                        compare_family_name, compare_family_category
+                    )
+                )
+    return root_families
+
+
 def read_data_into_families(path_to_data):
     """
     Read the data from the csv files in the directory and return a list of FamilyDataFamily objects.
@@ -486,53 +562,75 @@ def read_data_into_families(path_to_data):
         containers = container_read_result.result
         # loop over containers and assign to families
         for container in containers:
+
             # check if the family is already in the list
-            compare_family_name = None
-            compare_family_category = None
-            
-            if container.is_root_family:
-                # if family is a root family use directly the containers family name and family category
-                compare_family_name = container.family_nesting_path
-                compare_family_category = container.family_category_nesting_path
-            else:
-                # if a nested family get, need to get to the root family at the top of the nesting tree
-                root_name_path_chunks = container.family_nesting_path.split(
-                    NESTING_SEPARATOR
-                )
-                compare_family_name = root_name_path_chunks[0]
-                category_name_path_chunks = (
-                    container.family_category_nesting_path.split(NESTING_SEPARATOR)
-                )
-                compare_family_category = category_name_path_chunks[0]
+            # compare_family_name = container.family_nesting_path
+            # compare_family_category = container.family_category_nesting_path
+
+            # if container.is_root_family:
+            # if family is a root family use directly the containers family name and family category
+            #    compare_family_name = container.family_nesting_path
+            #    compare_family_category = container.family_category_nesting_path
+            # else:
+            # if a nested family get, need to get to the root family at the top of the nesting tree
+            #    root_name_path_chunks = container.family_nesting_path.split(
+            #        NESTING_SEPARATOR
+            #    )
+            #    compare_family_name = root_name_path_chunks[0]
+            #    category_name_path_chunks = (
+            #        container.family_category_nesting_path.split(NESTING_SEPARATOR)
+            #    )
+            #    compare_family_category = category_name_path_chunks[0]
+
             # check if the family is already in the list
             family_found = False
             for family in families:
                 if (
-                    family.family_name == compare_family_name
-                    and family.family_category == compare_family_category
+                    family.family_name == container.family_name
+                    and family.family_category == container.family_category
+                    and family.family_nesting_path == container.family_nesting_path
+                    and family.family_category_nesting_path
+                    == container.family_category_nesting_path
+                    and family.is_root_family == container.is_root_family
                 ):
                     family_found = True
                     family.add_data_container(container)
                     return_value.append_message(
-                        "Added container to family: {} - {}".format(
-                            compare_family_name, compare_family_category
+                        "Added container to family: {} - {} {} - {}".format(
+                            container.family_name,
+                            container.family_category,
+                            container.family_nesting_path,
+                            container.family_category_nesting_path,
                         )
                     )
                     break
             # if the family is not in the list, add it
             if family_found == False:
                 new_family = FamilyDataFamily(
-                    family_name=compare_family_name,
-                    family_category=compare_family_category,
+                    family_name=container.family_name,
+                    family_category=container.family_category,
                     family_file_path=container.family_file_path,
+                    family_nesting_path=container.family_nesting_path,
+                    family_category_nesting_path=container.family_category_nesting_path,
+                    is_root_family=container.is_root_family,
                 )
                 new_family.add_data_container(container)
                 families.append(new_family)
                 return_value.append_message(
-                    "Added new family: {} - {}".format(
-                        compare_family_name, compare_family_category
+                    "Added new family: {} - {} {} - {}".format(
+                        container.family_name,
+                        container.family_category,
+                        container.family_nesting_path,
+                        container.family_category_nesting_path,
                     )
                 )
+
+        # need to add nested families to root families
+        # filter out root families
+        root_families = _get_root_families(families=families)
+        # assign nested families to root families
+        families = _assign_nested_families_to_root_families(root_families, families)
+
     except Exception as e:
         return_value.update_sep(
             False, "Failed to convert containers into families: {}".format(e)

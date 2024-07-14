@@ -27,4 +27,8 @@ Category data default names.
 #
 #
 
+# processor identifier
 DATA_TYPE_PROCESSOR = "CategoryProcessor"
+
+# report name
+DATA_REPORT_NAME =   "FamilyCategoriesCombinedReport"

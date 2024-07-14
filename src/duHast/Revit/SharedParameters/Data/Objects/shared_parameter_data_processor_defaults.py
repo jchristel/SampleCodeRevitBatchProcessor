@@ -27,4 +27,8 @@ Shared parameters data default names.
 #
 #
 
+# processor identifier
 DATA_TYPE_PROCESSOR = "SharedParameterProcessor"
+
+# report name
+DATA_REPORT_NAME = "FamilySharedParametersCombinedReport"

@@ -27,8 +27,11 @@ Family base data default names.
 #
 #
 
-
+# processor identifier
 DATA_TYPE_PROCESSOR = "FamilyBaseProcessor"
 
 # indicates a nesting level
 NESTING_SEPARATOR = " :: "
+
+# report name
+DATA_REPORT_NAME =   "FamilyBaseDataCombinedReport"

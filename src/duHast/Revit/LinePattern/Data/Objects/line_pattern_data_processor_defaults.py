@@ -27,4 +27,8 @@ line pattern data default names.
 #
 #
 
+# processor identifier
 DATA_TYPE_PROCESSOR = "LinePatternProcessor"
+
+# report name
+DATA_REPORT_NAME = "FamilyLinePatternsCombinedReport"

@@ -27,4 +27,8 @@ Warnings data default names.
 #
 #
 
+# processor identifier
 DATA_TYPE_PROCESSOR = "WarningsProcessor"
+
+# report name
+DATA_REPORT_NAME = "FamilyWarningsCombinedReport"

@@ -119,6 +119,29 @@ class FamilyDataFamily(base.Base):
     def __repr__(self):
         return "{}<{}>".format(self.family_name, self.family_category)
 
+    def __eq__(self, other):
+        """
+        Compares family_name and family_category properties only
+
+        :param other: Another FamilyDataFamily instance
+        :type other: :class:`.FamilyDataFamily`
+        :return: True if family_name and family_category are equal otherwise false
+        :rtype: bool
+        """
+
+        return isinstance(other, FamilyDataFamily) and (
+            self.family_name,
+            self.family_category,
+        ) == (
+            other.family_name,
+            other.family_category,
+        )
+
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)
+
+
     def _build_nesting_by_name(self):
         """
         Build the nesting name for the family data.
@@ -277,6 +300,32 @@ class FamilyDataFamily(base.Base):
 
         # set flag indicating that the family data has changed and needs to be processed again
         self.is_processed = False
+
+    def get_all_storage_data_as_strings(self):
+        """
+        Returns the data storage within each container within this family as a list of string.
+
+        :return: A dictionary where key is the data storage type, and value is a nested list of lists containing the data storage string value
+        :rtype: {key:[[str]]}
+        """
+
+        # set up the return value
+        data_storage_as_string = {}
+
+        # loop over each container and get its dictionary representing the storage type and its values as a list o string
+        for container in self.data_containers_unsorted:
+            container_dic = container.get_data_string_list()
+            for key,value in container_dic.items():
+                # check if that storage key is already in the return dictionary
+                if key in data_storage_as_string:
+                    # if extend its value list by the new containers values list
+                    data_storage_as_string[key].extend(value)
+                else:
+                    # set up a new key and value list
+                    data_storage_as_string[key] = value
+
+        return data_storage_as_string
+
 
     def has_circular_nesting(self):
         """

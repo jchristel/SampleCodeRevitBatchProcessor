@@ -83,15 +83,15 @@ class FamilyDataContainer(base.Base):
         Note: There is the possibility that only one of the storage classes is populated, this is due to the fact that the data is read from separate files and not all data is always present in each file.
 
         :param family_base_data_storage: a list of FamilyBaseDataStorage instances
-        :type family_base_data_storage: list
+        :type family_base_data_storage: [:class:`.FamilyBaseDataStorage`]
         :param category_data_storage: a list of FamilyCategoryDataStorage instances
-        :type category_data_storage: list
+        :type category_data_storage: [:class:`.FamilyCategoryDataStorage`]
         :param line_pattern_data_storage: a list of FamilyLinePatternDataStorage instances
-        :type line_pattern_data_storage: list
+        :type line_pattern_data_storage: [:class:`.FamilyLinePatternDataStorage`]
         :param shared_parameter_data_storage: a list of FamilySharedParameterDataStorage instances
-        :type shared_parameter_data_storage: list
+        :type shared_parameter_data_storage: [:class:`.FamilySharedParameterDataStorage`]
         :param warnings_data_storage: a list of FamilyWarningsDataStorage instances
-        :type warnings_data_storage: list
+        :type warnings_data_storage: [:class:`.FamilyWarningsDataStorage`]
         :param kwargs: _description_
         :type kwargs: _type_
         :raises ValueError: type mismatch if any of the past in lists are not of the correct type
@@ -191,7 +191,7 @@ class FamilyDataContainer(base.Base):
         Will update the base properties of the class from a family base data storage instance.
 
         :param storage_instance: a family data storage instance
-        :type storage_instance: IFamilyDataStorage
+        :type storage_instance: :class:`.IFamilyDataStorage`
         """
 
         # set other class properties based on storage
@@ -217,13 +217,13 @@ class FamilyDataContainer(base.Base):
         Note: if storage data properties root_name_path and root_category_path are different to the current values
         all other storage properties will be wiped to avoid mismatches!
 
-        :param other: _description_
-        :type other: _type_
-        :raises ValueError: _description_
+        :param other: A family base data storage instance added to this class
+        :type other: :class:`.FamilyBaseDataStorage`
+        :raises TypeError: If other is not an instance of FamilyBaseDataStorage a type error will be raised.
         """
         # check is correct object type
         if isinstance(other, FamilyBaseDataStorage) == False:
-            raise ValueError("other must be a list of FamilyBaseDataStorage")
+            raise TypeError("other must be a list of FamilyBaseDataStorage")
 
         # only add if not already in list
         if other not in self.family_base_data_storage:
@@ -263,12 +263,12 @@ class FamilyDataContainer(base.Base):
         Note: an exception will be raised if family_nesting_path and family_category_nesting_path do not match the current values!
 
         :param other: a data storage instance
-        :type other: FamilyCategoryDataStorage
-        :raises ValueError: Type mismatch
+        :type other: :class:`.FamilyCategoryDataStorage`
+        :raises TypeError: If other is not an instance of FamilyCategoryDataStorage a type error will be raised.
         """
         # check is correct object type
         if isinstance(other, FamilyCategoryDataStorage) == False:
-            raise ValueError("other must be a list of FamilyCategoryDataStorage")
+            raise TypeError("other must be a list of FamilyCategoryDataStorage")
 
         # only add if not already in list
         if other not in self.category_data_storage:
@@ -330,12 +330,12 @@ class FamilyDataContainer(base.Base):
         Note: an exception will be raised if family_nesting_path and family_category_nesting_path do not match the current values!
 
         :param other: a data storage instance
-        :type other: FamilyLinePatternDataStorage
-        :raises ValueError: Type mismatch
+        :type other: :class:`.FamilyLinePatternDataStorage` 
+        :raises TypeError: If other is not an instance of FamilyLinePatternDataStorage a type error will be raised.
         """
         # check is correct object type
         if isinstance(other, FamilyLinePatternDataStorage) == False:
-            raise ValueError("other must be a list of FamilyLinePatternDataStorage")
+            raise TypeError("other must be a list of FamilyLinePatternDataStorage")
 
         # only add if not already in list
         if other not in self.line_pattern_data_storage:
@@ -394,12 +394,12 @@ class FamilyDataContainer(base.Base):
         Note: an exception will be raised if family_nesting_path and family_category_nesting_path do not match the current values!
 
         :param other: a data storage instance
-        :type other: FamilySharedParameterDataStorage
-        :raises ValueError: Type mismatch
+        :type other: :class:`.FamilySharedParameterDataStorage` 
+        :raises TypeError: If other is not an instance of FamilySharedParameterDataStorage a type error will be raised.
         """
         # check is correct object type
         if isinstance(other, FamilySharedParameterDataStorage) == False:
-            raise ValueError("other must be a list of FamilySharedParameterDataStorage")
+            raise TypeError("other must be a list of FamilySharedParameterDataStorage")
 
         # only add if not already in list
         if other not in self.shared_parameter_data_storage:
@@ -458,12 +458,12 @@ class FamilyDataContainer(base.Base):
         Note: an exception will be raised if family_nesting_path and family_category_nesting_path do not match the current values!
 
         :param other: a data storage instance
-        :type other: FamilyWarningsDataStorage
-        :raises ValueError: Type mismatch
+        :type other: :class:`.FamilyWarningsDataStorage` 
+        :raises TypeError: If other is not an instance of FamilyWarningsDataStorage a type error will be raised.
         """
         # check is correct object type
         if isinstance(other, FamilyWarningsDataStorage) == False:
-            raise ValueError("other must be type of FamilyWarningsDataStorage")
+            raise TypeError("other must be type of FamilyWarningsDataStorage")
 
         # only add if not already in list
         if other not in self.warnings_data_storage:
@@ -516,9 +516,17 @@ class FamilyDataContainer(base.Base):
             )
 
     def add_data_storage(self, other):
+        """
+        Adds a new data storage instance to this container.
+
+        :param other: The new data storage instance.
+        :type other: :class:`.IFamilyDataStorage`
+        :raises TypeError: If other is not an instance of IFamilyDataStorage a type error will be raised.
+        """
+
         # check is correct object type
         if isinstance(other, IFamilyDataStorage) == False:
-            raise ValueError(
+            raise TypeError(
                 "other must be a type of IFamilyDataStorage but is: {}".format(
                     type(other)
                 )
@@ -538,3 +546,90 @@ class FamilyDataContainer(base.Base):
             raise TypeError(
                 "Data storage type : {} is not supported.".format(other.data_type)
             )
+
+
+    def _get_storage_of_type(storage_property):
+        """
+        Loops of the storage instances saved in the storage property of this class and returns their string values
+        :param storage_property: a property of this class containing IFamilyDataStorage instances
+        :type storage_property: :class:`.Result` IFamilyDataStorage
+        :return: A nested list of strings representing each storage instance
+        :rtype: [[str]]
+        """
+        data = []
+        for storage in storage_property:
+            if(isinstance(storage, IFamilyDataStorage)==False):
+                raise TypeError( "storage should of type IFamilyDataStorage but is [{}]".format(type(storage)))
+            data.append(storage.get_data_values_as_list_of_strings())
+        return data
+
+    def get_family_base_data_storage_as_string(self):
+        """
+        Returns all family base data instance storage as string
+
+        :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage instance
+        :rtype: {str:[[str]]}
+        """
+        data = self._get_storage_of_type(storage_property = self.family_base_data_storage)
+        return {FamilyBaseDataStorage.data_type:data}
+
+    def get_family_category_data_storage_as_string(self):
+        """
+        Returns all family category data instance storage as string
+
+        :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage instance
+        :rtype: {str:[[str]]}
+        """
+        data = self._get_storage_of_type(storage_property = self.category_data_storage)
+        return {FamilyCategoryDataStorage.data_type:data}
+
+    def get_line_pattern_data_storage_as_string(self):
+        """
+        Returns all family line pattern data instance storage as string
+
+        :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage instance
+        :rtype: {str:[[str]]}
+        """
+        data = self._get_storage_of_type(storage_property = self.line_pattern_data_storage)
+        return {FamilyLinePatternDataStorage.data_type:data}
+
+    def get_shared_parameter_data_storage_as_string(self):
+        """
+        Returns all family shared parameter data instance storage as string
+
+        :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage instance
+        :rtype: {str:[[str]]}
+        """
+        data = self._get_storage_of_type(storage_property = self.shared_parameter_data_storage)
+        return {FamilySharedParameterDataStorage.data_type:data}
+    
+    def get_warnings_data_storage_as_string(self):
+        """
+        Returns all family warnings data instance storage as string
+
+        :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage instance
+        :rtype: {str:[[str]]}
+        """
+        data = self._get_storage_of_type(storage_property = self.warnings_data_storage)
+        return {FamilyWarningsDataStorage.data_type:data}
+    
+
+    def get_data_string_list(self):
+        """
+        returns a dictionary where key is the storage data type and value is a list of string representing the data storage
+        """
+
+        return_value = {}
+        storage_as_strings=[]
+
+        # get all storage data as string ( represented in dictionary where key is the data type and values list of lists containing the storage data)
+        storage_as_strings.append(self.get_family_base_data_storage_as_string())
+        storage_as_strings.append(self.get_family_category_data_storage_as_string())
+        storage_as_strings.append(self.get_line_pattern_data_storage_as_string())
+        storage_as_strings.append(self.get_shared_parameter_data_storage_as_string())
+        storage_as_strings.append(self.get_warnings_data_storage_as_string())
+
+        # build single dictionary by data type:
+        for d in storage_as_strings:
+            return_value[d.key]=d.value
+        return return_value

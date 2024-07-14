@@ -11,7 +11,7 @@ Family data container class.
     - LinePatternDataStorage
     - SharedParameterDataStorage
 
-
+- These storage instances belong to a specific family only identified by unique combination of family name nesting path and family category nesting path
 """
 
 #

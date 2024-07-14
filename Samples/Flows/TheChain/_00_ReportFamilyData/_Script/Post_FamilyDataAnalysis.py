@@ -58,17 +58,36 @@ from duHast.Revit.Family.Data.family_report_utils_deprecated import combine_repo
 from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
     DATA_TYPE_PROCESSOR as data_type_family_base_processor,
 )
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    DATA_REPORT_NAME as data_type_family_base_report_name,
+)
+
 from duHast.Revit.Categories.Data.Objects.category_data_processor_defaults import (
     DATA_TYPE_PROCESSOR as data_type_category_processor,
 )
+from duHast.Revit.Categories.Data.Objects.category_data_processor_defaults import (
+    DATA_REPORT_NAME as data_type_category_report_name,
+)
+
 from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor_defaults import (
     DATA_TYPE_PROCESSOR as data_type_line_pattern_processor,
 )
+from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor_defaults import (
+    DATA_REPORT_NAME as data_type_line_pattern_report_name,
+)
+
 from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_defaults import (
     DATA_TYPE_PROCESSOR as data_type_shared_parameter_processor,
 )
+from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_defaults import (
+    DATA_REPORT_NAME as data_type_shared_parameter_report_name,
+)
+
 from duHast.Revit.Warnings.Data.Objects.warnings_data_processor_defaults import (
     DATA_TYPE_PROCESSOR as data_type_warnings_processor,
+)
+from duHast.Revit.Warnings.Data.Objects.warnings_data_processor_defaults import (
+    DATA_REPORT_NAME as data_type_warnings_report_name,
 )
 
 # -------------
@@ -79,23 +98,23 @@ from duHast.Revit.Warnings.Data.Objects.warnings_data_processor_defaults import 
 FILE_DATA_TO_COMBINE = [
     [
         data_type_category_processor,
-        "FamilyCategoriesCombinedReport" + settings.REPORT_FILE_EXTENSION,
+        data_type_category_report_name + settings.REPORT_FILE_EXTENSION,
     ],
     [
         data_type_shared_parameter_processor,
-        "FamilySharedParametersCombinedReport" + settings.REPORT_FILE_EXTENSION,
+        data_type_shared_parameter_report_name + settings.REPORT_FILE_EXTENSION,
     ],
     [
         data_type_line_pattern_processor,
-        "FamilyLinePatternsCombinedReport" + settings.REPORT_FILE_EXTENSION,
+        data_type_line_pattern_report_name + settings.REPORT_FILE_EXTENSION,
     ],
     [
         data_type_family_base_processor,
-        "FamilyBaseDataCombinedReport" + settings.REPORT_FILE_EXTENSION,
+        data_type_family_base_report_name + settings.REPORT_FILE_EXTENSION,
     ],
     [
         data_type_warnings_processor,
-        "FamilyWarningsCombinedReport" + settings.REPORT_FILE_EXTENSION,
+        data_type_warnings_report_name + settings.REPORT_FILE_EXTENSION,
     ],
 ]
 

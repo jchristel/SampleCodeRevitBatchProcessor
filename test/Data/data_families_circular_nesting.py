@@ -35,6 +35,7 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Family.Data.family_base_data_circular_referencing import (
     check_families_have_circular_references,
 )
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (NESTING_SEPARATOR)
 
 TEST_REPORT_DIRECTORY_MULTIPLE = os.path.join(
     get_directory_path_from_file_path(__file__), "ReadCircFamilies_01"
@@ -70,12 +71,14 @@ class DataCircularNestingFamilies(test.Test):
             )
             # expecting 1 family instances
             assert len(test_result_circular.result) == len(test_data)
-
+            
             # check if circular reference was identified correctly
             for family_name, circular_reference in test_data.items():
                 found_match = False
                 for family_instance_data in test_result_circular.result:
-                    if family_instance_data[0].family_name == family_name:
+                    return_value.append_message("{}".format(family_instance_data))
+                    nesting_chunks = family_instance_data[2].split(NESTING_SEPARATOR)
+                    if nesting_chunks[0] == family_name:
                         found_match = True
                         return_value.append_message(
                             "Family {} found in family with circular references ".format(
@@ -85,13 +88,13 @@ class DataCircularNestingFamilies(test.Test):
 
                         return_value.append_message(
                             "circular referencing found {}: vs expected: {}".format(
-                                sorted(family_instance_data[0]),
-                                sorted(circular_reference[0]),
+                                sorted([family_instance_data[1]]),
+                                sorted(circular_reference),
                             )
                         )
                         try:
-                            assert sorted(family_instance_data[0]) == sorted(
-                                circular_reference[0]
+                            assert sorted([family_instance_data[1]]) == sorted(
+                                circular_reference
                             )
                         except Exception as e:
                             return_value.update_sep(
@@ -110,8 +113,8 @@ class DataCircularNestingFamilies(test.Test):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function _test runner : {}".format(
-                    self.test_name, e
+                "An exception: {} occurred in function _test runner : {}".format(
+                    e, self.test_name
                 ),
             )
 

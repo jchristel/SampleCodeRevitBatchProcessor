@@ -92,7 +92,7 @@ class DataCullingNestedFamilies(test.Test):
                         )
 
                         unique_longest_path_from_family = (
-                            family_instance._get_longest_unique_nesting_path()
+                            family_instance.get_longest_unique_nesting_path()
                         )
                         return_value.append_message(
                             "Longest unique path found {}: vs expected: {}".format(
@@ -121,7 +121,7 @@ class DataCullingNestedFamilies(test.Test):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function _test runner : {}".format(self.test_name, e),
+                "An exception: {} occurred in function _test runner : {}".format(e, self.test_name),
             )
 
         return return_value

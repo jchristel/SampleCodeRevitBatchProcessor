@@ -92,6 +92,19 @@ class DataReadFamiliesIntoFamilyInstances(test.Test):
                             len(family_instance.data_containers_unsorted)
                             == expected_number_of_containers[0]
                         )
+
+                        return_value.append_message(
+                            "Family {} has {} families nested. Expected: {}".format(
+                                family_name,
+                                len(family_instance.nested_families_unsorted),
+                                expected_number_of_containers[1],
+                            )
+                        )
+                        assert (
+                            len(family_instance.nested_families_unsorted)
+                            == expected_number_of_containers[1]
+                        )
+
                         break
                 if not found_match:
                     return_value.update_sep(
@@ -123,20 +136,20 @@ class DataReadFamiliesIntoFamilyInstances(test.Test):
             # test multiple families per report
             # 4 test files
             test_files_multiple = {
-                "Sample_Family_One": (4,),
-                "Sample_Family_Two": (4,),
-                "Sample_Family_Three": (2,),
-                "Sample_Family_Four": (2,),
-                "Sample_Family_Five": (2,),
-                "Sample_Family_Six": (9,),
-                "Sample_Family_Seven": (5,),
-                "Sample_Family_Eight": (2,),
-                "Sample_Family_Nine": (4,),
-                "Sample_Family_Ten": (1,),
-                "Sample_Family_Eleven": (2,),
-                "Sample_Family_Twelve": (1,),
-                "Sample_Family_Thirteen": (1,),
-                "Sample_Family_Fourteen": (2,),
+                "Sample_Family_One": (1,3,),
+                "Sample_Family_Two": (1,3,),
+                "Sample_Family_Three": (1,1,),
+                "Sample_Family_Four": (1,1,),
+                "Sample_Family_Five": (1,1,),
+                "Sample_Family_Six": (1,8,),
+                "Sample_Family_Seven": (1,4,),
+                "Sample_Family_Eight": (1,1,),
+                "Sample_Family_Nine": (1,3,),
+                "Sample_Family_Ten": (1,0,),
+                "Sample_Family_Eleven": (1,1,),
+                "Sample_Family_Twelve": (1,0,),
+                "Sample_Family_Thirteen": (1,0,),
+                "Sample_Family_Fourteen": (1,1,),
             }
 
             # make sure all families are accounted for and got the right number of containers loaded

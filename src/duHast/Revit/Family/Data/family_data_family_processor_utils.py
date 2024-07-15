@@ -73,23 +73,37 @@ def process_data(family_base_data_report_file_path, do_this):
 
         # set up some multithreading
         core_count = int(os.environ["NUMBER_OF_PROCESSORS"])
-        return_value.append_message("cores: ".format(core_count))
+        return_value.append_message("cores: {}".format(core_count))
 
         if core_count > 2:
             # leave some room for other processes
             core_count = core_count - 1
-            chunk_size = len(read_result.result) / core_count
+            return_value.append_message("using threads: {}".format(core_count))
+            # attempt int division
+            chunk_size = len(read_result.result) // core_count
+            return_value.append_message("...chunk size: {}".format(chunk_size))
             threads = []
+            start_value = 0
+            end_value = start_value + chunk_size
             # set up threads
             for i in range(core_count):
+                if start_value + chunk_size <= len(read_result.result)-1:
+                    end_value = start_value + chunk_size
+                else:
+                    end_value = len(read_result.result)
+                return_value.append_message("......assigning chunk {} : {} of {}".format(start_value, end_value, len(read_result.result)))
                 t = threading.Thread(
                     target=do_this,
                     args=(
-                        read_result.result[i * chunk_size : (i + 1) * chunk_size],
+                        read_result.result[start_value : end_value],
                         processing_result,
                     ),
                 )
                 threads.append(t)
+
+                # increase the start value for the next processing chunk by 1 to avoid duplicate processing
+                start_value = end_value + 1
+
             # start up threads
             for t in threads:
                 t.start()
@@ -98,9 +112,9 @@ def process_data(family_base_data_report_file_path, do_this):
                 t.join()
         else:
             # no threading
-            processing_result = do_this(read_result.result)
+            processing_result = do_this(read_result.result, processing_result)
     except Exception as e:
         return_value.update_sep(False, "Failed to read and process families with exception: {}".format(e))
 
-    return_value.result.append(processing_result)
+    return_value.result=processing_result
     return return_value

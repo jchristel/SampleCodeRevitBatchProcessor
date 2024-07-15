@@ -242,61 +242,65 @@ class FamilyDataFamily(base.Base):
         # as soon as there is a nested family, the root path of a family (no nesting) is not unique anymore.
 
         # get the highest nesting level
-        highest_nesting_level = max(self.nesting_by_level.keys())
+        if(len(self.nesting_by_level) == 0):
+            # if no nesting levels found return the root family only (?)
+            unique_nesting_paths.append((self.family_nesting_path, self.family_category_nesting_path))
+        else:
+            highest_nesting_level = max(self.nesting_by_level.keys())
 
-        # get the data containers at the highest nesting level
-        family_data_instances = self.nesting_by_level[highest_nesting_level]
-        if family_data_instances == None:
-            raise ValueError("No data containers found at highest nesting level.")
-
-        # add their nesting path to the unique nesting paths
-        for family_data_instance in family_data_instances:
-            # add tuple made up off family name nesting path at 0 and family category nesting path at 1
-            unique_nesting_paths.append(
-                (
-                    family_data_instance.family_nesting_path,
-                    family_data_instance.family_category_nesting_path,
-                )
-            )
-
-        # loop over the nesting levels from the highest to the lowest
-        for nesting_level in range(highest_nesting_level - 1, 0, -1):
-            # get the data containers at the current nesting level
-            family_data_instances = self.nesting_by_level[nesting_level]
+            # get the data containers at the highest nesting level
+            family_data_instances = self.nesting_by_level[highest_nesting_level]
             if family_data_instances == None:
-                raise ValueError(
-                    "No data containers found at nesting level: {}".format(
-                        nesting_level
+                raise ValueError("No data containers found at highest nesting level.")
+
+            # add their nesting path to the unique nesting paths
+            for family_data_instance in family_data_instances:
+                # add tuple made up off family name nesting path at 0 and family category nesting path at 1
+                unique_nesting_paths.append(
+                    (
+                        family_data_instance.family_nesting_path,
+                        family_data_instance.family_category_nesting_path,
                     )
                 )
-            # loop over the data containers at the current nesting level
-            for family_data_instance in family_data_instances:
-                # get the nesting path of the current data container
-                nesting_path_family_name_current_level = (
-                    family_data_instance.family_nesting_path
-                )
-                nesting_path_category_current_level = (
-                    family_data_instance.family_category_nesting_path
-                )
-                # check for match of both path
-                for unique_nesting_path in unique_nesting_paths:
-                    found_match = False
-                    # check if the current nesting path overlaps with the unique nesting path
-                    if (
-                        nesting_path_family_name_current_level in unique_nesting_path[0]
-                        and nesting_path_category_current_level
-                        in unique_nesting_path[1]
-                    ):
-                        # if it overlaps, remove it from the unique nesting paths
-                        found_match = True
-                        break
-                if not found_match:
-                    unique_nesting_paths.append(
-                        (
-                            nesting_path_family_name_current_level,
-                            nesting_path_category_current_level,
+
+            # loop over the nesting levels from the highest to the lowest
+            for nesting_level in range(highest_nesting_level - 1, 0, -1):
+                # get the data containers at the current nesting level
+                family_data_instances = self.nesting_by_level[nesting_level]
+                if family_data_instances == None:
+                    raise ValueError(
+                        "No data containers found at nesting level: {}".format(
+                            nesting_level
                         )
                     )
+                # loop over the data containers at the current nesting level
+                for family_data_instance in family_data_instances:
+                    # get the nesting path of the current data container
+                    nesting_path_family_name_current_level = (
+                        family_data_instance.family_nesting_path
+                    )
+                    nesting_path_category_current_level = (
+                        family_data_instance.family_category_nesting_path
+                    )
+                    # check for match of both path
+                    for unique_nesting_path in unique_nesting_paths:
+                        found_match = False
+                        # check if the current nesting path overlaps with the unique nesting path
+                        if (
+                            nesting_path_family_name_current_level in unique_nesting_path[0]
+                            and nesting_path_category_current_level
+                            in unique_nesting_path[1]
+                        ):
+                            # if it overlaps, remove it from the unique nesting paths
+                            found_match = True
+                            break
+                    if not found_match:
+                        unique_nesting_paths.append(
+                            (
+                                nesting_path_family_name_current_level,
+                                nesting_path_category_current_level,
+                            )
+                        )
         # return the unique nesting paths
         return unique_nesting_paths
 
@@ -422,7 +426,8 @@ class FamilyDataFamily(base.Base):
         """
 
         # check if processed and if not process the family data
-        self.process(self)
+        if not self.is_processed:
+            self.process()
 
         # get the longest unique nesting path ( can be multiple )
         longest_unique_nesting_path = self.get_longest_unique_nesting_path()

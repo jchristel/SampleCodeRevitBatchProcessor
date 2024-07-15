@@ -101,18 +101,24 @@ def check_families_have_circular_references(family_base_data_report_file_path):
     try:
 
         # load and process families
-        families_processed = process_data(
+        families_processed_result = process_data(
             family_base_data_report_file_path=family_base_data_report_file_path,
             do_this=find_circular_reference,
         )
 
         # check if processing was successful, otherwise get out
-        if families_processed.status == False:
-            raise ValueError(families_processed.message)
+        if families_processed_result.status == False:
+            raise ValueError(families_processed_result.message)
 
         # get results
-        families = families_processed.result[0]
-        families_with_circular_nesting = families_processed.result[1]
+        families=[]
+        families_with_circular_nesting=[]
+        for nested_tuple in families_processed_result.result:
+            families.append(nested_tuple[0])
+            families_with_circular_nesting.extend(nested_tuple[1])
+
+        # append messages debug
+        return_value.append_message(families_processed_result.message)
 
         return_value.append_message(
             "{} Found: {} circular references in families.".format(

@@ -59,4 +59,4 @@ twine==4.0.2
 tzdata==2023.3
 urllib3==2.2.2
 webencodings==0.5.1
-zipp==3.16.2
+zipp==3.19.1

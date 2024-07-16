@@ -55,6 +55,10 @@ from duHast.Revit.Common.Geometry.geometry import (
 )
 from duHast.Revit.Rooms.Geometry.geometry import get_room_boundary_loops
 from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value
+from duHast.Revit.Common import (
+    parameter_get_utils as rParaGet,
+    phases as rPhase,
+)
 
 
 def get_room_number(room):
@@ -66,10 +70,10 @@ def get_room_number(room):
     :rtype: str
     """
 
-    room_param = get_built_in_parameter_value(
+    number_param = get_built_in_parameter_value(
         element=room, built_in_parameter_def=BuiltInParameter.ROOM_NUMBER
     )
-    return room_param
+    return number_param
 
 
 def get_room_name(room):
@@ -80,7 +84,30 @@ def get_room_name(room):
     :return: The room name of the room
     :rtype: str
     """
-    return room.get_Parameter(BuiltInParameter.ROOM_NAME).AsString()
+    name_param = get_built_in_parameter_value(
+        element=room, built_in_parameter_def=BuiltInParameter.ROOM_NAME
+    )
+    return name_param
+
+
+def get_room_phase(rvt_doc, room):
+    """
+    Get the phase of the room
+    :param rvt_doc: The document to get the room from
+    :type rvt_doc: Document
+    :param room: The room to get the phase of
+    :type room: Room
+    :return: The phase of the room
+    :rtype: str
+    """
+    phase_param = get_built_in_parameter_value(
+        room,
+        BuiltInParameter.ROOM_PHASE,
+        rParaGet.get_parameter_value_as_element_id,
+    )
+
+    phase = rPhase.get_phase_name_by_id(rvt_doc, phase_param).encode("utf-8")
+    return phase
 
 
 def get_room_num_variations(room):
@@ -337,7 +364,7 @@ def get_all_rooms_in_plan_views(rvt_doc, view_list):
             FilteredElementCollector(rvt_doc, view.Id)
             .OfCategory(BuiltInCategory.OST_Rooms)
             .ToElements()
-        )  # get_rooms_in_view(rvt_doc, view)
+        )
         entire_rms = get_only_entire_rooms(rvt_doc, rooms_in_view, view)
         if len(entire_rms) > 0:
             rooms.extend(entire_rms)
@@ -355,7 +382,6 @@ def get_rooms_from_sheet_obj_list(rvt_doc, sheet_obj_list):
     :return: The rooms from the sheet object list
     :rtype: list
     """
-    sheet_list = [obj.sheet for obj in sheet_obj_list]
 
     rms_on_sel_shts = []
 

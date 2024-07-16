@@ -78,7 +78,7 @@ def get_segments_as_curves(rvt_doc, segments, filter_only=None):
     return curves
 
 
-def get_wall_segments_as_curves_only(rvt_doc, segments):
+def get_only_wall_segments_as_curves(rvt_doc, segments):
     """
     Get the wall segments of a room as curves.
     :param rvt_doc: The Revit document
@@ -91,7 +91,7 @@ def get_wall_segments_as_curves_only(rvt_doc, segments):
     return get_segments_as_curves(rvt_doc, segments, filter_only=Wall)
 
 
-def get_rm_sep_lines_as_curves_only(rvt_doc, segments):
+def get_only_rm_sep_lines_as_curves_only(rvt_doc, segments):
     """
     Get the room separation line segments of a room as curves.
     :param rvt_doc: The Revit document

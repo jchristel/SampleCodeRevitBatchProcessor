@@ -3,6 +3,7 @@
 This module contains a number of functions around exporting from Revit to nwc file format.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -55,6 +56,11 @@ from duHast.Revit.Exports.Utility.export_ifc_config_2022 import (
 from duHast.Revit.Exports.Utility.export_ifc_config_2023 import (
     ifc_get_third_party_export_config_by_model_2023,
     ifc_get_third_party_export_config_by_view_2023,
+)
+
+from duHast.Revit.Exports.Utility.export_ifc_config_2024 import (
+    ifc_get_third_party_export_config_by_model_2024,
+    ifc_get_third_party_export_config_by_view_2024,
 )
 
 
@@ -183,6 +189,7 @@ def setup_ifc_export_option(
     export_config,
     view_id=rdb.ElementId.InvalidElementId,
     coord_option=IFCCoords.shared_coordinates,
+    convert_view_id_to_integer=True,
 ):
     """
     Function assigning a view Id to export ifc config if it is exporting by view.
@@ -198,11 +205,20 @@ def setup_ifc_export_option(
     """
 
     if export_config.UseActiveViewGeometry == True:
-        export_config.ActiveViewId = view_id.IntegerValue
+        if convert_view_id_to_integer:
+            export_config.ActiveViewId = view_id.IntegerValue
+        else:
+            export_config.ActiveViewId = view_id
     else:
-        export_config.ActiveViewId = -1
+        if convert_view_id_to_integer:
+            export_config.ActiveViewId = -1
+        else:
+            export_config.ActiveViewId = rdb.ElementId.InvalidElementId
+
     # set up the ifc export options object
     ex_ifc = rdb.IFCExportOptions()
+
+    # do I need to convert the view id to int here as well if required?
     export_config.UpdateOptions(ex_ifc, view_id)
 
     # set the coordinate system to use
@@ -249,6 +265,13 @@ def export_3d_views_to_ifc(
     """
 
     return_value = res.Result()
+    # get the revit version:
+    convert_view_id_to_integer = True
+    # revit 2024 expects an Element Id for the view id not the integer value of the id
+    revit_version = get_revit_version_number(doc=doc)
+    if revit_version == 2024:
+        convert_view_id_to_integer = False
+
     views_to_export = []
     # get all 3D views in model and filter out views to be exported
     views = rView.get_views_of_type(doc, rdb.ViewType.ThreeD)
@@ -260,7 +283,10 @@ def export_3d_views_to_ifc(
         for export_view in views_to_export:
             return_value_by_view = res.Result()
             updated_export_option = setup_ifc_export_option(
-                ifc_export_config, export_view.Id, ifc_coordinates_system
+                export_config=ifc_export_config,
+                view_id=export_view.Id,
+                coord_option=ifc_coordinates_system,
+                convert_view_id_to_integer=convert_view_id_to_integer,
             )
             file_name = (
                 build_export_file_name_from_view(export_view.Name, view_filter, ".ifc")
@@ -310,11 +336,19 @@ def export_model_to_ifc(
     """
 
     return_value = res.Result()
+    # get the revit version:
+    convert_view_id_to_integer = True
+    # revit 2024 expects an Element Id for the view id not the integer value
+    revit_version = get_revit_version_number(doc=doc)
+    if revit_version == 2024:
+        convert_view_id_to_integer = False
+
     # need to create an export option from the export config
     ifc_export_option = setup_ifc_export_option(
         export_config=ifc_export_config,
         view_id=rdb.ElementId.InvalidElementId,
         coord_option=coord_option,
+        convert_view_id_to_integer=convert_view_id_to_integer,
     )
 
     return_value_by_model = export_to_ifc(
@@ -357,6 +391,10 @@ def ifc_get_third_party_export_config_by_model(doc, ifc_version, ifc_settings=No
         )
     elif revit_version == 2023:
         ifc_config = ifc_get_third_party_export_config_by_model_2023(
+            ifc_version=ifc_version, ifc_settings=ifc_settings
+        )
+    elif revit_version == 2024:
+        ifc_config = ifc_get_third_party_export_config_by_model_2024(
             ifc_version=ifc_version, ifc_settings=ifc_settings
         )
     else:
@@ -402,6 +440,10 @@ def ifc_get_third_party_export_config_by_view(doc, ifc_version, ifc_settings=Non
         )
     elif revit_version == 2023:
         ifc_config = ifc_get_third_party_export_config_by_view_2023(
+            ifc_version=ifc_version, ifc_settings=ifc_settings
+        )
+    elif revit_version == 2024:
+        ifc_config = ifc_get_third_party_export_config_by_view_2024(
             ifc_version=ifc_version, ifc_settings=ifc_settings
         )
     else:

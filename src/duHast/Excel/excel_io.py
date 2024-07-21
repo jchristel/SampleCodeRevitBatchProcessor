@@ -76,8 +76,6 @@ def get_excel_tab_names(file_path):
             False,  # corrupt load (False = don't load, True = load)
         )
         tab_names = [ws.Name for ws in wb.Worksheets]
-        wb.Close(False)
-        excel.Quit()
         return_value.update_sep(True, "Successfully read Excel file.")
         return_value.result = tab_names
     except Exception as e:
@@ -138,8 +136,6 @@ def save_excel_file_as_csv(file_path_excel, file_path_csv, tab_name=None):
             ws.Activate()
 
         wb.SaveAs(file_path_csv, Excel.XlFileFormat.xlCSV)
-        wb.Close(False)
-        excel.Quit()
         return_value.update_sep(True, "Successfully saved Excel file as CSV.")
     except Exception as e:
         return_value.update_sep(

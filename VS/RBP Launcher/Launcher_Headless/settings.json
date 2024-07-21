@@ -1,9 +1,0 @@
-{
-  "rbpFilePath": "my path",
-  "cPython": [
-    {
-      "version": "3.9",
-      "filePath": "my path"
-    }
-  ]
-}

@@ -30,26 +30,40 @@ from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 
 # from duHast.Utilities import Utility as util
 from duHast.Revit.Warnings import warnings as rWarn
+from duHast.Revit.Warnings.Data.Objects.warnings_data_storage import FamilyWarningsDataStorage
 
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
 
-WARNING_TEXT = "warningText"
-WARNING_GUID = "warningGUID"
-WARNING_RELATED_IDS = "warningRelatedIds"
-WARNING_OTHER_IDS = "warningOtherIds"
+#WARNING_TEXT = "warningText"
+#WARNING_GUID = "warningGUID"
+#WARNING_RELATED_IDS = "warningRelatedIds"
+#WARNING_OTHER_IDS = "warningOtherIds"
 
 
 class WarningsData(IFamData.IFamilyData):
-    def __init__(self, root_path=None, root_category_path=None, data_type=None):
+    def __init__(self, root_path=None, root_category_path=None):
+        """
+        Constructor for warnings data class.
+
+        :param root_path: root path for data
+        :type root_path: str
+        :param root_category_path: root category path for data
+        :type root_category_path: str
+        """
 
         super(WarningsData, self).__init__(
             root_path=root_path,
             root_category_path=root_category_path,
-            data_type=data_type,
         )
 
     def process(self, doc):
+
+        # make sure to get a value for the file path which is not empty if the document has not been saved
+        saved_file_name = "-"
+        if doc.PathName != "":
+            saved_file_name = doc.PathName
+        
         # get all warnings in document
         warnings = rWarn.get_warnings(doc)
         # loop over warnings and extract data
@@ -82,35 +96,42 @@ class WarningsData(IFamData.IFamilyData):
                 pass
 
             # build data
-            self.data.append(
-                {
-                    IFamData.ROOT: self.root_path,
-                    IFamData.ROOT_CATEGORY: self.root_category_path,
-                    IFamData.FAMILY_NAME: doc.Title,
-                    IFamData.FAMILY_FILE_PATH: doc.PathName,
-                    WARNING_TEXT: war_text,
-                    WARNING_GUID: war_guid,
-                    WARNING_RELATED_IDS: war_element_ids_as_integer,
-                    WARNING_OTHER_IDS: war_other_element_ids_as_integer,
-                }
+            storage = FamilyWarningsDataStorage(
+                root_name_path=self.root_path,
+                root_category_path=self.root_category_path,
+                family_name=self._strip_file_extension(doc.Title),
+                family_file_path=saved_file_name,
+                warning_text=war_text,
+                warning_guid=war_guid,
+                warning_related_ids=war_element_ids_as_integer,
+                warning_other_ids=war_other_element_ids_as_integer,
             )
+            self.add_data(storage_instance=storage)
 
         # check if any shared parameter was found
         if len(self.data) == 0:
             # add message no warnings found
             # build data
-            self.data.append(
-                {
-                    IFamData.ROOT: self.root_path,
-                    IFamData.ROOT_CATEGORY: self.root_category_path,
-                    IFamData.FAMILY_NAME: doc.Title,
-                    IFamData.FAMILY_FILE_PATH: doc.PathName,
-                    WARNING_TEXT: "No warnings present in family.",
-                    WARNING_GUID: "",
-                    WARNING_RELATED_IDS: [],
-                    WARNING_OTHER_IDS: [],
-                }
+            storage = FamilyWarningsDataStorage(
+                root_name_path=self.root_path,
+                root_category_path=self.root_category_path,
+                family_name=self._strip_file_extension(doc.Title),
+                family_file_path=saved_file_name,
+                warning_text="No warnings present in family.",
+                warning_guid="",
+                warning_related_ids=[],
+                warning_other_ids=[],
             )
+            self.add_data(storage_instance=storage)
 
     def get_data(self):
         return self.data
+    
+    def add_data(self, storage_instance):
+        if isinstance(storage_instance, FamilyWarningsDataStorage):
+            self.data.append(storage_instance)
+        else:
+            raise ValueError(
+                "storage instance must be an instance of FamilyWarningsDataStorage"
+            )
+

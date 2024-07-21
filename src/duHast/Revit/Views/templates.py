@@ -3,6 +3,7 @@
 This module contains a number of helper functions relating to Revit view templates. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ This module contains a number of helper functions relating to Revit view templat
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -54,6 +55,7 @@ def get_view_templates(doc):
 def get_view_templates_ids(doc):
     """
     Get all view template ids in a model
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: All view templates Id's in the model
@@ -67,6 +69,29 @@ def get_view_templates_ids(doc):
         if v.IsTemplate:
             ids.append(v.Id)
     return ids
+
+
+def get_view_template_which_allow_graphical_overrides(doc):
+    """
+    Returns a list of view template which allow graphical overrides to be applied.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: list
+    :rtype: [Autodesk.Revit.DB.View]
+    """
+
+    # get all view templates in the model
+    view_templates_in_model = get_view_templates(doc)
+    view_template_filtered = []
+
+    # check if graphical overrides are allowed
+    for vt in view_templates_in_model:
+        if vt.AreGraphicsOverridesAllowed():
+            view_template_filtered.append(vt)
+
+    return (view_template_filtered,)
 
 
 def get_used_view_templates_ids(doc):
@@ -99,9 +124,30 @@ def get_used_view_templates_ids(doc):
     return view_template_ids_used
 
 
+def get_view_template_by_name(doc, view_template_name):
+    """
+    Returns a view template by its name.
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view_template_name: The view template name.
+    :type view_template_name: str
+
+    :return: A view template if name matches, otherwise None
+    :rtype: Autodesk.Revit.DB.View
+    """
+
+    all_view_templates_in_model = get_view_templates(doc)
+    for view_temp in all_view_templates_in_model:
+        if view_temp.Name == view_template_name:
+            return view_temp
+    return None
+
+
 def get_default_view_type_template_ids(doc):
     """
     Gets view template Id's used as default by view types
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: All view templates Id's which are used as default in view types in the model

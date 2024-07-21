@@ -3,6 +3,7 @@
 A number of helper functions relating to Revit worksets.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ A number of helper functions relating to Revit worksets.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -39,6 +40,9 @@ import System
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import transaction as rTran
+from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
+    FailureHandlingConfig,
+)
 from duHast.Utilities import utility as util
 from duHast.Utilities import files_io as filesIO
 from duHast.Utilities import files_tab as filesTab
@@ -47,6 +51,8 @@ from duHast.Utilities import files_tab as filesTab
 import Autodesk.Revit.DB as rdb
 from Autodesk.Revit.DB import (
     BuiltInParameter,
+    DeleteWorksetOption,
+    DeleteWorksetSettings,
     Element,
     ElementId,
     ElementWorksetFilter,
@@ -477,23 +483,169 @@ def create_workset(doc, workset_name):
     """
 
     return_value = res.Result()
-    if (doc.IsWorkshared):
-        if(WorksetTable.IsWorksetNameUnique(doc, workset_name)):
+    if doc.IsWorkshared:
+        if WorksetTable.IsWorksetNameUnique(doc, workset_name):
+
             def action():
                 action_return_value = res.Result()
                 try:
                     new_workset = Workset.Create(doc, workset_name)
-                    action_return_value.update_sep(True, "Workset {} created.".format(workset_name))
+                    action_return_value.update_sep(
+                        True, "Workset {} created.".format(workset_name)
+                    )
                     action_return_value.result.append(new_workset)
                 except Exception as e:
-                    action_return_value.update_sep(False, "Failed to create workset {} with exception: {}".format(workset_name,e))
+                    action_return_value.update_sep(
+                        False,
+                        "Failed to create workset {} with exception: {}".format(
+                            workset_name, e
+                        ),
+                    )
                 return action_return_value
-            
+
             transaction = Transaction(doc, "Adding workset {}".format(workset_name))
             tranny_status = rTran.in_transaction(transaction, action)
             return_value.update(tranny_status)
         else:
-            return_value.update_sep(False, "Workset name already exists: {}".format(workset_name))
+            return_value.update_sep(
+                False, "Workset name already exists: {}".format(workset_name)
+            )
     else:
-        return_value.update_sep(False, "Cant create a workset in a non workshared file.")
+        return_value.update_sep(
+            False, "Cant create a workset in a non workshared file."
+        )
+    return return_value
+
+
+def delete_workset(doc, delete_workset_name, move_elements_to_workset_name=None):
+    """
+    deletes a workset given by name
+
+    if a move elements to workset name is provided, delete workset settings will be set accordingly
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param delete_workset_name: The name of the workset to be deleted
+    :type delete_workset_name: str
+    :param move_elements_to_workset_name: The name of the workset elements to be moved to. If None all elements on the workset will be deleted.
+    :type move_elements_to_workset_name: str (default is None)
+
+    :return:
+        Result class instance.
+
+        - .status = True if:
+
+            - successfully deleted the workset
+
+        - Otherwise False:
+
+            - An exception occurred.
+            - Revit cant delete the workset with the settings provided.
+            - Document is not workshared
+
+        .result will contain an empty list.
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+    try:
+        if doc.IsWorkshared:
+            # get the id of the workset to be deleted
+            workset_id_delete = get_workset_id_by_name(doc, delete_workset_name)
+            # check if workset name is valid
+            if workset_id_delete == ElementId.InvalidElementId:
+                raise ValueError(
+                    "To be deleted workset {} does not exist in file.".format(
+                        delete_workset_name
+                    )
+                )
+            else:
+                return_value.append_message("workset {} found in model.".format(delete_workset_name))
+
+            # set up delete setting
+            delete_workset_settings = None
+
+            if move_elements_to_workset_name is not None:
+                return_value.append_message(
+                    "Attempting to move elements to workset: {}".format(
+                        move_elements_to_workset_name
+                    )
+                )
+                # get the target workset id
+                workset_id_target = get_workset_id_by_name(
+                    doc, move_elements_to_workset_name
+                )
+                # check if workset name is valid
+                if workset_id_target == ElementId.InvalidElementId:
+                    raise ValueError(
+                        "Target workset {} does not exist in file.".format(
+                            move_elements_to_workset_name
+                        )
+                    )
+                # set up delete settings
+                delete_workset_settings = DeleteWorksetSettings(
+                    DeleteWorksetOption.MoveElementsToWorkset, workset_id_target
+                )
+            else:
+                return_value.append_message(
+                    "Deleting all elements on workset: {}".format(delete_workset_name)
+                )
+                # delete all elements on the workset provided
+                delete_workset_settings = DeleteWorksetSettings()
+
+            # check if workset can be deleted
+            if WorksetTable.CanDeleteWorkset(
+                doc, workset_id_delete, delete_workset_settings
+            ):
+                return_value.append_message(
+                    "Revit allows to delete workset: {}".format(delete_workset_name)
+                )
+                # set up the delete action
+                def action():
+                    action_return_value = res.Result()
+                    try:
+                        WorksetTable.DeleteWorkset(
+                            doc, workset_id_delete, delete_workset_settings
+                        )
+                        action_return_value.update_sep(
+                            True, "Workset {} deleted.".format(delete_workset_name)
+                        )
+                    except Exception as e:
+                        action_return_value.update_sep(
+                            False,
+                            "Failed to delete workset {} with exception: {}".format(
+                                delete_workset_name, e
+                            ),
+                        )
+                    return action_return_value
+                
+                # execute the delete action
+                transaction = Transaction(
+                    doc, "Deleting workset {}".format(delete_workset_name)
+                )
+                # delete the workset at all costs. (attempt to swallow up any warnings / errors revit may produce)
+                tranny_status = rTran.in_transaction_with_failure_handling(
+                    transaction, action
+                )
+                return_value.update(tranny_status)
+
+            else:
+                return_value.update_sep(
+                    False,
+                    "Can't delete workset {} with settings: {}. (Revit says NO!)".format(
+                        delete_workset_name, delete_workset_settings
+                    ),
+                )
+        else:
+            return_value.update_sep(
+                False, "Cant delete a workset in a non workshared file."
+            )
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "An exception {} occurred when attempting to delete workset: {}".format(
+                delete_workset_name, e
+            ),
+        )
     return return_value

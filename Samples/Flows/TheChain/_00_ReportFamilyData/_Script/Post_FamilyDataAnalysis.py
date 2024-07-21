@@ -4,6 +4,7 @@ This module contains post reporting analysis utility functions:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -51,24 +52,70 @@ from duHast.Utilities.directory_io import create_directory, directory_exists
 from duHast.Utilities.date_stamps import get_folder_date_stamp
 from duHast.Utilities.files_combine import combine_files
 
-from duHast.Revit.Family.Data.family_report_utils import combine_reports
+from duHast.Revit.Family.Data.family_report_utils_deprecated import combine_reports
+
+
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_family_base_processor,
+)
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    DATA_REPORT_NAME as data_type_family_base_report_name,
+)
+
+from duHast.Revit.Categories.Data.Objects.category_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_category_processor,
+)
+from duHast.Revit.Categories.Data.Objects.category_data_processor_defaults import (
+    DATA_REPORT_NAME as data_type_category_report_name,
+)
+
+from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_line_pattern_processor,
+)
+from duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor_defaults import (
+    DATA_REPORT_NAME as data_type_line_pattern_report_name,
+)
+
+from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_shared_parameter_processor,
+)
+from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_defaults import (
+    DATA_REPORT_NAME as data_type_shared_parameter_report_name,
+)
+
+from duHast.Revit.Warnings.Data.Objects.warnings_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_warnings_processor,
+)
+from duHast.Revit.Warnings.Data.Objects.warnings_data_processor_defaults import (
+    DATA_REPORT_NAME as data_type_warnings_report_name,
+)
+
 # -------------
 # my code here:
 # -------------
 
 # list containing file name prefixes and the associated combined report file names
 FILE_DATA_TO_COMBINE = [
-    ["Category", "FamilyCategoriesCombinedReport" + settings.REPORT_FILE_EXTENSION],
     [
-        "SharedParameter",
-        "FamilySharedParametersCombinedReport" + settings.REPORT_FILE_EXTENSION,
+        data_type_category_processor,
+        data_type_category_report_name + settings.REPORT_FILE_EXTENSION,
     ],
     [
-        "LinePattern",
-        "FamilyLinePatternsCombinedReport" + settings.REPORT_FILE_EXTENSION,
+        data_type_shared_parameter_processor,
+        data_type_shared_parameter_report_name + settings.REPORT_FILE_EXTENSION,
     ],
-    ["FamilyBase", "FamilyBaseDataCombinedReport" + settings.REPORT_FILE_EXTENSION],
-    ["Warnings", "FamilyWarningsCombinedReport" + settings.REPORT_FILE_EXTENSION],
+    [
+        data_type_line_pattern_processor,
+        data_type_line_pattern_report_name + settings.REPORT_FILE_EXTENSION,
+    ],
+    [
+        data_type_family_base_processor,
+        data_type_family_base_report_name + settings.REPORT_FILE_EXTENSION,
+    ],
+    [
+        data_type_warnings_processor,
+        data_type_warnings_report_name + settings.REPORT_FILE_EXTENSION,
+    ],
 ]
 
 
@@ -240,7 +287,9 @@ def combine_current_with_previous_report_files(previous_report_root_directory):
                 "Found match for current report file: {}".format(current_report_file)
             )
         else:
-            output("No match found for: {} current output folder.".format(to_combine[1]))
+            output(
+                "No match found for: {} current output folder.".format(to_combine[1])
+            )
 
         if file_exist(os.path.join(previous_report_root_directory, to_combine[1])):
             previous_report_file = os.path.join(

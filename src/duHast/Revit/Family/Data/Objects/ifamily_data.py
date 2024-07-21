@@ -20,14 +20,15 @@ Interface for family data storage / processing class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
 from duHast.Utilities.Objects import base
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
 
 # common data dictionary keys
 ROOT = "root"
@@ -67,6 +68,35 @@ class IFamilyData(base.Base):
 
     def get_data(self):
         pass
+
+    def get_root_storage(self):
+        """
+        Get the root storage objects.
+
+        :return: The IFamilyDataStorage objects referring to the root family.
+        :rtype: list
+        """
+
+        root_data_storage = []
+        for storage in self.data:
+            if NESTING_SEPARATOR not in storage.root_name_path:
+                root_data_storage.append(storage)
+        return root_data_storage
+
+    def get_property_names(self):
+        """
+        Get the property names of the storage object.
+
+        :return: The property names.
+        :rtype: list
+        """
+
+        # get the first storage object
+        if len(self.data) > 0:
+            storage_instance = self.data[0]
+            return storage_instance.get_property_names()
+        else:
+            return []
 
     def update_data(
         self,

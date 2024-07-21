@@ -15,6 +15,6 @@ This report list all families which contain within their nesting structure a cir
 Properties listed
 =====================
 
-- Full family file path of the host family contining a circular reference
+- Full family file path of the host family containing a circular reference
 - List of parent Families
 - List of child families

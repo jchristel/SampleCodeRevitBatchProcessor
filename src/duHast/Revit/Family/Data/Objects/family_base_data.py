@@ -20,8 +20,8 @@ Family base data class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -30,7 +30,11 @@ Family base data class.
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities import directory_io as dirIO, files_io as fileIO
 from duHast.Revit.Common import file_io as rFile
-from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDataUtils
+from duHast.Revit.Family.Data import family_base_data_utils_deprecated as rFamBaseDataUtils
+from duHast.Revit.Family.Data.Objects.family_base_data_storage import (
+    FamilyBaseDataStorage,
+)
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
 
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
@@ -40,46 +44,27 @@ CATEGORY_NAME = "categoryName"
 
 
 class FamilyBaseData(IFamData.IFamilyData):
-    def __init__(self, root_path=None, root_category_path=None, data_type=None):
+    def __init__(self, root_path=None, root_category_path=None):
         """
         Class constructor
 
-        :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+        :param rootPath: The path of the nested family in a tree: rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type rootPath: str
-        :param dataType: Human readable data type descriptor
-        :type dataType: str
+        :param rootCategoryPath: The path of the family category in a tree: rootCategoryName :: nestedCategoryNameOne :: nestedCategoryTwo\
+            This includes the actual category name as the last node.
+        :type rootCategoryPath: str
         """
 
         # store data type  in base class
         super(FamilyBaseData, self).__init__(
             root_path=root_path,
             root_category_path=root_category_path,
-            data_type=data_type,
         )
         # super(CategoryData, self).__init__(rootPath, dataType)
 
-        """
-        self.data = []
-        
-        if(dataType != None):
-            self.dataType = dataType
-        else:
-            self.dataType = 'not declared'
-        
-        if(rootPath != None):
-            self.rootPath = rootPath
-        else:
-            self.rootPath = '-'
-
-        if(rootCategoryPath != None):
-            self.rootCategoryPath = rootCategoryPath
-        else:
-            self.rootCategoryPath = '-'
-        """
-
         if root_category_path != None:
-            category_chunks = root_category_path.split(" :: ")
+            category_chunks = root_category_path.split(NESTING_SEPARATOR)
             self.category = category_chunks[-1]
         else:
             self.category = "unknown"
@@ -173,16 +158,28 @@ class FamilyBaseData(IFamData.IFamilyData):
                 session_id,
             )
 
+        # make sure to get a value for the file path which is not empty if the document has not been saved
+        saved_file_name = "-"
+        if doc.PathName != "":
+            saved_file_name = doc.PathName
+
         # build data
-        self.data.append(
-            {
-                IFamData.ROOT: self.root_path,
-                IFamData.ROOT_CATEGORY: self.root_category_path,
-                IFamData.FAMILY_NAME: self._strip_file_extension(doc.Title),
-                IFamData.FAMILY_FILE_PATH: doc.PathName,  # this property will often be an empty string in nested families
-                CATEGORY_NAME: self.category,
-            }
+        storage = FamilyBaseDataStorage(
+            root_name_path=self.root_path,
+            root_category_path=self.root_category_path,
+            family_name=self._strip_file_extension(doc.Title),
+            family_file_path=saved_file_name,
         )
+
+        self.add_data(storage_instance=storage)
 
     def get_data(self):
         return self.data
+
+    def add_data(self, storage_instance):
+        if isinstance(storage_instance, FamilyBaseDataStorage):
+            self.data.append(storage_instance)
+        else:
+            raise ValueError(
+                "storage instance must be an instance of FamilyBaseDataStorage"
+            )

@@ -3,6 +3,7 @@
 Family category data processor class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ Family category data processor class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -28,50 +29,31 @@ Family category data processor class.
 
 from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
 from duHast.Revit.Categories.Data.Objects import category_data as rCatData
+from duHast.Revit.Categories.Data.Objects.category_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_category_processor,
+)
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    NESTING_SEPARATOR,
+)
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
+from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 from duHast.Utilities.Objects import result as res
-from duHast.Revit.Categories.Utility import category_property_names as rCatPropNames
 
 
 class CategoryProcessor(IFamilyProcessor):
+
+    data_type = data_type_category_processor
+
     def __init__(self, pre_actions=None, post_actions=None):
         """
         Class constructor.
         """
 
-        # setup report header
-        key_prefix = (
-            rCatData.GRAPHIC_PROPERTY_KEY_PREFIX
-            + rCatData.GRAPHIC_PROPERTY_KEY_PREFIX_DELIMITER
-        )
-        string_report_headers = [
-            IFamData.ROOT,
-            IFamData.ROOT_CATEGORY,
-            IFamData.FAMILY_NAME,
-            IFamData.FAMILY_FILE_PATH,
-            IFamData.USAGE_COUNTER,
-            IFamData.USED_BY,
-            rCatData.CATEGORY_NAME,
-            rCatData.SUB_CATEGORY_NAME,
-            rCatData.SUB_CATEGORY_ID,
-            key_prefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_3D,
-            key_prefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_CUT,
-            key_prefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_PROJECTION,
-            key_prefix + rCatPropNames.PROPERTY_MATERIAL_NAME,
-            key_prefix + rCatPropNames.PROPERTY_MATERIAL_ID,
-            key_prefix + rCatPropNames.PROPERTY_LINE_WEIGHT_CUT_NAME,
-            key_prefix + rCatPropNames.PROPERTY_LINE_WEIGHT_PROJECTION_NAME,
-            key_prefix + rCatPropNames.PROPERTY_LINE_COLOUR_RED_NAME,
-            key_prefix + rCatPropNames.PROPERTY_LINE_COLOUR_GREEN_NAME,
-            key_prefix + rCatPropNames.PROPERTY_LINE_COLOUR_BLUE_NAME,
-        ]
-
         # store data type  in base class
         super(CategoryProcessor, self).__init__(
             pre_actions=pre_actions,
             post_actions=[self._post_action_update_used_subcategories],
-            data_type="Category",
-            string_report_headers=string_report_headers,
+            data_type=CategoryProcessor.data_type,
         )
 
         # self.data = []
@@ -95,133 +77,202 @@ class CategoryProcessor(IFamilyProcessor):
 
         :param doc: Current family document.
         :type doc: Autodesk.Revit.DB.Document
-        :param root_path: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+        :param root_path: The path of the nested family in a tree: rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type root_path: str
-        :param root_category_path: The category path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+        :param root_category_path: The category path of the nested family in a tree: rootFamilyCategory :: nestedFamilyOneCategory :: nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
         :type root_category_path: str
         """
 
-        dummy = rCatData.CategoryData(root_path, root_category_path, self.data_type)
+        dummy = rCatData.CategoryData(root_path, root_category_path)
         dummy.process(doc)
         self.data.append(dummy)
 
     # --------------------------------------------- post action ----------------------------------------------------------
 
-    def _add_data(
-        self,
-        processor,
-        root,
-        root_category_path,
-        fam_name,
-        fam_path,
-        use_counter,
-        used_by,
-        fam_cat_name,
-        sub_cat_name,
-        sub_cat_id,
-        cat_gra_style_three_d,
-        cat_gra_style_cut,
-        cat_gra_style_pro,
-        prop_mat_name,
-        prop_mat_id,
-        prop_line_weight_cut_name,
-        prop_line_weight_projection_name,
-        prop_line_col_red,
-        prop_line_col_green,
-        prop_line_col_blue,
+    def _is_sub_category_present(
+        self, root_family_data, nested_family_sub_category_storage
     ):
+        """
+        Check if sub category is present in root family data.
 
-        processor.add_Data(
-            root,
-            root_category_path,
-            fam_name,
-            fam_path,
-            use_counter,
-            used_by,
-            fam_cat_name,
-            sub_cat_name,
-            sub_cat_id,
-            cat_gra_style_three_d,
-            cat_gra_style_cut,
-            cat_gra_style_pro,
-            prop_mat_name,
-            prop_mat_id,
-            prop_line_weight_cut_name,
-            prop_line_weight_projection_name,
-            prop_line_col_red,
-            prop_line_col_green,
-            prop_line_col_blue,
-        )
+        :param root_family_data: List of IFamilyData objects.
+        :type root_family_data: list
+        :param nested_family_sub_category_storage: IFamilyDataStorage object.
+        :type nested_family_sub_category_storage: IFamilyDataStorage
+        :return: IFamilyData object.
+        :rtype: IFamilyData
+        """
 
-    def _is_sub_category_present(self, root_family_data, nested_family_sub_category):
+        # check what came is a list
+        if isinstance(root_family_data, list) == False:
+            raise ValueError(
+                "Root family data must be a list but is type: {}".format(
+                    type(root_family_data)
+                )
+            )
+        if isinstance(nested_family_sub_category_storage, IFamilyDataStorage) == False:
+            raise ValueError(
+                "Nested family sub category storage must be an instance of IFamilyDataStorage but is type: {}".format(
+                    type(nested_family_sub_category_storage)
+                )
+            )
+
         match = None
         # check whether sub category is present
         for root_fam in root_family_data:
-            if (
-                root_fam[rCatData.CATEGORY_NAME]
-                == nested_family_sub_category[rCatData.CATEGORY_NAME]
-                and root_fam[rCatData.SUB_CATEGORY_NAME]
-                == nested_family_sub_category[rCatData.SUB_CATEGORY_NAME]
-            ):
-                match = root_fam
-                break
+            if isinstance(root_fam, IFamData.IFamilyData) == False:
+                raise ValueError(
+                    "Root family data must be a list of IFamilyData objects but is type: {}".format(
+                        type(root_fam)
+                    )
+                )
+            storage_instances = root_fam.get_data()
+            for storage_root in storage_instances:
+                if (
+                    storage_root.category_name
+                    == nested_family_sub_category_storage.category_name
+                    and storage_root.sub_category_name
+                    == nested_family_sub_category_storage.sub_category_name
+                ):
+                    match = root_fam
+                    break
         return match
 
     def _update_root_family_data(
         self, root_family_data, nested_families_sub_categories
     ):
-        # loop over nested family subcategory data
-        for nested_sub_category in nested_families_sub_categories:
-            # check if sub category is already in root family
-            matching_root_fam_category = self._is_sub_category_present(
-                root_family_data, nested_sub_category
+        """
+        Update root family data with used subcategories from nested families.
+
+        :param root_family_data: List of IFamilyData objects.
+        :type root_family_data: list
+        :param nested_families_sub_categories: List of IFamilyDataStorage objects.
+        :type nested_families_sub_categories: list
+        """
+
+        # check what came is a list
+        if isinstance(root_family_data, list) == False:
+            raise ValueError(
+                "Root family data must be a list but is type: {}".format(
+                    type(root_family_data)
+                )
             )
-            if matching_root_fam_category != None:
-                # update used by list
-                if (
-                    nested_sub_category[IFamData.FAMILY_NAME]
-                    not in matching_root_fam_category[IFamData.USED_BY]
-                ):
-                    # add the root path to the used by list for ease of identification of the origin of this subcategory usage
-                    matching_root_fam_category[IFamData.USED_BY].append(
-                        nested_sub_category[IFamData.ROOT]
+        if isinstance(nested_families_sub_categories, list) == False:
+            raise ValueError(
+                "Nested families sub categories must be a list but is type: {}".format(
+                    type(nested_families_sub_categories)
+                )
+            )
+
+        # loop over nested family subcategory storage data
+        for nested_sub_category_storage in nested_families_sub_categories:
+
+            if isinstance(nested_sub_category_storage, IFamilyDataStorage) == False:
+                raise ValueError(
+                    "Nested family sub category must be an instance of IFamilyDataStorage but is type: {}".format(
+                        type(nested_sub_category_storage)
                     )
-                    # update used by counter
-                    matching_root_fam_category[IFamData.USAGE_COUNTER] = (
-                        matching_root_fam_category[IFamData.USAGE_COUNTER] + 1
-                    )
+                )
+
+            # check if sub category is already in root family
+            matching_root_fam_category_data = self._is_sub_category_present(
+                root_family_data, nested_sub_category_storage
+            )
+            if matching_root_fam_category_data != None:
+                root_storage_all = matching_root_fam_category_data.get_root_storage()
+
+                # some data instances might have more than one root storage instance to represent multiple categories present in the family
+                for root_storage in root_storage_all:
+                    if (
+                        nested_sub_category_storage.category_name
+                        == root_storage.category_name
+                    ) and (
+                        nested_sub_category_storage.sub_category_name
+                        == root_storage.sub_category_name
+                    ):
+                        # update used by list
+                        if (
+                            nested_sub_category_storage.family_name
+                            not in root_storage.used_by
+                        ):
+                            root_storage.update_usage(nested_sub_category_storage)
             else:
                 pass
                 # nothing to do if that category has not been reported to start off with
                 # this category could, for example, belong to the section marker family present in most 3d families
 
-    def _get_used_subcategories(self, data):
+    def _get_used_subcategories(self, data_instances):
+        """
+        Get used subcategories from nested families data as list of IFamilyDataStorage objects.
+
+        :param data_instances: List of IFamilyData objects.
+        :type data_instances: list
+        :return: List of IFamilyDataStorage objects.
+        :rtype: list
+        """
+
+        # data_instances should be a list of IFamilyData objects
+        if isinstance(data_instances, list) == False:
+            raise ValueError(
+                "Data must be a list but is type: {}".format(type(data_instances))
+            )
+
         used_subcategories = []
-        for d in data:
-            if d[IFamData.USAGE_COUNTER] > 0:
-                # get the family category
-                category_path = d[IFamData.ROOT_CATEGORY].split(" :: ")
-                # which is the last entry in the root category path
-                category = category_path[len(category_path) - 1]
-                # select only items which either belong to the category of the family or
-                # are corner cases like imports in families or Reference planes ... ( english language specific!! )
-                if (
-                    category == d[rCatData.CATEGORY_NAME]
-                    or d[rCatData.CATEGORY_NAME] in self.category_check_corner_cases
-                ):
-                    used_subcategories.append(d)
+        for d in data_instances:
+
+            # check what is being processed...should be an IFamilyData object
+            if isinstance(d, IFamData.IFamilyData) == False:
+                raise ValueError(
+                    "Data must be an instance of IFamilyData but is type: {}".format(
+                        type(d)
+                    )
+                )
+
+            # TODO: check if the root category path is correct
+            # should I get the first or last entry?? Might need to be the first?
+            # i'm not entirely sure why I'm checking this here...
+            # is this so I only delete sub categories in the root family which are not in use any where in the nested families of the same category?
+            # i.e Furniture.OverHead assumes the host family is of Category Furniture and I am checking whether the sub category OverHead is in use in any
+            # of the nested families as well as the host family?
+
+            # The report (storage data ) also contains two fields: Category and SubCategory. Category in this case can well be different to the category of the family!
+
+            # loop over storage of the data instance
+            data_storage_instances = d.get_data()
+            for storage in data_storage_instances:
+                if storage.use_counter > 0:
+                    # get the family category
+                    category_path = storage.root_category_path.split(NESTING_SEPARATOR)
+                    # which is the last entry in the root category path
+                    category_storage = category_path[len(category_path) - 1]
+                    # select only items which either belong to the category of the family or
+                    # are corner cases like imports in families or Reference planes ... ( english language specific!! )
+                    if (
+                        category_storage == storage.category_name
+                        or storage.category_name in self.category_check_corner_cases
+                    ):
+                        used_subcategories.append(storage)
         return used_subcategories
 
     def _post_action_update_used_subcategories(self, doc):
+        """
+        Post action to update used subcategories data in the root family data object.
+
+        :param doc: Current family document.
+        :type doc: Autodesk.Revit.DB.Document
+        :return: Result object.
+        :rtype: Result
+        """
+
         return_value = res.Result()
         try:
             # find all subcategories of nested families
             nested_family_data = self._find_nested_families_data()
             # get used sub categories from nested data
             nested_family_used_sub_categories = self._get_used_subcategories(
-                nested_family_data
+                data_instances=nested_family_data
             )
             # update root family data only
             root_family_data = self._find_root_family_data()

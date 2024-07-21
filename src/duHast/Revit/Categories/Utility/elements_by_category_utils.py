@@ -42,6 +42,7 @@ from duHast.Revit.Categories.Utility.category_properties_get_utils import (
 )
 from duHast.Revit.Categories.Utility.category_property_names import (
     CATEGORY_GRAPHIC_STYLE_3D,
+    CATEGORY_GRAPHIC_STYLE_CUT,
 )
 from duHast.Revit.Family import family_element_utils as rFamElementUtils
 
@@ -148,18 +149,23 @@ def get_elements_by_category(doc, cat):
     """
 
     # get all elements in family
+    # format is category graphic style id: list of element ids
     dic = _sort_all_elements_by_category(doc)
     # get id and graphic style id of category to be filtered by
-    category_ids = get_category_graphic_style_ids(cat)
+    # contains the ids of the graphic styles for the values '3D', 'Projection', 'Cut'
+    category_graphic_style_ids = get_category_graphic_style_ids(cat)
     # check whether category past in is same as owner family category
     if doc.OwnerFamily.FamilyCategory.Name == cat.Name:
         # 3d elements within family which have subcategory set to 'none' belong to owner family
         # category. Revit uses a None value as id rather then the actual category id
         # my get parameter value translates that into -1 (invalid element id)
-        category_ids[CATEGORY_GRAPHIC_STYLE_3D] = rdb.ElementId.InvalidElementId
+        category_graphic_style_ids[CATEGORY_GRAPHIC_STYLE_3D] = rdb.ElementId.InvalidElementId
     dic_filtered = {}
     # filter elements by category ids
-    for key, value in category_ids.items():
+    for key, value in category_graphic_style_ids.items():
+        # if the key is 'Cut' and the style id is -1 means there is no cut graphics style available for that family category...ignore it
+        if(key==CATEGORY_GRAPHIC_STYLE_CUT and value.IntegerValue ==-1):
+            continue
         # print (key + ' ' + str(value))
         if value in dic:
             dic_filtered[key] = dic[value]

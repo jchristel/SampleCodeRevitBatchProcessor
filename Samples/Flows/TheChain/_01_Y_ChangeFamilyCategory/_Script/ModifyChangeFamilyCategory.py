@@ -76,7 +76,7 @@ from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Revit.Common.file_io import save_as_family
 from duHast.Revit.Categories.categories import get_family_category
-from duHast.Revit.Family.Data.family_category_data_utils import (
+from duHast.Revit.Family.Data.family_category_data_utils_deprecated import (
     read_overall_family_category_change_directives_from_directory,
 )
 from duHast.Revit.Categories.change_family_category import change_family_category

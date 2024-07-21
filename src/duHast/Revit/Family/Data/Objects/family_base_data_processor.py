@@ -3,6 +3,7 @@
 Family base data processor class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,20 +20,23 @@ Family base data processor class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
 from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import DATA_TYPE_PROCESSOR as data_type_family_base_processor
 from duHast.Revit.Family.Data.Objects import family_base_data as rFamData
-from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Utilities import util_batch_p as uBP
 
 
 class FamilyBaseProcessor(IFamilyProcessor):
+
+    data_type = data_type_family_base_processor
+
     def __init__(
         self,
         reference_file_path=None,
@@ -46,24 +50,12 @@ class FamilyBaseProcessor(IFamilyProcessor):
         """
 
         # store data type  in base class
-        string_report_headers = [
-            IFamData.ROOT,
-            IFamData.ROOT_CATEGORY,
-            IFamData.FAMILY_NAME,
-            IFamData.FAMILY_FILE_PATH,
-            rFamData.CATEGORY_NAME,
-        ]
-
-        # store data type  in base class
         super(FamilyBaseProcessor, self).__init__(
-            data_type="FamilyBase",
+            data_type=FamilyBaseProcessor.data_type,
             pre_actions=pre_actions,
             post_actions=post_actions,
-            string_report_headers=string_report_headers,
         )
 
-        # self.data = []
-        # self.dataType = 'FamilyBase'
         self.reference_file_path = reference_file_path
         self.family_out_directory_path = family_out_directory_path
         if session_id != None:
@@ -80,15 +72,15 @@ class FamilyBaseProcessor(IFamilyProcessor):
 
         :param doc: Current family document.
         :type doc: Autodesk.Revit.DB.Document
-        :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+        :param rootPath: The path of the nested family in a tree: rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type rootPath: str
-        :param rootCategoryPath: The path of the nested family in in terms of category in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+        :param rootCategoryPath: The path of the nested family in in terms of category in a tree: rootFamilyCategory :: nestedFamilyOneCategory :: nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
         :type rootCategoryPath: str
         """
 
-        dummy = rFamData.FamilyBaseData(root_path, root_category_path, self.data_type)
+        dummy = rFamData.FamilyBaseData(root_path, root_category_path)
         dummy.process(
             doc,
             self.reference_file_path,

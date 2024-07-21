@@ -3,6 +3,7 @@
 Revit points helper functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ Revit points helper functions
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -222,6 +223,44 @@ def check_duplicate_point(points, point):
         if are_points_identical(p1, point):
             return True
     return False
+
+
+def on_which_side_of_line_is_point(line, point):
+    """
+    If d<0 then the point lies on one side of the line, and if d>0 then it lies on the other side.
+    If d=0 then the point lies exactly line.
+
+    Refer https://math.stackexchange.com/questions/274712/calculate-on-which-side-of-a-straight-line-is-a-given-point-located
+
+    :param line: Line to check which side a point is on.
+    :type line: Autodesk.Revit.DB.Line
+    :param point: The point to check;
+    :type point: Autodesk.Revit.DB.XYZ
+
+    :return: double
+    :rtype: double
+    """
+
+    d = (point.X - line.GetEndPoint(0).X) * (
+        line.GetEndPoint(1).Y - line.GetEndPoint(0).Y
+    ) - (point.Y - line.GetEndPoint(0).Y) * (
+        line.GetEndPoint(1).X - line.GetEndPoint(0).X
+    )
+    return d
+
+
+def distance_between_two_points(p1, p2):
+    """
+    Returns the distance between two points.
+
+    :param p1: First point.
+    :type p1: Autodesk.Revit.DB.XYZ
+    :param p2: Second point.
+    :type p2: Autodesk.Revit.DB.XYZ
+    :return: The distance between points
+    :rtype: double
+    """
+    return p1.DistanceTo(p2)
 
 
 # ---------------------------- debug ----------------------------

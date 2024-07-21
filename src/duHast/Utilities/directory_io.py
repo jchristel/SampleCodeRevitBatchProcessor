@@ -32,6 +32,19 @@ import os.path
 import shutil
 
 
+def is_directory(directory_path):
+    """
+    Check if a given path is a directory
+    :param directory_path: Fully qualified directory path
+    :type directory_path: str
+    :return: True if directory, otherwise False
+    :rtype: bool
+    """
+    try:
+        return os.path.isdir(directory_path)
+    except Exception:
+        return False
+
 def directory_empty_delete(full_directory_path):
     """
     Deletes an empty directory

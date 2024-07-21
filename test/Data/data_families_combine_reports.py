@@ -33,11 +33,11 @@ import sys
 
 from test.utils import test
 
-from duHast.Revit.Family.Data.family_base_data_utils import (
+from duHast.Revit.Family.Data.family_base_data_utils_deprecated import (
     nested_family,
     read_overall_family_data_list_from_directory,
 )
-from duHast.Revit.Family.Data.family_report_utils import combine_reports
+from duHast.Revit.Family.Data.family_report_utils_deprecated import combine_reports
 from duHast.Utilities.files_io import get_directory_path_from_file_path
 
 TEST_REPORT_DIRECTORY_ONE = os.path.join(

@@ -105,7 +105,7 @@ def delete_main_sub_category(doc, sub_cat_name):
 
     Note: Only subcategory directly belonging to the family category will be checked for a match.
 
-    ::param doc: Current Revit family document.
+    :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
     :param sub_cat_name: The name of the subcategory to be deleted.
     :type sub_cat_name: str

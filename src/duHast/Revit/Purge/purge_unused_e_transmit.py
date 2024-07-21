@@ -149,6 +149,42 @@ def _purge_unused_2022(doc):
     value = _purge(doc, e_transmit_file_path)
     return value
 
+def _purge_unused_2023(doc):
+    """
+    Purges the document, revit version 2023, using the purge unused functionality of the eTransmit tool provided by Autodesk
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: True purge was successful, otherwise False.
+    :rtype: bool
+    """
+
+    # path to e-Transmit dll for Revit 2019
+    e_transmit_file_path = (
+        r"C:\Program Files\Autodesk\eTransmit for Revit 2023\eTransmitForRevitDB.dll"
+    )
+    value = _purge(doc, e_transmit_file_path)
+    return value
+
+def _purge_unused_2024(doc):
+    """
+    Purges the document, revit version 2024, using the purge unused functionality of the eTransmit tool provided by Autodesk
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: True purge was successful, otherwise False.
+    :rtype: bool
+    """
+
+    # path to e-Transmit dll for Revit 2019
+    e_transmit_file_path = (
+        r"C:\Program Files\Autodesk\eTransmit for Revit 2024\eTransmitForRevitDB.dll"
+    )
+    value = _purge(doc, e_transmit_file_path)
+    return value
+
 
 # -------------------------------------------- Purge Unused using eTransmit for Revit 2021 -------------------------------------
 
@@ -188,6 +224,10 @@ def purge_unused_e_transmit(doc):
             result_value.status = _purge_unused_2021(doc)
         elif revit_version == "2022":
             result_value.status = _purge_unused_2022(doc)
+        elif revit_version == "2023":
+            result_value.status = _purge_unused_2023(doc)
+        elif revit_version == "2024":
+            result_value.status = _purge_unused_2024(doc)
         else:
             # this is a non supported revit version!
             raise ValueError(

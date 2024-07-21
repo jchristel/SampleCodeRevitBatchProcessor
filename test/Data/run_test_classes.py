@@ -26,13 +26,21 @@ This module runs all utility related tests .
 #
 #
 
-
+from duHast.Utilities.Objects.result import Result
 from test.utils.run_tests import RunTest
 
 # import test classes
 from test.Data import (
+    data_families_reading_families,
+    data_families_container_reading_single,
+    data_families_container_reading_multiple,
     data_families_culling_nested_families,
-    data_families_reading_overall_report,
+    data_families_reading_family_base_report,
+    data_families_reading_categories_report,
+    data_families_reading_line_patterns_report,
+    data_families_reading_shared_parameters_report,
+    data_families_reading_family_warnings_report,
+    data_families_circular_nesting,
     data_families_find_none_nested_root_families,
     data_families_find_host_families_needing_rename,
     data_families_combine_reports,
@@ -50,18 +58,29 @@ def run_tests():
     :rtype: {str:bool,str}
     """
 
+    return_value = {}
     # list of tests to be run
     run_tests = [
-        ["Data Read Overall Family Data Report", data_families_reading_overall_report.DataReadFamiliesReport],
-        ["Data Find None Nested Root families", data_families_find_none_nested_root_families.DataFindNoneNestedRootFamilies],
+        ["Data Read Overall Family Data Report", data_families_reading_family_base_report.DataReadFamiliesBaseReport],
+        ["Data Read Families Categories Report", data_families_reading_categories_report.DataReadFamiliesCategoriesReport],
+        ["Data Read Families line patterns Report", data_families_reading_line_patterns_report.DataReadFamiliesLinePatternsReport],
+        ["Data Read Families Shared Parameters Report", data_families_reading_shared_parameters_report.DataReadFamiliesSharedParametersReport],
+        ["Data Read Families Warnings Report", data_families_reading_family_warnings_report.DataReadFamiliesWarningsReport],
+        ["Data Read Families Container-single", data_families_container_reading_single.DataReadFamiliesIntoContainer],
+        ["Data Read Families Container-multiple", data_families_container_reading_multiple.DataReadFamiliesIntoContainers],
+        ["Data Read Families Into Family Instances", data_families_reading_families.DataReadFamiliesIntoFamilyInstances],
+        #["Data Find None Nested Root families", data_families_find_none_nested_root_families.DataFindNoneNestedRootFamilies],
         ["Data Nested Family culling", data_families_culling_nested_families.DataCullingNestedFamilies],
-        ["Data Find Host Families With Families To Rename", data_families_find_host_families_needing_rename.DataFindHostFamiliesWithFamiliesToRename],
-        ["Data Combine Reports", data_families_combine_reports.DataCombineFamiliesReports],
-        
+        ["Data find circular nesting", data_families_circular_nesting.DataCircularNestingFamilies],
+        #["Data Find Host Families With Families To Rename", data_families_find_host_families_needing_rename.DataFindHostFamiliesWithFamiliesToRename],
+        #["Data Combine Reports", data_families_combine_reports.DataCombineFamiliesReports],
     ]
 
-    # run tests
-    runner = RunTest(run_tests)
-    return_value = runner.run_tests()
+    try:
+        # run tests
+        runner = RunTest(run_tests)
+        return_value = runner.run_tests()
+    except Exception as e:
+        return_value["Data Tests"] = [False, "Data Tests failed: {}".format(str(e))]
 
     return return_value

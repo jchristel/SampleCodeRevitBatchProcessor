@@ -9,6 +9,7 @@ List of imports:
 - :module: Utility
 
 """
+
 #
 # License:
 #
@@ -25,14 +26,14 @@ List of imports:
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-
+import os
 import subprocess
 from System.IO import Path
 
@@ -51,6 +52,8 @@ def optimize_all_ifc_files_in_directory(directory_path):
     Function applying third party IFC optimizer to all ifc files in a given folder.
 
     Original files will be deleted.
+
+    Note: Very large IFC files may fail to optimize. (size larger than approx 1.5GB) Those files will be ignored.
 
     :param directory_path: The directory path where IFC files are located
     :type directory_path: str
@@ -159,38 +162,49 @@ def process_ifc_files(ifc_files, directory_path):
     if len(ifc_files) > 0:
         return_value.append_message("found ifc files: {}".format(len(ifc_files)))
         for ifc_file in ifc_files:
-            s = subprocess.check_call(
-                [
-                    r"C:\Program Files\Solibri\IFCOptimizer\Solibri IFC Optimizer.exe",
-                    "-in=" + ifc_file,
-                    "-out=" + directory_path,
-                    "-ifc",
-                    "-force",
-                ]
-            )
-            # check what came back
-            if s == 0:
-                # all went ok:
-                return_value.append_message("Optimized file: {}".format(ifc_file))
-                files_to_delete.append(ifc_file)  # full file path
-                # get the rename information
-                # contains old and new file name
-                rename = []
-                p = fileIO.get_directory_path_from_file_path(ifc_file)
-                if p != "":
-                    new_file_path = (
-                        str(p)
-                        + "\\"
-                        + str(Path.GetFileNameWithoutExtension(ifc_file))
-                        + "_optimized.ifc"
+            # there is a chance that the optimizer will fail on very large ifc files...do not optimize those (>1GB)
+            original_file_size = fileIO.get_file_size(ifc_file, fileIO.FILE_SIZE_IN_MB)
+            if original_file_size <= 1000:
+                # call the optimizer
+                s = subprocess.check_call(
+                    [
+                        r"C:\Program Files\Solibri\IFCOptimizer\Solibri IFC Optimizer.exe",
+                        "-in=" + ifc_file,
+                        "-out=" + directory_path,
+                        "-ifc",
+                        "-force",
+                    ]
+                )
+                # check what came back
+                if s == 0:
+                    # build the optimized ifc file path
+                    source_path = fileIO.get_directory_path_from_file_path(ifc_file)
+                    optimized_file_path = os.path.join(
+                        source_path,
+                        Path.GetFileNameWithoutExtension(ifc_file) + "_optimized.ifc",
                     )
-                    rename.append(new_file_path)
+                    return_value.append_message(
+                        "Optimized file size: {}".format(
+                            fileIO.get_file_size(
+                                optimized_file_path, fileIO.FILE_SIZE_IN_KB
+                            )
+                        )
+                    )
+
+                    return_value.append_message("Optimized file: {}".format(ifc_file))
+                    files_to_delete.append(ifc_file)  # full file path
+                    # get the rename information
+                    # contains old and new file name
+                    rename = []
+                    rename.append(optimized_file_path)
                     rename.append(ifc_file)
                     files_to_rename.append(rename)
             else:
                 # something went wrong
-                return_value.update_sep(
-                    False, "Failed to optimize file: {}".format(ifc_file)
+                return_value.append_message(
+                    "Skipped optimizing file: {}. File to big: [{}MB]".format(
+                        ifc_file, original_file_size
+                    )
                 )
         # clean up
         for file_to_delete in files_to_delete:

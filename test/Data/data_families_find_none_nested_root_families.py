@@ -33,7 +33,7 @@ import sys
 
 from test.utils import test
 
-from duHast.Revit.Family.Data.family_base_data_utils import (
+from duHast.Revit.Family.Data.family_base_data_utils_deprecated import (
     nested_family,
     find_root_families_not_in_nested_data,
     read_overall_family_data_list_from_directory,

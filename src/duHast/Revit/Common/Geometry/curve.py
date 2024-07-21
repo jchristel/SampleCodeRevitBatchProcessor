@@ -3,6 +3,7 @@
 Revit curve helper functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,12 +20,14 @@ Revit curve helper functions
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
+
+import math
 
 from Autodesk.Revit.DB import Arc, Line, Transform, XYZ
 
@@ -452,7 +455,7 @@ def translate_curves_in_elevation(
         for sgs in original_curves:
             new_curves.Append(sgs.CreateTransformed(tf))
         return_value.append_message("Created {} mew curve(s)".format(new_curves.Size))
-        return_value.result=[new_curves]
+        return_value.result = [new_curves]
     except Exception as e:
         return_value.update_sep(
             False,
@@ -461,3 +464,26 @@ def translate_curves_in_elevation(
             ),
         )
     return return_value
+
+
+def get_perpendicular_line_through_point(original_line, rotation_axis, rotation_point):
+    """
+    Returns a line rotated by 90 degree around the rotation point.
+
+    :param original_line: The original line to be rotated
+    :type original_line:  Autodesk.Revit.DB.Line
+    :param rotation_point: The point to rotate around.
+    :type rotation_point:  Autodesk.Revit.DB.XYZ
+    :param rotation_axis: The axis around to rotate the line
+    :type rotation_axis:  Autodesk.Revit.DB.XYZ
+
+    :return: The rotated line.
+    :rtype: Autodesk.Revit.DB.Line
+    """
+
+    # get a line through origin at 90 degree
+    trans_form = Transform.CreateRotationAtPoint(
+        rotation_axis, math.pi / 2.0, rotation_point
+    )
+    transformed_line = original_line.CreateTransformed(trans_form)
+    return transformed_line

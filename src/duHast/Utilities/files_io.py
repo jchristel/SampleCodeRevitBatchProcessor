@@ -43,7 +43,7 @@ def file_exist(full_file_path):
     """
 
     try:
-        value = os.path.exists(full_file_path)
+        value = os.path.isfile(full_file_path)
     except Exception:
         value = False
     return value

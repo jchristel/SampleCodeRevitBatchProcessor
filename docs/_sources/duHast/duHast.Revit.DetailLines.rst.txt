@@ -1,0 +1,21 @@
+duHast.Revit.DetailLines package
+================================
+
+Submodules
+----------
+
+duHast.Revit.DetailLines.detail\_lines module
+---------------------------------------------
+
+.. automodule:: duHast.Revit.DetailLines.detail_lines
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.DetailLines
+   :members:
+   :undoc-members:
+   :show-inheritance:

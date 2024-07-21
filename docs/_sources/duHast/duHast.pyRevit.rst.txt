@@ -1,6 +1,14 @@
 duHast.pyRevit package
 ======================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.pyRevit.Objects
+
 Submodules
 ----------
 

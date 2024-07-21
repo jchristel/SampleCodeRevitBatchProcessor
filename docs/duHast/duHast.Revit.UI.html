@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Rooms.Reporting package &#8212; Sample Code Revit Batch Processor 0.1.3 documentation</title>
+    <title>duHast.Revit.UI package &#8212; Sample Code Revit Batch Processor 0.1.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -16,23 +16,23 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 0.1.3 documentation" href="../index.html" />
-    <link rel="up" title="duHast.Revit.Rooms package" href="duHast.Revit.Rooms.html" />
-    <link rel="next" title="duHast.Revit.SharedParameters package" href="duHast.Revit.SharedParameters.html" />
-    <link rel="prev" title="duHast.Revit.Rooms.Objects package" href="duHast.Revit.Rooms.Objects.html" />
+    <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
+    <link rel="next" title="duHast.Revit.Views package" href="duHast.Revit.Views.html" />
+    <link rel="prev" title="duHast.Revit.Stairs.Utility package" href="duHast.Revit.Stairs.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
     <p>Sample Code Revit Batch Processor 0.1.3 documentation</p>
 </div>
 <div id="header">
-    <div id="title"><h1>duHast.Revit.Rooms.Reporting package</h1></div>
+    <div id="title"><h1>duHast.Revit.UI package</h1></div>
     <ul id="headerButtons">
         <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="duHast.Revit.SharedParameters.html" title="duHast.Revit.SharedParameters package" accesskey="N">next</a></div>
-            <div class="headerButton"><a href="duHast.Revit.Rooms.Objects.html" title="duHast.Revit.Rooms.Objects package" accesskey="P">previous</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Views.html" title="duHast.Revit.Views package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Stairs.Utility.html" title="duHast.Revit.Stairs.Utility package" accesskey="P">previous</a></div>
         </li>
     </ul>
 </div>
@@ -63,7 +63,7 @@
 
       <h3>This Page</h3>
       <ul class="this-page-menu">
-        <li><a href="../_sources/duHast/duHast.Revit.Rooms.Reporting.rst.txt"
+        <li><a href="../_sources/duHast/duHast.Revit.UI.rst.txt"
                rel="nofollow">Show Source</a></li>
       </ul>
     <div id="searchbox" style="display: none">
@@ -88,25 +88,63 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="duhast-revit-rooms-reporting-package">
-<h1>duHast.Revit.Rooms.Reporting package<a class="headerlink" href="#duhast-revit-rooms-reporting-package" title="Permalink to this heading">¶</a></h1>
+  <section id="duhast-revit-ui-package">
+<h1>duHast.Revit.UI package<a class="headerlink" href="#duhast-revit-ui-package" title="Permalink to this heading">¶</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="module-duHast.Revit.Rooms.Reporting.revit_rooms_report_header">
-<span id="duhast-revit-rooms-reporting-revit-rooms-report-header-module"></span><h2>duHast.Revit.Rooms.Reporting.revit_rooms_report_header module<a class="headerlink" href="#module-duHast.Revit.Rooms.Reporting.revit_rooms_report_header" title="Permalink to this heading">¶</a></h2>
-<section id="this-module-contains-the-header-row-for-any-room-reports">
-<h3>This module contains the header row for any room reports.<a class="headerlink" href="#this-module-contains-the-header-row-for-any-room-reports" title="Permalink to this heading">¶</a></h3>
+<section id="module-duHast.Revit.UI.custom_selection_filter_element">
+<span id="duhast-revit-ui-custom-selection-filter-element-module"></span><h2>duHast.Revit.UI.custom_selection_filter_element module<a class="headerlink" href="#module-duHast.Revit.UI.custom_selection_filter_element" title="Permalink to this heading">¶</a></h2>
+<section id="a-selection-filter-sample">
+<h3>A selection filter sample.<a class="headerlink" href="#a-selection-filter-sample" title="Permalink to this heading">¶</a></h3>
 </section>
-<dl class="py data">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.Reporting.revit_rooms_report_header.REPORT_ROOMS_HEADER">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Reporting.revit_rooms_report_header.</span></span><span class="sig-name descname"><span class="pre">REPORT_ROOMS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME',</span> <span class="pre">'NUMBER']</span></em><a class="headerlink" href="#duHast.Revit.Rooms.Reporting.revit_rooms_report_header.REPORT_ROOMS_HEADER" title="Permalink to this definition">¶</a></dt>
-<dd><p>header used in reports</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.UI.custom_selection_filter_element.selection_filter_floors">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.UI.custom_selection_filter_element.</span></span><span class="sig-name descname"><span class="pre">selection_filter_floors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.UI.custom_selection_filter_element.selection_filter_floors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the element is fo category Floors and a family instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>elem</strong> (<em>Autodesk.Revit.DB.Element</em>) – A revit element</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the element is fo category Floors and a family instance, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
-<section id="module-duHast.Revit.Rooms.Reporting">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Rooms.Reporting" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Revit.UI.custom_selection_user">
+<span id="duhast-revit-ui-custom-selection-user-module"></span><h2>duHast.Revit.UI.custom_selection_user module<a class="headerlink" href="#module-duHast.Revit.UI.custom_selection_user" title="Permalink to this heading">¶</a></h2>
+<section id="implementation-of-a-user-pick-action-with-a-custom-element-selection-filter">
+<h3>Implementation of a user pick action with a custom element selection filter.<a class="headerlink" href="#implementation-of-a-user-pick-action-with-a-custom-element-selection-filter" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.UI.custom_selection_user.get_user_selection">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.UI.custom_selection_user.</span></span><span class="sig-name descname"><span class="pre">get_user_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uidoc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ui_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection_filter=&lt;function</span> <span class="pre">selection_filter_floors&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.UI.custom_selection_user.get_user_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get user selection of set down families.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Revit Document</p></li>
+<li><p><strong>uidoc</strong> (<em>Autodesk.Revit.UI.UIDocument</em>) – Revit UIDocument</p></li>
+<li><p><strong>ui_text</strong> (<em>str</em>) – User text for the selection dialog</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing a list of selected elements and a list of selected element ids.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(list, list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.UI">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.UI" title="Permalink to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -127,8 +165,7 @@
                 <a href="modules.html" accesskey="U">duHast</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
                 <a href="duHast.html" >duHast package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
                 <a href="duHast.Revit.html" >duHast.Revit package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
-                <a href="duHast.Revit.Rooms.html" >duHast.Revit.Rooms package</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
-                duHast.Revit.Rooms.Reporting package
+                duHast.Revit.UI package
         </div>
         <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
   </body>

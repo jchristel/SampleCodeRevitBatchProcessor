@@ -124,14 +124,14 @@
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.Data.Objects.line_pattern_data.LinePatternData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.Data.Objects.line_pattern_data.</span></span><span class="sig-name descname"><span class="pre">LinePatternData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.Data.Objects.line_pattern_data.LinePatternData" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.Data.Objects.line_pattern_data.</span></span><span class="sig-name descname"><span class="pre">LinePatternData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.Data.Objects.line_pattern_data.LinePatternData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_data.IFamilyData" title="duHast.Revit.Family.Data.Objects.ifamily_data.IFamilyData"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyData</span></code></a></p>
 <p>Class constructor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>rootPath</strong> (<em>str</em>) – The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo            This includes the actual family name as the last node.</p></li>
-<li><p><strong>dataType</strong> (<em>str</em>) – Human readable data type descriptor</p></li>
+<li><p><strong>rootCategoryPath</strong> (<em>str</em>) – The category path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory            This includes the actual family category as the last node.</p></li>
 </ul>
 </dd>
 </dl>
@@ -151,6 +151,11 @@
 <span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.Data.Objects.line_pattern_data.LinePatternData.get_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.LinePattern.Data.Objects.line_pattern_data.LinePatternData.add_data">
+<span class="sig-name descname"><span class="pre">add_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.Data.Objects.line_pattern_data.LinePatternData.add_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -164,6 +169,11 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor.</span></span><span class="sig-name descname"><span class="pre">LinePatternProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor.LinePatternProcessor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_processor.IFamilyProcessor" title="duHast.Revit.Family.Data.Objects.ifamily_processor.IFamilyProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyProcessor</span></code></a></p>
 <p>Class constructor.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor.LinePatternProcessor.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'LinePatternProcessor'</span></em><a class="headerlink" href="#duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor.LinePatternProcessor.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor.LinePatternProcessor.process">
 <span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor.LinePatternProcessor.process" title="Permalink to this definition">¶</a></dt>
@@ -178,6 +188,35 @@
 </dd>
 </dl>
 </dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor_defaults">
+<span id="duhast-revit-linepattern-data-objects-line-pattern-data-processor-defaults-module"></span><h2>duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor_defaults module<a class="headerlink" href="#module-duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor_defaults" title="Permalink to this heading">¶</a></h2>
+<section id="line-pattern-data-default-names">
+<h3>line pattern data default names.<a class="headerlink" href="#line-pattern-data-default-names" title="Permalink to this heading">¶</a></h3>
+</section>
+</section>
+<section id="module-duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage">
+<span id="duhast-revit-linepattern-data-objects-line-pattern-data-storage-module"></span><h2>duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage module<a class="headerlink" href="#module-duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage" title="Permalink to this heading">¶</a></h2>
+<section id="class-for-family-line-pattern-data-storage-class">
+<h3>Class for family line pattern data storage class.<a class="headerlink" href="#class-for-family-line-pattern-data-storage-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage.FamilyLinePatternDataStorage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage.</span></span><span class="sig-name descname"><span class="pre">FamilyLinePatternDataStorage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_name_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_counter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">used_by</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern_id</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage.FamilyLinePatternDataStorage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_data_storage.IFamilyDataStorage" title="duHast.Revit.Family.Data.Objects.ifamily_data_storage.IFamilyDataStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyDataStorage</span></code></a></p>
+<p>Class constructor</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage.FamilyLinePatternDataStorage.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'LinePattern'</span></em><a class="headerlink" href="#duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage.FamilyLinePatternDataStorage.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage.FamilyLinePatternDataStorage.number_of_properties">
+<span class="sig-name descname"><span class="pre">number_of_properties</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></em><a class="headerlink" href="#duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage.FamilyLinePatternDataStorage.number_of_properties" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -201,6 +240,24 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.Data.Objects.line_pattern_settings.LinePatternSettings.data_type">
 <span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'line_pattern_settings'</span></em><a class="headerlink" href="#duHast.Revit.LinePattern.Data.Objects.line_pattern_settings.LinePatternSettings.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.LinePattern.Data.Objects.line_pattern_storage_used_by">
+<span id="duhast-revit-linepattern-data-objects-line-pattern-storage-used-by-module"></span><h2>duHast.Revit.LinePattern.Data.Objects.line_pattern_storage_used_by module<a class="headerlink" href="#module-duHast.Revit.LinePattern.Data.Objects.line_pattern_storage_used_by" title="Permalink to this heading">¶</a></h2>
+<section id="class-for-line-pattern-data-used-by-storage-class">
+<h3>Class for line pattern data used by storage class.<a class="headerlink" href="#class-for-line-pattern-data-used-by-storage-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.LinePattern.Data.Objects.line_pattern_storage_used_by.FamilyLinePatternDataStorageUsedBy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.Data.Objects.line_pattern_storage_used_by.</span></span><span class="sig-name descname"><span class="pre">FamilyLinePatternDataStorageUsedBy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.Data.Objects.line_pattern_storage_used_by.FamilyLinePatternDataStorageUsedBy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_data_storage_used_by.IFamilyDataStorageUsedBy" title="duHast.Revit.Family.Data.Objects.ifamily_data_storage_used_by.IFamilyDataStorageUsedBy"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyDataStorageUsedBy</span></code></a></p>
+<p>Class constructor</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.LinePattern.Data.Objects.line_pattern_storage_used_by.FamilyLinePatternDataStorageUsedBy.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'FamilyLinePatternDataStorageUsedBy'</span></em><a class="headerlink" href="#duHast.Revit.LinePattern.Data.Objects.line_pattern_storage_used_by.FamilyLinePatternDataStorageUsedBy.data_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

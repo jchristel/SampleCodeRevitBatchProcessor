@@ -132,7 +132,100 @@
 <dd class="field-even"><p>A collector with all grids in model.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_type_</p>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_multi_segmented_grids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_multi_segmented_grids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_multi_segmented_grids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all multi segmented grids in model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A collector with all multi segmented grids in model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_grids_in_view">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_grids_in_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_grids_in_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all grids in a view</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view to get grids from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A collector with all grids in view.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_multi_segmented_grids_in_view">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_multi_segmented_grids_in_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_multi_segmented_grids_in_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all multi segmented grids in a view</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view to get grids from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A collector with all multi segmented grids in view.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_all_segment_grid_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_all_segment_grid_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_segment_grids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_all_segment_grid_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a unique list of grids id’s making up the multi segment grids past in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>multi_segment_grids</strong> (<em>[</em><em>_type_</em><em>]</em>) – List of multi segment grids</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of individual grid ids.</p>
+</dd>
+</dl>
+<p>:rtype:[Autodesk.Revit.DB.ElementId]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_linear_grids_in_model_by_view">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_linear_grids_in_model_by_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_linear_grids_in_model_by_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns only linear grid visible in view.</p>
+<p>Will exclude multi segment grids and arc based grids.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of linear grids.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.Grid]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -309,6 +402,46 @@
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_all_grid_head_family_type_ids">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_all_grid_head_family_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_all_grid_head_family_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>This will return all ids grid head family types in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_grid_curves_from_view">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_grid_curves_from_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_grid_curves_from_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets grid curve (line from a view. Will return none if grid is out of view scope</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid</strong> (<em>Autodesk.Revit.DB.Grid</em>) – The grid element.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view of which the get the grid extend from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A curve object if grid is visible in view, otherwise None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.Curve] or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_grid_plane_z_value">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids.</span></span><span class="sig-name descname"><span class="pre">get_grid_plane_z_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_grid_plane_z_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the z value of Grid plane by view based on first grid found visible in view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grids</strong> (<em>[</em><em>Autodesk.Revit.DB.Grid</em><em>]</em>) – Grids in the model</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – the view</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The view plane Z value or 0.0 if no grid found in view.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -610,6 +743,201 @@ On exception:
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Grids.grids_extend_to_view_crop">
+<span id="duhast-revit-grids-grids-extend-to-view-crop-module"></span><h2>duHast.Revit.Grids.grids_extend_to_view_crop module<a class="headerlink" href="#module-duHast.Revit.Grids.grids_extend_to_view_crop" title="Permalink to this heading">¶</a></h2>
+<section id="revit-grids-extend-to-view-crop">
+<h3>Revit grids extend to view crop.<a class="headerlink" href="#revit-grids-extend-to-view-crop" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_extend_to_view_crop.extend_linear_grids_to_crop_box_of_view">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_extend_to_view_crop.</span></span><span class="sig-name descname"><span class="pre">extend_linear_grids_to_crop_box_of_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_extend_to_view_crop.extend_linear_grids_to_crop_box_of_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extends all linear grids to intersection points with crop box on active view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+<p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all grids in active view got extended successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the grids extended.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Grids.grids_propagate_visbility_and_extends">
+<span id="duhast-revit-grids-grids-propagate-visbility-and-extends-module"></span><h2>duHast.Revit.Grids.grids_propagate_visbility_and_extends module<a class="headerlink" href="#module-duHast.Revit.Grids.grids_propagate_visbility_and_extends" title="Permalink to this heading">¶</a></h2>
+<section id="revit-propagate-grids-extend-visibility-and-graphics-to-other-views">
+<h3>Revit propagate grids extend visibility, and graphics to other views.<a class="headerlink" href="#revit-propagate-grids-extend-visibility-and-graphics-to-other-views" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_propagate_visbility_and_extends.</span></span><span class="sig-name descname"><span class="pre">grid_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_grid_in_scope</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datum_extent_type_zero</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datum_extent_type_one</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_curve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_zero_bubble</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_one_bubble</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_grid_hidden</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<p>Create new instance of grid_properties(is_grid_in_scope, datum_extent_type_zero, datum_extent_type_one, grid_curve, end_zero_bubble, end_one_bubble, is_grid_hidden)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties.datum_extent_type_one">
+<span class="sig-name descname"><span class="pre">datum_extent_type_one</span></span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties.datum_extent_type_one" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties.datum_extent_type_zero">
+<span class="sig-name descname"><span class="pre">datum_extent_type_zero</span></span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties.datum_extent_type_zero" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties.end_one_bubble">
+<span class="sig-name descname"><span class="pre">end_one_bubble</span></span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties.end_one_bubble" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 5</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties.end_zero_bubble">
+<span class="sig-name descname"><span class="pre">end_zero_bubble</span></span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties.end_zero_bubble" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 4</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties.grid_curve">
+<span class="sig-name descname"><span class="pre">grid_curve</span></span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties.grid_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties.is_grid_hidden">
+<span class="sig-name descname"><span class="pre">is_grid_hidden</span></span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties.is_grid_hidden" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 6</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties.is_grid_in_scope">
+<span class="sig-name descname"><span class="pre">is_grid_in_scope</span></span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.grid_properties.is_grid_in_scope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_propagate_visbility_and_extends.get_active_view_grid_data">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_propagate_visbility_and_extends.</span></span><span class="sig-name descname"><span class="pre">get_active_view_grid_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">active_view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids_in_model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.get_active_view_grid_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a dictionary where grid id is the key and values are a list of properties:</p>
+<ul class="simple">
+<li><p>inScope (bool)</p></li>
+<li><p>isVisible (bool)</p></li>
+<li><p>end zero, end One: Extent type for both ends ( 2D vs 3D) (None if not in scope)</p></li>
+<li><p>curve: the curve (line) describing the grid extent in view (None if not in scope)</p></li>
+<li><p>end bubble one end bubble zero: bool describing which bubble isi visible in view (None if not in scope)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>active_view</strong> (<em>Autodesk.Revit.DB.View</em>) – The active view.</p></li>
+<li><p><strong>grids_in_model</strong> (<em>[</em><em>Autodesk.Revit.DB.Grid</em><em>]</em>) – Grids in the model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul>
+<li><p>result.status: True.</p></li>
+<li><p>result.message will contain the names of the grids not in scope only.</p></li>
+<li><p>result.result contains a named tuple: grid_properties:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>{</dt><dd><p>bool, is the grid in scope (inside the crop region)
+# Datum Extent type at End 0,
+# Datum Extend type at End 1,
+curve, describing the start and end point of grid
+bool, #bubble visible at zero end
+bool, # bubble visible at 1 end
+bool # is the grid visible</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+</li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>result.status (bool) will be True (exception is ignored)</p></li>
+<li><p>result.message will contain the message grid not in scope for view</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_propagate_visbility_and_extends.change_grid_extends_in_views">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_propagate_visbility_and_extends.</span></span><span class="sig-name descname"><span class="pre">change_grid_extends_in_views</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids_in_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_template_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views_to_change_grid_elements</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.change_grid_extends_in_views" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes grids  in a number views to match the extend, visibility, bubble visibility of grids in template view</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document.</p></li>
+<li><p><strong>grids_in_model</strong> (<em>[</em><em>Autodesk.Revit.DB.Grid</em><em>]</em>) – Grids in the model</p></li>
+<li><p><strong>grid_template_data</strong> (<em>A named tuple: grid_properties
+bool</em><em>, </em><em>is the grid in scope</em><em> (</em><em>inside the crop region</em><em>)
+</em><em># Datum Extent type at End 0</em><em>,
+</em><em># Datum Extend type at End 1</em><em>,
+</em><em>curve</em><em>, </em><em>describing the start and end point</em><em> of </em><em>grid
+bool</em><em>, </em><em># bubble visible at zero end
+bool</em><em>, </em><em># bubble visible at 1 end
+bool # is the grid visible</em>) – A dictionary describing the appearance of each grid in the template view</p></li>
+<li><p><strong>views_to_change_grid_elements</strong> (<em>[</em><em>Autodesk.Revit.DB.View</em><em>]</em>) – A list of views in which to update the grid graphics</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids_propagate_visbility_and_extends.propagate_grids_extends_and_visibility">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_propagate_visbility_and_extends.</span></span><span class="sig-name descname"><span class="pre">propagate_grids_extends_and_visibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views_to_change_grid_elements</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.propagate_grids_extends_and_visibility" title="Permalink to this definition">¶</a></dt>
+<dd><p>Propagates grid extends and visibility from the active view to all other views selected in UI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document.</p></li>
+<li><p><strong>viewsToChangeGridElements</strong> (<em>[</em><em>Autodesk.Revit.DB.View</em><em>]</em>) – A list of views in which to update the grid graphics</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: True.</p></li>
+<li><p>result.message will contain the names of the grids amended.</p></li>
+<li><p>result.result an empty list</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False</p></li>
+<li><p>result.message will contain the exception message</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Grids.grids_worksets">
 <span id="duhast-revit-grids-grids-worksets-module"></span><h2>duHast.Revit.Grids.grids_worksets module<a class="headerlink" href="#module-duHast.Revit.Grids.grids_worksets" title="Permalink to this heading">¶</a></h2>
 <section id="revit-grids-workset-modifier-functions">
@@ -668,7 +996,7 @@ On exception:
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
 <li><p><strong>worksetRules</strong> (<em>_type_</em>) – _description_</p></li>
 </ul>
 </dd>
@@ -690,7 +1018,7 @@ On exception:
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
 <li><p><strong>revitFileName</strong> (<em>_type_</em>) – _description_</p></li>
 <li><p><strong>worksetRules</strong> (<em>_type_</em>) – _description_</p></li>
 </ul>
@@ -698,8 +1026,22 @@ On exception:
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>returns a result object</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_type_</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: View deletion status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message: will contain the fully qualified file path of the exported file</p></li>
+<li><p>result.result: will be an empty list</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

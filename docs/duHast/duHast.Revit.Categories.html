@@ -100,6 +100,9 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.Objects.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.Objects.html#module-duHast.Revit.Categories.Data.Objects.category_data">duHast.Revit.Categories.Data.Objects.category_data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.Objects.html#module-duHast.Revit.Categories.Data.Objects.category_data_processor">duHast.Revit.Categories.Data.Objects.category_data_processor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.Objects.html#module-duHast.Revit.Categories.Data.Objects.category_data_processor_defaults">duHast.Revit.Categories.Data.Objects.category_data_processor_defaults module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.Objects.html#module-duHast.Revit.Categories.Data.Objects.category_data_storage">duHast.Revit.Categories.Data.Objects.category_data_storage module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.Objects.html#module-duHast.Revit.Categories.Data.Objects.category_data_storage_used_by">duHast.Revit.Categories.Data.Objects.category_data_storage_used_by module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Categories.Data.Objects.html#module-duHast.Revit.Categories.Data.Objects">Module contents</a></li>
 </ul>
 </li>
@@ -272,16 +275,18 @@ key is the current subcategory name, value is the new subcategory name</p>
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories.</span></span><span class="sig-name descname"><span class="pre">delete_main_sub_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_cat_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.delete_main_sub_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes a given subcategory from the family.</p>
 <p>Note: Only subcategory directly belonging to the family category will be checked for a match.</p>
-<p>::param doc: Current Revit family document.
-:type doc: Autodesk.Revit.DB.Document
-:param sub_cat_name: The name of the subcategory to be deleted.
-:type sub_cat_name: str</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if subcategory exists in family and was deleted successfully, otherwise False</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>sub_cat_name</strong> (<em>str</em>) – The name of the subcategory to be deleted.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if subcategory exists in family and was deleted successfully, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>

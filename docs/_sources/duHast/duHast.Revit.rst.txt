@@ -15,6 +15,7 @@ Subpackages
    duHast.Revit.Ceilings
    duHast.Revit.Common
    duHast.Revit.DetailItems
+   duHast.Revit.DetailLines
    duHast.Revit.Doors
    duHast.Revit.Exports
    duHast.Revit.Family
@@ -34,6 +35,7 @@ Subpackages
    duHast.Revit.Rooms
    duHast.Revit.SharedParameters
    duHast.Revit.Stairs
+   duHast.Revit.UI
    duHast.Revit.Views
    duHast.Revit.Walls
    duHast.Revit.Warnings

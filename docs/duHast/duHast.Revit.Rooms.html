@@ -118,6 +118,15 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#module-duHast.Revit.Rooms.Geometry">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html">duHast.Revit.Rooms.Objects package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#module-duHast.Revit.Rooms.Objects.RoomBaseObject">duHast.Revit.Rooms.Objects.RoomBaseObject module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#duHast.Revit.Rooms.Objects.RoomBaseObject.RoomBaseObj"><code class="docutils literal notranslate"><span class="pre">RoomBaseObj</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#module-duHast.Revit.Rooms.Objects">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html">duHast.Revit.Rooms.Reporting package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html#module-duHast.Revit.Rooms.Reporting.revit_rooms_report_header">duHast.Revit.Rooms.Reporting.revit_rooms_report_header module</a><ul>
@@ -134,14 +143,14 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="module-duHast.Revit.Rooms.room_functions">
-<span id="duhast-revit-rooms-room-functions-module"></span><h2>duHast.Revit.Rooms.room_functions module<a class="headerlink" href="#module-duHast.Revit.Rooms.room_functions" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Revit.Rooms.room_common_parameters">
+<span id="duhast-revit-rooms-room-common-parameters-module"></span><h2>duHast.Revit.Rooms.room_common_parameters module<a class="headerlink" href="#module-duHast.Revit.Rooms.room_common_parameters" title="Permalink to this heading">¶</a></h2>
 <section id="revit-api-utility-functions-for-rooms">
 <h3>Revit API utility functions for Rooms.<a class="headerlink" href="#revit-api-utility-functions-for-rooms" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_functions.get_room_number">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_functions.</span></span><span class="sig-name descname"><span class="pre">get_room_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_functions.get_room_number" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.get_room_number">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">get_room_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.get_room_number" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the room number of the room
 :param room: The room to get the number of
 :type room: Room
@@ -150,8 +159,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_functions.get_room_name">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_functions.</span></span><span class="sig-name descname"><span class="pre">get_room_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_functions.get_room_name" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.get_room_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">get_room_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.get_room_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the room name of the room
 :param room: The room to get the name of
 :type room: Room
@@ -160,8 +169,20 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_functions.get_room_num_variations">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_functions.</span></span><span class="sig-name descname"><span class="pre">get_room_num_variations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_functions.get_room_num_variations" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.get_room_phase">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">get_room_phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.get_room_phase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the phase of the room
+:param rvt_doc: The document to get the room from
+:type rvt_doc: Document
+:param room: The room to get the phase of
+:type room: Room
+:return: The phase of the room
+:rtype: str</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.get_room_num_variations">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">get_room_num_variations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.get_room_num_variations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of variations of room number
 e.g. 1.01, 101, 1-01
 :param room: The room to get the number of
@@ -171,8 +192,8 @@ e.g. 1.01, 101, 1-01
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_functions.get_room_num_name_comb">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_functions.</span></span><span class="sig-name descname"><span class="pre">get_room_num_name_comb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_functions.get_room_num_name_comb" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.get_room_num_name_comb">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">get_room_num_name_comb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.get_room_num_name_comb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a combination of room number and name in the format:
 ‘101 - Room Name’
 :param room: The room to get the number and name of
@@ -182,8 +203,8 @@ e.g. 1.01, 101, 1-01
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_functions.get_rooms_in_view">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_functions.</span></span><span class="sig-name descname"><span class="pre">get_rooms_in_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targ_view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_functions.get_rooms_in_view" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.get_rooms_in_view">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">get_rooms_in_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targ_view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.get_rooms_in_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all rooms in the view. This avoids using the FilteredElementCollector
 overload that takes a view id as an argument as this is has to generate
 graphics for all elements in the view which is very slow.
@@ -196,8 +217,8 @@ graphics for all elements in the view which is very slow.
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_functions.get_room_from_element">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_functions.</span></span><span class="sig-name descname"><span class="pre">get_room_from_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_functions.get_room_from_element" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.get_room_from_element">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">get_room_from_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.get_room_from_element" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the room associated with the element. This should be updated
 by Revit as the element moves
 :param phase_dictionary: The dictionary of phases names to phase elements
@@ -209,8 +230,8 @@ by Revit as the element moves
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_functions.check_element_is_in_room">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_functions.</span></span><span class="sig-name descname"><span class="pre">check_element_is_in_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_to_check</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_functions.check_element_is_in_room" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.check_element_is_in_room">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">check_element_is_in_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_to_check</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.check_element_is_in_room" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the element is in the room
 :param phase_dictionary: The dictionary of phases names to phase elements
 :type phase_dictionary: dict
@@ -223,8 +244,8 @@ by Revit as the element moves
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_functions.get_room_from_selection">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_functions.</span></span><span class="sig-name descname"><span class="pre">get_room_from_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_functions.get_room_from_selection" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.get_room_from_selection">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">get_room_from_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.get_room_from_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the first Room from a selection of element ids
 :param rvt_doc: The document to get the room from
 :type rvt_doc: Document
@@ -235,8 +256,8 @@ by Revit as the element moves
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_functions.check_room_on_view_level">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_functions.</span></span><span class="sig-name descname"><span class="pre">check_room_on_view_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_functions.check_room_on_view_level" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.check_room_on_view_level">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">check_room_on_view_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.check_room_on_view_level" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the room is on the same level as the view
 :param rvt_doc: The document to get the room from
 :type rvt_doc: Document
@@ -249,8 +270,8 @@ by Revit as the element moves
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_functions.check_rm_pt_extents">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_functions.</span></span><span class="sig-name descname"><span class="pre">check_rm_pt_extents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_view_crop_bx_pts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_functions.check_rm_pt_extents" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.check_rm_pt_extents">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">check_rm_pt_extents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_view_crop_bx_pts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.check_rm_pt_extents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if all the points from the room boundary segments are within a view crop box
 for a list of rooms
 :param rvt_doc: The document to get the room from
@@ -266,8 +287,8 @@ for a list of rooms
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_functions.check_rm_loc_point">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_functions.</span></span><span class="sig-name descname"><span class="pre">check_rm_loc_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_view_crop_bx_pts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_functions.check_rm_loc_point" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.check_rm_loc_point">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">check_rm_loc_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_view_crop_bx_pts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.check_rm_loc_point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the location crosshairs of a room is within a view crop box
 for a list of rooms
 :param room_list: The list of rooms to check
@@ -279,8 +300,8 @@ for a list of rooms
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_functions.get_only_entire_rooms">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_functions.</span></span><span class="sig-name descname"><span class="pre">get_only_entire_rooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rm_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_rm_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_functions.get_only_entire_rooms" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.get_only_entire_rooms">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">get_only_entire_rooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rm_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_rm_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.get_only_entire_rooms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get only the rooms that are entirely within the view crop box
 :param rvt_doc: The document to get the room from
 :type rvt_doc: Document
@@ -296,8 +317,8 @@ False: Check if the location crosshair is in the view crop box
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_functions.get_all_rooms_in_plan_views">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_functions.</span></span><span class="sig-name descname"><span class="pre">get_all_rooms_in_plan_views</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_functions.get_all_rooms_in_plan_views" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.get_all_rooms_in_plan_views">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">get_all_rooms_in_plan_views</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.get_all_rooms_in_plan_views" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all rooms in the plan views
 :param rvt_doc: The document to get the room from
 :type rvt_doc: Document
@@ -308,8 +329,8 @@ False: Check if the location crosshair is in the view crop box
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_functions.get_rooms_from_sheet_obj_list">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_functions.</span></span><span class="sig-name descname"><span class="pre">get_rooms_from_sheet_obj_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet_obj_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_functions.get_rooms_from_sheet_obj_list" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.get_rooms_from_sheet_obj_list">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">get_rooms_from_sheet_obj_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet_obj_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.get_rooms_from_sheet_obj_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all rooms from the sheet object list
 :param rvt_doc: The document to get the room from
 :type rvt_doc: Document
@@ -317,6 +338,79 @@ False: Check if the location crosshair is in the view crop box
 :type sheet_obj_list: list
 :return: The rooms from the sheet object list
 :rtype: list</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Rooms.room_spatial_elements">
+<span id="duhast-revit-rooms-room-spatial-elements-module"></span><h2>duHast.Revit.Rooms.room_spatial_elements module<a class="headerlink" href="#module-duHast.Revit.Rooms.room_spatial_elements" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_spatial_elements.get_room_segments">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_room_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_spatial_elements.get_room_segments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a rooms boundary segments with the default spatial element boundary options.
+:param room: The room to get for
+:type room: Room
+:return: The boundary segments of the room
+:rtype: List[List[BoundarySegment]]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_spatial_elements.get_segment_host">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_segment_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_spatial_elements.get_segment_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the element that the room boundary segment belongs to
+:param rvt_doc: The Revit document
+:type rvt_doc: Document
+:param seg: The boundary segment
+:type seg: BoundarySegment</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_spatial_elements.get_curves_as_curve_loop">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_curves_as_curve_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rm_crvs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_spatial_elements.get_curves_as_curve_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of curves as a CurveLoop object.
+:param rm_crvs: The curves to get for
+:type rm_crvs: List[Curve]
+:return: The curves as a CurveLoop object
+:rtype: CurveLoop</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_spatial_elements.get_segments_as_curves">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_segments_as_curves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_spatial_elements.get_segments_as_curves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of curves that represents the boundary segments of a room.</p>
+<p>Optional parameter to filter the segments by the host type (wall or
+room separation line).
+:param rvt_doc: The Revit document
+:type rvt_doc: Document
+:param segments: The boundary segments of a room
+:type segments: List[List[BoundarySegment]]
+:param filter_only: Optional: The host type to filter for
+:type filter_only: Wall, ModelLine or both in a list
+:return: A list of curves
+:rtype: List[Curve]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_spatial_elements.get_only_wall_segments_as_curves">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_only_wall_segments_as_curves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_spatial_elements.get_only_wall_segments_as_curves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the wall segments of a room as curves.
+:param rvt_doc: The Revit document
+:type rvt_doc: Document
+:param segments: The boundary segments of a room
+:type segments: List[List[BoundarySegment]]
+:return: A list of curves
+:rtype: List[Curve]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_spatial_elements.get_only_rm_sep_lines_as_curves_only">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_only_rm_sep_lines_as_curves_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_spatial_elements.get_only_rm_sep_lines_as_curves_only" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the room separation line segments of a room as curves.
+:param rvt_doc: The Revit document
+:type rvt_doc: Document
+:param segments: The boundary segments of a room
+:type segments: List[List[BoundarySegment]]
+:return: A list of curves
+:rtype: List[Curve]</p>
 </dd></dl>
 
 </section>

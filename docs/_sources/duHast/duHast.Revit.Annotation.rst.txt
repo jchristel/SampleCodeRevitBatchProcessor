@@ -21,6 +21,14 @@ duHast.Revit.Annotation.annotation module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Annotation.annotation\_copy module
+-----------------------------------------------
+
+.. automodule:: duHast.Revit.Annotation.annotation_copy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Annotation.arrow\_heads module
 -------------------------------------------
 

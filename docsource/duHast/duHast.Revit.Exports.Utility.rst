@@ -44,6 +44,14 @@ duHast.Revit.Exports.Utility.export\_ifc\_config\_2023 module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Exports.Utility.export\_ifc\_config\_2024 module
+-------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Exports.Utility.export_ifc_config_2024
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Exports.Utility.ifc\_export\_coordinates module
 ------------------------------------------------------------
 

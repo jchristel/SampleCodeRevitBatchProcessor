@@ -100,17 +100,16 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.Objects.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.Objects.html#module-duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data">duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.Objects.html#module-duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor">duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.Objects.html#module-duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_defaults">duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_defaults module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.Objects.html#module-duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage">duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.Objects.html#module-duHast.Revit.SharedParameters.Data.Objects.shared_parameter_storage_used_by">duHast.Revit.SharedParameters.Data.Objects.shared_parameter_storage_used_by module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.Objects.html#module-duHast.Revit.SharedParameters.Data.Objects">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.html#module-duHast.Revit.SharedParameters.Data.shared_parameter_data_purge_Unused">duHast.Revit.SharedParameters.Data.shared_parameter_data_purge_Unused module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.html#family-shared-parameters-purge-unused-utilities">Family shared parameters purge unused utilities.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.html#duHast.Revit.SharedParameters.Data.shared_parameter_data_purge_Unused.purge_unused"><code class="docutils literal notranslate"><span class="pre">purge_unused()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.html#duhast-revit-sharedparameters-data-shared-parameter-data-purge-unused-module">duHast.Revit.SharedParameters.Data.shared_parameter_data_purge_Unused module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.SharedParameters.Data.html#module-duHast.Revit.SharedParameters.Data">Module contents</a></li>
 </ul>
 </li>
@@ -329,29 +328,6 @@ add category to an existing binding if one exists already
 :type type_binding: bool
 :return: List of successful bindings, list of errors
 :rtype: tuple</p>
-</dd></dl>
-
-</section>
-<section id="module-duHast.Revit.SharedParameters.shared_parameter_data">
-<span id="duhast-revit-sharedparameters-shared-parameter-data-module"></span><h2>duHast.Revit.SharedParameters.shared_parameter_data module<a class="headerlink" href="#module-duHast.Revit.SharedParameters.shared_parameter_data" title="Permalink to this heading">¶</a></h2>
-<section id="family-shared-parameter-data-class">
-<h3>Family shared parameter data class.<a class="headerlink" href="#family-shared-parameter-data-class" title="Permalink to this heading">¶</a></h3>
-</section>
-<dl class="py class">
-<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_data.SharedParameterData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.shared_parameter_data.</span></span><span class="sig-name descname"><span class="pre">SharedParameterData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_data.SharedParameterData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_data.IFamilyData" title="duHast.Revit.Family.Data.Objects.ifamily_data.IFamilyData"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyData</span></code></a></p>
-<p>Class constructor</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_data.SharedParameterData.process">
-<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_data.SharedParameterData.process" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.shared_parameter_data.SharedParameterData.get_data">
-<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.shared_parameter_data.SharedParameterData.get_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </section>

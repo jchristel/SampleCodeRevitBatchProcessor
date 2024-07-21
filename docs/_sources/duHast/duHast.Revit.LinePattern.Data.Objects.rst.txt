@@ -28,10 +28,34 @@ duHast.Revit.LinePattern.Data.Objects.line\_pattern\_data\_processor module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.LinePattern.Data.Objects.line\_pattern\_data\_processor\_defaults module
+-------------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.LinePattern.Data.Objects.line_pattern_data_processor_defaults
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.LinePattern.Data.Objects.line\_pattern\_data\_storage module
+-------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.LinePattern.Data.Objects.line_pattern_data_storage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.LinePattern.Data.Objects.line\_pattern\_settings module
 --------------------------------------------------------------------
 
 .. automodule:: duHast.Revit.LinePattern.Data.Objects.line_pattern_settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.LinePattern.Data.Objects.line\_pattern\_storage\_used\_by module
+-----------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.LinePattern.Data.Objects.line_pattern_storage_used_by
    :members:
    :undoc-members:
    :show-inheritance:

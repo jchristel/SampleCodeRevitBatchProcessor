@@ -165,6 +165,27 @@ override_joins (bool, optional): Flag to indicate whether to override the joins 
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve.</span></span><span class="sig-name descname"><span class="pre">translate_curves_in_elevation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_curves</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_elevation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_elevation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve.translate_curves_in_elevation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.curve.get_perpendicular_line_through_point">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.curve.</span></span><span class="sig-name descname"><span class="pre">get_perpendicular_line_through_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.curve.get_perpendicular_line_through_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a line rotated by 90 degree around the rotation point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_line</strong> (<em>Autodesk.Revit.DB.Line</em>) – The original line to be rotated</p></li>
+<li><p><strong>rotation_point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The point to rotate around.</p></li>
+<li><p><strong>rotation_axis</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The axis around to rotate the line</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The rotated line.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.Line</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Common.Geometry.geometry">
 <span id="duhast-revit-common-geometry-geometry-module"></span><h2>duHast.Revit.Common.Geometry.geometry module<a class="headerlink" href="#module-duHast.Revit.Common.Geometry.geometry" title="Permalink to this heading">¶</a></h2>
@@ -823,6 +844,48 @@ The third double is the z coordinate of the point to which 1 is added.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.on_which_side_of_line_is_point">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">on_which_side_of_line_is_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.on_which_side_of_line_is_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>If d&lt;0 then the point lies on one side of the line, and if d&gt;0 then it lies on the other side.
+If d=0 then the point lies exactly line.</p>
+<p>Refer <a class="reference external" href="https://math.stackexchange.com/questions/274712/calculate-on-which-side-of-a-straight-line-is-a-given-point-located">https://math.stackexchange.com/questions/274712/calculate-on-which-side-of-a-straight-line-is-a-given-point-located</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>line</strong> (<em>Autodesk.Revit.DB.Line</em>) – Line to check which side a point is on.</p></li>
+<li><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – The point to check;</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>double</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.distance_between_two_points">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">distance_between_two_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.distance_between_two_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the distance between two points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – First point.</p></li>
+<li><p><strong>p2</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – Second point.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The distance between points</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double</p>
 </dd>
 </dl>
 </dd></dl>

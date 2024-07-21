@@ -1,0 +1,29 @@
+duHast.Revit.UI package
+=======================
+
+Submodules
+----------
+
+duHast.Revit.UI.custom\_selection\_filter\_element module
+---------------------------------------------------------
+
+.. automodule:: duHast.Revit.UI.custom_selection_filter_element
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.UI.custom\_selection\_user module
+----------------------------------------------
+
+.. automodule:: duHast.Revit.UI.custom_selection_user
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.UI
+   :members:
+   :undoc-members:
+   :show-inheritance:

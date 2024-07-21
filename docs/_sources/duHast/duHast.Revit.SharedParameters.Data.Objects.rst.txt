@@ -20,6 +20,30 @@ duHast.Revit.SharedParameters.Data.Objects.shared\_parameter\_data\_processor mo
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.SharedParameters.Data.Objects.shared\_parameter\_data\_processor\_defaults module
+----------------------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_defaults
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.SharedParameters.Data.Objects.shared\_parameter\_data\_storage module
+----------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.SharedParameters.Data.Objects.shared\_parameter\_storage\_used\_by module
+--------------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.SharedParameters.Data.Objects.shared_parameter_storage_used_by
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

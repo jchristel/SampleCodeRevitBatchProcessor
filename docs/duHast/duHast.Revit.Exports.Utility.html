@@ -303,6 +303,48 @@
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Exports.Utility.export_ifc_config_2024">
+<span id="duhast-revit-exports-utility-export-ifc-config-2024-module"></span><h2>duHast.Revit.Exports.Utility.export_ifc_config_2024 module<a class="headerlink" href="#module-duHast.Revit.Exports.Utility.export_ifc_config_2024" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-to-get-the-ifcexportconfig-in-revit-versions-2024-of-revit">
+<h3>This module contains a number of helper functions to get the IFCExportConfig in revit versions 2024 of Revit.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-to-get-the-ifcexportconfig-in-revit-versions-2024-of-revit" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.export_ifc_config_2024.ifc_get_third_party_export_config_by_view_2024">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.export_ifc_config_2024.</span></span><span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_view_2024</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2024.ifc_get_third_party_export_config_by_view_2024" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function returning an IFC export configuration for Revit 2024 using the open source third party IFC exporter plug in supported by AutoDesk</p>
+<p>This configuration allows export by view. If ifc_version is None, IFCVersion.Default will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ifc_version</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An IFCExportConfig object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.export_ifc_config_2024.ifc_get_third_party_export_config_by_model_2024">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.export_ifc_config_2024.</span></span><span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_model_2024</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2024.ifc_get_third_party_export_config_by_model_2024" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function returning an IFC export configuration for Revit 2024 using the open source third party IFC exporter plug in supported by AutoDesk</p>
+<p>This configuration allows export the entire model. If ifc_version is None, IFCVersion.Default will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ifc_version</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An IFCExportConfig object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Exports.Utility.ifc_export_coordinates">
 <span id="duhast-revit-exports-utility-ifc-export-coordinates-module"></span><h2>duHast.Revit.Exports.Utility.ifc_export_coordinates module<a class="headerlink" href="#module-duHast.Revit.Exports.Utility.ifc_export_coordinates" title="Permalink to this heading">¶</a></h2>
 <section id="ifc-export-coordinate-system-settings-class">

@@ -178,6 +178,35 @@
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Annotation.annotation_copy">
+<span id="duhast-revit-annotation-annotation-copy-module"></span><h2>duHast.Revit.Annotation.annotation_copy module<a class="headerlink" href="#module-duHast.Revit.Annotation.annotation_copy" title="Permalink to this heading">¶</a></h2>
+<section id="copies-annotation-samples">
+<h3>Copies annotation samples.<a class="headerlink" href="#copies-annotation-samples" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.annotation_copy.copy_annotation_to_views">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.annotation_copy.</span></span><span class="sig-name descname"><span class="pre">copy_annotation_to_views</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_dims_by_view_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views_by_name_selected</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.annotation_copy.copy_annotation_to_views" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy annotation from one view to another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Revit Document</p></li>
+<li><p><strong>source_dims_by_view_name</strong> (<em>dict</em>) – Dictionary containing the source annotations by target view name. ( not all annotations from the active view may want to be copied to all views )</p></li>
+<li><p><strong>active_view</strong> (<em>Autodesk.Revit.DB.View</em>) – The active view containing all source annotations</p></li>
+<li><p><strong>views_by_name_selected</strong> (<em>dict</em>) – Dictionary containing the selected views by name</p></li>
+<li><p><strong>callback_progress</strong> (<a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.ProgressBase.ProgressBase" title="duHast.UI.Objects.ProgressBase.ProgressBase"><em>ProgressBase</em></a>) – Progress callback</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Annotation.arrow_heads">
 <span id="duhast-revit-annotation-arrow-heads-module"></span><h2>duHast.Revit.Annotation.arrow_heads module<a class="headerlink" href="#module-duHast.Revit.Annotation.arrow_heads" title="Permalink to this heading">¶</a></h2>
 <section id="a-number-of-functions-around-revit-arrow-heads">

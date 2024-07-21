@@ -29,14 +29,6 @@ duHast.Revit.SharedParameters.shared\_parameter\_add module
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.SharedParameters.shared\_parameter\_data module
-------------------------------------------------------------
-
-.. automodule:: duHast.Revit.SharedParameters.shared_parameter_data
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 duHast.Revit.SharedParameters.shared\_parameter\_swap module
 ------------------------------------------------------------
 

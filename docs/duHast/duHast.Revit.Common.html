@@ -103,6 +103,7 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.calculate_shortened_curve_geometry"><code class="docutils literal notranslate"><span class="pre">calculate_shortened_curve_geometry()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.modify_model_line_action"><code class="docutils literal notranslate"><span class="pre">modify_model_line_action()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.translate_curves_in_elevation"><code class="docutils literal notranslate"><span class="pre">translate_curves_in_elevation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.get_perpendicular_line_through_point"><code class="docutils literal notranslate"><span class="pre">get_perpendicular_line_through_point()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#module-duHast.Revit.Common.Geometry.geometry">duHast.Revit.Common.Geometry.geometry module</a><ul>
@@ -147,6 +148,8 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.points.flatten_xyz_point"><code class="docutils literal notranslate"><span class="pre">flatten_xyz_point()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.points.are_points_identical"><code class="docutils literal notranslate"><span class="pre">are_points_identical()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.points.check_duplicate_point"><code class="docutils literal notranslate"><span class="pre">check_duplicate_point()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.points.on_which_side_of_line_is_point"><code class="docutils literal notranslate"><span class="pre">on_which_side_of_line_is_point()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.points.distance_between_two_points"><code class="docutils literal notranslate"><span class="pre">distance_between_two_points()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.points.get_point_as_string"><code class="docutils literal notranslate"><span class="pre">get_point_as_string()</span></code></a></li>
 </ul>
 </li>
@@ -1298,6 +1301,19 @@ On exception:
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_model_group_instances_by_names">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_model_group_instances_by_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_model_group_instances_by_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all elements from group instances in the model.
+:
+param doc: The Revit document.
+:type doc: <code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code>
+:param group_names: The names of the groups to get elements from.
+:type group_names: list[str]
+:return: A list of group instances.
+:rtype: list[<code class="xref py py-class docutils literal notranslate"><span class="pre">Autodesk.Revit.DB.Group</span></code>]</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_detail_groups">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_detail_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_detail_groups" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all detail groups in the model.</p>
@@ -1504,6 +1520,26 @@ On exception:
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.groups.get_group_elements">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.groups.</span></span><span class="sig-name descname"><span class="pre">get_group_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.groups.get_group_elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all elements from group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code>) – The Revit document.</p></li>
+<li><p><strong>group</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Autodesk.Revit.DB.Group</span></code>) – The group to get elements from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of elements.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<code class="xref py py-class docutils literal notranslate"><span class="pre">Autodesk.Revit.DB.Element</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2667,6 +2703,48 @@ added_vals = in_transaction_with_failures(trans, add_func, fail_config)</p>
 </li>
 </ul>
 <p>.result will contain the workset element in a list if successfully created, otherwise an empty list.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.worksets.delete_workset">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.worksets.</span></span><span class="sig-name descname"><span class="pre">delete_workset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_workset_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">move_elements_to_workset_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.worksets.delete_workset" title="Permalink to this definition">¶</a></dt>
+<dd><p>deletes a workset given by name</p>
+<p>if a move elements to workset name is provided, delete workset settings will be set accordingly</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>delete_workset_name</strong> (<em>str</em>) – The name of the workset to be deleted</p></li>
+<li><p><strong>move_elements_to_workset_name</strong> (<em>str</em><em> (</em><em>default is None</em><em>)</em>) – The name of the workset elements to be moved to. If None all elements on the workset will be deleted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul>
+<li><p>.status = True if:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>successfully deleted the workset</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Otherwise False:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>An exception occurred.</p></li>
+<li><p>Revit cant delete the workset with the settings provided.</p></li>
+<li><p>Document is not workshared</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>.result will contain an empty list.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>

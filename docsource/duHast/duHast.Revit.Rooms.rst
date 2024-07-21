@@ -9,15 +9,24 @@ Subpackages
 
    duHast.Revit.Rooms.Export
    duHast.Revit.Rooms.Geometry
+   duHast.Revit.Rooms.Objects
    duHast.Revit.Rooms.Reporting
 
 Submodules
 ----------
 
-duHast.Revit.Rooms.room\_functions module
------------------------------------------
+duHast.Revit.Rooms.room\_common\_parameters module
+--------------------------------------------------
 
-.. automodule:: duHast.Revit.Rooms.room_functions
+.. automodule:: duHast.Revit.Rooms.room_common_parameters
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Rooms.room\_spatial\_elements module
+-------------------------------------------------
+
+.. automodule:: duHast.Revit.Rooms.room_spatial_elements
    :members:
    :undoc-members:
    :show-inheritance:

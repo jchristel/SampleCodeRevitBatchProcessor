@@ -20,6 +20,30 @@ duHast.Revit.Warnings.Data.Objects.warnings\_data\_processor module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Warnings.Data.Objects.warnings\_data\_processor\_defaults module
+-----------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Warnings.Data.Objects.warnings_data_processor_defaults
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Warnings.Data.Objects.warnings\_data\_storage module
+-----------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Warnings.Data.Objects.warnings_data_storage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Warnings.Data.Objects.warnings\_data\_storage\_used\_by module
+---------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Warnings.Data.Objects.warnings_data_storage_used_by
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

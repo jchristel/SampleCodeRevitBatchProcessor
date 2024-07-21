@@ -100,18 +100,56 @@
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data.SharedParameterData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data.</span></span><span class="sig-name descname"><span class="pre">SharedParameterData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data.SharedParameterData" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data.</span></span><span class="sig-name descname"><span class="pre">SharedParameterData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data.SharedParameterData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_data.IFamilyData" title="duHast.Revit.Family.Data.Objects.ifamily_data.IFamilyData"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyData</span></code></a></p>
-<p>Class constructor</p>
+<p>Initialize the shared parameter data object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_path</strong> (<em>str</em>) – Root path of the family.</p></li>
+<li><p><strong>root_category_path</strong> (<em>str</em>) – Root category path of the family.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data.SharedParameterData.process">
 <span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data.SharedParameterData.process" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Process the document and find all shared parameters in the family.
+Update the data storage with the shared parameter data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Revit family document</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data.SharedParameterData.get_data">
 <span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data.SharedParameterData.get_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Get the shared parameter data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of shared parameter data storage instances.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data.SharedParameterData.add_data">
+<span class="sig-name descname"><span class="pre">add_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data.SharedParameterData.add_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add shared parameter data to the data storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>storage_instance</strong> (<a class="reference internal" href="#duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage.FamilySharedParameterDataStorage" title="duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage.FamilySharedParameterDataStorage"><em>FamilySharedParameterDataStorage</em></a>) – Shared parameter data storage instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -126,6 +164,11 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor.</span></span><span class="sig-name descname"><span class="pre">SharedParameterProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor.SharedParameterProcessor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_processor.IFamilyProcessor" title="duHast.Revit.Family.Data.Objects.ifamily_processor.IFamilyProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyProcessor</span></code></a></p>
 <p>Class constructor.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor.SharedParameterProcessor.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SharedParameterProcessor'</span></em><a class="headerlink" href="#duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor.SharedParameterProcessor.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor.SharedParameterProcessor.process">
 <span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor.SharedParameterProcessor.process" title="Permalink to this definition">¶</a></dt>
@@ -135,11 +178,58 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current family document.</p></li>
 <li><p><strong>rootPath</strong> (<em>str</em>) – The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo            This includes the actual family name as the last node.</p></li>
-<li><p><strong>rootCategoryPath</strong> (<em>str</em>) – The categroy path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory            This includes the actual family category as the last node.</p></li>
+<li><p><strong>rootCategoryPath</strong> (<em>str</em>) – The category path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory            This includes the actual family category as the last node.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_defaults">
+<span id="duhast-revit-sharedparameters-data-objects-shared-parameter-data-processor-defaults-module"></span><h2>duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_defaults module<a class="headerlink" href="#module-duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_processor_defaults" title="Permalink to this heading">¶</a></h2>
+<section id="shared-parameters-data-default-names">
+<h3>Shared parameters data default names.<a class="headerlink" href="#shared-parameters-data-default-names" title="Permalink to this heading">¶</a></h3>
+</section>
+</section>
+<section id="module-duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage">
+<span id="duhast-revit-sharedparameters-data-objects-shared-parameter-data-storage-module"></span><h2>duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage module<a class="headerlink" href="#module-duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage" title="Permalink to this heading">¶</a></h2>
+<section id="class-for-family-shared-parameter-data-storage-class">
+<h3>Class for family shared parameter data storage class.<a class="headerlink" href="#class-for-family-shared-parameter-data-storage-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage.FamilySharedParameterDataStorage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage.</span></span><span class="sig-name descname"><span class="pre">FamilySharedParameterDataStorage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_name_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_counter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">used_by</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage.FamilySharedParameterDataStorage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_data_storage.IFamilyDataStorage" title="duHast.Revit.Family.Data.Objects.ifamily_data_storage.IFamilyDataStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyDataStorage</span></code></a></p>
+<p>Class constructor</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage.FamilySharedParameterDataStorage.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SharedParameter'</span></em><a class="headerlink" href="#duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage.FamilySharedParameterDataStorage.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage.FamilySharedParameterDataStorage.number_of_properties">
+<span class="sig-name descname"><span class="pre">number_of_properties</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#duHast.Revit.SharedParameters.Data.Objects.shared_parameter_data_storage.FamilySharedParameterDataStorage.number_of_properties" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.SharedParameters.Data.Objects.shared_parameter_storage_used_by">
+<span id="duhast-revit-sharedparameters-data-objects-shared-parameter-storage-used-by-module"></span><h2>duHast.Revit.SharedParameters.Data.Objects.shared_parameter_storage_used_by module<a class="headerlink" href="#module-duHast.Revit.SharedParameters.Data.Objects.shared_parameter_storage_used_by" title="Permalink to this heading">¶</a></h2>
+<section id="class-for-category-data-used-by-storage-class">
+<h3>Class for category data used by storage class.<a class="headerlink" href="#class-for-category-data-used-by-storage-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.Data.Objects.shared_parameter_storage_used_by.FamilySharedParameterDataStorageUsedBy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.SharedParameters.Data.Objects.shared_parameter_storage_used_by.</span></span><span class="sig-name descname"><span class="pre">FamilySharedParameterDataStorageUsedBy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.SharedParameters.Data.Objects.shared_parameter_storage_used_by.FamilySharedParameterDataStorageUsedBy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.ifamily_data_storage_used_by.IFamilyDataStorageUsedBy" title="duHast.Revit.Family.Data.Objects.ifamily_data_storage_used_by.IFamilyDataStorageUsedBy"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyDataStorageUsedBy</span></code></a></p>
+<p>Class constructor</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.SharedParameters.Data.Objects.shared_parameter_storage_used_by.FamilySharedParameterDataStorageUsedBy.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'FamilySharedParameterDataStorageUsedBy'</span></em><a class="headerlink" href="#duHast.Revit.SharedParameters.Data.Objects.shared_parameter_storage_used_by.FamilySharedParameterDataStorageUsedBy.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

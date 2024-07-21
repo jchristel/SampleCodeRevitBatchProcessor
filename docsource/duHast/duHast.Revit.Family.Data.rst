@@ -20,6 +20,14 @@ duHast.Revit.Family.Data.family\_base\_data\_circular\_referencing module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.Data.family\_base\_data\_circular\_referencing\_deprecated module
+-------------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.family_base_data_circular_referencing_deprecated
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.Data.family\_base\_data\_missing\_families module
 ---------------------------------------------------------------------
 
@@ -28,26 +36,42 @@ duHast.Revit.Family.Data.family\_base\_data\_missing\_families module
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Family.Data.family\_base\_data\_reload\_advanced module
---------------------------------------------------------------------
+duHast.Revit.Family.Data.family\_base\_data\_missing\_families\_deprecated module
+---------------------------------------------------------------------------------
 
-.. automodule:: duHast.Revit.Family.Data.family_base_data_reload_advanced
+.. automodule:: duHast.Revit.Family.Data.family_base_data_missing_families_deprecated
    :members:
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Family.Data.family\_base\_data\_utils module
----------------------------------------------------------
+duHast.Revit.Family.Data.family\_base\_data\_reload\_advanced\_deprecated module
+--------------------------------------------------------------------------------
 
-.. automodule:: duHast.Revit.Family.Data.family_base_data_utils
+.. automodule:: duHast.Revit.Family.Data.family_base_data_reload_advanced_deprecated
    :members:
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Family.Data.family\_category\_data\_utils module
--------------------------------------------------------------
+duHast.Revit.Family.Data.family\_base\_data\_utils\_deprecated module
+---------------------------------------------------------------------
 
-.. automodule:: duHast.Revit.Family.Data.family_category_data_utils
+.. automodule:: duHast.Revit.Family.Data.family_base_data_utils_deprecated
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.family\_category\_data\_utils\_deprecated module
+-------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.family_category_data_utils_deprecated
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.family\_data\_family\_processor\_utils module
+----------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.family_data_family_processor_utils
    :members:
    :undoc-members:
    :show-inheritance:
@@ -84,10 +108,34 @@ duHast.Revit.Family.Data.family\_rename\_loaded\_families module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.Data.family\_report\_data\_writer module
+------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.family_report_data_writer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.family\_report\_reader module
+------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.family_report_reader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.Data.family\_report\_utils module
 -----------------------------------------------------
 
 .. automodule:: duHast.Revit.Family.Data.family_report_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.family\_report\_utils\_deprecated module
+-----------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.family_report_utils_deprecated
    :members:
    :undoc-members:
    :show-inheritance:

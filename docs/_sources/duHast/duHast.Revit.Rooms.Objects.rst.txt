@@ -1,0 +1,21 @@
+duHast.Revit.Rooms.Objects package
+==================================
+
+Submodules
+----------
+
+duHast.Revit.Rooms.Objects.RoomBaseObject module
+------------------------------------------------
+
+.. automodule:: duHast.Revit.Rooms.Objects.RoomBaseObject
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Rooms.Objects
+   :members:
+   :undoc-members:
+   :show-inheritance:

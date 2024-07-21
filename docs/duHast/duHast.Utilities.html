@@ -858,6 +858,16 @@ def function_to_measure():</p>
 <h3>Helper functions relating to directory IO .<a class="headerlink" href="#helper-functions-relating-to-directory-io" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.directory_io.is_directory">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.directory_io.</span></span><span class="sig-name descname"><span class="pre">is_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.is_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a given path is a directory
+:param directory_path: Fully qualified directory path
+:type directory_path: str
+:return: True if directory, otherwise False
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.directory_io.directory_empty_delete">
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.directory_io.</span></span><span class="sig-name descname"><span class="pre">directory_empty_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.directory_empty_delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes an empty directory
@@ -1836,6 +1846,7 @@ If message is longer then 70-2 characters it will be returned un-changed.</p>
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.solibri_ifc_optimizer.</span></span><span class="sig-name descname"><span class="pre">optimize_all_ifc_files_in_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.solibri_ifc_optimizer.optimize_all_ifc_files_in_directory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function applying third party IFC optimizer to all ifc files in a given folder.</p>
 <p>Original files will be deleted.</p>
+<p>Note: Very large IFC files may fail to optimize. (size larger than approx 1.5GB) Those files will be ignored.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>directory_path</strong> (<em>str</em>) – The directory path where IFC files are located</p>

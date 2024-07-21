@@ -98,7 +98,7 @@ def get_storage_data(family_data):
     return_value = {}
     for family_instance in family_data:
         data_dic = family_instance.get_all_storage_data_as_strings
-        for key, item in data_dic:
+        for key, item in data_dic.items():
             if key in return_value:
                 return_value[key].extend(item)
             else:
@@ -107,6 +107,11 @@ def get_storage_data(family_data):
 
 def get_storage_headers(family_data):
     return_value = {}
+    for family_instance in family_data:
+        data_dic = family_instance.get_all_storage_headers_as_strings
+        for key, item in data_dic.items():
+            if key not in return_value:
+                return_value[key] = item
     return return_value
 
 

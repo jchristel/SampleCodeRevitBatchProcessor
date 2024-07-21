@@ -410,6 +410,18 @@ class FamilyDataFamily(base.Base):
                     data_storage_as_string[key] = value
 
         return data_storage_as_string
+    
+    def get_all_storage_headers_as_strings(self):
+        """
+        Returns all property names used in storage instances in containers within this family and any nested families.
+
+        :return: A dictionary where key is the data storage type, and value is a list containing the data storage properties as string values
+        :rtype: {key:[[str]]}
+        """
+
+        # set up the return value
+        data_storage_as_string = {}
+        return data_storage_as_string
 
     def has_circular_nesting(self):
         """

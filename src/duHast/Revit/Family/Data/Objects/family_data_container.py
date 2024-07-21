@@ -57,7 +57,10 @@ from duHast.Revit.Warnings.Data.Objects.warnings_data_storage import (
     FamilyWarningsDataStorage,
 )
 from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
-from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    NESTING_SEPARATOR,
+)
+
 
 class FamilyDataContainer(base.Base):
     def __init__(
@@ -330,7 +333,7 @@ class FamilyDataContainer(base.Base):
         Note: an exception will be raised if family_nesting_path and family_category_nesting_path do not match the current values!
 
         :param other: a data storage instance
-        :type other: :class:`.FamilyLinePatternDataStorage` 
+        :type other: :class:`.FamilyLinePatternDataStorage`
         :raises TypeError: If other is not an instance of FamilyLinePatternDataStorage a type error will be raised.
         """
         # check is correct object type
@@ -394,7 +397,7 @@ class FamilyDataContainer(base.Base):
         Note: an exception will be raised if family_nesting_path and family_category_nesting_path do not match the current values!
 
         :param other: a data storage instance
-        :type other: :class:`.FamilySharedParameterDataStorage` 
+        :type other: :class:`.FamilySharedParameterDataStorage`
         :raises TypeError: If other is not an instance of FamilySharedParameterDataStorage a type error will be raised.
         """
         # check is correct object type
@@ -458,7 +461,7 @@ class FamilyDataContainer(base.Base):
         Note: an exception will be raised if family_nesting_path and family_category_nesting_path do not match the current values!
 
         :param other: a data storage instance
-        :type other: :class:`.FamilyWarningsDataStorage` 
+        :type other: :class:`.FamilyWarningsDataStorage`
         :raises TypeError: If other is not an instance of FamilyWarningsDataStorage a type error will be raised.
         """
         # check is correct object type
@@ -550,6 +553,7 @@ class FamilyDataContainer(base.Base):
     def _get_storage_of_type(storage_property):
         """
         Loops of the storage instances saved in the storage property of this class and returns their string values
+
         :param storage_property: a property of this class containing IFamilyDataStorage instances
         :type storage_property: :class:`.Result` IFamilyDataStorage
         :return: A nested list of strings representing each storage instance
@@ -557,8 +561,12 @@ class FamilyDataContainer(base.Base):
         """
         data = []
         for storage in storage_property:
-            if(isinstance(storage, IFamilyDataStorage)==False):
-                raise TypeError( "storage should of type IFamilyDataStorage but is [{}]".format(type(storage)))
+            if isinstance(storage, IFamilyDataStorage) == False:
+                raise TypeError(
+                    "Storage should of type IFamilyDataStorage but is [{}]".format(
+                        type(storage)
+                    )
+                )
             data.append(storage.get_data_values_as_list_of_strings())
         return data
 
@@ -569,8 +577,8 @@ class FamilyDataContainer(base.Base):
         :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage instance
         :rtype: {str:[[str]]}
         """
-        data = self._get_storage_of_type(storage_property = self.family_base_data_storage)
-        return {FamilyBaseDataStorage.data_type:data}
+        data = self._get_storage_of_type(storage_property=self.family_base_data_storage)
+        return {FamilyBaseDataStorage.data_type: data}
 
     def get_family_category_data_storage_as_string(self):
         """
@@ -579,8 +587,8 @@ class FamilyDataContainer(base.Base):
         :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage instance
         :rtype: {str:[[str]]}
         """
-        data = self._get_storage_of_type(storage_property = self.category_data_storage)
-        return {FamilyCategoryDataStorage.data_type:data}
+        data = self._get_storage_of_type(storage_property=self.category_data_storage)
+        return {FamilyCategoryDataStorage.data_type: data}
 
     def get_line_pattern_data_storage_as_string(self):
         """
@@ -589,8 +597,10 @@ class FamilyDataContainer(base.Base):
         :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage instance
         :rtype: {str:[[str]]}
         """
-        data = self._get_storage_of_type(storage_property = self.line_pattern_data_storage)
-        return {FamilyLinePatternDataStorage.data_type:data}
+        data = self._get_storage_of_type(
+            storage_property=self.line_pattern_data_storage
+        )
+        return {FamilyLinePatternDataStorage.data_type: data}
 
     def get_shared_parameter_data_storage_as_string(self):
         """
@@ -599,9 +609,11 @@ class FamilyDataContainer(base.Base):
         :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage instance
         :rtype: {str:[[str]]}
         """
-        data = self._get_storage_of_type(storage_property = self.shared_parameter_data_storage)
-        return {FamilySharedParameterDataStorage.data_type:data}
-    
+        data = self._get_storage_of_type(
+            storage_property=self.shared_parameter_data_storage
+        )
+        return {FamilySharedParameterDataStorage.data_type: data}
+
     def get_warnings_data_storage_as_string(self):
         """
         Returns all family warnings data instance storage as string
@@ -609,16 +621,16 @@ class FamilyDataContainer(base.Base):
         :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage instance
         :rtype: {str:[[str]]}
         """
-        data = self._get_storage_of_type(storage_property = self.warnings_data_storage)
-        return {FamilyWarningsDataStorage.data_type:data}
-    
+        data = self._get_storage_of_type(storage_property=self.warnings_data_storage)
+        return {FamilyWarningsDataStorage.data_type: data}
+
     def get_data_string_list(self):
         """
         returns a dictionary where key is the storage data type and value is a list of string representing the data storage
         """
 
         return_value = {}
-        storage_as_strings=[]
+        storage_as_strings = []
 
         # get all storage data as string ( represented in dictionary where key is the data type and values list of lists containing the storage data)
         storage_as_strings.append(self.get_family_base_data_storage_as_string())
@@ -629,5 +641,104 @@ class FamilyDataContainer(base.Base):
 
         # build single dictionary by data type:
         for d in storage_as_strings:
-            return_value[d.key]=d.value
+            return_value[d.key] = d.value
+        return return_value
+
+    def _get_storage_headers_of_type(storage_property):
+        """
+        Loops of the storage instances saved in the storage property names of this class.
+
+        :param storage_property: a property of this class containing IFamilyDataStorage instances
+        :type storage_property: :class:`.Result` IFamilyDataStorage
+        :return: A single nested list of strings representing storage instance property names
+        :rtype: [[str]]
+        """
+        data = []
+        for storage in storage_property:
+            if isinstance(storage, IFamilyDataStorage) == False:
+                raise TypeError(
+                    "Storage should of type IFamilyDataStorage but is [{}]".format(
+                        type(storage)
+                    )
+                )
+            data.append(storage.get_property_names())
+            # we only need one entry
+            break
+        return data
+    
+    def get_family_base_data_storage_headers_as_string(self):
+        """
+        Returns all family base data instance storage property as string
+
+        :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage property name
+        :rtype: {str:[[str]]}
+        """
+        data = self._get_storage_headers_of_type(storage_property=self.family_base_data_storage)
+        return {FamilyBaseDataStorage.data_type: data}
+
+    def get_family_category_data_storage_headers_as_string(self):
+        """
+        Returns all family category data instance storage as string
+
+        :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage property name
+        :rtype: {str:[[str]]}
+        """
+        data = self._get_storage_headers_of_type(storage_property=self.category_data_storage)
+        return {FamilyCategoryDataStorage.data_type: data}
+
+    def get_line_pattern_data_storage_headers_as_string(self):
+        """
+        Returns all family line pattern data instance storage as string
+
+        :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage property name
+        :rtype: {str:[[str]]}
+        """
+        data = self._get_storage_headers_of_type(
+            storage_property=self.line_pattern_data_storage
+        )
+        return {FamilyLinePatternDataStorage.data_type: data}
+
+    def get_shared_parameter_data_storage_headers_as_string(self):
+        """
+        Returns all family shared parameter data instance storage as string
+
+        :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage property name
+        :rtype: {str:[[str]]}
+        """
+        data = self._get_storage_headers_of_type(
+            storage_property=self.shared_parameter_data_storage
+        )
+        return {FamilySharedParameterDataStorage.data_type: data}
+
+    def get_warnings_data_storage_headers_as_string(self):
+        """
+        Returns all family warnings data instance storage as string
+
+        :return: A dictionary where key is the storage data type, and value is a nested list of strings representing each storage property name
+        :rtype: {str:[[str]]}
+        """
+        data = self._get_storage_headers_of_type(storage_property=self.warnings_data_storage)
+        return {FamilyWarningsDataStorage.data_type: data}
+    
+    
+    def get_data_headers_list(self):
+        """
+        returns a dictionary where key is the storage data type and value is a nested list of list of string representing the data storage property names
+
+        :return: Dictionary 
+        :rtype: {str:[[str]]}
+        """
+        return_value = {}
+        storage_as_strings = []
+
+        # get all storage data as string ( represented in dictionary where key is the data type and values list of lists containing the storage data)
+        storage_as_strings.append(self.get_family_base_data_storage_headers_as_string())
+        storage_as_strings.append(self.get_family_category_data_storage_headers_as_string())
+        storage_as_strings.append(self.get_line_pattern_data_storage_headers_as_string())
+        storage_as_strings.append(self.get_shared_parameter_data_storage_headers_as_string())
+        storage_as_strings.append(self.get_warnings_data_storage_headers_as_string())
+
+        # build single dictionary by data type:
+        for d in storage_as_strings:
+            return_value[d.key] = d.value
         return return_value

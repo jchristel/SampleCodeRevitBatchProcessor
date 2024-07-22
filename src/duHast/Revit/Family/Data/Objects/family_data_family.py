@@ -421,6 +421,23 @@ class FamilyDataFamily(base.Base):
 
         # set up the return value
         data_storage_as_string = {}
+        # loop over each container belonging directly to this family and get its dictionary representing the storage type and its header values as a list o string
+        for container in self.data_containers_unsorted:
+            container_data_storage_dic = container.get_data_headers_list()
+            for key, value in container_data_storage_dic.items():
+                # check if that storage key is already in the return dictionary
+                if key not in data_storage_as_string:
+                    # if not add its value list by the new containers values list
+                    data_storage_as_string[key]=value
+
+        # loop over nested families and get their storage header values too
+        for nested_family in self.nested_families_unsorted:
+            family_data_storage_dic = nested_family.get_all_storage_headers_as_strings()
+            for key, value in family_data_storage_dic.items():
+                # check if that storage key is already in the return dictionary
+                if key not in data_storage_as_string:
+                    # if extend its value list by the new containers values list
+                    data_storage_as_string[key]=value
         return data_storage_as_string
 
     def has_circular_nesting(self):

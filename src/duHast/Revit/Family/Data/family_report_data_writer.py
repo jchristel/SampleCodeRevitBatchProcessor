@@ -106,6 +106,16 @@ def get_storage_data(family_data):
     return return_value
 
 def get_storage_headers(family_data):
+    """
+    Gets the storage property (report) headers
+
+    :param family_data: List of family instances.
+    :type family_data: [:class:`.FamilyDataFamily`]
+
+    :return: A dictionary where the key is the storage data type, and value is a nested list of lists of strings representing the storage data property names.
+    :rtype: {str:[[str]]}
+    """
+
     return_value = {}
     for family_instance in family_data:
         data_dic = family_instance.get_all_storage_headers_as_strings

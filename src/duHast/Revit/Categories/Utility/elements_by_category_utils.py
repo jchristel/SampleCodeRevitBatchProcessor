@@ -26,7 +26,7 @@ Revit elements to category helper functions.
 #
 #
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import ElementId,  Solid
 
 from duHast.Revit.Common import parameter_set_utils as rParaSet
 from duHast.Utilities.Objects import result as res
@@ -88,8 +88,8 @@ def sort_geometry_elements_by_category(elements, element_dic, doc):
     counter = 0
     for el in elements:
         counter = counter + 1
-        graphic_style_id = rdb.ElementId.InvalidElementId
-        if type(el) is rdb.Solid:
+        graphic_style_id = ElementId.InvalidElementId
+        if type(el) is Solid:
             # get graphic style id from edges
             edge_array = el.Edges
             if edge_array.IsEmpty == False:
@@ -98,15 +98,15 @@ def sort_geometry_elements_by_category(elements, element_dic, doc):
         else:
             graphic_style_id = el.GraphicsStyleId
         # failed to get an id?
-        if graphic_style_id != rdb.ElementId.InvalidElementId:
+        if graphic_style_id != ElementId.InvalidElementId:
             graphic_style = doc.GetElement(graphic_style_id)
             graph_cat_id = graphic_style.GraphicsStyleCategory.Id
             # geometry elements have no Id property ... Doh!! pass in invalid element id...
             if graph_cat_id != None:
                 if graph_cat_id in element_dic:
-                    element_dic[graph_cat_id].append(rdb.ElementId.InvalidElementId)
+                    element_dic[graph_cat_id].append(ElementId.InvalidElementId)
                 else:
-                    element_dic[graph_cat_id] = [rdb.ElementId.InvalidElementId]
+                    element_dic[graph_cat_id] = [ElementId.InvalidElementId]
     return element_dic
 
 
@@ -159,7 +159,7 @@ def get_elements_by_category(doc, cat):
         # 3d elements within family which have subcategory set to 'none' belong to owner family
         # category. Revit uses a None value as id rather then the actual category id
         # my get parameter value translates that into -1 (invalid element id)
-        category_graphic_style_ids[CATEGORY_GRAPHIC_STYLE_3D] = rdb.ElementId.InvalidElementId
+        category_graphic_style_ids[CATEGORY_GRAPHIC_STYLE_3D] = ElementId.InvalidElementId
     dic_filtered = {}
     # filter elements by category ids
     for key, value in category_graphic_style_ids.items():
@@ -219,7 +219,7 @@ def move_elements_to_category(doc, elements, to_category_name, destination_cat_i
                             # not sure how this works in none - english versions of Revit...
                             if (
                                 key == "Cut"
-                                and target_id == rdb.ElementId.InvalidElementId
+                                and target_id == ElementId.InvalidElementId
                             ):
                                 target_id = destination_cat_ids["Projection"]
                                 return_value.append_message(

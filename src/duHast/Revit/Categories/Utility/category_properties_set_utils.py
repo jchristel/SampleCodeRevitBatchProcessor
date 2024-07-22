@@ -3,6 +3,7 @@
 Revit sub-category property set functions .
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,14 +20,14 @@ Revit sub-category property set functions .
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import Color, Element, GraphicsStyleType, Transaction
 
 from duHast.Revit.LinePattern import line_patterns as rPat
 from duHast.Revit.Common import transaction as rTran
@@ -77,8 +78,8 @@ def set_category_material(doc, cat, material_id):
                 )
             return action_return_value
 
-        transaction = rdb.Transaction(
-            doc, "Updating subcategory material: " + str(rdb.Element.Name.GetValue(mat))
+        transaction = Transaction(
+            doc, "Updating subcategory material: {}".format(Element.Name.GetValue(mat))
         )
         update_mat = rTran.in_transaction(transaction, action)
         flag = update_mat.status
@@ -110,7 +111,7 @@ def set_category_line_pattern(doc, cat, line_pattern_id, ignore_missing_cut_styl
         def action():
             action_return_value = res.Result()
             try:
-                cat.SetLinePatternId(line_pattern_id, rdb.GraphicsStyleType.Cut)
+                cat.SetLinePatternId(line_pattern_id, GraphicsStyleType.Cut)
                 action_return_value.update_sep(
                     True, "Successfully set cut line pattern of subcategory"
                 )
@@ -130,7 +131,7 @@ def set_category_line_pattern(doc, cat, line_pattern_id, ignore_missing_cut_styl
                         ),
                     )
             try:
-                cat.SetLinePatternId(line_pattern_id, rdb.GraphicsStyleType.Projection)
+                cat.SetLinePatternId(line_pattern_id, GraphicsStyleType.Projection)
                 action_return_value.update_sep(
                     True, "Successfully set projection line pattern of subcategory"
                 )
@@ -143,7 +144,7 @@ def set_category_line_pattern(doc, cat, line_pattern_id, ignore_missing_cut_styl
                 )
             return action_return_value
 
-        transaction = rdb.Transaction(doc, "Updating subcategory line pattern")
+        transaction = Transaction(doc, "Updating subcategory line pattern")
         update_line_pattern = rTran.in_transaction(transaction, action)
         flag = update_line_pattern.status
     except Exception as e:
@@ -176,7 +177,7 @@ def set_category_line_weights(
         def action():
             action_return_value = res.Result()
             try:
-                cat.SetLineWeight(line_thick_ness_cut, rdb.GraphicsStyleType.Cut)
+                cat.SetLineWeight(line_thick_ness_cut, GraphicsStyleType.Cut)
                 action_return_value.update_sep(
                     True, "Successfully set cut line weight of subcategory"
                 )
@@ -197,7 +198,7 @@ def set_category_line_weights(
                     )
             try:
                 cat.SetLineWeight(
-                    line_thickness_projection, rdb.GraphicsStyleType.Projection
+                    line_thickness_projection, GraphicsStyleType.Projection
                 )
                 action_return_value.update_sep(
                     True, "Successfully set projection line weight of subcategory"
@@ -211,7 +212,7 @@ def set_category_line_weights(
                 )
             return action_return_value
 
-        transaction = rdb.Transaction(doc, "Updating subcategory line weights")
+        transaction = Transaction(doc, "Updating subcategory line weights")
         update_line_weights = rTran.in_transaction(transaction, action)
         flag = update_line_weights.status
     except Exception as e:
@@ -242,7 +243,7 @@ def set_category_colour(doc, cat, red, green, blue):
         def action():
             action_return_value = res.Result()
             try:
-                new_colour = rdb.Color(red, green, blue)
+                new_colour = Color(red, green, blue)
                 cat.LineColor = new_colour
                 action_return_value.update_sep(
                     True, "Successfully set colour value of subcategory"
@@ -256,7 +257,7 @@ def set_category_colour(doc, cat, red, green, blue):
                 )
             return action_return_value
 
-        transaction = rdb.Transaction(doc, "Updating subcategory colour")
+        transaction = Transaction(doc, "Updating subcategory colour")
         update_colour = rTran.in_transaction(transaction, action)
         flag = update_colour.status
     except Exception as e:

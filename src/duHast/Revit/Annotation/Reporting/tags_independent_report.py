@@ -3,6 +3,7 @@
 This module contains a Revit tag instances report function. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ This module contains a Revit tag instances report function.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -41,7 +42,8 @@ from duHast.Revit.Annotation.Reporting import (
 from duHast.Revit.Common.Geometry.points import get_point_as_doubles
 from duHast.Revit.Common.revit_version import get_revit_version_number
 
-import Autodesk.Revit.DB as rdb
+
+from Autodesk.Revit.DB import ElementId
 
 
 def _convert_tagged_element_ids_to_int(data):
@@ -56,7 +58,7 @@ def _convert_tagged_element_ids_to_int(data):
 
     for tag_dic in data:
         for id_entry in tag_dic:
-            if type(tag_dic[id_entry]) == rdb.ElementId:
+            if type(tag_dic[id_entry]) == ElementId:
                 tag_dic[id_entry] = tag_dic[id_entry].IntegerValue
     return data
 

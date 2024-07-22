@@ -40,9 +40,6 @@ from duHast.Revit.Categories.Data.Objects.category_data_storage_used_by import (
     FamilyCategoryDataStorageUsedBy,
 )
 
-# import Autodesk
-# import Autodesk.Revit.DB as rdb
-
 # data dictionary key values specific to this class
 CATEGORY_NAME = "categoryName"
 SUB_CATEGORY_NAME = "subCategoryName"

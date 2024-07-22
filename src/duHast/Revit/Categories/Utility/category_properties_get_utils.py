@@ -3,6 +3,7 @@
 Revit sub-category property get functions .
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,15 +20,16 @@ Revit sub-category property get functions .
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import Element, ElementId, GraphicsStyleType
+
 from duHast.Revit.LinePattern import line_patterns as rPat
 from duHast.Revit.Categories.Utility.category_property_names import (
     CATEGORY_GRAPHIC_STYLE_3D,
@@ -53,16 +55,14 @@ def get_category_graphic_style_ids(cat):
     :rtype: dictionary {str: Autodesk.Revit.DB.ElementId}
     """
 
-    i_d_graphic_style_projection = cat.GetGraphicsStyle(
-        rdb.GraphicsStyleType.Projection
-    ).Id
+    i_d_graphic_style_projection = cat.GetGraphicsStyle(GraphicsStyleType.Projection).Id
 
     # check if this category has a cut style ( some families always appear in elevation only!)
-    graphic_style_cut = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Cut)
+    graphic_style_cut = cat.GetGraphicsStyle(GraphicsStyleType.Cut)
     # set as default invalid element id
-    i_d_graphic_style_cut = rdb.ElementId.InvalidElementId
+    i_d_graphic_style_cut = ElementId.InvalidElementId
     if graphic_style_cut != None:
-        i_d_graphic_style_cut = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Cut).Id
+        i_d_graphic_style_cut = cat.GetGraphicsStyle(GraphicsStyleType.Cut).Id
     # build category dictionary where key is the style type, values is the corresponding Id
     dic = {}
     dic[CATEGORY_GRAPHIC_STYLE_PROJECTION] = i_d_graphic_style_projection
@@ -84,10 +84,10 @@ def get_category_material(cat):
 
     dic_material = {}
     dic_material[PROPERTY_MATERIAL_NAME] = PROPERTY_MATERIAL_NAME_VALUE_DEFAULT
-    dic_material[PROPERTY_MATERIAL_ID] = rdb.ElementId.InvalidElementId
+    dic_material[PROPERTY_MATERIAL_ID] = ElementId.InvalidElementId
     material = cat.Material
     if material != None:
-        dic_material[PROPERTY_MATERIAL_NAME] = rdb.Element.Name.GetValue(material)
+        dic_material[PROPERTY_MATERIAL_NAME] = Element.Name.GetValue(material)
         dic_material[PROPERTY_MATERIAL_ID] = material.Id
     return dic_material
 
@@ -104,10 +104,10 @@ def get_category_line_weights(cat):
 
     dic_line_weights = {}
     dic_line_weights[PROPERTY_LINE_WEIGHT_PROJECTION_NAME] = cat.GetLineWeight(
-        rdb.GraphicsStyleType.Projection
+        GraphicsStyleType.Projection
     )
     dic_line_weights[PROPERTY_LINE_WEIGHT_CUT_NAME] = cat.GetLineWeight(
-        rdb.GraphicsStyleType.Cut
+        GraphicsStyleType.Cut
     )
     return dic_line_weights
 

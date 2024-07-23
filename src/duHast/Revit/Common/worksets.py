@@ -48,8 +48,6 @@ from duHast.Utilities import files_io as filesIO
 from duHast.Utilities import files_tab as filesTab
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
-
 from Autodesk.Revit.DB import (
     BuiltInParameter,
     DeleteWorksetOption,
@@ -60,6 +58,7 @@ from Autodesk.Revit.DB import (
     FilteredElementCollector,
     FilteredWorksetCollector,
     Transaction,
+    UIDocument,
     Workset,
     WorksetKind,
     WorksetDefaultVisibilitySettings,
@@ -160,7 +159,7 @@ def get_worksets_from_collector(doc):
     return collector
 
 
-def open_worksets_with_elements_hack(doc):
+def open_worksets_with_elements_hack(doc, ui_doc):
     """
     This is based on a hack from the AutoDesk forum and an article from the building coder:
 
@@ -173,6 +172,9 @@ def open_worksets_with_elements_hack(doc):
     :type doc: Autodesk.Revit.DB.Document
     """
 
+    if (isinstance(ui_doc, UIDocument)==False):
+        raise TypeError ("ui_doc needs to be of type UIDocument but is: {}".format(type(ui_doc)))
+    
     # get worksets in model
     workset_ids = get_workset_ids(doc)
     # loop over workset and open if anything is on them
@@ -181,7 +183,7 @@ def open_worksets_with_elements_hack(doc):
         elem_ids = FilteredElementCollector(doc).WherePasses(workset).ToElementIds()
         if len(elem_ids) > 0:
             # this will force Revit to open the workset containing this element
-            rdb.uidoc.ShowElements(elem_ids.First())
+            ui_doc.ShowElements(elem_ids.First())
 
 
 def modify_element_workset(doc, default_workset_name, collector, element_type_name):

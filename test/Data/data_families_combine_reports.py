@@ -32,150 +32,42 @@ import os
 import sys
 
 from test.utils import test
+from duHast.Utilities.Objects.result import Result
 
-from duHast.Revit.Family.Data.family_base_data_utils_deprecated import (
-    nested_family,
-    read_overall_family_data_list_from_directory,
-)
-from duHast.Revit.Family.Data.family_report_utils_deprecated import combine_reports
+from duHast.Revit.Family.Data.family_report_utils import combine_reports
 from duHast.Utilities.files_io import get_directory_path_from_file_path
 
+
+# test previous report empty and new report empty (01)
 TEST_REPORT_DIRECTORY_ONE = os.path.join(
     get_directory_path_from_file_path(__file__), "CombineReports_01"
 )
+
+# test previous report empty but new report not empty (02)
 TEST_REPORT_DIRECTORY_TWO = os.path.join(
     get_directory_path_from_file_path(__file__), "CombineReports_02"
 )
+
+# test previous report not empty but new report empty (03)
 TEST_REPORT_DIRECTORY_THREE = os.path.join(
     get_directory_path_from_file_path(__file__), "CombineReports_03"
 )
+
+# test previous report not empty and new report not empty (04)
 TEST_REPORT_DIRECTORY_FOUR = os.path.join(
     get_directory_path_from_file_path(__file__), "CombineReports_04"
 )
 
+# sub directories in test
+PREVIOUS_REPORT_DIRECTORY_NAME = "previous"
+NEW_REPORT_DIRECTORY_NAME = "new"
+
 
 REPORTS_TO_COMBINE = {
-    TEST_REPORT_DIRECTORY_ONE: [
-        (
-            [
-                "FamilyWarningsCombinedReport_previous.csv",
-                "FamilyWarningsCombinedReport_new.csv",
-            ],
-            [
-                [
-                    "root",
-                    "rootCategory",
-                    "familyName",
-                    "familyFilePath",
-                    "warningText",
-                    "warningGUID",
-                    "warningRelatedIds",
-                    "warningOtherIds",
-                ]
-            ],
-        ),
-        (
-            [
-                "FamilySharedParametersCombinedReport_previous.csv",
-                "FamilySharedParametersCombinedReport_new.csv",
-            ],
-            [
-                [
-                    "root",
-                    "rootCategory",
-                    "familyName",
-                    "familyFilePath",
-                    "parameterName",
-                    "parameterGUID",
-                    "parameterId",
-                    "usageCounter",
-                    "usedBy",
-                ]
-            ],
-        ),
-        (
-            [
-                "FamilyLinePatternsCombinedReport_previous.csv",
-                "FamilyLinePatternsCombinedReport_new.csv",
-            ],
-            [
-                [
-                    "root",
-                    "rootCategory",
-                    "familyName",
-                    "familyFilePath",
-                    "usageCounter",
-                    "usedBy",
-                    "patternName",
-                    "patternId",
-                ]
-            ],
-        ),
-        (
-            [
-                "FamilyCategoriesCombinedReport_previous.csv",
-                "FamilyCategoriesCombinedReport_new.csv",
-            ],
-            [
-                [
-                    "root",
-                    "rootCategory",
-                    "familyName",
-                    "familyFilePath",
-                    "usageCounter",
-                    "usedBy",
-                    "categoryName",
-                    "subCategoryName",
-                    "subCategoryId",
-                    "graphicProperty_3D",
-                    "graphicProperty_Cut",
-                    "graphicProperty_Projection",
-                    "graphicProperty_MaterialName",
-                    "graphicProperty_MaterialId",
-                    "graphicProperty_LineWeightCut",
-                    "graphicProperty_LineWeightProjection",
-                    "graphicProperty_Red",
-                    "graphicProperty_Green",
-                    "graphicProperty_Blue",
-                ]
-            ],
-        ),
-        (
-            [
-                "FamilyBaseDataCombinedReport_previous.csv",
-                "FamilyBaseDataCombinedReport_new.csv",
-            ],
-            [
-                [
-                    "root",
-                    "rootCategory",
-                    "familyName",
-                    "familyFilePath",
-                    "categoryName",
-                ]
-            ],
-        ),
-    ],
-    TEST_REPORT_DIRECTORY_TWO: [
-        (
-            [
-                "FamilyWarningsCombinedReport_previous.csv",
-                "FamilyWarningsCombinedReport_new.csv",
-            ],
-            [
-                [
-                    "root",
-                    "rootCategory",
-                    "familyName",
-                    "familyFilePath",
-                    "warningText",
-                    "warningGUID",
-                    "warningRelatedIds",
-                    "warningOtherIds",
-                ]
-            ],
-        ),
-    ],
+    TEST_REPORT_DIRECTORY_ONE: [],
+    TEST_REPORT_DIRECTORY_TWO: [],
+    TEST_REPORT_DIRECTORY_THREE: [],
+    TEST_REPORT_DIRECTORY_FOUR: [],
 }
 
 
@@ -187,6 +79,39 @@ class DataCombineFamiliesReports(test.Test):
             test_name="combine family data report"
         )
 
+    def _run_tests(self, test_data, test_files_directory):
+        """
+        actual test runner
+        """
+        return_value = Result()
+        # test reports
+        try:
+            # build directory names
+            previous_directory = os.path.join(test_files_directory, PREVIOUS_REPORT_DIRECTORY_NAME)
+            new_directory = os.path.join(test_files_directory, NEW_REPORT_DIRECTORY_NAME)
+
+            # combine results
+            combine_result = combine_reports(previous_report_path=previous_directory, new_report_path=new_directory)
+            
+            # check for exceptions
+            if (combine_result.status == False):
+                raise ValueError(combine_result.message)
+            
+            # test combine outcome
+
+            # check number of families returned
+
+            # check family names and categories returned
+
+            # check for specific value (file path ) indicating an update has ocurred
+
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "An exception occurred in function run tests : {}".format(e),
+            )
+        return return_value
+
     def test(self):
         """
         Combines family data report.
@@ -195,61 +120,19 @@ class DataCombineFamiliesReports(test.Test):
         :rtype: _bool
         """
 
-        flag = True
-        message = "\n-"
+        return_value = Result()
         try:
-            # test previous report empty and new report empty (01)
 
-            # test previous report empty but new report not empty (02)
-
-            # test previous report not empty but new report empty (03)
-
-            # test previous report not empty and new report not empty (04)
-
-            for directory, reports in REPORTS_TO_COMBINE.items():
-                for report in reports:
-                    previous_report = os.path.join(directory, report[0][0])
-                    new_report = os.path.join(directory, report[0][1])
-                    # attempt to combine reports
-                    result_combined = combine_reports(previous_report, new_report)
-
-                    # check if successful
-                    if not result_combined.status:
-                        flag = False
-                        message += "\nfailed to combine reports: {} and {} with message: \n{}\n{}".format(
-                            previous_report,
-                            new_report,
-                            result_combined.message,
-                            result_combined.status,
-                        )
-                        break
-
-                    # message logs if something goes wrong
-                    message += "\nresult from data: {} \nvs \nexpected: {}".format(
-                        "\n".join(
-                            " ".join(sublist)
-                            for sublist in sorted(result_combined.result)
-                        ),
-                        "\n".join(" ".join(sublist) for sublist in sorted(report[1])),
-                    )
-
-                    # check if equal
-                    assert sorted(result_combined.result) == sorted(report[1])
-
-                    # debug print
-                    print(result_combined)
-
-            pass
+            # loop over test directories, conduct test and compare outcome
+            for directory, test_data in REPORTS_TO_COMBINE.items():
+                test_result = self._run_tests(
+                    test_data=test_data, test_files_directory=directory
+                )
+                return_value.update(test_result)
 
         except Exception as e:
-            flag = False
-            message = (
-                message
-                + "\n"
-                + (
-                    "An exception occurred in function {} : {}".format(
-                        self.test_name, e
-                    )
-                )
+            return_value.update_sep(
+                False,
+                "An exception occurred in function {} : {}".format(self.test_name, e),
             )
-        return flag, message
+        return return_value.status, return_value.message

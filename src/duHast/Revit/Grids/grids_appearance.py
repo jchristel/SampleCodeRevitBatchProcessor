@@ -29,7 +29,8 @@ Note: Any grid appearance modification in a view will throw an exception if the 
 #
 #
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import DatumEnds, DatumExtentType, Transaction
+
 
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import transaction as rTran
@@ -69,10 +70,10 @@ def change_grids_2D(doc, grids, view):
             grid_counter = grid_counter + 1
             try:
                 g.SetDatumExtentType(
-                    rdb.DatumEnds.End1, view, rdb.DatumExtentType.ViewSpecific
+                    DatumEnds.End1, view, DatumExtentType.ViewSpecific
                 )
                 g.SetDatumExtentType(
-                    rdb.DatumEnds.End0, view, rdb.DatumExtentType.ViewSpecific
+                    DatumEnds.End0, view, DatumExtentType.ViewSpecific
                 )
                 action_return_value.update_sep(
                     True, "Changed grid {} to 2D.".format(g.Name)
@@ -90,7 +91,7 @@ def change_grids_2D(doc, grids, view):
             )
         return action_return_value
 
-    transaction = rdb.Transaction(doc, "Grids to 2D")
+    transaction = Transaction(doc, "Grids to 2D")
     return_value = rTran.in_transaction(transaction, action)
     return return_value
 
@@ -160,7 +161,7 @@ def show_bubble_end(doc, grid, view, end_identifier, show_bubble):
             )
         return action_return_value
 
-    transaction = rdb.Transaction(doc, "Toggle Bubble. {}".format((show_bubble)))
+    transaction = Transaction(doc, "Toggle Bubble. {}".format((show_bubble)))
     return_value = rTran.in_transaction(transaction, action)
     return return_value
 
@@ -195,8 +196,8 @@ def hide_both_bubbles(doc, grids, view):
 
     return_value = res.Result()
     for g in grids:
-        return_value.update(show_bubble_end(doc, g, view, rdb.DatumEnds.End1, False))
-        return_value.update(show_bubble_end(doc, g, view, rdb.DatumEnds.End0, False))
+        return_value.update(show_bubble_end(doc, g, view, DatumEnds.End1, False))
+        return_value.update(show_bubble_end(doc, g, view, DatumEnds.End0, False))
 
     return return_value
 
@@ -231,7 +232,7 @@ def show_bubble_zero_end(doc, grids, view):
 
     return_value = res.Result()
     for g in grids:
-        return_value.update(show_bubble_end(doc, g, view, rdb.DatumEnds.End0, True))
+        return_value.update(show_bubble_end(doc, g, view, DatumEnds.End0, True))
 
     return return_value
 
@@ -266,7 +267,7 @@ def show_bubble_one_end(doc, grids, view):
 
     return_value = res.Result()
     for g in grids:
-        return_value.update(show_bubble_end(doc, g, view, rdb.DatumEnds.End1, True))
+        return_value.update(show_bubble_end(doc, g, view, DatumEnds.End1, True))
 
     return return_value
 
@@ -333,7 +334,7 @@ def toggle_bubble_end(doc, grid, view, end_identifier):
             )
         return action_return_value
 
-    transaction = rdb.Transaction(doc, "Toggle Bubble.")
+    transaction = Transaction(doc, "Toggle Bubble.")
     return_value = rTran.in_transaction(transaction, action)
     return return_value
 
@@ -368,7 +369,7 @@ def toggle_bubble_one_end(doc, grids, view):
 
     return_value = res.Result()
     for g in grids:
-        return_value.update(toggle_bubble_end(doc, g, view, rdb.DatumEnds.End1))
+        return_value.update(toggle_bubble_end(doc, g, view, DatumEnds.End1))
     return return_value
 
 
@@ -402,5 +403,5 @@ def toggle_bubble_zero_end(doc, grids, view):
 
     return_value = res.Result()
     for g in grids:
-        return_value.update(toggle_bubble_end(doc, g, view, rdb.DatumEnds.End0))
+        return_value.update(toggle_bubble_end(doc, g, view, DatumEnds.End0))
     return return_value

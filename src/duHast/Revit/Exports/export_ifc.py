@@ -27,7 +27,8 @@ This module contains a number of functions around exporting from Revit to nwc fi
 #
 #
 
-import Autodesk.Revit.DB as rdb
+
+from Autodesk.Revit.DB import ElementId, IFCExportOptions, Transaction, ViewType
 
 from duHast.Revit.Common import transaction as rTran
 from duHast.Revit.Common.revit_version import get_revit_version_number
@@ -77,7 +78,7 @@ def ifc_get_export_config_by_view(
     :rtype: Autodesk.Revit.DB.IFCExportOptions
     """
 
-    ex_ifc = rdb.IFCExportOptions()
+    ex_ifc = IFCExportOptions()
     ex_ifc.ExportBaseQuantities = True
     ex_ifc.FileVersion = ifc_version
     ex_ifc.SpaceBoundaryLevel = ifc_space_bounds
@@ -130,7 +131,7 @@ def export_to_ifc(doc, ifc_export_option, directory_path, file_name):
             )
         return action_return_value
 
-    transaction = rdb.Transaction(doc, "Export to IFC")
+    transaction = Transaction(doc, "Export to IFC")
     return_value = rTran.in_transaction(transaction, action)
     return return_value
 
@@ -162,7 +163,7 @@ def export_3d_views_to_ifc_default(doc, view_filter, ifc_export_option, director
     return_value = res.Result()
     views_to_export = []
     # get all 3D views in model and filter out views to be exported
-    views = rView.get_views_of_type(doc, rdb.ViewType.ThreeD)
+    views = rView.get_views_of_type(doc, ViewType.ThreeD)
     for v in views:
         if v.Name.lower().startswith(view_filter.lower()):
             views_to_export.append(v)
@@ -187,7 +188,7 @@ def export_3d_views_to_ifc_default(doc, view_filter, ifc_export_option, director
 
 def setup_ifc_export_option(
     export_config,
-    view_id=rdb.ElementId.InvalidElementId,
+    view_id=ElementId.InvalidElementId,
     coord_option=IFCCoords.shared_coordinates,
     convert_view_id_to_integer=True,
 ):
@@ -213,10 +214,10 @@ def setup_ifc_export_option(
         if convert_view_id_to_integer:
             export_config.ActiveViewId = -1
         else:
-            export_config.ActiveViewId = rdb.ElementId.InvalidElementId
+            export_config.ActiveViewId = ElementId.InvalidElementId
 
     # set up the ifc export options object
-    ex_ifc = rdb.IFCExportOptions()
+    ex_ifc = IFCExportOptions()
 
     # do I need to convert the view id to int here as well if required?
     export_config.UpdateOptions(ex_ifc, view_id)
@@ -274,7 +275,7 @@ def export_3d_views_to_ifc(
 
     views_to_export = []
     # get all 3D views in model and filter out views to be exported
-    views = rView.get_views_of_type(doc, rdb.ViewType.ThreeD)
+    views = rView.get_views_of_type(doc, ViewType.ThreeD)
     for v in views:
         if v.Name.lower().startswith(view_filter.lower()):
             views_to_export.append(v)
@@ -346,7 +347,7 @@ def export_model_to_ifc(
     # need to create an export option from the export config
     ifc_export_option = setup_ifc_export_option(
         export_config=ifc_export_config,
-        view_id=rdb.ElementId.InvalidElementId,
+        view_id=ElementId.InvalidElementId,
         coord_option=coord_option,
         convert_view_id_to_integer=convert_view_id_to_integer,
     )

@@ -64,7 +64,7 @@ NEW_REPORT_DIRECTORY_NAME = "new"
 
 
 REPORTS_TO_COMBINE = {
-    TEST_REPORT_DIRECTORY_ONE: [],
+    TEST_REPORT_DIRECTORY_ONE: [1,()],
     TEST_REPORT_DIRECTORY_TWO: [],
     TEST_REPORT_DIRECTORY_THREE: [],
     TEST_REPORT_DIRECTORY_FOUR: [],
@@ -98,12 +98,15 @@ class DataCombineFamiliesReports(test.Test):
                 raise ValueError(combine_result.message)
             
             # test combine outcome
-
             # check number of families returned
+            return_value.append_message ("expecting {} families in combined report. Got {}".format(test_data[0], len (combine_result.result)))
 
-            # check family names and categories returned
+            # check if further tests required
+            if(test_data[0]>0):
+                pass
+                # check family names and categories returned
 
-            # check for specific value (file path ) indicating an update has ocurred
+                # check for specific value (file path ) indicating an update has ocurred
 
         except Exception as e:
             return_value.update_sep(

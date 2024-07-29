@@ -28,7 +28,7 @@ This module contains a Revit ceilings utility functions.
 #
 
 import Autodesk.Revit.DB as rdb
-
+from Autodesk.Revit.DB import BuiltInCategory, CeilingType, FilteredElementCollector
 
 def _get_all_ceiling_types_by_category(doc):
     """
@@ -49,8 +49,8 @@ def _get_all_ceiling_types_by_category(doc):
     """
 
     collector = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_Ceilings)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_Ceilings)
         .WhereElementIsElementType()
     )
     return collector
@@ -74,4 +74,4 @@ def _get_ceiling_types_by_class(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.CeilingType)
+    return FilteredElementCollector(doc).OfClass(CeilingType)

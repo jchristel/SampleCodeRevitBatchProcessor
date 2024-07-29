@@ -3,6 +3,7 @@
 This module contains a Revit ceilings geometry extraction functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,13 +20,14 @@ This module contains a Revit ceilings geometry extraction functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
-import Autodesk.Revit.DB as rdb
+
+from Autodesk.Revit.DB import Options, Solid
 
 from duHast.Revit.Ceilings import ceilings as rCeiling
 from duHast.Data.Objects.Properties.Geometry import from_revit_conversion as rCon
@@ -46,13 +48,13 @@ def get_2d_points_from_revit_ceiling(ceiling):
 
     all_ceiling_points = []
     # get geometry from ceiling
-    opt = rdb.Options()
+    opt = Options()
     fr1_geom = ceiling.get_Geometry(opt)
     solids = []
     # check geometry for Solid elements
     # todo check for FamilyInstance geometry ( in place families!)
     for item in fr1_geom:
-        if type(item) is rdb.Solid:
+        if type(item) is Solid:
             solids.append(item)
 
     # process solids to points

@@ -56,6 +56,9 @@ class FileSelectionSettings(base.Base):
         :type revitFileExtension: str
         """
 
+        # ini super class to allow multi inheritance in children!
+        super(FileSelectionSettings, self).__init__()
+
         self.input_directory = input_path
         self.incl_sub_dirs = include_sub_dirs_in_search
         self.output_dir = output_directory
@@ -63,6 +66,3 @@ class FileSelectionSettings(base.Base):
         self.revit_file_extension = revit_file_extension
         self.filters = filters
         self.filter_type = filter_type
-
-        # ini super class to allow multi inheritance in children!
-        super(FileSelectionSettings, self).__init__()

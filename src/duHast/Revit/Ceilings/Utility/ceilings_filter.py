@@ -27,7 +27,6 @@ This module contains a Revit ceilings utility functions.
 #
 #
 
-import Autodesk.Revit.DB as rdb
 from Autodesk.Revit.DB import BuiltInCategory, CeilingType, FilteredElementCollector
 
 def _get_all_ceiling_types_by_category(doc):

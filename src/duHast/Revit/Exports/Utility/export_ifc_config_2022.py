@@ -20,8 +20,8 @@ This module contains a number of helper functions to get the IFCExportConfig in 
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -31,7 +31,7 @@ import clr
 import System
 import sys
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import ElementId, IFCVersion
 
 
 # -------------------------------------------- IFC EXPORT Revit 2022 -------------------------------------
@@ -115,7 +115,7 @@ def ifc_get_third_party_export_config_by_model_2022(ifc_version, ifc_settings):
 
 def _setup_config_from_settings_2022(ifc_export_config, ifc_settings):
     """
-    Sets up an ifc config object for Revit 2022 based on settings passt in.
+    Sets up an ifc config object for Revit 2022 based on settings past in.
 
     :param ifc_export_config: An ifc export config object
     :type ifc_export_config: BIM.IFC.Export.UI.IFCExportConfiguration
@@ -133,27 +133,27 @@ def _setup_config_from_settings_2022(ifc_export_config, ifc_settings):
     ifc_export_config.Name = ifc_settings.name
     # set up IFC version
     if ifc_settings.ifc_version == "IFCBCA":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFCBCA
+        ifc_export_config.IFCVersion = IFCVersion.IFCBCA
     elif ifc_settings.ifc_version == "IFC2x2":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x2
+        ifc_export_config.IFCVersion = IFCVersion.IFC2x2
     elif ifc_settings.ifc_version == "IFC2x3":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x3
+        ifc_export_config.IFCVersion = IFCVersion.IFC2x3
     elif ifc_settings.ifc_version == "IFCCOBIE":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFCCOBIE
+        ifc_export_config.IFCVersion = IFCVersion.IFCCOBIE
     elif ifc_settings.ifc_version == "IFC2x3CV2":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x3CV2
+        ifc_export_config.IFCVersion = IFCVersion.IFC2x3CV2
     elif ifc_settings.ifc_version == "IFC4":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC4
+        ifc_export_config.IFCVersion = IFCVersion.IFC4
     elif ifc_settings.ifc_version == "IFC2x3FM":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x3FM
+        ifc_export_config.IFCVersion = IFCVersion.IFC2x3FM
     elif ifc_settings.ifc_version == "IFC4RV":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC4RV
+        ifc_export_config.IFCVersion = IFCVersion.IFC4RV
     elif ifc_settings.ifc_version == "IFC4DTV":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC4DTV
+        ifc_export_config.IFCVersion = IFCVersion.IFC4DTV
     elif ifc_settings.ifc_version == "IFC2x3BFM":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x3BFM
+        ifc_export_config.IFCVersion = IFCVersion.IFC2x3BFM
     else:
-        ifc_export_config.IFCVersion = rdb.IFCVersion.Default
+        ifc_export_config.IFCVersion = IFCVersion.Default
 
     ifc_export_config.SpaceBoundaries = ifc_settings.space_boundaries
     ifc_export_config.ActivePhaseId = ifc_settings.active_phase_id
@@ -249,12 +249,12 @@ def _setup_config_default_values_2022(ifc_export_config, ifc_version, export_by_
 
     # set up IFC version
     if ifc_version is None or ifc_version == "":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.Default
+        ifc_export_config.IFCVersion = IFCVersion.Default
     else:
         ifc_export_config.IFCVersion = ifc_version
 
     ifc_export_config.SpaceBoundaries = 1
-    ifc_export_config.ActivePhaseId = rdb.ElementId.InvalidElementId.IntegerValue
+    ifc_export_config.ActivePhaseId = ElementId.InvalidElementId.IntegerValue
     ifc_export_config.ExportBaseQuantities = True
     ifc_export_config.SplitWallsAndColumns = True
     ifc_export_config.VisibleElementsOfCurrentView = export_by_view  # by model

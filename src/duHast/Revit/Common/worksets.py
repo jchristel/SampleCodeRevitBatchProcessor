@@ -58,12 +58,13 @@ from Autodesk.Revit.DB import (
     FilteredElementCollector,
     FilteredWorksetCollector,
     Transaction,
-    UIDocument,
     Workset,
     WorksetKind,
     WorksetDefaultVisibilitySettings,
     WorksetTable,
 )
+
+from Autodesk.Revit.UI import UIDocument
 
 # --------------------------------------------- utility functions ------------------
 

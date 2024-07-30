@@ -56,6 +56,9 @@ from duHast.Utilities.files_io import (
     FILE_SIZE_IN_KB,
     is_back_up_file,
 )
+
+from duHast.Utilities.directory_io import directory_exists
+
 from duHast.Utilities.console_out import output_with_time_stamp
 from duHast.UI.Objects.file_item import MyFileItem
 
@@ -178,14 +181,21 @@ def process_args(argv):
         output_with_time_stamp(
             "The number of output files must be bigger then 0 and smaller then 100"
         )
-    if not file_exist(input_dir_file):
+
+    # this could be a directory or a file
+    if (
+        file_exist(input_dir_file) == False
+        and directory_exists(input_dir_file) == False
+    ):
         got_args = False
         output_with_time_stamp(
             "Invalid input directory or file path: {}".format(input_dir_file)
         )
-    if not file_exist(output_directory):
+
+    if not directory_exists(output_directory):
         got_args = False
-        output_with_time_stamp("Invalid output directory: {}".format(output_directory))
+        output_with_time_stamp("Invalid output directory: [{}]".format(output_directory))
+
     if (
         revit_file_extension.lower() != ".rvt"
         and revit_file_extension.lower() != ".rfa"
@@ -198,11 +208,13 @@ def process_args(argv):
         )
 
     return got_args, set.FileSelectionSettings(
-        input_dir_file,
-        include_sub_dirs_in_search,
-        output_directory,
-        output_file_number,
-        revit_file_extension,
+        input_path=input_dir_file,
+        include_sub_dirs_in_search=include_sub_dirs_in_search,
+        output_directory=output_directory,
+        output_file_number=output_file_number,
+        revit_file_extension=revit_file_extension,
+        filters=None,
+        filter_type=None,
     )
 
 

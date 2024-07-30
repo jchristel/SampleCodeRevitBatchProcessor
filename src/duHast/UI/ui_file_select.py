@@ -84,7 +84,7 @@ class MyWindow(Windows.Window):
         self.selectedFiles = []
         self.revitfiles = revitFiles
         self.files.ItemsSource = revitFiles
-        self.tbSourceFolder.Text = settings.input_path
+        self.tbSourceFolder.Text = settings.input_directory
         self.tbDestinationFolder.Text = settings.output_dir
         self.tbFileType.Text = settings.revit_file_extension
         self.tbNoOfFiles.Text = str(settings.output_file_num)

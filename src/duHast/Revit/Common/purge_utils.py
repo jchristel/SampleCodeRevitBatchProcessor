@@ -94,7 +94,7 @@ def check_whether_dependent_elements_are_multiple_orphaned_legend_components(
     #   if none has return true, otherwise return false
     dic = build_category_dictionary(doc, element_ids)
     # check if dictionary has legend component key first up
-    if dic.has_key(category_name) == True:
+    if category_name in dic:
         # if so check number of keys and length of elements per key
         if len(dic.keys()) == 2 and len(dic[category_name]) == len(element_ids) - 1:
             # this should be the only code path returning true...

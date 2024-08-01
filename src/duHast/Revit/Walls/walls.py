@@ -240,12 +240,12 @@ def set_location_reference_type_name(doc, wall_instance, reference_type_name):
 
     Possible values are:
 
-    # 0- Wall Centerline;
-    # 1- Core Centerline;
-    # 2- Finish Face: Exterior;
-    # 3- Finish Face: Interior;
-    # 4- Core Face: Exterior and
-    # 5- Core Face: Interior.
+        - Wall Centerline
+        - Core Centerline
+        - Finish Face: Exterior
+        - Finish Face: Interior
+        - Core Face: Exterior
+        - Core Face: Interior
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -269,7 +269,7 @@ def set_location_reference_type_name(doc, wall_instance, reference_type_name):
     return_value = res.Result()
 
     if reference_type_name not in reference_types_by_name:
-        return_value.update_sep(False, "Invalid reference type name.")
+        return_value.update_sep(False, "Invalid reference type name. Expect:\n{}".format("\n".join(reference_types_by_name.keys())))
         return return_value
 
     result_change_loc_line = set_built_in_parameter_value(

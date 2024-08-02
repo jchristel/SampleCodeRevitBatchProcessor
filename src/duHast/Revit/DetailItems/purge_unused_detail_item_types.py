@@ -3,6 +3,7 @@
 This module contains a number of helper functions relating to purging Revit detail items. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ This module contains a number of helper functions relating to purging Revit deta
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -108,7 +109,7 @@ def get_all_used_detail_symbol_ids(doc):
     dic = rDetailTypeSort.build_detail_type_ids_dictionary(
         rDetail.get_all_detail_types_by_category(doc)
     )
-    if dic.has_key(rDetail.ELEMENT_TYPE):
+    if rDetail.ELEMENT_TYPE in dic:
         ids_unfiltered = dic[rDetail.FAMILY_SYMBOL]
         # check if used in repeating details
         ids_repeat_det = rDetail.get_all_repeating_detail_type_ids_available(doc)
@@ -186,7 +187,7 @@ def get_used_filled_region_type_ids(doc):
         dic = rDetailTypeSort.build_dependent_elements_dictionary(
             doc, el.GetDependentElements(None)
         )
-        if dic.has_key("Autodesk.Revit.DB.FilledRegion"):
+        if "Autodesk.Revit.DB.FilledRegion" in dic:
             ids.append(id)
     return ids
 
@@ -208,7 +209,7 @@ def get_unused_filled_region_type_ids(doc):
         dic = rDetailTypeSort.build_dependent_elements_dictionary(
             doc, el.GetDependentElements(None)
         )
-        if dic.has_key("Autodesk.Revit.DB.FilledRegion") == False:
+        if "Autodesk.Revit.DB.FilledRegion" in dic == False:
             ids.append(id)
     return ids
 

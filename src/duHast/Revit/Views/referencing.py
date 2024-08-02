@@ -3,6 +3,7 @@
 This module contains a number of helper functions relating to Revit view referencing. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ This module contains a number of helper functions relating to Revit view referen
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -45,6 +46,7 @@ import Autodesk.Revit.DB as rdb
 
 # ------------------------ deprecated -----------------------
 # the following element collectors dont seem to return any types ...
+
 
 # doc:   current model document
 def deprecated__get_all_call_out_types_by_category(doc):
@@ -222,7 +224,7 @@ def get_reference_type_ids_from_view_type(view_type):
         p_value = rParaGet.get_built_in_parameter_value(view_type, p_def)
         if p_value != None:
             # there should only ever be one value per key!
-            if dic.has_key(p_def):
+            if p_def in dic:
                 dic[p_def].append(p_value)
             else:
                 dic[p_def] = [p_value]
@@ -247,7 +249,7 @@ def get_used_view_reference_type_id_data(doc):
         reference_type_by_view_type = get_reference_type_ids_from_view_type(c)
         # check if already in dictionary , if not append
         for key, value in reference_type_by_view_type.items():
-            if dic.has_key(key):
+            if key in dic:
                 for v in value:
                     if v not in dic[key]:
                         dic[key].append(v)
@@ -279,7 +281,7 @@ def get_all_view_reference_type_id_data(doc):
                 if type != None:
                     all_sim_type_ids = type.GetSimilarTypes()
                     for sim_type_id in all_sim_type_ids:
-                        if dic.has_key(key):
+                        if key in dic:
                             if sim_type_id not in dic[key]:
                                 dic[key].append(sim_type_id)
                         else:

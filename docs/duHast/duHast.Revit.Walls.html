@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Walls package &#8212; Sample Code Revit Batch Processor 1.1.0 documentation</title>
+    <title>duHast.Revit.Walls package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.0 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Walls.Reporting package" href="duHast.Revit.Walls.Reporting.html" />
     <link rel="prev" title="duHast.Revit.Views.Utility package" href="duHast.Revit.Views.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.0 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Walls package</h1></div>
@@ -878,6 +878,61 @@ In the case that no wall instance using any of the types is placed this will ret
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.walls.get_location_reference_type_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.walls.</span></span><span class="sig-name descname"><span class="pre">get_location_reference_type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wall_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.walls.get_location_reference_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the location line reference type name of a wall instance.</p>
+<p># 0- Wall Centerline;
+# 1- Core Centerline;
+# 2- Finish Face: Exterior;
+# 3- Finish Face: Interior;
+# 4- Core Face: Exterior and
+# 5- Core Face: Interior.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>wall_instance</strong> (<em>Autodesk.Revit.DB.Element</em>) – Wall instance to get the location line reference type name for.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Name of the reference type.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.walls.set_location_reference_type_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Walls.walls.</span></span><span class="sig-name descname"><span class="pre">set_location_reference_type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wall_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_type_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.walls.set_location_reference_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the location line reference type name of a wall instance.</p>
+<p>Possible values are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Wall Centerline</p></li>
+<li><p>Core Centerline</p></li>
+<li><p>Finish Face: Exterior</p></li>
+<li><p>Finish Face: Interior</p></li>
+<li><p>Core Face: Exterior</p></li>
+<li><p>Core Face: Interior</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>wall_instance</strong> (<em>Autodesk.Revit.DB.Element</em>) – Wall instance to change the location line reference type name for.</p></li>
+<li><p><strong>reference_type_name</strong> (<em>str</em>) – Name of the reference type to set.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object with success status and message.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
 </dd>
 </dl>
 </dd></dl>

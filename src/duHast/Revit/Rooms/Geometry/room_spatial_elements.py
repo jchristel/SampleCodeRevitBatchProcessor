@@ -154,15 +154,21 @@ def get_segments_as_curves(rvt_doc, segments, filter_only=None):
     :return: A list of curves
     :rtype: List[Curve]
     """
-    host_list = get_segment_hosts(rvt_doc, segments, filter_only)
+    segment_list = get_all_segs_from_list(segments)
+
+    type_filter_list = get_spatial_element_filter(filter_only)
 
     curves = []
 
-    for host in host_list:
-        if isinstance(host, Wall):
-            curves.append(host.Location.Curve)
-        elif isinstance(host, ModelLine):
-            curves.append(host.GeometryCurve)
+    for seg in segment_list:
+        host = get_segment_host(rvt_doc, seg)
+        if type_filter_list is None:
+            curves.append(seg.GetCurve())
+        else:
+            if host.GetType() in type_filter_list:
+                curves.append(seg.GetCurve())
+
+    return curves
 
 
 def get_only_wall_segments_as_curves(rvt_doc, segments):

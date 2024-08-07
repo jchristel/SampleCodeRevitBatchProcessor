@@ -3,6 +3,7 @@
 This module contains a Revit rooms geometry extraction functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ This module contains a Revit rooms geometry extraction functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -32,9 +33,11 @@ from duHast.Revit.Rooms.rooms import get_all_rooms
 from duHast.Data.Objects.Properties.Geometry import geometry_polygon as dGeometryPoly
 
 
-def get_room_boundary_loops(revit_room,
-                            spatial_boundary_option=rdb.SpatialElementBoundaryOptions(),
-                            boundary_location=rdb.SpatialElementBoundaryLocation.Center):
+def get_room_boundary_loops(
+    revit_room,
+    spatial_boundary_option=rdb.SpatialElementBoundaryOptions(),
+    boundary_location=rdb.SpatialElementBoundaryLocation.Center,
+):
     """
     Returns all boundary loops for a rooms. Default value set to the center
     boundary location.
@@ -62,7 +65,7 @@ def get_points_from_room_boundaries(boundary_loops):
     - List of Lists because a room can be made up of multiple loops (holes in rooms!)
     - First nested list represents the outer boundary of a room
     - All loops are implicitly closed ( last point is not the first point again!)
-    
+
     :param boundary_loops: List of boundary loops defining the room.
     :type boundary_loops: List of lists of Autodesk.Revit.DB.BoundarySegment
     :return: A data geometry instance containing the points defining the boundary loop.
@@ -94,6 +97,7 @@ def get_2d_points_from_revit_room(revit_room):
     """
     Returns a list of dataGeometry object containing points representing the flattened(2D geometry) of a room in the model.
     List should only have one entry.
+    
     :param revit_room: The room.
     :type revit_room: Autodesk.Revit.DB.Architecture.Room
     :return: A list of data geometry instance containing the points defining the boundary loop.
@@ -111,6 +115,7 @@ def get_2d_points_from_revit_room(revit_room):
 def get_2d_points_from_all_revit_rooms(doc):
     """
     Returns a list of dataGeometry object containing points representing the flattened(2D geometry) of all the rooms in the model.
+    
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A list of data geometry instances containing the points defining the boundary loop per room.

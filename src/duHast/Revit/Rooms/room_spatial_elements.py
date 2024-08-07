@@ -178,7 +178,7 @@ def get_only_wall_segments_as_curves(rvt_doc, segments):
     return get_segments_as_curves(rvt_doc, segments, filter_only=Wall)
 
 
-def get_only_rm_sep_lines_as_curves_only(rvt_doc, segments):
+def get_only_rm_sep_lines_as_curves(rvt_doc, segments):
     """
     Get the room separation line segments of a room as curves.
     :param rvt_doc: The Revit document
@@ -189,3 +189,29 @@ def get_only_rm_sep_lines_as_curves_only(rvt_doc, segments):
     :rtype: List[Curve]
     """
     return get_segments_as_curves(rvt_doc, segments, filter_only=ModelLine)
+
+
+def get_only_wall_segments_as_walls(rvt_doc, segments):
+    """
+    Get the wall segments of a room as walls.
+    :param rvt_doc: The Revit document
+    :type rvt_doc: Document
+    :param segments: The boundary segments of a room
+    :type segments: List[List[BoundarySegment]]
+    :return: A list of walls
+    :rtype: List[Wall]
+    """
+    return get_segment_hosts(rvt_doc, segments, filter_only=Wall)
+
+
+def get_only_rm_sep_lines_as_model_lines(rvt_doc, segments):
+    """
+    Get the room separation line segments of a room as model lines.
+    :param rvt_doc: The Revit document
+    :type rvt_doc: Document
+    :param segments: The boundary segments of a room
+    :type segments: List[List[BoundarySegment]]
+    :return: A list of model lines
+    :rtype: List[ModelLine]
+    """
+    return get_segment_hosts(rvt_doc, segments, filter_only=ModelLine)

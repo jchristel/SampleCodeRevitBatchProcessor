@@ -29,9 +29,9 @@ This module contains a number of utilities for an elements spatial properties
 from Autodesk.Revit.DB import BuiltInParameter
 
 
-def get_room_element_is_in(element, phase_dict):
+def get_room_element_is_in_by_element_phase_created(element, phase_dict):
     """
-    Get the room an element is in if the room matches the phase the element is created in
+    Get the room an element is in.The room phase need to match the phase the element is created in.
 
     :param element: The element to check
     :type element: FamilyInstance

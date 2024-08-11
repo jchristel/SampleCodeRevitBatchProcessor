@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Common.Utility package &#8212; Sample Code Revit Batch Processor 1.1.0 documentation</title>
+    <title>duHast.Revit.Common.Utility package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.0 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Common package" href="duHast.Revit.Common.html" />
     <link rel="next" title="duHast.Revit.DetailItems package" href="duHast.Revit.DetailItems.html" />
     <link rel="prev" title="duHast.Revit.Common.Reporting package" href="duHast.Revit.Common.Reporting.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.0 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Common.Utility package</h1></div>
@@ -123,13 +123,21 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.Utility.element_spatial_utils.get_room_element_is_in">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Utility.element_spatial_utils.</span></span><span class="sig-name descname"><span class="pre">get_room_element_is_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Utility.element_spatial_utils.get_room_element_is_in" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the room an element is in
-:param element: The element to check
-:type element: FamilyInstance
-:param phase_dict: The dictionary of phase name to phase element
-:type phase_dict: dict
-:return: The room the element is in
-:rtype: Room</p>
+<dd><p>Get the room an element is in if the room matches the phase the element is created in</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element</strong> (<em>FamilyInstance</em>) – The element to check</p></li>
+<li><p><strong>phase_dict</strong> (<em>dict</em>) – The dictionary of phase name to phase element id ( key is the phase name, value is the phase element id)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The room the element is in or None if no room exists or the element is not in a room</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Room</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

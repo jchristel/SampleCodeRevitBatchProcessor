@@ -3,6 +3,7 @@
 This module contains a number of helper functions relating to purging Revit stairs and stair sub element types.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ This module contains a number of helper functions relating to purging Revit stai
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -191,7 +192,7 @@ def build_system_family_dictionary(doc, ids):
     dic = {}
     for id in ids:
         el = doc.GetElement(id)
-        if dic.has_key(el.FamilyName):
+        if el.FamilyName in dic:
             dic[el.FamilyName].append(id)
         else:
             dic[el.FamilyName] = [id]
@@ -218,7 +219,7 @@ def check_system_families(doc, ids, leave_one_behind):
     dic_reference = build_system_family_dictionary(doc, similar_ids)
     ids = []
     for key, value in dic_to_check.items():
-        if dic_reference.has_key(key):
+        if key in dic_reference:
             if len(dic_reference[key]) == len(dic_to_check[key]) and leave_one_behind:
                 # need to leave one behind...
                 if len(dic_to_check[key]) > 0:

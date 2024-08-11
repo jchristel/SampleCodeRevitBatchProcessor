@@ -91,7 +91,7 @@ def get_all_filled_region_type_ids_available(doc):
     dic = rDetailItemTypeSort.build_detail_type_ids_dictionary(
         get_all_detail_types_by_category(doc)
     )
-    if dic.has_key(FILLED_REGION_TYPE):
+    if FILLED_REGION_TYPE in dic:
         return dic[FILLED_REGION_TYPE]
     else:
         return []
@@ -142,7 +142,7 @@ def get_all_repeating_detail_type_ids_available(doc):
     dic = rDetailItemTypeSort.build_detail_type_ids_dictionary(
         get_all_detail_types_by_category(doc)
     )
-    if dic.has_key(ELEMENT_TYPE):
+    if ELEMENT_TYPE in dic:
         return dic[ELEMENT_TYPE]
     else:
         return []
@@ -165,7 +165,7 @@ def get_all_detail_symbol_ids_available(doc):
     dic = rDetailItemTypeSort.build_detail_type_ids_dictionary(
         get_all_detail_types_by_category(doc)
     )
-    if dic.has_key(FAMILY_SYMBOL):
+    if FAMILY_SYMBOL in dic:
         return dic[FAMILY_SYMBOL]
     else:
         return []

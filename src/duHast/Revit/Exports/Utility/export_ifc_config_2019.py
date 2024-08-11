@@ -31,7 +31,7 @@ import clr
 import System
 import sys
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import ElementId, IFCVersion
 
 # -------------------------------------------- IFC EXPORT Revit 2019 -------------------------------------
 
@@ -59,12 +59,12 @@ def ifc_get_third_party_export_config_by_view_2019(ifc_version, ifc_settings):
     ifc_export_config.Name = "DefaultIFCByViewSetup"
     # set up IFC version
     if ifc_version is None or ifc_version == "":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.Default
+        ifc_export_config.IFCVersion = IFCVersion.Default
     else:
         ifc_export_config.IFCVersion = ifc_version
 
     ifc_export_config.SpaceBoundaries = 1
-    ifc_export_config.ActivePhaseId = rdb.ElementId.InvalidElementId
+    ifc_export_config.ActivePhaseId = ElementId.InvalidElementId
     ifc_export_config.ExportBaseQuantities = True
     ifc_export_config.SplitWallsAndColumns = True
     ifc_export_config.VisibleElementsOfCurrentView = True  # by view
@@ -122,12 +122,12 @@ def ifc_get_third_party_export_config_by_model_2019(ifc_version, ifc_settings):
 
     # set up IFC version
     if ifc_version is None or ifc_version == "":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.Default
+        ifc_export_config.IFCVersion = IFCVersion.Default
     else:
         ifc_export_config.IFCVersion = ifc_version
 
     ifc_export_config.SpaceBoundaries = 1
-    ifc_export_config.ActivePhaseId = rdb.ElementId.InvalidElementId
+    ifc_export_config.ActivePhaseId = ElementId.InvalidElementId
     ifc_export_config.ExportBaseQuantities = True
     ifc_export_config.SplitWallsAndColumns = True
     ifc_export_config.VisibleElementsOfCurrentView = False  # by model

@@ -37,7 +37,7 @@ from System import Linq
 clr.ImportExtensions(Linq)
 
 # import everything from Autodesk Revit DataBase namespace (Revit API)
-from Autodesk.Revit.DB import ElementId  # , ParameterType, StorageType
+from Autodesk.Revit.DB import ElementId #, ParameterType, StorageType
 import Autodesk.Revit.DB as rdb
 
 # utilities

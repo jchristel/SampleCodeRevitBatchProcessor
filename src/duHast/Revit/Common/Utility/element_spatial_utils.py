@@ -29,25 +29,42 @@ This module contains a number of utilities for an elements spatial properties
 from Autodesk.Revit.DB import BuiltInParameter
 
 
-def get_room_element_is_in(element, phase_dict):
+def get_room_element_is_in_by_element_phase_created(element, phase_dict):
     """
-    Get the room an element is in
+    Get the room an element is in.The room phase need to match the phase the element is created in.
+
     :param element: The element to check
     :type element: FamilyInstance
-    :param phase_dict: The dictionary of phase name to phase element
+    :param phase_dict: The dictionary of phase name to phase element id ( key is the phase name, value is the phase element id)
     :type phase_dict: dict
-    :return: The room the element is in
+    
+    :return: The room the element is in or None if no room exists or the element is not in a room
     :rtype: Room
     """
+
+    # get the phase the element is created in
     el_phase = element.get_Parameter(BuiltInParameter.PHASE_CREATED)
     if el_phase != None:
+        # get the phase name
         el_phase_name = el_phase.AsValueString()
         try:
+            # get the phase element
             el_phase_elem = phase_dict[el_phase_name]
         except:
+            print(
+                "Element has phase created but phase not found: {}".format(
+                    element.Id.IntegerValue
+                )
+            )
             return None
-        el_room = element.get_Room(el_phase_elem)
+        # attempt to get the room the element is in
+        # this can throw an exception if the element is created in a phase where there in no room enclosing the element
+        try:
+            el_room = element.get_Room(el_phase_elem)
+            return el_room
+        except:
+            return None
 
-        return el_room
     else:
+        print("Element has no phase created: {}".format(element.Id.IntegerValue))
         return None

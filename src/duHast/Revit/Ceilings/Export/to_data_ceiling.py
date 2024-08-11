@@ -3,6 +3,7 @@
 This module contains a Revit ceilings export to DATA class functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,14 +20,15 @@ This module contains a Revit ceilings export to DATA class functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import BuiltInParameter, Element, StorageType
+
 
 from duHast.Revit.Common import (
     design_set_options as rDesignO,
@@ -83,17 +85,17 @@ def populate_data_ceiling_object(doc, revit_ceiling):
 
         # get type properties
         data_c.type_properties.id = revit_ceiling.GetTypeId().IntegerValue
-        data_c.type_properties.name = rdb.Element.Name.GetValue(revit_ceiling).encode(
+        data_c.type_properties.name = Element.Name.GetValue(revit_ceiling).encode(
             "utf-8"
         )
         ceiling_type = doc.GetElement(revit_ceiling.GetTypeId())
 
         # custom parameter value getters
         value_getter = {
-            rdb.StorageType.Double: rParaGet.getter_double_as_double_converted_to_metric,
-            rdb.StorageType.Integer: rParaGet.getter_int_as_int,
-            rdb.StorageType.String: rParaGet.getter_string_as_UTF8_string,  # encode ass utf 8 just in case
-            rdb.StorageType.ElementId: rParaGet.getter_element_id_as_element_int,  # needs to be an integer for JSON encoding
+            StorageType.Double: rParaGet.getter_double_as_double_converted_to_metric,
+            StorageType.Integer: rParaGet.getter_int_as_int,
+            StorageType.String: rParaGet.getter_string_as_UTF8_string,  # encode ass utf 8 just in case
+            StorageType.ElementId: rParaGet.getter_element_id_as_element_int,  # needs to be an integer for JSON encoding
             str(None): rParaGet.getter_none,
         }
         data_c.type_properties.properties = (
@@ -111,12 +113,12 @@ def populate_data_ceiling_object(doc, revit_ceiling):
         )
 
         # get level properties
-        data_c.level.name = rdb.Element.Name.GetValue(
+        data_c.level.name = Element.Name.GetValue(
             doc.GetElement(revit_ceiling.LevelId)
         ).encode("utf-8")
         data_c.level.id = revit_ceiling.LevelId.IntegerValue
         data_c.level.offset_from_level = rParaGet.get_built_in_parameter_value(
-            revit_ceiling, rdb.BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM
+            revit_ceiling, BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM
         )  # offset from level
 
         # get the model name
@@ -130,7 +132,7 @@ def populate_data_ceiling_object(doc, revit_ceiling):
             doc,
             rParaGet.get_built_in_parameter_value(
                 revit_ceiling,
-                rdb.BuiltInParameter.PHASE_CREATED,
+                BuiltInParameter.PHASE_CREATED,
                 rParaGet.get_parameter_value_as_element_id,
             ),
         ).encode("utf-8")
@@ -138,7 +140,7 @@ def populate_data_ceiling_object(doc, revit_ceiling):
             doc,
             rParaGet.get_built_in_parameter_value(
                 revit_ceiling,
-                rdb.BuiltInParameter.PHASE_DEMOLISHED,
+                BuiltInParameter.PHASE_DEMOLISHED,
                 rParaGet.get_parameter_value_as_element_id,
             ),
         ).encode("utf-8")

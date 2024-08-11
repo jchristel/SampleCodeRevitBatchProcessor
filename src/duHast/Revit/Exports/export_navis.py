@@ -3,6 +3,7 @@
 This module contains a number of functions around exporting from Revit to nwc file format.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,14 +20,20 @@ This module contains a number of functions around exporting from Revit to nwc fi
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import (
+    NavisworksCoordinates,
+    NavisworksExportOptions,
+    NavisworksExportScope,
+    NavisworksParameters,
+    ViewType,
+)
 
 from duHast.Revit.Views import views as rView
 from duHast.Utilities.Objects import result as res
@@ -42,7 +49,7 @@ def setup_nwc_custom_export_option(
     export_room_as_attributes,
     export_room_geometry,
     find_missing_materials,
-    navis_parameters=rdb.NavisworksParameters.All,
+    navis_parameters=NavisworksParameters.All,
     convert_element_properties=False,
 ):
     """
@@ -74,16 +81,16 @@ def setup_nwc_custom_export_option(
     :rtype: Autodesk.Revit.DB.NavisworksExportOptions
     """
 
-    ex_nwc = rdb.NavisworksExportOptions()
+    ex_nwc = NavisworksExportOptions()
     ex_nwc.Coordinates = (
-        rdb.NavisworksCoordinates.Shared
+        NavisworksCoordinates.Shared
         if using_shared_coordinates == True
-        else rdb.NavisworksCoordinates.Internal
+        else NavisworksCoordinates.Internal
     )
     ex_nwc.ExportScope = (
-        rdb.NavisworksExportScope.Model
+        NavisworksExportScope.Model
         if export_entire_model == True
-        else rdb.NavisworksExportScope.View
+        else NavisworksExportScope.View
     )
     ex_nwc.ExportLinks = export_links
     ex_nwc.DivideFileIntoLevels = split_model_by_level
@@ -225,7 +232,7 @@ def export_3d_views_to_nwc(
     return_value = res.Result()
     views_to_export = []
     # get all 3D views in model and filter out views to be exported
-    views = rView.get_views_of_type(doc, rdb.ViewType.ThreeD)
+    views = rView.get_views_of_type(doc, ViewType.ThreeD)
     for v in views:
         if v.Name.lower().startswith(view_filter.lower()):
             views_to_export.append(v)

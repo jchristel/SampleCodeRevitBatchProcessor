@@ -43,7 +43,7 @@ def build_generic_annotation_types_dictionary(collector, dic):
     """
 
     for c in collector:
-        if dic.has_key(c.FamilyName):
+        if c.FamilyName in dic:
             if c.Id not in dic[c.FamilyName]:
                 dic[c.FamilyName].append(c.Id)
         else:

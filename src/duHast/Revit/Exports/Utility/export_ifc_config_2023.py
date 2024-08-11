@@ -31,7 +31,7 @@ import clr
 import System
 import sys
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import ElementId, IFCVersion
 
 # -------------------------------------------- IFC EXPORT Revit 2023 -------------------------------------
 # need to check for new features in revit 2022
@@ -132,27 +132,27 @@ def _setup_config_from_settings_2023(ifc_export_config, ifc_settings):
     ifc_export_config.Name = ifc_settings.name
     # set up IFC version
     if ifc_settings.ifc_version == "IFCBCA":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFCBCA
+        ifc_export_config.IFCVersion = IFCVersion.IFCBCA
     elif ifc_settings.ifc_version == "IFC2x2":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x2
+        ifc_export_config.IFCVersion = IFCVersion.IFC2x2
     elif ifc_settings.ifc_version == "IFC2x3":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x3
+        ifc_export_config.IFCVersion = IFCVersion.IFC2x3
     elif ifc_settings.ifc_version == "IFCCOBIE":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFCCOBIE
+        ifc_export_config.IFCVersion = IFCVersion.IFCCOBIE
     elif ifc_settings.ifc_version == "IFC2x3CV2":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x3CV2
+        ifc_export_config.IFCVersion = IFCVersion.IFC2x3CV2
     elif ifc_settings.ifc_version == "IFC4":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC4
+        ifc_export_config.IFCVersion = IFCVersion.IFC4
     elif ifc_settings.ifc_version == "IFC2x3FM":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x3FM
+        ifc_export_config.IFCVersion = IFCVersion.IFC2x3FM
     elif ifc_settings.ifc_version == "IFC4RV":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC4RV
+        ifc_export_config.IFCVersion = IFCVersion.IFC4RV
     elif ifc_settings.ifc_version == "IFC4DTV":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC4DTV
+        ifc_export_config.IFCVersion = IFCVersion.IFC4DTV
     elif ifc_settings.ifc_version == "IFC2x3BFM":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x3BFM
+        ifc_export_config.IFCVersion = IFCVersion.IFC2x3BFM
     else:
-        ifc_export_config.IFCVersion = rdb.IFCVersion.Default
+        ifc_export_config.IFCVersion = IFCVersion.Default
 
     ifc_export_config.SpaceBoundaries = ifc_settings.space_boundaries
     ifc_export_config.ActivePhaseId = ifc_settings.active_phase_id
@@ -248,12 +248,12 @@ def _setup_config_default_values_2023(ifc_export_config, ifc_version, export_by_
 
     # set up IFC version
     if ifc_version is None or ifc_version == "":
-        ifc_export_config.IFCVersion = rdb.IFCVersion.Default
+        ifc_export_config.IFCVersion = IFCVersion.Default
     else:
         ifc_export_config.IFCVersion = ifc_version
 
     ifc_export_config.SpaceBoundaries = 1
-    ifc_export_config.ActivePhaseId = rdb.ElementId.InvalidElementId.IntegerValue
+    ifc_export_config.ActivePhaseId = ElementId.InvalidElementId.IntegerValue
     ifc_export_config.ExportBaseQuantities = True
     ifc_export_config.SplitWallsAndColumns = True
     ifc_export_config.VisibleElementsOfCurrentView = export_by_view  # by model

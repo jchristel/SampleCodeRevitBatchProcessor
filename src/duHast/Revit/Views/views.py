@@ -34,10 +34,10 @@ from duHast.Revit.Common import common as com
 from duHast.Revit.Views.Utility.view_types import _get_view_types
 from duHast.Revit.Views.schedules import filter_revision_schedules
 from duHast.Revit.Views.sheets import get_all_sheets
+from duHast.Revit.Areas.areas import get_area_scheme_by_name
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
-
+from Autodesk.Revit.DB import ElementClassFilter, FilteredElementCollector, View, ViewType
 
 def get_view_types(doc):
     """
@@ -83,7 +83,7 @@ def get_views_of_type(doc, view_type):
     """
 
     views = []
-    col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
+    col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
         if v.ViewType == view_type and v.IsTemplate == False:
             views.append(v)
@@ -141,17 +141,17 @@ def get_views_in_model(doc, filter):
     """
 
     views = []
-    col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
+    col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
         # filter out browser organization and other views which cant be deleted
         if (
             v.IsTemplate == False
             and filter(v) == True
-            and v.ViewType != rdb.ViewType.SystemBrowser
-            and v.ViewType != rdb.ViewType.ProjectBrowser
-            and v.ViewType != rdb.ViewType.Undefined
-            and v.ViewType != rdb.ViewType.Internal
-            and v.ViewType != rdb.ViewType.DrawingSheet
+            and v.ViewType != ViewType.SystemBrowser
+            and v.ViewType != ViewType.ProjectBrowser
+            and v.ViewType != ViewType.Undefined
+            and v.ViewType != ViewType.Internal
+            and v.ViewType != ViewType.DrawingSheet
         ):
             views.append(v)
     return views
@@ -185,3 +185,24 @@ def get_views_not_on_sheet(doc):
         if match == False:
             views_not_on_sheet.append(view_in_model)
     return views_not_on_sheet
+
+def get_views_by_area_scheme_name(doc, scheme_name):
+    """
+    Returns a list of Revit views that are associated with a specific area scheme.
+
+    Args:
+        doc (Revit Document): The Revit document object.
+        scheme_name (str): The name of the area scheme.
+
+    Returns:
+        list: A list of Revit elements representing the views associated with the specified area scheme.
+    """
+    return_value = []
+    area_scheme = get_area_scheme_by_name(doc=doc, area_scheme_name=scheme_name)
+    if area_scheme:
+        filter = ElementClassFilter(View)
+        dependent_element_ids = area_scheme.GetDependentElements(filter)
+        for id in dependent_element_ids:
+            element = doc.GetElement(id)
+            return_value.append(element)
+    return return_value

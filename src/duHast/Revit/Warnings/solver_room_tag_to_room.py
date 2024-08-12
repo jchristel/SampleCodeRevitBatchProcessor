@@ -29,6 +29,7 @@ Room tag not in room warnings solver class.
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Rooms.room_tags import move_tag_to_room
 from duHast.Revit.Common.transaction import in_transaction
+from duHast.Revit.Warnings.warning_guids import ROOM_TAG_OUTSIDE_ROOM
 
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
@@ -53,7 +54,7 @@ class RevitWarningsSolverRoomTagToRoom(base.Base):
 
     # --------------------------- room tag not in room ---------------------------
     #: guid identifying this specific warning
-    GUID = "4f0bba25-e17f-480a-a763-d97d184be18a"
+    GUID = ROOM_TAG_OUTSIDE_ROOM
 
     def solve_warnings(self, doc, warnings):
         """

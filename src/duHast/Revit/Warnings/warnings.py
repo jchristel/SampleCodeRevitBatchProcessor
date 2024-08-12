@@ -70,6 +70,29 @@ def get_warnings_by_guid(doc, guid):
     return filtered_warnings
 
 
+def get_single_warnings_elements_by_guid(doc, guid):
+    """
+    Returns a list of element ids of all warnings with a specific guid
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param guid: Filter: Identifying a specific failure of which the corresponding messages are to be returned.
+    :type guid: string
+
+    :return: List of element ids of all warnings with a specific guid
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    """
+    
+    # get all warning relating to a guid
+    warnings = get_warnings_by_guid(doc, guid)
+    all_element_ids = []
+    for warning in warnings:
+        element_ids = warning.GetFailingElements()
+        if(len(element_ids) == 1):
+            all_element_ids.append(element_ids[0].IntegerValue)
+    return all_element_ids
+
+
 def get_warnings_grouped_by_relation(doc, guid):
     """
     Returns a dictionary of warnings where all warnings specified by guid related to each other are grouped together.

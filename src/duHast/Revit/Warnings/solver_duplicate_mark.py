@@ -31,7 +31,7 @@ Duplicate mark warnings solver class.
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 from duHast.Revit.Common import parameter_set_utils as rParaSet
 from duHast.Utilities.Objects import result as res
-
+from duHast.Revit.Warnings.warning_guids import DUPLICATE_MARK_VALUE
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
@@ -59,7 +59,7 @@ class RevitWarningsSolverDuplicateMark(base.Base):
 
     # --------------------------- duplicate mark guid ---------------------------
     #: guid identifying this specific warning
-    GUID = "6e1efefe-c8e0-483d-8482-150b9f1da21a"
+    GUID = DUPLICATE_MARK_VALUE
 
     IGNORED_WARNINGS = ["Type Mark"]
 

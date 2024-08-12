@@ -38,6 +38,7 @@ from duHast.Revit.Warnings.Utility.curves_util import (
     modify_curves_by_shortening,
 )
 from duHast.Revit.Common.transaction import in_transaction
+from duHast.Revit.Warnings.warning_guids import ROOM_SEPARATION_LINES_OVERLAP
 
 
 class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
@@ -85,7 +86,7 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
 
     # --------------------------- room tag not in room ---------------------------
     #: guid identifying this specific warning
-    GUID = "374396c0-984d-4f72-a081-30ab7dacb66d"
+    GUID = ROOM_SEPARATION_LINES_OVERLAP
 
     def solve_warnings(self, doc, warnings):
         """

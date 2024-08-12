@@ -3,6 +3,7 @@
 Revit areas helper functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -73,6 +74,40 @@ def get_area_lines_by_area_scheme_name(doc, scheme_name):
     return return_value
 
 
+def get_area_lines_by_scheme_and_level_name(doc, scheme_name, level_name):
+    """
+    Returns a list of area lines based on the area scheme and level name.
+
+    Args:
+        doc (Document): The current model document.
+        scheme_name (str): The name of the area scheme.
+        level_name (str): The name of the level.
+
+    Returns:
+        list: A list of area lines based on the area scheme and level name.
+    """
+
+    # get all area lines by scheme name
+    area_lines_by_scheme_name = get_area_lines_by_area_scheme_name(
+        doc=doc, scheme_name=scheme_name
+    )
+
+    # check if we got area lines
+    if len(area_lines_by_scheme_name) == 0:
+        return None
+
+    # sort area lines by level
+    sorted_area_lines = sort_area_line_by_level_name(
+        doc=doc, area_lines=area_lines_by_scheme_name
+    )
+
+    # check if we got area lines on the level
+    if level_name in sorted_area_lines:
+        return sorted_area_lines[level_name]
+    else:
+        return None
+
+
 def sort_area_line_by_level_name(doc, area_lines):
     """
     Sorts the area lines based on their associated level names and returns a dictionary where the keys are the level names and the values are lists of area lines.
@@ -90,7 +125,7 @@ def sort_area_line_by_level_name(doc, area_lines):
     for l in levels:
         level_names_by_id[l.Id] = l.Name
     # add edge case: line is not associated with a level ( maybe in a group?)
-    level_names_by_id[ElementId.InvalidElementId] = 'This curve has no level associated'
+    level_names_by_id[ElementId.InvalidElementId] = "This curve has no level associated"
     # build level name to area lines dictionary
     area_lines_by_Level_name = {}
     for area_line in area_lines:
@@ -303,7 +338,7 @@ def copy_area_lines_to_level_name(
         return_value.update_sep(
             False,
             "Failed to copy {} area separation line(s) to level(s) with exception: {}".format(
-                len(area_lines),e
+                len(area_lines), e
             ),
         )
     return return_value

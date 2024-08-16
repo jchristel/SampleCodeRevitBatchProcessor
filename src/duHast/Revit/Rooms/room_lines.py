@@ -199,7 +199,7 @@ def filter_room_separation_lines_by_phase_demolished(
     return room_separation_lines_filtered
 
 
-def filter_room_separation_lines_by_phase_created_older_than_active_view_phase(
+def filter_room_separation_lines_by_phase_created_older_than_upper_bound_phase(
     doc, room_separation_lines, upper_bound_phase_id
 ):
     """

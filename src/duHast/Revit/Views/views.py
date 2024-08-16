@@ -3,6 +3,7 @@
 This module contains a number of helper functions relating to Revit views. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ This module contains a number of helper functions relating to Revit views.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -35,9 +36,21 @@ from duHast.Revit.Views.Utility.view_types import _get_view_types
 from duHast.Revit.Views.schedules import filter_revision_schedules
 from duHast.Revit.Views.sheets import get_all_sheets
 from duHast.Revit.Areas.areas import get_area_scheme_by_name
+from duHast.Revit.Common.parameter_get_utils import (
+    get_built_in_parameter_value,
+    get_parameter_value_as_element_id,
+)
 
 # import Autodesk
-from Autodesk.Revit.DB import ElementClassFilter, FilteredElementCollector, View, ViewType
+from Autodesk.Revit.DB import (
+    BuiltInParameter,
+    ElementClassFilter,
+    ElementId,
+    FilteredElementCollector,
+    View,
+    ViewType,
+)
+
 
 def get_view_types(doc):
     """
@@ -186,6 +199,7 @@ def get_views_not_on_sheet(doc):
             views_not_on_sheet.append(view_in_model)
     return views_not_on_sheet
 
+
 def get_views_by_area_scheme_name(doc, scheme_name):
     """
     Returns a list of Revit views that are associated with a specific area scheme.
@@ -206,3 +220,34 @@ def get_views_by_area_scheme_name(doc, scheme_name):
             element = doc.GetElement(id)
             return_value.append(element)
     return return_value
+
+
+def get_view_phase_id(view):
+    """
+    Get the views phase id.
+
+    Note if view does not support phase id and Invlaid ElementId (-1) is returned
+
+    :param view: The view of which to return the phase id
+    :type view: Autodesk.Revit.DB.View
+
+    :return: An element id representing the phase id. If view does not support phases then an Invalid id (-1) will be returned.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    """
+    
+    # set up the default value ( no phase )
+    return_value = ElementId.InvalidElementId
+
+    # attempt to get the phase id from the view
+    phase_id = get_built_in_parameter_value(
+        element=view,
+        built_in_parameter_def=BuiltInParameter.VIEW_PHASE,
+        parameter_value_getter=get_parameter_value_as_element_id,
+    )
+
+    # check what came back and return accordingly
+    if phase_id is not None:
+        return phase_id
+    else:
+        return return_value
+

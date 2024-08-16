@@ -20,8 +20,8 @@ This module contains a number of functions around Revit Design Sets and Design O
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -31,11 +31,17 @@ import clr
 import System
 
 # import common library modules
-#from duHast.Revit.Common import parameter_get_utils as rParaGet
+# from duHast.Revit.Common import parameter_get_utils as rParaGet
 
 
 # import Autodesk
-from Autodesk.Revit.DB import BuiltInParameter, DesignOption, Element, FilteredElementCollector
+from Autodesk.Revit.DB import (
+    BuiltInParameter,
+    DesignOption,
+    Element,
+    ElementId,
+    FilteredElementCollector,
+)
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports
@@ -56,6 +62,25 @@ def get_design_options(doc):
 
     collector = FilteredElementCollector(doc).OfClass(DesignOption)
     return collector
+
+
+def get_active_design_option(doc):
+    """
+    Get the active design option in a model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Active design option in current model, or if no design option is active, None
+    :rtype: Autodesk.Revit.DB.DesignOption
+    """
+
+    design_option_id = DesignOption.GetActiveDesignOptionId(doc)
+    # check if design option is valid ( invalid is indicator for main model active )
+    if design_option_id is ElementId.InvalidElementId:
+        return None
+    design_option = doc.GetElement(design_option_id)
+    return design_option
 
 
 def get_design_sets(doc):
@@ -79,6 +104,30 @@ def get_design_sets(doc):
         if designSetName not in design_set_names:
             design_sets.append(e)
             design_set_names.append(designSetName)
+    return design_sets
+
+
+def get_design_options_by_design_set(doc):
+    """
+    Gets all the design options grouped by design sets in a model,
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A dictionary where key is the Design sets name and value is a list of design options in that set
+    :rtype: {str:[Autodesk.Revit.DB.Element]}
+    """
+
+    collector = get_design_options(doc=doc)
+    design_sets = {}
+    for do in collector:
+        e = doc.GetElement(
+            do.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId()
+        )
+        design_set_name = Element.Name.GetValue(e)
+        if design_set_name not in design_sets:
+            design_sets[design_set_name].append(e)
+        else:
+            design_sets[design_set_name] = [e]
     return design_sets
 
 
@@ -146,9 +195,7 @@ def get_design_set_option_info(doc, element):
         dic["designOptionName"] = design_option.Name
         dic["isPrimary"] = design_option.IsPrimary
         e = doc.GetElement(
-            design_option.get_Parameter(
-                BuiltInParameter.OPTION_SET_ID
-            ).AsElementId()
+            design_option.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId()
         )
         dic["designSetName"] = Element.Name.GetValue(e)
     except Exception as e:

@@ -203,7 +203,7 @@ def filter_room_separation_lines_by_phase_created_older_than_upper_bound_phase(
     doc, room_separation_lines, upper_bound_phase_id
 ):
     """
-    Filter room separation lines by phase created and an upper bound phase id.
+    Filter room separation lines by phase created. Phase created value must be a phase equal to or older than the upper bound phase id.
     If upper bound phase Id is and ElementId.InvalidElementId the list will be returned unchanged.
 
     :param doc: The Revit document.
@@ -264,6 +264,57 @@ def filter_room_separation_lines_by_level_id(room_separation_lines, level_id):
     lines_filtered = []
     for room_line in room_separation_lines:
         if room_line.LevelId == level_id:
+            lines_filtered.append(room_line)
+
+    return lines_filtered
+
+def filter_room_separation_lines_by_design_option_id(doc, room_separation_lines, design_option_id, include_main_model = True, include_other_primary=True):
+    """
+    Filter room separation lines by design option id.
+
+    :param doc: The Revit document.
+    :type doc: Document
+    :param room_separation_lines: A list of room separation lines
+    :type room_separation_lines: []
+    :param design_option_id: The id of the design option to be filtered by. None will return either all room separation lines from the main model and / or all room separation lines from other primary design options.
+    :type design_option_id: Autodesk.Revit.ElementId
+    :param include_main_model: Include room separation lines from the main model option.
+    :type include_main_model: bool
+    :param include_other_primary: Include room separation lines from other primary design options in the model.
+    :type include_other_primary: bool
+
+    :return: A list of room separation lines filtered by design option id.
+    :rtype: list
+    """
+    option_ids = []
+    # get the design option filter ids depending on toggle values and filter id past in
+    if design_option_id == None and include_main_model == True and include_other_primary == True:
+        pass
+    elif design_option_id == None and include_main_model == False and include_other_primary == True:
+        #return lines within other primary design options only
+        pass
+    elif design_option_id == None and include_main_model == True and include_other_primary == False:
+        #return lines within the main model only
+        pass
+    elif design_option_id == None and include_main_model == False and include_other_primary == False:
+
+        raise ValueError("You need to include at least one option to filter by.")
+    elif design_option_id != None  and include_main_model == True and include_other_primary == True:
+        # return lines within the specified design option, the main model and other primary design options
+        pass
+    elif design_option_id != None  and include_main_model == False and include_other_primary == True:
+        # return lines within the specified design option and other primary design options only
+        pass
+    elif design_option_id != None  and include_main_model == True and include_other_primary == False:
+        # return lines within the specified design option and the main model only
+        pass
+    elif design_option_id != None  and include_main_model == False and include_other_primary == False:
+        # return lines within the specified design option only
+        option_ids.append(design_option_id)
+
+    lines_filtered = []
+    for room_line in room_separation_lines:
+        if room_line.DesignOption == design_option_id:
             lines_filtered.append(room_line)
 
     return lines_filtered

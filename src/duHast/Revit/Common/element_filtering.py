@@ -117,7 +117,7 @@ def is_family_name_from_instance_contains(
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param contains_value: The string the name of the family instance is to be tested for.
-    :type ccontains_value: str
+    :type contains_value: str
     :param element_id: The id of the element to be tested.
     :type element_id:  Autodesk.Revit.DB.ElementId
     :return: True if family name does contain the test string, otherwise False.

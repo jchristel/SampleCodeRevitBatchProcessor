@@ -201,3 +201,65 @@ def get_design_set_option_info(doc, element):
     except Exception as e:
         pass
     return dic
+
+
+# filters
+
+
+def get_design_option_ids_of_all_primary_options(doc):
+    """
+    Get the design option ids of all primary options in a model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: List of design option ids of all primary options in the model.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    """
+
+    collector = get_design_options(doc=doc)
+    primary_options_ids = []
+    for do in collector:
+        if do.IsPrimary:
+            primary_options_ids.append(do.Id)
+    return primary_options_ids
+
+
+def get_design_option_ids_of_all_primary_options_but_the_one_containing_filter_id(
+    doc, filter_Id
+):
+    """
+    Get the design option ids of all primary options in a model except the one where the design set contains a design option with the filter id.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param filter_Id: Element Id of the filter.
+    :type filter_Id: Autodesk.Revit.DB.ElementId
+    :return: List of design option ids of all primary options in the model except the one containing the filter id.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    """
+
+    # setup return value
+    primary_options_ids = []
+
+    # get a dictionary with design sets as key and design options as values
+    design_options_byd_design_set = get_design_options_by_design_set(doc)
+
+    # loop over all design sets and check if the filter id is in the design options
+    for design_set, design_options in design_options_byd_design_set.items():
+        # set filter match flag
+        match = False
+        # set default value for primary design option id
+        primary_design_option_id = None
+        # loop over all design options in the design set
+        for design_option in design_options:
+            # check if design option is primary
+            if design_option.IsPrimary:
+                primary_design_option_id = design_option.Id
+            # check if design option id is the filter id
+            if design_option.Id == filter_Id:
+                match = True
+                break
+        # if no match was found, add the primary design option id to the list
+        if not match:
+            primary_options_ids.append(primary_design_option_id)
+    return primary_options_ids

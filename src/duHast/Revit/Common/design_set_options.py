@@ -119,15 +119,16 @@ def get_design_options_by_design_set(doc):
 
     collector = get_design_options(doc=doc)
     design_sets = {}
-    for do in collector:
-        e = doc.GetElement(
-            do.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId()
+    for design_option in collector:
+        option_set = doc.GetElement(
+            design_option.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId()
         )
-        design_set_name = Element.Name.GetValue(e)
+        design_set_name = Element.Name.GetValue(option_set)
         if design_set_name not in design_sets:
-            design_sets[design_set_name].append(e)
+            design_sets[design_set_name] = [design_option]
         else:
-            design_sets[design_set_name] = [e]
+            design_sets[design_set_name].append(design_option)
+
     return design_sets
 
 

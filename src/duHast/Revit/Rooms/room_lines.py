@@ -147,7 +147,7 @@ def filter_room_separation_lines_by_phase_created(
     # loop over lines and filter them by phase created
     for room_line in room_separation_lines:
         phase_Line_created_name = doc.GetElement(room_line.CreatedPhaseId).Name
-        print(" {} vs {} ".format(phase_Line_created_name, phase_created_name))
+        # print(" {} vs {} ".format(phase_Line_created_name, phase_created_name))
         if phase_Line_created_name == phase_created_name:
             room_separation_lines_filtered.append(room_line)
 

@@ -31,7 +31,7 @@ from duHast.Revit.Common.design_set_options import (
     get_design_option_ids_of_all_primary_options,
     get_design_option_ids_of_all_primary_options_but_the_one_containing_filter_id,
 )
-from Autodesk.Revit.DB import Document, ElementId
+from Autodesk.Revit.DB import Document, ElementId, FilteredElementCollector
 
 
 def filter_elements_by_design_option_id(
@@ -64,9 +64,9 @@ def filter_elements_by_design_option_id(
         raise TypeError(
             "doc needs to be of type Document. But got : {}".format(type(doc))
         )
-    if not isinstance(elements, list):
+    if not isinstance(elements, list) and not isinstance(elements, FilteredElementCollector):
         raise TypeError(
-            "elements needs to be of type list. But got : {}".format(type(elements))
+            "elements needs to be of type list or FilteredElementCollector. But got : {}".format(type(elements))
         )
     if not isinstance(design_option_id, ElementId) and design_option_id != None:
         raise TypeError(

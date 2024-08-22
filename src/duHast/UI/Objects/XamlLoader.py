@@ -71,4 +71,4 @@ class XamlLoader(object):
         """
         if hasattr(self.Root, 'FindName'):
             return self.Root.FindName(item)
-        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{item}'")
+        raise AttributeError("{} object has no attribute {}". format(self.__class__.__name__, item))

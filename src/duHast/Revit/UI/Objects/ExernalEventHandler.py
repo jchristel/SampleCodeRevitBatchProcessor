@@ -50,7 +50,7 @@ class ExternalEventHandler(IExternalEventHandler):
     # Execute method run in Revit API environment.
     def Execute(self, uiapp):
         try:
-            self.execute_at_event_raised()
+            self.execute_at_event_raised(uiapp)
         except InvalidOperationException as e:
             print("An exception occurred within the external event handler: {}".format(e))
 

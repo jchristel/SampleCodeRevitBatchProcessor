@@ -60,8 +60,8 @@ class WPFWindowBase(Window):
         # Wire up the Closed event
         self.Closed += self.on_closed
 
-        print("view model: {}".format(view_model))
-        print("xaml root: {}".format(self.Content))
+        #print("view model: {}".format(view_model))
+        #print("xaml root: {}".format(self.Content))
     
     def on_closed(self, sender, event):
         # Handle cleanup here

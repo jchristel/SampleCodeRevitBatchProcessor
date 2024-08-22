@@ -32,12 +32,18 @@ https://markheath.net/post/wpf-and-mvvm-in-ironpython
 #
 #
 
+#from duHast.Utilities.Objects import base
 
 from System.ComponentModel import INotifyPropertyChanged
 from System.ComponentModel import PropertyChangedEventArgs
 
 class ViewModelBase(INotifyPropertyChanged):
     def __init__(self):
+        """
+        A base class for WPF view models.
+        """
+        # ini super class to allow multi inheritance in children!
+        super(ViewModelBase, self).__init__()
         self.propertyChangedHandlers = []
 
     def RaisePropertyChanged(self, propertyName):

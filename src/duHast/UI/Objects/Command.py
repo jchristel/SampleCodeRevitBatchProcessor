@@ -32,12 +32,26 @@ https://markheath.net/post/wpf-and-mvvm-in-ironpython
 #
 #
 
+from duHast.Utilities.Objects import base
 from System.Windows.Input import ICommand
 
 class Command(ICommand):
-    def __init__(self, execute, can_execute=None):
+    
+    def __init__(self, execute):
+        """
+        A class to handle wpf command bindings.
+
+        :param execute: The method to execute when the command is invoked.
+        :type execute: callable
+        :param can_execute: The method to determine if the command can be executed.
+        :type can_execute: callable
+        """
+        # ini super class to allow multi inheritance in children!
+        # super(Command, self).__init__()
+
+
         self.execute = execute
-        self.can_execute = can_execute
+        #self.can_execute = can_execute
     
     def Execute(self, parameter):
         self.execute()
@@ -49,6 +63,4 @@ class Command(ICommand):
         pass
 
     def CanExecute(self, parameter):
-        if self.can_execute:
-            return self.can_execute(parameter)
         return True

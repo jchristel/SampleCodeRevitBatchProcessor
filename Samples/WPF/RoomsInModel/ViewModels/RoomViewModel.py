@@ -19,7 +19,7 @@ class RoomViewModel(ViewModelBase):
         self.room = room
         
         # store the room properties
-        self.room_id = str(room.room_id)
+        self.room_id = str(room.room_id.room_id_integer)
         self.room_name = room.room_name
         self.room_number = room.room_number
         self.phase = room.phase

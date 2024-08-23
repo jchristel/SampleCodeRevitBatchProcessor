@@ -1,9 +1,15 @@
+
+import clr
+
+clr.AddReference("System.Core")
+
 from duHast.UI.Objects.ViewModelBase import ViewModelBase
 from duHast.UI.Objects.Command import Command
 from ViewModels.RoomViewModel import RoomViewModel
 from Models.Room import Room
 from Models.RoomId import RoomId
-from System.Collection.ObjectModel import ObservableCollection
+from System.Collections.ObjectModel import ObservableCollection
+
 
 
 class RoomsListViewModel(ViewModelBase):

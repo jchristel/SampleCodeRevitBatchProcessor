@@ -35,7 +35,7 @@ https://markheath.net/post/wpf-and-mvvm-in-ironpython
 from duHast.Utilities.Objects import base
 from System.Windows.Input import ICommand
 
-class Command(ICommand):
+class CommandBase(ICommand):
     
     def __init__(self, execute):
         """

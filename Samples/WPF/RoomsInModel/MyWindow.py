@@ -1,5 +1,5 @@
-
 from duHast.Revit.UI.Objects.WPFWindowBase import WPFWindowBase
+
 
 class MyWindow(WPFWindowBase):
 

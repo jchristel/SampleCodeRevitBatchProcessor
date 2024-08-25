@@ -1,5 +1,5 @@
 from duHast.UI.Objects.ViewModelBase import ViewModelBase
-from duHast.UI.Objects.Command import Command
+from duHast.UI.Objects.CommandBase import CommandBase
 from duHast.UI.Objects.file_item import MyFileItem
 from duHast.UI.file_list import get_revit_files_for_processing
 
@@ -61,8 +61,8 @@ class ViewModel(ViewModelBase):
         self.filter_is_or = not (filter_is_and)
 
         # hook up ok and cancel buttons
-        self.BtnOkCommand = Command(self.button_ok)
-        self.BtnCancelCommand = Command(self.button_cancel)
+        self.BtnOkCommand = CommandBase(self.button_ok)
+        self.BtnCancelCommand = CommandBase(self.button_cancel)
 
         # get files
         self._get_files()

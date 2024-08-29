@@ -4,10 +4,11 @@ clr.AddReference("System.Core")
 
 from duHast.UI.Objects.ViewModelBase import ViewModelBase
 from duHast.UI.Objects.CommandBase import CommandBase
-from ViewModels.RoomViewModel import RoomViewModel
-from Models.Room import Room
-from Models.RoomId import RoomId
-from Commands.RefreshRoomsInRevitModel import RefreshRoomsInRevitModelCommand
+from WPF.RoomsInModel.ViewModels.RoomViewModel import RoomViewModel
+#from ViewModels.RoomViewModel import RoomViewModel
+from WPF.RoomsInModel.Models.Room import Room
+from WPF.RoomsInModel.Models.RoomId import RoomId
+from WPF.RoomsInModel.Commands.RefreshRoomsInRevitModel import RefreshRoomsInRevitModelCommand
 
 # from System.Collections.ObjectModel import ObservableCollection
 from System.Collections.Specialized import (
@@ -65,7 +66,7 @@ class RoomsListViewModel(ViewModelBase):
     def cancel(self):
         pass
 
-    def on_rooms_collection_changed(self, sender, e: NotifyCollectionChangedEventArgs):
+    def on_rooms_collection_changed(self, sender, e):
         """
         These functions are useful if th UI is meant to do any additional checking of the
         new room data...noty required if all I'm doing is displaying it
@@ -89,7 +90,8 @@ class RoomsListViewModel(ViewModelBase):
 
         elif e.Action == NotifyCollectionChangedAction.Reset:
             # The entire collection was cleared
-            print("Rooms collection cleared.")
+            # print("Rooms collection cleared.")
+            pass
 
     def add_dummy_rooms(self):
         self.rooms.Add(RoomViewModel(Room(RoomId(1), "Room 1", "1", "Phase 1", "Level 1")))

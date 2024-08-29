@@ -1,15 +1,17 @@
 from duHast.Utilities.Objects import base
+from duHast.Revit.Rooms.rooms import get_all_placed_rooms
+from duHast.Revit.Rooms.room_common_parameters import get_room_name, get_room_number, get_room_phase, get_room_level
 from System.Collections.ObjectModel import ObservableCollection
 
-from ViewModels.RoomViewModel import RoomViewModel
-from Models.Room import Room
-from Models.RoomId import RoomId
+from WPF.RoomsInModel.ViewModels.RoomViewModel import RoomViewModel
+from WPF.RoomsInModel.Models.Room import Room
+from WPF.RoomsInModel.Models.RoomId import RoomId
 
 
 class GetRoomsFromModelAction(base.Base):
     
     
-    def __init__(self, ):
+    def __init__(self):
         """
         A class which contains the function to be executed when Revit raises an external event.
         
@@ -27,39 +29,26 @@ class GetRoomsFromModelAction(base.Base):
         # clear the current list
         self.rooms.Clear()
         
-        # add a few dummy rooms
-        self.rooms.Add(
-            RoomViewModel(
-                room=Room(
-                    room_id=RoomId(room_id_integer=1),
-                    room_name="Room 10",
-                    room_number="1",
-                    phase="Phase 1",
-                    level="Level 1",
-                )
-            )
-        )
+        # current document
+        doc=uiapp.ActiveUIDocument.Document
 
-        self.rooms.Add(
-            RoomViewModel(
-                room=Room(
-                    room_id=RoomId(room_id_integer=2),
-                    room_name="Room 20",
-                    room_number="2",
-                    phase="Phase 1",
-                    level="Level 1",
-                )
-            )
-        )
+        # get the rooms from the revit model and display them
+        all_placed_rooms = get_all_placed_rooms(doc=doc)
 
-        self.rooms.Add(
-            RoomViewModel(
-                room=Room(
-                    room_id=RoomId(room_id_integer=3),
-                    room_name="Room 30",
-                    room_number="3",
-                    phase="Phase 1",
-                    level="Level 1",
+        # print("Found rooms: {}".format(len(all_placed_rooms)))
+        try:
+            for placed_room in all_placed_rooms:
+                # add a few dummy rooms
+                self.rooms.Add(
+                    RoomViewModel(
+                        room=Room(
+                            room_id=RoomId(room_id_integer=placed_room.Id.IntegerValue),
+                            room_name=get_room_name(room=placed_room),
+                            room_number=get_room_number(room=placed_room),
+                            phase=get_room_phase(rvt_doc=doc, room=placed_room),
+                            level=get_room_level(rvt_doc=doc, room=placed_room),
+                        )
+                    )
                 )
-            )
-        )
+        except Exception as e:
+            print("Exception occured when adding room: {}".format(e))

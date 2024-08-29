@@ -1,4 +1,4 @@
-from Models.Room import Room
+from WPF.RoomsInModel.Models.Room import Room
 from duHast.UI.Objects.ViewModelBase import ViewModelBase
 
 

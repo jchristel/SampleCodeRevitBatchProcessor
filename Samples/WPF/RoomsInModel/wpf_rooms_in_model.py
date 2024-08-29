@@ -24,8 +24,8 @@ from Autodesk.Revit.UI import (
 # settings:
 
 # test XAML path
-XAML_PATH = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\Samples\WPF\RoomsInModel\Views\rooms_in_model.xaml"
-
+# XAML_PATH = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\Samples\WPF\RoomsInModel\Views\rooms_in_model.xaml"
+XAML_PATH = r"C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\Samples\WPF\RoomsInModel\Views\rooms_in_model.xaml"
 
 # main code
 
@@ -80,7 +80,8 @@ def wpf_sample():
     # pass in the external event object instance
     # TODO: pass in rooms?
     view_model_test = RoomsListViewModel(
-        ext_event_refresh_rooms=ext_event_refresh_rooms
+        ext_event_refresh_rooms=ext_event_refresh_rooms,
+        action_refresh_room=revit_action,
     )
 
     # set up a window and show it modeless

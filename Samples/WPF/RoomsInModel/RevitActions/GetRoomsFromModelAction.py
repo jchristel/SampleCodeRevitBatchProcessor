@@ -7,7 +7,7 @@ from WPF.RoomsInModel.ViewModels.RoomViewModel import RoomViewModel
 from WPF.RoomsInModel.Models.Room import Room
 from WPF.RoomsInModel.Models.RoomId import RoomId
 
-
+from Autodesk.Revit.DB import ElementId
 class GetRoomsFromModelAction(base.Base):
     
     
@@ -23,19 +23,55 @@ class GetRoomsFromModelAction(base.Base):
         # set up list of rooms
         self.rooms = ObservableCollection[RoomViewModel]()
         
+
+    def get_rooms_from_model(self, doc):
+        """
+        Returns the rooms from the model depending on the active view.
+
+        If the view is not a plan view all rooms will be returned. Otherwise just rooms placed on the same level
+        as the active plan view.
+
+        """
+        # set up a rooms container
+        all_placed_rooms = get_all_placed_rooms(doc=doc)
+
+        view_level_id = ElementId.InvalidElementId
+        try:
+            view_level_id = doc.ActiveView.GenLevel.Id
+        except Exception:
+            pass
+
+        # depending on whether this is a plan view or not get the rooms
+        if(view_level_id != ElementId.InvalidElementId):
+            filtered_rooms_by_level = []
+            # get the rooms on the current level only
+            for room_placed in all_placed_rooms:
+                if(room_placed.LevelId == view_level_id):
+                    filtered_rooms_by_level.append(room_placed)
+
+            # reset rooms placed collection to the filtered one
+            all_placed_rooms = filtered_rooms_by_level
         
+        return all_placed_rooms
+
+
     def execute_at_event_raised_sample_refresh_rooms(self, uiapp):
-        
+        """
+        This function gets called from Revit when an external event is raised by pressing the refresh button in the UI
+
+        It will populate the UI with rooms from the model depending on the active view.
+
+        """
         # clear the current list
         self.rooms.Clear()
         
         # current document
         doc=uiapp.ActiveUIDocument.Document
 
-        # get the rooms from the revit model and display them
-        all_placed_rooms = get_all_placed_rooms(doc=doc)
+        # set up a rooms container
+        all_placed_rooms = self.get_rooms_from_model(doc=doc)
 
-        # print("Found rooms: {}".format(len(all_placed_rooms)))
+        # convert room objects to fit WPF view model
         try:
             for placed_room in all_placed_rooms:
                 # add a few dummy rooms

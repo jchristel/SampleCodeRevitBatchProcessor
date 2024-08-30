@@ -38,7 +38,7 @@ class RoomsListViewModel(ViewModelBase):
         self.RefreshRoomsCommand = RefreshRoomsInRevitModelCommand(self.refresh_rooms)
         self.CancelCommand = CommandBase(self.cancel)
 
-        # hook up list of rooms to action class property
+        # hook up list of rooms to action class property which is an obervable collection!
         self.rooms = self.action_refresh_room.rooms
         # self.rooms = ObservableCollection[RoomViewModel]()
 

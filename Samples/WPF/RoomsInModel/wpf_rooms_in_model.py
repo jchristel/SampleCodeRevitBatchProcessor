@@ -52,7 +52,7 @@ def execute_at_event_raised_sample_refresh_rooms(uiapp):
     return test_list
 
 
-def wpf_sample():
+def wpf_sample(uiapp):
     # set up a model
     revit_model = RevitModel("Revit Model")
 
@@ -78,7 +78,6 @@ def wpf_sample():
 
     # set up a view model
     # pass in the external event object instance
-    # TODO: pass in rooms?
     view_model_test = RoomsListViewModel(
         ext_event_refresh_rooms=ext_event_refresh_rooms,
         action_refresh_room=revit_action,
@@ -91,4 +90,8 @@ def wpf_sample():
         external_event=ext_event_refresh_rooms,
         external_event_handler=ex_event_handler_refresh_rooms,
     )
+
+    # populate wpf 
+    revit_action.execute_at_event_raised_sample_refresh_rooms(uiapp=uiapp)
+
     test.Show()

@@ -237,7 +237,7 @@ def change_grid_extends_in_views(
                                 )
                                 # get the nested old curve from list
                                 old_grid_curve = item.grid_curve[0]
-
+                                
                                 # set extend types to match
                                 grid_element.SetDatumExtentType(
                                     DatumEnds.End0, view, item.datum_extent_type_zero
@@ -268,6 +268,7 @@ def change_grid_extends_in_views(
                                     new_grid_z_plane,
                                 )
                                 new_grid_curve = Line.CreateBound(start_point, end_point)
+                                
                                 grid_element.SetCurveInView(
                                     DatumExtentType.ViewSpecific, view, new_grid_curve
                                 )
@@ -328,6 +329,7 @@ def propagate_grids_extends_and_visibility(doc, views_to_change_grid_elements):
         if len(grids_in_model.ToElementIds()) > 0:
             # get active view grid information
             grid_data_result = get_active_view_grid_data(doc.ActiveView, grids_in_model)
+            
             if grid_data_result.status == False:
                 raise ValueError(grid_data_result.message)
             # get the grid template data
@@ -345,9 +347,10 @@ def propagate_grids_extends_and_visibility(doc, views_to_change_grid_elements):
                 )
 
                 # update grid extends
-                change_grid_extends_in_views(
+                result_change = change_grid_extends_in_views(
                     doc, grids_in_model, grid_data, views_to_change_grid_elements
                 )
+                return_value.update(result_change)
             else:
                 return_value.append_message(
                     "No view to propagate grids extends to where provided."

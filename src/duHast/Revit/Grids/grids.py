@@ -410,7 +410,7 @@ def get_grid_plane_z_value(grids, view):
     z = 0.0
     try:
         for grid in grids:
-            curve = get_curve_from_view(grid, view)
+            curve = get_grid_curves_from_view(grid, view)
             if curve != None:
                 if len(curve) > 0:
                     z = curve[0].GetEndPoint(0).Z

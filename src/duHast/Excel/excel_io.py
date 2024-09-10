@@ -257,7 +257,7 @@ def read_excel_file_fast(file_path, excel_tab_name=None):
         conversion_result = save_excel_file_as_csv(
             file_path, temp_csv_path, excel_tab_name
         )
-        if not conversion_result.success:
+        if not conversion_result.status:
             raise ValueError(conversion_result.message)
         return_value.update(conversion_result)
 
@@ -275,7 +275,7 @@ def read_excel_file_fast(file_path, excel_tab_name=None):
         if temp_csv_path:
             delete_flag = file_delete(temp_csv_path)
             return_value.append_message(
-                "Deleted temp csv file with status [{}]".format(delete_flag.message)
+                "Deleted temp csv file with status [{}]".format(delete_flag)
             )
 
     return return_value

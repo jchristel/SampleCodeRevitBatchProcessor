@@ -26,7 +26,7 @@ This module contains utility function(s) for grid reports.
 #
 #
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import FilteredElementCollector,Grid
 from duHast.Revit.Common import worksets as rWork
 from duHast.Utilities import utility as util
 from duHast.Revit.Grids import grids as rGrid
@@ -44,7 +44,7 @@ def get_grid_report_data(doc, revit_file_path):
     """
 
     data = []
-    for grid in rdb.FilteredElementCollector(doc).OfClass(rdb.Grid):
+    for grid in FilteredElementCollector(doc).OfClass(Grid):
         data.append(
             [
                 revit_file_path,
@@ -53,6 +53,7 @@ def get_grid_report_data(doc, revit_file_path):
                 rWork.get_workset_name_by_id(doc, grid.WorksetId.IntegerValue),
                 rGrid.get_max_extent_as_string(grid),
                 rGrid.get_min_extent_as_string(grid),
+                str(grid.IsCurved),
             ]
         )
     return data

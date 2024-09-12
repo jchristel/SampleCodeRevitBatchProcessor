@@ -255,7 +255,7 @@ def getter_string_as_UTF8_string(para):
     if para.StorageType == rdb.StorageType.String:
         if para.AsString() != None and para.AsString() != "":
             # do encode and decode to avoid byte string
-            parameter_value = para.AsString().encode("utf-8").decode('utf-8')
+            parameter_value = util.encode_utf8(para.AsString())
     return parameter_value
 
 

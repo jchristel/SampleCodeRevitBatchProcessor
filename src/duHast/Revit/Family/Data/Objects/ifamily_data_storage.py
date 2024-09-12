@@ -36,6 +36,7 @@ Notes:
 #
 
 from duHast.Utilities.Objects import base
+from duHast.Utilities.utility import encode_utf8
 from duHast.Revit.Family.Data.Objects.ifamily_data_storage_used_by import (
     IFamilyDataStorageUsedBy,
 )

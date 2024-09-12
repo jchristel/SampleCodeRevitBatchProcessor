@@ -41,7 +41,7 @@ from duHast.Revit.Ceilings import ceilings as rCeiling
 from duHast.Data.Objects import data_ceiling as dCeiling
 from duHast.Data.Objects.Properties.Geometry import from_revit_conversion as rCon
 from duHast.Revit.Common.Geometry import solids as rSolid
-
+from duHast.Utilities.utility import encode_utf8
 
 def populate_data_ceiling_object(doc, revit_ceiling):
     """

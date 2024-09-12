@@ -136,6 +136,26 @@ def encode_ascii(string):
         return string
 
 
+def encode_utf8(string):
+    """
+    Encode a string as utf-8 and replaces all non utf-8 characters
+
+    If a non string is past in the value will be returned unchanged.
+
+    :param string: The string to be utf-8 encoded.
+    :type string: str
+
+    :return: utf-8 encoded string
+    :rtype: str
+    """
+    if type(string) == str:
+        # make sure the string is encoded and a string ( not a byte string ) is returned
+        return string.encode("utf-8","replace").decode("utf-8")
+    else:
+        return string
+
+
+
 def get_first(iterable, default, condition=lambda x: True):
     """
     Returns the first value in a list matching condition. If no value found returns the specified default value.

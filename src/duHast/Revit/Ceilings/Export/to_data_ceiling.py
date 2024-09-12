@@ -43,6 +43,7 @@ from duHast.Data.Objects.Properties.Geometry import from_revit_conversion as rCo
 from duHast.Revit.Common.Geometry import solids as rSolid
 from duHast.Utilities.utility import encode_utf8
 
+
 def populate_data_ceiling_object(doc, revit_ceiling):
     """
     Returns a custom ceiling data objects populated with some data from the revit model ceiling past in.
@@ -85,9 +86,7 @@ def populate_data_ceiling_object(doc, revit_ceiling):
 
         # get type properties
         data_c.type_properties.id = revit_ceiling.GetTypeId().IntegerValue
-        data_c.type_properties.name = Element.Name.GetValue(revit_ceiling).encode(
-            "utf-8"
-        )
+        data_c.type_properties.name = encode_utf8(Element.Name.GetValue(revit_ceiling))
         ceiling_type = doc.GetElement(revit_ceiling.GetTypeId())
 
         # custom parameter value getters
@@ -113,9 +112,9 @@ def populate_data_ceiling_object(doc, revit_ceiling):
         )
 
         # get level properties
-        data_c.level.name = Element.Name.GetValue(
-            doc.GetElement(revit_ceiling.LevelId)
-        ).encode("utf-8")
+        data_c.level.name = encode_utf8(
+            Element.Name.GetValue(doc.GetElement(revit_ceiling.LevelId))
+        )
         data_c.level.id = revit_ceiling.LevelId.IntegerValue
         data_c.level.offset_from_level = rParaGet.get_built_in_parameter_value(
             revit_ceiling, BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM
@@ -129,21 +128,25 @@ def populate_data_ceiling_object(doc, revit_ceiling):
 
         # get phasing information
         data_c.phasing.created = rPhase.get_phase_name_by_id(
-            doc,
-            rParaGet.get_built_in_parameter_value(
-                revit_ceiling,
-                BuiltInParameter.PHASE_CREATED,
-                rParaGet.get_parameter_value_as_element_id,
-            ),
-        ).encode("utf-8")
+            encode_utf8(
+                doc,
+                rParaGet.get_built_in_parameter_value(
+                    revit_ceiling,
+                    BuiltInParameter.PHASE_CREATED,
+                    rParaGet.get_parameter_value_as_element_id,
+                ),
+            )
+        )
         data_c.phasing.demolished = rPhase.get_phase_name_by_id(
-            doc,
-            rParaGet.get_built_in_parameter_value(
-                revit_ceiling,
-                BuiltInParameter.PHASE_DEMOLISHED,
-                rParaGet.get_parameter_value_as_element_id,
-            ),
-        ).encode("utf-8")
+            encode_utf8(
+                doc,
+                rParaGet.get_built_in_parameter_value(
+                    revit_ceiling,
+                    BuiltInParameter.PHASE_DEMOLISHED,
+                    rParaGet.get_parameter_value_as_element_id,
+                ),
+            )
+        )
 
         return data_c
     else:

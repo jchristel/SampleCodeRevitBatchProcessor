@@ -3,6 +3,7 @@
 This module contains a Revit rooms export to DATA class functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ This module contains a Revit rooms export to DATA class functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -37,6 +38,8 @@ from duHast.Data.Objects import data_room as dRoom
 from duHast.Data.Objects.Properties.Geometry import from_revit_conversion as rGeo
 from duHast.Revit.Rooms.rooms import get_all_rooms
 from duHast.Revit.Rooms.Geometry.geometry import get_2d_points_from_revit_room
+
+from duHast.Utilities.utility import encode_utf8
 
 
 def populate_data_room_object(doc, revit_room):
@@ -96,21 +99,21 @@ def populate_data_room_object(doc, revit_room):
             data_r.revit_model.name = doc.Title
 
         # get phase name
-        data_r.phasing.created = rPhase.get_phase_name_by_id(
-            doc,
-            rParaGet.get_built_in_parameter_value(
-                revit_room,
-                rdb.BuiltInParameter.ROOM_PHASE,
-                rParaGet.get_parameter_value_as_element_id,
-            ),
-        ).encode("utf-8")
+        data_r.phasing.created = encode_utf8(
+            rPhase.get_phase_name_by_id(
+                doc,
+                rParaGet.get_built_in_parameter_value(
+                    revit_room,
+                    rdb.BuiltInParameter.ROOM_PHASE,
+                    rParaGet.get_parameter_value_as_element_id,
+                ),
+            )
+        )
         data_r.phasing.demolished = -1
 
         # get level data
         try:
-            data_r.level.name = rdb.Element.Name.GetValue(revit_room.Level).encode(
-                "utf-8"
-            )
+            data_r.level.name = encode_utf8(rdb.Element.Name.GetValue(revit_room.Level))
             data_r.level.id = revit_room.Level.Id.IntegerValue
         except:
             data_r.level.name = "no level"

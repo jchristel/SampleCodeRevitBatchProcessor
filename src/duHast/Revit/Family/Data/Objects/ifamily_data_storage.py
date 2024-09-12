@@ -149,7 +149,7 @@ class IFamilyDataStorage(base.Base):
         """
 
         if isinstance(value, str):
-            value = value.encode("utf-8").decode("utf-8")
+            value = encode_utf8(value)
         elif isinstance(value, System.Byte):
             value = str(value)
         elif isinstance(value, list):

@@ -20,14 +20,20 @@ This module contains a Revit door export to DATA class functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-from Autodesk.Revit.DB import BoundingBoxXYZ, BuiltInParameter, Element, Options, StorageType
+from Autodesk.Revit.DB import (
+    BoundingBoxXYZ,
+    BuiltInParameter,
+    Element,
+    Options,
+    StorageType,
+)
 
 from duHast.Revit.Common import (
     design_set_options as rDesignO,
@@ -44,6 +50,7 @@ from duHast.Data.Objects.Properties.Geometry.from_revit_conversion import (
 )
 
 from duHast.Revit.Common.Geometry.solids import get_bounding_box_from_family_geometry
+from duHast.Utilities.utility import encode_utf8
 
 
 def populate_data_door_object(doc, revit_door):
@@ -79,12 +86,12 @@ def populate_data_door_object(doc, revit_door):
     # only export door data if 3D geometry is available
     # if no geometry is available, return None
     # some families of type door do not have any 3D geometry... ignore those for now
-    if (isinstance(door_bounding_box, BoundingBoxXYZ) == False):
+    if isinstance(door_bounding_box, BoundingBoxXYZ) == False:
         return None
     revit_door_data_geometry = convert_bounding_box_to_flattened_2d_points(
         door_bounding_box
     )
-    
+
     if len(revit_door_data_geometry.outer_loop) > 0:
         door_point_groups_as_doubles = []
         data_geo_converted = convert_xyz_in_data_geometry_polygons(
@@ -102,9 +109,7 @@ def populate_data_door_object(doc, revit_door):
 
         # get type properties
         data_door.type_properties.id = revit_door.GetTypeId().IntegerValue
-        data_door.type_properties.name = Element.Name.GetValue(revit_door).encode(
-            "utf-8"
-        )
+        data_door.type_properties.name = encode_utf8(Element.Name.GetValue(revit_door))
         ceiling_type = doc.GetElement(revit_door.GetTypeId())
 
         # custom parameter value getters
@@ -130,9 +135,9 @@ def populate_data_door_object(doc, revit_door):
         )
 
         # get level properties
-        data_door.level.name = Element.Name.GetValue(
-            doc.GetElement(revit_door.LevelId)
-        ).encode("utf-8")
+        data_door.level.name = encode_utf8(
+            Element.Name.GetValue(doc.GetElement(revit_door.LevelId))
+        )
         data_door.level.id = revit_door.LevelId.IntegerValue
         data_door.level.offset_from_level = rParaGet.get_built_in_parameter_value(
             revit_door, BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM
@@ -145,29 +150,33 @@ def populate_data_door_object(doc, revit_door):
             data_door.revit_model.name = doc.Title
 
         # get phasing information
-        data_door.phasing.created = rPhase.get_phase_name_by_id(
-            doc,
-            rParaGet.get_built_in_parameter_value(
-                revit_door,
-                BuiltInParameter.PHASE_CREATED,
-                rParaGet.get_parameter_value_as_element_id,
-            ),
-        ).encode("utf-8")
-        data_door.phasing.demolished = rPhase.get_phase_name_by_id(
-            doc,
-            rParaGet.get_built_in_parameter_value(
-                revit_door,
-                BuiltInParameter.PHASE_DEMOLISHED,
-                rParaGet.get_parameter_value_as_element_id,
-            ),
-        ).encode("utf-8")
+        data_door.phasing.created = encode_utf8(
+            rPhase.get_phase_name_by_id(
+                doc,
+                rParaGet.get_built_in_parameter_value(
+                    revit_door,
+                    BuiltInParameter.PHASE_CREATED,
+                    rParaGet.get_parameter_value_as_element_id,
+                ),
+            )
+        )
+        data_door.phasing.demolished = encode_utf8(
+            rPhase.get_phase_name_by_id(
+                doc,
+                rParaGet.get_built_in_parameter_value(
+                    revit_door,
+                    BuiltInParameter.PHASE_DEMOLISHED,
+                    rParaGet.get_parameter_value_as_element_id,
+                ),
+            )
+        )
 
         return data_door
     else:
         return None
 
 
-def get_all_door_data(doc, filter_family_names = []):
+def get_all_door_data(doc, filter_family_names=[]):
     """
     Gets a list of door data objects for each door element in the model.
 

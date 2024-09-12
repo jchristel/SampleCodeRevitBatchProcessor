@@ -130,7 +130,8 @@ def encode_ascii(string):
     :rtype: str
     """
     if type(string) == str:
-        return string.encode("ascii", "replace")
+        # make sure the string is encoded and a string ( not a byte string ) is returned
+        return string.encode("ascii", "replace").decode("ascii")
     else:
         return string
 

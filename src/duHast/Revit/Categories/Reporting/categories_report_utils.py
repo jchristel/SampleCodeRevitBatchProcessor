@@ -91,12 +91,12 @@ def build_report_data_by_category(doc, dic, family_cat, main_cat_name, doc_file_
         elements = get_elements_by_category(doc, dic[key])
         # get properties
         dic_material = get_category_material(dic[key])
-        encode_utf8(row.append(str(dic_material[PROPERTY_MATERIAL_NAME])))
-        encode_utf8(row.append(str(dic_material[PROPERTY_MATERIAL_ID])))
+        row.append(encode_utf8(str(dic_material[PROPERTY_MATERIAL_NAME])))
+        row.append(encode_utf8(str(dic_material[PROPERTY_MATERIAL_ID])))
         # line pattern
         dic_pattern = get_line_pattern_from_category(dic[key], doc)
-        encode_utf8(row.append(str(dic_pattern[PROPERTY_PATTERN_NAME])))
-        encode_utf8(row.append(str(dic_pattern[PROPERTY_PATTERN_ID])))
+        row.append(encode_utf8(str(dic_pattern[PROPERTY_PATTERN_NAME])))
+        row.append(encode_utf8(str(dic_pattern[PROPERTY_PATTERN_ID])))
         # line weights
         dic_line_weights = get_category_line_weights(dic[key])
         row.append(

@@ -72,20 +72,33 @@ def combine_files(
     """
 
     file_list = file_getter(folder_path, file_prefix, file_suffix, file_extension)
+
+    errors = []
+
     with open(os.path.join(folder_path, out_put_file_name), "w") as result:
+        
         file_counter = 0
         for file_ in file_list:
-            line_counter = 0
-            fp = open(file_, "r")
-            lines = fp.readlines()
-            fp.close()
-            for line in lines:
-                # ensure header from first file is copied over
-                if file_counter == 0 and line_counter == 0 or line_counter != 0:
-                    result.write(line)
-                line_counter += 1
+            try:
+                line_counter = 0
+                fp = codecs.open(file_, "r", encoding="utf-8")
+                #fp = open(file_, "r")
+                lines = fp.readlines()
+                fp.close()
+                for line in lines:
+                    # ensure header from first file is copied over
+                    if file_counter == 0 and line_counter == 0 or line_counter != 0:
+                        result.write(line)
+                    line_counter += 1
 
-            file_counter += 1
+                file_counter += 1
+            except Exception as e:
+                errors.append("File: {} failed to combine with exception: {}".format(file_, e))
+    
+    # raise any errors
+    if(len(errors)>0):
+        raise ValueError("\n".join(errors))
+    
 
 
 def combine_files_basic(

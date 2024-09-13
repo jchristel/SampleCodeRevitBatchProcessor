@@ -49,7 +49,7 @@ class RevitFilterOverride(base.Base):
 
         """
 
-        super(RevitFilterOverride, self).__init__(**kwargs)
+        super(RevitFilterOverride, self).__init__()
 
         # set default values
         self.filter_name = filter_name

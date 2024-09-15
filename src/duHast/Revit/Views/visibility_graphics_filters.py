@@ -83,7 +83,7 @@ def update_filter_override_from_view(view, filter_storage_instance):
     :rtype: :class:`.RevitFilterOverride`
     """
 
-    filter_storage_instance.filter_override = view.GetFilterOverrides(
+    filter_storage_instance.revit_override = view.GetFilterOverrides(
         filter_storage_instance.filter_id
     )
     filter_storage_instance.is_filter_visible = view.GetFilterVisibility(

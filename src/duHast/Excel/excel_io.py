@@ -35,9 +35,8 @@ import Microsoft.Office.Interop.Excel as Excel
 import os
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Utilities.files_io import get_directory_path_from_file_path
+from duHast.Utilities.files_io import get_directory_path_from_file_path, file_delete, get_file_name_without_ext
 from duHast.Utilities.files_csv import read_csv_file
-from duHast.Utilities.files_io import file_delete
 
 
 def get_excel_tab_names(file_path):
@@ -278,4 +277,62 @@ def read_excel_file_fast(file_path, excel_tab_name=None):
                 "Deleted temp csv file with status [{}]".format(delete_flag)
             )
 
+    return return_value
+
+
+def save_csv_as_excel(file_path):
+    """
+    Convertes as csv to .xslx in the same directory.
+    
+    :param file_path: The path to the csv file.
+    :type file_path: str
+
+    :return: A result object with the result status set to true if successful, otherwise an error message.
+    :rtype: Result
+    """
+
+    return_value = Result()
+    excel = None
+    file_name_new = ""
+    try:
+        excel = Excel.ApplicationClass()
+        excel.Visible = False
+        excel.DisplayAlerts = False
+        # refer to this website for arg docs:https://learn.microsoft.com/en-us/office/vba/api/Excel.Workbooks.Open
+        # open excel and the csv
+        wb = excel.Workbooks.Open(
+            file_path,  # excel doc file path
+            0,  # update links ( 0 No )
+            True,  # read only
+            6,  # format delimeter ( 6 = CSV)
+            "",  # password to open a file (not required)
+            "",  # password to write to a write protected file (not required)
+            True,  # ignore read only recommended (False = don't ignore, True = ignore)
+            Excel.XlPlatform.xlWindows,  # file origin (xlWindows = Microsoft Windows)
+            ",",  # delimiter (comma) optional
+            False,  # editable (False = read only, True = editable)
+            False,  # notify (False = don't notify, True = notify)
+            0,  # converter (0 = don't convert, 1 = convert)
+            False,  # add to MRU (False = don't add, True = add)
+            True,  # local (False = don't local, True = local)
+            False  # corrupt load (False = don't load, True = load)
+        )
+        # build new file name:
+        output_dir = get_directory_path_from_file_path(file_path)
+        file_name_part = get_file_name_without_ext(file_path=file_path)
+        file_name_new = os.path.join(output_dir, file_name_part+".xlsx")
+
+        # save:
+        save_status = wb.SaveAs(file_name_new, Excel.XlFileFormat.xlWorkbookDefault)
+        
+        # save the file
+        wb.Close(False)
+
+    except Exception as e:
+        return_value.update_sep(False, "Failed to save csv with exception: {}".format(e))
+    
+    if excel is not None:
+        excel.Quit()
+
+    return_value.update_sep(True, "Successfully saved Excel file: {}.".format(file_name_new))
     return return_value

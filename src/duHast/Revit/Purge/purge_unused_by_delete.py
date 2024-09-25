@@ -137,7 +137,11 @@ def document_change_purge_element(
                         debug_string += "element is of type: {}\n{}\n".format(type(elem),elem)
                         try:
                             if(isinstance(elem, Element)):
-                                debug_string += "{}\n".format(elem.Name)
+                                debug_string_temp = "Nameless Element"
+                                try:
+                                    debug_string += "{}\n".format(Element.Name.GetValue(elem))
+                                except:
+                                    debug_string += debug_string_temp
                         except Exception as e:
                             debug_string += "An exception occurred when building debug string in modified elements: {}\n".format(e)
                             

@@ -42,3 +42,16 @@ class ProgressPyRevit(ProgressBase):
         """
 
         super(ProgressPyRevit, self).__init__(form=form)
+    
+    def update(self, count, total, message=None):
+        """
+        Base implementation to update the progress form.
+
+        Args:
+            count: The current count
+            total: The total count
+            message: The message to display
+
+        """
+
+        self.form.update_progress(count, total)

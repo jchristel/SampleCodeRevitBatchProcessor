@@ -392,6 +392,12 @@ def purge_unused_elements(
             "Element {} took: {}".format(element_id, t_by_element.stop())
         )
 
+        # check for user cancel
+        if progress_callback != None:
+            if(progress_callback.is_cancelled()):
+                return_value.append_message("User cancelled!")
+                break
+
     deleted_elements_data += "\n"
     return_value.append_message(
         "\nDeleted {} unused elements:\n\n{}".format(

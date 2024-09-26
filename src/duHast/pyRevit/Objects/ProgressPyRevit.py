@@ -45,7 +45,7 @@ class ProgressPyRevit(ProgressBase):
     
     def update(self, count, total, message=None):
         """
-        Base implementation to update the progress form.
+        Implementation to update the progress form.
 
         Args:
             count: The current count
@@ -55,3 +55,14 @@ class ProgressPyRevit(ProgressBase):
         """
 
         self.form.update_progress(count, total)
+    
+
+    def is_cancelled(self):
+        """
+        Implementation to check if the form has been cancelled.
+
+        Returns:
+            True if the form has been cancelled
+        """
+
+        return self.form.cancelled

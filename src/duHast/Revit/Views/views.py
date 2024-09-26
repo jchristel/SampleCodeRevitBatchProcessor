@@ -33,7 +33,7 @@ import System
 # import common library modules
 from duHast.Revit.Common import common as com
 from duHast.Revit.Views.Utility.view_types import _get_view_types
-from duHast.Revit.Views.schedules import filter_revision_schedules
+from duHast.Revit.Views.schedules_revision_filter import filter_revision_schedules
 from duHast.Revit.Views.sheets import get_all_sheets
 from duHast.Revit.Areas.areas import get_area_scheme_by_name
 from duHast.Revit.Common.parameter_get_utils import (

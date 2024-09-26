@@ -26,44 +26,18 @@ This module contains a number of helper functions relating to Revit view schedul
 #
 #
 
-from Autodesk.Revit.DB import FilteredElementCollector, ScheduleSheetInstance, ViewType
-
-from duHast.Revit.Views.views import get_views_of_type
-
-
-def get_schedule_ids_on_sheets(doc):
+def filter_revision_schedules(view):
     """
-    Gets view ids of all schedules with instances placed on a sheet
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :return: List containing schedule Id's.
-    :rtype: list of Autodesk.Revit.DB.ElementId
+    Checks whether a view is a revision schedule.
+    (not required...schedules have a property flag!!)
+
+    :param view: The view to check.
+    :type view: Autodesk.Revit.DB.View
+    :return: True if the view name starts with '<', otherwise False
+    :rtype: bool
     """
 
-    ids = []
-    col = FilteredElementCollector(doc).OfClass(ScheduleSheetInstance)
-    for s in col:
-        if s.ScheduleId not in ids:
-            ids.append(s.ScheduleId)
-    return ids
-
-
-def get_schedules_not_on_sheets(doc):
-    """
-    Gets all schedules without an instance placed on a sheet.
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :return: list of schedules without a sheet schedule instance.
-    :rtype: list of Autodesk.Revit.DB.View
-    """
-
-    schedules_not_on_sheets = []
-    # get schedules on sheets
-    ids_on_sheets = get_schedule_ids_on_sheets(doc)
-    # get all schedules in model
-    schedules_in_model = get_views_of_type(doc, ViewType.Schedule)
-    # loop and filter out schedules not on sheets
-    for schedule in schedules_in_model:
-        if schedule.Id not in ids_on_sheets:
-            schedules_not_on_sheets.append(schedule)
-    return schedules_not_on_sheets
+    if view.Name.startswith("<"):
+        return False
+    else:
+        return True

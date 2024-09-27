@@ -33,7 +33,7 @@ import System
 # import common library modules
 from duHast.Revit.Common import common as com
 from duHast.Revit.Views.Utility.view_types import _get_view_types
-from duHast.Revit.Views.schedules_revision_filter import filter_revision_schedules
+from duHast.Revit.Views.schedules_revision_filter import filter_revision_schedules, filter_schedules
 from duHast.Revit.Views.sheets import get_all_sheets
 from duHast.Revit.Areas.areas import get_area_scheme_by_name
 from duHast.Revit.Common.parameter_get_utils import (
@@ -187,7 +187,7 @@ def get_views_not_on_sheet(doc):
     # get all viewPorts on sheets
     view_ports_on_sheets = get_viewport_on_sheets(doc, sheets_in_model)
     # get all views in model
-    views_in_model = get_views_in_model(doc, filter_revision_schedules)
+    views_in_model = get_views_in_model(doc=doc, filter=filter_schedules)
     # check whether view has a viewport if not ... its not placed on a sheet
     for view_in_model in views_in_model:
         match = False

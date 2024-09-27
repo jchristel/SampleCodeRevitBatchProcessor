@@ -26,6 +26,9 @@ This module contains a number of helper functions relating to Revit view schedul
 #
 #
 
+from Autodesk.Revit.DB import ViewType
+
+
 def filter_revision_schedules(view):
     """
     Checks whether a view is a revision schedule.
@@ -38,6 +41,20 @@ def filter_revision_schedules(view):
     """
 
     if view.Name.startswith("<"):
+        return False
+    else:
+        return True
+
+def filter_schedules(view):
+    """
+    Checks if the view is of type schedule. If so it returns true, otherwise false
+
+    :param view: the view
+    :type view: Autodesk.Revit.DB.View
+    :return: True if view is a schedule, otherwise false.
+    :rtype:bool
+    """
+    if view.ViewType == ViewType.Schedule:
         return False
     else:
         return True

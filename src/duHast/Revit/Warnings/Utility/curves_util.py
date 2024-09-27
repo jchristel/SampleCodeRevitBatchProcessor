@@ -334,7 +334,7 @@ def modify_curves_by_lengthening(doc, guid, transaction_manager, group_id, callb
         for i in range(max_loop):
             # update the call back function with any progress made
             if callback:
-                callback(i, max_loop)
+                callback.update(i, max_loop)
             # start again, this time to change curve geometry
             failure_messages = get_warnings_by_guid(doc, guid=guid)
             # get next curve sets from failure message
@@ -502,7 +502,7 @@ def modify_curves_by_shortening(doc, guid, transaction_manager, group_id, callba
         for i in range(max_loop):
             # update the call back function with any progress made
             if callback:
-                callback(i, max_loop)
+                callback.update(i, max_loop)
             # start again, this time to change curve geometry
             failure_messages = get_warnings_by_guid(doc, guid=guid)
             # get next curve sets from failure message

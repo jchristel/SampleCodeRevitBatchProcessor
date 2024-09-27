@@ -79,7 +79,7 @@ class RevitWarningsSolverRoomTagToRoom(base.Base):
             # report progress to call back if required
             counter = 0
             if self.callback:
-                self.callback(counter, len(warnings))
+                self.callback.update(counter, len(warnings))
             for warning in warnings:
                 element_ids = warning.GetFailingElements()
                 for el_id in element_ids:

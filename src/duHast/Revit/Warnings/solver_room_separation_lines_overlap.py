@@ -110,6 +110,7 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
 
         return_value = res.Result()
         if len(warnings) > 0:
+
             # extract model lines and geometry from failure messages
             curve_storage_sets = get_curves_from_failure_messages(
                 doc=doc, failure_messages=warnings, group_id=self.group_id
@@ -123,6 +124,8 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
                 doc=doc, curves_to_delete=curves_to_delete, curve_descriptor="room"
             )
             return_value.update(delete_curves_status)
+            
+            # determinae as to solve overlapping lines by lengthening or shortening
             if self.solve_by_lengthening_curves:
                 # attempt to modify overlapping curves by lengthening the longer curve to
                 # the length of the shorter curve and thereby completely overlapping the shorter curve

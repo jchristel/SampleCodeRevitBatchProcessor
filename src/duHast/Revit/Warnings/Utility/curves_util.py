@@ -330,6 +330,7 @@ def modify_curves_by_lengthening(doc, guid, transaction_manager, group_id, callb
         return_value.append_message(
             "Found {} warnings matching group id: {}".format(max_loop, group_id)
         )
+
         ignore_these_curves = []
         for i in range(max_loop):
             # update the call back function with any progress made
@@ -415,6 +416,12 @@ def modify_curves_by_lengthening(doc, guid, transaction_manager, group_id, callb
                                 )
                             )
                     # get out of loop and start again by getting the current set of warnings from the model
+                    break
+
+            # check if cancelled
+            if(callback):
+                if (callback.is_cancelled()):
+                    return_value.append_message("User cancelled!")
                     break
     else:
         return_value.append_message(
@@ -546,6 +553,12 @@ def modify_curves_by_shortening(doc, guid, transaction_manager, group_id, callba
                         )
                         return_value.update(status_update)
                     # get out of loop and start again by getting the current set of warnings from the model
+                    break
+                
+            # check if cancelled
+            if(callback):
+                if (callback.is_cancelled()):
+                    return_value.append_message("User cancelled!")
                     break
     else:
         return_value.append_message(

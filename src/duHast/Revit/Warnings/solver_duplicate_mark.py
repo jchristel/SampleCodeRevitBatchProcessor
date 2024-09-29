@@ -32,15 +32,14 @@ from duHast.Revit.Common import parameter_get_utils as rParaGet
 from duHast.Revit.Common import parameter_set_utils as rParaSet
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Warnings.warning_guids import DUPLICATE_MARK_VALUE
-
-# import Autodesk
-import Autodesk.Revit.DB as rdb
 from duHast.Utilities.Objects import base
 
+# import Autodesk
+from Autodesk.Revit.DB import BuiltInParameter, Element
 
 class RevitWarningsSolverDuplicateMark(base.Base):
 
-    def __init__(self, filter_func, filter_values=[]):
+    def __init__(self, filter_func, filter_values=[], callback=None,):
         """
         Constructor: this solver takes two arguments: a filter function and a list of values to filter by
 
@@ -56,6 +55,7 @@ class RevitWarningsSolverDuplicateMark(base.Base):
         self.filter = filter_func
         self.filter_values = filter_values
         self.filter_name = "Duplicate mark value."
+        self.callback = callback
 
     # --------------------------- duplicate mark guid ---------------------------
     #: guid identifying this specific warning
@@ -83,9 +83,20 @@ class RevitWarningsSolverDuplicateMark(base.Base):
 
         return_value = res.Result()
         if len(warnings) > 0:
+
+            # report progress to call back if required
+            counter = 0
+
             for warning in warnings:
-                # Flag to indicate if we should continue the outer loop
+                
+                # report progress to call back if required
+                if self.callback:
+                    self.callback.update(counter, len(warnings))
+                
+                # Flag to indicate if we should continue the outer loop 
+                # ignoring this warning
                 should_continue_outer = False
+
                 # check for any duplicate Type Mark warnings...which are not to be addressed!
                 for ignore in self.IGNORED_WARNINGS:
                     if ignore in warning.GetDescriptionText():
@@ -96,14 +107,16 @@ class RevitWarningsSolverDuplicateMark(base.Base):
                                 True,
                                 "{} Warning of type: duplicate {}. {} will be ignored.".format(
                                     self.filter_name,
-                                    rdb.Element.Name.GetValue(element),
+                                    Element.Name.GetValue(element),
                                     ignore,
                                 ),
                             )
                         should_continue_outer = True
-                        break  # Break out of the inner loop
+                        break  # Break out of the inner loop (ignore this warning)
                 if should_continue_outer:
                     continue  # Continue the outer loop
+                
+                # loop over elements in warning and set mark to an empty value
                 element_ids = warning.GetFailingElements()
                 for el_id in element_ids:
                     element = doc.GetElement(el_id)
@@ -112,13 +125,13 @@ class RevitWarningsSolverDuplicateMark(base.Base):
 
                         try:
                             p_value = rParaGet.get_built_in_parameter_value(
-                                element, rdb.BuiltInParameter.ALL_MODEL_MARK
+                                element, BuiltInParameter.ALL_MODEL_MARK
                             )
                             if p_value != None:
                                 result = rParaSet.set_built_in_parameter_value(
                                     doc,
                                     element,
-                                    rdb.BuiltInParameter.ALL_MODEL_MARK,
+                                    BuiltInParameter.ALL_MODEL_MARK,
                                     "",
                                 )
                                 return_value.update(result)
@@ -127,7 +140,7 @@ class RevitWarningsSolverDuplicateMark(base.Base):
                                     True,
                                     "{}:  Element has no mark value: {}".format(
                                         self.filter_name,
-                                        rdb.Element.Name.GetValue(element),
+                                        Element.Name.GetValue(element),
                                     ),
                                 )
                         except Exception as e:
@@ -141,9 +154,18 @@ class RevitWarningsSolverDuplicateMark(base.Base):
                         return_value.update_sep(
                             True,
                             "{}: Element removed by filter: {}".format(
-                                self.filter_name, rdb.Element.Name.GetValue(element)
+                                self.filter_name, Element.Name.GetValue(element)
                             ),
                         )
+
+                # increase progress counter
+                counter = counter + 1
+
+                # check if cancelled
+                if(self.callback):
+                    if (self.callback.is_cancelled()):
+                        return_value.append_message("User cancelled!")
+                        break
         else:
             return_value.update_sep(
                 True,

@@ -31,8 +31,6 @@ from duHast.Revit.Rooms.room_tags import move_tag_to_room
 from duHast.Revit.Common.transaction import in_transaction
 from duHast.Revit.Warnings.warning_guids import ROOM_TAG_OUTSIDE_ROOM
 
-# import Autodesk
-# import Autodesk.Revit.DB as rdb
 from duHast.Utilities.Objects import base
 
 
@@ -76,11 +74,15 @@ class RevitWarningsSolverRoomTagToRoom(base.Base):
 
         return_value = res.Result()
         if len(warnings) > 0:
-            # report progress to call back if required
+            
+            # set up progress counter
             counter = 0
-            if self.callback:
-                self.callback.update(counter, len(warnings))
+            
             for warning in warnings:
+                # report progress to call back if required
+                if self.callback:
+                    self.callback.update(counter, len(warnings))
+
                 element_ids = warning.GetFailingElements()
                 for el_id in element_ids:
                     result = move_tag_to_room(
@@ -89,7 +91,15 @@ class RevitWarningsSolverRoomTagToRoom(base.Base):
                         transaction_manager=self.transaction_manager,
                     )
                     return_value.update(result)
+
+                # increase progress counter
                 counter = counter + 1
+
+                # check if cancelled
+                if(self.callback):
+                    if (self.callback.is_cancelled()):
+                        return_value.append_message("User cancelled!")
+                        break
         else:
             return_value.update_sep(
                 True, "{}: No warnings of type: room tag outside of room in model.".format(self.filter_name)

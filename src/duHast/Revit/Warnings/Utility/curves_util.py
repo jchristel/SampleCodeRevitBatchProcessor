@@ -229,10 +229,10 @@ def delete_curves(doc, curves_to_delete, curve_descriptor):
         result_delete = delete_by_element_ids(
             doc=doc,
             ids=ids,
-            transaction_name="delete overlapping {} separation lines {}".format(
+            transaction_name="delete overlapping {}: {}".format(
                 curve_descriptor, len(ids)
             ),
-            element_name="{} separation line(s)".format(curve_descriptor),
+            element_name="{}".format(curve_descriptor),
         )
         return_value.update(result_delete)
     else:

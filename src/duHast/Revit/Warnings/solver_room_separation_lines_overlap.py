@@ -123,7 +123,7 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
             delete_curves_status = delete_curves(
                 doc=doc, curves_to_delete=curves_to_delete, curve_descriptor="room"
             )
-            return_value.update(delete_curves_status)
+            return_value.update_sep(delete_curves_status.status,"Separation lines completely within other separation lines: {}".format(delete_curves_status.message))
             
             # determinae as to solve overlapping lines by lengthening or shortening
             if self.solve_by_lengthening_curves:

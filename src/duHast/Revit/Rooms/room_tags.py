@@ -33,7 +33,10 @@ from duHast.Utilities.Objects import result as res
 
 def move_tag_to_room(doc, tag_id, transaction_manager=in_transaction):
     """
-    Moves a room tag to the associated rooms location point.
+    Moves a room tag to the associated rooms location point. This will
+    
+    - un-pin the tag
+    - disable any leader
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -64,6 +67,15 @@ def move_tag_to_room(doc, tag_id, transaction_manager=in_transaction):
     def action():
         action_return_value = res.Result()
         try:
+            # check if tag is pinned...
+            if rt.Pinned:
+                rt.Pinned = False
+
+            # disable leader if there is one 
+            if rt.HasLeader:
+                rt.HasLeader = False
+            
+            # and move the tag
             rt.Location.Move(translation)
             action_return_value.message = "Moved tag to room: {}".format(room_data)
         except Exception as e:

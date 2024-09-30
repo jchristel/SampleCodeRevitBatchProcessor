@@ -168,10 +168,10 @@ def change_grid_extends_in_views(
     return_value = res.Result()
 
     # some type checking
-    if isinstance(callback, ProgressBase) == False:
+    if isinstance(callback, ProgressBase) == False and callback is not None:
         return_value.update_sep(
             False,
-            "Callback needs to inherit from ProgressBase. Got {} instead".format(
+            "Callback needs to inherit from ProgressBase or must be None. Got {} instead".format(
                 type(callback)
             ),
         )
@@ -359,10 +359,10 @@ def propagate_grids_extends_and_visibility(
     return_value = res.Result()
 
     # some type checking
-    if isinstance(callback, ProgressBase) == False:
+    if isinstance(callback, ProgressBase) == False and callback is not None:
         return_value.update_sep(
             False,
-            "Callback needs to inherit from ProgressBase. Got {} instead".format(
+            "Callback needs to inherit from ProgressBase or must be None. Got {} instead".format(
                 type(callback)
             ),
         )

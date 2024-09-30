@@ -3,6 +3,7 @@
 Revit families helper functions to change the reference type of reference planes and curve based elements.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,15 +20,15 @@ Revit families helper functions to change the reference type of reference planes
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import BuiltInParameter, FilteredElementCollector, ReferencePlane
 
 from duHast.Revit.Common import (
     parameter_get_utils as rParaGet,
@@ -70,28 +71,29 @@ def set_ref_planes_to_not_a_reference(doc):
     - ('ref name', 'Reference Plane', 'reference type as int', 14, 'reference type as string', 'Weak Reference')
     """
 
-
     result = res.Result()
     result.update_sep(True, "Changing reference status of reference planes...")
     match_at_all = False
-    collector_ref_planes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
+    collector_ref_planes = FilteredElementCollector(doc).OfClass(ReferencePlane)
     for ref_p in collector_ref_planes:
         value_int = rParaGet.get_built_in_parameter_value(
             ref_p,
-            rdb.BuiltInParameter.ELEM_REFERENCE_NAME,
+            BuiltInParameter.ELEM_REFERENCE_NAME,
             rParaGet.get_parameter_value_as_integer,
         )
         # check if an update is required (id is greater then 12)
         if value_int > 13:
             result_change = rParaSet.set_built_in_parameter_value(
-                doc, ref_p, rdb.BuiltInParameter.ELEM_REFERENCE_NAME, "12"
+                doc, ref_p, BuiltInParameter.ELEM_REFERENCE_NAME, "12"
             )
             # set overall flag to indicate that at least one element was changed
             if result_change.status == True and match_at_all == False:
                 match_at_all = True
             result.update(result_change)
     if match_at_all == False:
-        result.update_sep(False, "No reference planes found requiring reference type update")
+        result.update_sep(
+            False, "No reference planes found requiring reference type update"
+        )
     return result
 
 
@@ -120,7 +122,6 @@ def set_symbolic_and_model_lines_to_not_a_reference(doc):
     - ('ref name', 'Symbolic Lines', 'reference type as int', 2, 'reference type as string', 'Strong Reference')
     """
 
-
     result = res.Result()
     result.update_sep(True, "Changing reference status of model and symbolic curves...")
     match_at_all = False
@@ -129,13 +130,13 @@ def set_symbolic_and_model_lines_to_not_a_reference(doc):
         # get the current reference type
         value_int = rParaGet.get_built_in_parameter_value(
             curve,
-            rdb.BuiltInParameter.ELEM_IS_REFERENCE,
+            BuiltInParameter.ELEM_IS_REFERENCE,
             rParaGet.get_parameter_value_as_integer,
         )
         # check if an update is required (id equals 1)
         if value_int == 1:
             result_change = rParaSet.set_built_in_parameter_value(
-                doc, curve, rdb.BuiltInParameter.ELEM_IS_REFERENCE, "0"
+                doc, curve, BuiltInParameter.ELEM_IS_REFERENCE, "0"
             )
             # set overall flag to indicate that at least one element was changed
             if result_change.status == True and match_at_all == False:

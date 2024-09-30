@@ -54,7 +54,22 @@ from duHast.Revit.Family.family_load_option import *
 from duHast.Revit.Common import transaction as rTran
 
 # import Autodesk Revit DataBase namespace
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import (
+    BuiltInCategory,
+    BuiltInParameter,
+    ElementCategoryFilter,
+    ElementMulticategoryFilter,
+    ElementId,
+    ElementParameterFilter,
+    Family,
+    FamilyInstance,
+    FamilySymbol,
+    FilteredElementCollector,
+    FilterElementIdRule,
+    FilterNumericEquals,
+    ParameterValueProvider,
+    Transaction,
+)
 
 from duHast.Revit.Family.Utility.loadable_family_categories import (
     CATEGORIES_LOADABLE_3D,
@@ -97,7 +112,7 @@ def load_family(doc, family_file_path):
         # set up load / reload action to be run within a transaction
         def action():
             # set up return value for the load / reload
-            return_family = clr.Reference[rdb.Family]()
+            return_family = clr.Reference[Family]()
             action_return_value = res.Result()
             try:
                 reload_status = doc.LoadFamily(
@@ -120,7 +135,7 @@ def load_family(doc, family_file_path):
                 )
             return action_return_value
 
-        transaction = rdb.Transaction(
+        transaction = Transaction(
             doc,
             "Loading Family: {}".format(
                 fileIO.get_file_name_without_ext(family_file_path)
@@ -152,10 +167,10 @@ def get_family_symbols(doc, cats):
 
     elements = []
     try:
-        multi_cat_filter = rdb.ElementMulticategoryFilter(cats)
+        multi_cat_filter = ElementMulticategoryFilter(cats)
         elements = (
-            rdb.FilteredElementCollector(doc)
-            .OfClass(rdb.FamilySymbol)
+            FilteredElementCollector(doc)
+            .OfClass(FamilySymbol)
             .WherePasses(multi_cat_filter)
             .ToElements()
         )
@@ -180,10 +195,10 @@ def get_family_instances_by_built_in_categories(doc, cats):
 
     elements = []
     try:
-        multi_cat_filter = rdb.ElementMulticategoryFilter(cats)
+        multi_cat_filter = ElementMulticategoryFilter(cats)
         elements = (
-            rdb.FilteredElementCollector(doc)
-            .OfClass(rdb.FamilyInstance)
+            FilteredElementCollector(doc)
+            .OfClass(FamilyInstance)
             .WherePasses(multi_cat_filter)
             .ToElements()
         )
@@ -205,10 +220,10 @@ def get_family_instances_of_built_in_category(doc, builtin_cat):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    filter = rdb.ElementCategoryFilter(builtin_cat)
+    filter = ElementCategoryFilter(builtin_cat)
     col = (
-        rdb.FilteredElementCollector(doc)
-        .OfClass(rdb.FamilyInstance)
+        FilteredElementCollector(doc)
+        .OfClass(FamilyInstance)
         .WherePasses(filter)
     )
     return col
@@ -227,9 +242,9 @@ def get_all_loadable_families(doc):
     :rtype: list Autodesk.Revit.DB.Family
     """
 
-    collector = rdb.FilteredElementCollector(doc)
+    collector = FilteredElementCollector(doc)
     families = (
-        collector.OfClass(rdb.Family).Where(lambda e: (e.IsInPlace == False)).ToList()
+        collector.OfClass(Family).Where(lambda e: (e.IsInPlace == False)).ToList()
     )
     return families
 
@@ -245,7 +260,7 @@ def get_all_loadable_family_ids_through_types(doc):
     """
 
     family_ids = []
-    col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol)
+    col = FilteredElementCollector(doc).OfClass(FamilySymbol)
     # get families from symbols and filter out in place families
     for fam_symbol in col:
         if (
@@ -269,9 +284,9 @@ def get_all_in_place_families(doc):
     :rtype: list Autodesk.Revit.DB.Family
     """
 
-    collector = rdb.FilteredElementCollector(doc)
+    collector = FilteredElementCollector(doc)
     families = (
-        collector.OfClass(rdb.Family).Where(lambda e: (e.IsInPlace == True)).ToList()
+        collector.OfClass(Family).Where(lambda e: (e.IsInPlace == True)).ToList()
     )
     return families
 
@@ -287,7 +302,7 @@ def get_all_family_instances(doc):
     :rtype: Autodesk.Revit.DB.Collector
     """
 
-    col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance)
+    col = FilteredElementCollector(doc).OfClass(FamilyInstance)
     return col
 
 
@@ -296,12 +311,12 @@ def get_all_family_instances(doc):
 
 def is_any_nested_family_instance_label_driven(doc):
     """
-    Checks whether any family isntance in document is driven by the 'Label' property.
+    Checks whether any family instance in document is driven by the 'Label' property.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: True if at least one instance is driven by label property. Othewise False
+    :return: True if at least one instance is driven by label property. Otherwise False
     :rtype: bool
     """
 
@@ -312,11 +327,11 @@ def is_any_nested_family_instance_label_driven(doc):
         # get the Label parameter value
         p_value = rParaGet.get_built_in_parameter_value(
             fam_instance,
-            rdb.BuiltInParameter.ELEM_TYPE_LABEL,
+            BuiltInParameter.ELEM_TYPE_LABEL,
             rParaGet.get_parameter_value_as_element_id,
         )
         # a valid Element Id means family instance is driven by Label
-        if p_value != rdb.ElementId.InvalidElementId:
+        if p_value != ElementId.InvalidElementId:
             flag = True
             break
 
@@ -363,13 +378,13 @@ def get_family_instances_by_symbol_type_id(doc, type_id):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     """
 
-    pvp_symbol = rdb.ParameterValueProvider(
-        rdb.ElementId(rdb.BuiltInParameter.SYMBOL_ID_PARAM)
+    pvp_symbol = ParameterValueProvider(
+        ElementId(BuiltInParameter.SYMBOL_ID_PARAM)
     )
-    equals = rdb.FilterNumericEquals()
-    id_filter = rdb.FilterElementIdRule(pvp_symbol, equals, type_id)
-    element_filter = rdb.ElementParameterFilter(id_filter)
-    collector = rdb.FilteredElementCollector(doc).WherePasses(element_filter)
+    equals = FilterNumericEquals()
+    id_filter = FilterElementIdRule(pvp_symbol, equals, type_id)
+    element_filter = ElementParameterFilter(id_filter)
+    collector = FilteredElementCollector(doc).WherePasses(element_filter)
     return collector
 
 
@@ -387,9 +402,9 @@ def get_all_in_place_type_ids_in_model_of_category(doc, fam_built_in_category):
     """
 
     # filter model for family symbols of given built in category
-    filter = rdb.ElementCategoryFilter(fam_built_in_category)
+    filter = ElementCategoryFilter(fam_built_in_category)
     col = (
-        rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(filter)
+        FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
     )
     ids = []
     for c in col:
@@ -418,10 +433,10 @@ def get_family_symbols_ids(doc, cats, exclude_shared_fam=True):
 
     ids = []
     try:
-        multi_cat_filter = rdb.ElementMulticategoryFilter(cats)
+        multi_cat_filter = ElementMulticategoryFilter(cats)
         elements = (
-            rdb.FilteredElementCollector(doc)
-            .OfClass(rdb.FamilySymbol)
+            FilteredElementCollector(doc)
+            .OfClass(FamilySymbol)
             .WherePasses(multi_cat_filter)
         )
         for el in elements:
@@ -429,7 +444,7 @@ def get_family_symbols_ids(doc, cats, exclude_shared_fam=True):
             if exclude_shared_fam:
                 fam = el.Family
                 p_value = rParaGet.get_built_in_parameter_value(
-                    fam, rdb.BuiltInParameter.FAMILY_SHARED
+                    fam, BuiltInParameter.FAMILY_SHARED
                 )
                 if p_value != None:
                     if p_value == "No" and el.Id not in ids:

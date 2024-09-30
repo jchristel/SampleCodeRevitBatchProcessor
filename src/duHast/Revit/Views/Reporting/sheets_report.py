@@ -132,7 +132,9 @@ def write_sheet_data(doc, file_name, current_file_name):
         data = get_sheet_report_data(doc, current_file_name)
         headers = get_sheets_report_headers(doc)
         data_converted = convert_view_data_to_list(data, headers)
-        write_report_data_as_csv(file_name=file_name, header=headers, data=data_converted,enforce_ascci=True)
+        write_report_data_as_csv(
+            file_name=file_name, header=headers, data=data_converted, enforce_ascci=True
+        )
         return_value.update_sep(True, "Successfully wrote data file")
     except Exception as e:
         return_value.update_sep(False, str(e))
@@ -169,7 +171,9 @@ def write_sheet_data_by_property_names(
         headers = REPORT_SHEETS_HEADER[:] + sheet_properties
         data_converted = convert_view_data_to_list(data, headers)
         # write data out to file
-        write_report_data_as_csv(file_name=file_name, header=headers, data=data_converted, enforce_ascci=True)
+        write_report_data_as_csv(
+            file_name=file_name, header=headers, data=data_converted, enforce_ascci=True
+        )
         return_value.update_sep(True, "Successfully wrote data file")
     except Exception as e:
         return_value.update_sep(False, str(e))

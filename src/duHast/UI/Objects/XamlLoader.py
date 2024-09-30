@@ -35,6 +35,7 @@ https://markheath.net/post/wpf-and-mvvm-in-ironpython
 
 from System.Windows.Markup import XamlReader
 
+
 class XamlLoader(object):
     def __init__(self, xaml_path):
         """
@@ -44,7 +45,7 @@ class XamlLoader(object):
         :type xaml_path: str
         """
         self.Root = self.load_xaml(xaml_path)
-    
+
     def load_xaml(self, xaml_path):
         """
         Load the XAML file and parse it.
@@ -55,9 +56,9 @@ class XamlLoader(object):
         :rtype: System.Windows.UIElement
         """
         # Read the XAML file
-        with open(xaml_path, 'r') as file:
+        with open(xaml_path, "r") as file:
             xaml_content = file.read()
-        
+
         # Parse the XAML content
         return XamlReader.Parse(xaml_content)
 
@@ -69,6 +70,8 @@ class XamlLoader(object):
         :param item: The name of the attribute
         :return: The value of the attribute, if found
         """
-        if hasattr(self.Root, 'FindName'):
+        if hasattr(self.Root, "FindName"):
             return self.Root.FindName(item)
-        raise AttributeError("{} object has no attribute {}". format(self.__class__.__name__, item))
+        raise AttributeError(
+            "{} object has no attribute {}".format(self.__class__.__name__, item)
+        )

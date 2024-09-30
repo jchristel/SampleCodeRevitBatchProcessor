@@ -76,13 +76,13 @@ def combine_files(
     errors = []
 
     with open(os.path.join(folder_path, out_put_file_name), "w") as result:
-        
+
         file_counter = 0
         for file_ in file_list:
             try:
                 line_counter = 0
                 fp = codecs.open(file_, "r", encoding="utf-8")
-                #fp = open(file_, "r")
+                # fp = open(file_, "r")
                 lines = fp.readlines()
                 fp.close()
                 for line in lines:
@@ -93,12 +93,13 @@ def combine_files(
 
                 file_counter += 1
             except Exception as e:
-                errors.append("File: {} failed to combine with exception: {}".format(file_, e))
-    
+                errors.append(
+                    "File: {} failed to combine with exception: {}".format(file_, e)
+                )
+
     # raise any errors
-    if(len(errors)>0):
+    if len(errors) > 0:
         raise ValueError("\n".join(errors))
-    
 
 
 def combine_files_basic(

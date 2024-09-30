@@ -56,6 +56,7 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
     - Solving overlapping room separation lines by deleting or modifying them.
     - Ignoring room separation lines that overlap when they are in group instances.
     """
+
     def __init__(
         self,
         solve_by_lengthening_curves=True,
@@ -123,8 +124,13 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
             delete_curves_status = delete_curves(
                 doc=doc, curves_to_delete=curves_to_delete, curve_descriptor="room"
             )
-            return_value.update_sep(delete_curves_status.status,"Separation lines completely within other separation lines: {}".format(delete_curves_status.message))
-            
+            return_value.update_sep(
+                delete_curves_status.status,
+                "Separation lines completely within other separation lines: {}".format(
+                    delete_curves_status.message
+                ),
+            )
+
             # determinae as to solve overlapping lines by lengthening or shortening
             if self.solve_by_lengthening_curves:
                 # attempt to modify overlapping curves by lengthening the longer curve to
@@ -134,7 +140,7 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
                     guid=self.GUID,
                     group_id=self.group_id,
                     transaction_manager=self.transaction_manager,
-                    callback=self.callback
+                    callback=self.callback,
                 )
                 return_value.update(modify_curves_status)
             else:
@@ -150,6 +156,9 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
                 return_value.update(modify_curves_status)
         else:
             return_value.update_sep(
-                True, "{}: No warnings of type: room separation lines overlap in model.".format(self.filter_name)
+                True,
+                "{}: No warnings of type: room separation lines overlap in model.".format(
+                    self.filter_name
+                ),
             )
         return return_value

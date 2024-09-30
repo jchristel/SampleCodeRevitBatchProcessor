@@ -19,8 +19,8 @@ Revit category report functions .
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -60,6 +60,7 @@ from duHast.Revit.Categories.Utility.elements_by_category_utils import (
 )
 
 from duHast.Utilities.utility import encode_utf8
+
 
 def build_report_data_by_category(doc, dic, family_cat, main_cat_name, doc_file_path):
     """
@@ -110,9 +111,7 @@ def build_report_data_by_category(doc, dic, family_cat, main_cat_name, doc_file_
         row.append(encode_utf8(str(dic_colour[PROPERTY_LINE_COLOUR_BLUE_NAME])))
         # elements
         row.append(encode_utf8(str(len(elements[CATEGORY_GRAPHIC_STYLE_3D]))))
-        row.append(
-            encode_utf8(str(len(elements[CATEGORY_GRAPHIC_STYLE_PROJECTION])))
-        )
+        row.append(encode_utf8(str(len(elements[CATEGORY_GRAPHIC_STYLE_PROJECTION]))))
         row.append(encode_utf8(str(len(elements[CATEGORY_GRAPHIC_STYLE_CUT]))))
 
         data.append(row)

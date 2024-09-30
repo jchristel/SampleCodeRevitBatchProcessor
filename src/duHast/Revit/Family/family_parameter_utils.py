@@ -38,7 +38,12 @@ from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities.Objects import result as res
 
 # import Autodesk Revit DataBase namespace
-from Autodesk.Revit.DB import BuiltInParameterGroup, ParameterType,StorageType, Transaction
+from Autodesk.Revit.DB import (
+    BuiltInParameterGroup,
+    ParameterType,
+    StorageType,
+    Transaction,
+)
 
 
 def set_family_parameter_value_by_storage_type(param_w, manager, value):
@@ -176,8 +181,11 @@ def set_parameter_formula(doc, manager, fam_para, formula):
     return_value = rTran.in_transaction(transaction, action)
     return return_value
 
-def create_family_parameter(doc, parameter_name, parameter_group, parameter_type, is_instance):
-    '''
+
+def create_family_parameter(
+    doc, parameter_name, parameter_group, parameter_type, is_instance
+):
+    """
     Changes a shared family parameter to a standard family parameter.
 
     Note: will need updating to support ForgeType fro Revit 2022 onwards
@@ -188,41 +196,56 @@ def create_family_parameter(doc, parameter_name, parameter_group, parameter_type
     :type parameterName: str
     :param prefix: Revit requires the new parameter to have a different name to the shard parameter, therefore a prefix to the name is applied, defaults to '_'
     :type prefix: str, optional
-    
-    :return: 
+
+    :return:
         Result class instance.
 
         - Parameter change status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the name of the shared parameter and the new family parameter name.
         - result.status will contain the new family parameter.
-        
+
         On exception (handled by optimizer itself!):
-        
+
         - result.status (bool) will be False.
         - result.message will contain generic exception message.
         - result.status will be an empty list
-    
+
     :rtype: :class:`.Result`
-    '''
+    """
 
     return_value = res.Result()
 
     # do some type checking
     if not isinstance(parameter_name, str):
-        return_value.UpdateSep(False, 'Parameter name must be a string. Got: {}'.format(type(parameter_name)))
+        return_value.UpdateSep(
+            False,
+            "Parameter name must be a string. Got: {}".format(type(parameter_name)),
+        )
         return return_value
-    
+
     if not isinstance(parameter_group, BuiltInParameterGroup):
-        return_value.UpdateSep(False, 'Parameter group must be a BuiltInParameterGroup. Got: {}'.format(type(parameter_group)))
+        return_value.UpdateSep(
+            False,
+            "Parameter group must be a BuiltInParameterGroup. Got: {}".format(
+                type(parameter_group)
+            ),
+        )
         return return_value
-    
+
     if not isinstance(parameter_type, ParameterType):
-        return_value.UpdateSep(False, 'Parameter type must be a ParameterType. Got: {}'.format(type(parameter_type)))
+        return_value.UpdateSep(
+            False,
+            "Parameter type must be a ParameterType. Got: {}".format(
+                type(parameter_type)
+            ),
+        )
         return return_value
-    
+
     if not isinstance(is_instance, bool):
-        return_value.UpdateSep(False, 'Is instance must be a bool. Got: {}'.format(type(is_instance)))
-        return  return_value
+        return_value.UpdateSep(
+            False, "Is instance must be a bool. Got: {}".format(type(is_instance))
+        )
+        return return_value
 
     # get the family manager
     manager = doc.FamilyManager
@@ -232,25 +255,32 @@ def create_family_parameter(doc, parameter_name, parameter_group, parameter_type
         try:
 
             parameter_new = manager.AddParameter(
-                        parameter_name, 
-                        parameter_group,
-                        parameter_type,
-                        is_instance
-                        )
-                    
-            action_return_value.UpdateSep(True, 'Added parameter: {} to family.'.format(parameter_name))
+                parameter_name, parameter_group, parameter_type, is_instance
+            )
+
+            action_return_value.UpdateSep(
+                True, "Added parameter: {} to family.".format(parameter_name)
+            )
             action_return_value.result.append(parameter_new)
         except Exception as e:
-            action_return_value.UpdateSep(False, 'Failed to add parameter: {} with exception: {}'.format(parameter_name, e))
+            action_return_value.UpdateSep(
+                False,
+                "Failed to add parameter: {} with exception: {}".format(
+                    parameter_name, e
+                ),
+            )
         return action_return_value
-    
+
     # set up a transaction and execute it
     transaction = Transaction(doc, "Add family parameter: {}".format(parameter_name))
     return_value = rTran.in_transaction(transaction, action)
 
     return return_value
 
-def associate_parameter_with_other_parameter(doc, nested_family_instance, target_parameter_name, source_parameter_name):
+
+def associate_parameter_with_other_parameter(
+    doc, nested_family_instance, target_parameter_name, source_parameter_name
+):
     """
     Associate a nested family instance parameter ( can be type or instance) with a host family parameter.
 
@@ -273,7 +303,7 @@ def associate_parameter_with_other_parameter(doc, nested_family_instance, target
     # get the nested family placed instance parameters
     nested_instance_parameters = nested_family_instance.GetOrderedParameters()
     # get the hot family parameters
-    host_family_parameters =  manager.GetParameters()
+    host_family_parameters = manager.GetParameters()
 
     # set up some flags to check if all went well
     found_source_parameter = False
@@ -299,26 +329,48 @@ def associate_parameter_with_other_parameter(doc, nested_family_instance, target
                     def action():
                         action_return_value = res.Result()
                         try:
-                            manager.AssociateElementParameterToFamilyParameter(target_parameter, source_parameter)
-                            action_return_value.UpdateSep(True, 'Associated parameter: {} with parameter: {}'.format(target_parameter_name, source_parameter_name))
+                            manager.AssociateElementParameterToFamilyParameter(
+                                target_parameter, source_parameter
+                            )
+                            action_return_value.UpdateSep(
+                                True,
+                                "Associated parameter: {} with parameter: {}".format(
+                                    target_parameter_name, source_parameter_name
+                                ),
+                            )
                         except Exception as e:
-                            action_return_value.UpdateSep(False, 'Failed to associate parameter: {} with parameter: {} with exception: {}'.format(target_parameter_name, source_parameter_name, e))
+                            action_return_value.UpdateSep(
+                                False,
+                                "Failed to associate parameter: {} with parameter: {} with exception: {}".format(
+                                    target_parameter_name, source_parameter_name, e
+                                ),
+                            )
                         return action_return_value
 
-                    transaction = Transaction(doc, "Associate parameter: {} with {}".format(target_parameter_name, source_parameter_name))
+                    transaction = Transaction(
+                        doc,
+                        "Associate parameter: {} with {}".format(
+                            target_parameter_name, source_parameter_name
+                        ),
+                    )
                     return_value = rTran.in_transaction(transaction, action)
                     break
-            
+
             # break out of the loop if source parameter found
             if found_source_parameter:
                 break
             else:
                 # give user feedback if source parameter not found
-                return_value.UpdateSep(False, 'Failed to find source parameter: {}'.format(source_parameter_name))
+                return_value.UpdateSep(
+                    False,
+                    "Failed to find source parameter: {}".format(source_parameter_name),
+                )
                 break
-    
+
     # check if target parameter found
     if not found_target_parameter:
-        return_value.UpdateSep(False, 'Failed to find target parameter: {}'.format(target_parameter_name))
-    
+        return_value.UpdateSep(
+            False, "Failed to find target parameter: {}".format(target_parameter_name)
+        )
+
     return return_value

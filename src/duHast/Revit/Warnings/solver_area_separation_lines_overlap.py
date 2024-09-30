@@ -132,7 +132,7 @@ class RevitWarningsSolverAreaSepLinesOverlap(base.Base):
                     guid=self.GUID,
                     group_id=self.group_id,
                     transaction_manager=self.transaction_manager,
-                    callback=self.callback
+                    callback=self.callback,
                 )
                 return_value.update(modify_curves_status)
             else:
@@ -148,6 +148,9 @@ class RevitWarningsSolverAreaSepLinesOverlap(base.Base):
                 return_value.update(modify_curves_status)
         else:
             return_value.update_sep(
-                True, "{}: No warnings of type: area separation lines overlap in model.".format(self.filter_name)
+                True,
+                "{}: No warnings of type: area separation lines overlap in model.".format(
+                    self.filter_name
+                ),
             )
         return return_value

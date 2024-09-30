@@ -111,6 +111,7 @@ def get_room_phase(rvt_doc, room):
     phase = encode_utf8(rPhase.get_phase_name_by_id(rvt_doc, phase_param))
     return phase
 
+
 def get_room_level(rvt_doc, room):
     """
     Get the phase of the room
@@ -121,7 +122,7 @@ def get_room_level(rvt_doc, room):
     :return: The phase of the room
     :rtype: str
     """
-    
+
     try:
         rm_level_name = rvt_doc.GetElement(room.LevelId).Name
     except Exception:

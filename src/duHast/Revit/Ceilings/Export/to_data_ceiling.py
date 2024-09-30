@@ -127,7 +127,8 @@ def populate_data_ceiling_object(doc, revit_ceiling):
             data_c.revit_model.name = doc.Title
 
         # get phasing information
-        data_c.phasing.created = encode_utf8(rPhase.get_phase_name_by_id(
+        data_c.phasing.created = encode_utf8(
+            rPhase.get_phase_name_by_id(
                 doc,
                 rParaGet.get_built_in_parameter_value(
                     revit_ceiling,
@@ -136,7 +137,8 @@ def populate_data_ceiling_object(doc, revit_ceiling):
                 ),
             )
         )
-        data_c.phasing.demolished = encode_utf8(rPhase.get_phase_name_by_id(
+        data_c.phasing.demolished = encode_utf8(
+            rPhase.get_phase_name_by_id(
                 doc,
                 rParaGet.get_built_in_parameter_value(
                     revit_ceiling,

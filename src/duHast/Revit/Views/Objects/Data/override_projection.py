@@ -74,7 +74,7 @@ class OverrideProjection(base.Base):
 
             # load overrides and throw exception if something is missing!
             try:
-                
+
                 self.pattern_background = pattern_background.PatternBackground(
                     j=j[pattern_background.PatternBackground.data_type]
                 )
@@ -114,7 +114,7 @@ class OverrideProjection(base.Base):
     # python 2.7 needs custom implementation of not equal
     def __ne__(self, other):
         return not self.__eq__(other=other)
-    
+
     def __hash__(self):
         """
         Custom hash override

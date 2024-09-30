@@ -41,7 +41,6 @@ from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import
 
 
 class FamilyDataFamily(base.Base):
-
     def __init__(
         self,
         family_name=None,
@@ -97,7 +96,7 @@ class FamilyDataFamily(base.Base):
                     type(family_file_path)
                 )
             )
-        
+
         if isinstance(family_nesting_path, str) or family_nesting_path == None:
             self.family_nesting_path = family_nesting_path
         else:
@@ -107,7 +106,10 @@ class FamilyDataFamily(base.Base):
                 )
             )
 
-        if isinstance(family_category_nesting_path, str) or family_category_nesting_path == None:
+        if (
+            isinstance(family_category_nesting_path, str)
+            or family_category_nesting_path == None
+        ):
             self.family_category_nesting_path = family_category_nesting_path
         else:
             raise TypeError(
@@ -115,16 +117,14 @@ class FamilyDataFamily(base.Base):
                     type(family_category_nesting_path)
                 )
             )
-        
+
         if isinstance(is_root_family, bool):
             self.is_root_family = is_root_family
         else:
             raise TypeError(
-                "is_root_family must be a boolean. Got {}".format(
-                    type(is_root_family)
-                )
+                "is_root_family must be a boolean. Got {}".format(type(is_root_family))
             )
-        
+
         # nested family tree
         self.nested_families_unsorted = []
         if nested_families is not None:
@@ -166,12 +166,12 @@ class FamilyDataFamily(base.Base):
             self.family_name,
             self.family_category,
             self.family_nesting_path,
-            self.family_category_nesting_path
+            self.family_category_nesting_path,
         ) == (
             other.family_name,
             other.family_category,
             other.family_nesting_path,
-            other.family_category_nesting_path
+            other.family_category_nesting_path,
         )
 
     # python 2.7 needs custom implementation of not equal
@@ -186,9 +186,9 @@ class FamilyDataFamily(base.Base):
         self.nesting_by_name_path = {}
 
         for family_instance_data in self.nested_families_unsorted:
-            self.nesting_by_name_path[family_instance_data.family_nesting_path] = (
-                family_instance_data
-            )
+            self.nesting_by_name_path[
+                family_instance_data.family_nesting_path
+            ] = family_instance_data
 
     def _build_nesting_by_level(self):
         """
@@ -218,7 +218,9 @@ class FamilyDataFamily(base.Base):
                         family_instance_data
                     )
                 else:
-                    self.nesting_by_level[len(nesting_chunks) - 1] = [family_instance_data]
+                    self.nesting_by_level[len(nesting_chunks) - 1] = [
+                        family_instance_data
+                    ]
 
     def get_longest_unique_nesting_path(self):
         """
@@ -242,9 +244,11 @@ class FamilyDataFamily(base.Base):
         # as soon as there is a nested family, the root path of a family (no nesting) is not unique anymore.
 
         # get the highest nesting level
-        if(len(self.nesting_by_level) == 0):
+        if len(self.nesting_by_level) == 0:
             # if no nesting levels found return the root family only (?)
-            unique_nesting_paths.append((self.family_nesting_path, self.family_category_nesting_path))
+            unique_nesting_paths.append(
+                (self.family_nesting_path, self.family_category_nesting_path)
+            )
         else:
             highest_nesting_level = max(self.nesting_by_level.keys())
 
@@ -287,7 +291,8 @@ class FamilyDataFamily(base.Base):
                         found_match = False
                         # check if the current nesting path overlaps with the unique nesting path
                         if (
-                            nesting_path_family_name_current_level in unique_nesting_path[0]
+                            nesting_path_family_name_current_level
+                            in unique_nesting_path[0]
                             and nesting_path_category_current_level
                             in unique_nesting_path[1]
                         ):
@@ -410,7 +415,7 @@ class FamilyDataFamily(base.Base):
                     data_storage_as_string[key] = value
 
         return data_storage_as_string
-    
+
     def get_all_storage_headers_as_strings(self):
         """
         Returns all property names used in storage instances in containers within this family and any nested families.
@@ -428,7 +433,7 @@ class FamilyDataFamily(base.Base):
                 # check if that storage key is already in the return dictionary
                 if key not in data_storage_as_string:
                     # if not add its value list by the new containers values list
-                    data_storage_as_string[key]=value
+                    data_storage_as_string[key] = value
 
         # loop over nested families and get their storage header values too
         for nested_family in self.nested_families_unsorted:
@@ -437,7 +442,7 @@ class FamilyDataFamily(base.Base):
                 # check if that storage key is already in the return dictionary
                 if key not in data_storage_as_string:
                     # if extend its value list by the new containers values list
-                    data_storage_as_string[key]=value
+                    data_storage_as_string[key] = value
         return data_storage_as_string
 
     def has_circular_nesting(self):

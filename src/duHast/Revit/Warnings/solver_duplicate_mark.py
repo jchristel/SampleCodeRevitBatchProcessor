@@ -29,7 +29,9 @@ Duplicate mark warnings solver class.
 #
 
 from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value
-from duHast.Revit.Common.parameter_set_utils import set_builtin_parameter_without_transaction_wrapper_by_name
+from duHast.Revit.Common.parameter_set_utils import (
+    set_builtin_parameter_without_transaction_wrapper_by_name,
+)
 from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
     FailureHandlingConfig,
 )
@@ -41,9 +43,14 @@ from duHast.Utilities.Objects import base
 # import Autodesk
 from Autodesk.Revit.DB import BuiltInParameter, Element, Transaction
 
-class RevitWarningsSolverDuplicateMark(base.Base):
 
-    def __init__(self, filter_func, filter_values=None, callback=None,):
+class RevitWarningsSolverDuplicateMark(base.Base):
+    def __init__(
+        self,
+        filter_func,
+        filter_values=None,
+        callback=None,
+    ):
         """
         Constructor: this solver takes two arguments: a filter function and a list of values to filter by
 
@@ -58,7 +65,7 @@ class RevitWarningsSolverDuplicateMark(base.Base):
 
         self.filter = filter_func
         # check if default value
-        if (filter_values==None):
+        if filter_values == None:
             self.filter_values = []
         else:
             self.filter_values = filter_values
@@ -72,7 +79,6 @@ class RevitWarningsSolverDuplicateMark(base.Base):
 
     IGNORED_WARNINGS = ["Type Mark"]
 
-
     def _setup_failure_handling_config(self):
         # define failure handling for the transaction ( push through on any warnings or errors )
         failure_handling_settings = FailureHandlingConfig(
@@ -82,7 +88,7 @@ class RevitWarningsSolverDuplicateMark(base.Base):
             print_errors=False,
         )
         return failure_handling_settings
-    
+
     def solve_warnings(self, doc, warnings):
         """
         Solver setting element mark to nothing, provided it passes the filter.
@@ -108,12 +114,12 @@ class RevitWarningsSolverDuplicateMark(base.Base):
             counter = 0
 
             for warning in warnings:
-                
+
                 # report progress to call back if required
                 if self.callback:
                     self.callback.update(counter, len(warnings))
-                
-                # Flag to indicate if we should continue the outer loop 
+
+                # Flag to indicate if we should continue the outer loop
                 # ignoring this warning
                 should_continue_outer = False
 
@@ -135,7 +141,7 @@ class RevitWarningsSolverDuplicateMark(base.Base):
                         break  # Break out of the inner loop (ignore this warning)
                 if should_continue_outer:
                     continue  # Continue the outer loop
-                
+
                 # loop over elements in warning and set mark to an empty value
                 element_ids = warning.GetFailingElements()
                 # set up a failure handling config ignoring all warnings and errors
@@ -156,26 +162,35 @@ class RevitWarningsSolverDuplicateMark(base.Base):
                                     action_return_value = res.Result()
                                     try:
                                         action_return_value = set_builtin_parameter_without_transaction_wrapper_by_name(
-                                            element=element, 
+                                            element=element,
                                             parameter_definition=BuiltInParameter.ALL_MODEL_MARK,
-                                            parameter_value=""
+                                            parameter_value="",
                                         )
                                     except Exception as e:
                                         action_return_value.update_sep(
                                             False, "Failed with exception: {}".format(e)
                                         )
                                     return action_return_value
+
                                 # set up the revit transaction
-                                transaction = Transaction(doc, "Updating mark value to empty")
+                                transaction = Transaction(
+                                    doc, "Updating mark value to empty"
+                                )
                                 # run the action in the transaction
                                 result = in_transaction_with_failure_handling(
                                     transaction=transaction,
                                     action=action,
                                     failure_config=failure_handling_config,
-                                )             
+                                )
                                 # setup return object message
-                                message_prefix = "Updated mark on: {} [id:{}]".format(Element.Name.GetValue(element), element.Id.IntegerValue)
-                                return_value.update_sep(result.status, "{} : {}".format(message_prefix, result.message))
+                                message_prefix = "Updated mark on: {} [id:{}]".format(
+                                    Element.Name.GetValue(element),
+                                    element.Id.IntegerValue,
+                                )
+                                return_value.update_sep(
+                                    result.status,
+                                    "{} : {}".format(message_prefix, result.message),
+                                )
                             else:
                                 return_value.update_sep(
                                     True,
@@ -203,8 +218,8 @@ class RevitWarningsSolverDuplicateMark(base.Base):
                 counter = counter + 1
 
                 # check if cancelled
-                if(self.callback):
-                    if (self.callback.is_cancelled()):
+                if self.callback:
+                    if self.callback.is_cancelled():
                         return_value.append_message("User cancelled!")
                         break
         else:

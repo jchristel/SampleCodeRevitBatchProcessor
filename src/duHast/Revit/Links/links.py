@@ -185,9 +185,7 @@ def reload_revit_links(
             try:
                 new_link_path = get_link_path(link_type_name, link_locations, ".rvt")
                 if new_link_path != None:
-                    mp = ModelPathUtils.ConvertUserVisiblePathToModelPath(
-                        new_link_path
-                    )
+                    mp = ModelPathUtils.ConvertUserVisiblePathToModelPath(new_link_path)
                     # attempt to reload with worksets set to last viewed
                     # wc = WorksetConfiguration(WorksetConfigurationOption.OpenLastViewed)
                     # however that can be achieved also ... According to Autodesk:
@@ -257,9 +255,7 @@ def reload_revit_links_from_list(
             try:
                 new_link_path = get_link_path(link_type_name, link_locations, ".rvt")
                 if new_link_path != None:
-                    mp = ModelPathUtils.ConvertUserVisiblePathToModelPath(
-                        new_link_path
-                    )
+                    mp = ModelPathUtils.ConvertUserVisiblePathToModelPath(new_link_path)
                     # attempt to reload with worksets set to last viewed
                     # wc = WorksetConfiguration(WorksetConfigurationOption.OpenLastViewed)
                     # however that can be achieved also ... According to Autodesk:

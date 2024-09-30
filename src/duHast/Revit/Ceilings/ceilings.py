@@ -31,7 +31,9 @@ import System
 
 # import common library modules
 from duHast.Revit.Common.common import get_ids_from_element_collector
-from duHast.Revit.Family.family_utils import get_all_in_place_type_ids_in_model_of_category
+from duHast.Revit.Family.family_utils import (
+    get_all_in_place_type_ids_in_model_of_category,
+)
 
 from duHast.Revit.Ceilings.Utility import ceilings_filter as rCeilingsFilter
 

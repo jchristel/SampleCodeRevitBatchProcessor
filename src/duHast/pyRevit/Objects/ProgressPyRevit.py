@@ -32,8 +32,8 @@ A class used to wrap the pyRevit progress bar form into a call back function.
 
 from duHast.UI.Objects.ProgressBase import ProgressBase
 
+
 class ProgressPyRevit(ProgressBase):
-    
     def __init__(self, form):
         """
         Class constructor
@@ -42,7 +42,7 @@ class ProgressPyRevit(ProgressBase):
         """
 
         super(ProgressPyRevit, self).__init__(form=form)
-    
+
     def update(self, count, total, message=None):
         """
         Implementation to update the progress form.
@@ -55,7 +55,6 @@ class ProgressPyRevit(ProgressBase):
         """
 
         self.form.update_progress(count, total)
-    
 
     def is_cancelled(self):
         """

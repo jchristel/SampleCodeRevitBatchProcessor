@@ -57,7 +57,7 @@ class ProgressBase(base.Base):
         """
 
         self.form.update(count, total, message)
-    
+
     def is_cancelled(self):
         """
         Base implementation to check if the form has been cancelled.

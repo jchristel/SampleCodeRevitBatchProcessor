@@ -74,10 +74,10 @@ class RevitWarningsSolverRoomTagToRoom(base.Base):
 
         return_value = res.Result()
         if len(warnings) > 0:
-            
+
             # set up progress counter
             counter = 0
-            
+
             for warning in warnings:
                 # report progress to call back if required
                 if self.callback:
@@ -96,12 +96,15 @@ class RevitWarningsSolverRoomTagToRoom(base.Base):
                 counter = counter + 1
 
                 # check if cancelled
-                if(self.callback):
-                    if (self.callback.is_cancelled()):
+                if self.callback:
+                    if self.callback.is_cancelled():
                         return_value.append_message("User cancelled!")
                         break
         else:
             return_value.update_sep(
-                True, "{}: No warnings of type: room tag outside of room in model.".format(self.filter_name)
+                True,
+                "{}: No warnings of type: room tag outside of room in model.".format(
+                    self.filter_name
+                ),
             )
         return return_value

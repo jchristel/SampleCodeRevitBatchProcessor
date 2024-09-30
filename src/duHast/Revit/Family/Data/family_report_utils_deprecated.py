@@ -143,7 +143,9 @@ def _compare_family_dictionaries(previous_aggregated_data, new_aggregated_data):
                     "Substituting family data: {}".format(family_path)
                 )
             else:
-                return_value.append_message("Adding new family data: {}".format(family_path))
+                return_value.append_message(
+                    "Adding new family data: {}".format(family_path)
+                )
             previous_aggregated_data[family_path] = new_aggregated_data[family_path]
         return_value.result.append(previous_aggregated_data)
     return return_value
@@ -158,7 +160,7 @@ def _get_nested_families_belonging_to_root_families(root_family, nested_families
     :param nestedFamilies: A list of tuples of all nested families in a report
     :type nestedFamilies: [tuple of type 'nestedFamily']
 
-    :return: 
+    :return:
     :rtype: _type_
     """
 
@@ -168,10 +170,19 @@ def _get_nested_families_belonging_to_root_families(root_family, nested_families
             root_family.name == nested_family.rootPath[0]
             and root_family.category == nested_family.categoryPath[0]
         ):
-            nested_families_belonging_to_root_families.append(nested_families[nested_family][0])
+            nested_families_belonging_to_root_families.append(
+                nested_families[nested_family][0]
+            )
             print("nested family in list", nested_families[nested_family][0])
         else:
-            print("root family name: [{}] root family category: [{}] nested family root path: [{}] nested family category path: [{}]".format(root_family.name, root_family.category, nested_family.rootPath[0], nested_family.categoryPath[0]))
+            print(
+                "root family name: [{}] root family category: [{}] nested family root path: [{}] nested family category path: [{}]".format(
+                    root_family.name,
+                    root_family.category,
+                    nested_family.rootPath[0],
+                    nested_family.categoryPath[0],
+                )
+            )
     return nested_families_belonging_to_root_families
 
 
@@ -193,7 +204,9 @@ def _aggregate_family_data(root_families, nested_families):
     aggregated_family_data = {}
     for root_family in root_families:
         nested_families_of_root_family_row_data = (
-            _get_nested_families_belonging_to_root_families(root_family, nested_families)
+            _get_nested_families_belonging_to_root_families(
+                root_family, nested_families
+            )
         )
         # key is the unique family file path of the root family
         # value is a tuple of two lists : root  at index 0, nested fam at index 1
@@ -302,7 +315,7 @@ def combine_reports(previous_report_path, new_report_path):
     previous_aggregated_families = {}
     new_aggregated_families = {}
 
-    print( "reading previous")
+    print("reading previous")
     # previous report
     try:
         previous_root, previous_nested = read_overall_family_data_list(
@@ -325,8 +338,8 @@ def combine_reports(previous_report_path, new_report_path):
         # check whether empty file exception
         if str(e) != EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES:
             raise e
-        
-    print( "reading new")
+
+    print("reading new")
     # new report
     try:
         new_root, new_nested = read_overall_family_data_list(new_report_path)
@@ -346,7 +359,7 @@ def combine_reports(previous_report_path, new_report_path):
         if str(e) != EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES:
             raise e
 
-    print ("comparing")
+    print("comparing")
     # compare dictionaries: build unique list of families
     unique_family_data_status = _compare_family_dictionaries(
         previous_aggregated_families, new_aggregated_families
@@ -354,7 +367,7 @@ def combine_reports(previous_report_path, new_report_path):
     return_value.update(unique_family_data_status)
     unique_family_data = unique_family_data_status.result[0]
 
-    print( "checking")
+    print("checking")
     # check whether families still exist on file server
     remove_none_existing_families = _check_families_still_exist(unique_family_data)
     return_value.update(remove_none_existing_families)
@@ -364,8 +377,8 @@ def combine_reports(previous_report_path, new_report_path):
 
     # get report header row (there should be a previous report file...otherwise this will write an empty header row)
     header_row = fileCSV.get_first_row_in_csv_file(previous_report_path)
-    #header_row = header.split(",")
-    print( "building")
+    # header_row = header.split(",")
+    print("building")
     # build list of data rows
     rows_current = _get_data_rows_from_dictionary(unique_family_data)
     # sort rows by root ( first entry ) since other code (circ reference checker for instance) expects data sorted

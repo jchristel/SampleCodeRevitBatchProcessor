@@ -38,7 +38,15 @@ from duHast.Revit.Common.Objects.Data.line_cut import LineCut
 
 
 class ObjectStyle(base.Base):
-    def __init__(self, main_category_name="",sub_category_name="",category_id=-1, data_type="object_style", j=None, **kwargs):
+    def __init__(
+        self,
+        main_category_name="",
+        sub_category_name="",
+        category_id=-1,
+        data_type="object_style",
+        j=None,
+        **kwargs
+    ):
         """
         Class constructor.
 
@@ -54,7 +62,6 @@ class ObjectStyle(base.Base):
         self.material_id = -1
         self.line_projection = LineProjection()
         self.line_cut = LineCut()
-        
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -76,9 +83,7 @@ class ObjectStyle(base.Base):
                 self.sub_category_name = j["sub_category_name"]
                 self.category_id = j["category_id"]
                 self.material_id = j["material_id"]
-                self.line_projection = LineProjection(
-                    j=j[LineProjection.data_type]
-                )
+                self.line_projection = LineProjection(j=j[LineProjection.data_type])
                 self.line_cut = LineCut(j=j[LineCut.data_type])
             except Exception as e:
                 raise ValueError(
@@ -127,7 +132,7 @@ class ObjectStyle(base.Base):
     # python 2.7 needs custom implementation of not equal
     def __ne__(self, other):
         return not self.__eq__(other=other)
-    
+
     def __hash__(self):
         """
         Custom hash override
@@ -149,7 +154,7 @@ class ObjectStyle(base.Base):
                     self.data_type,
                     self.line_projection,
                     self.line_cut,
-                    self.material_id
+                    self.material_id,
                 )
             )
 
@@ -164,19 +169,13 @@ class ObjectStyle(base.Base):
         used_line_patterns = {}
 
         # from projection
-        if (
-            self.line_projection.line_pattern_settings.name
-            not in used_line_patterns
-        ):
+        if self.line_projection.line_pattern_settings.name not in used_line_patterns:
             used_line_patterns[
                 self.line_projection.line_pattern_settings.name
             ] = self.line_projection.line_pattern_settings
 
         # from cut
-        if (
-            self.line_cut.line_pattern_settings.name
-            not in used_line_patterns
-        ):
+        if self.line_cut.line_pattern_settings.name not in used_line_patterns:
             used_line_patterns[
                 self.line_cut.line_pattern_settings.name
             ] = self.line_cut.line_pattern_settings

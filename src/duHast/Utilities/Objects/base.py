@@ -90,6 +90,8 @@ Methods:
 Fields:
 - No specific fields are defined in the `Base` class.
 """
+
+
 class Base(object):
     def __init__(self, **kwargs):
         """
@@ -114,10 +116,9 @@ class Base(object):
             ", ".join("{}={!r}".format(k, v) for k, v in self.__dict__.items()),
         )
 
-
     def __eq__(self, other):
         """
-        Custom compare is equal override 
+        Custom compare is equal override
 
         :param other: Another instance of pattern class
         :type other: :class:`.PatternBase`
@@ -130,7 +131,7 @@ class Base(object):
     # python 2.7 needs custom implementation of not equal
     def __ne__(self, other):
         return not self.__eq__(other=other)
-    
+
     def __hash__(self):
         """
         Custom hash override
@@ -146,7 +147,6 @@ class Base(object):
                 )
             )
 
-
     def to_json(self):
         """
         Convert the instance of this class to json.
@@ -157,32 +157,33 @@ class Base(object):
 
         return json.dumps(self, indent=None, default=lambda o: o.__dict__)
 
-
     def string_to_utf(self, o):
-        '''
+        """
         Used to convert any properties stored as string to utf-8 in to json conversion of all class properties...
 
         :param o: _description_
         :type o: _type_
         :return: _description_
         :rtype: _type_
-        '''
+        """
 
         if isinstance(o, str):
-            return o.encode('utf-8').decode('utf-8')  # Encoding and decoding to ensure the type is str
+            return o.encode("utf-8").decode(
+                "utf-8"
+            )  # Encoding and decoding to ensure the type is str
         return o.__dict__
 
     def to_json_utf(self):
-        '''
+        """
         Convert the instance of this class to json, any string properties are converted to utf-8
 
         :return: A Json object.
         :rtype: json
-        '''
+        """
 
-        return json.dumps(self, indent=None, default=self.string_to_utf, ensure_ascii=False)
-
-
+        return json.dumps(
+            self, indent=None, default=self.string_to_utf, ensure_ascii=False
+        )
 
     def _is_primitive(self, obj):
         """

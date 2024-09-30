@@ -84,7 +84,6 @@ class IFamilyDataStorage(base.Base):
         else:
             raise ValueError("family_file_path must be a string")
 
-
     def __eq__(self, other):
         """
         Custom compare is equal override.
@@ -112,7 +111,7 @@ class IFamilyDataStorage(base.Base):
     # python 2.7 needs custom implementation of not equal
     def __ne__(self, other):
         return not self.__eq__(other=other)
-    
+
     def update_usage(self, other_storage):
         """
         Update the usage of this storage object with the usage of another storage object by:
@@ -203,7 +202,7 @@ class IFamilyDataStorage(base.Base):
                     and isinstance(value_updated, list) == False
                 ):
                     value_updated = str(value_updated)
-                    
+
             data_list.append(value_updated)
         return data_list
 

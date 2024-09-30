@@ -33,7 +33,10 @@ Revit purging not used line pattern styles using purge by delete helper function
 from duHast.Revit.LinePattern.line_patterns import get_all_line_patterns
 from duHast.Revit.Common.common import get_ids_from_element_collector
 from duHast.Revit.Purge.purge_unused_by_delete import purge_unused_elements
-from duHast.Revit.Categories.categories_styles_model import get_category_styles, get_all_used_line_patterns_ids_from_categories
+from duHast.Revit.Categories.categories_styles_model import (
+    get_category_styles,
+    get_all_used_line_patterns_ids_from_categories,
+)
 
 from duHast.Utilities.Objects.result import Result
 
@@ -54,11 +57,13 @@ def get_line_pattern_ids(doc):
     # do some pre -purge filtering
     # remove all line patterns that are used in categories
     categories_result = get_category_styles(doc)
-    if (categories_result.status):
+    if categories_result.status:
         category_styles = categories_result.result
 
         # get line patterns used in categories
-        used_line_pattern_ids = get_all_used_line_patterns_ids_from_categories(category_styles)
+        used_line_pattern_ids = get_all_used_line_patterns_ids_from_categories(
+            category_styles
+        )
 
         # remove used line patterns
         ids = [x for x in ids if x.IntegerValue not in used_line_pattern_ids]

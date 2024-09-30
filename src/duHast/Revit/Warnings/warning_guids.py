@@ -57,28 +57,28 @@ DUPLICATE_MARK_VALUE = "6e1efefe-c8e0-483d-8482-150b9f1da21a"
 ELEMENTS_OWNED_BY_OTHER = "3b7fcaec-c01e-4c2e-819f-67ddd102ce1f"
 
 # Elements have duplicate "Number" values.
-ELEMENTS_DUPLICATE_NUMBER_VALUES="6e1efefe-c8e0-483d-8482-150b9f1da21a"
+ELEMENTS_DUPLICATE_NUMBER_VALUES = "6e1efefe-c8e0-483d-8482-150b9f1da21a"
 
 # There are identical instances in the same place. This will result in double counting in schedules. You can tab-select one of the overlapping elements to exclude it from the group instance.
-IDENTICAL_INSTANCES_IN_SAME_PLACE="b4176cef-6086-45a8-a066-c3fd424c9412"
+IDENTICAL_INSTANCES_IN_SAME_PLACE = "b4176cef-6086-45a8-a066-c3fd424c9412"
 
 # Highlighted lines overlap. Lines may not form closed loops. You can tab-select one of the overlapping elements to exclude it from the group instance.
-LINES_OVERLAP="6891f0e6-5858-4e2f-bb34-801e0b87f60d"
+LINES_OVERLAP = "6891f0e6-5858-4e2f-bb34-801e0b87f60d"
 
 # Line in Sketch is slightly off axis and may cause inaccuracies.
-LINE_IN_SKETCH_OFF_AXIS="ec905b6a-064b-48e1-a6c7-51e2cf092490"
+LINE_IN_SKETCH_OFF_AXIS = "ec905b6a-064b-48e1-a6c7-51e2cf092490"
 
 # Line in Massing Sketch is slightly off axis and may cause inaccuracies.
-LINE_IN_MASSING_SKETCH_OFF_AXIS="e4b4847a-1cbc-4283-854e-85431403a2a0"
+LINE_IN_MASSING_SKETCH_OFF_AXIS = "e4b4847a-1cbc-4283-854e-85431403a2a0"
 
 # Line is slightly off axis and may cause inaccuracies.
 LINE_OFF_AXIS = "7b8f75b6-a3f2-48a4-8b5d-d767c9a20b32"
 
 # Wall is slightly off axis and may cause inaccuracies.
-WALL_OFF_AXIS="fb1d4583-6b62-4ccb-9cb8-7c2e849b4d43"
+WALL_OFF_AXIS = "fb1d4583-6b62-4ccb-9cb8-7c2e849b4d43"
 
 # Ref Plane is slightly off axis and may cause inaccuracies.
-REF_PLANE_OFF_AXIS="ce961443-d03b-4cda-94c9-6b9beab9d2a6"
+REF_PLANE_OFF_AXIS = "ce961443-d03b-4cda-94c9-6b9beab9d2a6"
 
 # Curve-Based Family is slightly off axis and may cause inaccuracies.
-FAMILY_CURVE_BASED_OFF_AXIS ="e9b42850-030f-4909-990b-cf7cddf165a6"
+FAMILY_CURVE_BASED_OFF_AXIS = "e9b42850-030f-4909-990b-cf7cddf165a6"

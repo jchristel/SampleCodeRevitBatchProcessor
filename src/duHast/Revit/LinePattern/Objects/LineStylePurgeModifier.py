@@ -36,15 +36,21 @@ after the elements are deleted from the model but a reference is required of the
 #
 
 import System
-from System.Collections.Generic import List #required since we are dealing with a c# List element
+from System.Collections.Generic import (
+    List,
+)  # required since we are dealing with a c# List element
 
 from duHast.Revit.Purge.Objects.ModifierBase import ModifierBase
-from duHast.Revit.LinePattern.line_styles import get_all_graphics_style_ids_by_line_style_id 
+from duHast.Revit.LinePattern.line_styles import (
+    get_all_graphics_style_ids_by_line_style_id,
+)
 
 # required for isInstance check
 from Autodesk.Revit.DB import (
     ElementId,
 )
+
+
 class LineStylePurgeModifier(ModifierBase):
     def __init__(self, doc):
         """
@@ -55,7 +61,9 @@ class LineStylePurgeModifier(ModifierBase):
         super(ModifierBase, self).__init__()
 
         # get dictionary of line styles
-        self.graphic_style_id_by_line_style_id = get_all_graphics_style_ids_by_line_style_id(doc)
+        self.graphic_style_id_by_line_style_id = (
+            get_all_graphics_style_ids_by_line_style_id(doc)
+        )
         self.debug_log = []
 
     def modify_deleted(self, doc, deleted):
@@ -77,27 +85,54 @@ class LineStylePurgeModifier(ModifierBase):
         """
 
         if isinstance(deleted, List[ElementId]) == False:
-            self.debug_log.append("deleted is not a List[ElementId]: {}".format(deleted))
+            self.debug_log.append(
+                "deleted is not a List[ElementId]: {}".format(deleted)
+            )
             raise TypeError("deleted must be a List[ElementId]:".format(deleted))
 
         # should be exactly two ids
-        if (len(deleted) != 2):
+        if len(deleted) != 2:
             self.debug_log.append("deleted count is not 2: {}".format(deleted))
             return deleted
-        
+
         # sort ids ascending
         # first id should be the line style and second (higher value) the graphics style
         sorted_ids = sorted(deleted, key=lambda x: x.IntegerValue)
-        if(sorted_ids[0].IntegerValue in self.graphic_style_id_by_line_style_id):
-            self.debug_log.append("sorted_id: {} is in dictionary: {}".format(sorted_ids[0], self.graphic_style_id_by_line_style_id ))
-            if(sorted_ids[1].IntegerValue == self.graphic_style_id_by_line_style_id [sorted_ids[0].IntegerValue]):
-                self.debug_log.append("sorted_id: {} is equal to dictionary value: {}".format(sorted_ids[1], self.graphic_style_id_by_line_style_id[sorted_ids[0].IntegerValue] ))
+        if sorted_ids[0].IntegerValue in self.graphic_style_id_by_line_style_id:
+            self.debug_log.append(
+                "sorted_id: {} is in dictionary: {}".format(
+                    sorted_ids[0], self.graphic_style_id_by_line_style_id
+                )
+            )
+            if (
+                sorted_ids[1].IntegerValue
+                == self.graphic_style_id_by_line_style_id[sorted_ids[0].IntegerValue]
+            ):
+                self.debug_log.append(
+                    "sorted_id: {} is equal to dictionary value: {}".format(
+                        sorted_ids[1],
+                        self.graphic_style_id_by_line_style_id[
+                            sorted_ids[0].IntegerValue
+                        ],
+                    )
+                )
                 # adjusted the deleted id value to 1
                 return [sorted_ids[0]]
             else:
-                self.debug_log.append("sorted_id: {} is not equal to dictionary value: {}".format(sorted_ids[1], self.graphic_style_id_by_line_style_id[sorted_ids[0].IntegerValue] ))
+                self.debug_log.append(
+                    "sorted_id: {} is not equal to dictionary value: {}".format(
+                        sorted_ids[1],
+                        self.graphic_style_id_by_line_style_id[
+                            sorted_ids[0].IntegerValue
+                        ],
+                    )
+                )
                 return deleted
         # leave the deleted id count value as is
-        else:  
-            self.debug_log.append("sorted_id: {} is not in dictionary: {}".format(sorted_ids[0], self.graphic_style_id_by_line_style_id ))
+        else:
+            self.debug_log.append(
+                "sorted_id: {} is not in dictionary: {}".format(
+                    sorted_ids[0], self.graphic_style_id_by_line_style_id
+                )
+            )
         return deleted

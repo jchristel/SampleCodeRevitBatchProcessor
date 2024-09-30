@@ -34,7 +34,7 @@ from duHast.Utilities.Objects import result as res
 def move_tag_to_room(doc, tag_id, transaction_manager=in_transaction):
     """
     Moves a room tag to the associated rooms location point. This will
-    
+
     - un-pin the tag
     - disable any leader
 
@@ -53,7 +53,7 @@ def move_tag_to_room(doc, tag_id, transaction_manager=in_transaction):
 
         - result.status (bool) will be False.
         - result.message will contain the name and number of the room and the exception message.
-        
+
     :rtype: :class:`.Result`
     """
 
@@ -71,10 +71,10 @@ def move_tag_to_room(doc, tag_id, transaction_manager=in_transaction):
             if rt.Pinned:
                 rt.Pinned = False
 
-            # disable leader if there is one 
+            # disable leader if there is one
             if rt.HasLeader:
                 rt.HasLeader = False
-            
+
             # and move the tag
             rt.Location.Move(translation)
             action_return_value.message = "Moved tag to room: {}".format(room_data)

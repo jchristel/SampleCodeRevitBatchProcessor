@@ -48,7 +48,7 @@ def purge_line_styles_by_delete(doc, progress_callback=None, debug=False):
     - a custom element deleted modifier is used to check if the deleted element count is 2 and if the second deleted element is the associated graphics style.
     - if that is the case and no modified elements are listed, the deleted element count is reduced to 1 and the line style is considered as deleted.
 
-    
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param progress_callback: Callback to report progress.
@@ -72,12 +72,12 @@ def purge_line_styles_by_delete(doc, progress_callback=None, debug=False):
         purge_result = purge_unused_elements(
             doc=doc,
             element_id_getter=get_all_line_style_ids,
-            deleted_elements_modifier=mod_delete, # reduces the count of deleted elements to the line style only by removing the associated graphics style
+            deleted_elements_modifier=mod_delete,  # reduces the count of deleted elements to the line style only by removing the associated graphics style
             modified_elements_modifier=None,
             progress_callback=progress_callback,
             debug=debug,
         )
-        
+
         # get the debug log if debug mode is enabled
         if debug:
             return_value.append_message("\n".join(mod_delete.debug_log))

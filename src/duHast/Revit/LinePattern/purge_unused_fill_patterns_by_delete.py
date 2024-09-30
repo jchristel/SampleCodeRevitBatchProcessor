@@ -30,7 +30,10 @@ Revit purging not used fill pattern styles using purge by delete helper function
 #
 #
 
-from duHast.Revit.LinePattern.fill_patterns import get_all_fill_pattern, get_used_pattern_ids_in_filled_region_types
+from duHast.Revit.LinePattern.fill_patterns import (
+    get_all_fill_pattern,
+    get_used_pattern_ids_in_filled_region_types,
+)
 from duHast.Revit.Common.common import get_ids_from_element_collector
 from duHast.Revit.Purge.purge_unused_by_delete import purge_unused_elements
 
@@ -57,6 +60,7 @@ def get_fill_pattern_ids(doc):
     ids = [id for id in ids if id not in used_pattern_ids]
 
     return ids
+
 
 def purge_fill_pattern_by_delete(doc, progress_callback=None, debug=False):
     """

@@ -6,6 +6,7 @@ Revit grids appearance modifier functions.
 Note: Any grid appearance modification in a view will throw an exception if the grid is not actually visible in the view.
 
 """
+
 #
 # License:
 #
@@ -69,12 +70,8 @@ def change_grids_2D(doc, grids, view):
         for g in grids:
             grid_counter = grid_counter + 1
             try:
-                g.SetDatumExtentType(
-                    DatumEnds.End1, view, DatumExtentType.ViewSpecific
-                )
-                g.SetDatumExtentType(
-                    DatumEnds.End0, view, DatumExtentType.ViewSpecific
-                )
+                g.SetDatumExtentType(DatumEnds.End1, view, DatumExtentType.ViewSpecific)
+                g.SetDatumExtentType(DatumEnds.End0, view, DatumExtentType.ViewSpecific)
                 action_return_value.update_sep(
                     True, "Changed grid {} to 2D.".format(g.Name)
                 )
@@ -397,7 +394,7 @@ def toggle_bubble_zero_end(doc, grids, view):
         - `result.status` (bool) will be False.
         - `result.message` (str) will contain a generic exception message including the grid name.
         - `result.result` (list) will be empty.
-        
+
     :rtype: :class:`.Result`
     """
 

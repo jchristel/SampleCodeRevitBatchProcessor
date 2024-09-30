@@ -269,7 +269,12 @@ def set_location_reference_type_name(doc, wall_instance, reference_type_name):
     return_value = res.Result()
 
     if reference_type_name not in reference_types_by_name:
-        return_value.update_sep(False, "Invalid reference type name. Expect:\n{}".format("\n".join(reference_types_by_name.keys())))
+        return_value.update_sep(
+            False,
+            "Invalid reference type name. Expect:\n{}".format(
+                "\n".join(reference_types_by_name.keys())
+            ),
+        )
         return return_value
 
     result_change_loc_line = set_built_in_parameter_value(

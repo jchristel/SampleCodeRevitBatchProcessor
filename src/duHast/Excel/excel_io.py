@@ -35,7 +35,11 @@ import Microsoft.Office.Interop.Excel as Excel
 import os
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Utilities.files_io import get_directory_path_from_file_path, file_delete, get_file_name_without_ext
+from duHast.Utilities.files_io import (
+    get_directory_path_from_file_path,
+    file_delete,
+    get_file_name_without_ext,
+)
 from duHast.Utilities.files_csv import read_csv_file
 
 
@@ -283,7 +287,7 @@ def read_excel_file_fast(file_path, excel_tab_name=None):
 def save_csv_as_excel(file_path):
     """
     Convertes as csv to .xslx in the same directory.
-    
+
     :param file_path: The path to the csv file.
     :type file_path: str
 
@@ -315,24 +319,28 @@ def save_csv_as_excel(file_path):
             0,  # converter (0 = don't convert, 1 = convert)
             False,  # add to MRU (False = don't add, True = add)
             True,  # local (False = don't local, True = local)
-            False  # corrupt load (False = don't load, True = load)
+            False,  # corrupt load (False = don't load, True = load)
         )
         # build new file name:
         output_dir = get_directory_path_from_file_path(file_path)
         file_name_part = get_file_name_without_ext(file_path=file_path)
-        file_name_new = os.path.join(output_dir, file_name_part+".xlsx")
+        file_name_new = os.path.join(output_dir, file_name_part + ".xlsx")
 
         # save:
         save_status = wb.SaveAs(file_name_new, Excel.XlFileFormat.xlWorkbookDefault)
-        
+
         # save the file
         wb.Close(False)
 
     except Exception as e:
-        return_value.update_sep(False, "Failed to save csv with exception: {}".format(e))
-    
+        return_value.update_sep(
+            False, "Failed to save csv with exception: {}".format(e)
+        )
+
     if excel is not None:
         excel.Quit()
 
-    return_value.update_sep(True, "Successfully saved Excel file: {}.".format(file_name_new))
+    return_value.update_sep(
+        True, "Successfully saved Excel file: {}.".format(file_name_new)
+    )
     return return_value

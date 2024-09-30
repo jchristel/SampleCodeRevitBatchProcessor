@@ -34,7 +34,9 @@ from duHast.Utilities.Objects import result as res
 # import Autodesk
 from Autodesk.Revit.DB import Element, FamilySymbol, FilteredElementCollector
 from duHast.Utilities.Objects import base
-from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    NESTING_SEPARATOR,
+)
 
 
 class RevitFamilyDataCollector(base.Base):
@@ -127,8 +129,8 @@ class RevitFamilyDataCollector(base.Base):
                             # go recursive
                             dive_result = self._dive(
                                 family_doc,
-                                root_name +  NESTING_SEPARATOR + fam_name,
-                                root_category +  NESTING_SEPARATOR + fam_category_name,
+                                root_name + NESTING_SEPARATOR + fam_name,
+                                root_category + NESTING_SEPARATOR + fam_category_name,
                             )
                             return_value.update(dive_result)
                     except Exception as e:
@@ -199,7 +201,8 @@ class RevitFamilyDataCollector(base.Base):
                 return_value.update_sep(
                     False,
                     "PreProcessor [{}] of family: {} [EXCEPTION] {}".format(
-                    pro.data_type,doc.Title,e)
+                        pro.data_type, doc.Title, e
+                    ),
                 )
 
         # loop over fam processor instances and process family with each of them

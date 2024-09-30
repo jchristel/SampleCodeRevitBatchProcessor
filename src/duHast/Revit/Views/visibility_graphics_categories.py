@@ -122,7 +122,7 @@ def get_category_overrides_from_view(view, category_storage_instances):
             view, category_storage_instance
         )
         updated_category_storage_instances.append(updated_category_instance)
-    
+
     return updated_category_storage_instances
 
 

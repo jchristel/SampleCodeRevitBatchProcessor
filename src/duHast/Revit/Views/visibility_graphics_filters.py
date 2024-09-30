@@ -118,7 +118,9 @@ def get_filter_overrides_from_view(view, filter_storage_instances):
     return updated_filter_storage_instances
 
 
-def apply_filter_override_to_view(doc, view, filter_storage_instances, add_filter_if_not_present = True):
+def apply_filter_override_to_view(
+    doc, view, filter_storage_instances, add_filter_if_not_present=True
+):
     """
     Applies filter override(s) to a single view
 
@@ -152,19 +154,23 @@ def apply_filter_override_to_view(doc, view, filter_storage_instances, add_filte
             action_return_value = res.Result()
             try:
                 # check if filter is present
-                if (is_filter_applied_to_view(view=view, filter=filter_storage_instance.filter) == False):
+                if (
+                    is_filter_applied_to_view(
+                        view=view, filter=filter_storage_instance.filter
+                    )
+                    == False
+                ):
                     # do we need to add it? ( if yes the below code will do that automatically)
-                    if(add_filter_if_not_present == False):
+                    if add_filter_if_not_present == False:
                         # nothing to do ... move on
                         action_return_value.update_sep(
                             True,
                             "Filter {} is not applied to view {}. Skipping".format(
-                                filter_storage_instance.filter_name,
-                                view.Name
+                                filter_storage_instance.filter_name, view.Name
                             ),
                         )
                         return action_return_value
-                
+
                 # this appears to add the filter if not present...
                 view.SetFilterOverrides(
                     filter_storage_instance.filter_id,

@@ -46,7 +46,7 @@ def get_shared_parameter_ids(doc):
     """
 
     shared_col = get_all_shared_parameters(doc)
-    
+
     parameter_with_bindings = []
     # get all parameter binding in a project and exclude those from the list
     # to speed things up a little
@@ -55,13 +55,14 @@ def get_shared_parameter_ids(doc):
     while iter.MoveNext():
         definition = iter.Key
         parameter_with_bindings.append(definition.Id)
-    
+
     # get the ids of collector
     ids = get_ids_from_element_collector(shared_col)
     # remove all shared parameters which are bound to a category
     ids = [i for i in ids if i not in parameter_with_bindings]
 
     return ids
+
 
 def purge_shared_parameters_by_delete(doc, progress_callback=None, debug=False):
     """
@@ -76,11 +77,11 @@ def purge_shared_parameters_by_delete(doc, progress_callback=None, debug=False):
     - any shared parameter which is bound to a category in a Revit model (but not used in a family etc) will report 2 elements as deleted:
         - the shared parameter itself
         - the binding (type or instance) to a category
-    
-    - any shared parameter which is not bound to a category in a Revit model, but used in a family etc will report 
+
+    - any shared parameter which is not bound to a category in a Revit model, but used in a family etc will report
         - 1 element as deleted
             - the shared parameter itself
-        - multiple changed elements: 
+        - multiple changed elements:
             - the families (and any of its instances placed) the shared parameter is used in
 
     :param doc: Current Revit model document.

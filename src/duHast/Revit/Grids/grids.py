@@ -153,9 +153,13 @@ def get_linear_grids_in_model_by_view(doc, view):
     """
 
     # do some type checking
-    if(isinstance(view, View)==False):
-        raise TypeError("view needs to be of type Autodesk.Revit.DB.View. Got {} instead.".format(type(view)))
-    
+    if isinstance(view, View) == False:
+        raise TypeError(
+            "view needs to be of type Autodesk.Revit.DB.View. Got {} instead.".format(
+                type(view)
+            )
+        )
+
     # get all grids in view
     grids = get_grids_in_view(doc, view).ToElements()
     # get all multi segment grids in view

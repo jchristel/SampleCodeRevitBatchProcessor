@@ -42,11 +42,10 @@ def process_data(family_base_data_report_file_path, do_this):
     # do_this: function taking two args: list of family_data_family and result list
     # returns two lists: 0: family read result, 1: a list of processed family_data_family
 
-    
     return_value = res.Result()
     # results will be stored in here:
     processing_result = []
-    
+
     try:
         # read families into data
         read_result = read_data_into_families(family_base_data_report_file_path)
@@ -87,15 +86,19 @@ def process_data(family_base_data_report_file_path, do_this):
             end_value = start_value + chunk_size
             # set up threads
             for i in range(core_count):
-                if start_value + chunk_size <= len(read_result.result)-1:
+                if start_value + chunk_size <= len(read_result.result) - 1:
                     end_value = start_value + chunk_size
                 else:
                     end_value = len(read_result.result)
-                return_value.append_message("......assigning chunk {} : {} of {}".format(start_value, end_value, len(read_result.result)))
+                return_value.append_message(
+                    "......assigning chunk {} : {} of {}".format(
+                        start_value, end_value, len(read_result.result)
+                    )
+                )
                 t = threading.Thread(
                     target=do_this,
                     args=(
-                        read_result.result[start_value : end_value],
+                        read_result.result[start_value:end_value],
                         processing_result,
                     ),
                 )
@@ -114,7 +117,9 @@ def process_data(family_base_data_report_file_path, do_this):
             # no threading
             processing_result = do_this(read_result.result, processing_result)
     except Exception as e:
-        return_value.update_sep(False, "Failed to read and process families with exception: {}".format(e))
+        return_value.update_sep(
+            False, "Failed to read and process families with exception: {}".format(e)
+        )
 
-    return_value.result=processing_result
+    return_value.result = processing_result
     return return_value

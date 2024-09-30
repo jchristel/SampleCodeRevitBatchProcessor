@@ -19,8 +19,8 @@ This module contains a number of helper functions relating to purging Revit wall
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -28,12 +28,12 @@ This module contains a number of helper functions relating to purging Revit wall
 
 
 # required for .ToList() call
-#import clr
+# import clr
 
-#clr.AddReference("System.Core")
-#from System import Linq
+# clr.AddReference("System.Core")
+# from System import Linq
 
-#clr.ImportExtensions(Linq)
+# clr.ImportExtensions(Linq)
 
 from duHast.Revit.Common.purge_utils import get_used_unused_type_ids
 
@@ -41,7 +41,9 @@ from duHast.Revit.Walls.walls import (
     get_all_in_place_wall_type_ids,
     get_all_basic_wall_type_ids,
 )
-from duHast.Revit.Family.purge_unused_family_types import get_unused_in_place_ids_for_purge
+from duHast.Revit.Family.purge_unused_family_types import (
+    get_unused_in_place_ids_for_purge,
+)
 from duHast.Revit.Walls.curtain_walls import get_all_curtain_wall_type_ids
 from duHast.Revit.Walls.stacked_walls import get_all_stacked_wall_type_ids
 
@@ -180,9 +182,7 @@ def get_unused_in_place_wall_ids_for_purge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
-    ids = get_unused_in_place_ids_for_purge(
-        doc, get_unused_in_place_wall_type_ids
-    )
+    ids = get_unused_in_place_ids_for_purge(doc, get_unused_in_place_wall_type_ids)
     return ids
 
 

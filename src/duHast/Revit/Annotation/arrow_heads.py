@@ -19,8 +19,8 @@ A number of functions around Revit Arrow heads.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -30,9 +30,17 @@ A number of functions around Revit Arrow heads.
 # --------------------------------------------- Arrow heads  ------------------
 
 #: list of built in parameters attached to dimensions containing arrow head ids
-from Autodesk.Revit.DB import BuiltInParameter, ElementType, ElementId, FilteredElementCollector
+from Autodesk.Revit.DB import (
+    BuiltInParameter,
+    ElementType,
+    ElementId,
+    FilteredElementCollector,
+)
 
-from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value, get_parameter_value_as_element_id
+from duHast.Revit.Common.parameter_get_utils import (
+    get_built_in_parameter_value,
+    get_parameter_value_as_element_id,
+)
 
 #:  list of built in parameters attached to
 #:
@@ -83,12 +91,10 @@ def get_arrow_head_ids_from_type(doc, type_getter, parameter_list):
     types = type_getter(doc)
     for t in types:
         for p_int in parameter_list:
-            id = get_built_in_parameter_value(t, p_int, get_parameter_value_as_element_id)
-            if (
-                id not in used_ids
-                and id != ElementId.InvalidElementId
-                and id != None
-            ):
+            id = get_built_in_parameter_value(
+                t, p_int, get_parameter_value_as_element_id
+            )
+            if id not in used_ids and id != ElementId.InvalidElementId and id != None:
                 used_ids.append(id)
             break
     return used_ids

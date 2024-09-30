@@ -87,7 +87,7 @@ def get_storage_data(family_data):
 
     :param family_data: List of family instances.
     :type family_data: [:class:`.FamilyDataFamily`]
-    
+
     :return: A dictionary where the key is the storage data type, and value is a nested list of lists of strings representing the storage data.
     :rtype: {str:[[str]]}
     """
@@ -102,8 +102,9 @@ def get_storage_data(family_data):
             if key in return_value:
                 return_value[key].extend(item)
             else:
-                return_value[key]= item
+                return_value[key] = item
     return return_value
+
 
 def get_storage_headers(family_data):
     """
@@ -138,15 +139,15 @@ def write_data_from_families_to_files(family_data, directory_path):
     :raises ValueError: Directory: xyz does not exist.
     :raises ValueError: Failed to get any storage data from family data past in.
 
-    :return: 
+    :return:
         Result class instance.
 
         - result.status: Write report files status returned in result.status. False if an exception occurred, otherwise True.
         - result.message: Will contain the fully qualified file path of each of report files written.
         - result.result: Will be a fully qualified file path of each file written.
-        
+
         On exception
-        
+
         - Reload.status (bool) will be False
         - Reload.message will contain the exception message
 
@@ -175,7 +176,7 @@ def write_data_from_families_to_files(family_data, directory_path):
             raise ValueError("Directory: {} does not exist.".format(directory_path))
 
         # get storage data
-        storage_data_dic = get_storage_data(family_data= family_data)
+        storage_data_dic = get_storage_data(family_data=family_data)
 
         # get storage file headers
         storage_headers_dic = get_storage_headers(family_data=family_data)
@@ -200,10 +201,19 @@ def write_data_from_families_to_files(family_data, directory_path):
                     write_report_data_as_csv(
                         file_name=full_file_name, header=header_data, data=item
                     )
-                    return_value.append_message("Successfully wrote data type: {} report to: {}".format(key, full_file_name))
+                    return_value.append_message(
+                        "Successfully wrote data type: {} report to: {}".format(
+                            key, full_file_name
+                        )
+                    )
                     return_value.result.append(full_file_name)
                 except Exception as e:
-                    return_value.update_sep(False, "Failed to write report for data type: {} to file: {}".format(key, full_file_name))
+                    return_value.update_sep(
+                        False,
+                        "Failed to write report for data type: {} to file: {}".format(
+                            key, full_file_name
+                        ),
+                    )
             else:
                 return_value.update_sep(
                     False, "Data type: {} has no report file name assigned".format(key)

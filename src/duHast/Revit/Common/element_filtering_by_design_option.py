@@ -64,9 +64,13 @@ def filter_elements_by_design_option_id(
         raise TypeError(
             "doc needs to be of type Document. But got : {}".format(type(doc))
         )
-    if not isinstance(elements, list) and not isinstance(elements, FilteredElementCollector):
+    if not isinstance(elements, list) and not isinstance(
+        elements, FilteredElementCollector
+    ):
         raise TypeError(
-            "elements needs to be of type list or FilteredElementCollector. But got : {}".format(type(elements))
+            "elements needs to be of type list or FilteredElementCollector. But got : {}".format(
+                type(elements)
+            )
         )
     if not isinstance(design_option_id, ElementId) and design_option_id != None:
         raise TypeError(
@@ -188,7 +192,9 @@ def filter_elements_by_design_option_id(
                     elements_filtered.append(element_instance)
         except Exception as e:
             raise ValueError(
-                "Error while filtering elements by design option id. Error: {}".format(e)
+                "Error while filtering elements by design option id. Error: {}".format(
+                    e
+                )
             )
 
     # return filtered set

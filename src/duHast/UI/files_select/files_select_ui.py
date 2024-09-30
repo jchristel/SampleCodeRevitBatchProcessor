@@ -13,7 +13,7 @@ from System.Windows import Application
 ROOT_REPO_DIRECTORY = os.path.join(
     os.path.realpath(__file__), os.pardir, os.pardir, os.pardir, os.pardir
 )
-sys.path.insert(0,ROOT_REPO_DIRECTORY)
+sys.path.insert(0, ROOT_REPO_DIRECTORY)
 
 
 # import UI helper
@@ -59,14 +59,14 @@ def main(argv):
             get_data = fl.bucket_to_task_list_bim_360
         else:
             get_data = fl.bucket_to_task_list_file_system
-        
+
         # check if anything came back
         if len(revit_files) > 0:
             # load xaml
             xaml = XamlLoader(XAML_FULL_FILE_NAME)
             # forms window
             window = xaml.Root
-            
+
             # view model initialise
             view_model = ViewModel(
                 window,
@@ -80,12 +80,12 @@ def main(argv):
             )
             # assign view model to xaml
             xaml.Root.DataContext = view_model
-            
+
             # show application
             Application().Run(xaml.Root)
-            
+
             # debugging
-            '''
+            """
             print("Destination Path {}".format(xaml.Root.DataContext.destination_path))
             print("Source Path {}".format(xaml.Root.DataContext.source_path))
             print(
@@ -103,8 +103,8 @@ def main(argv):
             for frf in view_model.filtered_revit_files:
                 print("filtered files: {}".format(frf.name))
             print("debug {}".format("\n".join(view_model.debug)))
-            '''
-            
+            """
+
             # get the dialog result (ok vs cancel buttons)
             ui_result = view_model.DialogResult
             if ui_result:
@@ -165,7 +165,15 @@ def process_args(argv):
         opts, args = getopt.getopt(
             argv,
             "hsxi:o:n:e:f:",
-            ["subDir", "TextFilterIsOR", "inputDirectory=", "outputDirectory=", "numberOfOutputFiles=", "fileExtension=", "filterText="],
+            [
+                "subDir",
+                "TextFilterIsOR",
+                "inputDirectory=",
+                "outputDirectory=",
+                "numberOfOutputFiles=",
+                "fileExtension=",
+                "filterText=",
+            ],
         )
     except getopt.GetoptError as e:
         output_with_time_stamp(
@@ -173,12 +181,12 @@ def process_args(argv):
                 e
             )
         )
-        
+
     # set a default value (True) for the filter type
     filter_is_and = True
     # set default value for text filters
     filter_rules = []
-    
+
     # check what args have been provided
     for opt, arg in opts:
         if opt == "-h":
@@ -216,7 +224,7 @@ def process_args(argv):
         output_with_time_stamp(
             "The number of output files must be bigger then 0 and smaller then 100"
         )
-    
+
     # need to check if path provided is a directory or a file path
     if os.path.isdir(input_dir_file):
         if not directory_exists(input_dir_file):
@@ -224,18 +232,14 @@ def process_args(argv):
             output_with_time_stamp(
                 "Invalid input directory or file path: {}".format(input_dir_file)
             )
-    elif(os.path.isfile(input_dir_file)):
+    elif os.path.isfile(input_dir_file):
         if not file_exist(input_dir_file):
             got_args = False
-            output_with_time_stamp(
-                "Invalid input file path: {}".format(input_dir_file)
-            )
+            output_with_time_stamp("Invalid input file path: {}".format(input_dir_file))
     else:
         got_args = False
-        output_with_time_stamp(
-                "Invalid input path: {}".format(input_dir_file)
-            )
-    
+        output_with_time_stamp("Invalid input path: {}".format(input_dir_file))
+
     # check output directory
     if not directory_exists(output_directory):
         got_args = False
@@ -250,7 +254,7 @@ def process_args(argv):
                 revit_file_extension
             )
         )
-    
+
     return got_args, FileSelectionSettings(
         input_dir_file,
         include_sub_dirs_in_search,
@@ -258,7 +262,7 @@ def process_args(argv):
         output_file_number,
         revit_file_extension,
         filter_rules,
-        filter_is_and
+        filter_is_and,
     )
 
 

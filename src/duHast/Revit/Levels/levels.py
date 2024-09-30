@@ -79,6 +79,7 @@ def get_levels_in_view(doc, view):
     collector = FilteredElementCollector(doc, view.Id).OfClass(Level)
     return collector
 
+
 # --------------------------------------------- utility functions ------------------
 
 

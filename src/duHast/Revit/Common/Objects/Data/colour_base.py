@@ -98,7 +98,7 @@ class ColourBase(base.Base):
     # python 2.7 needs custom implementation of not equal
     def __ne__(self, other):
         return not self.__eq__(other=other)
-    
+
     def __hash__(self):
         """
         Custom hash override

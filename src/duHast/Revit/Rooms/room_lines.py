@@ -31,6 +31,7 @@ from Autodesk.Revit.DB import BuiltInCategory, ElementId, FilteredElementCollect
 
 from duHast.Revit.Common.phases import get_all_phases_in_order
 
+
 def get_room_separation_lines(doc):
     """
     Get all room separation lines in the document.

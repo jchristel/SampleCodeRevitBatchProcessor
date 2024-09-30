@@ -374,7 +374,7 @@ def _intersect_ceiling_vs_room(
         # populate values if ceiling object is found
         if data_object_ceiling:
             ceiling_id = data_object_ceiling.instance_properties.id
-        
+
         return_value.append_message(
             "Exception: {} \noffending room: room name: {} , room number: {} , room id: {} , \n...is valid polygon: {}\n...is empty polygon: {}\noffending ceiling id: {} , \n...is valid polygon: {}\n...is empty polygon: {}".format(
                 e,
@@ -388,7 +388,7 @@ def _intersect_ceiling_vs_room(
                 ceiling_polygon.is_empty,
             )
         )
-        
+
     return return_value
 
 

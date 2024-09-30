@@ -40,6 +40,7 @@ from duHast.Utilities.Objects import base
 class PatternSettingBase(base.Base):
     NO_PATTERN = "no pattern assigned"
     SOLID_PATTERN = "SOLID"
+
     def __init__(self, name=NO_PATTERN, id=-1, data_type="unknown", j=None, **kwargs):
         """
         Class constructor.
@@ -96,7 +97,7 @@ class PatternSettingBase(base.Base):
     # python 2.7 needs custom implementation of not equal
     def __ne__(self, other):
         return not self.__eq__(other=other)
-    
+
     def __hash__(self):
         """
         Custom hash override

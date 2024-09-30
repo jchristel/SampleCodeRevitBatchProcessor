@@ -19,8 +19,8 @@ This module contains the Revit view report functionality.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -76,13 +76,13 @@ def get_views_report_data(doc, host_name):
         for v in collector_views:
             # get all parameters attached to sheet
             paras = v.GetOrderedParameters()
-            info = WorksharingUtils.GetWorksharingTooltipInfo(doc,v.Id)
+            info = WorksharingUtils.GetWorksharingTooltipInfo(doc, v.Id)
             # check values and substitute any empty strings
             owner = info.Owner
-            last_changed_by = info.LastChangedBy,
-            if(info.Owner == ""):
+            last_changed_by = (info.LastChangedBy,)
+            if info.Owner == "":
                 owner = "not applicable"
-            if(info.LastChangedBy==""):
+            if info.LastChangedBy == "":
                 last_changed_by = "not applicable"
             data = {
                 REPORT_VIEWS_HEADER[0]: host_name,
@@ -151,7 +151,9 @@ def write_views_data(doc, file_name, current_file_name):
         data = get_views_report_data(doc, current_file_name)
         headers = get_views_report_headers(doc)
         data_converted = convert_view_data_to_list(data, headers)
-        filesCSV.write_report_data_as_csv(file_name=file_name,header= headers, data=data_converted,enforce_ascci= True)
+        filesCSV.write_report_data_as_csv(
+            file_name=file_name, header=headers, data=data_converted, enforce_ascci=True
+        )
         return_value.update_sep(
             True, "Successfully wrote data file at {}".format(file_name)
         )
@@ -190,7 +192,9 @@ def write_view_data_by_property_names(
         headers = REPORT_VIEWS_HEADER[:] + view_properties
         data_converted = convert_view_data_to_list(data, headers)
         # write data out to file
-        filesCSV.write_report_data_as_csv(file_name=file_name, header=headers, data=data_converted, enforce_ascci=True)
+        filesCSV.write_report_data_as_csv(
+            file_name=file_name, header=headers, data=data_converted, enforce_ascci=True
+        )
         return_value.update_sep(
             True, "Successfully wrote data file at {}".format(file_name)
         )

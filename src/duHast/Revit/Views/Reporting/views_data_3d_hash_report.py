@@ -191,7 +191,7 @@ def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
                 # overwrite existing hash table
                 hash_data.hash_table = mapped_hash_table_categories
             except Exception as e:
-                raise ValueError ("Failed to match category hash: {}".format(e))
+                raise ValueError("Failed to match category hash: {}".format(e))
             # update filters hash table
             mapped_hash_table_filters = []
             try:
@@ -207,7 +207,7 @@ def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
                 # overwrite existing hash table
                 hash_data.hash_table_filters = mapped_hash_table_filters
             except Exception as e:
-                raise ValueError ("Failed to match filter hash: {}".format(e))
+                raise ValueError("Failed to match filter hash: {}".format(e))
             # update call back
             call_back_progress_counter = call_back_progress_counter + 1
             if progress_call_back is not None:
@@ -339,7 +339,9 @@ def _assign_padded_default_array(hash_data_by_file, progress_call_back=None):
                 merged_row_headers=hash_by_file.merged_row_headers_filters,
             )
             hash_data_by_file[key].padded_default_hash_table = padded_array_categories
-            hash_data_by_file[key].padded_default_hash_table_filters = padded_array_filters
+            hash_data_by_file[
+                key
+            ].padded_default_hash_table_filters = padded_array_filters
             result.append_message(
                 "{}: Created padded categories default value array of size {} by {}".format(
                     key, len(padded_array_categories), len(padded_array_categories[0])
@@ -712,7 +714,10 @@ def convert_vt_data_to_3d_flattened(json_files, progress_call_back=None):
         for key, entry in hash_data_by_file.items():
             result.append_message(
                 "{}: number of merged column headers: {} , merged category row headers: {} and number of merged filter row headers: {}".format(
-                    key, len(entry.merged_column_headers), len(entry.merged_row_headers), len(entry.merged_row_headers_filters)
+                    key,
+                    len(entry.merged_column_headers),
+                    len(entry.merged_row_headers),
+                    len(entry.merged_row_headers_filters),
                 )
             )
 

@@ -116,11 +116,11 @@ def area_lines_with_warnings_by_level_and_by_area_scheme(doc):
     # loop over dictionary and find lines with warnings
     for scheme_name in line_by_area_scheme_and_level:
 
-        for level_name, separation_line_ids in line_by_area_scheme_and_level[scheme_name].items():
+        for level_name, separation_lines in line_by_area_scheme_and_level[scheme_name].items():
             lines_with_warnings = []
-            for sep_line_id in separation_line_ids:
-                if sep_line_id in area_lines_with_warnings:
-                    lines_with_warnings.append(sep_line_id)
+            for sep_line in separation_lines:
+                if sep_line.Id in area_lines_with_warnings:
+                    lines_with_warnings.append(sep_line)
             # replace previous line id list with line ids with warnigns associated
             line_by_area_scheme_and_level[scheme_name][level_name]=lines_with_warnings
     

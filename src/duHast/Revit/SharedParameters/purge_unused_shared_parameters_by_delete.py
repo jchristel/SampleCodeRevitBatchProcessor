@@ -35,7 +35,7 @@ from duHast.Revit.Purge.purge_unused_by_delete import purge_unused_elements
 from duHast.Utilities.Objects.result import Result
 
 
-def get_shared_parameter_ids(doc, ignore_element_ids=None):
+def get_shared_parameter_ids(doc, element_ids=None, element_ids_list_is_inclusive_filter=True):
     """
     Returns all shared parameter ids in the model with the exception of parameters which have a binding and are therefore assumed to be used.
 
@@ -43,6 +43,10 @@ def get_shared_parameter_ids(doc, ignore_element_ids=None):
     :type doc: Autodesk.Revit.DB.Document
     :return: A list of all shared parameter ids in the model.
     :rtype: list of Autodesk.Revit.DB.ElementId
+    :param element_ids: optional list of shared parameter element ids
+    :type element_ids: [Autodesk.Revit.DB.ElementId]
+    :param element_ids_list_is_inclusive_filter: If true and element_ids list has values only those parameters will be purged if possible. If false and element_ids list has values any parameters in the list will not be purged.
+    :type element_ids_list_is_inclusive_filter: bool
     """
 
     shared_col = get_all_shared_parameters(doc)
@@ -59,9 +63,25 @@ def get_shared_parameter_ids(doc, ignore_element_ids=None):
     # get the ids of collector
     ids = get_ids_from_element_collector(shared_col)
     # remove all shared parameters which are bound to a category
-    ids = [i for i in ids if i not in parameter_with_bindings]
+    ids_without_parameter_binidng = [i for i in ids if i not in parameter_with_bindings]
 
-    return ids
+    # check if further filtering is required
+    if element_ids == None:
+        return ids_without_parameter_binidng
+    
+    # apply filtering
+    ids_filtered = []
+    if element_ids_list_is_inclusive_filter:
+        # only return element ids which are also present in the filter list
+        for id_without_binding in ids_without_parameter_binidng:
+            if id_without_binding in element_ids:
+                ids_filtered.append(id_without_binding)
+    else:
+        # only return element ids which are not present in the filter list
+        for id_without_binding in ids_without_parameter_binidng:
+            if id_without_binding not in element_ids:
+                ids_filtered.append(id_without_binding)
+    return ids_filtered
 
 
 def purge_shared_parameters_by_delete(
@@ -92,6 +112,11 @@ def purge_shared_parameters_by_delete(
     :type progress_callback: callable
     :param debug: Debug mode.
     :type debug: bool
+    :param element_ids: optional list of shared parameter element ids
+    :type element_ids: [Autodesk.Revit.DB.ElementId]
+    :param element_ids_list_is_inclusive_filter: If true and element_ids list has values only those parameters will be purged if possible. If false and element_ids list has values any parameters in the list will not be purged.
+    :type element_ids_list_is_inclusive_filter: bool
+
     :return: Result class instance.
 
         - .status True if unused shared parameters where deleted or nothing needed to be deleted. Otherwise False.
@@ -107,7 +132,8 @@ def purge_shared_parameters_by_delete(
         # make allowance for an ignore element id list
         def action(doc):
             result_action = get_shared_parameter_ids(
-                doc=doc, ignore_element_ids=ignore_element_ids
+                doc=doc, element_ids=element_ids,
+                element_ids_list_is_inclusive_filter=element_ids_list_is_inclusive_filter
             )
             return result_action
 

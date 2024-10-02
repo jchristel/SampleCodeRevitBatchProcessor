@@ -84,7 +84,7 @@ def get_area_lines_by_scheme_and_level_name(doc, scheme_name, level_name):
         level_name (str): The name of the level.
 
     Returns:
-        list: A list of area lines based on the area scheme and level name.
+        list: A list of area lines based on the area scheme and level name or None if no area lines attached to scheme and level.
     """
 
     # get all area lines by scheme name

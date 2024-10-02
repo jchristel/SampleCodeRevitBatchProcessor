@@ -35,9 +35,9 @@ from duHast.Revit.Purge.purge_unused_by_delete import purge_unused_elements
 from duHast.Utilities.Objects.result import Result
 
 
-def get_shared_parameter_ids(doc):
+def get_shared_parameter_ids(doc, ignore_element_ids=None):
     """
-    Returns all shared parameter ids in the model.
+    Returns all shared parameter ids in the model with the exception of parameters which have a binding and are therefore assumed to be used.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -64,7 +64,9 @@ def get_shared_parameter_ids(doc):
     return ids
 
 
-def purge_shared_parameters_by_delete(doc, progress_callback=None, debug=False):
+def purge_shared_parameters_by_delete(
+    doc, progress_callback=None, debug=False, element_ids=None, element_ids_list_is_inclusive_filter=True
+):
     """
     Purge shared parameters by delete.
 
@@ -101,10 +103,18 @@ def purge_shared_parameters_by_delete(doc, progress_callback=None, debug=False):
 
     try:
 
+        # set up element Id getter
+        # make allowance for an ignore element id list
+        def action(doc):
+            result_action = get_shared_parameter_ids(
+                doc=doc, ignore_element_ids=ignore_element_ids
+            )
+            return result_action
+
         # purge unused shared parameters
         purge_result = purge_unused_elements(
             doc=doc,
-            element_id_getter=get_shared_parameter_ids,
+            element_id_getter=action,
             deleted_elements_modifier=None,
             modified_elements_modifier=None,
             progress_callback=progress_callback,

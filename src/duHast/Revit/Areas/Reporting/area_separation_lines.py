@@ -11,7 +11,7 @@ Revit area separation lines reports functions.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -40,8 +40,8 @@ def area_lines_by_level_and_by_area_schemes (doc):
     """
     Reports all area separation line by area schemes and level they belong too. 
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: dictionary where key is the area scheme name and value is a list of are line ids, or empty list if no area lines are associated with the scheme
     :rtype: {str: Autodesk.Revit.DB.ElementId]}
@@ -86,8 +86,8 @@ def area_lines_with_warnings_by_level_and_by_area_scheme(doc):
     """
     Reports all area separation line with warnings by area schemes and level they belong too. 
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: dictionary where key is the area scheme name and value is a list of are line ids, or empty list if no area lines are associated with the scheme
     :rtype: {str: Autodesk.Revit.DB.ElementId]}

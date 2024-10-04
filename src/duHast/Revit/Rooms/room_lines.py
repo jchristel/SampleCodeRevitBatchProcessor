@@ -160,7 +160,7 @@ def filter_room_separation_lines_by_phase_demolished(
     doc, room_separation_lines, phase_demolished_name
 ):
     """
-    Filter room separation lines by phase created.
+    Filter room separation lines by phase demolished.
 
     :param doc: The Revit document.
     :type doc: Document

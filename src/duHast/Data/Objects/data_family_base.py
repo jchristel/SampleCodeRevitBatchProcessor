@@ -82,22 +82,28 @@ class DataFamilyBase(data_base.DataBase, data_element_geometry.DataElementGeomet
 
             # attempt to populate from json
             try:
-                self.instance_properties = j.get(
-                    data_instance_properties.DataInstanceProperties.data_type,
-                    self.instance_properties,
+                self.instance_properties = (
+                    data_instance_properties.DataInstanceProperties(
+                        j.get(
+                            data_instance_properties.DataInstanceProperties.data_type,
+                            {},
+                        )
+                    )
                 )
-                self.type_properties = j.get(
-                    data_type_properties.DataTypeProperties.data_type,
-                    self.type_properties,
+                self.type_properties = data_type_properties.DataTypeProperties(
+                    j.get(data_type_properties.DataTypeProperties.data_type, {})
                 )
-                self.level = j.get(data_level.DataLevel.data_type, self.level)
-                self.revit_model = j.get(
-                    data_revit_model.DataRevitModel.data_type, self.revit_model
+                self.level = data_level.DataLevel(
+                    j.get(data_level.DataLevel.data_type, {})
                 )
-                self.phasing = j.get(data_phasing.DataPhasing.data_type, self.phasing)
-                self.design_set_and_option = j.get(
-                    data_design_set_option.DataDesignSetOption.data_type,
-                    self.design_set_and_option,
+                self.revit_model = data_revit_model.DataRevitModel(
+                    j.get(data_revit_model.DataRevitModel.data_type, {})
+                )
+                self.phasing = data_phasing.DataPhasing(
+                    j.get(data_phasing.DataPhasing.data_type, {})
+                )
+                self.design_set_and_option = data_design_set_option.DataDesignSetOption(
+                    j.get(data_design_set_option.DataDesignSetOption.data_type, {})
                 )
                 self.associated_elements = j.get(
                     "associated_elements", self.associated_elements

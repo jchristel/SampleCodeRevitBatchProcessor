@@ -9,6 +9,7 @@ Data storage base class used for geometry aspects of Revit elements.
     - topology cell (WIP)
 
 """
+
 #
 # License:
 #
@@ -53,11 +54,10 @@ class DataElementGeometryBase(base.Base):
         # ini super class to allow multi inheritance in children!
         # forwards all unused arguments
         super(DataElementGeometryBase, self).__init__(**kwargs)
-        
+
         # set default values
         self.polygon = []
         self.topologic_cell = geometry_topo_cell.DataTopologyCell()
-
 
         # check valid j input
         if j != None and len(j) > 0:
@@ -78,10 +78,7 @@ class DataElementGeometryBase(base.Base):
             # attempt to populate from json
             try:
                 # check for polygon data
-                polygon_data = j.get(
-                    geometry_polygon.DataPolygon.data_type,
-                    []
-                )
+                polygon_data = j.get(geometry_polygon.DataPolygon.data_type, [])
 
                 # this is stored as a list since there could be multiple polygons representing an object
                 geometry_data_list = []
@@ -90,15 +87,14 @@ class DataElementGeometryBase(base.Base):
                         if item["data_type"]:
                             dummy = geometry_polygon.DataPolygon(item)
                             geometry_data_list.append(dummy)
-                
+
                 self.polygon = geometry_data_list
 
-                self.topologic_cell = j.get(
-                    geometry_topo_cell.DataTopologyCell.data_type,
-                    self.topologic_cell
+                self.topologic_cell = geometry_topo_cell.DataTopologyCell(
+                    j.get(geometry_topo_cell.DataTopologyCell.data_type, {})
                 )
 
             except Exception as e:
-                    raise ValueError(
-                        "Node {} failed to initialise with: {}".format(self.data_type, e)
-                    )
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

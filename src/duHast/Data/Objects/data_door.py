@@ -33,3 +33,14 @@ from duHast.Data.Objects.data_family_base import DataFamilyBase
 class DataDoor(DataFamilyBase):
 
     data_type = "door"
+
+    def __init__(self, j=None):
+        """
+        Class constructor.
+
+        :param j: A json formatted dictionary of this class, defaults to {}
+        :type j: dict, optional
+        """
+
+        # store data type  in base class
+        super(DataDoor, self).__init__(data_type=DataDoor.data_type, j=j)

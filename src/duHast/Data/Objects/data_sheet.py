@@ -39,6 +39,9 @@ import json
 from duHast.Data.Utils import data_base
 from duHast.Data.Objects.Properties import data_type_properties
 from duHast.Data.Objects.Properties import data_instance_properties
+from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
+    DataBoundingBox,
+)
 
 
 class DataSheet(data_base.DataBase):
@@ -59,6 +62,8 @@ class DataSheet(data_base.DataBase):
         # set default values
         self.instance_properties = data_instance_properties.DataInstanceProperties()
         self.type_properties = data_type_properties.DataTypeProperties()
+        self.view_ports = []
+        self.bounding_box = DataBoundingBox()
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -78,15 +83,18 @@ class DataSheet(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.instance_properties = j.get(
-                    data_instance_properties.DataInstanceProperties.data_type,
-                    self.instance_properties,
+                self.instance_properties = (
+                    data_instance_properties.DataInstanceProperties(
+                        j.get(
+                            data_instance_properties.DataInstanceProperties.data_type,
+                            {},
+                        )
+                    )
                 )
-                self.type_properties = j.get(
-                    data_type_properties.DataTypeProperties.data_type,
-                    self.type_properties,
+                self.type_properties = data_type_properties.DataTypeProperties(
+                    j.get(data_type_properties.DataTypeProperties.data_type, {})
                 )
-
+                self.bounding_box = DataBoundingBox(j.get("bounding_box", {}))
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

@@ -49,7 +49,7 @@ class DataBase(base.Base):
         """
         Property: returns the data type of this class.
 
-        :return: 'ceiling'
+        :return:  A string representing the data type
         :rtype: str
         """
 

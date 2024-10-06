@@ -3,6 +3,7 @@
 Data base storage class for Revit family properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -54,78 +55,54 @@ class DataFamilyBase(data_base.DataBase, data_element_geometry.DataElementGeomet
         # store data type  in base class
         super(DataFamilyBase, self).__init__(data_type=DataFamilyBase.data_type, j=j)
 
+        # set default values
+        self.associated_elements = []
+        self.instance_properties = data_instance_properties.DataInstanceProperties()
+        self.type_properties = data_type_properties.DataTypeProperties()
+        self.level = data_level.DataLevel()
+        self.revit_model = data_revit_model.DataRevitModel()
+        self.phasing = data_phasing.DataPhasing()
+        self.design_set_and_option = data_design_set_option.DataDesignSetOption()
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
-            if type(j) == str:
+            if isinstance(j, str):
                 # a string
                 j = json.loads(j)
-            elif type(j) == dict:
+            elif isinstance(j, dict):
                 # no action required
                 pass
             else:
-                raise ValueError(
-                    "Argument supplied must be of type string or type dictionary"
-                )
-
-            if data_instance_properties.DataInstanceProperties.data_type in j:
-                self.instance_properties = (
-                    data_instance_properties.DataInstanceProperties(
-                        j[data_instance_properties.DataInstanceProperties.data_type]
+                raise TypeError(
+                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
+                        type(j)
                     )
                 )
-            else:
-                self.instance_properties = (
-                    data_instance_properties.DataInstanceProperties()
+
+            # attempt to populate from json
+            try:
+                self.instance_properties = j.get(
+                    data_instance_properties.DataInstanceProperties.data_type,
+                    self.instance_properties,
                 )
-
-            if data_design_set_option.DataDesignSetOption.data_type in j:
-                self.design_set_and_option = data_design_set_option.DataDesignSetOption(
-                    j[data_design_set_option.DataDesignSetOption.data_type]
+                self.type_properties = j.get(
+                    data_type_properties.DataTypeProperties.data_type,
+                    self.type_properties,
                 )
-            else:
-                self.design_set_and_option = (
-                    data_design_set_option.DataDesignSetOption()
+                self.level = j.get(data_level.DataLevel.data_type, self.level)
+                self.revit_model = j.get(
+                    data_revit_model.DataRevitModel.data_type, self.revit_model
                 )
-
-            if data_type_properties.DataTypeProperties.data_type in j:
-                self.type_properties = data_type_properties.DataTypeProperties(
-                    j[data_type_properties.DataTypeProperties.data_type]
+                self.phasing = j.get(data_phasing.DataPhasing.data_type, self.phasing)
+                self.design_set_and_option = j.get(
+                    data_design_set_option.DataDesignSetOption.data_type,
+                    self.design_set_and_option,
                 )
-            else:
-                self.type_properties = data_type_properties.DataTypeProperties()
-
-            if data_level.DataLevel.data_type in j:
-                self.level = data_level.DataLevel(j[data_level.DataLevel.data_type])
-            else:
-                self.level = data_level.DataLevel()
-
-            if data_revit_model.DataRevitModel.data_type in j:
-                self.revit_model = data_revit_model.DataRevitModel(
-                    j[data_revit_model.DataRevitModel.data_type]
+                self.associated_elements = j.get(
+                    "associated_elements", self.associated_elements
                 )
-            else:
-                self.revit_model = data_revit_model.DataRevitModel()
-
-            if data_phasing.DataPhasing.data_type in j:
-                self.phasing = data_phasing.DataPhasing(
-                    j[data_phasing.DataPhasing.data_type]
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
-            else:
-                self.phasing = data_phasing.DataPhasing()
-
-            # load associated elements
-            if "associated_elements" in j:
-                self.associated_elements = j["associated_elements"]
-            else:
-                self.associated_elements = []
-
-        else:
-            self.associated_elements = []
-            # initialise classes with default values
-            self.instance_properties = data_instance_properties.DataInstanceProperties()
-            self.type_properties = data_type_properties.DataTypeProperties()
-            self.level = data_level.DataLevel()
-            self.revit_model = data_revit_model.DataRevitModel()
-            self.phasing = data_phasing.DataPhasing()
-            self.design_set_and_option = data_design_set_option.DataDesignSetOption()

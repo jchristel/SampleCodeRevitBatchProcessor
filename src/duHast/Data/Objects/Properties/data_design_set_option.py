@@ -3,6 +3,7 @@
 Data storage class for Revit design option properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -44,36 +45,33 @@ class DataDesignSetOption(data_base.DataBase):
         # store data type  in base class
         super(DataDesignSetOption, self).__init__(DataDesignSetOption.data_type)
 
+        # set default values
+        self.set_name = "-"
+        self.option_name = "-"
+        self.is_primary = True
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
-            if type(j) == str:
+            if isinstance(j, str):
                 # a string
                 j = json.loads(j)
-            elif type(j) == dict:
+            elif isinstance(j, dict):
                 # no action required
                 pass
             else:
-                raise ValueError(
-                    "Argument supplied must be of type string or type dictionary"
+                raise TypeError(
+                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
+                        type(j)
+                    )
                 )
 
-            if "designSetName" in j:
-                self.set_name = j["designSetName"]
-            else:
-                self.set_name = "-"
-
-            if "designOptionName" in j:
-                self.option_name = j["designOptionName"]
-            else:
-                self.option_name = "-"
-
-            if "isPrimary" in j:
-                self.is_primary = j["isPrimary"]
-            else:
-                self.is_primary = True
-        else:
-            # set default values
-            self.set_name = "-"
-            self.option_name = "-"
-            self.is_primary = True
+            # attempt to populate from json
+            try:
+                self.set_name = j.get("designSetName", self.set_name)
+                self.option_name = j.get("designOptionName", self.option_name)
+                self.is_primary = j.get("isPrimary", self.is_primary)
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

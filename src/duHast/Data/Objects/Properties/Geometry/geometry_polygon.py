@@ -3,6 +3,7 @@
 Geometry data storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -44,30 +45,31 @@ class DataPolygon(geometry_base.DataGeometryBase):
         # store data type  in base class
         super(DataPolygon, self).__init__(DataPolygon.data_type, j)
 
+        # set default values
+        self.outer_loop = []
+        self.inner_loops = []
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
-            if type(j) == str:
+            if isinstance(j, str):
                 # a string
                 j = json.loads(j)
-            elif type(j) == dict:
+            elif isinstance(j, dict):
                 # no action required
                 pass
             else:
-                raise ValueError(
-                    "Argument supplied must be of type string or type dictionary"
+                raise TypeError(
+                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
+                        type(j)
+                    )
                 )
 
-            if "outer_loop" in j:
-                self.outer_loop = j["outer_loop"]
-            else:
-                self.outer_loop = []
-
-            if "inner_loops" in j:
-                self.inner_loops = j["inner_loops"]
-            else:
-                self.inner_loops = []
-        else:
-            # set default values
-            self.outer_loop = []
-            self.inner_loops = []
+            # attempt to populate from json
+            try:
+                self.outer_loop = j.get("outer_loop", self.outer_loop)
+                self.inner_loops = j.get("inner_loops", self.inner_loops)
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

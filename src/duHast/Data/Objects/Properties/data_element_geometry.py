@@ -53,42 +53,52 @@ class DataElementGeometryBase(base.Base):
         # ini super class to allow multi inheritance in children!
         # forwards all unused arguments
         super(DataElementGeometryBase, self).__init__(**kwargs)
+        
+        # set default values
+        self.polygon = []
+        self.topologic_cell = geometry_topo_cell.DataTopologyCell()
+
+
         # check valid j input
         if j != None and len(j) > 0:
             # check type of data that came in:
-            if type(j) == str:
+            if isinstance(j, str):
                 # a string
                 j = json.loads(j)
-            elif type(j) == dict:
+            elif isinstance(j, dict):
                 # no action required
                 pass
             else:
-                raise ValueError(
-                    "Argument supplied must be of type string or type dictionary"
+                raise TypeError(
+                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
+                        type(j)
+                    )
                 )
 
-            # check for polygon data
-            # this is stored as a list since there could be multiple polygons representing an object
-            geometry_data_list = []
-            if geometry_polygon.DataPolygon.data_type in j:
-                for item in j[geometry_polygon.DataPolygon.data_type]:
+            # attempt to populate from json
+            try:
+                # check for polygon data
+                polygon_data = j.get(
+                    geometry_polygon.DataPolygon.data_type,
+                    []
+                )
+
+                # this is stored as a list since there could be multiple polygons representing an object
+                geometry_data_list = []
+                for item in polygon_data:
                     if "data_type" in item:
                         if item["data_type"]:
                             dummy = geometry_polygon.DataPolygon(item)
                             geometry_data_list.append(dummy)
-                    else:
-                        print("no data type in item")
-            self.polygon = geometry_data_list
+                
+                self.polygon = geometry_data_list
 
-            # check for topo cell data
-            if geometry_topo_cell.DataTopologyCell.data_type in j:
-                self.topologic_cell = geometry_topo_cell.DataTopologyCell(
-                    j[geometry_topo_cell.DataTopologyCell.DataType]
+                self.topologic_cell = j.get(
+                    geometry_topo_cell.DataTopologyCell.data_type,
+                    self.topologic_cell
                 )
-            else:
-                self.topologic_cell = geometry_topo_cell.DataTopologyCell()
 
-        else:
-            # initialise classes with default values
-            self.polygon = []
-            self.topologic_cell = geometry_topo_cell.DataTopologyCell()
+            except Exception as e:
+                    raise ValueError(
+                        "Node {} failed to initialise with: {}".format(self.data_type, e)
+                    )

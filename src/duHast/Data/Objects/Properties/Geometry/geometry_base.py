@@ -3,6 +3,7 @@
 Geometry data storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -42,46 +43,39 @@ class DataGeometryBase(data_base.DataBase):
         # store data type  in base class
         super(DataGeometryBase, self).__init__(data_type)
 
+        # set default values
+        # translation as per shared coordinates in revit file
+        self.translation_coord = [0.0, 0.0, 0.0]
+        # rotation as per shared coordinates in revit file
+        self.rotation_coord = [
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+        ]
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
-            if type(j) == str:
+            if isinstance(j, str):
                 # a string
                 j = json.loads(j)
-            elif type(j) == dict:
+            elif isinstance(j, dict):
                 # no action required
                 pass
             else:
-                print("j", j)
-                raise ValueError(
-                    "Argument supplied must be of type string or type dictionary"
+                raise TypeError(
+                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
+                        type(j)
+                    )
                 )
 
-            # translation as per shared coordinates in revit file
-            if "translation_coord" in j:
-                self.translation_coord = j["translation_coord"]
-            else:
-                self.translation_coord = [0.0, 0.0, 0.0]
-
-            # rotation as per shared coordinates in revit file
-            if "rotation_coord" in j:
-                self.rotation_coord = j["rotation_coord"]
-            else:
-                self.rotation_coord = [
-                    [0.0, 0.0, 0.0],
-                    [0.0, 0.0, 0.0],
-                    [0.0, 0.0, 0.0],
-                ]
-
-        else:
-            # set default values
-            self.translation_coord = [
-                0.0,
-                0.0,
-                0.0,
-            ]  # translation as per shared coordinates in revit file
-            self.rotation_coord = [
-                [0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0],
-            ]  # rotation as per shared coordinates in revit file
+            # attempt to populate from json
+            try:
+                self.translation_coord = j.get(
+                    "translation_coord", self.translation_coord
+                )
+                self.rotation_coord = j.get("rotation_coord", self.rotation_coord)
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

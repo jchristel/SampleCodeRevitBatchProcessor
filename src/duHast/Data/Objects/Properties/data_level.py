@@ -3,6 +3,7 @@
 Data storage class for Revit element level properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -45,35 +46,35 @@ class DataLevel(data_base.DataBase):
         # store data type  in base class
         super(DataLevel, self).__init__(DataLevel.data_type)
 
+        # set default values
+        self.name = "-"
+        self.id = -1
+        self.offset_from_level = 0.0
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
-            if type(j) == str:
+            if isinstance(j, str):
                 # a string
                 j = json.loads(j)
-            elif type(j) == dict:
+            elif isinstance(j, dict):
                 # no action required
                 pass
             else:
-                raise ValueError(
-                    "Argument supplied must be of type string or type dictionary"
+                raise TypeError(
+                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
+                        type(j)
+                    )
                 )
 
-            if "name" in j:
-                self.name = j["name"]
-            else:
-                self.name = "-"
-
-            if "id" in j:
-                self.id = j["id"]
-            else:
-                self.id = -1
-
-            if "offset_from_level" in j:
-                self.offset_from_level = j["offset_from_level"]
-            else:
-                self.offset_from_level = 0.0
-        else:
-            self.name = "-"
-            self.id = -1
-            self.offset_from_level = 0.0
+            # attempt to populate from json
+            try:
+                self.name = j.get("name", self.name)
+                self.id = j.get("id", self.id)
+                self.offset_from_level = j.get(
+                    "offset_from_level", self.offset_from_level
+                )
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

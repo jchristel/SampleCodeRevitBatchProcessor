@@ -3,6 +3,7 @@
 Data storage class for Revit element phasing properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -45,29 +46,31 @@ class DataPhasing(data_base.DataBase):
         # store data type  in base class
         super(DataPhasing, self).__init__(DataPhasing.data_type)
 
+        # set default values
+        self.created = "-"
+        self.demolished = "-"
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
-            if type(j) == str:
+            if isinstance(j, str):
                 # a string
                 j = json.loads(j)
-            elif type(j) == dict:
+            elif isinstance(j, dict):
                 # no action required
                 pass
             else:
-                raise ValueError(
-                    "Argument supplied must be of type string or type dictionary"
+                raise TypeError(
+                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
+                        type(j)
+                    )
                 )
 
-            if "created" in j:
-                self.created = j["created"]
-            else:
-                self.created = "-"
-
-            if "demolished" in j:
-                self.demolished = j["demolished"]
-            else:
-                self.demolished = "-"
-        else:
-            self.created = "-"
-            self.demolished = "-"
+            # attempt to populate from json
+            try:
+                self.created = j.get("created", self.created)
+                self.demolished = j.get("demolished", self.demolished)
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

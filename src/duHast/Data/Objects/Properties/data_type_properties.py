@@ -45,36 +45,33 @@ class DataTypeProperties(data_base.DataBase):
         # store data type  in base class
         super(DataTypeProperties, self).__init__(DataTypeProperties.data_type)
 
+        # set default values
+        self.name = "-"
+        self.id = -1
+        self.properties = {}
+        
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
-            if type(j) == str:
+            if isinstance(j, str):
                 # a string
                 j = json.loads(j)
-            elif type(j) == dict:
+            elif isinstance(j, dict):
                 # no action required
                 pass
             else:
-                raise ValueError(
-                    "Argument supplied must be of type string or type dictionary"
+                raise TypeError(
+                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
+                        type(j)
+                    )
                 )
 
-            if "name" in j:
-                self.name = j["name"]
-            else:
-                self.name = "-"
-
-            if "id" in j:
-                self.id = j["id"]
-            else:
-                self.id = -1
-
-            if "properties" in j:
-                self.properties = j["properties"]
-            else:
-                self.properties = {}
-
-        else:
-            self.name = "-"
-            self.id = -1
-            self.properties = {}
+            # attempt to populate from json
+            try:
+                self.name = j.get("name",self.name)
+                self.id = j.get("id", self.id)
+                self.properties = j.get("properties",self.properties)
+            except Exception as e:
+                    raise ValueError(
+                        "Node {} failed to initialise with: {}".format(self.data_type, e)
+                    )

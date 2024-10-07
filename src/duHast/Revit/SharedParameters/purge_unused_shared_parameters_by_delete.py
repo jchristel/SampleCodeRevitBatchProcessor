@@ -41,12 +41,13 @@ def get_shared_parameter_ids(doc, element_ids=None, element_ids_list_is_inclusiv
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :return: A list of all shared parameter ids in the model.
-    :rtype: list of Autodesk.Revit.DB.ElementId
     :param element_ids: optional list of shared parameter element ids
     :type element_ids: [Autodesk.Revit.DB.ElementId]
     :param element_ids_list_is_inclusive_filter: If true and element_ids list has values only those parameters will be purged if possible. If false and element_ids list has values any parameters in the list will not be purged.
     :type element_ids_list_is_inclusive_filter: bool
+
+    :return: A list of all shared parameter ids in the model.
+    :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
     shared_col = get_all_shared_parameters(doc)
@@ -63,22 +64,22 @@ def get_shared_parameter_ids(doc, element_ids=None, element_ids_list_is_inclusiv
     # get the ids of collector
     ids = get_ids_from_element_collector(shared_col)
     # remove all shared parameters which are bound to a category
-    ids_without_parameter_binidng = [i for i in ids if i not in parameter_with_bindings]
+    ids_without_parameter_binding = [i for i in ids if i not in parameter_with_bindings]
 
     # check if further filtering is required
     if element_ids == None:
-        return ids_without_parameter_binidng
+        return ids_without_parameter_binding
     
     # apply filtering
     ids_filtered = []
     if element_ids_list_is_inclusive_filter:
         # only return element ids which are also present in the filter list
-        for id_without_binding in ids_without_parameter_binidng:
+        for id_without_binding in ids_without_parameter_binding:
             if id_without_binding in element_ids:
                 ids_filtered.append(id_without_binding)
     else:
         # only return element ids which are not present in the filter list
-        for id_without_binding in ids_without_parameter_binidng:
+        for id_without_binding in ids_without_parameter_binding:
             if id_without_binding not in element_ids:
                 ids_filtered.append(id_without_binding)
     return ids_filtered

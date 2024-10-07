@@ -40,12 +40,17 @@ from duHast.Revit.Purge.purge_unused_by_delete import purge_unused_elements
 from duHast.Utilities.Objects.result import Result
 
 
-def get_fill_pattern_ids(doc):
+def get_fill_pattern_ids(doc, element_ids=None, element_ids_list_is_inclusive_filter=True):
     """
     Returns all fill pattern ids in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+    :param element_ids: optional list of fill pattern element ids
+    :type element_ids: [Autodesk.Revit.DB.ElementId]
+    :param element_ids_list_is_inclusive_filter: If true and element_ids list has values only those patterns will be purged if possible. If false and element_ids list has values any patterns in the list will not be purged.
+    :type element_ids_list_is_inclusive_filter: bool
+    
     :return: A list of all fill pattern ids in the model.
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
@@ -57,12 +62,28 @@ def get_fill_pattern_ids(doc):
     # get all fill pattern ids used in filled region types
     used_pattern_ids = get_used_pattern_ids_in_filled_region_types(doc)
     # only return ids not used in filled region types
-    ids = [id for id in ids if id not in used_pattern_ids]
+    ids_not_used_in_region_types = [id for id in ids if id not in used_pattern_ids]
 
-    return ids
+    # check if further filtering is required
+    if element_ids == None:
+        return ids_not_used_in_region_types
+    
+    # apply filtering
+    ids_filtered = []
+    if element_ids_list_is_inclusive_filter:
+        # only return element ids which are also present in the filter list
+        for id_not_used in ids_not_used_in_region_types:
+            if id_not_used in element_ids:
+                ids_filtered.append(id_not_used)
+    else:
+        # only return element ids which are not present in the filter list
+        for id_not_used in ids_not_used_in_region_types:
+            if id_not_used not in element_ids:
+                ids_filtered.append(id_not_used)
+    return ids_filtered
 
 
-def purge_fill_pattern_by_delete(doc, progress_callback=None, debug=False):
+def purge_fill_pattern_by_delete(doc, progress_callback=None, debug=False, element_ids=None, element_ids_list_is_inclusive_filter=True):
     """
     Purge fill pattern by delete.
 
@@ -74,6 +95,11 @@ def purge_fill_pattern_by_delete(doc, progress_callback=None, debug=False):
     :type progress_callback: callable
     :param debug: Debug mode.
     :type debug: bool
+    :param element_ids: optional list of fill pattern element ids
+    :type element_ids: [Autodesk.Revit.DB.ElementId]
+    :param element_ids_list_is_inclusive_filter: If true and element_ids list has values only those fill patterns will be purged if possible. If false and element_ids list has values any fill patterns in the list will not be purged.
+    :type element_ids_list_is_inclusive_filter: bool
+
     :return: Result class instance.
 
         - .status True if unused fill pattern where deleted or nothing needed to be deleted. Otherwise False.
@@ -85,10 +111,19 @@ def purge_fill_pattern_by_delete(doc, progress_callback=None, debug=False):
 
     try:
 
+        # set up element Id getter
+        # make allowance for an ignore element id list
+        def action(doc):
+            result_action = get_fill_pattern_ids(
+                doc=doc, element_ids=element_ids,
+                element_ids_list_is_inclusive_filter=element_ids_list_is_inclusive_filter
+            )
+            return result_action
+        
         # purge unused fill patterns
         purge_result = purge_unused_elements(
             doc=doc,
-            element_id_getter=get_fill_pattern_ids,
+            element_id_getter=action,
             deleted_elements_modifier=None,
             modified_elements_modifier=None,
             progress_callback=progress_callback,

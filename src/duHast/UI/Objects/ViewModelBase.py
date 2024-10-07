@@ -45,15 +45,27 @@ class ViewModelBase(INotifyPropertyChanged):
         """
         # ini super class to allow multi inheritance in children!
         super(ViewModelBase, self).__init__()
-        self.propertyChangedHandlers = []
+        self.property_changed_handlers = []
 
     def RaisePropertyChanged(self, propertyName):
+        """
+        Raises property changed event for handlers
+
+        Args:
+            propertyName (str): the name of the property which has changed
+        """
         args = PropertyChangedEventArgs(propertyName)
-        for handler in self.propertyChangedHandlers:
+        for handler in self.property_changed_handlers:
             handler(self, args)
 
     def add_PropertyChanged(self, handler):
-        self.propertyChangedHandlers.append(handler)
+        """
+        Adds a handler to the property changed event.
+        """
+        self.property_changed_handlers.append(handler)
 
     def remove_PropertyChanged(self, handler):
-        self.propertyChangedHandlers.remove(handler)
+        """
+        Removes a handler from the property changed event.
+        """
+        self.property_changed_handlers.remove(handler)

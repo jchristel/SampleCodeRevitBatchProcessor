@@ -34,7 +34,7 @@ https://markheath.net/post/wpf-and-mvvm-in-ironpython
 
 from duHast.Utilities.Objects import base
 from System.Windows.Input import ICommand
-
+from System import EventArgs
 
 class CommandBase(ICommand):
     def __init__(self, execute):
@@ -50,16 +50,31 @@ class CommandBase(ICommand):
         # super(Command, self).__init__()
 
         self.execute = execute
-        # self.can_execute = can_execute
+        self.can_execute_changed_handlers = []
 
     def Execute(self, parameter):
         self.execute()
 
+    def on_can_execute_changed(self):
+        """
+        Raises the CanExecuteChanged event for subscribers.
+        """
+        if self.can_execute_changed_handlers:
+            for handler in self.can_execute_changed_handlers:
+                handler(self, EventArgs())
+                
     def add_CanExecuteChanged(self, handler):
-        pass
+        """
+        Adds a handler to the CanExecuteChanged event.
+        """
+        self.can_execute_changed_handlers.append(handler)
 
     def remove_CanExecuteChanged(self, handler):
-        pass
+        """
+        Removes a handler from the CanExecuteChanged event.
+        """
+        if handler in self.can_execute_changed_handlers:
+            self.can_execute_changed_handlers.remove(handler)
 
     def CanExecute(self, parameter):
         return True

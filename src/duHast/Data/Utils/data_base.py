@@ -41,7 +41,7 @@ class DataBase(base.Base):
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
-        super(DataBase, self).__init__(**kwargs)
+        super(DataBase, self).__init__()
         self.data_type = data_type
 
     @property

@@ -1,9 +1,8 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit elements model properties.
+Data property  names enum class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
-
 #
 # License:
 #
@@ -11,7 +10,7 @@ Data storage class for Revit elements model properties.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -27,49 +26,16 @@ Data storage class for Revit elements model properties.
 #
 #
 
-import json
-from duHast.Data.Utils import data_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+
+from enum import Enum
 
 
-class DataRevitModel(data_base.DataBase):
-
-    data_type = "revit_model"
-
-    def __init__(self, j=None):
-        """
-        Class constructor
-
-        :param j:  json formatted dictionary of this class, defaults to {}
-        :type j: dict, optional
-        """
-
-        # store data type  in base class
-        super(DataRevitModel, self).__init__(DataRevitModel.data_type)
-
-        # set default values
-        self.name = "-"
-
-        # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
-            # check type of data that came in:
-            if isinstance(j, str):
-                # a string
-                j = json.loads(j)
-            elif isinstance(j, dict):
-                # no action required
-                pass
-            else:
-                raise TypeError(
-                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
-                        type(j)
-                    )
-                )
-
-            # attempt to populate from json
-            try:
-                self.name = j.get(DataPropertyNames.NAME, self.name)
-            except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+class DataPropertyNames(Enum):
+    """
+    Contains property names used in data storage classes
+    """
+    
+    ID = "id"
+    NAME = "name"
+    PROPERTIES = "properties"
+    VALUE = "value"

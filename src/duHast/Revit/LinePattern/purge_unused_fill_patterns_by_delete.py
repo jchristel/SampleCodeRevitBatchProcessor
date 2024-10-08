@@ -65,7 +65,7 @@ def get_fill_pattern_ids(doc, element_ids=None, element_ids_list_is_inclusive_fi
     ids_not_used_in_region_types = [id for id in ids if id not in used_pattern_ids]
 
     # check if further filtering is required
-    if element_ids == None:
+    if element_ids is None:
         return ids_not_used_in_region_types
     
     # apply filtering

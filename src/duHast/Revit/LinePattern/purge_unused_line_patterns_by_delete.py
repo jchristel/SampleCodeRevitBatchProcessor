@@ -75,6 +75,10 @@ def get_line_pattern_ids(doc, element_ids=None, element_ids_list_is_inclusive_fi
     # remove used line patterns
     ids_not_used = [x for x in ids if x.IntegerValue not in used_line_pattern_ids]
 
+    # check if further filtering is required
+    if element_ids is None:
+        return ids_not_used
+    
     # apply filtering
     ids_filtered = []
     if element_ids_list_is_inclusive_filter:

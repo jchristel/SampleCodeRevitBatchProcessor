@@ -54,6 +54,10 @@ def get_line_style_ids(doc, element_ids=None, element_ids_list_is_inclusive_filt
     line_pattern_col = get_all_line_style_ids(doc)
     ids = get_ids_from_element_collector(line_pattern_col)
 
+    # check if filtering is required
+    if (element_ids is None):
+        return ids
+    
     # apply filtering
     ids_filtered = []
     if element_ids_list_is_inclusive_filter:

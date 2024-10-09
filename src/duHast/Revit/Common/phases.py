@@ -28,6 +28,10 @@ Model phase functions.
 #
 #
 
+from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value, get_parameter_value_as_element_id
+
+from Autodesk.Revit.DB import BuiltInParameter
+
 
 def get_all_phases(doc):
     """
@@ -107,3 +111,41 @@ def get_name_to_phase_dict(rvt_doc):
         phase_dict[phase.Name] = phase
 
     return phase_dict
+
+
+def get_phase_id_created(element):
+    """
+    Returns the id of the phase an element was created in.
+
+    :param element: A Revit element
+    :type element: Autodesk.Revit.DB.Element
+
+    :return: Phase id
+    :rtype: Autodesk.Revit.DB.ElementId
+    """
+
+    id = get_built_in_parameter_value(
+        element,
+        BuiltInParameter.PHASE_CREATED,
+        get_parameter_value_as_element_id,
+    )
+    return id
+
+
+def get_phase_id_demolished(element):
+    """
+    Returns the id of the phase an element was demolished in.
+
+    :param element: A Revit element
+    :type element: Autodesk.Revit.DB.Element
+
+    :return: Phase id
+    :rtype: Autodesk.Revit.DB.ElementId
+    """
+    
+    id = get_built_in_parameter_value(
+        element,
+        BuiltInParameter.PHASE_DEMOLISHED,
+        get_parameter_value_as_element_id,
+    )
+    return id

@@ -27,10 +27,9 @@ This module contains a Revit rooms export to DATA class functions.
 #
 #
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import BuiltInParameter, Element
 
 from duHast.Revit.Common import (
-    design_set_options as rDesignO,
     parameter_get_utils as rParaGet,
     phases as rPhase,
 )
@@ -38,6 +37,11 @@ from duHast.Data.Objects import data_room as dRoom
 from duHast.Data.Objects.Properties.Geometry import from_revit_conversion as rGeo
 from duHast.Revit.Rooms.rooms import get_all_rooms
 from duHast.Revit.Rooms.Geometry.geometry import get_2d_points_from_revit_room
+from duHast.Revit.Exports.export_data import (
+    get_model_data,
+    get_instance_properties,
+    get_design_set_data,
+)
 
 from duHast.Utilities.utility import encode_utf8
 
@@ -54,6 +58,7 @@ def populate_data_room_object(doc, revit_room):
     :type doc: Autodesk.Revit.DB.Document
     :param revit_room: The room.
     :type revit_room: Autodesk.Revit.DB.Architecture.Room
+
     :return: A room data instance.
     :rtype: :class:`.DataRoom`
     """
@@ -70,33 +75,18 @@ def populate_data_room_object(doc, revit_room):
             )
             room_point_groups_as_doubles.append(data_geometry_converted)
         data_r.polygon = room_point_groups_as_doubles
+        
         # get design set data
-        design_set_data = rDesignO.get_design_set_option_info(doc, revit_room)
-        data_r.design_set_and_option.option_name = design_set_data["designOptionName"]
-        data_r.design_set_and_option.set_name = design_set_data["designSetName"]
-        data_r.design_set_and_option.is_primary = design_set_data["isPrimary"]
+        design_set = get_design_set_data(doc=doc, element=revit_room)
+        data_r.design_set_and_option = design_set
 
         # get instance properties
-        data_r.instance_properties.id = revit_room.Id.IntegerValue
-        # custom parameter value getters
-        value_getter = {
-            rdb.StorageType.Double: rParaGet.getter_double_as_double_converted_to_metric,
-            rdb.StorageType.Integer: rParaGet.getter_int_as_int,
-            rdb.StorageType.String: rParaGet.getter_string_as_UTF8_string,  # encode ass utf 8 just in case
-            rdb.StorageType.ElementId: rParaGet.getter_element_id_as_element_int,  # needs to be an integer for JSON encoding
-            str(None): rParaGet.getter_none,
-        }
-        data_r.instance_properties.properties = (
-            rParaGet.get_all_parameters_and_values_wit_custom_getters(
-                revit_room, value_getter
-            )
-        )
+        instance_props = get_instance_properties(revit_room)
+        data_r.instance_properties = instance_props
 
         # get the model name
-        if doc.IsDetached:
-            data_r.revit_model.name = "Detached Model"
-        else:
-            data_r.revit_model.name = doc.Title
+        model = get_model_data(doc=doc)
+        data_r.revit_model = model
 
         # get phase name
         data_r.phasing.created = encode_utf8(
@@ -104,7 +94,7 @@ def populate_data_room_object(doc, revit_room):
                 doc,
                 rParaGet.get_built_in_parameter_value(
                     revit_room,
-                    rdb.BuiltInParameter.ROOM_PHASE,
+                    BuiltInParameter.ROOM_PHASE,
                     rParaGet.get_parameter_value_as_element_id,
                 ),
             )
@@ -113,7 +103,7 @@ def populate_data_room_object(doc, revit_room):
 
         # get level data
         try:
-            data_r.level.name = encode_utf8(rdb.Element.Name.GetValue(revit_room.Level))
+            data_r.level.name = encode_utf8(Element.Name.GetValue(revit_room.Level))
             data_r.level.id = revit_room.Level.Id.IntegerValue
         except:
             data_r.level.name = "no level"

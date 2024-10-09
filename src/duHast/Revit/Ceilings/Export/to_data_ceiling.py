@@ -27,22 +27,22 @@ This module contains a Revit ceilings export to DATA class functions.
 #
 #
 
-from Autodesk.Revit.DB import BuiltInParameter, Element, StorageType
-
-
-from duHast.Revit.Common import (
-    design_set_options as rDesignO,
-    parameter_get_utils as rParaGet,
-    phases as rPhase,
-)
+from Autodesk.Revit.DB import BuiltInParameter
 
 # from duHast.APISamples.Ceilings.Geometry import Geometry
 from duHast.Revit.Ceilings import ceilings as rCeiling
 from duHast.Data.Objects import data_ceiling as dCeiling
 from duHast.Data.Objects.Properties.Geometry import from_revit_conversion as rCon
 from duHast.Revit.Common.Geometry import solids as rSolid
-from duHast.Utilities.utility import encode_utf8
-from duHast.Revit.Exports.export_data import get_element_properties, get_phasing_data, get_model_data
+from duHast.Revit.Exports.export_data import (
+    get_level_data,
+    get_phasing_data,
+    get_model_data,
+    get_instance_properties,
+    get_type_properties,
+    get_design_set_data,
+)
+
 
 def populate_data_ceiling_object(doc, revit_ceiling):
     """
@@ -78,32 +78,26 @@ def populate_data_ceiling_object(doc, revit_ceiling):
             )
             ceiling_point_groups_as_doubles.append(data_geo_converted)
         data_c.polygon = ceiling_point_groups_as_doubles
+
         # get design set data
-        design_set_data = rDesignO.get_design_set_option_info(doc, revit_ceiling)
-        data_c.design_set_and_option.option_name = design_set_data["designOptionName"]
-        data_c.design_set_and_option.set_name = design_set_data["designSetName"]
-        data_c.design_set_and_option.is_primary = design_set_data["isPrimary"]
+        design_set = get_design_set_data(doc=doc, element=revit_ceiling)
+        data_c.design_set_and_option = design_set
 
         # get type properties
-        data_c.type_properties.id = revit_ceiling.GetTypeId().IntegerValue
-        data_c.type_properties.name = encode_utf8(Element.Name.GetValue(revit_ceiling))
-        ceiling_type = doc.GetElement(revit_ceiling.GetTypeId())
-        type_properties = get_element_properties(ceiling_type)
-        data_c.type_properties.properties = type_properties
+        type_props = get_type_properties(doc=doc, element=revit_ceiling)
+        data_c.type_properties = type_props
 
         # get instance properties
-        data_c.instance_properties.id = revit_ceiling.Id.IntegerValue
-        instance_properties = get_element_properties(revit_ceiling)
-        data_c.instance_properties.properties = instance_properties
+        instance_props = get_instance_properties(revit_ceiling)
+        data_c.instance_properties = instance_props
 
         # get level properties
-        data_c.level.name = encode_utf8(
-            Element.Name.GetValue(doc.GetElement(revit_ceiling.LevelId))
+        level = get_level_data(
+            doc=doc,
+            element=revit_ceiling,
+            built_in_parameter_def=BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM,
         )
-        data_c.level.id = revit_ceiling.LevelId.IntegerValue
-        data_c.level.offset_from_level = rParaGet.get_built_in_parameter_value(
-            revit_ceiling, BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM
-        )  # offset from level
+        data_c.level = level
 
         # get the model name
         model = get_model_data(doc=doc)
@@ -111,7 +105,7 @@ def populate_data_ceiling_object(doc, revit_ceiling):
 
         # get phasing information
         phase = get_phasing_data(doc=doc, element=revit_ceiling)
-        data_c.phasing=phase
+        data_c.phasing = phase
 
         return data_c
     else:

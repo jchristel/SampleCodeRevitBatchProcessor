@@ -30,16 +30,9 @@ This module contains a Revit door export to DATA class functions.
 from Autodesk.Revit.DB import (
     BoundingBoxXYZ,
     BuiltInParameter,
-    Element,
     Options,
-    StorageType,
 )
 
-from duHast.Revit.Common import (
-    design_set_options as rDesignO,
-    parameter_get_utils as rParaGet,
-    phases as rPhase,
-)
 
 # from duHast.APISamples.Ceilings.Geometry import Geometry
 from duHast.Revit.Doors.doors import get_door_instances
@@ -50,7 +43,14 @@ from duHast.Data.Objects.Properties.Geometry.from_revit_conversion import (
 )
 
 from duHast.Revit.Common.Geometry.solids import get_bounding_box_from_family_geometry
-from duHast.Utilities.utility import encode_utf8
+from duHast.Revit.Exports.export_data import (
+    get_level_data,
+    get_phasing_data,
+    get_model_data,
+    get_instance_properties,
+    get_type_properties,
+    get_design_set_data,
+)
 
 
 def populate_data_door_object(doc, revit_door):
@@ -99,77 +99,34 @@ def populate_data_door_object(doc, revit_door):
         )
         door_point_groups_as_doubles.append(data_geo_converted)
         data_door.polygon = door_point_groups_as_doubles
+
         # get design set data
-        design_set_data = rDesignO.get_design_set_option_info(doc, revit_door)
-        data_door.design_set_and_option.option_name = design_set_data[
-            "designOptionName"
-        ]
-        data_door.design_set_and_option.set_name = design_set_data["designSetName"]
-        data_door.design_set_and_option.is_primary = design_set_data["isPrimary"]
+        design_set = get_design_set_data(doc=doc, element=revit_door)
+        data_door.design_set_and_option = design_set
 
         # get type properties
-        data_door.type_properties.id = revit_door.GetTypeId().IntegerValue
-        data_door.type_properties.name = encode_utf8(Element.Name.GetValue(revit_door))
-        ceiling_type = doc.GetElement(revit_door.GetTypeId())
-
-        # custom parameter value getters
-        value_getter = {
-            StorageType.Double: rParaGet.getter_double_as_double_converted_to_metric,
-            StorageType.Integer: rParaGet.getter_int_as_int,
-            StorageType.String: rParaGet.getter_string_as_UTF8_string,  # encode ass utf 8 just in case
-            StorageType.ElementId: rParaGet.getter_element_id_as_element_int,  # needs to be an integer for JSON encoding
-            str(None): rParaGet.getter_none,
-        }
-        data_door.type_properties.properties = (
-            rParaGet.get_all_parameters_and_values_wit_custom_getters(
-                ceiling_type, value_getter
-            )
-        )
+        type_props = get_type_properties(doc=doc, element=revit_door)
+        data_door.type_properties = type_props
 
         # get instance properties
-        data_door.instance_properties.id = revit_door.Id.IntegerValue
-        data_door.instance_properties.properties = (
-            rParaGet.get_all_parameters_and_values_wit_custom_getters(
-                revit_door, value_getter
-            )
-        )
+        instance_props = get_instance_properties(revit_door)
+        data_door.instance_properties = instance_props
 
         # get level properties
-        data_door.level.name = encode_utf8(
-            Element.Name.GetValue(doc.GetElement(revit_door.LevelId))
+        level = get_level_data(
+            doc=doc,
+            element=revit_door,
+            built_in_parameter_def=BuiltInParameter.ASSOCIATED_LEVEL_OFFSET,  # TODO: check this parameter
         )
-        data_door.level.id = revit_door.LevelId.IntegerValue
-        data_door.level.offset_from_level = rParaGet.get_built_in_parameter_value(
-            revit_door, BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM
-        )  # offset from level
+        data_door.level = level
 
         # get the model name
-        if doc.IsDetached:
-            data_door.revit_model.name = "Detached Model"
-        else:
-            data_door.revit_model.name = doc.Title
+        model = get_model_data(doc=doc)
+        data_door.revit_model = model
 
         # get phasing information
-        data_door.phasing.created = encode_utf8(
-            rPhase.get_phase_name_by_id(
-                doc,
-                rParaGet.get_built_in_parameter_value(
-                    revit_door,
-                    BuiltInParameter.PHASE_CREATED,
-                    rParaGet.get_parameter_value_as_element_id,
-                ),
-            )
-        )
-        data_door.phasing.demolished = encode_utf8(
-            rPhase.get_phase_name_by_id(
-                doc,
-                rParaGet.get_built_in_parameter_value(
-                    revit_door,
-                    BuiltInParameter.PHASE_DEMOLISHED,
-                    rParaGet.get_parameter_value_as_element_id,
-                ),
-            )
-        )
+        phase = get_phasing_data(doc=doc, element=revit_door)
+        data_door.phasing = phase
 
         return data_door
     else:
@@ -182,6 +139,7 @@ def get_all_door_data(doc, filter_family_names=[]):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+
     :return: A list of data door instances.
     :rtype: list of :class:`.DoorCeiling`
     """

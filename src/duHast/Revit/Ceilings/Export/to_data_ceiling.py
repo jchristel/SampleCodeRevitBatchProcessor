@@ -42,7 +42,7 @@ from duHast.Data.Objects import data_ceiling as dCeiling
 from duHast.Data.Objects.Properties.Geometry import from_revit_conversion as rCon
 from duHast.Revit.Common.Geometry import solids as rSolid
 from duHast.Utilities.utility import encode_utf8
-
+from duHast.Revit.Exports.export_data import get_element_properties, get_phasing_data, get_model_data
 
 def populate_data_ceiling_object(doc, revit_ceiling):
     """
@@ -88,28 +88,13 @@ def populate_data_ceiling_object(doc, revit_ceiling):
         data_c.type_properties.id = revit_ceiling.GetTypeId().IntegerValue
         data_c.type_properties.name = encode_utf8(Element.Name.GetValue(revit_ceiling))
         ceiling_type = doc.GetElement(revit_ceiling.GetTypeId())
-
-        # custom parameter value getters
-        value_getter = {
-            StorageType.Double: rParaGet.getter_double_as_double_converted_to_metric,
-            StorageType.Integer: rParaGet.getter_int_as_int,
-            StorageType.String: rParaGet.getter_string_as_UTF8_string,  # encode ass utf 8 just in case
-            StorageType.ElementId: rParaGet.getter_element_id_as_element_int,  # needs to be an integer for JSON encoding
-            str(None): rParaGet.getter_none,
-        }
-        data_c.type_properties.properties = (
-            rParaGet.get_all_parameters_and_values_wit_custom_getters(
-                ceiling_type, value_getter
-            )
-        )
+        type_properties = get_element_properties(ceiling_type)
+        data_c.type_properties.properties = type_properties
 
         # get instance properties
         data_c.instance_properties.id = revit_ceiling.Id.IntegerValue
-        data_c.instance_properties.properties = (
-            rParaGet.get_all_parameters_and_values_wit_custom_getters(
-                revit_ceiling, value_getter
-            )
-        )
+        instance_properties = get_element_properties(revit_ceiling)
+        data_c.instance_properties.properties = instance_properties
 
         # get level properties
         data_c.level.name = encode_utf8(
@@ -121,32 +106,12 @@ def populate_data_ceiling_object(doc, revit_ceiling):
         )  # offset from level
 
         # get the model name
-        if doc.IsDetached:
-            data_c.revit_model.name = "Detached Model"
-        else:
-            data_c.revit_model.name = doc.Title
+        model = get_model_data(doc=doc)
+        data_c.revit_model = model
 
         # get phasing information
-        data_c.phasing.created = encode_utf8(
-            rPhase.get_phase_name_by_id(
-                doc,
-                rParaGet.get_built_in_parameter_value(
-                    revit_ceiling,
-                    BuiltInParameter.PHASE_CREATED,
-                    rParaGet.get_parameter_value_as_element_id,
-                ),
-            )
-        )
-        data_c.phasing.demolished = encode_utf8(
-            rPhase.get_phase_name_by_id(
-                doc,
-                rParaGet.get_built_in_parameter_value(
-                    revit_ceiling,
-                    BuiltInParameter.PHASE_DEMOLISHED,
-                    rParaGet.get_parameter_value_as_element_id,
-                ),
-            )
-        )
+        phase = get_phasing_data(doc=doc, element=revit_ceiling)
+        data_c.phasing=phase
 
         return data_c
     else:

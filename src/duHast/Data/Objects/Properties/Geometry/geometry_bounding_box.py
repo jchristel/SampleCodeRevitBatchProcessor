@@ -29,7 +29,7 @@ Geometry data bounding_box storage class.
 
 import json
 from duHast.Data.Objects.Properties.Geometry import geometry_base
-
+from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 class DataBoundingBox(geometry_base.DataGeometryBase):
     data_type = "bounding box"
@@ -68,11 +68,11 @@ class DataBoundingBox(geometry_base.DataGeometryBase):
             # attempt to populate from json
             try:
                 self.min = j.get(
-                    "min",
+                    DataPropertyNames.MIN,
                     self.min,
                 )
                 self.type_properties = j.get(
-                    "max",
+                    DataPropertyNames.MAX,
                     self.max,
                 )
             except Exception as e:

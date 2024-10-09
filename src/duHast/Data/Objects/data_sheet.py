@@ -43,6 +43,7 @@ from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
     DataBoundingBox,
 )
 
+from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 class DataSheet(data_base.DataBase):
 
@@ -94,7 +95,8 @@ class DataSheet(data_base.DataBase):
                 self.type_properties = data_type_properties.DataTypeProperties(
                     j.get(data_type_properties.DataTypeProperties.data_type, {})
                 )
-                self.bounding_box = DataBoundingBox(j.get("bounding_box", {}))
+                self.bounding_box = DataBoundingBox(j.get(DataPropertyNames.BOUNDING_BOX, {}))
+                
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

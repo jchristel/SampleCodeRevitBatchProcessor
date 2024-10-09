@@ -3,6 +3,7 @@
 Data property  names enum class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -34,15 +35,18 @@ class DataPropertyNames(Enum):
     """
     Contains property names used in data storage classes
     """
-    
-    ID = "id"
-    NAME = "name"
-    PROPERTIES = "properties"
-    VALUE = "value"
-    CREATED = "created"
-    DEMOLISHED = "demolished"
+
     ASSOCIATED_ELEMENTS = "associated_elements"
+    BOUNDING_BOX = "bounding_box"
+    CREATED = "created"
     DATA_TYPE = "data_type"
+    DEMOLISHED = "demolished"
+    ID = "id"
+    IS_PRIMARY = "is_primary"
+    MIN = "min"
+    MAX = "max"
+    NAME = "name"
+    OPTION_NAME = "option_name"
+    PROPERTIES = "properties"
     SET_NAME = "set_name"
-    OPTION_NAME="option_name"
-    IS_PRIMARY="is_primary"
+    VALUE = "value"

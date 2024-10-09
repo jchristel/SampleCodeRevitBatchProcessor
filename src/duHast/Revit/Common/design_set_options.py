@@ -31,7 +31,7 @@ import clr
 import System
 
 # import common library modules
-# from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Common.Objects.design_set_property_names import DesignSetPropertyNames
 
 
 # import Autodesk
@@ -176,8 +176,8 @@ def get_design_set_option_info(doc, element):
     :type doc: Autodesk.Revit.DB.Document
     :param element: The element of which the design set/option data is to be returned.
     :type element: Autodesk.Revit.DB.Element
-    :return: Dictionary
-        Design Set Name: (can be either Main Model or the design set name)
+    :return: Dictionary ( for keys refer to :class:`.DesignSetPropertyNames` )
+        DesignSetName: (can be either Main Model or the design set name)
         designOptionName:    Design Option Name (empty string if Main Model
         isPrimary:           Indicating whether design option is primary (true also if Main Model)
     :rtype: Dictionary
@@ -187,26 +187,28 @@ def get_design_set_option_info(doc, element):
     """
 
     # keys match properties in DataDesignSetOption class!!
-    new_key = ["designSetName", "designOptionName", "isPrimary"]
+    new_key = [
+        DesignSetPropertyNames.DESIGN_SET_NAME,
+        DesignSetPropertyNames.DESIGN_OPTION_NAME,
+        DesignSetPropertyNames.DESIGN_OPTION_IS_PRIMARY,
+    ]
     new_value = ["Main Model", "-", True]
     dic = dict(zip(new_key, new_value))
     try:
         # this only works for objects inheriting from Autodesk.Revit.DB.Element
         design_option = element.DesignOption
-        dic["designOptionName"] = design_option.Name
-        dic["isPrimary"] = design_option.IsPrimary
+        dic[DesignSetPropertyNames.DESIGN_OPTION_NAME] = design_option.Name
+        dic[DesignSetPropertyNames.DESIGN_OPTION_IS_PRIMARY] = design_option.IsPrimary
         e = doc.GetElement(
             design_option.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId()
         )
-        dic["designSetName"] = Element.Name.GetValue(e)
+        dic[DesignSetPropertyNames.DESIGN_SET_NAME] = Element.Name.GetValue(e)
     except Exception as e:
         pass
     return dic
 
 
 # filters
-
-
 def get_design_option_ids_of_all_primary_options(doc):
     """
     Get the design option ids of all primary options in a model.

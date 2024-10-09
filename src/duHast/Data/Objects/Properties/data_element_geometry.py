@@ -39,6 +39,7 @@ from duHast.Utilities.Objects import base
 from duHast.Data.Objects.Properties.Geometry import geometry_polygon
 from duHast.Data.Objects.Properties.Geometry import geometry_topo_cell
 
+from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 class DataElementGeometryBase(base.Base):
     def __init__(self, j, **kwargs):
@@ -83,8 +84,8 @@ class DataElementGeometryBase(base.Base):
                 # this is stored as a list since there could be multiple polygons representing an object
                 geometry_data_list = []
                 for item in polygon_data:
-                    if "data_type" in item:
-                        if item["data_type"]:
+                    if DataPropertyNames.DATA_TYPE in item:
+                        if item[DataPropertyNames.DATA_TYPE]:
                             dummy = geometry_polygon.DataPolygon(item)
                             geometry_data_list.append(dummy)
 

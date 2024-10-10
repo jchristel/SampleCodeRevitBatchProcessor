@@ -30,7 +30,7 @@ Revit API utility functions for Room boundary loops and elements.
 from Autodesk.Revit.DB import SpatialElementBoundaryOptions, CurveLoop, Wall, ModelLine
 
 
-def get_room_segments(room):
+def get_room_segments(room, spat_opts=SpatialElementBoundaryOptions()):
     """
     Get a rooms boundary segments with the default spatial element boundary options.
     :param room: The room to get for
@@ -38,7 +38,7 @@ def get_room_segments(room):
     :return: The boundary segments of the room
     :rtype: List[List[BoundarySegment]]
     """
-    return room.GetBoundarySegments(SpatialElementBoundaryOptions())
+    return room.GetBoundarySegments(spat_opts)
 
 
 def get_segment_host(rvt_doc, seg):

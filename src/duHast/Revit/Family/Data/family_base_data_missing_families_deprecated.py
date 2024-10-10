@@ -48,7 +48,9 @@ Algorithm description:
 
 # from collections import namedtuple
 
-from duHast.Revit.Family.Data import family_base_data_utils_deprecated as rFamBaseDataUtils
+from duHast.Revit.Family.Data import (
+    family_base_data_utils_deprecated as rFamBaseDataUtils,
+)
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects import result as res
 

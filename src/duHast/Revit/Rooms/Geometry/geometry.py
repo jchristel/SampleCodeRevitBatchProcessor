@@ -97,7 +97,7 @@ def get_2d_points_from_revit_room(revit_room):
     """
     Returns a list of dataGeometry object containing points representing the flattened(2D geometry) of a room in the model.
     List should only have one entry.
-    
+
     :param revit_room: The room.
     :type revit_room: Autodesk.Revit.DB.Architecture.Room
     :return: A list of data geometry instance containing the points defining the boundary loop.
@@ -115,7 +115,7 @@ def get_2d_points_from_revit_room(revit_room):
 def get_2d_points_from_all_revit_rooms(doc):
     """
     Returns a list of dataGeometry object containing points representing the flattened(2D geometry) of all the rooms in the model.
-    
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A list of data geometry instances containing the points defining the boundary loop per room.

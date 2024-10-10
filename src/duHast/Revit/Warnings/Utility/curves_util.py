@@ -135,7 +135,8 @@ def check_curves_overlaps(curves, group_id):
                     curve_to_delete.group_id == group_id
                     and curve_set[0].design_option_id == curve_set[1].design_option_id
                     and curve_set[0].phase_created_id == curve_set[1].phase_created_id
-                    and curve_set[0].phase_demolished_id == curve_set[1].phase_demolished_id
+                    and curve_set[0].phase_demolished_id
+                    == curve_set[1].phase_demolished_id
                 ):
                     # check if the curve to be deleted is in the main model
                     curves_to_delete.append(curve_to_delete)
@@ -229,10 +230,10 @@ def delete_curves(doc, curves_to_delete, curve_descriptor):
         result_delete = delete_by_element_ids(
             doc=doc,
             ids=ids,
-            transaction_name="delete overlapping {} separation lines {}".format(
+            transaction_name="delete overlapping {}: {}".format(
                 curve_descriptor, len(ids)
             ),
-            element_name="{} separation line(s)".format(curve_descriptor),
+            element_name="{}".format(curve_descriptor),
         )
         return_value.update(result_delete)
     else:
@@ -330,11 +331,12 @@ def modify_curves_by_lengthening(doc, guid, transaction_manager, group_id, callb
         return_value.append_message(
             "Found {} warnings matching group id: {}".format(max_loop, group_id)
         )
+
         ignore_these_curves = []
         for i in range(max_loop):
             # update the call back function with any progress made
             if callback:
-                callback(i, max_loop)
+                callback.update(i, max_loop)
             # start again, this time to change curve geometry
             failure_messages = get_warnings_by_guid(doc, guid=guid)
             # get next curve sets from failure message
@@ -416,6 +418,12 @@ def modify_curves_by_lengthening(doc, guid, transaction_manager, group_id, callb
                             )
                     # get out of loop and start again by getting the current set of warnings from the model
                     break
+
+            # check if cancelled
+            if callback:
+                if callback.is_cancelled():
+                    return_value.append_message("User cancelled!")
+                    break
     else:
         return_value.append_message(
             "No overlap warnings with guid: {} in model.".format(guid)
@@ -443,13 +451,11 @@ def _identify_curves_to_amend_short(curve_set, group_id):
 
     curves_to_amend = []
     if len(curve_set) == 2:
-        curve_to_change = calculate_shortened_curve_geometry(
-                curve_set[0], curve_set[1]
-        )
+        curve_to_change = calculate_shortened_curve_geometry(curve_set[0], curve_set[1])
         # check whether changes can be executed
         # need to be in main model, same design option, same phase created and demoed
         if (
-            curve_to_change 
+            curve_to_change
             and curve_set[0].group_id == curve_set[1].group_id
             and curve_set[0].design_option_id == curve_set[1].design_option_id
             and curve_set[0].phase_created_id == curve_set[1].phase_created_id
@@ -502,7 +508,7 @@ def modify_curves_by_shortening(doc, guid, transaction_manager, group_id, callba
         for i in range(max_loop):
             # update the call back function with any progress made
             if callback:
-                callback(i, max_loop)
+                callback.update(i, max_loop)
             # start again, this time to change curve geometry
             failure_messages = get_warnings_by_guid(doc, guid=guid)
             # get next curve sets from failure message
@@ -546,6 +552,12 @@ def modify_curves_by_shortening(doc, guid, transaction_manager, group_id, callba
                         )
                         return_value.update(status_update)
                     # get out of loop and start again by getting the current set of warnings from the model
+                    break
+
+            # check if cancelled
+            if callback:
+                if callback.is_cancelled():
+                    return_value.append_message("User cancelled!")
                     break
     else:
         return_value.append_message(

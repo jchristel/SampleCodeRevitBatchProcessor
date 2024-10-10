@@ -35,18 +35,23 @@ from duHast.Revit.Purge.purge_unused_by_delete import purge_unused_elements
 from duHast.Utilities.Objects.result import Result
 
 
-def get_shared_parameter_ids(doc):
+def get_shared_parameter_ids(doc, element_ids=None, element_ids_list_is_inclusive_filter=True):
     """
-    Returns all shared parameter ids in the model.
+    Returns all shared parameter ids in the model with the exception of parameters which have a binding and are therefore assumed to be used.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+    :param element_ids: optional list of shared parameter element ids
+    :type element_ids: [Autodesk.Revit.DB.ElementId]
+    :param element_ids_list_is_inclusive_filter: If true and element_ids list has values only those parameters will be purged if possible. If false and element_ids list has values any parameters in the list will not be purged.
+    :type element_ids_list_is_inclusive_filter: bool
+
     :return: A list of all shared parameter ids in the model.
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
 
     shared_col = get_all_shared_parameters(doc)
-    
+
     parameter_with_bindings = []
     # get all parameter binding in a project and exclude those from the list
     # to speed things up a little
@@ -55,15 +60,34 @@ def get_shared_parameter_ids(doc):
     while iter.MoveNext():
         definition = iter.Key
         parameter_with_bindings.append(definition.Id)
-    
+
     # get the ids of collector
     ids = get_ids_from_element_collector(shared_col)
     # remove all shared parameters which are bound to a category
-    ids = [i for i in ids if i not in parameter_with_bindings]
+    ids_without_parameter_binding = [i for i in ids if i not in parameter_with_bindings]
 
-    return ids
+    # check if further filtering is required
+    if element_ids == None:
+        return ids_without_parameter_binding
+    
+    # apply filtering
+    ids_filtered = []
+    if element_ids_list_is_inclusive_filter:
+        # only return element ids which are also present in the filter list
+        for id_without_binding in ids_without_parameter_binding:
+            if id_without_binding in element_ids:
+                ids_filtered.append(id_without_binding)
+    else:
+        # only return element ids which are not present in the filter list
+        for id_without_binding in ids_without_parameter_binding:
+            if id_without_binding not in element_ids:
+                ids_filtered.append(id_without_binding)
+    return ids_filtered
 
-def purge_shared_parameters_by_delete(doc, progress_callback=None, debug=False):
+
+def purge_shared_parameters_by_delete(
+    doc, progress_callback=None, debug=False, element_ids=None, element_ids_list_is_inclusive_filter=True
+):
     """
     Purge shared parameters by delete.
 
@@ -76,11 +100,11 @@ def purge_shared_parameters_by_delete(doc, progress_callback=None, debug=False):
     - any shared parameter which is bound to a category in a Revit model (but not used in a family etc) will report 2 elements as deleted:
         - the shared parameter itself
         - the binding (type or instance) to a category
-    
-    - any shared parameter which is not bound to a category in a Revit model, but used in a family etc will report 
+
+    - any shared parameter which is not bound to a category in a Revit model, but used in a family etc will report
         - 1 element as deleted
             - the shared parameter itself
-        - multiple changed elements: 
+        - multiple changed elements:
             - the families (and any of its instances placed) the shared parameter is used in
 
     :param doc: Current Revit model document.
@@ -89,6 +113,11 @@ def purge_shared_parameters_by_delete(doc, progress_callback=None, debug=False):
     :type progress_callback: callable
     :param debug: Debug mode.
     :type debug: bool
+    :param element_ids: optional list of shared parameter element ids
+    :type element_ids: [Autodesk.Revit.DB.ElementId]
+    :param element_ids_list_is_inclusive_filter: If true and element_ids list has values only those parameters will be purged if possible. If false and element_ids list has values any parameters in the list will not be purged.
+    :type element_ids_list_is_inclusive_filter: bool
+
     :return: Result class instance.
 
         - .status True if unused shared parameters where deleted or nothing needed to be deleted. Otherwise False.
@@ -100,10 +129,19 @@ def purge_shared_parameters_by_delete(doc, progress_callback=None, debug=False):
 
     try:
 
+        # set up element Id getter
+        # make allowance for an ignore element id list
+        def action(doc):
+            result_action = get_shared_parameter_ids(
+                doc=doc, element_ids=element_ids,
+                element_ids_list_is_inclusive_filter=element_ids_list_is_inclusive_filter
+            )
+            return result_action
+
         # purge unused shared parameters
         purge_result = purge_unused_elements(
             doc=doc,
-            element_id_getter=get_shared_parameter_ids,
+            element_id_getter=action,
             deleted_elements_modifier=None,
             modified_elements_modifier=None,
             progress_callback=progress_callback,

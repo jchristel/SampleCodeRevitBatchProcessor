@@ -51,6 +51,7 @@ from Autodesk.Revit.DB import (
     Grid,
     Line,
     FilteredElementCollector,
+    View,
 )
 
 
@@ -151,10 +152,18 @@ def get_linear_grids_in_model_by_view(doc, view):
     :rtype: [Autodesk.Revit.DB.Grid]
     """
 
+    # do some type checking
+    if isinstance(view, View) == False:
+        raise TypeError(
+            "view needs to be of type Autodesk.Revit.DB.View. Got {} instead.".format(
+                type(view)
+            )
+        )
+
     # get all grids in view
-    grids = get_grids_in_view(doc, view.Id).ToElements()
+    grids = get_grids_in_view(doc, view).ToElements()
     # get all multi segment grids in view
-    grids_multi = get_multi_segmented_grids_in_view(doc, view.Id).ToElements()
+    grids_multi = get_multi_segmented_grids_in_view(doc, view).ToElements()
     # get the individual grid id's making up the multi segment grid
     segment_grid_ids = get_all_segment_grid_ids(grids_multi)
     # set up placeholder to be returned
@@ -405,7 +414,7 @@ def get_grid_plane_z_value(grids, view):
     z = 0.0
     try:
         for grid in grids:
-            curve = get_curve_from_view(grid, view)
+            curve = get_grid_curves_from_view(grid, view)
             if curve != None:
                 if len(curve) > 0:
                     z = curve[0].GetEndPoint(0).Z

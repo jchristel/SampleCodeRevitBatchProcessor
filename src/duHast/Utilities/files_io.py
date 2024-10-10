@@ -119,6 +119,7 @@ def copy_file(old_name, new_name):
         value = False
     return value
 
+
 def file_move(old_name, new_name):
     """
     Moves a file
@@ -136,6 +137,7 @@ def file_move(old_name, new_name):
     except Exception:
         value = False
     return value
+
 
 #: file size in KB conversion
 FILE_SIZE_IN_KB = 1024
@@ -322,7 +324,7 @@ def remove_backup_revit_files_from_list(files):
     files_not_backups = []
     # Exclude any files that are backups: they have .0001.rvt (or similar pattern) in their name
     for rvt_file in files:
-        if(not is_back_up_file(rvt_file)):
+        if not is_back_up_file(rvt_file):
             files_not_backups.append(rvt_file)
 
     return files_not_backups

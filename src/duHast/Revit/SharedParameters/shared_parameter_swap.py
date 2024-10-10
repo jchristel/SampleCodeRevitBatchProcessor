@@ -37,8 +37,8 @@ Parameter change directives are read from a .csv file:
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -127,10 +127,15 @@ def swap_shared_parameters(doc, change_directive_file_path):
     _parameter_prefix_ = "_dummy_"
 
     # check if file exists
-    if(file_exist(change_directive_file_path) == False):
-        return_value.update_sep(False, "Change directive file does not exist: {}".format(change_directive_file_path))
+    if file_exist(change_directive_file_path) == False:
+        return_value.update_sep(
+            False,
+            "Change directive file does not exist: {}".format(
+                change_directive_file_path
+            ),
+        )
         return return_value
-    
+
     # load change directive
     parameter_directives = _load_shared_parameter_data_from_file(
         change_directive_file_path
@@ -140,8 +145,7 @@ def swap_shared_parameters(doc, change_directive_file_path):
     if len(parameter_directives) == 0:
         return_value.update_sep(False, "No parameter directives in file.")
         return return_value
-    
-    
+
     # loop over directive and
     for p_directive in parameter_directives:
         # load shared para file
@@ -165,9 +169,7 @@ def swap_shared_parameters(doc, change_directive_file_path):
             if status_change_to_fam_para.status:
                 #   - delete all shared parameter definition
                 status_delete_old_shared_para_def = (
-                    rSharedParaDelete.delete_shared_parameter_by_name(
-                        doc, p_directive
-                    )
+                    rSharedParaDelete.delete_shared_parameter_by_name(doc, p_directive)
                 )
                 return_value.update(status_delete_old_shared_para_def)
                 if status_delete_old_shared_para_def.status:
@@ -180,9 +182,7 @@ def swap_shared_parameters(doc, change_directive_file_path):
                     if s_para_def != None:
                         return_value.append_message(
                             "Retrieved shared parameter definition for: {}".format(
-                                parameter_directives[
-                                    p_directive
-                                ].newParameterData.name
+                                parameter_directives[p_directive].newParameterData.name
                             )
                         )
                         #   - swap family parameter to shared parameter

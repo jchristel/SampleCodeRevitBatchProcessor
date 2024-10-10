@@ -3,6 +3,7 @@
 This module contains a number of helper functions relating to Revit views. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ This module contains a number of helper functions relating to Revit views.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -32,11 +33,26 @@ import System
 # import common library modules
 from duHast.Revit.Common import common as com
 from duHast.Revit.Views.Utility.view_types import _get_view_types
-from duHast.Revit.Views.schedules import filter_revision_schedules
+from duHast.Revit.Views.schedules_revision_filter import (
+    filter_revision_schedules,
+    filter_schedules,
+)
 from duHast.Revit.Views.sheets import get_all_sheets
+from duHast.Revit.Areas.areas import get_area_scheme_by_name, get_area_schemes, get_views_by_area_scheme_name
+from duHast.Revit.Common.parameter_get_utils import (
+    get_built_in_parameter_value,
+    get_parameter_value_as_element_id,
+)
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import (
+    BuiltInParameter,
+    ElementClassFilter,
+    ElementId,
+    FilteredElementCollector,
+    View,
+    ViewType,
+)
 
 
 def get_view_types(doc):
@@ -83,7 +99,7 @@ def get_views_of_type(doc, view_type):
     """
 
     views = []
-    col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
+    col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
         if v.ViewType == view_type and v.IsTemplate == False:
             views.append(v)
@@ -141,17 +157,17 @@ def get_views_in_model(doc, filter):
     """
 
     views = []
-    col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
+    col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
         # filter out browser organization and other views which cant be deleted
         if (
             v.IsTemplate == False
             and filter(v) == True
-            and v.ViewType != rdb.ViewType.SystemBrowser
-            and v.ViewType != rdb.ViewType.ProjectBrowser
-            and v.ViewType != rdb.ViewType.Undefined
-            and v.ViewType != rdb.ViewType.Internal
-            and v.ViewType != rdb.ViewType.DrawingSheet
+            and v.ViewType != ViewType.SystemBrowser
+            and v.ViewType != ViewType.ProjectBrowser
+            and v.ViewType != ViewType.Undefined
+            and v.ViewType != ViewType.Internal
+            and v.ViewType != ViewType.DrawingSheet
         ):
             views.append(v)
     return views
@@ -174,7 +190,7 @@ def get_views_not_on_sheet(doc):
     # get all viewPorts on sheets
     view_ports_on_sheets = get_viewport_on_sheets(doc, sheets_in_model)
     # get all views in model
-    views_in_model = get_views_in_model(doc, filter_revision_schedules)
+    views_in_model = get_views_in_model(doc=doc, filter=filter_schedules)
     # check whether view has a viewport if not ... its not placed on a sheet
     for view_in_model in views_in_model:
         match = False
@@ -185,3 +201,58 @@ def get_views_not_on_sheet(doc):
         if match == False:
             views_not_on_sheet.append(view_in_model)
     return views_not_on_sheet
+
+
+def get_view_phase_id(view):
+    """
+    Get the views phase id.
+
+    Note if view does not support phase id and Invlaid ElementId (-1) is returned
+
+    :param view: The view of which to return the phase id
+    :type view: Autodesk.Revit.DB.View
+
+    :return: An element id representing the phase id. If view does not support phases then an Invalid id (-1) will be returned.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    """
+
+    # set up the default value ( no phase )
+    return_value = ElementId.InvalidElementId
+
+    # attempt to get the phase id from the view
+    phase_id = get_built_in_parameter_value(
+        element=view,
+        built_in_parameter_def=BuiltInParameter.VIEW_PHASE,
+        parameter_value_getter=get_parameter_value_as_element_id,
+    )
+
+    # check what came back and return accordingly
+    if phase_id is not None:
+        return phase_id
+    else:
+        return return_value
+
+
+def get_area_scheme_of_view(doc, view):
+    """
+    Returns the area scheme an area plan is associated with.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view: The view of which to return the area scheme
+    :type view: Autodesk.Revit.DB.View
+    :return: The area scheme if the view is of type AreaPlan otherwise None
+    :rtype: str or None
+    """
+    if view.ViewType != ViewType.AreaPlan:
+        return None
+    
+    area_schemes_in_model = get_area_schemes(doc=doc)
+
+    for area_scheme in area_schemes_in_model:
+        views_by_area_scheme = get_views_by_area_scheme_name(doc=doc, area_scheme_name=area_scheme.Name)
+        for view_in_scheme in views_by_area_scheme:
+            if view_in_scheme.Id == view.Id:
+                return area_scheme
+    
+    return None

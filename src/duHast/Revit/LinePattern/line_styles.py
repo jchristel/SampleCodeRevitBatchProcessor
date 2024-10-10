@@ -19,8 +19,8 @@ Revit line line styles helper functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -49,7 +49,7 @@ def delete_line_styles_starts_with(doc, starts_with):
 
         - .status True if all views where deleted. Otherwise False.
         - .message will contain deletion status.
-        
+
     :rtype: :class:`.Result`
     """
 
@@ -78,6 +78,7 @@ def get_all_line_style_ids(doc):
     lc = doc.Settings.Categories[BuiltInCategory.OST_Lines]
     ids = list(c.Id for c in lc.SubCategories).ToList[ElementId]()
     return ids
+
 
 def get_all_graphics_style_ids_by_line_style_id(doc):
     """

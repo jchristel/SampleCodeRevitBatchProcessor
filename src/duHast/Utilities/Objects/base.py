@@ -90,6 +90,8 @@ Methods:
 Fields:
 - No specific fields are defined in the `Base` class.
 """
+
+
 class Base(object):
     def __init__(self, **kwargs):
         """
@@ -114,10 +116,83 @@ class Base(object):
             ", ".join("{}={!r}".format(k, v) for k, v in self.__dict__.items()),
         )
 
+    def __str__(self, indent=0):
+        """
+        formatted output including indentation
 
+        :param indent: The level of indentation, defaults to 0
+        :type indent: int, optional
+
+        :return: A string representing all class properties and their values
+        :rtype: str
+        """
+
+        output = []
+        for attr_name, attr_value in self.__dict__.items():
+            if isinstance(attr_value, list):
+                output.append(" " * indent + "{}:".format(attr_name))
+                output.append(self._format_list(attr_value, indent + 2))
+            elif isinstance(attr_value, dict):
+                output.append(" " * indent + "{}:".format(attr_name))
+                output.append(self._format_dict(attr_value, indent + 2))
+            elif isinstance(attr_value, Base):
+                output.append(" " * indent + "{}:".format(attr_name))
+                output.append(attr_value.__str__(indent + 2))
+            else:
+                output.append(" " * indent + "{}: {}".format(attr_name,attr_value))
+        return "\n".join(output)
+
+    def _format_list(self, lst, indent):
+        """
+        A helper function to format list properties
+
+        :param lst: A list
+        :type lst: []
+        :param indent: level of indentation to be provided to the string output
+        :type indent: int
+
+        :return: A string formatted representation of the list past in with indentation.
+        :rtype: str
+        """
+        output = []
+        for item in lst:
+            if isinstance(item, Base):
+                output.append(item.__str__(indent))
+            elif isinstance(item, dict):
+                output.append(self._format_dict(item, indent))
+            else:
+                output.append(" " * indent + str(item))
+        return "\n".join(output)
+
+    def _format_dict(self, d, indent):
+        """
+        A helper function to format dictionary properties.
+
+        :param d: A dictionary
+        :type d: {}
+        :param indent: level of indentation to be provided to the string output
+        :type indent: int
+
+        :return: A string formatted representation of the dictionary past in with indentation.
+        :rtype: str
+        """
+        output = []
+        for key, value in d.items():
+            output.append(" " * indent + "{}:".format(key))
+            if isinstance(value, Base):
+                output.append(value.__str__(indent + 2))
+            elif isinstance(value, dict):
+                output.append(self._format_dict(value, indent + 2))
+            elif isinstance(value, list):
+                output.append(" " * (indent + 2) + "{}:".format(key))
+                output.append(self._format_list(value, indent + 4))
+            else:
+                output.append(" " * (indent + 2) + str(value))
+        return "\n".join(output)
+    
     def __eq__(self, other):
         """
-        Custom compare is equal override 
+        Custom compare is equal override
 
         :param other: Another instance of pattern class
         :type other: :class:`.PatternBase`
@@ -130,7 +205,7 @@ class Base(object):
     # python 2.7 needs custom implementation of not equal
     def __ne__(self, other):
         return not self.__eq__(other=other)
-    
+
     def __hash__(self):
         """
         Custom hash override
@@ -146,7 +221,6 @@ class Base(object):
                 )
             )
 
-
     def to_json(self):
         """
         Convert the instance of this class to json.
@@ -157,32 +231,33 @@ class Base(object):
 
         return json.dumps(self, indent=None, default=lambda o: o.__dict__)
 
-
     def string_to_utf(self, o):
-        '''
+        """
         Used to convert any properties stored as string to utf-8 in to json conversion of all class properties...
 
         :param o: _description_
         :type o: _type_
         :return: _description_
         :rtype: _type_
-        '''
+        """
 
         if isinstance(o, str):
-            return o.encode('utf-8').decode('utf-8')  # Encoding and decoding to ensure the type is str
+            return o.encode("utf-8").decode(
+                "utf-8"
+            )  # Encoding and decoding to ensure the type is str
         return o.__dict__
 
     def to_json_utf(self):
-        '''
+        """
         Convert the instance of this class to json, any string properties are converted to utf-8
 
         :return: A Json object.
         :rtype: json
-        '''
+        """
 
-        return json.dumps(self, indent=None, default=self.string_to_utf, ensure_ascii=False)
-
-
+        return json.dumps(
+            self, indent=None, default=self.string_to_utf, ensure_ascii=False
+        )
 
     def _is_primitive(self, obj):
         """

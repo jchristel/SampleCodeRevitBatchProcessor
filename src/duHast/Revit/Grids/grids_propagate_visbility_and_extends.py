@@ -41,7 +41,7 @@ from duHast.Revit.Grids import grids as rGrids
 from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Grids.grids import get_grid_curves_from_view, get_grid_plane_z_value
-
+from duHast.UI.Objects.ProgressBase import ProgressBase
 
 from Autodesk.Revit.DB import (
     DatumEnds,
@@ -60,6 +60,7 @@ grid_properties = namedtuple(
     "grid_properties",
     "is_grid_in_scope datum_extent_type_zero datum_extent_type_one grid_curve, end_zero_bubble, end_one_bubble, is_grid_hidden",
 )
+
 
 def get_active_view_grid_data(active_view, grids_in_model):
     """
@@ -133,13 +134,15 @@ def get_active_view_grid_data(active_view, grids_in_model):
                     SPACER, SPACER, grid.Name, active_view.Name, e
                 )
             )
-            grid_visibility_data[id] = grid_properties(False, None, None, None, None, None, False)
+            grid_visibility_data[id] = grid_properties(
+                False, None, None, None, None, None, False
+            )
     return_value.result.append(grid_visibility_data)
     return return_value
 
 
 def change_grid_extends_in_views(
-    doc, grids_in_model, grid_template_data, views_to_change_grid_elements
+    doc, grids_in_model, grid_template_data, views_to_change_grid_elements, callback
 ):
     """
     Changes grids  in a number views to match the extend, visibility, bubble visibility of grids in template view
@@ -159,11 +162,30 @@ def change_grid_extends_in_views(
         bool # is the grid visible
     :param views_to_change_grid_elements: A list of views in which to update the grid graphics
     :type views_to_change_grid_elements: [Autodesk.Revit.DB.View]
+    :param callback: A progress call back function
+    :type views_to_change_grid_elements: :class:`.ProgressBase`
     """
     return_value = res.Result()
+
+    # some type checking
+    if isinstance(callback, ProgressBase) == False and callback is not None:
+        return_value.update_sep(
+            False,
+            "Callback needs to inherit from ProgressBase or must be None. Got {} instead".format(
+                type(callback)
+            ),
+        )
+        return return_value
+
     try:
+        view_counter = 0
         # loop over views and update grids based on template data
         for view in views_to_change_grid_elements:
+
+            # update any progress call back
+            if callback:
+                callback.update(view_counter, len(views_to_change_grid_elements))
+
             return_value.append_message("Processing view: {}".format(view.Name))
             # get the grid z plane for the view
             new_grid_z_plane = get_grid_plane_z_value(grids_in_model, view)
@@ -267,7 +289,10 @@ def change_grid_extends_in_views(
                                     old_grid_curve.GetEndPoint(1).Y,
                                     new_grid_z_plane,
                                 )
-                                new_grid_curve = Line.CreateBound(start_point, end_point)
+                                new_grid_curve = Line.CreateBound(
+                                    start_point, end_point
+                                )
+
                                 grid_element.SetCurveInView(
                                     DatumExtentType.ViewSpecific, view, new_grid_curve
                                 )
@@ -291,6 +316,12 @@ def change_grid_extends_in_views(
                             e
                         ),
                     )
+
+            # check if cancelled
+            if callback and callback.is_cancelled():
+                return_value.append_message("User cancelled.")
+                break
+
     except Exception as e:
         return_value.update_sep(
             False, "An exception occurred while changing grid extends: {}".format(e)
@@ -299,7 +330,9 @@ def change_grid_extends_in_views(
     return return_value
 
 
-def propagate_grids_extends_and_visibility(doc, views_to_change_grid_elements):
+def propagate_grids_extends_and_visibility(
+    doc, views_to_change_grid_elements, callback=None
+):
     """
     Propagates grid extends and visibility from the active view to all other views selected in UI.
 
@@ -307,6 +340,8 @@ def propagate_grids_extends_and_visibility(doc, views_to_change_grid_elements):
     :type doc: Autodesk.Revit.DB.Document
     :param viewsToChangeGridElements: A list of views in which to update the grid graphics
     :type viewsToChangeGridElements: [Autodesk.Revit.DB.View]
+    :param callback: A progress call back function
+    :type views_to_change_grid_elements: :class:`.ProgressBase`
 
     :return:
         Result class instance.
@@ -317,17 +352,28 @@ def propagate_grids_extends_and_visibility(doc, views_to_change_grid_elements):
 
         On exception
 
-        - result.status (bool) will be False 
+        - result.status (bool) will be False
         - result.message will contain the exception message
     """
 
     return_value = res.Result()
+
+    # some type checking
+    if isinstance(callback, ProgressBase) == False and callback is not None:
+        return_value.update_sep(
+            False,
+            "Callback needs to inherit from ProgressBase or must be None. Got {} instead".format(
+                type(callback)
+            ),
+        )
+        return return_value
     try:
         # get all grids in model
         grids_in_model = rGrids.get_grids_in_model(doc)
         if len(grids_in_model.ToElementIds()) > 0:
             # get active view grid information
             grid_data_result = get_active_view_grid_data(doc.ActiveView, grids_in_model)
+
             if grid_data_result.status == False:
                 raise ValueError(grid_data_result.message)
             # get the grid template data
@@ -345,9 +391,14 @@ def propagate_grids_extends_and_visibility(doc, views_to_change_grid_elements):
                 )
 
                 # update grid extends
-                change_grid_extends_in_views(
-                    doc, grids_in_model, grid_data, views_to_change_grid_elements
+                result_change = change_grid_extends_in_views(
+                    doc=doc,
+                    grids_in_model=grids_in_model,
+                    grid_template_data=grid_data,
+                    views_to_change_grid_elements=views_to_change_grid_elements,
+                    callback=callback,
                 )
+                return_value.update(result_change)
             else:
                 return_value.append_message(
                     "No view to propagate grids extends to where provided."

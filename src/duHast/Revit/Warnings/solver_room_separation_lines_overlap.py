@@ -38,6 +38,7 @@ from duHast.Revit.Warnings.Utility.curves_util import (
     modify_curves_by_shortening,
 )
 from duHast.Revit.Common.transaction import in_transaction
+from duHast.Revit.Warnings.warning_guids import ROOM_SEPARATION_LINES_OVERLAP
 
 
 class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
@@ -55,6 +56,7 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
     - Solving overlapping room separation lines by deleting or modifying them.
     - Ignoring room separation lines that overlap when they are in group instances.
     """
+
     def __init__(
         self,
         solve_by_lengthening_curves=True,
@@ -85,7 +87,7 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
 
     # --------------------------- room tag not in room ---------------------------
     #: guid identifying this specific warning
-    GUID = "374396c0-984d-4f72-a081-30ab7dacb66d"
+    GUID = ROOM_SEPARATION_LINES_OVERLAP
 
     def solve_warnings(self, doc, warnings):
         """
@@ -109,6 +111,7 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
 
         return_value = res.Result()
         if len(warnings) > 0:
+
             # extract model lines and geometry from failure messages
             curve_storage_sets = get_curves_from_failure_messages(
                 doc=doc, failure_messages=warnings, group_id=self.group_id
@@ -121,7 +124,14 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
             delete_curves_status = delete_curves(
                 doc=doc, curves_to_delete=curves_to_delete, curve_descriptor="room"
             )
-            return_value.update(delete_curves_status)
+            return_value.update_sep(
+                delete_curves_status.status,
+                "Separation lines completely within other separation lines: {}".format(
+                    delete_curves_status.message
+                ),
+            )
+
+            # determinae as to solve overlapping lines by lengthening or shortening
             if self.solve_by_lengthening_curves:
                 # attempt to modify overlapping curves by lengthening the longer curve to
                 # the length of the shorter curve and thereby completely overlapping the shorter curve
@@ -130,7 +140,7 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
                     guid=self.GUID,
                     group_id=self.group_id,
                     transaction_manager=self.transaction_manager,
-                    callback=self.callback
+                    callback=self.callback,
                 )
                 return_value.update(modify_curves_status)
             else:
@@ -146,6 +156,9 @@ class RevitWarningsSolverRoomSepLinesOverlap(base.Base):
                 return_value.update(modify_curves_status)
         else:
             return_value.update_sep(
-                True, "{}: No warnings of type: room separation lines overlap in model.".format(self.filter_name)
+                True,
+                "{}: No warnings of type: room separation lines overlap in model.".format(
+                    self.filter_name
+                ),
             )
         return return_value

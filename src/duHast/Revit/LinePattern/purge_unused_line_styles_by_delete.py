@@ -29,14 +29,52 @@ Revit purging not used line styles by using the purge by delete helper functions
 #
 
 from duHast.Revit.LinePattern.line_styles import get_all_line_style_ids
+from duHast.Revit.Common.common import get_ids_from_element_collector
 from duHast.Revit.Purge.purge_unused_by_delete import purge_unused_elements
 from duHast.Revit.LinePattern.Objects.LineStylePurgeModifier import (
     LineStylePurgeModifier,
 )
 from duHast.Utilities.Objects.result import Result
 
+def get_line_style_ids(doc, element_ids=None, element_ids_list_is_inclusive_filter=True):
+    """
+    Returns all line style ids in the model.
 
-def purge_line_styles_by_delete(doc, progress_callback=None, debug=False):
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param element_ids: optional list of line style element ids
+    :type element_ids: [Autodesk.Revit.DB.ElementId]
+    :param element_ids_list_is_inclusive_filter: If true and element_ids list has values only those line styles will be purged if possible. If false and element_ids list has values any line styles in the list will not be purged.
+    :type element_ids_list_is_inclusive_filter: bool
+
+    :return: A list of all line styles ids in the model.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    """
+
+    line_pattern_col = get_all_line_style_ids(doc)
+    ids = get_ids_from_element_collector(line_pattern_col)
+
+    # check if filtering is required
+    if (element_ids is None):
+        return ids
+    
+    # apply filtering
+    ids_filtered = []
+    if element_ids_list_is_inclusive_filter:
+        # only return element ids which are also present in the filter list
+        for id in ids:
+            if id in element_ids:
+                ids_filtered.append(id)
+    else:
+        # only return element ids which are not present in the filter list
+        for id in ids:
+            if id not in element_ids:
+                ids_filtered.append(id)
+    
+    return ids_filtered
+
+
+def purge_line_styles_by_delete(doc, progress_callback=None, debug=False, element_ids=None, element_ids_list_is_inclusive_filter=True):
     """
     Purge line styles by delete.
 
@@ -48,13 +86,18 @@ def purge_line_styles_by_delete(doc, progress_callback=None, debug=False):
     - a custom element deleted modifier is used to check if the deleted element count is 2 and if the second deleted element is the associated graphics style.
     - if that is the case and no modified elements are listed, the deleted element count is reduced to 1 and the line style is considered as deleted.
 
-    
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param progress_callback: Callback to report progress.
     :type progress_callback: callable
     :param debug: Debug mode.
     :type debug: bool
+    :param element_ids: optional list of line style element ids
+    :type element_ids: [Autodesk.Revit.DB.ElementId]
+    :param element_ids_list_is_inclusive_filter: If true and element_ids list has values only those line styles will be purged if possible. If false and element_ids list has values any line styles in the list will not be purged.
+    :type element_ids_list_is_inclusive_filter: bool
+
     :return: Result class instance.
 
         - .status True if unused line styles where deleted or nothing needed to be deleted. Otherwise False.
@@ -65,19 +108,30 @@ def purge_line_styles_by_delete(doc, progress_callback=None, debug=False):
     return_value = Result()
 
     try:
+
+        # set up element Id getter
+        # make allowance for an ignore element id list
+        def action(doc):
+            result_action = get_line_style_ids(
+                doc=doc, element_ids=element_ids,
+                element_ids_list_is_inclusive_filter=element_ids_list_is_inclusive_filter
+            )
+            return result_action
+        
         # set up delete modifier instance
+        # reduces the count of deleted elements to the line style only by removing the associated graphics style
         mod_delete = LineStylePurgeModifier(doc)
 
         # purge unused line styles
         purge_result = purge_unused_elements(
             doc=doc,
-            element_id_getter=get_all_line_style_ids,
-            deleted_elements_modifier=mod_delete, # reduces the count of deleted elements to the line style only by removing the associated graphics style
+            element_id_getter=action,
+            deleted_elements_modifier=mod_delete,
             modified_elements_modifier=None,
             progress_callback=progress_callback,
             debug=debug,
         )
-        
+
         # get the debug log if debug mode is enabled
         if debug:
             return_value.append_message("\n".join(mod_delete.debug_log))

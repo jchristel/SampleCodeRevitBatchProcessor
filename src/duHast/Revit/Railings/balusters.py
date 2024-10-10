@@ -19,16 +19,17 @@ This module contains a number of helper functions relating to Revit railing balu
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-import Autodesk.Revit.DB as rdb
 
-from duHast.Revit.Common import common as com
+from Autodesk.Revit.DB import BuiltInCategory, ElementId, FilteredElementCollector
+
+from duHast.Revit.Common.common import get_ids_from_element_collector
 from duHast.Revit.Railings.Utility.merge_lists import merge_into_unique_list
 from duHast.Revit.Railings.railings import (
     get_all_railing_type_ids_by_class_and_category,
@@ -49,13 +50,13 @@ def get_balusters_used_in_pattern(b_pattern):
         bal_info = b_pattern.GetBaluster(i)
         if (
             bal_info.BalusterFamilyId not in ids
-            and bal_info.BalusterFamilyId != rdb.ElementId.InvalidElementId
+            and bal_info.BalusterFamilyId != ElementId.InvalidElementId
         ):
             ids.append(bal_info.BalusterFamilyId)
     # add excess pattern baluster id
     if (
         b_pattern.ExcessLengthFillBalusterId not in ids
-        and b_pattern.ExcessLengthFillBalusterId != rdb.ElementId.InvalidElementId
+        and b_pattern.ExcessLengthFillBalusterId != ElementId.InvalidElementId
     ):
         ids.append(b_pattern.ExcessLengthFillBalusterId)
     return ids
@@ -76,17 +77,17 @@ def get_used_baluster_post_ids(b_post_pattern):
 
     ids = []
     # get corner post
-    if b_post_pattern.CornerPost.BalusterFamilyId != rdb.ElementId.InvalidElementId:
+    if b_post_pattern.CornerPost.BalusterFamilyId != ElementId.InvalidElementId:
         ids.append(b_post_pattern.CornerPost.BalusterFamilyId)
     # get end post id
     if (
-        b_post_pattern.EndPost.BalusterFamilyId != rdb.ElementId.InvalidElementId
+        b_post_pattern.EndPost.BalusterFamilyId != ElementId.InvalidElementId
         and b_post_pattern.EndPost.BalusterFamilyId not in ids
     ):
         ids.append(b_post_pattern.EndPost.BalusterFamilyId)
     # get start post id
     if (
-        b_post_pattern.StartPost.BalusterFamilyId != rdb.ElementId.InvalidElementId
+        b_post_pattern.StartPost.BalusterFamilyId != ElementId.InvalidElementId
         and b_post_pattern.StartPost.BalusterFamilyId not in ids
     ):
         ids.append(b_post_pattern.StartPost.BalusterFamilyId)
@@ -104,7 +105,7 @@ def get_used_baluster_per_tread(b_placement):
 
     ids = []
     # get baluster per tread
-    if b_placement.BalusterPerTreadFamilyId != rdb.ElementId.InvalidElementId:
+    if b_placement.BalusterPerTreadFamilyId != ElementId.InvalidElementId:
         ids.append(b_placement.BalusterPerTreadFamilyId)
     return ids
 
@@ -119,8 +120,8 @@ def get_all_baluster_symbols(doc):
     """
 
     col = (
-        rdb.FilteredElementCollector(doc)
-        .OfCategory(rdb.BuiltInCategory.OST_StairsRailingBaluster)
+        FilteredElementCollector(doc)
+        .OfCategory(BuiltInCategory.OST_StairsRailingBaluster)
         .WhereElementIsElementType()
     )
     return col
@@ -137,7 +138,7 @@ def get_all_baluster_symbols_ids(doc):
 
     ids = []
     col = get_all_baluster_symbols(doc)
-    ids = com.get_ids_from_element_collector(col)
+    ids = get_ids_from_element_collector(col)
     return ids
 
 

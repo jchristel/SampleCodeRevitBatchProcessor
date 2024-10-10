@@ -30,7 +30,9 @@ Family warnings data processor class.
 
 from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
 from duHast.Revit.Warnings.Data.Objects import warnings_data as rWarnData
-from duHast.Revit.Warnings.Data.Objects.warnings_data_processor_defaults import DATA_TYPE_PROCESSOR as data_type_warnings_processor
+from duHast.Revit.Warnings.Data.Objects.warnings_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_warnings_processor,
+)
 
 
 class WarningsProcessor(IFamilyProcessor):

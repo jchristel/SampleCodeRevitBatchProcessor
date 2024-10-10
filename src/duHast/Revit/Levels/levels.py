@@ -64,6 +64,22 @@ def get_levels_in_model(doc):
     return collector
 
 
+def get_levels_in_view(doc, view):
+    """
+    Get all levels in a view
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view: The view to get grids from.
+    :type view: Autodesk.Revit.DB.View
+    :return: A collector with all grids in view.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    """
+
+    collector = FilteredElementCollector(doc, view.Id).OfClass(Level)
+    return collector
+
+
 # --------------------------------------------- utility functions ------------------
 
 

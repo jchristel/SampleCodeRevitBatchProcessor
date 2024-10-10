@@ -19,8 +19,8 @@ A file selection GUI.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -40,6 +40,7 @@ import ctypes
 # from duHast.UI import FileSelectSettings as set
 from duHast.UI.file_list import get_revit_files_for_processing
 from duHast.UI.Objects.file_select_settings import FileSelectionSettings
+
 
 def Mbox(title, text, style):
     """
@@ -77,7 +78,7 @@ class MyWindow(Windows.Window):
         wpf.LoadComponent(self, xaml_full_file_name)
 
         # set the settings
-        if(isinstance(settings, FileSelectionSettings) == False):
+        if isinstance(settings, FileSelectionSettings) == False:
             raise ValueError("settings parameter must be of type FileSelectionSettings")
         self.GUIChange = True
         # populate fields
@@ -95,22 +96,27 @@ class MyWindow(Windows.Window):
         """
         Event handler for text changed in TextBox.
         """
-        filter_text = sender.Text.lower()  # Convert to lowercase for case-insensitive filtering
-        #self.FilteredFiles.Filter = lambda item: filter_text in item.name.lower()
-        filtered_files = [file for file in self.revitfiles if filter_text in file.name.lower()]
+        filter_text = (
+            sender.Text.lower()
+        )  # Convert to lowercase for case-insensitive filtering
+        # self.FilteredFiles.Filter = lambda item: filter_text in item.name.lower()
+        filtered_files = [
+            file for file in self.revitfiles if filter_text in file.name.lower()
+        ]
         self.files.ItemsSource = filtered_files
 
     def _HandleFileChange(self):
-        '''
+        """
         _summary_
-        '''
-        
-        if(self.GUIChange == False):
+        """
+
+        if self.GUIChange == False:
             revitFiles = get_revit_files_for_processing(
-                self.tbSourceFolder.Text, 
-                self.cbInclSubDirs.IsChecked, 
-                self.tbFileType.Text)
-            
+                self.tbSourceFolder.Text,
+                self.cbInclSubDirs.IsChecked,
+                self.tbFileType.Text,
+            )
+
             self.revitfiles = revitFiles
             # set new source
             self.files.ItemsSource = revitFiles
@@ -160,35 +166,35 @@ class MyWindow(Windows.Window):
         self.Close()
 
     def TextBoxSourcePath_TextChanged(self, sender, TextChangedEventArgs):
-        '''
+        """
         Source Path text box change event handler
 
         :param sender: _description_
         :type sender: _type_
         :param TextChangedEventArgs: _description_
         :type TextChangedEventArgs: _type_
-        '''
+        """
 
         self._HandleFileChange()
-    
+
     def CheckBoxSubDir_Checked(self, sender, RoutedEventArgs):
-        '''
+        """
         _summary_
 
         :param sender: _description_
         :type sender: _type_
         :param RoutedEventArgs: _description_
         :type RoutedEventArgs: _type_
-        '''
+        """
         self._HandleFileChange()
 
     def SubDirCheckBox_Unchecked(self, sender, RoutedEventArgs):
-        '''
+        """
         _summary_
 
         :param sender: _description_
         :type sender: _type_
         :param RoutedEventArgs: _description_
         :type RoutedEventArgs: _type_
-        '''
+        """
         self._HandleFileChange()

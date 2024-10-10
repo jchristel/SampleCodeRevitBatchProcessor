@@ -31,4 +31,4 @@ Category data default names.
 DATA_TYPE_PROCESSOR = "CategoryProcessor"
 
 # report name
-DATA_REPORT_NAME =   "FamilyCategoriesCombinedReport"
+DATA_REPORT_NAME = "FamilyCategoriesCombinedReport"

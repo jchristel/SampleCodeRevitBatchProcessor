@@ -188,7 +188,7 @@ class FamilyCategoryDataStorage(IFamDataStorage.IFamilyDataStorage):
             other.property_line_colour_green_name,
             other.property_line_colour_blue_name,
         )
-    
+
     # python 2.7 needs custom implementation of not equal
     def __ne__(self, other):
         return not self.__eq__(other=other)

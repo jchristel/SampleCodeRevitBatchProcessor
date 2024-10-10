@@ -136,7 +136,9 @@ def check_line_patterns_are_in_model(doc, line_pattern_data):
     return_value = res.Result()
     all_line_pattern_in_model = build_patterns_dictionary_by_name(doc=doc)
     # append solid line pattern as it is  a special case inn the api
-    all_line_pattern_in_model[PatternSettingBase.SOLID_PATTERN]= [LinePatternElement.GetSolidPatternId()]
+    all_line_pattern_in_model[PatternSettingBase.SOLID_PATTERN] = [
+        LinePatternElement.GetSolidPatternId()
+    ]
     # check line pattern in model against line pattern in data
     return_value.update(
         _check_pattern_in_model(
@@ -239,9 +241,9 @@ def _add_filters_to_view(doc, view, filter_data):
         filter_data (list): A list of filter objects that should be added to the view.
 
     Returns:
-        duHast.Utilities.Objects.result.Result: The result object containing the outcome of adding the filters to the view. 
-        The `status` attribute of the result object indicates whether the filters were added successfully or not. 
-        The `message` attribute of the result object contains any additional messages related to the application of the filters. 
+        duHast.Utilities.Objects.result.Result: The result object containing the outcome of adding the filters to the view.
+        The `status` attribute of the result object indicates whether the filters were added successfully or not.
+        The `message` attribute of the result object contains any additional messages related to the application of the filters.
         The `result` attribute of the result object is a list of filters that were successfully added to the view.
     """
     return_value = res.Result()

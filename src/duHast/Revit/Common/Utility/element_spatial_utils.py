@@ -37,7 +37,7 @@ def get_room_element_is_in_by_element_phase_created(element, phase_dict):
     :type element: FamilyInstance
     :param phase_dict: The dictionary of phase name to phase element id ( key is the phase name, value is the phase element id)
     :type phase_dict: dict
-    
+
     :return: The room the element is in or None if no room exists or the element is not in a room
     :rtype: Room
     """

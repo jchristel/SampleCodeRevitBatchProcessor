@@ -61,7 +61,7 @@ def get_unused_in_place_ids_for_purge(doc, unused_type_getter):
     """
     Filters symbol (type) IDs and family IDs of families.
 
-    The returned list of IDs can be either unused family symbols or entire families if none of their symbols are in use. 
+    The returned list of IDs can be either unused family symbols or entire families if none of their symbols are in use.
     In terms of purging, it's faster to delete an entire family definition rather than deleting its symbols first and then the definition.
 
     :param doc: Current Revit model document.
@@ -73,7 +73,6 @@ def get_unused_in_place_ids_for_purge(doc, unused_type_getter):
     :return: A list of Element IDs representing the family symbols and/or family IDs matching the filter.
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
-
 
     unused_ids = []
     unused_family_ids = []
@@ -114,7 +113,6 @@ def get_used_unused_type_ids(doc, type_id_getter, use_type=0, exclude_shared_fam
     :return: A list of Element IDs representing the family symbols matching the filter.
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
-
 
     # get all types elements available
     all_loadable_three_d_type_ids = type_id_getter(

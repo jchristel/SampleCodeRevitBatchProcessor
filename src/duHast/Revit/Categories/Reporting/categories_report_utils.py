@@ -19,8 +19,8 @@ Revit category report functions .
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -59,6 +59,8 @@ from duHast.Revit.Categories.Utility.elements_by_category_utils import (
     get_elements_by_category,
 )
 
+from duHast.Utilities.utility import encode_utf8
+
 
 def build_report_data_by_category(doc, dic, family_cat, main_cat_name, doc_file_path):
     """
@@ -80,39 +82,37 @@ def build_report_data_by_category(doc, dic, family_cat, main_cat_name, doc_file_
     data = []
     for key in dic:
         row = [
-            str(doc_file_path).encode("utf-8"),
-            family_cat.encode("utf-8"),
-            main_cat_name.encode("utf-8"),
-            key.encode("utf-8"),
+            encode_utf8(str(doc_file_path)),
+            encode_utf8(family_cat),
+            encode_utf8(main_cat_name),
+            encode_utf8(key),
             str(dic[key].Id),
         ]
         # get elements
         elements = get_elements_by_category(doc, dic[key])
         # get properties
         dic_material = get_category_material(dic[key])
-        row.append(str(dic_material[PROPERTY_MATERIAL_NAME]).encode("utf-8"))
-        row.append(str(dic_material[PROPERTY_MATERIAL_ID]).encode("utf-8"))
+        row.append(encode_utf8(str(dic_material[PROPERTY_MATERIAL_NAME])))
+        row.append(encode_utf8(str(dic_material[PROPERTY_MATERIAL_ID])))
         # line pattern
         dic_pattern = get_line_pattern_from_category(dic[key], doc)
-        row.append(str(dic_pattern[PROPERTY_PATTERN_NAME]).encode("utf-8"))
-        row.append(str(dic_pattern[PROPERTY_PATTERN_ID]).encode("utf-8"))
+        row.append(encode_utf8(str(dic_pattern[PROPERTY_PATTERN_NAME])))
+        row.append(encode_utf8(str(dic_pattern[PROPERTY_PATTERN_ID])))
         # line weights
         dic_line_weights = get_category_line_weights(dic[key])
         row.append(
-            str(dic_line_weights[PROPERTY_LINE_WEIGHT_PROJECTION_NAME]).encode("utf-8")
+            encode_utf8(str(dic_line_weights[PROPERTY_LINE_WEIGHT_PROJECTION_NAME]))
         )
-        row.append(str(dic_line_weights[PROPERTY_LINE_WEIGHT_CUT_NAME]).encode("utf-8"))
+        row.append(encode_utf8(str(dic_line_weights[PROPERTY_LINE_WEIGHT_CUT_NAME])))
         # category colour
         dic_colour = get_category_colour(dic[key])
-        row.append(str(dic_colour[PROPERTY_LINE_COLOUR_RED_NAME]).encode("utf-8"))
-        row.append(str(dic_colour[PROPERTY_LINE_COLOUR_GREEN_NAME]).encode("utf-8"))
-        row.append(str(dic_colour[PROPERTY_LINE_COLOUR_BLUE_NAME]).encode("utf-8"))
+        row.append(encode_utf8(str(dic_colour[PROPERTY_LINE_COLOUR_RED_NAME])))
+        row.append(encode_utf8(str(dic_colour[PROPERTY_LINE_COLOUR_GREEN_NAME])))
+        row.append(encode_utf8(str(dic_colour[PROPERTY_LINE_COLOUR_BLUE_NAME])))
         # elements
-        row.append(str(len(elements[CATEGORY_GRAPHIC_STYLE_3D])).encode("utf-8"))
-        row.append(
-            str(len(elements[CATEGORY_GRAPHIC_STYLE_PROJECTION])).encode("utf-8")
-        )
-        row.append(str(len(elements[CATEGORY_GRAPHIC_STYLE_CUT])).encode("utf-8"))
+        row.append(encode_utf8(str(len(elements[CATEGORY_GRAPHIC_STYLE_3D]))))
+        row.append(encode_utf8(str(len(elements[CATEGORY_GRAPHIC_STYLE_PROJECTION]))))
+        row.append(encode_utf8(str(len(elements[CATEGORY_GRAPHIC_STYLE_CUT]))))
 
         data.append(row)
     return data

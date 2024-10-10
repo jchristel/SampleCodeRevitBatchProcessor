@@ -31,15 +31,22 @@ import clr
 # used to convert integer to byte value
 import System
 
-from Autodesk.Revit.DB import Color, ElementId, LinePatternElement, OverrideGraphicSettings
+from Autodesk.Revit.DB import (
+    Color,
+    ElementId,
+    LinePatternElement,
+    OverrideGraphicSettings,
+)
 
 from duHast.Revit.Common.Utility.revit_to_data_conversion import (
-    VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE,VIEW_DETAIL_LEVEL_NAME_MAPPING,
+    VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE,
+    VIEW_DETAIL_LEVEL_NAME_MAPPING,
 )
 
 from duHast.Revit.LinePattern.line_patterns import build_patterns_dictionary_by_name
 from duHast.Revit.LinePattern.fill_patterns import pattern_ids_by_name
 from duHast.Revit.Common.Objects.Data.pattern_settings_base import PatternSettingBase
+
 
 def get_colour(data_colour):
     """
@@ -123,7 +130,7 @@ def convert_to_revit_graphic_override(doc, data_override, is_filter_override=Fal
 
     # set up a new revit api override settings instance
     revit_override_setting = OverrideGraphicSettings()
-    
+
     # set values based on data override if one is present
     if data_override.are_overrides_present:
         # Sets the override color of the background pattern of cut faces.
@@ -174,7 +181,7 @@ def convert_to_revit_graphic_override(doc, data_override, is_filter_override=Fal
         # detail override only exists on category overrides
         if is_filter_override == False:
             # Sets the detail level if required
-            if(data_override.detail_level != -1):
+            if data_override.detail_level != -1:
                 revit_override_setting.SetDetailLevel(
                     VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE[data_override.detail_level]
                 )

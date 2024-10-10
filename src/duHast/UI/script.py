@@ -194,7 +194,9 @@ def process_args(argv):
 
     if not directory_exists(output_directory):
         got_args = False
-        output_with_time_stamp("Invalid output directory: [{}]".format(output_directory))
+        output_with_time_stamp(
+            "Invalid output directory: [{}]".format(output_directory)
+        )
 
     if (
         revit_file_extension.lower() != ".rvt"

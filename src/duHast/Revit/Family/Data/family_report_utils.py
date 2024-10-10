@@ -65,14 +65,16 @@ def _check_families_still_exist(family_data):
     family_was_removed = False
     try:
         # check which ones do not exist anymore
-        for family_data_instance  in family_data:
+        for family_data_instance in family_data:
             if file_exist(family_data_instance.family_file_path):
                 filtered_list.append(family_data_instance)
             else:
-                return_value.append_message("Removed family: {}".format(family_data_instance.family_file_path))
+                return_value.append_message(
+                    "Removed family: {}".format(family_data_instance.family_file_path)
+                )
                 family_was_removed = True
 
-        if(family_was_removed == False):
+        if family_was_removed == False:
             return_value.append_message("No family required removing from data.")
 
         # update return data
@@ -85,6 +87,7 @@ def _check_families_still_exist(family_data):
             "Failed to check whether families still exist with exception: {}".format(e),
         )
     return return_value
+
 
 def combine_reports(previous_report_path, new_report_path):
     """
@@ -122,33 +125,51 @@ def combine_reports(previous_report_path, new_report_path):
     try:
         # checks:
         # are past in path strings
-        if isinstance(previous_report_path,str)==False:
-            raise TypeError("previous_report_path should be of type string but is: {}".format(type(previous_report_path)))
-        if isinstance(new_report_path,str)==False:
-            raise TypeError("new_report_path should be of type string but is: {}".format(type(new_report_path)))
-        
+        if isinstance(previous_report_path, str) == False:
+            raise TypeError(
+                "previous_report_path should be of type string but is: {}".format(
+                    type(previous_report_path)
+                )
+            )
+        if isinstance(new_report_path, str) == False:
+            raise TypeError(
+                "new_report_path should be of type string but is: {}".format(
+                    type(new_report_path)
+                )
+            )
+
         # read values from previous path
-        previous_families_read_result = read_data_into_families(path_to_data= previous_report_path)
+        previous_families_read_result = read_data_into_families(
+            path_to_data=previous_report_path
+        )
         # check read was successful
         if previous_families_read_result.status == False:
             raise ValueError(previous_families_read_result.message)
         else:
-            return_value.append_message("Successfully read {} families from: {}".format(len(previous_families_read_result.result), previous_report_path))
-        
+            return_value.append_message(
+                "Successfully read {} families from: {}".format(
+                    len(previous_families_read_result.result), previous_report_path
+                )
+            )
+
         # read values from new path
         new_families_read_result = read_data_into_families(path_to_data=new_report_path)
         # check read was successful
         if new_families_read_result.status == False:
             raise ValueError(new_families_read_result.message)
         else:
-            return_value.append_message("Successfully read {} families from: {}".format(len(new_families_read_result.result), new_report_path))
-        
+            return_value.append_message(
+                "Successfully read {} families from: {}".format(
+                    len(new_families_read_result.result), new_report_path
+                )
+            )
+
         # some stats:
         new_families_added = 0
         previous_families_retained = 0
 
         # check if any new families where retrieved
-        if len(new_families_read_result.result)> 0:
+        if len(new_families_read_result.result) > 0:
             new_families_added = len(new_families_read_result.result)
             combined_families = new_families_read_result.result
             # take new families as base line and append previous report families only which have no match in new families
@@ -162,23 +183,40 @@ def combine_reports(previous_report_path, new_report_path):
             previous_families_retained = len(previous_families_read_result.result)
 
         # set the return value
-        return_value.append_message("Combined report contains {} new families and {} previous report families where retained.".format(new_families_added, previous_families_retained))
+        return_value.append_message(
+            "Combined report contains {} new families and {} previous report families where retained.".format(
+                new_families_added, previous_families_retained
+            )
+        )
         return_value.result = combined_families
-        
+
         # check if all families still exist on the server...if not remove from list
         check_files_exists = _check_families_still_exist(combined_families)
-        if(check_files_exists.status):
-            if(len(check_files_exists.result)!= len(combined_families)):
-                return_value.append_message("Removed {} families from data set as they no longer exist on server.".format(len(combined_families)-len(check_files_exists.result)))
+        if check_files_exists.status:
+            if len(check_files_exists.result) != len(combined_families):
+                return_value.append_message(
+                    "Removed {} families from data set as they no longer exist on server.".format(
+                        len(combined_families) - len(check_files_exists.result)
+                    )
+                )
                 return_value.result = check_files_exists.result
             else:
-                return_value.append_message("All families still exist on server. None was removed from data set.")
+                return_value.append_message(
+                    "All families still exist on server. None was removed from data set."
+                )
         else:
-            return_value.update_sep(False, "Failed to check file exists with exception: {}".format(check_files_exists.message))
+            return_value.update_sep(
+                False,
+                "Failed to check file exists with exception: {}".format(
+                    check_files_exists.message
+                ),
+            )
             # reset the result to an empty list!
             return_value.result = []
 
     except Exception as e:
-        return_value.update_sep(False, "An exception ocurred when combining reports: {}".format(e))
+        return_value.update_sep(
+            False, "An exception ocurred when combining reports: {}".format(e)
+        )
 
     return return_value

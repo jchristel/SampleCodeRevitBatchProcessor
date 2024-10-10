@@ -19,8 +19,8 @@ This module contains a Revit warnings properties report function.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -141,7 +141,12 @@ def write_warnings_data(file_name, data):
     return_value = res.Result()
     try:
         data_converted = convert_warnings_data_to_list(warnings_data=data)
-        write_report_data_as_csv(file_name, REPORT_WARNINGS_HEADER, data_converted)
+        write_report_data_as_csv(
+            file_name=file_name,
+            header=REPORT_WARNINGS_HEADER,
+            data=data_converted,
+            enforce_ascci=True,
+        )
         return_value.update_sep(
             True, "Successfully wrote data file at {}".format(file_name)
         )

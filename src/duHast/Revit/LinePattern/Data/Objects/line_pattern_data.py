@@ -270,7 +270,10 @@ class LinePatternData(IFamData.IFamilyData):
             # just in case parameter name is not unicode
             element_name = self._get_pattern_name(element)
             # get usage data from categories
-            pattern_use_counter, pattern_categories_used_by_data = self._get_pattern_usage_data_from_categories(
+            (
+                pattern_use_counter,
+                pattern_categories_used_by_data,
+            ) = self._get_pattern_usage_data_from_categories(
                 line_pattern_ids_by_category, element
             )
             # get usage data from levels
@@ -284,7 +287,9 @@ class LinePatternData(IFamData.IFamilyData):
             # get overall count
             pattern_use_counter = pattern_use_counter + counter_level
             # get overall usage data
-            pattern_usage_all = pattern_categories_used_by_data + pattern_levels_used_by_data
+            pattern_usage_all = (
+                pattern_categories_used_by_data + pattern_levels_used_by_data
+            )
 
             # make sure to get a value for the file path which is not empty if the document has not been saved
             saved_file_name = "-"

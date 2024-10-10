@@ -20,8 +20,8 @@ This module contains a number of helper functions
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -130,7 +130,27 @@ def encode_ascii(string):
     :rtype: str
     """
     if type(string) == str:
-        return string.encode("ascii", "replace")
+        # make sure the string is encoded and a string ( not a byte string ) is returned
+        return string.encode("ascii", "replace").decode("ascii")
+    else:
+        return string
+
+
+def encode_utf8(string):
+    """
+    Encode a string as utf-8 and replaces all non utf-8 characters
+
+    If a non string is past in the value will be returned unchanged.
+
+    :param string: The string to be utf-8 encoded.
+    :type string: str
+
+    :return: utf-8 encoded string
+    :rtype: str
+    """
+    if type(string) == str:
+        # make sure the string is encoded and a string ( not a byte string ) is returned
+        return string.encode("utf-8", "replace").decode("utf-8")
     else:
         return string
 
@@ -217,10 +237,11 @@ def flatten(d, parent_key="", sep="_"):
             items.append((new_key, v))
     return dict(items)
 
+
 def flatten_list(lst):
     """
     Function to flatten a nested list
-    
+
     :param lst: The list to be flattened
     :type lst: list
     :return: The flattened list

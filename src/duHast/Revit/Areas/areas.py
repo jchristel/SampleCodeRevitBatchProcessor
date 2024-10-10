@@ -31,7 +31,7 @@ from Autodesk.Revit.DB import (
     BuiltInCategory,
     ElementClassFilter,
     FilteredElementCollector,
-    ViewPlan
+    ViewPlan,
 )
 
 
@@ -89,6 +89,7 @@ def get_area_scheme_by_name(doc, area_scheme_name):
                 return area_scheme
     return return_value
 
+
 def get_views_by_area_scheme_name(doc, area_scheme_name):
     """
     Retrieves all views associated with a given area scheme name in Autodesk Revit.
@@ -109,3 +110,4 @@ def get_views_by_area_scheme_name(doc, area_scheme_name):
             element = doc.GetElement(id)
             return_value.append(element)
     return return_value
+

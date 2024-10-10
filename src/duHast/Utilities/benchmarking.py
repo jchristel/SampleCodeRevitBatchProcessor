@@ -71,7 +71,7 @@ def add_measure_time(func, should_output=True):
     Use like
     @measure_time(should_output = show_benchmarking_output_bool)
     def function_to_measure():
-        
+
 
     :param should_output: Whether the elapsed time should be printed to the console
     :type should_output: bool

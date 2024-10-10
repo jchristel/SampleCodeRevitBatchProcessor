@@ -20,8 +20,8 @@ Warnings solver utility class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -34,13 +34,19 @@ import clr
 
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Warnings.warnings import get_warnings_by_guid
-from duHast.Revit.Warnings.solver_room_tag_to_room import RevitWarningsSolverRoomTagToRoom
+from duHast.Revit.Warnings.solver_room_tag_to_room import (
+    RevitWarningsSolverRoomTagToRoom,
+)
 from duHast.Revit.Warnings.solver_duplicate_mark import RevitWarningsSolverDuplicateMark
-from duHast.Revit.Warnings.solver_area_separation_lines_overlap import RevitWarningsSolverAreaSepLinesOverlap
-from duHast.Revit.Warnings.solver_room_separation_lines_overlap import RevitWarningsSolverRoomSepLinesOverlap
+from duHast.Revit.Warnings.solver_area_separation_lines_overlap import (
+    RevitWarningsSolverAreaSepLinesOverlap,
+)
+from duHast.Revit.Warnings.solver_room_separation_lines_overlap import (
+    RevitWarningsSolverRoomSepLinesOverlap,
+)
 
 # import Autodesk
-#import Autodesk.Revit.DB as rdb
+# import Autodesk.Revit.DB as rdb
 
 from duHast.Utilities.Objects import base
 
@@ -67,9 +73,7 @@ class RevitWarningsSolver(base.Base):
 
     #: default solver classes
     solver_room_tag_to_room = RevitWarningsSolverRoomTagToRoom()
-    solver_same_mark = RevitWarningsSolverDuplicateMark(
-        default_filter_return_all
-    )
+    solver_same_mark = RevitWarningsSolverDuplicateMark(default_filter_return_all)
     solver_room_sep_lines = RevitWarningsSolverRoomSepLinesOverlap()
     solver_area_sep_lines = RevitWarningsSolverAreaSepLinesOverlap()
 
@@ -77,8 +81,8 @@ class RevitWarningsSolver(base.Base):
     AVAILABLE_SOLVERS = {
         solver_room_tag_to_room.GUID: solver_room_tag_to_room,
         solver_same_mark.GUID: solver_same_mark,
-        solver_room_sep_lines.GUID : solver_room_sep_lines,
-        solver_area_sep_lines.GUID : solver_area_sep_lines,
+        solver_room_sep_lines.GUID: solver_room_sep_lines,
+        solver_area_sep_lines.GUID: solver_area_sep_lines,
     }
 
     # --------------------------- solvers code ---------------------------
@@ -134,7 +138,14 @@ class RevitWarningsSolver(base.Base):
                     )
                     return_value.update(result_solver)
                 except Exception as e:
-                    return_value.update_sep(False, "Failed to apply solver for warnings guid {} with exception: {}".format(self.AVAILABLE_SOLVERS[solver].GUID, e))
+                    return_value.update_sep(
+                        False,
+                        "Failed to apply solver for warnings guid {} with exception: {}".format(
+                            self.AVAILABLE_SOLVERS[solver].GUID, e
+                        ),
+                    )
         except Exception as e:
-            return_value.update_sep(False, "Failed to apply all solvers with exception: {}".format(e))
+            return_value.update_sep(
+                False, "Failed to apply all solvers with exception: {}".format(e)
+            )
         return return_value

@@ -35,6 +35,7 @@ from duHast.Utilities.date_stamps import (
     TIME_STAMP_HHMMSEC_COLON,
 )
 
+
 class RevitWarning(base.Base):
     """
     A class representing a warning in a Revit file. This class inherits from the base.Base class.
@@ -44,10 +45,9 @@ class RevitWarning(base.Base):
         - id (str): The ID of the warning.
         - description (str): The description of the warning.
         - element_ids (list of str): A list of element IDs associated with the warning.
-        
+
     This class is used to store information about warnings that occur in a Revit file, such as the filename, warning ID, description, and associated element IDs.
     """
-
 
     def __init__(self, file_name="", id="", description="", element_ids=[], **kwargs):
         """
@@ -61,17 +61,15 @@ class RevitWarning(base.Base):
             `**kwargs` (optional): Additional keyword arguments to be passed to the base.Base class constructor.
         """
 
-
         super(RevitWarning, self).__init__(**kwargs)
 
         self.file_name = file_name
         self.id = id
         self.description = description
         self.element_ids = element_ids
-        self.date = get_date_stamp(FILE_DATE_STAMP_YYYYMMDD_SPACE),
+        self.date = (get_date_stamp(FILE_DATE_STAMP_YYYYMMDD_SPACE),)
         self.time = get_date_stamp(TIME_STAMP_HHMMSEC_COLON)
-    
-    
+
     def class_to_csv(self, headers):
         """
         Converts the warning object to a CSV list based on the provided headers.
@@ -86,7 +84,7 @@ class RevitWarning(base.Base):
         if isinstance(self, object):
             csv_list = []
             for prop in headers:
-                if(prop in self.__dict__):
+                if prop in self.__dict__:
                     csv_list.append(self.__dict__[prop])
                 else:
                     csv_list.append("Property {} does not exist!".format(prop))

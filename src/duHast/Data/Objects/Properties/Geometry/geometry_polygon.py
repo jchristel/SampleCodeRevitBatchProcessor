@@ -3,6 +3,7 @@
 Geometry data storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ Geometry data storage class.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -44,30 +45,31 @@ class DataPolygon(geometry_base.DataGeometryBase):
         # store data type  in base class
         super(DataPolygon, self).__init__(DataPolygon.data_type, j)
 
+        # set default values
+        self.outer_loop = []
+        self.inner_loops = []
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
-            if type(j) == str:
+            if isinstance(j, str):
                 # a string
                 j = json.loads(j)
-            elif type(j) == dict:
+            elif isinstance(j, dict):
                 # no action required
                 pass
             else:
-                raise ValueError(
-                    "Argument supplied must be of type string or type dictionary"
+                raise TypeError(
+                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
+                        type(j)
+                    )
                 )
 
-            if "outer_loop" in j:
-                self.outer_loop = j["outer_loop"]
-            else:
-                self.outer_loop = []
-
-            if "inner_loops" in j:
-                self.inner_loops = j["inner_loops"]
-            else:
-                self.inner_loops = []
-        else:
-            # set default values
-            self.outer_loop = []
-            self.inner_loops = []
+            # attempt to populate from json
+            try:
+                self.outer_loop = j.get("outer_loop", self.outer_loop)
+                self.inner_loops = j.get("inner_loops", self.inner_loops)
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

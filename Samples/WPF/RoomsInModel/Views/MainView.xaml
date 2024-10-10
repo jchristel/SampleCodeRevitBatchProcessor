@@ -1,0 +1,10 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="RoomsInModel.Views.MainView"
+        xmlns:local = "clr-namespace:RoomsInModel.Views"
+        Title="Rooms in model" Height="150" Width="300" ShowInTaskbar="False" Topmost="True"
+        WindowStartupLocation="CenterScreen" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalContentAlignment="Center">
+    <Grid>
+        <local:RoomsInModel/>
+    </Grid>
+</Window>

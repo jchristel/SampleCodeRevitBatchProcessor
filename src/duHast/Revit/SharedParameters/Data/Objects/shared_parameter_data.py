@@ -42,9 +42,9 @@ from duHast.Revit.SharedParameters.Data.Objects.shared_parameter_storage_used_by
 from Autodesk.Revit.DB import Element
 
 
-#PARAMETER_GUID = "parameterGUID"
-#PARAMETER_NAME = "parameterName"
-#PARAMETER_ID = "parameterId"
+# PARAMETER_GUID = "parameterGUID"
+# PARAMETER_NAME = "parameterName"
+# PARAMETER_ID = "parameterId"
 
 
 class SharedParameterData(IFamData.IFamilyData):
@@ -54,7 +54,7 @@ class SharedParameterData(IFamData.IFamilyData):
 
         :param root_path: Root path of the family.
         :type root_path: str
-        :param root_category_path: Root category path of the family. 
+        :param root_category_path: Root category path of the family.
         :type root_category_path: str
         """
 
@@ -68,7 +68,7 @@ class SharedParameterData(IFamData.IFamilyData):
         """
         Process the document and find all shared parameters in the family.
         Update the data storage with the shared parameter data.
-        
+
         :param doc: Revit family document
         :type doc: Autodesk.Revit.DB.Document
         :return: None

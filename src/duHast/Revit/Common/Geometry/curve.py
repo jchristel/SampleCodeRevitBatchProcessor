@@ -29,7 +29,7 @@ Revit curve helper functions
 
 import math
 
-from Autodesk.Revit.DB import Arc, Line, Transform, XYZ
+from Autodesk.Revit.DB import Arc, ElementId, Line, ModelCurve, Transform, XYZ
 
 from duHast.Utilities.compare import is_close
 from duHast.Utilities.Objects import result as res
@@ -487,3 +487,25 @@ def get_perpendicular_line_through_point(original_line, rotation_axis, rotation_
     )
     transformed_line = original_line.CreateTransformed(trans_form)
     return transformed_line
+
+
+def get_curve_level(doc, curve):
+    """
+    Sorts the area lines based on their associated level names and returns a dictionary where the keys are the level names and the values are lists of area lines.
+
+    Args:
+        doc (Document): The current model document.
+        area_lines (list): A list of area lines.
+
+    Returns:
+        dict: A dictionary where the keys are the level names and the values are lists of area lines.
+    """
+
+    if isinstance(curve, ModelCurve)==False:
+        raise TypeError("Expect curve to be a ModelCurve instance. Got {} instead".format(type(curve)))
+    
+    level_id = curve.LevelId
+    if(level_id==ElementId.InvalidElementId):
+        return None
+    level = doc.GetElement(level_id)
+    return level

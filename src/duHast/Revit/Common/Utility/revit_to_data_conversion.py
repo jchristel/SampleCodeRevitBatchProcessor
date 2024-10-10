@@ -49,7 +49,8 @@ VIEW_DETAIL_LEVEL_NAME_MAPPING_REVERSE = {
     v: k for k, v in VIEW_DETAIL_LEVEL_NAME_MAPPING.items()
 }
 
-def to_colour (revit_colour):
+
+def to_colour(revit_colour):
     """
     Convertes a Revit colour instance to a ColourBase storage instance
 

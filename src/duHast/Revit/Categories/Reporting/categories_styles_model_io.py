@@ -68,6 +68,7 @@ def write_category_graphics_settings_report(revit_file_name, file_path, data):
     result = write_json_to_file(json_data=json_data, data_output_file_path=file_path)
     return result
 
+
 def read_category_graphics_data_from_file(file_path):
     """
     Reads a category graphics data report file into a list of ObjectStyle instances
@@ -102,6 +103,8 @@ def read_category_graphics_data_from_file(file_path):
                 data_views.append(data_view)
     else:
         # missing node...raise an exception
-        raise ValueError("Data does not contain a {} node".format(PROP_CATEGORY_STYLE_DATA))
+        raise ValueError(
+            "Data does not contain a {} node".format(PROP_CATEGORY_STYLE_DATA)
+        )
 
     return data_views

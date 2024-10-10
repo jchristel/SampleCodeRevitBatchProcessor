@@ -33,17 +33,25 @@ Revit purging not used line pattern styles using purge by delete helper function
 from duHast.Revit.LinePattern.line_patterns import get_all_line_patterns
 from duHast.Revit.Common.common import get_ids_from_element_collector
 from duHast.Revit.Purge.purge_unused_by_delete import purge_unused_elements
-from duHast.Revit.Categories.categories_styles_model import get_category_styles, get_all_used_line_patterns_ids_from_categories
+from duHast.Revit.Categories.categories_styles_model import (
+    get_category_styles,
+    get_all_used_line_patterns_ids_from_categories,
+)
 
 from duHast.Utilities.Objects.result import Result
 
 
-def get_line_pattern_ids(doc):
+def get_line_pattern_ids(doc, element_ids=None, element_ids_list_is_inclusive_filter=True):
     """
     Returns all line pattern ids in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+    :param element_ids: optional list of shared parameter element ids
+    :type element_ids: [Autodesk.Revit.DB.ElementId]
+    :param element_ids_list_is_inclusive_filter: If true and element_ids list has values only those line patterns will be purged if possible. If false and element_ids list has values any line patterns in the list will not be purged.
+    :type element_ids_list_is_inclusive_filter: bool
+
     :return: A list of all line pattern ids in the model.
     :rtype: list of Autodesk.Revit.DB.ElementId
     """
@@ -54,19 +62,40 @@ def get_line_pattern_ids(doc):
     # do some pre -purge filtering
     # remove all line patterns that are used in categories
     categories_result = get_category_styles(doc)
-    if (categories_result.status):
-        category_styles = categories_result.result
+    if categories_result.status == False:
+        return ids
+    
+    category_styles = categories_result.result
 
-        # get line patterns used in categories
-        used_line_pattern_ids = get_all_used_line_patterns_ids_from_categories(category_styles)
+    # get line patterns used in categories
+    used_line_pattern_ids = get_all_used_line_patterns_ids_from_categories(
+        category_styles
+    )
 
-        # remove used line patterns
-        ids = [x for x in ids if x.IntegerValue not in used_line_pattern_ids]
+    # remove used line patterns
+    ids_not_used = [x for x in ids if x.IntegerValue not in used_line_pattern_ids]
 
-    return ids
+    # check if further filtering is required
+    if element_ids is None:
+        return ids_not_used
+    
+    # apply filtering
+    ids_filtered = []
+    if element_ids_list_is_inclusive_filter:
+        # only return element ids which are also present in the filter list
+        for id_not_used in ids_not_used:
+            if id_not_used in element_ids:
+                ids_filtered.append(id_not_used)
+    else:
+        # only return element ids which are not present in the filter list
+        for id_not_used in ids_not_used:
+            if id_not_used not in element_ids:
+                ids_filtered.append(id_not_used)
+    
+    return ids_filtered
 
 
-def purge_line_pattern_by_delete(doc, progress_callback=None, debug=False):
+def purge_line_pattern_by_delete(doc, progress_callback=None, debug=False, element_ids=None, element_ids_list_is_inclusive_filter=True):
     """
     Purge line pattern by delete.
 
@@ -78,6 +107,11 @@ def purge_line_pattern_by_delete(doc, progress_callback=None, debug=False):
     :type progress_callback: callable
     :param debug: Debug mode.
     :type debug: bool
+    :param element_ids: optional list of shared parameter element ids
+    :type element_ids: [Autodesk.Revit.DB.ElementId]
+    :param element_ids_list_is_inclusive_filter: If true and element_ids list has values only those parameters will be purged if possible. If false and element_ids list has values any parameters in the list will not be purged.
+    :type element_ids_list_is_inclusive_filter: bool
+    
     :return: Result class instance.
 
         - .status True if unused line pattern where deleted or nothing needed to be deleted. Otherwise False.
@@ -89,10 +123,19 @@ def purge_line_pattern_by_delete(doc, progress_callback=None, debug=False):
 
     try:
 
+        # set up element Id getter
+        # make allowance for an ignore element id list
+        def action(doc):
+            result_action = get_line_pattern_ids(
+                doc=doc, element_ids=element_ids,
+                element_ids_list_is_inclusive_filter=element_ids_list_is_inclusive_filter
+            )
+            return result_action
+        
         # purge unused fill patterns
         purge_result = purge_unused_elements(
             doc=doc,
-            element_id_getter=get_line_pattern_ids,
+            element_id_getter=action,
             deleted_elements_modifier=None,
             modified_elements_modifier=None,
             progress_callback=progress_callback,

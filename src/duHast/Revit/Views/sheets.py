@@ -28,7 +28,9 @@ This module contains a number of helper functions relating to Revit view sheets.
 
 import clr
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import BuiltInParameter, FilteredElementCollector, ViewSheet
+
+
 from duHast.Utilities import utility as util
 from duHast.Revit.Views.Utility.sheet_parameters import get_sheet_number
 from duHast.Revit.Common import parameter_get_utils as rParaGet
@@ -51,7 +53,7 @@ def get_sheets_by_filters(doc, view_rules=None):
     :rtype: list of Autodesk.Revit.DB.View
     """
 
-    collector_views = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet)
+    collector_views = FilteredElementCollector(doc).OfClass(ViewSheet)
     views = []
     for v in collector_views:
         # if no filter rules applied return al sheets
@@ -81,7 +83,7 @@ def get_all_sheets(doc):
     :rtype: list of Autodesk.Revit.DB.View
     """
 
-    collector_views = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet)
+    collector_views = FilteredElementCollector(doc).OfClass(ViewSheet)
     return collector_views
 
 
@@ -101,14 +103,14 @@ def get_sheet_rev_by_sheet_number(doc, sheet_number):  # type # type: str
 
     rev_value = "-"
     collector = (
-        rdb.FilteredElementCollector(doc)
-        .OfClass(rdb.ViewSheet)
+        FilteredElementCollector(doc)
+        .OfClass(ViewSheet)
         .Where(lambda e: e.SheetNumber == sheet_number)
     )  # type
     results = collector.ToList()
     if len(results) > 0:
         sheet = results[0]
-        rev_p = sheet.get_Parameter(rdb.BuiltInParameter.SHEET_CURRENT_REVISION)
+        rev_p = sheet.get_Parameter(BuiltInParameter.SHEET_CURRENT_REVISION)
         rev_value = rev_p.AsString()
     return rev_value
 
@@ -131,14 +133,14 @@ def get_sheet_rev_by_sheet_name(doc, sheet_name):  # type # type: str
 
     rev_value = "-"
     collector = (
-        rdb.FilteredElementCollector(doc)
-        .OfClass(rdb.ViewSheet)
+        FilteredElementCollector(doc)
+        .OfClass(ViewSheet)
         .Where(lambda e: e.Name == sheet_name)
     )  # type
     results = collector.ToList()
     if len(results) > 0:
         sheet = results[0]
-        rev_p = sheet.get_Parameter(rdb.BuiltInParameter.SHEET_CURRENT_REVISION)
+        rev_p = sheet.get_Parameter(BuiltInParameter.SHEET_CURRENT_REVISION)
         rev_value = util.pad_single_digit_numeric_string(rev_p.AsString())
     return rev_value
 

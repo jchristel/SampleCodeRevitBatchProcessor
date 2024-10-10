@@ -28,19 +28,29 @@ Duplicate mark warnings solver class.
 #
 #
 
-from duHast.Revit.Common import parameter_get_utils as rParaGet
-from duHast.Revit.Common import parameter_set_utils as rParaSet
+from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value
+from duHast.Revit.Common.parameter_set_utils import (
+    set_builtin_parameter_without_transaction_wrapper_by_name,
+)
+from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
+    FailureHandlingConfig,
+)
+from duHast.Revit.Common.transaction import in_transaction_with_failure_handling
 from duHast.Utilities.Objects import result as res
-
+from duHast.Revit.Warnings.warning_guids import DUPLICATE_MARK_VALUE
+from duHast.Utilities.Objects import base
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
-from duHast.Utilities.Objects import base
+from Autodesk.Revit.DB import BuiltInParameter, Element, Transaction
 
 
 class RevitWarningsSolverDuplicateMark(base.Base):
-
-    def __init__(self, filter_func, filter_values=[]):
+    def __init__(
+        self,
+        filter_func,
+        filter_values=None,
+        callback=None,
+    ):
         """
         Constructor: this solver takes two arguments: a filter function and a list of values to filter by
 
@@ -54,14 +64,30 @@ class RevitWarningsSolverDuplicateMark(base.Base):
         super(RevitWarningsSolverDuplicateMark, self).__init__()
 
         self.filter = filter_func
-        self.filter_values = filter_values
+        # check if default value
+        if filter_values == None:
+            self.filter_values = []
+        else:
+            self.filter_values = filter_values
+
         self.filter_name = "Duplicate mark value."
+        self.callback = callback
 
     # --------------------------- duplicate mark guid ---------------------------
     #: guid identifying this specific warning
-    GUID = "6e1efefe-c8e0-483d-8482-150b9f1da21a"
+    GUID = DUPLICATE_MARK_VALUE
 
     IGNORED_WARNINGS = ["Type Mark"]
+
+    def _setup_failure_handling_config(self):
+        # define failure handling for the transaction ( push through on any warnings or errors )
+        failure_handling_settings = FailureHandlingConfig(
+            roll_back_on_warning=False,
+            print_warnings=False,
+            roll_back_on_error=False,
+            print_errors=False,
+        )
+        return failure_handling_settings
 
     def solve_warnings(self, doc, warnings):
         """
@@ -83,9 +109,20 @@ class RevitWarningsSolverDuplicateMark(base.Base):
 
         return_value = res.Result()
         if len(warnings) > 0:
+
+            # report progress to call back if required
+            counter = 0
+
             for warning in warnings:
+
+                # report progress to call back if required
+                if self.callback:
+                    self.callback.update(counter, len(warnings))
+
                 # Flag to indicate if we should continue the outer loop
+                # ignoring this warning
                 should_continue_outer = False
+
                 # check for any duplicate Type Mark warnings...which are not to be addressed!
                 for ignore in self.IGNORED_WARNINGS:
                     if ignore in warning.GetDescriptionText():
@@ -96,38 +133,70 @@ class RevitWarningsSolverDuplicateMark(base.Base):
                                 True,
                                 "{} Warning of type: duplicate {}. {} will be ignored.".format(
                                     self.filter_name,
-                                    rdb.Element.Name.GetValue(element),
+                                    Element.Name.GetValue(element),
                                     ignore,
                                 ),
                             )
                         should_continue_outer = True
-                        break  # Break out of the inner loop
+                        break  # Break out of the inner loop (ignore this warning)
                 if should_continue_outer:
                     continue  # Continue the outer loop
+
+                # loop over elements in warning and set mark to an empty value
                 element_ids = warning.GetFailingElements()
+                # set up a failure handling config ignoring all warnings and errors
+                failure_handling_config = self._setup_failure_handling_config()
+
                 for el_id in element_ids:
                     element = doc.GetElement(el_id)
                     # check whether element passes filter
                     if self.filter(doc, el_id, self.filter_values):
 
                         try:
-                            p_value = rParaGet.get_built_in_parameter_value(
-                                element, rdb.BuiltInParameter.ALL_MODEL_MARK
+                            p_value = get_built_in_parameter_value(
+                                element, BuiltInParameter.ALL_MODEL_MARK
                             )
                             if p_value != None:
-                                result = rParaSet.set_built_in_parameter_value(
-                                    doc,
-                                    element,
-                                    rdb.BuiltInParameter.ALL_MODEL_MARK,
-                                    "",
+                                # set up an action to run in a transaction with custom failure handling
+                                def action():
+                                    action_return_value = res.Result()
+                                    try:
+                                        action_return_value = set_builtin_parameter_without_transaction_wrapper_by_name(
+                                            element=element,
+                                            parameter_definition=BuiltInParameter.ALL_MODEL_MARK,
+                                            parameter_value="",
+                                        )
+                                    except Exception as e:
+                                        action_return_value.update_sep(
+                                            False, "Failed with exception: {}".format(e)
+                                        )
+                                    return action_return_value
+
+                                # set up the revit transaction
+                                transaction = Transaction(
+                                    doc, "Updating mark value to empty"
                                 )
-                                return_value.update(result)
+                                # run the action in the transaction
+                                result = in_transaction_with_failure_handling(
+                                    transaction=transaction,
+                                    action=action,
+                                    failure_config=failure_handling_config,
+                                )
+                                # setup return object message
+                                message_prefix = "Updated mark on: {} [id:{}]".format(
+                                    Element.Name.GetValue(element),
+                                    element.Id.IntegerValue,
+                                )
+                                return_value.update_sep(
+                                    result.status,
+                                    "{} : {}".format(message_prefix, result.message),
+                                )
                             else:
                                 return_value.update_sep(
                                     True,
                                     "{}:  Element has no mark value: {}".format(
                                         self.filter_name,
-                                        rdb.Element.Name.GetValue(element),
+                                        Element.Name.GetValue(element),
                                     ),
                                 )
                         except Exception as e:
@@ -141,9 +210,18 @@ class RevitWarningsSolverDuplicateMark(base.Base):
                         return_value.update_sep(
                             True,
                             "{}: Element removed by filter: {}".format(
-                                self.filter_name, rdb.Element.Name.GetValue(element)
+                                self.filter_name, Element.Name.GetValue(element)
                             ),
                         )
+
+                # increase progress counter
+                counter = counter + 1
+
+                # check if cancelled
+                if self.callback:
+                    if self.callback.is_cancelled():
+                        return_value.append_message("User cancelled!")
+                        break
         else:
             return_value.update_sep(
                 True,

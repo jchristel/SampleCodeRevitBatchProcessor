@@ -48,7 +48,7 @@ def overwrite_element_graphics_in_view(
     :param elements: The elements to overwrite the graphics for.
     :type elements: list
     :param override_graphics_settings: The override settings to apply to the elements.
-    :type override_graphics_settings: OverrideGraphicSettings
+    :type override_graphics_settings: Autodesk.Revit.DB.OverrideGraphicSettings
 
     :return: A result object.
     :rtype: Result

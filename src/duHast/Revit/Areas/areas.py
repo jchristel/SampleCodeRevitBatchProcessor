@@ -110,3 +110,4 @@ def get_views_by_area_scheme_name(doc, area_scheme_name):
             element = doc.GetElement(id)
             return_value.append(element)
     return return_value
+

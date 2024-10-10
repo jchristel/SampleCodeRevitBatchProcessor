@@ -36,7 +36,7 @@ from duHast.Revit.Warnings.warnings import get_unique_warnings_elements_by_guid
 from Autodesk.Revit.DB import Element
 
 
-def area_lines_by_level_and_by_area_schemes (doc):
+def area_lines_by_schemes_and_by_levels (doc):
     """
     Reports all area separation line by area schemes and level they belong too. 
 
@@ -82,7 +82,7 @@ def area_lines_by_level_and_by_area_schemes (doc):
     return line_by_area_scheme_and_level
 
 
-def area_lines_with_warnings_by_level_and_by_area_scheme(doc):
+def area_lines_with_warnings_by_schemes_and_by_levels(doc):
     """
     Reports all area separation line with warnings by area schemes and level they belong too. 
 
@@ -94,7 +94,7 @@ def area_lines_with_warnings_by_level_and_by_area_scheme(doc):
     """
 
     # get area lines by scheme name and level name
-    line_by_area_scheme_and_level = area_lines_by_level_and_by_area_schemes (doc= doc)
+    line_by_area_scheme_and_level = area_lines_by_schemes_and_by_levels (doc= doc)
 
     # check for empty and return if so
     if(len(line_by_area_scheme_and_level)==0):

@@ -38,7 +38,7 @@ from duHast.Revit.Views.schedules_revision_filter import (
     filter_schedules,
 )
 from duHast.Revit.Views.sheets import get_all_sheets
-from duHast.Revit.Areas.areas import get_area_scheme_by_name
+from duHast.Revit.Areas.areas import get_area_scheme_by_name, get_area_schemes, get_views_by_area_scheme_name
 from duHast.Revit.Common.parameter_get_utils import (
     get_built_in_parameter_value,
     get_parameter_value_as_element_id,
@@ -203,28 +203,6 @@ def get_views_not_on_sheet(doc):
     return views_not_on_sheet
 
 
-def get_views_by_area_scheme_name(doc, scheme_name):
-    """
-    Returns a list of Revit views that are associated with a specific area scheme.
-
-    Args:
-        doc (Revit Document): The Revit document object.
-        scheme_name (str): The name of the area scheme.
-
-    Returns:
-        list: A list of Revit elements representing the views associated with the specified area scheme.
-    """
-    return_value = []
-    area_scheme = get_area_scheme_by_name(doc=doc, area_scheme_name=scheme_name)
-    if area_scheme:
-        filter = ElementClassFilter(View)
-        dependent_element_ids = area_scheme.GetDependentElements(filter)
-        for id in dependent_element_ids:
-            element = doc.GetElement(id)
-            return_value.append(element)
-    return return_value
-
-
 def get_view_phase_id(view):
     """
     Get the views phase id.
@@ -253,3 +231,28 @@ def get_view_phase_id(view):
         return phase_id
     else:
         return return_value
+
+
+def get_area_scheme_of_view(doc, view):
+    """
+    Returns the area scheme an area plan is associated with.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view: The view of which to return the area scheme
+    :type view: Autodesk.Revit.DB.View
+    :return: The area scheme if the view is of type AreaPlan otherwise None
+    :rtype: str or None
+    """
+    if view.ViewType != ViewType.AreaPlan:
+        return None
+    
+    area_schemes_in_model = get_area_schemes(doc=doc)
+
+    for area_scheme in area_schemes_in_model:
+        views_by_area_scheme = get_views_by_area_scheme_name(doc=doc, area_scheme_name=area_scheme.Name)
+        for view_in_scheme in views_by_area_scheme:
+            if view_in_scheme.Id == view.Id:
+                return area_scheme
+    
+    return None

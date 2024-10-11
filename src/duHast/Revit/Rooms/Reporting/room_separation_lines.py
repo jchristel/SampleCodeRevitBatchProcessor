@@ -132,7 +132,7 @@ def room_lines_with_warnings_by_design_option_and_level(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: dictionary where key is the area scheme name and value is a list of are line ids, or empty list if no area lines are associated with the scheme
+    :return: dictionary where key is the design option name and value is a nested dictionary where key is the level name and value is a list of room line ids
     :rtype: {str: Autodesk.Revit.DB.ElementId]}
     """
 

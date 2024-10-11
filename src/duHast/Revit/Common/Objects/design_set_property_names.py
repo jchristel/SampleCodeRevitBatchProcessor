@@ -38,3 +38,6 @@ class DesignSetPropertyNames(Enum):
     DESIGN_SET_NAME = "designSetName"
     DESIGN_OPTION_NAME = "designOptionName"
     DESIGN_OPTION_IS_PRIMARY = "isPrimary"
+
+    DESIGN_SET_DEFAULT_NAME = "Main Model"
+    DESIGN_OPTION_DEFAULT_NAME = "-"

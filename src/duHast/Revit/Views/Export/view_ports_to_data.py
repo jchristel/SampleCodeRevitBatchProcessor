@@ -29,32 +29,75 @@ This module contains a number of helper functions relating to Revit view port to
 
 from duHast.Data.Objects.data_sheet_view_port import DataSheetViewPort
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import DataBoundingBox
+from duHast.Data.Objects.Properties.data_view_port_type_names import DataViewPortTypeNames
+from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
-def convert_revit_viewport_to_data_instance(view_port):
+from AutoDesk.Revit.DB import ViewType
+
+
+def _get_view_port_type(doc, revit_view_port):
+    """
+    Returns a string reprensenting the viewport type on None if to be ignored (not match with view port types of interest)
+
+    :param doc: The Revit document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view_port: A Revit ViewPort
+    :type view_port: Autodesk.Revit.DB.ViewPort
+
+    :return: The viewport type name or none
+    :rtype: str or None
+    """
+
+    view = doc.GetElement(revit_view_port.ViewId)
+
+    if view.ViewType == ViewType.FloorPlan:
+        return DataViewPortTypeNames.FLOOR_PLAN
+    elif view.ViewType == ViewType.Elevation:
+        return DataViewPortTypeNames.ELEVATION
+    elif view.ViewType == ViewType.ThreeD:
+        return DataViewPortTypeNames.THREE_D
+    elif view.ViewType == ViewType.Schedule:
+        # thats unlikely
+        return DataViewPortTypeNames.SCHEDULE
+    else:
+        return None
+
+
+def convert_revit_viewport_to_data_instance(doc, revit_view_port):
     """
     Convertes a Revit ViewPort into a data viewport
 
+    :param doc: The Revit document.
+    :type doc: Autodesk.Revit.DB.Document
     :param view_port: A Revit ViewPort
     :type view_port: Autodesk.Revit.DB.ViewPort
     :return: A populated data viewport instance
     :rtype: :class:`.DataSheetViewPort`
     """
+
+    view_port_type = _get_view_port_type(doc, revit_view_port)
+    if view_port_type == None:
+        # ignore this viewport
+        return None
+
     # set up data instances
     view_port_data = DataSheetViewPort()
     bbox = DataBoundingBox()
 
     # get an outline from the Revit view port
-    view_port_outline = view_port.GetBoxOutline()
+    view_port_outline = revit_view_port.GetBoxOutline()
     # get the outlines min and max points
     max_point = view_port_outline.MaximumPoint
     min_point = view_port_outline.MinimumPoint
 
     # get the min and max point from the outline
-    # TODO: convert into metric
-    bbox.max = [max_point.X,max_point.Y,max_point.Z]
-    bbox.min = [min_point.X,min_point.Y,min_point.Z]
+    bbox.max = [convert_imperial_feet_to_metric_mm(max_point.X),convert_imperial_feet_to_metric_mm(max_point.Y),convert_imperial_feet_to_metric_mm(max_point.Z)]
+    bbox.min = [convert_imperial_feet_to_metric_mm(min_point.X),convert_imperial_feet_to_metric_mm(min_point.Y),convert_imperial_feet_to_metric_mm(min_point.Z)]
     
     # update the bounding box property of the view port instance
     view_port_data.bounding_box = bbox
+
+    # set the viewport type
+    view_port_data.vp_type =view_port_type
 
     return view_port_data

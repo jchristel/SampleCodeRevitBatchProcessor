@@ -40,6 +40,7 @@ from duHast.Data.Utils import data_base
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
     DataBoundingBox,
 )
+from duHast.Data.Objects.Properties.data_view_port_type_names import DataViewPortTypeNames
 
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
@@ -60,6 +61,7 @@ class DataSheetViewPort(data_base.DataBase):
 
         # set default values
         self.bounding_box = DataBoundingBox()
+        self.vp_type = DataViewPortTypeNames.FLOOR_PLAN
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -81,6 +83,7 @@ class DataSheetViewPort(data_base.DataBase):
             try:
                 
                 self.bounding_box = DataBoundingBox(j.get(DataPropertyNames.BOUNDING_BOX, {}))
+                self.vp_type = j.get(DataPropertyNames.VIEW_PORT_TYPE, self.vp_type)
                 
             except Exception as e:
                 raise ValueError(

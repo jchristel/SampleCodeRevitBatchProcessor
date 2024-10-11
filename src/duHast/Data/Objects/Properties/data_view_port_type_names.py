@@ -1,8 +1,9 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains a number of helper functions relating to Revit sheet to data sheet conversion. 
+Data view port type  names enum class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -26,46 +27,16 @@ This module contains a number of helper functions relating to Revit sheet to dat
 #
 #
 
-from duHast.Revit.Views.views import get_viewport_on_sheets
-from duHast.Revit.Views.Export.view_ports_to_data import convert_revit_viewport_to_data_instance
-from duHast.Data.Objects.data_sheet import DataSheet
-from duHast.Revit.Exports.export_data import get_instance_properties
 
-def convert_revit_sheet(doc, sheet):
+from enum import Enum
+
+
+class DataViewPortTypeNames(Enum):
     """
-    Convertes a revit sheet to a data instance sheet.
-
-    :param doc: The Revit document.
-    :type doc: Autodesk.Revit.DB.Document
-    :param sheet: A revit sheet
-    :type sheet: Autodesk.Revit.DB.view
-
-    :return: A data sheet instance
-    :rtype: :class:`.DataSheet`
+    Contains viewport type names
     """
 
-    # instantiate new data sheet object
-    data_sheet = DataSheet()
-
-    # get instance properties
-    data_sheet.instance_properties.id = sheet.Id.IntegerValue
-    
-    # get any instance parameters properties
-    instance_properties = get_instance_properties(sheet) 
-    data_sheet.instance_properties = instance_properties
-    
-    # get view ports on sheet
-    revit_view_ports = get_viewport_on_sheets(doc=doc,sheets= [sheet])
-
-    # convert to data objects
-    view_ports_converted = []
-    for revit_view_port in revit_view_ports:
-        view_port_data = convert_revit_viewport_to_data_instance(doc=doc, revit_view_port=revit_view_port)
-        
-        # check if this is a view port of interest, otherwise ignore
-        if view_port_data:
-            view_ports_converted.append(view_port_data)
-    
-    # add them to sheet
-    data_sheet.view_ports = view_ports_converted
-    return data_sheet
+    FLOOR_PLAN = "floor plan"
+    ELEVATION = "elevation"
+    THREE_D = "three d"
+    SCHEDULE = "schedule"

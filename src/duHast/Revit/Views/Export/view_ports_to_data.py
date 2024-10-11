@@ -32,7 +32,7 @@ from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import DataBo
 from duHast.Data.Objects.Properties.data_view_port_type_names import DataViewPortTypeNames
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
-from AutoDesk.Revit.DB import ViewType
+from Autodesk.Revit.DB import ViewType
 
 
 def _get_view_port_type(doc, revit_view_port):

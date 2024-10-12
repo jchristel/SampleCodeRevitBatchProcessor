@@ -35,10 +35,10 @@ https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
 
 class MissingXAMLException(Exception):
     def __init__(self, message, view_model):
-        
+
         # Call the base class constructor with the message
         super(MissingXAMLException, self).__init__(message, view_model)
-        
+
         self.view_model = view_model
 
     def __str__(self):

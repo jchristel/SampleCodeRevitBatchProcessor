@@ -33,24 +33,24 @@ https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
 #
 
 
-
 from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
 
+
 class MainViewModel(ViewModelBase):
-    
+
     def __init__(self, navigation_store):
         super(MainViewModel, self).__init__()
 
         # store the navigation store
         self._navigation_store = navigation_store
-        
+
         # Subscribe to the CurrentViewModelChanged event
-        self._navigation_store.add_ViewModelChanged (self.OnCurrentViewModelChanged)
-        
+        self._navigation_store.add_ViewModelChanged(self.OnCurrentViewModelChanged)
+
     @property
     def CurrentViewModel(self):
         return self._navigation_store.CurrentViewModel
-    
+
     # Method to be called when the CurrentViewModel changes
     def OnCurrentViewModelChanged(self):
         # Trigger property change notification for CurrentViewModel

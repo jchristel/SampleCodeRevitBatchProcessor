@@ -34,19 +34,21 @@ https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
 
 
 import clr
-clr.AddReference('System')
+
+clr.AddReference("System")
 from System import EventArgs
 
+
 class NavigationStore:
-    
+
     def __init__(self):
-        
+
         # Private member _currentViewModel
         self._currentViewModel = None
-        
+
         # Event for CurrentViewModelChanged
         self.CurrentViewModelChanged = []
-    
+
     # Property for CurrentViewModel
     @property
     def CurrentViewModel(self):
@@ -57,12 +59,12 @@ class NavigationStore:
         self._currentViewModel = value
         # raise event that notifies subscribers that the view model has changed
         self.OnCurrentViewModelChanged()
-    
+
     # Method to trigger CurrentViewModelChanged event
     def OnCurrentViewModelChanged(self):
         for handler in self.CurrentViewModelChanged:
-            handler()#self)#, EventArgs()) # Invoke the event if there are any listeners
-        
+            handler()  # self)#, EventArgs()) # Invoke the event if there are any listeners
+
     def add_ViewModelChanged(self, handler):
         """
         Adds a handler to the ViewModelChanged event.

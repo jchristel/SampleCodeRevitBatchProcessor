@@ -32,15 +32,16 @@ https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
 #
 #
 
-class NavigationService():
+
+class NavigationService:
     """
     A class providing a navigation service between view models.
     """
-    
+
     def __init__(self, navigation_store, create_view_model):
-        
+
         self._navigation_store = navigation_store
         self._create_view_model = create_view_model
-    
+
     def Navigate(self):
         self._navigation_store.CurrentViewModel = self._create_view_model()

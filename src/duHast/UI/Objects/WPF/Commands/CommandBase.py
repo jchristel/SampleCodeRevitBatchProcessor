@@ -37,6 +37,7 @@ from duHast.Utilities.Objects import base
 from System.Windows.Input import ICommand
 from System import EventArgs
 
+
 class CommandBase(ICommand):
     def __init__(self, execute):
         """
@@ -63,7 +64,7 @@ class CommandBase(ICommand):
         if self.can_execute_changed_handlers:
             for handler in self.can_execute_changed_handlers:
                 handler(self, EventArgs())
-                
+
     def add_CanExecuteChanged(self, handler):
         """
         Adds a handler to the CanExecuteChanged event.

@@ -139,7 +139,7 @@ class Base(object):
                 output.append(" " * indent + "{}:".format(attr_name))
                 output.append(attr_value.__str__(indent + 2))
             else:
-                output.append(" " * indent + "{}: {}".format(attr_name,attr_value))
+                output.append(" " * indent + "{}: {}".format(attr_name, attr_value))
         return "\n".join(output)
 
     def _format_list(self, lst, indent):
@@ -189,7 +189,7 @@ class Base(object):
             else:
                 output.append(" " * (indent + 2) + str(value))
         return "\n".join(output)
-    
+
     def __eq__(self, other):
         """
         Custom compare is equal override

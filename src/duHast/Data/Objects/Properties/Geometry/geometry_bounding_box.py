@@ -31,6 +31,7 @@ import json
 from duHast.Data.Objects.Properties.Geometry import geometry_base
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
+
 class DataBoundingBox(geometry_base.DataGeometryBase):
     data_type = "bounding box"
 

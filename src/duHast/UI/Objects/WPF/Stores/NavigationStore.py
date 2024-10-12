@@ -1,8 +1,14 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-An implementation of a custom wpf window base class which can be shown in the Revit context.
+A class to handle stores.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Based on:
+
+https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
+
 """
+
 #
 # License:
 #
@@ -26,45 +32,39 @@ An implementation of a custom wpf window base class which can be shown in the Re
 #
 #
 
+
 import clr
+clr.AddReference('System')
+from System import EventArgs
 
-clr.AddReference("PresentationFramework")
-# clr.AddReference("PresentationCore")
+class NavigationStore:
+    
+    def __init__(self):
+        
+        # Private member _currentViewModel
+        self._currentViewModel = None
+        
+        # Event for CurrentViewModelChanged
+        self.CurrentViewModelChanged = []
+    
+    # Property for CurrentViewModel
+    @property
+    def CurrentViewModel(self):
+        return self._currentViewModel
 
-from System.Windows import Window
-from duHast.UI.Objects.XamlLoader import XamlLoader
-
-
-class WPFWindowBase(Window):
-    def __init__(self, xaml_path, view_model):
-
-        # make sure to initialize the base class
-        super(WPFWindowBase, self).__init__()
-
-        # load xaml data
-        xaml = XamlLoader(xaml_path)
-
-        # get the xaml root
-        xaml_window = xaml.Root
-
-        # Ensure xaml_window is of type Window and use it
-        if isinstance(xaml_window, Window):
-            self.Content = xaml_window.Content
-            self.Title = xaml_window.Title
-            self.Width = xaml_window.Width
-            self.SizeToContent = xaml_window.SizeToContent
-        else:
-            self.Content = xaml_window
-
-        # Set DataContext
-        self.DataContext = view_model
-
-        # Wire up the Closed event
-        self.Closed += self.on_closed
-
-        # print("view model: {}".format(view_model))
-        # print("xaml root: {}".format(self.Content))
-
-    def on_closed(self, sender, event):
-        # Handle cleanup here
-        pass
+    @CurrentViewModel.setter
+    def CurrentViewModel(self, value):
+        self._currentViewModel = value
+        # raise event that notifies subscribers that the view model has changed
+        self.OnCurrentViewModelChanged()
+    
+    # Method to trigger CurrentViewModelChanged event
+    def OnCurrentViewModelChanged(self):
+        for handler in self.CurrentViewModelChanged:
+            handler()#self)#, EventArgs()) # Invoke the event if there are any listeners
+        
+    def add_ViewModelChanged(self, handler):
+        """
+        Adds a handler to the ViewModelChanged event.
+        """
+        self.CurrentViewModelChanged.append(handler)

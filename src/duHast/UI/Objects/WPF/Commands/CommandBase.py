@@ -6,6 +6,7 @@ A class to handle wpf command bindings.
 Based on:
 
 https://markheath.net/post/wpf-and-mvvm-in-ironpython
+https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
 
 """
 
@@ -16,7 +17,7 @@ https://markheath.net/post/wpf-and-mvvm-in-ironpython
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:

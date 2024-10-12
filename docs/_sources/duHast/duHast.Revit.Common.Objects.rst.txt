@@ -44,6 +44,14 @@ duHast.Revit.Common.Objects.ParameterMappingDirective module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Common.Objects.design\_set\_property\_names module
+---------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Common.Objects.design_set_property_names
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

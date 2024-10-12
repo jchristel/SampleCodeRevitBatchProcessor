@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.pyRevit.Objects package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast.pyRevit.Objects package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.pyRevit package" href="duHast.pyRevit.html" />
     <link rel="next" title="Flows" href="../flows/index.html" />
     <link rel="prev" title="duHast.pyRevit package" href="duHast.pyRevit.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.pyRevit.Objects package</h1></div>
@@ -47,6 +47,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -107,6 +108,28 @@ Args:</p>
 <blockquote>
 <div><p>form: The progress form to wrap</p>
 </div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.pyRevit.Objects.ProgressPyRevit.ProgressPyRevit.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.Objects.ProgressPyRevit.ProgressPyRevit.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implementation to update the progress form.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>count: The current count
+total: The total count
+message: The message to display</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.pyRevit.Objects.ProgressPyRevit.ProgressPyRevit.is_cancelled">
+<span class="sig-name descname"><span class="pre">is_cancelled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.Objects.ProgressPyRevit.ProgressPyRevit.is_cancelled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implementation to check if the form has been cancelled.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>True if the form has been cancelled</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>

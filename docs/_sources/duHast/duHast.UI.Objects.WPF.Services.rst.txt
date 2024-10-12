@@ -1,0 +1,21 @@
+duHast.UI.Objects.WPF.Services package
+======================================
+
+Submodules
+----------
+
+duHast.UI.Objects.WPF.Services.NavigationService module
+-------------------------------------------------------
+
+.. automodule:: duHast.UI.Objects.WPF.Services.NavigationService
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.UI.Objects.WPF.Services
+   :members:
+   :undoc-members:
+   :show-inheritance:

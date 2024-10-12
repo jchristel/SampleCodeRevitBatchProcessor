@@ -44,6 +44,22 @@ duHast.Data.Objects.data\_room module
    :undoc-members:
    :show-inheritance:
 
+duHast.Data.Objects.data\_sheet module
+--------------------------------------
+
+.. automodule:: duHast.Data.Objects.data_sheet
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.data\_sheet\_view\_port module
+--------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.data_sheet_view_port
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

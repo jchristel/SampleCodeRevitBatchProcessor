@@ -1,37 +1,21 @@
 duHast.UI.Objects package
 =========================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.UI.Objects.WPF
+
 Submodules
 ----------
-
-duHast.UI.Objects.Command module
---------------------------------
-
-.. automodule:: duHast.UI.Objects.Command
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 duHast.UI.Objects.ProgressBase module
 -------------------------------------
 
 .. automodule:: duHast.UI.Objects.ProgressBase
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.UI.Objects.ViewModelBase module
---------------------------------------
-
-.. automodule:: duHast.UI.Objects.ViewModelBase
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.UI.Objects.XamlLoader module
------------------------------------
-
-.. automodule:: duHast.UI.Objects.XamlLoader
    :members:
    :undoc-members:
    :show-inheritance:

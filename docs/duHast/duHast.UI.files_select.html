@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.UI.files_select package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast.UI.files_select package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.UI package" href="duHast.UI.html" />
     <link rel="next" title="duHast.Utilities package" href="duHast.Utilities.html" />
-    <link rel="prev" title="duHast.UI.Objects package" href="duHast.UI.Objects.html" />
+    <link rel="prev" title="duHast.UI.Objects.WPF.Xaml package" href="duHast.UI.Objects.WPF.Xaml.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.UI.files_select package</h1></div>
@@ -32,7 +32,7 @@
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
             <div class="headerButton"><a href="duHast.Utilities.html" title="duHast.Utilities package" accesskey="N">next</a></div>
-            <div class="headerButton"><a href="duHast.UI.Objects.html" title="duHast.UI.Objects package" accesskey="P">previous</a></div>
+            <div class="headerButton"><a href="duHast.UI.Objects.WPF.Xaml.html" title="duHast.UI.Objects.WPF.Xaml package" accesskey="P">previous</a></div>
         </li>
     </ul>
 </div>
@@ -47,6 +47,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -93,151 +94,11 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="module-duHast.UI.files_select.ViewModel">
-<span id="duhast-ui-files-select-viewmodel-module"></span><h2>duHast.UI.files_select.ViewModel module<a class="headerlink" href="#module-duHast.UI.files_select.ViewModel" title="Permalink to this heading">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="duHast.UI.files_select.ViewModel.ViewModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.UI.files_select.ViewModel.</span></span><span class="sig-name descname"><span class="pre">ViewModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.files_select.ViewModel.ViewModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.ViewModelBase.ViewModelBase" title="duHast.UI.Objects.ViewModelBase.ViewModelBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ViewModelBase</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="duHast.UI.files_select.ViewModel.ViewModel.PropertyChanged">
-<span class="sig-name descname"><span class="pre">PropertyChanged</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#duHast.UI.files_select.ViewModel.ViewModel.PropertyChanged" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="duHast.UI.files_select.ViewModel.ViewModel.TextBoxText_SourcePath">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TextBoxText_SourcePath</span></span><a class="headerlink" href="#duHast.UI.files_select.ViewModel.ViewModel.TextBoxText_SourcePath" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="duHast.UI.files_select.ViewModel.ViewModel.TextBoxText_Filter">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TextBoxText_Filter</span></span><a class="headerlink" href="#duHast.UI.files_select.ViewModel.ViewModel.TextBoxText_Filter" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="duHast.UI.files_select.ViewModel.ViewModel.RadioButton_FilterAnd">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RadioButton_FilterAnd</span></span><a class="headerlink" href="#duHast.UI.files_select.ViewModel.ViewModel.RadioButton_FilterAnd" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="duHast.UI.files_select.ViewModel.ViewModel.RadioButton_FilterOr">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RadioButton_FilterOr</span></span><a class="headerlink" href="#duHast.UI.files_select.ViewModel.ViewModel.RadioButton_FilterOr" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.UI.files_select.ViewModel.ViewModel.convert_list_to_observable_collection">
-<span class="sig-name descname"><span class="pre">convert_list_to_observable_collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.files_select.ViewModel.ViewModel.convert_list_to_observable_collection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Used transfer items from a standard python list to another list ( of a .net type)</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>list_of_items (_type_): _description_
-target_list (_type_): _description_</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.UI.files_select.ViewModel.ViewModel.OnPropertyChanged">
-<span class="sig-name descname"><span class="pre">OnPropertyChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.files_select.ViewModel.ViewModel.OnPropertyChanged" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.UI.files_select.ViewModel.ViewModel.TextBox_Filter_TextChanged">
-<span class="sig-name descname"><span class="pre">TextBox_Filter_TextChanged</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.files_select.ViewModel.ViewModel.TextBox_Filter_TextChanged" title="Permalink to this definition">¶</a></dt>
-<dd><p>Event handler for text changed in TextBox.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.UI.files_select.ViewModel.ViewModel.text_box_source_path_change">
-<span class="sig-name descname"><span class="pre">text_box_source_path_change</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.files_select.ViewModel.ViewModel.text_box_source_path_change" title="Permalink to this definition">¶</a></dt>
-<dd><p>when the source directory is changes</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.UI.files_select.ViewModel.ViewModel.button_ok">
-<span class="sig-name descname"><span class="pre">button_ok</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.files_select.ViewModel.ViewModel.button_ok" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ok button event handler.</p>
-<p>Gets the selected rows of files and adds them to .selectedFiles property
-Sets the dialog result value to True.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sender</strong> (<em>_type_</em>) – _description_</p></li>
-<li><p><strong>EventArgs</strong> (<em>_type_</em>) – _description_</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.UI.files_select.ViewModel.ViewModel.button_cancel">
-<span class="sig-name descname"><span class="pre">button_cancel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.files_select.ViewModel.ViewModel.button_cancel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cancel button event handler.
-Sets the dialogue result value to False.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sender</strong> (<em>_type_</em>) – _description_</p></li>
-<li><p><strong>EventArgs</strong> (<em>_type_</em>) – _description_</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<section id="duhast-ui-files-select-viewmodel-module">
+<h2>duHast.UI.files_select.ViewModel module<a class="headerlink" href="#duhast-ui-files-select-viewmodel-module" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="module-duHast.UI.files_select.files_select_ui">
-<span id="duhast-ui-files-select-files-select-ui-module"></span><h2>duHast.UI.files_select.files_select_ui module<a class="headerlink" href="#module-duHast.UI.files_select.files_select_ui" title="Permalink to this heading">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.UI.files_select.files_select_ui.main">
-<span class="sig-prename descclassname"><span class="pre">duHast.UI.files_select.files_select_ui.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.files_select.files_select_ui.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Entry point.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>argv</strong> (<em>[</em><em>str</em><em>]</em>) – A list of string representing arguments past in.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.UI.files_select.files_select_ui.process_args">
-<span class="sig-prename descclassname"><span class="pre">duHast.UI.files_select.files_select_ui.</span></span><span class="sig-name descname"><span class="pre">process_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.files_select.files_select_ui.process_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Processes past in arguments and checks whether inputs are valid.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>argv</strong> (<em>_type_</em>) – List of arguments</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p>True if arguments past in are valid, otherwise False.</p></li>
-<li><p>FIle select settings object instance.</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool, <a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.file_select_settings.FileSelectionSettings" title="duHast.UI.Objects.file_select_settings.FileSelectionSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileSelectionSettings</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.UI.files_select.files_select_ui.is_bim_360_file">
-<span class="sig-prename descclassname"><span class="pre">duHast.UI.files_select.files_select_ui.</span></span><span class="sig-name descname"><span class="pre">is_bim_360_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_files</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.files_select.files_select_ui.is_bim_360_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks whether the first item in a file item list belongs to a BIM 360 project.</p>
-<p>Checks whether Project GUID property on file item object is None.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>revit_files</strong> ([<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>]) – List of file items.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if BIM360 file, otherwise False.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="duhast-ui-files-select-files-select-ui-module">
+<h2>duHast.UI.files_select.files_select_ui module<a class="headerlink" href="#duhast-ui-files-select-files-select-ui-module" title="Permalink to this heading">¶</a></h2>
 </section>
 <section id="module-duHast.UI.files_select">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.UI.files_select" title="Permalink to this heading">¶</a></h2>

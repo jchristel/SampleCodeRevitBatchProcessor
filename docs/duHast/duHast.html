@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast" href="modules.html" />
     <link rel="next" title="duHast.Data package" href="duHast.Data.html" />
     <link rel="prev" title="duHast" href="modules.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast package</h1></div>
@@ -47,6 +47,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -103,6 +104,8 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.html#module-duHast.Data.Objects.data_door">duHast.Data.Objects.data_door module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.html#module-duHast.Data.Objects.data_family_base">duHast.Data.Objects.data_family_base module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.html#module-duHast.Data.Objects.data_room">duHast.Data.Objects.data_room module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.html#module-duHast.Data.Objects.data_sheet">duHast.Data.Objects.data_sheet module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.html#module-duHast.Data.Objects.data_sheet_view_port">duHast.Data.Objects.data_sheet_view_port module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.html#module-duHast.Data.Objects">Module contents</a></li>
 </ul>
 </li>
@@ -146,9 +149,14 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Excel.html#duHast.Excel.excel_io.save_excel_file_as_csv"><code class="docutils literal notranslate"><span class="pre">save_excel_file_as_csv()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Excel.html#duHast.Excel.excel_io.read_excel_file"><code class="docutils literal notranslate"><span class="pre">read_excel_file()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Excel.html#duHast.Excel.excel_io.read_excel_file_fast"><code class="docutils literal notranslate"><span class="pre">read_excel_file_fast()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Excel.html#duHast.Excel.excel_io.save_csv_as_excel"><code class="docutils literal notranslate"><span class="pre">save_csv_as_excel()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Excel.html#module-duHast.Excel">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Geometry.html#module-duHast.Geometry">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a><ul>
@@ -174,6 +182,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Areas.html">duHast.Revit.Areas package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Areas.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Areas.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Areas.html#module-duHast.Revit.Areas.area_lines">duHast.Revit.Areas.area_lines module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Areas.html#module-duHast.Revit.Areas.areas">duHast.Revit.Areas.areas module</a></li>
@@ -224,6 +233,7 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.html#module-duHast.Revit.Common.delete">duHast.Revit.Common.delete module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.html#module-duHast.Revit.Common.design_set_options">duHast.Revit.Common.design_set_options module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.html#module-duHast.Revit.Common.element_filtering">duHast.Revit.Common.element_filtering module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.html#module-duHast.Revit.Common.element_filtering_by_design_option">duHast.Revit.Common.element_filtering_by_design_option module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.html#module-duHast.Revit.Common.failure_handling">duHast.Revit.Common.failure_handling module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.html#module-duHast.Revit.Common.file_io">duHast.Revit.Common.file_io module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.html#module-duHast.Revit.Common.groups">duHast.Revit.Common.groups module</a></li>
@@ -264,6 +274,7 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Exports.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Exports.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Exports.html#module-duHast.Revit.Exports.export">duHast.Revit.Exports.export module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Exports.html#module-duHast.Revit.Exports.export_data">duHast.Revit.Exports.export_data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Exports.html#module-duHast.Revit.Exports.export_ifc">duHast.Revit.Exports.export_ifc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Exports.html#module-duHast.Revit.Exports.export_navis">duHast.Revit.Exports.export_navis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Exports.html#module-duHast.Revit.Exports">Module contents</a></li>
@@ -412,7 +423,7 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Rooms.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Rooms.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Rooms.html#module-duHast.Revit.Rooms.room_common_parameters">duHast.Revit.Rooms.room_common_parameters module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Rooms.html#module-duHast.Revit.Rooms.room_spatial_elements">duHast.Revit.Rooms.room_spatial_elements module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Rooms.html#module-duHast.Revit.Rooms.room_lines">duHast.Revit.Rooms.room_lines module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Rooms.html#module-duHast.Revit.Rooms.room_tags">duHast.Revit.Rooms.room_tags module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Rooms.html#module-duHast.Revit.Rooms.rooms">duHast.Revit.Rooms.rooms module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Rooms.html#module-duHast.Revit.Rooms">Module contents</a></li>
@@ -445,6 +456,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.UI.html">duHast.Revit.UI package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.UI.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.UI.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.UI.html#module-duHast.Revit.UI.custom_selection_filter_element">duHast.Revit.UI.custom_selection_filter_element module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.UI.html#module-duHast.Revit.UI.custom_selection_user">duHast.Revit.UI.custom_selection_user module</a></li>
@@ -455,12 +467,16 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#module-duHast.Revit.Views.delete">duHast.Revit.Views.delete module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#module-duHast.Revit.Views.element_overrides">duHast.Revit.Views.element_overrides module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#module-duHast.Revit.Views.filters">duHast.Revit.Views.filters module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#module-duHast.Revit.Views.legends">duHast.Revit.Views.legends module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#module-duHast.Revit.Views.referencing">duHast.Revit.Views.referencing module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#module-duHast.Revit.Views.schedules">duHast.Revit.Views.schedules module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#module-duHast.Revit.Views.schedules_revision_filter">duHast.Revit.Views.schedules_revision_filter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#module-duHast.Revit.Views.sheets">duHast.Revit.Views.sheets module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#module-duHast.Revit.Views.templates">duHast.Revit.Views.templates module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#module-duHast.Revit.Views.views">duHast.Revit.Views.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#module-duHast.Revit.Views.views_crop">duHast.Revit.Views.views_crop module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#module-duHast.Revit.Views.views_purge_unused">duHast.Revit.Views.views_purge_unused module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#module-duHast.Revit.Views.visibility_graphics">duHast.Revit.Views.visibility_graphics module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Views.html#module-duHast.Revit.Views.visibility_graphics_categories">duHast.Revit.Views.visibility_graphics_categories module</a></li>
@@ -489,6 +505,7 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.html#module-duHast.Revit.Warnings.solver_duplicate_mark">duHast.Revit.Warnings.solver_duplicate_mark module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.html#module-duHast.Revit.Warnings.solver_room_separation_lines_overlap">duHast.Revit.Warnings.solver_room_separation_lines_overlap module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.html#module-duHast.Revit.Warnings.solver_room_tag_to_room">duHast.Revit.Warnings.solver_room_tag_to_room module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.html#module-duHast.Revit.Warnings.warning_guids">duHast.Revit.Warnings.warning_guids module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.html#module-duHast.Revit.Warnings.warnings">duHast.Revit.Warnings.warnings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Warnings.html#module-duHast.Revit.Warnings">Module contents</a></li>
 </ul>
@@ -501,11 +518,9 @@
 <li class="toctree-l1"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.UI.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.html">duHast.UI.Objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#module-duHast.UI.Objects.Command">duHast.UI.Objects.Command module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#module-duHast.UI.Objects.ProgressBase">duHast.UI.Objects.ProgressBase module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#module-duHast.UI.Objects.ViewModelBase">duHast.UI.Objects.ViewModelBase module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#module-duHast.UI.Objects.XamlLoader">duHast.UI.Objects.XamlLoader module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#module-duHast.UI.Objects.common_ui">duHast.UI.Objects.common_ui module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#module-duHast.UI.Objects.file_item">duHast.UI.Objects.file_item module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#module-duHast.UI.Objects.file_select_settings">duHast.UI.Objects.file_select_settings module</a></li>
@@ -515,8 +530,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.UI.files_select.html">duHast.UI.files_select package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#module-duHast.UI.files_select.ViewModel">duHast.UI.files_select.ViewModel module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#module-duHast.UI.files_select.files_select_ui">duHast.UI.files_select.files_select_ui module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#duhast-ui-files-select-viewmodel-module">duHast.UI.files_select.ViewModel module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#duhast-ui-files-select-files-select-ui-module">duHast.UI.files_select.files_select_ui module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#module-duHast.UI.files_select">Module contents</a></li>
 </ul>
 </li>
@@ -792,6 +807,7 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.html#duHast.Utilities.utility.PAD_SINGLE_DIGIT_TO_THREE"><code class="docutils literal notranslate"><span class="pre">PAD_SINGLE_DIGIT_TO_THREE</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.html#duHast.Utilities.utility.pad_single_digit_numeric_string"><code class="docutils literal notranslate"><span class="pre">pad_single_digit_numeric_string()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.html#duHast.Utilities.utility.encode_ascii"><code class="docutils literal notranslate"><span class="pre">encode_ascii()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.html#duHast.Utilities.utility.encode_utf8"><code class="docutils literal notranslate"><span class="pre">encode_utf8()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.html#duHast.Utilities.utility.get_first"><code class="docutils literal notranslate"><span class="pre">get_first()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.html#duHast.Utilities.utility.index_of"><code class="docutils literal notranslate"><span class="pre">index_of()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.html#duHast.Utilities.utility.remove_items_from_list"><code class="docutils literal notranslate"><span class="pre">remove_items_from_list()</span></code></a></li>

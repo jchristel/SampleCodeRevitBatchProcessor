@@ -1,0 +1,21 @@
+duHast.UI.Objects.WPF.Exceptions package
+========================================
+
+Submodules
+----------
+
+duHast.UI.Objects.WPF.Exceptions.MissingXAMLException module
+------------------------------------------------------------
+
+.. automodule:: duHast.UI.Objects.WPF.Exceptions.MissingXAMLException
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.UI.Objects.WPF.Exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,21 @@
+duHast.UI.Objects.WPF.Windows package
+=====================================
+
+Submodules
+----------
+
+duHast.UI.Objects.WPF.Windows.WPFWindowBase module
+--------------------------------------------------
+
+.. automodule:: duHast.UI.Objects.WPF.Windows.WPFWindowBase
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.UI.Objects.WPF.Windows
+   :members:
+   :undoc-members:
+   :show-inheritance:

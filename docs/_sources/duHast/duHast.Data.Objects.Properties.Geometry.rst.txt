@@ -28,6 +28,14 @@ duHast.Data.Objects.Properties.Geometry.geometry\_base module
    :undoc-members:
    :show-inheritance:
 
+duHast.Data.Objects.Properties.Geometry.geometry\_bounding\_box module
+----------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Properties.Geometry.geometry_bounding_box
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Data.Objects.Properties.Geometry.geometry\_polygon module
 ----------------------------------------------------------------
 

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.UI package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast.UI package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
     <link rel="next" title="duHast.UI.Objects package" href="duHast.UI.Objects.html" />
     <link rel="prev" title="duHast.Revit.Warnings.Utility package" href="duHast.Revit.Warnings.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.UI package</h1></div>
@@ -47,6 +47,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -95,18 +96,15 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="duHast.UI.Objects.html">duHast.UI.Objects package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.UI.Objects.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.WPF.html">duHast.UI.Objects.WPF package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.html#module-duHast.UI.Objects.WPF">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.UI.Objects.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.UI.Objects.html#module-duHast.UI.Objects.Command">duHast.UI.Objects.Command module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.html#a-class-to-handle-wpf-command-bindings">A class to handle wpf command bindings.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.Command.Command"><code class="docutils literal notranslate"><span class="pre">Command</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.Command.Command.Execute"><code class="docutils literal notranslate"><span class="pre">Command.Execute()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.Command.Command.add_CanExecuteChanged"><code class="docutils literal notranslate"><span class="pre">Command.add_CanExecuteChanged()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.Command.Command.remove_CanExecuteChanged"><code class="docutils literal notranslate"><span class="pre">Command.remove_CanExecuteChanged()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.Command.Command.CanExecute"><code class="docutils literal notranslate"><span class="pre">Command.CanExecute()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.UI.Objects.html#module-duHast.UI.Objects.ProgressBase">duHast.UI.Objects.ProgressBase module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.html#a-class-used-to-wrap-a-progress-form-into-a-call-back-function">A class used to wrap a progress form into a call back function.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.ProgressBase.ProgressBase"><code class="docutils literal notranslate"><span class="pre">ProgressBase</span></code></a><ul>
@@ -114,21 +112,6 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.ProgressBase.ProgressBase.is_cancelled"><code class="docutils literal notranslate"><span class="pre">ProgressBase.is_cancelled()</span></code></a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.UI.Objects.html#module-duHast.UI.Objects.ViewModelBase">duHast.UI.Objects.ViewModelBase module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.html#a-base-class-for-wpf-view-models">A base class for WPF view models.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.ViewModelBase.ViewModelBase"><code class="docutils literal notranslate"><span class="pre">ViewModelBase</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.ViewModelBase.ViewModelBase.RaisePropertyChanged"><code class="docutils literal notranslate"><span class="pre">ViewModelBase.RaisePropertyChanged()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.ViewModelBase.ViewModelBase.add_PropertyChanged"><code class="docutils literal notranslate"><span class="pre">ViewModelBase.add_PropertyChanged()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.ViewModelBase.ViewModelBase.remove_PropertyChanged"><code class="docutils literal notranslate"><span class="pre">ViewModelBase.remove_PropertyChanged()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.UI.Objects.html#module-duHast.UI.Objects.XamlLoader">duHast.UI.Objects.XamlLoader module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.html#a-class-to-load-xaml-files">A class to load xaml files.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.XamlLoader.XamlLoader"><code class="docutils literal notranslate"><span class="pre">XamlLoader</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.UI.Objects.html#module-duHast.UI.Objects.common_ui">duHast.UI.Objects.common_ui module</a><ul>
@@ -161,29 +144,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="duHast.UI.files_select.html">duHast.UI.files_select package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.UI.files_select.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.UI.files_select.html#module-duHast.UI.files_select.ViewModel">duHast.UI.files_select.ViewModel module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.ViewModel.ViewModel"><code class="docutils literal notranslate"><span class="pre">ViewModel</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.ViewModel.ViewModel.PropertyChanged"><code class="docutils literal notranslate"><span class="pre">ViewModel.PropertyChanged</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.ViewModel.ViewModel.TextBoxText_SourcePath"><code class="docutils literal notranslate"><span class="pre">ViewModel.TextBoxText_SourcePath</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.ViewModel.ViewModel.TextBoxText_Filter"><code class="docutils literal notranslate"><span class="pre">ViewModel.TextBoxText_Filter</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.ViewModel.ViewModel.RadioButton_FilterAnd"><code class="docutils literal notranslate"><span class="pre">ViewModel.RadioButton_FilterAnd</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.ViewModel.ViewModel.RadioButton_FilterOr"><code class="docutils literal notranslate"><span class="pre">ViewModel.RadioButton_FilterOr</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.ViewModel.ViewModel.convert_list_to_observable_collection"><code class="docutils literal notranslate"><span class="pre">ViewModel.convert_list_to_observable_collection()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.ViewModel.ViewModel.OnPropertyChanged"><code class="docutils literal notranslate"><span class="pre">ViewModel.OnPropertyChanged()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.ViewModel.ViewModel.TextBox_Filter_TextChanged"><code class="docutils literal notranslate"><span class="pre">ViewModel.TextBox_Filter_TextChanged()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.ViewModel.ViewModel.text_box_source_path_change"><code class="docutils literal notranslate"><span class="pre">ViewModel.text_box_source_path_change()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.ViewModel.ViewModel.button_ok"><code class="docutils literal notranslate"><span class="pre">ViewModel.button_ok()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.ViewModel.ViewModel.button_cancel"><code class="docutils literal notranslate"><span class="pre">ViewModel.button_cancel()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.UI.files_select.html#module-duHast.UI.files_select.files_select_ui">duHast.UI.files_select.files_select_ui module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.files_select_ui.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.files_select_ui.process_args"><code class="docutils literal notranslate"><span class="pre">process_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.UI.files_select.html#duHast.UI.files_select.files_select_ui.is_bim_360_file"><code class="docutils literal notranslate"><span class="pre">is_bim_360_file()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.UI.files_select.html#duhast-ui-files-select-viewmodel-module">duHast.UI.files_select.ViewModel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.UI.files_select.html#duhast-ui-files-select-files-select-ui-module">duHast.UI.files_select.files_select_ui module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.UI.files_select.html#module-duHast.UI.files_select">Module contents</a></li>
 </ul>
 </li>

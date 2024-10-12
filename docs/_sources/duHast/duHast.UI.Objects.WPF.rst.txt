@@ -1,0 +1,26 @@
+duHast.UI.Objects.WPF package
+=============================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.UI.Objects.WPF.Commands
+   duHast.UI.Objects.WPF.Exceptions
+   duHast.UI.Objects.WPF.Models
+   duHast.UI.Objects.WPF.Services
+   duHast.UI.Objects.WPF.Stores
+   duHast.UI.Objects.WPF.ViewModels
+   duHast.UI.Objects.WPF.Views
+   duHast.UI.Objects.WPF.Windows
+   duHast.UI.Objects.WPF.Xaml
+
+Module contents
+---------------
+
+.. automodule:: duHast.UI.Objects.WPF
+   :members:
+   :undoc-members:
+   :show-inheritance:

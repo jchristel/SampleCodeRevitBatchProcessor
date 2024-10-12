@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.UI.Objects package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast.UI.Objects package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.UI package" href="duHast.UI.html" />
-    <link rel="next" title="duHast.UI.files_select package" href="duHast.UI.files_select.html" />
+    <link rel="next" title="duHast.UI.Objects.WPF package" href="duHast.UI.Objects.WPF.html" />
     <link rel="prev" title="duHast.UI package" href="duHast.UI.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.UI.Objects package</h1></div>
@@ -31,7 +31,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="duHast.UI.files_select.html" title="duHast.UI.files_select package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.UI.Objects.WPF.html" title="duHast.UI.Objects.WPF package" accesskey="N">next</a></div>
             <div class="headerButton"><a href="duHast.UI.html" title="duHast.UI package" accesskey="P">previous</a></div>
         </li>
     </ul>
@@ -47,6 +47,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -90,42 +91,73 @@
             
   <section id="duhast-ui-objects-package">
 <h1>duHast.UI.Objects package<a class="headerlink" href="#duhast-ui-objects-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.UI.Objects.WPF.html">duHast.UI.Objects.WPF package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.UI.Objects.WPF.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.WPF.Commands.html">duHast.UI.Objects.WPF.Commands package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Commands.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Commands.html#module-duHast.UI.Objects.WPF.Commands.CommandBase">duHast.UI.Objects.WPF.Commands.CommandBase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Commands.html#module-duHast.UI.Objects.WPF.Commands">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.WPF.Exceptions.html">duHast.UI.Objects.WPF.Exceptions package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Exceptions.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Exceptions.html#module-duHast.UI.Objects.WPF.Exceptions.MissingXAMLException">duHast.UI.Objects.WPF.Exceptions.MissingXAMLException module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Exceptions.html#module-duHast.UI.Objects.WPF.Exceptions">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.WPF.Models.html">duHast.UI.Objects.WPF.Models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Models.html#module-duHast.UI.Objects.WPF.Models">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.WPF.Services.html">duHast.UI.Objects.WPF.Services package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Services.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Services.html#module-duHast.UI.Objects.WPF.Services.NavigationService">duHast.UI.Objects.WPF.Services.NavigationService module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Services.html#module-duHast.UI.Objects.WPF.Services">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.WPF.Stores.html">duHast.UI.Objects.WPF.Stores package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Stores.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Stores.html#module-duHast.UI.Objects.WPF.Stores.NavigationStore">duHast.UI.Objects.WPF.Stores.NavigationStore module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Stores.html#module-duHast.UI.Objects.WPF.Stores">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.WPF.ViewModels.html">duHast.UI.Objects.WPF.ViewModels package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.ViewModels.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.ViewModels.html#module-duHast.UI.Objects.WPF.ViewModels.MainViewModel">duHast.UI.Objects.WPF.ViewModels.MainViewModel module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.ViewModels.html#module-duHast.UI.Objects.WPF.ViewModels.ViewModelBase">duHast.UI.Objects.WPF.ViewModels.ViewModelBase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.ViewModels.html#module-duHast.UI.Objects.WPF.ViewModels">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.WPF.Views.html">duHast.UI.Objects.WPF.Views package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Views.html#module-duHast.UI.Objects.WPF.Views">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.WPF.Windows.html">duHast.UI.Objects.WPF.Windows package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Windows.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Windows.html#module-duHast.UI.Objects.WPF.Windows.WPFWindowBase">duHast.UI.Objects.WPF.Windows.WPFWindowBase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Windows.html#module-duHast.UI.Objects.WPF.Windows">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.UI.Objects.WPF.Xaml.html">duHast.UI.Objects.WPF.Xaml package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Xaml.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Xaml.html#module-duHast.UI.Objects.WPF.Xaml.XamlLoader">duHast.UI.Objects.WPF.Xaml.XamlLoader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.UI.Objects.WPF.Xaml.html#module-duHast.UI.Objects.WPF.Xaml">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.UI.Objects.WPF.html#module-duHast.UI.Objects.WPF">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
-</section>
-<section id="module-duHast.UI.Objects.Command">
-<span id="duhast-ui-objects-command-module"></span><h2>duHast.UI.Objects.Command module<a class="headerlink" href="#module-duHast.UI.Objects.Command" title="Permalink to this heading">¶</a></h2>
-<section id="a-class-to-handle-wpf-command-bindings">
-<h3>A class to handle wpf command bindings.<a class="headerlink" href="#a-class-to-handle-wpf-command-bindings" title="Permalink to this heading">¶</a></h3>
-<p>Based on:</p>
-<p><a class="reference external" href="https://markheath.net/post/wpf-and-mvvm-in-ironpython">https://markheath.net/post/wpf-and-mvvm-in-ironpython</a></p>
-</section>
-<dl class="py class">
-<dt class="sig sig-object py" id="duHast.UI.Objects.Command.Command">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.UI.Objects.Command.</span></span><span class="sig-name descname"><span class="pre">Command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.Command.Command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ICommand</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.UI.Objects.Command.Command.Execute">
-<span class="sig-name descname"><span class="pre">Execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.Command.Command.Execute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.UI.Objects.Command.Command.add_CanExecuteChanged">
-<span class="sig-name descname"><span class="pre">add_CanExecuteChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.Command.Command.add_CanExecuteChanged" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.UI.Objects.Command.Command.remove_CanExecuteChanged">
-<span class="sig-name descname"><span class="pre">remove_CanExecuteChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.Command.Command.remove_CanExecuteChanged" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.UI.Objects.Command.Command.CanExecute">
-<span class="sig-name descname"><span class="pre">CanExecute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.Command.Command.CanExecute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </section>
 <section id="module-duHast.UI.Objects.ProgressBase">
 <span id="duhast-ui-objects-progressbase-module"></span><h2>duHast.UI.Objects.ProgressBase module<a class="headerlink" href="#module-duHast.UI.Objects.ProgressBase" title="Permalink to this heading">¶</a></h2>
@@ -163,49 +195,6 @@ message: The message to display</p>
 </dl>
 </dd></dl>
 
-</dd></dl>
-
-</section>
-<section id="module-duHast.UI.Objects.ViewModelBase">
-<span id="duhast-ui-objects-viewmodelbase-module"></span><h2>duHast.UI.Objects.ViewModelBase module<a class="headerlink" href="#module-duHast.UI.Objects.ViewModelBase" title="Permalink to this heading">¶</a></h2>
-<section id="a-base-class-for-wpf-view-models">
-<h3>A base class for WPF view models.<a class="headerlink" href="#a-base-class-for-wpf-view-models" title="Permalink to this heading">¶</a></h3>
-<p>Based on:</p>
-<p><a class="reference external" href="https://markheath.net/post/wpf-and-mvvm-in-ironpython">https://markheath.net/post/wpf-and-mvvm-in-ironpython</a></p>
-</section>
-<dl class="py class">
-<dt class="sig sig-object py" id="duHast.UI.Objects.ViewModelBase.ViewModelBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.UI.Objects.ViewModelBase.</span></span><span class="sig-name descname"><span class="pre">ViewModelBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.ViewModelBase.ViewModelBase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">INotifyPropertyChanged</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.UI.Objects.ViewModelBase.ViewModelBase.RaisePropertyChanged">
-<span class="sig-name descname"><span class="pre">RaisePropertyChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">propertyName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.ViewModelBase.ViewModelBase.RaisePropertyChanged" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.UI.Objects.ViewModelBase.ViewModelBase.add_PropertyChanged">
-<span class="sig-name descname"><span class="pre">add_PropertyChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.ViewModelBase.ViewModelBase.add_PropertyChanged" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="duHast.UI.Objects.ViewModelBase.ViewModelBase.remove_PropertyChanged">
-<span class="sig-name descname"><span class="pre">remove_PropertyChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.ViewModelBase.ViewModelBase.remove_PropertyChanged" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="module-duHast.UI.Objects.XamlLoader">
-<span id="duhast-ui-objects-xamlloader-module"></span><h2>duHast.UI.Objects.XamlLoader module<a class="headerlink" href="#module-duHast.UI.Objects.XamlLoader" title="Permalink to this heading">¶</a></h2>
-<section id="a-class-to-load-xaml-files">
-<h3>A class to load xaml files.<a class="headerlink" href="#a-class-to-load-xaml-files" title="Permalink to this heading">¶</a></h3>
-<p>Based on:</p>
-<p><a class="reference external" href="https://markheath.net/post/wpf-and-mvvm-in-ironpython">https://markheath.net/post/wpf-and-mvvm-in-ironpython</a></p>
-</section>
-<dl class="py class">
-<dt class="sig sig-object py" id="duHast.UI.Objects.XamlLoader.XamlLoader">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.UI.Objects.XamlLoader.</span></span><span class="sig-name descname"><span class="pre">XamlLoader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xamlPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.XamlLoader.XamlLoader" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 </dd></dl>
 
 </section>

@@ -20,6 +20,14 @@ duHast.Revit.Exports.export module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Exports.export\_data module
+----------------------------------------
+
+.. automodule:: duHast.Revit.Exports.export_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Exports.export\_ifc module
 ---------------------------------------
 

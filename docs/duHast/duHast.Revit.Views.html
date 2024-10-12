@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Views package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast.Revit.Views package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
-    <link rel="next" title="duHast.Revit.Views.Geometry package" href="duHast.Revit.Views.Geometry.html" />
-    <link rel="prev" title="duHast.Revit.UI package" href="duHast.Revit.UI.html" />
+    <link rel="next" title="duHast.Revit.Views.Export package" href="duHast.Revit.Views.Export.html" />
+    <link rel="prev" title="duHast.Revit.UI.Objects package" href="duHast.Revit.UI.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Views package</h1></div>
@@ -31,8 +31,8 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="duHast.Revit.Views.Geometry.html" title="duHast.Revit.Views.Geometry package" accesskey="N">next</a></div>
-            <div class="headerButton"><a href="duHast.Revit.UI.html" title="duHast.Revit.UI package" accesskey="P">previous</a></div>
+            <div class="headerButton"><a href="duHast.Revit.Views.Export.html" title="duHast.Revit.Views.Export package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Revit.UI.Objects.html" title="duHast.Revit.UI.Objects package" accesskey="P">previous</a></div>
         </li>
     </ul>
 </div>
@@ -47,6 +47,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -94,6 +95,21 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Views.Export.html">duHast.Revit.Views.Export package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Export.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Export.html#module-duHast.Revit.Views.Export.sheets_to_data">duHast.Revit.Views.Export.sheets_to_data module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Export.html#this-module-contains-a-number-of-helper-functions-relating-to-revit-sheet-to-data-sheet-conversion">This module contains a number of helper functions relating to Revit sheet to data sheet conversion.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Export.html#duHast.Revit.Views.Export.sheets_to_data.convert_revit_sheet"><code class="docutils literal notranslate"><span class="pre">convert_revit_sheet()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Export.html#module-duHast.Revit.Views.Export.view_ports_to_data">duHast.Revit.Views.Export.view_ports_to_data module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Export.html#this-module-contains-a-number-of-helper-functions-relating-to-revit-view-port-to-data-view-port-conversion">This module contains a number of helper functions relating to Revit view port to data view port conversion.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Export.html#duHast.Revit.Views.Export.view_ports_to_data.convert_revit_viewport_to_data_instance"><code class="docutils literal notranslate"><span class="pre">convert_revit_viewport_to_data_instance()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Export.html#module-duHast.Revit.Views.Export">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Views.Geometry.html">duHast.Revit.Views.Geometry package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Geometry.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Geometry.html#module-duHast.Revit.Views.Geometry.view_geometry">duHast.Revit.Views.Geometry.view_geometry module</a><ul>
@@ -388,6 +404,36 @@
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Views.element_overrides">
+<span id="duhast-revit-views-element-overrides-module"></span><h2>duHast.Revit.Views.element_overrides module<a class="headerlink" href="#module-duHast.Revit.Views.element_overrides" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-by-element-in-view-overrides">
+<h3>This module contains a number of helper functions relating to by element in view overrides.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-by-element-in-view-overrides" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.element_overrides.overwrite_element_graphics_in_view">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.element_overrides.</span></span><span class="sig-name descname"><span class="pre">overwrite_element_graphics_in_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override_graphics_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.element_overrides.overwrite_element_graphics_in_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite the graphics of elements in a view.</p>
+<p>Note:
+If None is passed as the override_graphics_settings parameter, the default settings will be used to remove any overrides on the elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Document</em>) – The Revit document.</p></li>
+<li><p><strong>view</strong> (<em>View</em>) – The view in which the elements are located.</p></li>
+<li><p><strong>elements</strong> (<em>list</em>) – The elements to overwrite the graphics for.</p></li>
+<li><p><strong>override_graphics_settings</strong> (<em>Autodesk.Revit.DB.OverrideGraphicSettings</em>) – The override settings to apply to the elements.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A result object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Views.filters">
 <span id="duhast-revit-views-filters-module"></span><h2>duHast.Revit.Views.filters module<a class="headerlink" href="#module-duHast.Revit.Views.filters" title="Permalink to this heading">¶</a></h2>
 <section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-view-filters">
@@ -516,6 +562,46 @@ view (Autodesk.Revit.DB.View): The view object to which the filter should be app
 filter (Autodesk.Revit.DB.Filter): The filter object that should be applied to the view.</p>
 </dd>
 <dt>Returns:</dt><dd><p>duHast.Utilities.Objects.result.Result: The result object containing the outcome of applying the filter to the view. The <cite>result</cite> attribute of the result object indicates whether the filter was applied successfully or not. The <cite>messages</cite> attribute of the result object contains any additional messages related to the application of the filter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.legends">
+<span id="duhast-revit-views-legends-module"></span><h2>duHast.Revit.Views.legends module<a class="headerlink" href="#module-duHast.Revit.Views.legends" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-legends">
+<h3>This module contains a number of helper functions relating to Revit legends.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-legends" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.legends.get_view_legends">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.legends.</span></span><span class="sig-name descname"><span class="pre">get_view_legends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.legends.get_view_legends" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all view legends in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>All view legends in the model</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.View</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.legends.get_view_legends_not_placed">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.legends.</span></span><span class="sig-name descname"><span class="pre">get_view_legends_not_placed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.legends.get_view_legends_not_placed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all unplaced legend views</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>All view legends in the model not on a sheet</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.View</p>
 </dd>
 </dl>
 </dd></dl>
@@ -840,8 +926,24 @@ view reference types and view continuation types in the model.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Views.schedules.filter_revision_schedules">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules.</span></span><span class="sig-name descname"><span class="pre">filter_revision_schedules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules.filter_revision_schedules" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules.get_schedules_not_on_sheets">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules.</span></span><span class="sig-name descname"><span class="pre">get_schedules_not_on_sheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules.get_schedules_not_on_sheets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all schedules without an instance placed on a sheet.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: list of schedules without a sheet schedule instance.
+:rtype: list of Autodesk.Revit.DB.View</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.schedules_revision_filter">
+<span id="duhast-revit-views-schedules-revision-filter-module"></span><h2>duHast.Revit.Views.schedules_revision_filter module<a class="headerlink" href="#module-duHast.Revit.Views.schedules_revision_filter" title="Permalink to this heading">¶</a></h2>
+<section id="id1">
+<h3>This module contains a number of helper functions relating to Revit view schedules.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_revision_filter.filter_revision_schedules">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_revision_filter.</span></span><span class="sig-name descname"><span class="pre">filter_revision_schedules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_revision_filter.filter_revision_schedules" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether a view is a revision schedule.
 (not required…schedules have a property flag!!)</p>
 <dl class="field-list simple">
@@ -858,13 +960,18 @@ view reference types and view continuation types in the model.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Views.schedules.get_schedules_not_on_sheets">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules.</span></span><span class="sig-name descname"><span class="pre">get_schedules_not_on_sheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules.get_schedules_not_on_sheets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all schedules without an instance placed on a sheet.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:return: list of schedules without a sheet schedule instance.
-:rtype: list of Autodesk.Revit.DB.View</p>
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_revision_filter.filter_schedules">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_revision_filter.</span></span><span class="sig-name descname"><span class="pre">filter_schedules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_revision_filter.filter_schedules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the view is of type schedule. If so it returns true, otherwise false</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – the view</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if view is a schedule, otherwise false.</p>
+</dd>
+</dl>
+<p>:rtype:bool</p>
 </dd></dl>
 
 </section>
@@ -1220,6 +1327,94 @@ view reference types and view continuation types in the model.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.View</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.views.get_view_phase_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.views.</span></span><span class="sig-name descname"><span class="pre">get_view_phase_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.views.get_view_phase_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the views phase id.</p>
+<p>Note if view does not support phase id and Invlaid ElementId (-1) is returned</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view of which to return the phase id</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An element id representing the phase id. If view does not support phases then an Invalid id (-1) will be returned.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.views.get_area_scheme_of_view">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.views.</span></span><span class="sig-name descname"><span class="pre">get_area_scheme_of_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.views.get_area_scheme_of_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the area scheme an area plan is associated with.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view of which to return the area scheme</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The area scheme if the view is of type AreaPlan otherwise None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.views_crop">
+<span id="duhast-revit-views-views-crop-module"></span><h2>duHast.Revit.Views.views_crop module<a class="headerlink" href="#module-duHast.Revit.Views.views_crop" title="Permalink to this heading">¶</a></h2>
+<section id="view-crop-utilities">
+<h3>View crop utilities.<a class="headerlink" href="#view-crop-utilities" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.views_crop.get_view_crop">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.views_crop.</span></span><span class="sig-name descname"><span class="pre">get_view_crop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.views_crop.get_view_crop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the crop region loops of a view.</p>
+<p>This method returns a representation of the boundaries of the currently active crop for the associated view.
+If the view crop has a non-rectangular shape, the method returns that shape.
+Otherwise, if the view crop has been split, the method returns the multiple rectangular boundaries visible in the crop - note that this does not reflect any offsets that may have been applied to the boundary regions.
+If the crop is not split, this returns a single rectangle representing the crop.
+All coordinates are in the coordinate frame of the view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view to get the crop region from.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The crop region of the view.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.CurveLoop]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.views_crop.apply_view_crop">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.views_crop.</span></span><span class="sig-name descname"><span class="pre">apply_view_crop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crop_loop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.views_crop.apply_view_crop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply a crop region to a view.</p>
+<p>This method sets the crop region of the view to the specified crop loops.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The document containing the view.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view to apply the crop region to.</p></li>
+<li><p><strong>crop_loops</strong> (<em>Autodesk.Revit.DB.CurveLoop</em>) – The crop loop to apply to the view.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">duHast.Utilities.Objects.result.Result</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1604,7 +1799,7 @@ view_data (dict): A dictionary where the keys are the names of the views and the
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.visibility_graphics_filters.apply_filter_override_to_view">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.visibility_graphics_filters.</span></span><span class="sig-name descname"><span class="pre">apply_filter_override_to_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_storage_instances</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.visibility_graphics_filters.apply_filter_override_to_view" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.visibility_graphics_filters.</span></span><span class="sig-name descname"><span class="pre">apply_filter_override_to_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_storage_instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_filter_if_not_present</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.visibility_graphics_filters.apply_filter_override_to_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies filter override(s) to a single view</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

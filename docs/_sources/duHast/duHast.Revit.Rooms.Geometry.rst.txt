@@ -12,6 +12,14 @@ duHast.Revit.Rooms.Geometry.geometry module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Rooms.Geometry.room\_spatial\_elements module
+----------------------------------------------------------
+
+.. automodule:: duHast.Revit.Rooms.Geometry.room_spatial_elements
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

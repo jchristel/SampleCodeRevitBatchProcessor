@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Rooms package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast.Revit.Rooms package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Rooms.Export package" href="duHast.Revit.Rooms.Export.html" />
     <link rel="prev" title="duHast.Revit.Roofs.Utility package" href="duHast.Revit.Roofs.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Rooms package</h1></div>
@@ -47,6 +47,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -115,12 +116,28 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.geometry.get_2d_points_from_all_revit_rooms"><code class="docutils literal notranslate"><span class="pre">get_2d_points_from_all_revit_rooms()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#module-duHast.Revit.Rooms.Geometry.room_spatial_elements">duHast.Revit.Rooms.Geometry.room_spatial_elements module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#revit-api-utility-functions-for-room-boundary-loops-and-elements">Revit API utility functions for Room boundary loops and elements.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_room_segments"><code class="docutils literal notranslate"><span class="pre">get_room_segments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_segment_host"><code class="docutils literal notranslate"><span class="pre">get_segment_host()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_curves_as_curve_loop"><code class="docutils literal notranslate"><span class="pre">get_curves_as_curve_loop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_spatial_element_filter"><code class="docutils literal notranslate"><span class="pre">get_spatial_element_filter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_all_segs_from_list"><code class="docutils literal notranslate"><span class="pre">get_all_segs_from_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_segment_hosts"><code class="docutils literal notranslate"><span class="pre">get_segment_hosts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_segments_as_curves"><code class="docutils literal notranslate"><span class="pre">get_segments_as_curves()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_wall_segments_as_curves"><code class="docutils literal notranslate"><span class="pre">get_only_wall_segments_as_curves()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_rm_sep_lines_as_curves"><code class="docutils literal notranslate"><span class="pre">get_only_rm_sep_lines_as_curves()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_wall_segments_as_walls"><code class="docutils literal notranslate"><span class="pre">get_only_wall_segments_as_walls()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_rm_sep_lines_as_model_lines"><code class="docutils literal notranslate"><span class="pre">get_only_rm_sep_lines_as_model_lines()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#module-duHast.Revit.Rooms.Geometry">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html">duHast.Revit.Rooms.Objects package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#module-duHast.Revit.Rooms.Objects.RoomBaseObject">duHast.Revit.Rooms.Objects.RoomBaseObject module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#revit-room-utility-class">Revit room utility class.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#duHast.Revit.Rooms.Objects.RoomBaseObject.RoomBaseObj"><code class="docutils literal notranslate"><span class="pre">RoomBaseObj</span></code></a></li>
 </ul>
 </li>
@@ -132,6 +149,11 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html#module-duHast.Revit.Rooms.Reporting.revit_rooms_report_header">duHast.Revit.Rooms.Reporting.revit_rooms_report_header module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html#this-module-contains-the-header-row-for-any-room-reports">This module contains the header row for any room reports.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html#duHast.Revit.Rooms.Reporting.revit_rooms_report_header.REPORT_ROOMS_HEADER"><code class="docutils literal notranslate"><span class="pre">REPORT_ROOMS_HEADER</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html#module-duHast.Revit.Rooms.Reporting.room_separation_lines">duHast.Revit.Rooms.Reporting.room_separation_lines module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html#revit-room-separation-lines-reports-functions">Revit room separation lines reports functions.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html#duHast.Revit.Rooms.Reporting.room_separation_lines.room_lines_with_warnings_by_design_option_and_level"><code class="docutils literal notranslate"><span class="pre">room_lines_with_warnings_by_design_option_and_level()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html#module-duHast.Revit.Rooms.Reporting">Module contents</a></li>
@@ -171,6 +193,18 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.get_room_phase">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">get_room_phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.get_room_phase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the phase of the room
+:param rvt_doc: The document to get the room from
+:type rvt_doc: Document
+:param room: The room to get the phase of
+:type room: Room
+:return: The phase of the room
+:rtype: str</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_common_parameters.get_room_level">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_common_parameters.</span></span><span class="sig-name descname"><span class="pre">get_room_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_common_parameters.get_room_level" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the phase of the room
 :param rvt_doc: The document to get the room from
 :type rvt_doc: Document
@@ -341,76 +375,165 @@ False: Check if the location crosshair is in the view crop box
 </dd></dl>
 
 </section>
-<section id="module-duHast.Revit.Rooms.room_spatial_elements">
-<span id="duhast-revit-rooms-room-spatial-elements-module"></span><h2>duHast.Revit.Rooms.room_spatial_elements module<a class="headerlink" href="#module-duHast.Revit.Rooms.room_spatial_elements" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Revit.Rooms.room_lines">
+<span id="duhast-revit-rooms-room-lines-module"></span><h2>duHast.Revit.Rooms.room_lines module<a class="headerlink" href="#module-duHast.Revit.Rooms.room_lines" title="Permalink to this heading">¶</a></h2>
+<section id="revit-api-utility-functions-for-room-separation-lines">
+<h3>Revit API utility functions for Room separation lines.<a class="headerlink" href="#revit-api-utility-functions-for-room-separation-lines" title="Permalink to this heading">¶</a></h3>
+</section>
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_spatial_elements.get_room_segments">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_room_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_spatial_elements.get_room_segments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a rooms boundary segments with the default spatial element boundary options.
-:param room: The room to get for
-:type room: Room
-:return: The boundary segments of the room
-:rtype: List[List[BoundarySegment]]</p>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_lines.get_room_separation_lines">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_lines.</span></span><span class="sig-name descname"><span class="pre">get_room_separation_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_lines.get_room_separation_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all room separation lines in the document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Document</em>) – The Revit document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A collector containing room separation lines.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_spatial_elements.get_segment_host">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_segment_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_spatial_elements.get_segment_host" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the element that the room boundary segment belongs to
-:param rvt_doc: The Revit document
-:type rvt_doc: Document
-:param seg: The boundary segment
-:type seg: BoundarySegment</p>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_lines.get_room_separation_lines_by_level_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_lines.</span></span><span class="sig-name descname"><span class="pre">get_room_separation_lines_by_level_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_lines.get_room_separation_lines_by_level_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all room separation lines in the document on a specific level by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Document</em>) – The Revit document.</p></li>
+<li><p><strong>level_name</strong> (<em>str</em>) – The name of the level.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of room separation lines on the specified level.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_spatial_elements.get_curves_as_curve_loop">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_curves_as_curve_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rm_crvs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_spatial_elements.get_curves_as_curve_loop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a list of curves as a CurveLoop object.
-:param rm_crvs: The curves to get for
-:type rm_crvs: List[Curve]
-:return: The curves as a CurveLoop object
-:rtype: CurveLoop</p>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_lines.get_room_separation_lines_by_level_names">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_lines.</span></span><span class="sig-name descname"><span class="pre">get_room_separation_lines_by_level_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_lines.get_room_separation_lines_by_level_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all room separation lines in the document sorted by level name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Document</em>) – The Revit document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing room separation lines sorted by level name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_spatial_elements.get_segments_as_curves">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_segments_as_curves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_spatial_elements.get_segments_as_curves" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a list of curves that represents the boundary segments of a room.</p>
-<p>Optional parameter to filter the segments by the host type (wall or
-room separation line).
-:param rvt_doc: The Revit document
-:type rvt_doc: Document
-:param segments: The boundary segments of a room
-:type segments: List[List[BoundarySegment]]
-:param filter_only: Optional: The host type to filter for
-:type filter_only: Wall, ModelLine or both in a list
-:return: A list of curves
-:rtype: List[Curve]</p>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_lines.sort_room_separation_line_by_phase_created">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_lines.</span></span><span class="sig-name descname"><span class="pre">sort_room_separation_line_by_phase_created</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_separation_lines</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_lines.sort_room_separation_line_by_phase_created" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sorts the room separation lines by phase created id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>room_separation_lines</strong> – list of room separation lines</p>
+</dd>
+</dl>
+<p>:type room_separation_lines:list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of room separation lines, where key is the phase created id, and values are the associated room separation lines</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>{ElementId:[ModelLine]}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_spatial_elements.get_only_wall_segments_as_curves">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_only_wall_segments_as_curves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_spatial_elements.get_only_wall_segments_as_curves" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the wall segments of a room as curves.
-:param rvt_doc: The Revit document
-:type rvt_doc: Document
-:param segments: The boundary segments of a room
-:type segments: List[List[BoundarySegment]]
-:return: A list of curves
-:rtype: List[Curve]</p>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_lines.filter_room_separation_lines_by_phase_created">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_lines.</span></span><span class="sig-name descname"><span class="pre">filter_room_separation_lines_by_phase_created</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_separation_lines</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_created_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_lines.filter_room_separation_lines_by_phase_created" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter room separation lines by phase created.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Document</em>) – The Revit document.</p></li>
+<li><p><strong>phase_created_name</strong> (<em>str</em>) – The phase name of the phase the room separation lines was created in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of room separation lines filtered by phase created.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_spatial_elements.get_only_rm_sep_lines_as_curves_only">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_only_rm_sep_lines_as_curves_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_spatial_elements.get_only_rm_sep_lines_as_curves_only" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the room separation line segments of a room as curves.
-:param rvt_doc: The Revit document
-:type rvt_doc: Document
-:param segments: The boundary segments of a room
-:type segments: List[List[BoundarySegment]]
-:return: A list of curves
-:rtype: List[Curve]</p>
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_lines.filter_room_separation_lines_by_phase_demolished">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_lines.</span></span><span class="sig-name descname"><span class="pre">filter_room_separation_lines_by_phase_demolished</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_separation_lines</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_demolished_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_lines.filter_room_separation_lines_by_phase_demolished" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter room separation lines by phase demolished.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Document</em>) – The Revit document.</p></li>
+<li><p><strong>phase_demolished_name</strong> (<em>str</em>) – The phase name of the phase the room separation lines was created in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of room separation lines filtered by phase created.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_lines.filter_room_separation_lines_by_phase_created_older_than_upper_bound_phase">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_lines.</span></span><span class="sig-name descname"><span class="pre">filter_room_separation_lines_by_phase_created_older_than_upper_bound_phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_separation_lines</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound_phase_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_lines.filter_room_separation_lines_by_phase_created_older_than_upper_bound_phase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter room separation lines by phase created. Phase created value must be a phase equal to or older than the upper bound phase id.
+If upper bound phase Id is and ElementId.InvalidElementId the list will be returned unchanged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Document</em>) – The Revit document.</p></li>
+<li><p><strong>room_separation_lines</strong> (<em>[</em><em>]</em>) – A list of room separation lines</p></li>
+<li><p><strong>upper_bound_phase_id</strong> (<em>Autodesk.Revit.ElementId</em>) – the id of the phase to be used as upper bound</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of room separation lines filtered by phase created.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_lines.filter_room_separation_lines_by_level_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_lines.</span></span><span class="sig-name descname"><span class="pre">filter_room_separation_lines_by_level_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_separation_lines</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_lines.filter_room_separation_lines_by_level_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter room separation lines by level id its placed on.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>room_separation_lines</strong> (<em>[</em><em>]</em>) – A list of room separation lines</p></li>
+<li><p><strong>level_id</strong> (<em>Autodesk.Revit.ElementId</em>) – The id of he level to be filtered by.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of room separation lines filtered by level placed on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -422,7 +545,11 @@ room separation line).
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.room_tags.move_tag_to_room">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_tags.</span></span><span class="sig-name descname"><span class="pre">move_tag_to_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_manager=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_tags.move_tag_to_room" title="Permalink to this definition">¶</a></dt>
-<dd><p>Moves a room tag to the associated rooms location point.</p>
+<dd><p>Moves a room tag to the associated rooms location point. This will</p>
+<ul class="simple">
+<li><p>un-pin the tag</p></li>
+<li><p>disable any leader</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

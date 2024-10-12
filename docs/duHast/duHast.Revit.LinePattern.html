@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.LinePattern package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast.Revit.LinePattern package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.LinePattern.Data package" href="duHast.Revit.LinePattern.Data.html" />
     <link rel="prev" title="duHast.Revit.Levels.Reporting package" href="duHast.Revit.Levels.Reporting.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.LinePattern package</h1></div>
@@ -47,6 +47,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -441,11 +442,15 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete.get_fill_pattern_ids">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete.</span></span><span class="sig-name descname"><span class="pre">get_fill_pattern_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete.get_fill_pattern_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete.</span></span><span class="sig-name descname"><span class="pre">get_fill_pattern_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids_list_is_inclusive_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete.get_fill_pattern_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all fill pattern ids in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element_ids</strong> (<em>[</em><em>Autodesk.Revit.DB.ElementId</em><em>]</em>) – optional list of fill pattern element ids</p></li>
+<li><p><strong>element_ids_list_is_inclusive_filter</strong> (<em>bool</em>) – If true and element_ids list has values only those patterns will be purged if possible. If false and element_ids list has values any patterns in the list will not be purged.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of all fill pattern ids in the model.</p>
@@ -458,7 +463,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete.purge_fill_pattern_by_delete">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete.</span></span><span class="sig-name descname"><span class="pre">purge_fill_pattern_by_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete.purge_fill_pattern_by_delete" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete.</span></span><span class="sig-name descname"><span class="pre">purge_fill_pattern_by_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids_list_is_inclusive_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.purge_unused_fill_patterns_by_delete.purge_fill_pattern_by_delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Purge fill pattern by delete.</p>
 <p>Note: This is a very slow process and can take a few hours to complete depending on the size of the model and the number of fill patterns.</p>
 <dl class="field-list simple">
@@ -467,6 +472,8 @@
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>progress_callback</strong> (<em>callable</em>) – Callback to report progress.</p></li>
 <li><p><strong>debug</strong> (<em>bool</em>) – Debug mode.</p></li>
+<li><p><strong>element_ids</strong> (<em>[</em><em>Autodesk.Revit.DB.ElementId</em><em>]</em>) – optional list of fill pattern element ids</p></li>
+<li><p><strong>element_ids_list_is_inclusive_filter</strong> (<em>bool</em>) – If true and element_ids list has values only those fill patterns will be purged if possible. If false and element_ids list has values any fill patterns in the list will not be purged.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -488,11 +495,15 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete.get_line_pattern_ids">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete.</span></span><span class="sig-name descname"><span class="pre">get_line_pattern_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete.get_line_pattern_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete.</span></span><span class="sig-name descname"><span class="pre">get_line_pattern_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids_list_is_inclusive_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete.get_line_pattern_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all line pattern ids in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element_ids</strong> (<em>[</em><em>Autodesk.Revit.DB.ElementId</em><em>]</em>) – optional list of shared parameter element ids</p></li>
+<li><p><strong>element_ids_list_is_inclusive_filter</strong> (<em>bool</em>) – If true and element_ids list has values only those line patterns will be purged if possible. If false and element_ids list has values any line patterns in the list will not be purged.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of all line pattern ids in the model.</p>
@@ -505,7 +516,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete.purge_line_pattern_by_delete">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete.</span></span><span class="sig-name descname"><span class="pre">purge_line_pattern_by_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete.purge_line_pattern_by_delete" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete.</span></span><span class="sig-name descname"><span class="pre">purge_line_pattern_by_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids_list_is_inclusive_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.purge_unused_line_patterns_by_delete.purge_line_pattern_by_delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Purge line pattern by delete.</p>
 <p>Note: This is a very slow process and can take a few hours to complete depending on the size of the model and the number of line patterns.</p>
 <dl class="field-list simple">
@@ -514,6 +525,8 @@
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>progress_callback</strong> (<em>callable</em>) – Callback to report progress.</p></li>
 <li><p><strong>debug</strong> (<em>bool</em>) – Debug mode.</p></li>
+<li><p><strong>element_ids</strong> (<em>[</em><em>Autodesk.Revit.DB.ElementId</em><em>]</em>) – optional list of shared parameter element ids</p></li>
+<li><p><strong>element_ids_list_is_inclusive_filter</strong> (<em>bool</em>) – If true and element_ids list has values only those parameters will be purged if possible. If false and element_ids list has values any parameters in the list will not be purged.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -534,8 +547,29 @@
 <h3>Revit purging not used line styles by using the purge by delete helper functions.<a class="headerlink" href="#revit-purging-not-used-line-styles-by-using-the-purge-by-delete-helper-functions" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.LinePattern.purge_unused_line_styles_by_delete.get_line_style_ids">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.purge_unused_line_styles_by_delete.</span></span><span class="sig-name descname"><span class="pre">get_line_style_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids_list_is_inclusive_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.purge_unused_line_styles_by_delete.get_line_style_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all line style ids in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element_ids</strong> (<em>[</em><em>Autodesk.Revit.DB.ElementId</em><em>]</em>) – optional list of line style element ids</p></li>
+<li><p><strong>element_ids_list_is_inclusive_filter</strong> (<em>bool</em>) – If true and element_ids list has values only those line styles will be purged if possible. If false and element_ids list has values any line styles in the list will not be purged.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of all line styles ids in the model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.purge_unused_line_styles_by_delete.purge_line_styles_by_delete">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.purge_unused_line_styles_by_delete.</span></span><span class="sig-name descname"><span class="pre">purge_line_styles_by_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.purge_unused_line_styles_by_delete.purge_line_styles_by_delete" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.purge_unused_line_styles_by_delete.</span></span><span class="sig-name descname"><span class="pre">purge_line_styles_by_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids_list_is_inclusive_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.purge_unused_line_styles_by_delete.purge_line_styles_by_delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Purge line styles by delete.</p>
 <p>Note: This is a quick(ish) process and can take a few minutes to complete depending on the size of the model and the number of line styles.</p>
 <p>Observations:</p>
@@ -550,6 +584,8 @@
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>progress_callback</strong> (<em>callable</em>) – Callback to report progress.</p></li>
 <li><p><strong>debug</strong> (<em>bool</em>) – Debug mode.</p></li>
+<li><p><strong>element_ids</strong> (<em>[</em><em>Autodesk.Revit.DB.ElementId</em><em>]</em>) – optional list of line style element ids</p></li>
+<li><p><strong>element_ids_list_is_inclusive_filter</strong> (<em>bool</em>) – If true and element_ids list has values only those line styles will be purged if possible. If false and element_ids list has values any line styles in the list will not be purged.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

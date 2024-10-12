@@ -1,0 +1,21 @@
+duHast.UI.Objects.WPF.Commands package
+======================================
+
+Submodules
+----------
+
+duHast.UI.Objects.WPF.Commands.CommandBase module
+-------------------------------------------------
+
+.. automodule:: duHast.UI.Objects.WPF.Commands.CommandBase
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.UI.Objects.WPF.Commands
+   :members:
+   :undoc-members:
+   :show-inheritance:

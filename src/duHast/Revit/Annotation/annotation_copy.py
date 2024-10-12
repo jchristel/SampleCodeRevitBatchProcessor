@@ -93,7 +93,7 @@ def copy_annotation_to_views(
 
     # loop over target views and copy specific annotation form active view to it
     for target_view_name, source_dims in source_dims_by_view_name.items():
-        
+
         # update the progress bar
         counter += 1
         if callback_progress:

@@ -85,7 +85,7 @@ def in_transaction(tranny, action, *args, **kwargs):
             return_value.update_sep(False, "Failed with exception: {}".format(e))
     except Exception as e:
         return_value.update_sep(False, "Failed with exception: {}".format(e))
-   
+
     return return_value
 
 
@@ -123,7 +123,6 @@ def in_transaction_with_failure_handling(
 
     """
 
-
     if not callable(action):
         raise ValueError("The action parameter must be a callable function.")
     if not callable(failure_processing_func):
@@ -141,8 +140,7 @@ def in_transaction_with_failure_handling(
 
     # Establish the failure preprocessor
     failure_pre_processor = FailuresPreprocessor(
-        failure_processor=failure_processing_func, 
-        fail_config=failure_config
+        failure_processor=failure_processing_func, fail_config=failure_config
     )
     # Get and overwrite the failure handling options for the transaction arg
     failure_opts = transaction.GetFailureHandlingOptions()

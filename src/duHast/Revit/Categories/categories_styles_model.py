@@ -304,9 +304,11 @@ def set_category_material_by_material_id(doc, category, material_id):
         material = get_material_by_id(doc, ElementId(material_id))
 
         # check if material with this id exists in model
-        if(material == None and material_id != -1):
-            raise ValueError("Material with id {} not found in model".format(material_id))
-        
+        if material == None and material_id != -1:
+            raise ValueError(
+                "Material with id {} not found in model".format(material_id)
+            )
+
         # start
         def action():
             action_return_value = res.Result()
@@ -358,7 +360,7 @@ def set_category_style(doc, category_style_source, category_style_target):
         # check if doc is a Revit Document object
         if isinstance(doc, Document) == False:
             raise TypeError("doc must be a Revit Document object")
-        
+
         # check if category_style_source is a list of ObjectStyle instances
         if isinstance(category_style_source, ObjectStyle) is False:
             raise TypeError("category_style_source must be an ObjectStyle instance")

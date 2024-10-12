@@ -38,7 +38,7 @@ class RevitFilterOverride(base.Base):
         self,
         filter_name="",
         filter_id=-1,
-        filter = None,
+        filter=None,
         revit_override=None,
         is_filter_visible=True,
         is_filter_enabled=True,
@@ -49,7 +49,7 @@ class RevitFilterOverride(base.Base):
 
         """
 
-        super(RevitFilterOverride, self).__init__(**kwargs)
+        super(RevitFilterOverride, self).__init__()
 
         # set default values
         self.filter_name = filter_name

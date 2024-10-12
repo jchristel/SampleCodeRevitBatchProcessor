@@ -34,4 +34,4 @@ DATA_TYPE_PROCESSOR = "FamilyBaseProcessor"
 NESTING_SEPARATOR = " :: "
 
 # report name
-DATA_REPORT_NAME =   "FamilyBaseDataCombinedReport"
+DATA_REPORT_NAME = "FamilyBaseDataCombinedReport"

@@ -36,6 +36,7 @@ from Autodesk.Revit.DB.Structure import (
     StructuralType,
 )
 
+
 def door_in_basic_wall(doc, door_symbol, door_location, wall, wall_level):
     return_value = res.Result()
     try:
@@ -43,9 +44,7 @@ def door_in_basic_wall(doc, door_symbol, door_location, wall, wall_level):
         # https://thebuildingcoder.typepad.com/blog/2014/08/activate-your-family-symbol-before-using-it.html
         if not door_symbol.IsActive:
             return_value.append_message(
-                "Activating symbol {}".format(
-                    Element.Name.GetValue(door_symbol)
-                )
+                "Activating symbol {}".format(Element.Name.GetValue(door_symbol))
             )
             door_symbol.Activate()
             doc.Regenerate()
@@ -64,9 +63,7 @@ def door_in_basic_wall(doc, door_symbol, door_location, wall, wall_level):
 
         # update messages
         return_value.append_message(
-            "Added door {} to wall.".format(
-                Element.Name.GetValue(door_symbol)
-            )
+            "Added door {} to wall.".format(Element.Name.GetValue(door_symbol))
         )
     except Exception as e:
         return_value.update_sep(

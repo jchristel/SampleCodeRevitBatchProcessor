@@ -19,14 +19,14 @@ Revit elements to category helper functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-from Autodesk.Revit.DB import ElementId,  Solid
+from Autodesk.Revit.DB import ElementId, Solid
 
 from duHast.Revit.Common import parameter_set_utils as rParaSet
 from duHast.Utilities.Objects import result as res
@@ -84,7 +84,7 @@ def sort_geometry_elements_by_category(elements, element_dic, doc):
     Returns:
         dict: A dictionary where the keys are category ids and the values are lists of element ids. The geometry elements are sorted by their category.
     """
-    
+
     counter = 0
     for el in elements:
         counter = counter + 1
@@ -159,12 +159,14 @@ def get_elements_by_category(doc, cat):
         # 3d elements within family which have subcategory set to 'none' belong to owner family
         # category. Revit uses a None value as id rather then the actual category id
         # my get parameter value translates that into -1 (invalid element id)
-        category_graphic_style_ids[CATEGORY_GRAPHIC_STYLE_3D] = ElementId.InvalidElementId
+        category_graphic_style_ids[
+            CATEGORY_GRAPHIC_STYLE_3D
+        ] = ElementId.InvalidElementId
     dic_filtered = {}
     # filter elements by category ids
     for key, value in category_graphic_style_ids.items():
         # if the key is 'Cut' and the style id is -1 means there is no cut graphics style available for that family category...ignore it
-        if(key==CATEGORY_GRAPHIC_STYLE_CUT and value.IntegerValue ==-1):
+        if key == CATEGORY_GRAPHIC_STYLE_CUT and value.IntegerValue == -1:
             continue
         # print (key + ' ' + str(value))
         if value in dic:
@@ -217,10 +219,7 @@ def move_elements_to_category(doc, elements, to_category_name, destination_cat_i
                             target_id = destination_cat_ids[key]
                             # check if a 'cut' style id exists...if not move to 'projection' instead
                             # not sure how this works in none - english versions of Revit...
-                            if (
-                                key == "Cut"
-                                and target_id == ElementId.InvalidElementId
-                            ):
+                            if key == "Cut" and target_id == ElementId.InvalidElementId:
                                 target_id = destination_cat_ids["Projection"]
                                 return_value.append_message(
                                     "No cut style present in family, using projection style instead"

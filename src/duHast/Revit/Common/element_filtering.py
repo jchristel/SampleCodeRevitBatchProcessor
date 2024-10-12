@@ -21,14 +21,15 @@ Varies Element filter / check functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 
 
 from Autodesk.Revit.DB import Element
+
 
 def is_element_of_built_in_category(doc, element_id, builtin_categories):
     """
@@ -117,7 +118,7 @@ def is_family_name_from_instance_contains(
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param contains_value: The string the name of the family instance is to be tested for.
-    :type ccontains_value: str
+    :type contains_value: str
     :param element_id: The id of the element to be tested.
     :type element_id:  Autodesk.Revit.DB.ElementId
     :return: True if family name does contain the test string, otherwise False.

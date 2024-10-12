@@ -92,9 +92,10 @@ def update_category_override_from_view(view, category_storage_instance):
     :rtype: :class:`.RevitCategoryOverride`
     """
 
-    category_storage_instance.category_override = view.GetCategoryOverrides(
+    category_storage_instance.revit_override = view.GetCategoryOverrides(
         category_storage_instance.category_id
     )
+
     category_storage_instance.is_category_hidden = view.GetCategoryHidden(
         category_storage_instance.category_id
     )
@@ -121,6 +122,7 @@ def get_category_overrides_from_view(view, category_storage_instances):
             view, category_storage_instance
         )
         updated_category_storage_instances.append(updated_category_instance)
+
     return updated_category_storage_instances
 
 
@@ -157,6 +159,7 @@ def apply_graphic_override_to_view(doc, view, category_storage_instances):
         def action():
             action_return_value = res.Result()
             try:
+                # apply category override
                 view.SetCategoryOverrides(
                     category_storage_instance.category_id,
                     category_storage_instance.revit_override,
@@ -169,6 +172,8 @@ def apply_graphic_override_to_view(doc, view, category_storage_instances):
                         view.Name,
                     ),
                 )
+
+                # set category visibility
                 view.SetCategoryHidden(
                     category_storage_instance.category_id,
                     category_storage_instance.is_category_hidden,

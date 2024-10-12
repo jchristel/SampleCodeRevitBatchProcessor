@@ -91,7 +91,7 @@ def get_view_template_which_allow_graphical_overrides(doc):
         if vt.AreGraphicsOverridesAllowed():
             view_template_filtered.append(vt)
 
-    return (view_template_filtered,)
+    return view_template_filtered
 
 
 def get_used_view_templates_ids(doc):

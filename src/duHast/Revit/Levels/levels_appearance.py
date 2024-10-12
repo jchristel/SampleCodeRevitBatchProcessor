@@ -22,8 +22,8 @@ Note: Any level appearance modification in a view will throw an exception if the
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -182,9 +182,7 @@ def hide_both_heads(doc, levels, view):
         - `result.message` (str) will contain a generic exception message including the level name.
         - `result.result` (list) will be empty.
 
-    :rtype: :class:`.Result`
-"""
-
+    :rtype: :class:`.Result`"""
 
     return_value = res.Result()
     for l in levels:
@@ -373,7 +371,7 @@ def toggle_head_zero_end(doc, levels, view):
         - result.status (bool) will be False.
         - result.message will contain generic exception message including the level name.
         - result.result will be empty
-        
+
     :rtype: :class:`.Result`
     """
 

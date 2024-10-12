@@ -3,6 +3,7 @@
 This module contains utility function(s) for Revit link reports. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,14 +20,15 @@ This module contains utility function(s) for Revit link reports.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-import Autodesk.Revit.DB as rdb
+
+from Autodesk.Revit.DB import BuiltInParameter, Element, ModelPathUtils
 
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 from duHast.Revit.Links.links import (
@@ -53,19 +55,42 @@ def get_revit_link_type_data(doc, revit_link_type):
     path_type = "unknown"
     is_loaded = revit_link_type.IsLoaded(doc, revit_link_type.Id)
     is_from_local_path = revit_link_type.IsFromLocalPath()
-    ex_file_ref = revit_link_type.GetExternalFileReference()
+
+    # check external file reference
+    # this will fail if link is to a cloud file
+    ex_file_ref = None
+    try:
+        ex_file_ref = revit_link_type.GetExternalFileReference()
+    except:
+        # set path type to cloud file
+        path_type = "cloud file"
+
+    # check if we got a valid external file reference
+    if ex_file_ref == None:
+        # try to get the external file reference from the first external resource reference instead
+        # since this is not a local file server link
+        ex_resource_references = revit_link_type.GetExternalResourceReferences()
+        # the path value will be empty if the link is not loaded
+        for ref in ex_resource_references:
+            # these are c# key value pairs
+            if ref.Value.InSessionPath == "":
+                model_path = "unknown since link is unloaded"
+            else:
+                model_path = ref.Value.InSessionPath
+            break
+    else:
+        # local file server link
+        if ex_file_ref.IsValidExternalFileReference(ex_file_ref):
+            model_path = ModelPathUtils.ConvertModelPathToUserVisiblePath(
+                ex_file_ref.GetPath()
+            )
+            path_type = ex_file_ref.PathType.ToString()
+
     # get the workset of the link type (this can bew different to the workset of the link instance)
-    ws_parameter = revit_link_type.get_Parameter(
-        rdb.BuiltInParameter.ELEM_PARTITION_PARAM
-    )
-    if ex_file_ref.IsValidExternalFileReference(ex_file_ref):
-        model_path = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(
-            ex_file_ref.GetPath()
-        )
-        path_type = ex_file_ref.PathType.ToString()
+    ws_parameter = revit_link_type.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
 
     data = [
-        rdb.Element.Name.GetValue(revit_link_type),
+        Element.Name.GetValue(revit_link_type),
         str(is_loaded),
         str(ws_parameter.AsValueString()),
         str(is_from_local_path),
@@ -91,9 +116,9 @@ def get_revit_link_report_data(doc, revit_file_path):
     collector = get_all_revit_link_instances(doc)
     for c in collector:
         # get the workset
-        ws_parameter = c.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+        ws_parameter = c.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
         # get the design option
-        do_parameter = c.get_Parameter(rdb.BuiltInParameter.DESIGN_OPTION_ID)
+        do_parameter = c.get_Parameter(BuiltInParameter.DESIGN_OPTION_ID)
         # get whether link is shared or not (only works when link is loaded)
         if "<Not Shared>" in c.Name:
             l_s = False

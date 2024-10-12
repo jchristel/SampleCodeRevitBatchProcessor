@@ -28,7 +28,9 @@ Family base data processor class.
 #
 
 from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
-from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import DATA_TYPE_PROCESSOR as data_type_family_base_processor
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_family_base_processor,
+)
 from duHast.Revit.Family.Data.Objects import family_base_data as rFamData
 from duHast.Utilities import util_batch_p as uBP
 

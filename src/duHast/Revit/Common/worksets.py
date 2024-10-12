@@ -173,9 +173,11 @@ def open_worksets_with_elements_hack(doc, ui_doc):
     :type doc: Autodesk.Revit.DB.Document
     """
 
-    if (isinstance(ui_doc, UIDocument)==False):
-        raise TypeError ("ui_doc needs to be of type UIDocument but is: {}".format(type(ui_doc)))
-    
+    if isinstance(ui_doc, UIDocument) == False:
+        raise TypeError(
+            "ui_doc needs to be of type UIDocument but is: {}".format(type(ui_doc))
+        )
+
     # get worksets in model
     workset_ids = get_workset_ids(doc)
     # loop over workset and open if anything is on them
@@ -565,7 +567,9 @@ def delete_workset(doc, delete_workset_name, move_elements_to_workset_name=None)
                     )
                 )
             else:
-                return_value.append_message("workset {} found in model.".format(delete_workset_name))
+                return_value.append_message(
+                    "workset {} found in model.".format(delete_workset_name)
+                )
 
             # set up delete setting
             delete_workset_settings = None
@@ -623,7 +627,7 @@ def delete_workset(doc, delete_workset_name, move_elements_to_workset_name=None)
                             ),
                         )
                     return action_return_value
-                
+
                 # execute the delete action
                 transaction = Transaction(
                     doc, "Deleting workset {}".format(delete_workset_name)

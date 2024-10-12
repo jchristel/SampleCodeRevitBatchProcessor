@@ -110,7 +110,7 @@ def process_families(family_data, result_list):
         longest_path = family.get_longest_unique_nesting_path()
         if longest_path != None:
             for lp in longest_path:
-                result_list.append((family,lp))
+                result_list.append((family, lp))
     return result_list
 
 
@@ -299,8 +299,8 @@ def find_missing_families_direct_host_families(family_base_data_report_file_path
             raise ValueError(families_processed_result.message)
 
         # get results
-        families=[]
-        families_longest_path =[]
+        families = []
+        families_longest_path = []
         for nested_tuple in families_processed_result.result:
             # per nested path there might be multiple entries of the same family
             if nested_tuple[0] not in families:

@@ -36,15 +36,16 @@ from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.Objects import base
-from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    NESTING_SEPARATOR,
+)
+
 
 class IFamilyProcessor(base.Base):
 
     data_type_header = "Data Type"  # Data type header
 
-    def __init__(
-        self, data_type=None, pre_actions=None, post_actions=None, **kwargs
-    ):
+    def __init__(self, data_type=None, pre_actions=None, post_actions=None, **kwargs):
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
@@ -280,12 +281,12 @@ class IFamilyProcessor(base.Base):
         out_value = []
 
         flattened_storage_data = self.get_data()
-        #print("flattened_storage_data: ", flattened_storage_data)
+        # print("flattened_storage_data: ", flattened_storage_data)
         for storage in flattened_storage_data:
             out_value.append(storage.get_data_values_as_list_of_strings())
-            #print("out_value: ", out_value)
+            # print("out_value: ", out_value)
 
-        #print("out_value: ", out_value)
+        # print("out_value: ", out_value)
         return out_value
 
     def get_data_headers(self):

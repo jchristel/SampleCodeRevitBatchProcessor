@@ -82,7 +82,7 @@ def place_a_family_instance_by_level(
             if not family_symbol.IsActive:
                 family_symbol.Activate()
                 doc.Regenerate()
-                
+
             # create a new instance
             element = doc.Create.NewFamilyInstance(
                 location_point,
@@ -115,14 +115,16 @@ def place_a_family_instance_by_level(
 
     return return_value
 
-def place_a_family_instance_in_basic_wall(doc,
+
+def place_a_family_instance_in_basic_wall(
+    doc,
     location_point,
     wall,
     family_symbol,
     target_placement_level,
     transaction_manager=in_transaction,
     modify_action=None,
-    ):
+):
     """
     Places a family instance in a basic wall.
 
@@ -166,7 +168,7 @@ def place_a_family_instance_in_basic_wall(doc,
                 target_placement_level,
                 StructuralType.NonStructural,
             )
-            
+
             action_return_value.append_message("Family placed successfully.")
             action_return_value.result.append(element)
 

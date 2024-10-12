@@ -49,12 +49,12 @@ class RevitCategoryOverride(base.Base):
 
         """
 
-        super(RevitCategoryOverride, self).__init__(**kwargs)
+        super(RevitCategoryOverride, self).__init__()
 
         # set default values
         self.main_category_name = main_category_name
         self.sub_category_name = sub_category_name
-        self.category=category
+        self.category = category
         self.category_id = category_id
         self.revit_override = revit_override
         self.is_category_hidden = is_category_hidden

@@ -26,7 +26,12 @@ Category override to data storage class helper functions.
 #
 #
 
-from Autodesk.Revit.DB import Element, ElementId, OverrideGraphicSettings, LinePatternElement
+from Autodesk.Revit.DB import (
+    Element,
+    ElementId,
+    OverrideGraphicSettings,
+    LinePatternElement,
+)
 
 from duHast.Revit.Views.Objects.view_graphics_settings import ViewGraphicsSettings
 from duHast.Revit.LinePattern.line_patterns import get_all_line_patterns
@@ -417,6 +422,7 @@ def get_view_settings(doc, view):
     view_data.override_by_filter = filter_overrides
 
     return view_data
+
 
 def get_views_graphic_settings_data(doc, views):
     """

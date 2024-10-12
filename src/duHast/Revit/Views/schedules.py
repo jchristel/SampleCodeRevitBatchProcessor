@@ -19,16 +19,16 @@ This module contains a number of helper functions relating to Revit view schedul
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import FilteredElementCollector, ScheduleSheetInstance, ViewType
 
-from duHast.Revit.Views.Utility.view_types import _get_view_types
+from duHast.Revit.Views.views import get_views_of_type
 
 
 def get_schedule_ids_on_sheets(doc):
@@ -41,28 +41,11 @@ def get_schedule_ids_on_sheets(doc):
     """
 
     ids = []
-    col = rdb.FilteredElementCollector(doc).OfClass(rdb.ScheduleSheetInstance)
+    col = FilteredElementCollector(doc).OfClass(ScheduleSheetInstance)
     for s in col:
         if s.ScheduleId not in ids:
             ids.append(s.ScheduleId)
     return ids
-
-
-def filter_revision_schedules(view):
-    """
-    Checks whether a view is a revision schedule.
-    (not required...schedules have a property flag!!)
-
-    :param view: The view to check.
-    :type view: Autodesk.Revit.DB.View
-    :return: True if the view name starts with '<', otherwise False
-    :rtype: bool
-    """
-
-    if view.Name.startswith("<"):
-        return False
-    else:
-        return True
 
 
 def get_schedules_not_on_sheets(doc):
@@ -78,7 +61,7 @@ def get_schedules_not_on_sheets(doc):
     # get schedules on sheets
     ids_on_sheets = get_schedule_ids_on_sheets(doc)
     # get all schedules in model
-    schedules_in_model = _get_view_types(doc, rdb.ViewType.Schedule)
+    schedules_in_model = get_views_of_type(doc, ViewType.Schedule)
     # loop and filter out schedules not on sheets
     for schedule in schedules_in_model:
         if schedule.Id not in ids_on_sheets:

@@ -19,14 +19,14 @@ Revit grids workset modifier functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import FilteredElementCollector, Grid
 
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import worksets as rWork
@@ -52,7 +52,7 @@ def modify_grid_worksets_default(doc, worksetRules):
     """
 
     gridsResults = res.Result()
-    collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
+    collectorGrids = FilteredElementCollector(doc).OfClass(Grid)
     for rule in worksetRules:
         for defaultWorksetName in rule:
             grids = rWork.modify_element_workset(
@@ -80,7 +80,6 @@ def modify_grid_worksets_by_type_name(doc, worksetRules):
     :rtype: Type
     """
 
-
     gridsResults = res.Result()
     # loop over grid type filter and address one at the time
     # get all grids matching type name filter
@@ -92,8 +91,8 @@ def modify_grid_worksets_by_type_name(doc, worksetRules):
         # get the grid type id from the type name
         typeId = rGrid.get_grid_type_id_by_name(doc, typeName)
         collectorGrids = (
-            rdb.FilteredElementCollector(doc)
-            .OfClass(rdb.Grid)
+            FilteredElementCollector(doc)
+            .OfClass(Grid)
             .Where(lambda e: typeNameCondition(e.GetTypeId(), typeId))
         )
         grids = rWork.modify_element_workset(
@@ -106,9 +105,9 @@ def modify_grid_worksets_by_type_name(doc, worksetRules):
 def modify_grid_worksets_by_parameter_value(doc, worksetRules):
     """
     Workset modifier method. Moves grids matching parameter condition to a particular workset
-    
-    Default workset type rules example: 
-    
+
+    Default workset type rules example:
+
     [['model name', [[ModifyGridWorkSetsByParameterValue, [['workset name', util.ConTwoStartWithOne, 'Name', 'name starts with value']]]]]]
 
     :param doc: The current model document.
@@ -125,8 +124,8 @@ def modify_grid_worksets_by_parameter_value(doc, worksetRules):
     # get all grids matching filter
     for defaultWorksetName, paraCondition, paraName, conditionValue in worksetRules:
         collectorGrids = (
-            rdb.FilteredElementCollector(doc)
-            .OfClass(rdb.Grid)
+            FilteredElementCollector(doc)
+            .OfClass(Grid)
             .Where(
                 lambda e: rGrid.grid_check_parameter_value(
                     e, paraName, paraCondition, conditionValue
@@ -143,9 +142,9 @@ def modify_grid_worksets_by_parameter_value(doc, worksetRules):
 def modify_grids_worksets(doc, revitFileName, worksetRules):
     """
     Modifies worksets of grids as per workset rules format.
-    
-    Default workset type rules example: 
-      
+
+    Default workset type rules example:
+
     [['model name', [[ModifyGridWorkSetsDefault, [['default workset name']  # There should only be one per model]]]]]
 
     :param doc: The current model document.
@@ -161,9 +160,9 @@ def modify_grids_worksets(doc, revitFileName, worksetRules):
         - result.status: View deletion status returned in result.status. False if an exception occurred, otherwise True.
         - result.message: will contain the fully qualified file path of the exported file
         - result.result: will be an empty list
-        
+
         On exception
-        
+
         - Reload.status (bool) will be False
         - Reload.message will contain the exception message
 

@@ -31,6 +31,7 @@ import codecs
 import csv
 
 from duHast.Utilities.files_io import get_file_name_without_ext
+from duHast.Utilities.utility import encode_ascii
 
 
 def get_unique_headers(files):
@@ -114,7 +115,9 @@ def get_first_row_in_csv_file(filePath):
     return return_value
 
 
-def write_report_data_as_csv(file_name, header, data, write_type="w"):
+def write_report_data_as_csv(
+    file_name, header, data, write_type="w", enforce_ascci=False
+):
     """
     Function writing out report information as CSV file.
     :param file_name: The reports fully qualified file path.
@@ -136,6 +139,11 @@ def write_report_data_as_csv(file_name, header, data, write_type="w"):
             writer.writerow(header)
         if len(data) > 0:
             for d in data:
-                # write a row to the csv file
-                writer.writerow(d)
+                # check if ascii encoding is required
+                if enforce_ascci:
+                    ascii_encoded_list = [encode_ascii(s) for s in d]
+                    writer.writerow(ascii_encoded_list)
+                else:
+                    # write a row to the csv file
+                    writer.writerow(d)
         f.close()

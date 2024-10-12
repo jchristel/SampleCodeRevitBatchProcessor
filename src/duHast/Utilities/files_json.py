@@ -19,8 +19,8 @@ Utility functions writing / reading json objects to/ from file.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -31,23 +31,27 @@ from duHast.Utilities.Objects import result as res
 import codecs
 import json
 
+
 def _custom_default(o):
-    '''
+    """
     Encode string values to utf-8 for json formatted outputs
 
     :param o: The value to be encoded if of type string
     :type o: var
     :return: Encoded string or var
     :rtype: str, var
-    '''
+    """
 
     if isinstance(o, str):
         # only encode if required
         if any(ord(char) > 127 for char in o):
-            return o.encode('utf-8').decode('utf-8')  # Encoding and decoding to ensure the type is str
+            return o.encode("utf-8").decode(
+                "utf-8"
+            )  # Encoding and decoding to ensure the type is str
     return o.__dict__
 
-def write_json_to_file(json_data, data_output_file_path, enforce_utf8 = True):
+
+def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
     """
     Writes collected data to a new json formatted file.
 
@@ -74,10 +78,14 @@ def write_json_to_file(json_data, data_output_file_path, enforce_utf8 = True):
     try:
         json_object = None
         # check if utf-8 is to be enforced
-        if(enforce_utf8):
-            json_object = json.dumps(json_data, indent=None, default=_custom_default, ensure_ascii=False)
+        if enforce_utf8:
+            json_object = json.dumps(
+                json_data, indent=None, default=_custom_default, ensure_ascii=False
+            )
         else:
-            json_object = json.dumps(json_data, indent=None, default=lambda o: o.__dict__)
+            json_object = json.dumps(
+                json_data, indent=None, default=lambda o: o.__dict__
+            )
         with codecs.open(data_output_file_path, "w", encoding="utf-8") as f:
             f.write(json_object)
             f.close()

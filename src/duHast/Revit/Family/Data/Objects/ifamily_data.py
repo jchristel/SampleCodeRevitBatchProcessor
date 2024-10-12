@@ -28,7 +28,9 @@ Interface for family data storage / processing class.
 #
 
 from duHast.Utilities.Objects import base
-from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    NESTING_SEPARATOR,
+)
 
 # common data dictionary keys
 ROOT = "root"

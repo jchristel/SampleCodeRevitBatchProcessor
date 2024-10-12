@@ -41,6 +41,7 @@ def copy_elements_from_target_doc(
 ):
     """
     Copy elements from one document to another
+
     :param destination_doc: The document which will be the copy destination
     :type destination_doc: Document
     :param source_doc: The template document which will be the copy source

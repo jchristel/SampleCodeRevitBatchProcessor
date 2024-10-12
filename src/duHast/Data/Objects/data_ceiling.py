@@ -3,6 +3,7 @@
 Data storage class for Revit ceiling properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,8 +20,8 @@ Data storage class for Revit ceiling properties.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
@@ -54,78 +55,60 @@ class DataCeiling(data_base.DataBase, data_element_geometry.DataElementGeometryB
         # store data type  in base class
         super(DataCeiling, self).__init__(data_type=DataCeiling.data_type, j=j)
 
+        # set default values
+        self.associated_elements = []
+        self.instance_properties = data_instance_properties.DataInstanceProperties()
+        self.type_properties = data_type_properties.DataTypeProperties()
+        self.level = data_level.DataLevel()
+        self.revit_model = data_revit_model.DataRevitModel()
+        self.phasing = data_phasing.DataPhasing()
+        self.design_set_and_option = data_design_set_option.DataDesignSetOption()
+
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
             # check type of data that came in:
-            if type(j) == str:
+            if isinstance(j, str):
                 # a string
                 j = json.loads(j)
-            elif type(j) == dict:
+            elif isinstance(j, dict):
                 # no action required
                 pass
             else:
-                raise ValueError(
-                    "Argument supplied must be of type string or type dictionary"
-                )
-
-            if data_instance_properties.DataInstanceProperties.data_type in j:
-                self.instance_properties = (
-                    data_instance_properties.DataInstanceProperties(
-                        j[data_instance_properties.DataInstanceProperties.data_type]
+                raise TypeError(
+                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
+                        type(j)
                     )
                 )
-            else:
+
+            # attempt to populate from json
+            try:
                 self.instance_properties = (
-                    data_instance_properties.DataInstanceProperties()
+                    data_instance_properties.DataInstanceProperties(
+                        j.get(
+                            data_instance_properties.DataInstanceProperties.data_type,
+                            {},
+                        )
+                    )
                 )
-
-            if data_design_set_option.DataDesignSetOption.data_type in j:
-                self.design_set_and_option = data_design_set_option.DataDesignSetOption(
-                    j[data_design_set_option.DataDesignSetOption.data_type]
-                )
-            else:
-                self.design_set_and_option = (
-                    data_design_set_option.DataDesignSetOption()
-                )
-
-            if data_type_properties.DataTypeProperties.data_type in j:
                 self.type_properties = data_type_properties.DataTypeProperties(
-                    j[data_type_properties.DataTypeProperties.data_type]
+                    j.get(data_type_properties.DataTypeProperties.data_type, {})
                 )
-            else:
-                self.type_properties = data_type_properties.DataTypeProperties()
-
-            if data_level.DataLevel.data_type in j:
-                self.level = data_level.DataLevel(j[data_level.DataLevel.data_type])
-            else:
-                self.level = data_level.DataLevel()
-
-            if data_revit_model.DataRevitModel.data_type in j:
+                self.level = data_level.DataLevel(
+                    j.get(data_level.DataLevel.data_type, {})
+                )
                 self.revit_model = data_revit_model.DataRevitModel(
-                    j[data_revit_model.DataRevitModel.data_type]
+                    j.get(data_revit_model.DataRevitModel.data_type, {})
                 )
-            else:
-                self.revit_model = data_revit_model.DataRevitModel()
-
-            if data_phasing.DataPhasing.data_type in j:
                 self.phasing = data_phasing.DataPhasing(
-                    j[data_phasing.DataPhasing.data_type]
+                    j.get(data_phasing.DataPhasing.data_type, {})
                 )
-            else:
-                self.phasing = data_phasing.DataPhasing()
-
-            # load associated elements
-            if "associated_elements" in j:
-                self.associated_elements = j["associated_elements"]
-            else:
-                self.associated_elements = []
-
-        else:
-            self.associated_elements = []
-            # initialise classes with default values
-            self.instance_properties = data_instance_properties.DataInstanceProperties()
-            self.type_properties = data_type_properties.DataTypeProperties()
-            self.level = data_level.DataLevel()
-            self.revit_model = data_revit_model.DataRevitModel()
-            self.phasing = data_phasing.DataPhasing()
-            self.design_set_and_option = data_design_set_option.DataDesignSetOption()
+                self.design_set_and_option = data_design_set_option.DataDesignSetOption(
+                    j.get(data_design_set_option.DataDesignSetOption.data_type, {})
+                )
+                self.associated_elements = j.get(
+                    "associated_elements", self.associated_elements
+                )
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

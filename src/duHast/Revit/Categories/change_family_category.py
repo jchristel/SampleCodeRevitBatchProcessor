@@ -19,16 +19,27 @@ Revit family change category helper functions.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 
-from duHast.Revit.Categories.Utility.category_properties_get_utils import get_category_graphic_style_ids, get_category_properties
-from duHast.Revit.Categories.Utility.elements_by_category_utils import get_elements_by_category, move_elements_to_category
-from duHast.Revit.Categories.categories import get_main_sub_categories, set_family_category
-from duHast.Revit.Categories.family_sub_categories import create_new_category_from_saved_properties
+from duHast.Revit.Categories.Utility.category_properties_get_utils import (
+    get_category_graphic_style_ids,
+    get_category_properties,
+)
+from duHast.Revit.Categories.Utility.elements_by_category_utils import (
+    get_elements_by_category,
+    move_elements_to_category,
+)
+from duHast.Revit.Categories.categories import (
+    get_main_sub_categories,
+    set_family_category,
+)
+from duHast.Revit.Categories.family_sub_categories import (
+    create_new_category_from_saved_properties,
+)
 from duHast.Utilities.Objects import result as res
 
 

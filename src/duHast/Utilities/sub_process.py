@@ -19,8 +19,8 @@ Start a sub process in a python version of choice.
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 
@@ -34,9 +34,11 @@ import subprocess
 
 def start_sub_process(python_path, script_path):
     return_value = Result()
-    return_value.append_message ("Starting sub-process with python: {} \n and script: {}".format(
-        python_path, script_path
-    ))
+    return_value.append_message(
+        "Starting sub-process with python: {} \n and script: {}".format(
+            python_path, script_path
+        )
+    )
     try:
         # open subprocess in virtual environment and wait for completion
         # https://stackoverflow.com/questions/28284715/python-subprocess-popen-wait-for-completion
@@ -45,13 +47,15 @@ def start_sub_process(python_path, script_path):
         subprocess.check_output(
             [python_path, script_path], shell=True, stderr=subprocess.STDOUT
         ).decode()
-        
-        return_value.append_message ("Successfully executed script")
+
+        return_value.append_message("Successfully executed script")
     except subprocess.CalledProcessError as e:
-        return_value.update_sep(False, "Failed with called processor exception : {}".format(e.output.decode()) )
+        return_value.update_sep(
+            False,
+            "Failed with called processor exception : {}".format(e.output.decode()),
+        )
 
     except Exception as e:
         return_value.update_sep(False, "Failed with general exception: {}".format(e))
-        
 
     return return_value

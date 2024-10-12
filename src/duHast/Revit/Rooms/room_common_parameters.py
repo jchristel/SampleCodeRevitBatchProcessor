@@ -60,6 +60,8 @@ from duHast.Revit.Common import (
     phases as rPhase,
 )
 
+from duHast.Utilities.utility import encode_utf8
+
 
 def get_room_number(room):
     """
@@ -106,8 +108,26 @@ def get_room_phase(rvt_doc, room):
         rParaGet.get_parameter_value_as_element_id,
     )
 
-    phase = rPhase.get_phase_name_by_id(rvt_doc, phase_param).encode("utf-8")
+    phase = encode_utf8(rPhase.get_phase_name_by_id(rvt_doc, phase_param))
     return phase
+
+
+def get_room_level(rvt_doc, room):
+    """
+    Get the phase of the room
+    :param rvt_doc: The document to get the room from
+    :type rvt_doc: Document
+    :param room: The room to get the phase of
+    :type room: Room
+    :return: The phase of the room
+    :rtype: str
+    """
+
+    try:
+        rm_level_name = rvt_doc.GetElement(room.LevelId).Name
+    except Exception:
+        rm_level_name = "Not placed in model"
+    return rm_level_name
 
 
 def get_room_num_variations(room):

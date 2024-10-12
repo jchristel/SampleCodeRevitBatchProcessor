@@ -38,6 +38,7 @@ from duHast.Revit.Warnings.Utility.curves_util import (
     modify_curves_by_shortening,
 )
 from duHast.Revit.Common.transaction import in_transaction
+from duHast.Revit.Warnings.warning_guids import AREA_SEPARATION_LINES_OVERLAP
 
 
 class RevitWarningsSolverAreaSepLinesOverlap(base.Base):
@@ -86,7 +87,7 @@ class RevitWarningsSolverAreaSepLinesOverlap(base.Base):
 
     # --------------------------- area separation lines ---------------------------
     #: guid identifying this specific warning
-    GUID = "6891f0e6-5858-4e2f-bb34-801e0b87f60d"
+    GUID = AREA_SEPARATION_LINES_OVERLAP
 
     def solve_warnings(self, doc, warnings):
         """
@@ -131,7 +132,7 @@ class RevitWarningsSolverAreaSepLinesOverlap(base.Base):
                     guid=self.GUID,
                     group_id=self.group_id,
                     transaction_manager=self.transaction_manager,
-                    callback=self.callback
+                    callback=self.callback,
                 )
                 return_value.update(modify_curves_status)
             else:
@@ -147,6 +148,9 @@ class RevitWarningsSolverAreaSepLinesOverlap(base.Base):
                 return_value.update(modify_curves_status)
         else:
             return_value.update_sep(
-                True, "{}: No warnings of type: area separation lines overlap in model.".format(self.filter_name)
+                True,
+                "{}: No warnings of type: area separation lines overlap in model.".format(
+                    self.filter_name
+                ),
             )
         return return_value

@@ -3,6 +3,7 @@
 This module contains a number of helper functions relating to changing Revit shared parameters to family parameters and vise versa.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -19,15 +20,15 @@ This module contains a number of helper functions relating to changing Revit sha
 # - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 # - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 #
-# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. 
-# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; 
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
 # or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
 #
 #
 #
 
 
-import Autodesk.Revit.DB as rdb
+from Autodesk.Revit.DB import Transaction
 
 from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities.Objects import result as res
@@ -44,6 +45,7 @@ def change_shared_parameter_to_family_parameter(doc, parameter_name, prefix="_")
     :type parameter_name: str
     :param prefix: Revit requires the new parameter to have a different name to the shard parameter, therefore a prefix to the name is applied, defaults to '_'
     :type prefix: str, optional
+
     :return:
         Result class instance.
         - Parameter change status returned in result.status. False if an exception occurred, otherwise True.
@@ -81,31 +83,31 @@ def change_shared_parameter_to_family_parameter(doc, parameter_name, prefix="_")
 
                     action_return_value.update_sep(
                         True,
-                        para_old_name
-                        + ": Successfully changed shared parameter to family parameter: "
-                        + prefix
-                        + para_old_name,
+                        "{} : Successfully changed shared parameter to family parameter: {}{}".format(
+                            para_old_name, prefix, para_old_name
+                        ),
                     )
                     action_return_value.result.append(parameter_new)
                 except Exception as e:
                     action_return_value.update_sep(
                         False,
-                        para_old_name
-                        + ": Failed to change shared parameter to family parameter: "
-                        + str(e),
+                        "{} : Failed to change shared parameter to family parameter: {}{} with exception: {}".format(
+                            para_old_name, prefix, para_old_name, e
+                        ),
                     )
                 return action_return_value
 
-            transaction = rdb.Transaction(doc, "change to family parameter")
+            transaction = Transaction(doc, "change to family parameter")
             return_value = rTran.in_transaction(transaction, action)
             changed_parameter = return_value.status
+
+    # check if the parameter was changed
     if changed_parameter == False:
         return_value.status = False
-        return_value.message = (
-            "No parameter matching: "
-            + parameter_name
-            + " was found. No shared parameter was changed."
+        return_value.message = "No parameter matching: {} was found. No shared parameter was changed.".format(
+            parameter_name
         )
+
     return return_value
 
 
@@ -123,6 +125,7 @@ def change_family_parameter_to_shared_parameter(
     :type parameter_data: RevitSharedParametersTuple.parameterData
     :param parameter_def: The external definition of the shared parameter.
     :type parameter_def: Autodesk.Revit.DB.ExternalDefinition
+
     :return:
         Result class instance.
         - Parameter change status returned in result.status. False if an exception occurred, otherwise True.
@@ -159,27 +162,29 @@ def change_family_parameter_to_shared_parameter(
 
                     action_return_value.update_sep(
                         True,
-                        parameter_name
-                        + ": Changed family parameter to shared parameter: "
-                        + parameter_data.name,
+                        "{} : Changed family parameter to shared parameter: {}".format(
+                            parameter_name, parameter_data.name
+                        ),
                     )
                     action_return_value.result.append(parameter_new)
                 except Exception as e:
                     action_return_value.update_sep(
                         False,
-                        parameter_name
-                        + ": Failed to change family parameter to shared parameter.",
+                        "{} : Failed to change family parameter to shared parameter: {} with exception: {}".format(
+                            parameter_name, parameter_data.name, e
+                        ),
                     )
                 return action_return_value
 
-            transaction = rdb.Transaction(doc, "change to shared parameter")
+            transaction = Transaction(doc, "change to shared parameter")
             return_value = rTran.in_transaction(transaction, action)
             changed_parameter = return_value.status
+
+    # check if the parameter was changed
     if changed_parameter == False:
         return_value.status = False
-        return_value.message = (
-            "No parameter matching: "
-            + parameter_name
-            + " was found. No family parameter was changed."
+        return_value.message = "No parameter matching: {} was found. No shared parameter was changed.".format(
+            parameter_name
         )
+
     return return_value

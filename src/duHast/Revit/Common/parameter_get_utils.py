@@ -37,7 +37,10 @@ from System import Linq
 clr.ImportExtensions(Linq)
 
 # import everything from Autodesk Revit DataBase namespace (Revit API)
-from Autodesk.Revit.DB import ElementId #, ParameterType, StorageType
+from Autodesk.Revit.DB import ElementId  # , ParameterType, StorageType
+
+
+
 import Autodesk.Revit.DB as rdb
 
 # utilities
@@ -254,7 +257,8 @@ def getter_string_as_UTF8_string(para):
     parameter_value = "None"
     if para.StorageType == rdb.StorageType.String:
         if para.AsString() != None and para.AsString() != "":
-            parameter_value = para.AsString().encode("utf-8")
+            # do encode and decode to avoid byte string
+            parameter_value = util.encode_utf8(para.AsString())
     return parameter_value
 
 
@@ -427,7 +431,7 @@ def get_parameter_value(para):
         parameter_value = get_parameter_value_with_over_load(para, value_getter)
 
     except Exception as e:
-        parameter_value = "Exception: " + str(e)
+        parameter_value = "Exception: {}".format(e)
 
     return parameter_value
 

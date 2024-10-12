@@ -107,6 +107,7 @@ from duHast.Revit.Links.Reporting import links_report_header as rLinkHeader
 from duHast.Revit.Links.Reporting import cad_links_report_utils as rLinkCadRep
 from duHast.Revit.Links.Reporting import cad_links_report_header as rLinkCadHeader
 
+from duHast.Utilities.utility import encode_utf8
 
 def report_sheets(doc, revit_file_path, output):
     """
@@ -413,9 +414,9 @@ def report_families(doc, revit_file_path, output):
 
             row_data = [
                 revit_project_file_name,
-                rdb.Element.Name.GetValue(family).encode("utf-8"),
+                encode_utf8(rdb.Element.Name.GetValue(family)),
                 category.Name,
-                rdb.Element.Name.GetValue(family_symbol).encode("utf-8"),
+                encode_utf8(rdb.Element.Name.GetValue(family_symbol)),
                 str(count_instances),
             ]
 

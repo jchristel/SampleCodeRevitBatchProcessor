@@ -77,7 +77,7 @@ def document_change_purge_element(
     modified_elements = e.GetModifiedElementIds()
     debug_string = ""
     # check if anything got deleted or modified
-    if(len(deleted_elements) == 0 and  len(modified_elements) == 0) and debug:
+    if (len(deleted_elements) == 0 and len(modified_elements) == 0) and debug:
         debug_string += "No deleted and modified elements. Element will be ignored\n"
     else:
         try:
@@ -132,28 +132,42 @@ def document_change_purge_element(
                         "Element will not be deleted. Event modified elements:\n"
                     )
                     for elem_id in modified_elements:
-                        debug_string += "element id is of type: {}\n".format(type(elem_id))
+                        debug_string += "element id is of type: {}\n".format(
+                            type(elem_id)
+                        )
                         elem = doc.GetElement(elem_id)
-                        debug_string += "element is of type: {}\n{}\n".format(type(elem),elem)
+                        debug_string += "element is of type: {}\n{}\n".format(
+                            type(elem), elem
+                        )
                         try:
-                            if(isinstance(elem, Element)):
-                                debug_string += "{}\n".format(elem.Name)
+                            if isinstance(elem, Element):
+                                debug_string_temp = "Nameless Element"
+                                try:
+                                    debug_string += "{}\n".format(
+                                        Element.Name.GetValue(elem)
+                                    )
+                                except:
+                                    debug_string += debug_string_temp
                         except Exception as e:
-                            debug_string += "An exception occurred when building debug string in modified elements: {}\n".format(e)
-                            
-                elif len(deleted_elements) >1:
+                            debug_string += "An exception occurred when building debug string in modified elements: {}\n".format(
+                                e
+                            )
+
+                elif len(deleted_elements) > 1:
                     debug_string += "Element will not be deleted. More than one element got deleted:\n"
                     for elem_id in deleted_elements:
-                        debug_string += "Element Id: {}\n".format(
-                                str(elem_id)
-                            )
+                        debug_string += "Element Id: {}\n".format(str(elem_id))
                         elem = doc.GetElement(elem_id)
-                        debug_string += "element is of type: {}\n{}\n".format(type(elem), elem)
+                        debug_string += "element is of type: {}\n{}\n".format(
+                            type(elem), elem
+                        )
                         try:
-                            if(isinstance(elem, Element)):
+                            if isinstance(elem, Element):
                                 debug_string += "{}\n".format(elem.Name)
                         except Exception as e:
-                            debug_string += "An exception occurred when building debug string in deleted elements: {}\n".format(e)
+                            debug_string += "An exception occurred when building debug string in deleted elements: {}\n".format(
+                                e
+                            )
                 elif len(deleted_elements) == 0 and len(modified_elements) == 0:
                     # just in case modifiers applied reduce both counts to 0...should not happen?
                     debug_string += (
@@ -332,22 +346,25 @@ def purge_unused_elements(
                     "Element {} {} is a built-in element and cannot be deleted".format(
                         element_id.IntegerValue, element_name
                     )
-            )
+                )
             else:
                 try:
                     doc.Delete(element_id)
                     action_return_value.append_message(
-                        "Attempted to delete element {} :: {}".format(element_id, element_name)
+                        "Attempted to delete element {} :: {}".format(
+                            element_id, element_name
+                        )
                     )
                 except Exception as e:
-                    action_return_value.update_sep(False,
-                        "Element {} could not be deleted: {}".format(element_name, e)
+                    action_return_value.update_sep(
+                        False,
+                        "Element {} could not be deleted: {}".format(element_name, e),
                     )
                     # note if an exception is thrown at delete step
                     # the modified_by_delete will remain 0 and the transaction will be rolled back
                     # document change event does not get triggered
             return action_return_value
-        
+
         # define failure handling for the transaction ( roll back on any warnings or errors )
         failure_handling_settings = FailureHandlingConfig(
             roll_back_on_warning=True,
@@ -387,6 +404,12 @@ def purge_unused_elements(
         return_value.append_message(
             "Element {} took: {}".format(element_id, t_by_element.stop())
         )
+
+        # check for user cancel
+        if progress_callback != None:
+            if progress_callback.is_cancelled():
+                return_value.append_message("User cancelled!")
+                break
 
     deleted_elements_data += "\n"
     return_value.append_message(

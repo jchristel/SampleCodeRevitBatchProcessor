@@ -5,7 +5,7 @@
         mc:Ignorable="d"
         Title="duHast" Height="450" Width="800"
         FontSize="14">
-    <Grid x:Name="MainGrid" MaxWidth="600" Margin="20 10">
+    <Grid x:Name="MainGrid" Margin="20 10">
         <!-- View will be added dynamically -->
         <ContentControl x:Name="contentControl" />
     </Grid>

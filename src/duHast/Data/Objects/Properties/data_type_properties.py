@@ -69,9 +69,9 @@ class DataTypeProperties(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.name = j.get(DataPropertyNames.NAME,self.name)
-                self.id = j.get(DataPropertyNames.ID, self.id)
-                self.properties = j.get(DataPropertyNames.PROPERTIES,self.properties)
+                self.name = j.get(DataPropertyNames.NAME.value,self.name)
+                self.id = j.get(DataPropertyNames.ID.value, self.id)
+                self.properties = j.get(DataPropertyNames.PROPERTIES.value,self.properties)
             except Exception as e:
                     raise ValueError(
                         "Node {} failed to initialise with: {}".format(self.data_type, e)

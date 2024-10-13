@@ -83,8 +83,8 @@ def _sort_room_lines_by_design_option(doc, room_line_ids):
         element = doc.GetElement(id)
         data_dic = get_design_set_option_info(doc=doc, element=element)
         key = "{}_{}".format(
-            data_dic[DesignSetPropertyNames.DESIGN_SET_NAME],
-            data_dic[DesignSetPropertyNames.DESIGN_OPTION_NAME],
+            data_dic[DesignSetPropertyNames.DESIGN_SET_NAME.value],
+            data_dic[DesignSetPropertyNames.DESIGN_OPTION_NAME.value],
         )
         if key in room_lines_by_design_option:
             room_lines_by_design_option[key].append(element)

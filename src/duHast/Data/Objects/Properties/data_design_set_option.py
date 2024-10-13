@@ -68,9 +68,9 @@ class DataDesignSetOption(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.set_name = j.get(DataPropertyNames.SET_NAME, self.set_name)
-                self.option_name = j.get(DataPropertyNames.OPTION_NAME, self.option_name)
-                self.is_primary = j.get(DataPropertyNames.IS_PRIMARY, self.is_primary)
+                self.set_name = j.get(DataPropertyNames.SET_NAME.value, self.set_name)
+                self.option_name = j.get(DataPropertyNames.OPTION_NAME.value, self.option_name)
+                self.is_primary = j.get(DataPropertyNames.IS_PRIMARY.value, self.is_primary)
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

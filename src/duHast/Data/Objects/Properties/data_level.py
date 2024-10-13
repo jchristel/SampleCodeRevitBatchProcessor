@@ -70,8 +70,8 @@ class DataLevel(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.name = j.get(DataPropertyNames.NAME, self.name)
-                self.id = j.get(DataPropertyNames.ID, self.id)
+                self.name = j.get(DataPropertyNames.NAME.value, self.name)
+                self.id = j.get(DataPropertyNames.ID.value, self.id)
                 self.offset_from_level = j.get(
                     "offset_from_level", self.offset_from_level
                 )

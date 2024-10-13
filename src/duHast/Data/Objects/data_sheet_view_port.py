@@ -88,9 +88,9 @@ class DataSheetViewPort(data_base.DataBase):
             try:
 
                 self.bounding_box = DataBoundingBox(
-                    j.get(DataPropertyNames.BOUNDING_BOX, {})
+                    j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
-                self.vp_type = j.get(DataPropertyNames.VIEW_PORT_TYPE, self.vp_type)
+                self.vp_type = j.get(DataPropertyNames.VIEW_PORT_TYPE.value, self.vp_type)
 
             except Exception as e:
                 raise ValueError(

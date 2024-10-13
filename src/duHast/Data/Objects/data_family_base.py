@@ -107,7 +107,7 @@ class DataFamilyBase(data_base.DataBase, data_element_geometry.DataElementGeomet
                     j.get(data_design_set_option.DataDesignSetOption.data_type, {})
                 )
                 self.associated_elements = j.get(
-                    DataPropertyNames.ASSOCIATED_ELEMENTS, self.associated_elements
+                    DataPropertyNames.ASSOCIATED_ELEMENTS.value, self.associated_elements
                 )
             except Exception as e:
                 raise ValueError(

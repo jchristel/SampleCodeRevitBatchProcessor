@@ -97,7 +97,7 @@ class DataSheet(data_base.DataBase):
                     j.get(data_type_properties.DataTypeProperties.data_type, {})
                 )
                 self.bounding_box = DataBoundingBox(
-                    j.get(DataPropertyNames.BOUNDING_BOX, {})
+                    j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
 
             except Exception as e:

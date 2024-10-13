@@ -71,6 +71,14 @@ duHast.Revit.Common.element\_filtering module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Common.element\_filtering\_by\_design\_option module
+-----------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Common.element_filtering_by_design_option
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Common.failure\_handling module
 --------------------------------------------
 

@@ -23,10 +23,10 @@ duHast.Revit.Rooms.room\_common\_parameters module
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Rooms.room\_spatial\_elements module
--------------------------------------------------
+duHast.Revit.Rooms.room\_lines module
+-------------------------------------
 
-.. automodule:: duHast.Revit.Rooms.room_spatial_elements
+.. automodule:: duHast.Revit.Rooms.room_lines
    :members:
    :undoc-members:
    :show-inheritance:

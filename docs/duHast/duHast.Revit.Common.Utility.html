@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Common.Utility package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast.Revit.Common.Utility package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Common package" href="duHast.Revit.Common.html" />
     <link rel="next" title="duHast.Revit.DetailItems package" href="duHast.Revit.DetailItems.html" />
     <link rel="prev" title="duHast.Revit.Common.Reporting package" href="duHast.Revit.Common.Reporting.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Common.Utility package</h1></div>
@@ -47,6 +47,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -101,17 +102,23 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.Utility.element_copying.copy_elements_from_target_doc">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Utility.element_copying.</span></span><span class="sig-name descname"><span class="pre">copy_elements_from_target_doc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destination_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_of_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Utility.element_copying.copy_elements_from_target_doc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy elements from one document to another
-:param destination_doc: The document which will be the copy destination
-:type destination_doc: Document
-:param source_doc: The template document which will be the copy source
-:type source_doc: Document
-:param list_of_ids: List of element ids to copy
-:type list_of_ids: List[ElementId]
-:param element_str: String of element type to copy for logging messages
-:type element_str: str
-:return: List of new elements
-:rtype: list</p>
+<dd><p>Copy elements from one document to another</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>destination_doc</strong> (<em>Document</em>) – The document which will be the copy destination</p></li>
+<li><p><strong>source_doc</strong> (<em>Document</em>) – The template document which will be the copy source</p></li>
+<li><p><strong>list_of_ids</strong> (<em>List</em><em>[</em><em>ElementId</em><em>]</em>) – List of element ids to copy</p></li>
+<li><p><strong>element_str</strong> (<em>str</em>) – String of element type to copy for logging messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of new elements</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -121,9 +128,9 @@
 <h3>This module contains a number of utilities for an elements spatial properties<a class="headerlink" href="#this-module-contains-a-number-of-utilities-for-an-elements-spatial-properties" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Common.Utility.element_spatial_utils.get_room_element_is_in">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Utility.element_spatial_utils.</span></span><span class="sig-name descname"><span class="pre">get_room_element_is_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Utility.element_spatial_utils.get_room_element_is_in" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the room an element is in if the room matches the phase the element is created in</p>
+<dt class="sig sig-object py" id="duHast.Revit.Common.Utility.element_spatial_utils.get_room_element_is_in_by_element_phase_created">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Utility.element_spatial_utils.</span></span><span class="sig-name descname"><span class="pre">get_room_element_is_in_by_element_phase_created</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Utility.element_spatial_utils.get_room_element_is_in_by_element_phase_created" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the room an element is in.The room phase need to match the phase the element is created in.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

@@ -1,0 +1,21 @@
+duHast.UI.Objects.WPF.Xaml package
+==================================
+
+Submodules
+----------
+
+duHast.UI.Objects.WPF.Xaml.XamlLoader module
+--------------------------------------------
+
+.. automodule:: duHast.UI.Objects.WPF.Xaml.XamlLoader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.UI.Objects.WPF.Xaml
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Grids package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast.Revit.Grids package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Grids.Reporting package" href="duHast.Revit.Grids.Reporting.html" />
     <link rel="prev" title="duHast.Revit.Floors.Utility package" href="duHast.Revit.Floors.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Grids package</h1></div>
@@ -47,6 +47,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -888,7 +889,7 @@ bool # is the grid visible</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids_propagate_visbility_and_extends.change_grid_extends_in_views">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_propagate_visbility_and_extends.</span></span><span class="sig-name descname"><span class="pre">change_grid_extends_in_views</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids_in_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_template_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views_to_change_grid_elements</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.change_grid_extends_in_views" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_propagate_visbility_and_extends.</span></span><span class="sig-name descname"><span class="pre">change_grid_extends_in_views</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids_in_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_template_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views_to_change_grid_elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.change_grid_extends_in_views" title="Permalink to this definition">¶</a></dt>
 <dd><p>Changes grids  in a number views to match the extend, visibility, bubble visibility of grids in template view</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -903,7 +904,8 @@ bool</em><em>, </em><em>is the grid in scope</em><em> (</em><em>inside the crop 
 bool</em><em>, </em><em># bubble visible at zero end
 bool</em><em>, </em><em># bubble visible at 1 end
 bool # is the grid visible</em>) – A dictionary describing the appearance of each grid in the template view</p></li>
-<li><p><strong>views_to_change_grid_elements</strong> (<em>[</em><em>Autodesk.Revit.DB.View</em><em>]</em>) – A list of views in which to update the grid graphics</p></li>
+<li><p><strong>views_to_change_grid_elements</strong> (<a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.ProgressBase.ProgressBase" title="duHast.UI.Objects.ProgressBase.ProgressBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProgressBase</span></code></a>) – A list of views in which to update the grid graphics</p></li>
+<li><p><strong>callback</strong> – A progress call back function</p></li>
 </ul>
 </dd>
 </dl>
@@ -911,13 +913,14 @@ bool # is the grid visible</em>) – A dictionary describing the appearance of e
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.grids_propagate_visbility_and_extends.propagate_grids_extends_and_visibility">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_propagate_visbility_and_extends.</span></span><span class="sig-name descname"><span class="pre">propagate_grids_extends_and_visibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views_to_change_grid_elements</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.propagate_grids_extends_and_visibility" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.grids_propagate_visbility_and_extends.</span></span><span class="sig-name descname"><span class="pre">propagate_grids_extends_and_visibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views_to_change_grid_elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids_propagate_visbility_and_extends.propagate_grids_extends_and_visibility" title="Permalink to this definition">¶</a></dt>
 <dd><p>Propagates grid extends and visibility from the active view to all other views selected in UI.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document.</p></li>
 <li><p><strong>viewsToChangeGridElements</strong> (<em>[</em><em>Autodesk.Revit.DB.View</em><em>]</em>) – A list of views in which to update the grid graphics</p></li>
+<li><p><strong>callback</strong> – A progress call back function</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1056,18 +1059,51 @@ bool # is the grid visible</em>) – A dictionary describing the appearance of e
 <dt class="sig sig-object py" id="duHast.Revit.Grids.purge_unused_grid_types.get_unused_grid_types_for_purge">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.purge_unused_grid_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_grid_types_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.purge_unused_grid_types.get_unused_grid_types_for_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>this will return all ids of unused grid types in the model to be purged</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of grid types which can be purged</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.purge_unused_grid_types.get_unused_grid_head_families">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.purge_unused_grid_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_grid_head_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.purge_unused_grid_types.get_unused_grid_head_families" title="Permalink to this definition">¶</a></dt>
 <dd><p>this will return all ids of unused family symbols (types) of grid head families</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of grid head family ids.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.ElementId]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Grids.purge_unused_grid_types.get_unused_grid_head_families_for_purge">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Grids.purge_unused_grid_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_grid_head_families_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.purge_unused_grid_types.get_unused_grid_head_families_for_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>this will return all ids of unused grid head symbols and families to be purged</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of family ids.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.ElementId]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

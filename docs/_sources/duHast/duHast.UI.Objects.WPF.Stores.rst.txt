@@ -1,0 +1,21 @@
+duHast.UI.Objects.WPF.Stores package
+====================================
+
+Submodules
+----------
+
+duHast.UI.Objects.WPF.Stores.NavigationStore module
+---------------------------------------------------
+
+.. automodule:: duHast.UI.Objects.WPF.Stores.NavigationStore
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.UI.Objects.WPF.Stores
+   :members:
+   :undoc-members:
+   :show-inheritance:

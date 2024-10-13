@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Data package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast.Data package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
     <link rel="next" title="duHast.Data.Objects package" href="duHast.Data.Objects.html" />
     <link rel="prev" title="duHast package" href="duHast.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Data package</h1></div>
@@ -47,6 +47,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -104,8 +105,11 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#module-duHast.Data.Objects.Properties.data_instance_properties">duHast.Data.Objects.Properties.data_instance_properties module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#module-duHast.Data.Objects.Properties.data_level">duHast.Data.Objects.Properties.data_level module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#module-duHast.Data.Objects.Properties.data_phasing">duHast.Data.Objects.Properties.data_phasing module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#module-duHast.Data.Objects.Properties.data_property">duHast.Data.Objects.Properties.data_property module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#module-duHast.Data.Objects.Properties.data_property_names">duHast.Data.Objects.Properties.data_property_names module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#module-duHast.Data.Objects.Properties.data_revit_model">duHast.Data.Objects.Properties.data_revit_model module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#module-duHast.Data.Objects.Properties.data_type_properties">duHast.Data.Objects.Properties.data_type_properties module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#module-duHast.Data.Objects.Properties.data_view_port_type_names">duHast.Data.Objects.Properties.data_view_port_type_names module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#module-duHast.Data.Objects.Properties">Module contents</a></li>
 </ul>
 </li>
@@ -140,6 +144,22 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.html#data-storage-class-for-revit-room-properties">Data storage class for Revit room properties.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.html#duHast.Data.Objects.data_room.DataRoom"><code class="docutils literal notranslate"><span class="pre">DataRoom</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.html#duHast.Data.Objects.data_room.DataRoom.data_type"><code class="docutils literal notranslate"><span class="pre">DataRoom.data_type</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Data.Objects.html#module-duHast.Data.Objects.data_sheet">duHast.Data.Objects.data_sheet module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.html#data-storage-base-class-used-for-revit-sheets">Data storage base class used for Revit sheets.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.html#duHast.Data.Objects.data_sheet.DataSheet"><code class="docutils literal notranslate"><span class="pre">DataSheet</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.html#duHast.Data.Objects.data_sheet.DataSheet.data_type"><code class="docutils literal notranslate"><span class="pre">DataSheet.data_type</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Data.Objects.html#module-duHast.Data.Objects.data_sheet_view_port">duHast.Data.Objects.data_sheet_view_port module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.html#id1">Data storage base class used for Revit sheets.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.html#duHast.Data.Objects.data_sheet_view_port.DataSheetViewPort"><code class="docutils literal notranslate"><span class="pre">DataSheetViewPort</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.html#duHast.Data.Objects.data_sheet_view_port.DataSheetViewPort.data_type"><code class="docutils literal notranslate"><span class="pre">DataSheetViewPort.data_type</span></code></a></li>
 </ul>
 </li>
 </ul>

@@ -1,0 +1,29 @@
+duHast.Revit.UI.Objects package
+===============================
+
+Submodules
+----------
+
+duHast.Revit.UI.Objects.CustomSelectionFilter module
+----------------------------------------------------
+
+.. automodule:: duHast.Revit.UI.Objects.CustomSelectionFilter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.UI.Objects.ExernalEventHandler module
+--------------------------------------------------
+
+.. automodule:: duHast.Revit.UI.Objects.ExernalEventHandler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.UI.Objects
+   :members:
+   :undoc-members:
+   :show-inheritance:

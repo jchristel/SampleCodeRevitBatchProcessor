@@ -12,6 +12,14 @@ duHast.Revit.Rooms.Reporting.revit\_rooms\_report\_header module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Rooms.Reporting.room\_separation\_lines module
+-----------------------------------------------------------
+
+.. automodule:: duHast.Revit.Rooms.Reporting.room_separation_lines
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

@@ -52,6 +52,22 @@ duHast.Data.Objects.Properties.data\_phasing module
    :undoc-members:
    :show-inheritance:
 
+duHast.Data.Objects.Properties.data\_property module
+----------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Properties.data_property
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Properties.data\_property\_names module
+-----------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Properties.data_property_names
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Data.Objects.Properties.data\_revit\_model module
 --------------------------------------------------------
 
@@ -64,6 +80,14 @@ duHast.Data.Objects.Properties.data\_type\_properties module
 ------------------------------------------------------------
 
 .. automodule:: duHast.Data.Objects.Properties.data_type_properties
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Properties.data\_view\_port\_type\_names module
+-------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Properties.data_view_port_type_names
    :members:
    :undoc-members:
    :show-inheritance:

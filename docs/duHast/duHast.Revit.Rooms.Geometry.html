@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Rooms.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast.Revit.Rooms.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Rooms package" href="duHast.Revit.Rooms.html" />
     <link rel="next" title="duHast.Revit.Rooms.Objects package" href="duHast.Revit.Rooms.Objects.html" />
     <link rel="prev" title="duHast.Revit.Rooms.Export package" href="duHast.Revit.Rooms.Export.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Rooms.Geometry package</h1></div>
@@ -47,6 +47,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -142,21 +143,175 @@ boundary location.</p>
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.geometry.get_2d_points_from_revit_room">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_2d_points_from_revit_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.geometry.get_2d_points_from_revit_room" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of dataGeometry object containing points representing the flattened(2D geometry) of a room in the model.
-List should only have one entry.
-:param revit_room: The room.
-:type revit_room: Autodesk.Revit.DB.Architecture.Room
-:return: A list of data geometry instance containing the points defining the boundary loop.
-:rtype: list of  <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></p>
+List should only have one entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>revit_room</strong> (<em>Autodesk.Revit.DB.Architecture.Room</em>) – The room.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of data geometry instance containing the points defining the boundary loop.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of  <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.geometry.get_2d_points_from_all_revit_rooms">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_2d_points_from_all_revit_rooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.geometry.get_2d_points_from_all_revit_rooms" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of dataGeometry object containing points representing the flattened(2D geometry) of all the rooms in the model.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:return: A list of data geometry instances containing the points defining the boundary loop per room.
-:rtype: list of  <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></p>
+<dd><p>Returns a list of dataGeometry object containing points representing the flattened(2D geometry) of all the rooms in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of data geometry instances containing the points defining the boundary loop per room.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of  <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Rooms.Geometry.room_spatial_elements">
+<span id="duhast-revit-rooms-geometry-room-spatial-elements-module"></span><h2>duHast.Revit.Rooms.Geometry.room_spatial_elements module<a class="headerlink" href="#module-duHast.Revit.Rooms.Geometry.room_spatial_elements" title="Permalink to this heading">¶</a></h2>
+<section id="revit-api-utility-functions-for-room-boundary-loops-and-elements">
+<h3>Revit API utility functions for Room boundary loops and elements.<a class="headerlink" href="#revit-api-utility-functions-for-room-boundary-loops-and-elements" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.room_spatial_elements.get_room_segments">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_room_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_room_segments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a rooms boundary segments with the default spatial element boundary options.
+:param room: The room to get for
+:type room: Room
+:return: The boundary segments of the room
+:rtype: List[List[BoundarySegment]]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.room_spatial_elements.get_segment_host">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_segment_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_segment_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the element that the room boundary segment belongs to
+:param rvt_doc: The Revit document
+:type rvt_doc: Document
+:param seg: The boundary segment
+:type seg: BoundarySegment</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.room_spatial_elements.get_curves_as_curve_loop">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_curves_as_curve_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rm_crvs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_curves_as_curve_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of curves as a CurveLoop object.
+:param rm_crvs: The curves to get for
+:type rm_crvs: List[Curve]
+:return: The curves as a CurveLoop object
+:rtype: CurveLoop</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.room_spatial_elements.get_spatial_element_filter">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_spatial_element_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_only</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_spatial_element_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if there is a Wall, ModelLine or both filter and returns a list
+of the types to filter for.
+:param filter_only: The host type to filter for
+:type filter_only: Wall, ModelLine or both in a list
+:return: A list of types to filter for
+:rtype: List[Type] or None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.room_spatial_elements.get_all_segs_from_list">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_all_segs_from_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_all_segs_from_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of curves that represents the boundary segments of a room.</p>
+<p>Optional parameter to filter the segments by the host type (wall or
+room separation line).
+:param rvt_doc: The Revit document
+:type rvt_doc: Document
+:param segments: The boundary segments of a room
+:type segments: List[List[BoundarySegment]]
+:param filter_only: Optional: The host type to filter for
+:type filter_only: Wall, ModelLine or both in a list
+:return: A list of curves
+:rtype: List[Curve]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.room_spatial_elements.get_segment_hosts">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_segment_hosts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_segment_hosts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the host element of a boundary segment. With option
+to filter by the host type
+:param rvt_doc: The Revit document
+:type rvt_doc: Document
+:param segments: The boundary segments of a room
+:type segments: List[List[BoundarySegment]]
+:param filter_only: Optional: The host type to filter for
+:type filter_only: Wall, ModelLine or both in a list
+:return: A list of hosts
+:rtype: List[Element]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.room_spatial_elements.get_segments_as_curves">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_segments_as_curves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_segments_as_curves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the curves that make up the boundary segments of a room.
+:param rvt_doc: The Revit document
+:type rvt_doc: Document
+:param segments: The boundary segments of a room
+:type segments: List[List[BoundarySegment]]
+:param filter_only: Optional: The host type to filter for
+:type filter_only: Wall, ModelLine or both in a list
+:return: A list of curves
+:rtype: List[Curve]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_wall_segments_as_curves">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_only_wall_segments_as_curves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_wall_segments_as_curves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the wall segments of a room as curves.
+:param rvt_doc: The Revit document
+:type rvt_doc: Document
+:param segments: The boundary segments of a room
+:type segments: List[List[BoundarySegment]]
+:return: A list of curves
+:rtype: List[Curve]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_rm_sep_lines_as_curves">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_only_rm_sep_lines_as_curves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_rm_sep_lines_as_curves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the room separation line segments of a room as curves.
+:param rvt_doc: The Revit document
+:type rvt_doc: Document
+:param segments: The boundary segments of a room
+:type segments: List[List[BoundarySegment]]
+:return: A list of curves
+:rtype: List[Curve]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_wall_segments_as_walls">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_only_wall_segments_as_walls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_wall_segments_as_walls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the wall segments of a room as walls.
+:param rvt_doc: The Revit document
+:type rvt_doc: Document
+:param segments: The boundary segments of a room
+:type segments: List[List[BoundarySegment]]
+:return: A list of walls
+:rtype: List[Wall]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_rm_sep_lines_as_model_lines">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_only_rm_sep_lines_as_model_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_rm_sep_lines_as_model_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the room separation line segments of a room as model lines.
+:param rvt_doc: The Revit document
+:type rvt_doc: Document
+:param segments: The boundary segments of a room
+:type segments: List[List[BoundarySegment]]
+:return: A list of model lines
+:rtype: List[ModelLine]</p>
 </dd></dl>
 
 </section>

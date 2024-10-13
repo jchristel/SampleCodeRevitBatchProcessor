@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Data.Objects.Properties package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast.Data.Objects.Properties package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.Data.Objects package" href="duHast.Data.Objects.html" />
     <link rel="next" title="duHast.Data.Objects.Properties.Geometry package" href="duHast.Data.Objects.Properties.Geometry.html" />
     <link rel="prev" title="duHast.Data.Objects package" href="duHast.Data.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Data.Objects.Properties package</h1></div>
@@ -47,6 +47,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -111,6 +112,14 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#module-duHast.Data.Objects.Properties.Geometry.geometry_base">duHast.Data.Objects.Properties.Geometry.geometry_base module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#geometry-data-storage-class">Geometry data storage class.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#duHast.Data.Objects.Properties.Geometry.geometry_base.DataGeometryBase"><code class="docutils literal notranslate"><span class="pre">DataGeometryBase</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#module-duHast.Data.Objects.Properties.Geometry.geometry_bounding_box">duHast.Data.Objects.Properties.Geometry.geometry_bounding_box module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#geometry-data-bounding-box-storage-class">Geometry data bounding_box storage class.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#duHast.Data.Objects.Properties.Geometry.geometry_bounding_box.DataBoundingBox"><code class="docutils literal notranslate"><span class="pre">DataBoundingBox</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#duHast.Data.Objects.Properties.Geometry.geometry_bounding_box.DataBoundingBox.data_type"><code class="docutils literal notranslate"><span class="pre">DataBoundingBox.data_type</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#module-duHast.Data.Objects.Properties.Geometry.geometry_polygon">duHast.Data.Objects.Properties.Geometry.geometry_polygon module</a><ul>
@@ -261,6 +270,117 @@
 </dd></dl>
 
 </section>
+<section id="module-duHast.Data.Objects.Properties.data_property">
+<span id="duhast-data-objects-properties-data-property-module"></span><h2>duHast.Data.Objects.Properties.data_property module<a class="headerlink" href="#module-duHast.Data.Objects.Properties.data_property" title="Permalink to this heading">¶</a></h2>
+<section id="data-storage-class-for-revit-properties">
+<h3>Data storage class for Revit properties.<a class="headerlink" href="#data-storage-class-for-revit-properties" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property.DataProperty">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Properties.data_property.</span></span><span class="sig-name descname"><span class="pre">DataProperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property.DataProperty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Data.Utils.html#duHast.Data.Utils.data_base.DataBase" title="duHast.Data.Utils.data_base.DataBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataBase</span></code></a></p>
+<p>Class constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – json formatted dictionary of this class, defaults to {}</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property.DataProperty.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'property'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property.DataProperty.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Data.Objects.Properties.data_property_names">
+<span id="duhast-data-objects-properties-data-property-names-module"></span><h2>duHast.Data.Objects.Properties.data_property_names module<a class="headerlink" href="#module-duHast.Data.Objects.Properties.data_property_names" title="Permalink to this heading">¶</a></h2>
+<section id="data-property-names-enum-class">
+<h3>Data property  names enum class.<a class="headerlink" href="#data-property-names-enum-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Properties.data_property_names.</span></span><span class="sig-name descname"><span class="pre">DataPropertyNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Contains property names used in data storage classes</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.ASSOCIATED_ELEMENTS">
+<span class="sig-name descname"><span class="pre">ASSOCIATED_ELEMENTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'associated_elements'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.ASSOCIATED_ELEMENTS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.BOUNDING_BOX">
+<span class="sig-name descname"><span class="pre">BOUNDING_BOX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'bounding_box'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.BOUNDING_BOX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.CREATED">
+<span class="sig-name descname"><span class="pre">CREATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'created'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.CREATED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.DATA_TYPE">
+<span class="sig-name descname"><span class="pre">DATA_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'data_type'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.DATA_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.DEMOLISHED">
+<span class="sig-name descname"><span class="pre">DEMOLISHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'demolished'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.DEMOLISHED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.ID">
+<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'id'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.ID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.IS_PRIMARY">
+<span class="sig-name descname"><span class="pre">IS_PRIMARY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'is_primary'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.IS_PRIMARY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.MIN">
+<span class="sig-name descname"><span class="pre">MIN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'min'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.MIN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.MAX">
+<span class="sig-name descname"><span class="pre">MAX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'max'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.MAX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.NAME">
+<span class="sig-name descname"><span class="pre">NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'name'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.OPTION_NAME">
+<span class="sig-name descname"><span class="pre">OPTION_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'option_name'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.OPTION_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.PROPERTIES">
+<span class="sig-name descname"><span class="pre">PROPERTIES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'properties'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.PROPERTIES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.SET_NAME">
+<span class="sig-name descname"><span class="pre">SET_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'set_name'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.SET_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.VALUE">
+<span class="sig-name descname"><span class="pre">VALUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'value'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.VALUE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.VIEW_PORT_TYPE">
+<span class="sig-name descname"><span class="pre">VIEW_PORT_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vp_type'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.VIEW_PORT_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-duHast.Data.Objects.Properties.data_revit_model">
 <span id="duhast-data-objects-properties-data-revit-model-module"></span><h2>duHast.Data.Objects.Properties.data_revit_model module<a class="headerlink" href="#module-duHast.Data.Objects.Properties.data_revit_model" title="Permalink to this heading">¶</a></h2>
 <section id="data-storage-class-for-revit-elements-model-properties">
@@ -302,6 +422,39 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_type_properties.DataTypeProperties.data_type">
 <span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'type_properties'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_type_properties.DataTypeProperties.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Data.Objects.Properties.data_view_port_type_names">
+<span id="duhast-data-objects-properties-data-view-port-type-names-module"></span><h2>duHast.Data.Objects.Properties.data_view_port_type_names module<a class="headerlink" href="#module-duHast.Data.Objects.Properties.data_view_port_type_names" title="Permalink to this heading">¶</a></h2>
+<section id="data-view-port-type-names-enum-class">
+<h3>Data view port type  names enum class.<a class="headerlink" href="#data-view-port-type-names-enum-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_view_port_type_names.DataViewPortTypeNames">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.Properties.data_view_port_type_names.</span></span><span class="sig-name descname"><span class="pre">DataViewPortTypeNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.Properties.data_view_port_type_names.DataViewPortTypeNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Contains viewport type names</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_view_port_type_names.DataViewPortTypeNames.FLOOR_PLAN">
+<span class="sig-name descname"><span class="pre">FLOOR_PLAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'floor</span> <span class="pre">plan'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_view_port_type_names.DataViewPortTypeNames.FLOOR_PLAN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_view_port_type_names.DataViewPortTypeNames.ELEVATION">
+<span class="sig-name descname"><span class="pre">ELEVATION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'elevation'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_view_port_type_names.DataViewPortTypeNames.ELEVATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_view_port_type_names.DataViewPortTypeNames.THREE_D">
+<span class="sig-name descname"><span class="pre">THREE_D</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'three</span> <span class="pre">d'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_view_port_type_names.DataViewPortTypeNames.THREE_D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Data.Objects.Properties.data_view_port_type_names.DataViewPortTypeNames.SCHEDULE">
+<span class="sig-name descname"><span class="pre">SCHEDULE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'schedule'</span></em><a class="headerlink" href="#duHast.Data.Objects.Properties.data_view_port_type_names.DataViewPortTypeNames.SCHEDULE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

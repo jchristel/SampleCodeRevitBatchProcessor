@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Family package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast.Revit.Family package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Family.Data package" href="duHast.Revit.Family.Data.html" />
     <link rel="prev" title="duHast.Revit.Exports.Utility package" href="duHast.Revit.Exports.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Family package</h1></div>
@@ -47,6 +47,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -574,17 +575,123 @@ Use the modify_action parameter to provide a function that modifies the family i
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_parameter_utils.set_family_parameter_value_by_storage_type">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_parameter_utils.</span></span><span class="sig-name descname"><span class="pre">set_family_parameter_value_by_storage_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_parameter_utils.set_family_parameter_value_by_storage_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set parameter value based on the storage type of the parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>param_w</strong> (<em>Parameter</em>) – The parameter to set the value for.</p></li>
+<li><p><strong>manager</strong> (<em>FamilyManager</em>) – The family manager.</p></li>
+<li><p><strong>value</strong> (<em>str</em>) – The value to set the parameter to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>res.Result</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_parameter_utils.set_family_parameter_value">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_parameter_utils.</span></span><span class="sig-name descname"><span class="pre">set_family_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fam_para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_parameter_utils.set_family_parameter_value" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set parameter value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>rdb.Document</em>) – The Revit document.</p></li>
+<li><p><strong>manager</strong> (<em>FamilyManager</em>) – The family manager.</p></li>
+<li><p><strong>fam_para</strong> (<em>Parameter</em>) – The parameter to set the value for.</p></li>
+<li><p><strong>value</strong> (<em>str</em>) – The value to set the parameter to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>res.Result</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_parameter_utils.set_parameter_formula">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_parameter_utils.</span></span><span class="sig-name descname"><span class="pre">set_parameter_formula</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fam_para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formula</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_parameter_utils.set_parameter_formula" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set parameter value as a formula.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>rdb.Document</em>) – The Revit document.</p></li>
+<li><p><strong>manager</strong> (<em>FamilyManager</em>) – The family manager.</p></li>
+<li><p><strong>fam_para</strong> (<em>rdb.Parameter</em>) – The parameter to set the formula for.</p></li>
+<li><p><strong>formula</strong> (<em>str</em>) – The formula to set.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>res.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_parameter_utils.create_family_parameter">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_parameter_utils.</span></span><span class="sig-name descname"><span class="pre">create_family_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_parameter_utils.create_family_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes a shared family parameter to a standard family parameter.</p>
+<p>Note: will need updating to support ForgeType fro Revit 2022 onwards</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>parameterName</strong> (<em>str</em>) – The shared parameter name.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – Revit requires the new parameter to have a different name to the shard parameter, therefore a prefix to the name is applied, defaults to ‘_’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Parameter change status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the name of the shared parameter and the new family parameter name.</p></li>
+<li><p>result.status will contain the new family parameter.</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+<li><p>result.status will be an empty list</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_parameter_utils.associate_parameter_with_other_parameter">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_parameter_utils.</span></span><span class="sig-name descname"><span class="pre">associate_parameter_with_other_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nested_family_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_parameter_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_parameter_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_parameter_utils.associate_parameter_with_other_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Associate a nested family instance parameter ( can be type or instance) with a host family parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Document</em>) – The Revit document.</p></li>
+<li><p><strong>nested_family_instance</strong> (<em>FamilyInstance</em>) – The nested family instance.</p></li>
+<li><p><strong>target_parameter_name</strong> (<em>str</em>) – The target parameter name.</p></li>
+<li><p><strong>source_parameter_name</strong> (<em>str</em>) – The source parameter name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>res.Result</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-duHast.Revit.Family.family_reference_elements">
@@ -954,13 +1061,13 @@ with parameter values in family.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.is_any_nested_family_instance_label_driven">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">is_any_nested_family_instance_label_driven</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.is_any_nested_family_instance_label_driven" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks whether any family isntance in document is driven by the ‘Label’ property.</p>
+<dd><p>Checks whether any family instance in document is driven by the ‘Label’ property.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if at least one instance is driven by label property. Othewise False</p>
+<dd class="field-even"><p>True if at least one instance is driven by label property. Otherwise False</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
@@ -1093,7 +1200,7 @@ Check is done by comparing entries of fam_type_ids with used_type_ids.
 <dt class="sig sig-object py" id="duHast.Revit.Family.purge_unused_family_types.get_unused_in_place_ids_for_purge">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.purge_unused_family_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_in_place_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unused_type_getter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.purge_unused_family_types.get_unused_in_place_ids_for_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters symbol (type) IDs and family IDs of families.</p>
-<p>The returned list of IDs can be either unused family symbols or entire families if none of their symbols are in use. 
+<p>The returned list of IDs can be either unused family symbols or entire families if none of their symbols are in use.
 In terms of purging, it’s faster to delete an entire family definition rather than deleting its symbols first and then the definition.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

@@ -1,0 +1,29 @@
+duHast.UI.Objects.WPF.ViewModels package
+========================================
+
+Submodules
+----------
+
+duHast.UI.Objects.WPF.ViewModels.MainViewModel module
+-----------------------------------------------------
+
+.. automodule:: duHast.UI.Objects.WPF.ViewModels.MainViewModel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.UI.Objects.WPF.ViewModels.ViewModelBase module
+-----------------------------------------------------
+
+.. automodule:: duHast.UI.Objects.WPF.ViewModels.ViewModelBase
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.UI.Objects.WPF.ViewModels
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,6 +1,14 @@
 duHast.Revit.UI package
 =======================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Revit.UI.Objects
+
 Submodules
 ----------
 

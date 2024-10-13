@@ -1,0 +1,10 @@
+duHast.Geometry package
+=======================
+
+Module contents
+---------------
+
+.. automodule:: duHast.Geometry
+   :members:
+   :undoc-members:
+   :show-inheritance:

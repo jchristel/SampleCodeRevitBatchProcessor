@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Common package &#8212; Sample Code Revit Batch Processor 1.1.1 documentation</title>
+    <title>duHast.Revit.Common package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Common.Geometry package" href="duHast.Revit.Common.Geometry.html" />
     <link rel="prev" title="duHast.Revit.Ceilings.Utility package" href="duHast.Revit.Ceilings.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Common package</h1></div>
@@ -47,6 +47,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="duHast.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.html">duHast.Data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Excel.html">duHast.Excel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Geometry.html">duHast.Geometry package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="duHast.Revit.html">duHast.Revit package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.UI.html">duHast.UI package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.html">duHast.Utilities package</a></li>
@@ -104,6 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.modify_model_line_action"><code class="docutils literal notranslate"><span class="pre">modify_model_line_action()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.translate_curves_in_elevation"><code class="docutils literal notranslate"><span class="pre">translate_curves_in_elevation()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.get_perpendicular_line_through_point"><code class="docutils literal notranslate"><span class="pre">get_perpendicular_line_through_point()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#duHast.Revit.Common.Geometry.curve.get_curve_level"><code class="docutils literal notranslate"><span class="pre">get_curve_level()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Geometry.html#module-duHast.Revit.Common.Geometry.geometry">duHast.Revit.Common.Geometry.geometry module</a><ul>
@@ -212,6 +214,18 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects.design_set_property_names">duHast.Revit.Common.Objects.design_set_property_names module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#design-set-property-names-enum-class">Design set property names enum class.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.design_set_property_names.DesignSetPropertyNames"><code class="docutils literal notranslate"><span class="pre">DesignSetPropertyNames</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.design_set_property_names.DesignSetPropertyNames.DESIGN_SET_NAME"><code class="docutils literal notranslate"><span class="pre">DesignSetPropertyNames.DESIGN_SET_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.design_set_property_names.DesignSetPropertyNames.DESIGN_OPTION_NAME"><code class="docutils literal notranslate"><span class="pre">DesignSetPropertyNames.DESIGN_OPTION_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.design_set_property_names.DesignSetPropertyNames.DESIGN_OPTION_IS_PRIMARY"><code class="docutils literal notranslate"><span class="pre">DesignSetPropertyNames.DESIGN_OPTION_IS_PRIMARY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.design_set_property_names.DesignSetPropertyNames.DESIGN_SET_DEFAULT_NAME"><code class="docutils literal notranslate"><span class="pre">DesignSetPropertyNames.DESIGN_SET_DEFAULT_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.design_set_property_names.DesignSetPropertyNames.DESIGN_OPTION_DEFAULT_NAME"><code class="docutils literal notranslate"><span class="pre">DesignSetPropertyNames.DESIGN_OPTION_DEFAULT_NAME</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Objects.html#module-duHast.Revit.Common.Objects">Module contents</a></li>
 </ul>
 </li>
@@ -244,7 +258,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Utility.html#module-duHast.Revit.Common.Utility.element_spatial_utils">duHast.Revit.Common.Utility.element_spatial_utils module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Utility.html#this-module-contains-a-number-of-utilities-for-an-elements-spatial-properties">This module contains a number of utilities for an elements spatial properties</a></li>
-<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Utility.html#duHast.Revit.Common.Utility.element_spatial_utils.get_room_element_is_in"><code class="docutils literal notranslate"><span class="pre">get_room_element_is_in()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Common.Utility.html#duHast.Revit.Common.Utility.element_spatial_utils.get_room_element_is_in_by_element_phase_created"><code class="docutils literal notranslate"><span class="pre">get_room_element_is_in_by_element_phase_created()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Common.Utility.html#module-duHast.Revit.Common.Utility.revit_to_data_conversion">duHast.Revit.Common.Utility.revit_to_data_conversion module</a><ul>
@@ -812,6 +826,60 @@ If element names does contain any of the test values, the function will return F
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.get_active_design_option">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.design_set_options.</span></span><span class="sig-name descname"><span class="pre">get_active_design_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.get_active_design_option" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the active design option in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Active design option in current model, or if no design option is active, None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.DesignOption</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.get_desing_set_from_option">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.design_set_options.</span></span><span class="sig-name descname"><span class="pre">get_desing_set_from_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.get_desing_set_from_option" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the design set of the design option.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>design_option</strong> (<em>Autodesk.Revit.DB.DesignOption</em>) – a revit design option</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A revit design set or None if no design option is active</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.get_design_set_of_active_design_option">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.design_set_options.</span></span><span class="sig-name descname"><span class="pre">get_design_set_of_active_design_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.get_design_set_of_active_design_option" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the design set of the current active design option.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A revit design set or None if no design option is active</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.get_design_sets">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.design_set_options.</span></span><span class="sig-name descname"><span class="pre">get_design_sets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.get_design_sets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all the design sets in a model,</p>
@@ -824,6 +892,23 @@ If element names does contain any of the test values, the function will return F
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.Element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.get_design_options_by_design_set">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.design_set_options.</span></span><span class="sig-name descname"><span class="pre">get_design_options_by_design_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.get_design_options_by_design_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all the design options grouped by design sets in a model,</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary where key is the Design sets name and value is a list of design options in that set</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{str:[Autodesk.Revit.DB.Element]}</p>
 </dd>
 </dl>
 </dd></dl>
@@ -861,8 +946,8 @@ If element names does contain any of the test values, the function will return F
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dictionary
-Design Set Name: (can be either Main Model or the design set name)
+<dd class="field-even"><p>Dictionary ( for keys refer to <a class="reference internal" href="duHast.Revit.Common.Objects.html#duHast.Revit.Common.Objects.design_set_property_names.DesignSetPropertyNames" title="duHast.Revit.Common.Objects.design_set_property_names.DesignSetPropertyNames"><code class="xref py py-class docutils literal notranslate"><span class="pre">DesignSetPropertyNames</span></code></a> )
+DesignSetName: (can be either Main Model or the design set name)
 designOptionName:    Design Option Name (empty string if Main Model
 isPrimary:           Indicating whether design option is primary (true also if Main Model)</p>
 </dd>
@@ -871,6 +956,43 @@ isPrimary:           Indicating whether design option is primary (true also if M
 designSetName:str
 designOptionName:str
 isPrimary:bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.get_design_option_ids_of_all_primary_options">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.design_set_options.</span></span><span class="sig-name descname"><span class="pre">get_design_option_ids_of_all_primary_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.get_design_option_ids_of_all_primary_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the design option ids of all primary options in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of design option ids of all primary options in the model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.get_design_option_ids_of_all_primary_options_but_the_one_containing_filter_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.design_set_options.</span></span><span class="sig-name descname"><span class="pre">get_design_option_ids_of_all_primary_options_but_the_one_containing_filter_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_Id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.get_design_option_ids_of_all_primary_options_but_the_one_containing_filter_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the design option ids of all primary options in a model except the one where the design set contains a design option with the filter id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>filter_Id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – Element Id of the filter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of design option ids of all primary options in the model except the one containing the filter id.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
 </dd></dl>
@@ -938,7 +1060,7 @@ isPrimary:bool</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>contains_value</strong> – The string the name of the family instance is to be tested for.</p></li>
+<li><p><strong>contains_value</strong> (<em>str</em>) – The string the name of the family instance is to be tested for.</p></li>
 <li><p><strong>element_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be tested.</p></li>
 </ul>
 </dd>
@@ -1010,6 +1132,35 @@ isPrimary:bool</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.element_filtering_by_design_option">
+<span id="duhast-revit-common-element-filtering-by-design-option-module"></span><h2>duHast.Revit.Common.element_filtering_by_design_option module<a class="headerlink" href="#module-duHast.Revit.Common.element_filtering_by_design_option" title="Permalink to this heading">¶</a></h2>
+<section id="element-filter-by-design-option-id-s">
+<h3>Element filter by design option id’s<a class="headerlink" href="#element-filter-by-design-option-id-s" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.element_filtering_by_design_option.filter_elements_by_design_option_id">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.element_filtering_by_design_option.</span></span><span class="sig-name descname"><span class="pre">filter_elements_by_design_option_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_option_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_main_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_other_primary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.element_filtering_by_design_option.filter_elements_by_design_option_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter room separation lines by design option id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Document</em>) – The Revit document.</p></li>
+<li><p><strong>elements</strong> (<em>[</em><em>]</em>) – A list of Revit elements</p></li>
+<li><p><strong>design_option_id</strong> (<em>Autodesk.Revit.ElementId</em>) – The id of the design option to be filtered by. None will return either all room separation lines from the main model, if include main model is true, and / or all room separation lines from other primary design options.</p></li>
+<li><p><strong>include_main_model</strong> (<em>bool</em>) – Include room separation lines from the main model option.</p></li>
+<li><p><strong>include_other_primary</strong> (<em>bool</em>) – Include room separation lines from other primary design options in the model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of room separation lines filtered by design option id.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2171,6 +2322,23 @@ The function needs to accept these args: parameter, new parameter value as strin
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.phases.get_all_phases_in_order">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.phases.</span></span><span class="sig-name descname"><span class="pre">get_all_phases_in_order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.phases.get_all_phases_in_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all phases in the order of oldest to newest.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of tuples ordered oldest to newest. Tuple properties are: 0 is the phase id and 1 is the phase name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[(ElementId, str)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.phases.get_phase_name_by_id">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.phases.</span></span><span class="sig-name descname"><span class="pre">get_phase_name_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.phases.get_phase_name_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the name of a phase by Id</p>
@@ -2203,6 +2371,40 @@ The function needs to accept these args: parameter, new parameter value as strin
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dic{key str: value Autodesk.Revit.DB.Phase}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.phases.get_phase_id_created">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.phases.</span></span><span class="sig-name descname"><span class="pre">get_phase_id_created</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.phases.get_phase_id_created" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the id of the phase an element was created in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – A Revit element</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Phase id</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.phases.get_phase_id_demolished">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.phases.</span></span><span class="sig-name descname"><span class="pre">get_phase_id_demolished</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.phases.get_phase_id_demolished" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the id of the phase an element was demolished in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – A Revit element</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Phase id</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
 </dd></dl>

@@ -33,7 +33,6 @@ import System
 # import common library modules
 from duHast.Revit.Common.Objects.design_set_property_names import DesignSetPropertyNames
 
-
 # import Autodesk
 from Autodesk.Revit.DB import (
     BuiltInParameter,
@@ -81,6 +80,52 @@ def get_active_design_option(doc):
         return None
     design_option = doc.GetElement(design_option_id)
     return design_option
+
+
+def get_desing_set_from_option(doc, design_option):
+    """
+    Returns the design set of the design option.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param design_option: a revit design option
+    :type design_option: Autodesk.Revit.DB.DesignOption
+
+    :return: A revit design set or None if no design option is active
+    :rtype: _type_
+    """
+
+    # if no option is active
+    if design_option == None:
+        return None
+    design_set = doc.GetElement(
+        design_option.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId()
+    )
+    return design_set
+
+
+def get_design_set_of_active_design_option(doc):
+    """
+    Returns the design set of the current active design option.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A revit design set or None if no design option is active
+    :rtype: _type_
+    """
+
+    # get the active design option
+    option = get_active_design_option(doc=doc)
+
+    # if no option is active
+    if option == None:
+        return None
+    
+    design_set = doc.GetElement(
+        option.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId()
+    )
+    return design_set
 
 
 def get_design_sets(doc):
@@ -192,7 +237,7 @@ def get_design_set_option_info(doc, element):
         DesignSetPropertyNames.DESIGN_OPTION_NAME,
         DesignSetPropertyNames.DESIGN_OPTION_IS_PRIMARY,
     ]
-    new_value = ["Main Model", "-", True]
+    new_value = [DesignSetPropertyNames.DESIGN_SET_DEFAULT_NAME, DesignSetPropertyNames.DESIGN_OPTION_DEFAULT_NAME, True]
     dic = dict(zip(new_key, new_value))
     try:
         # this only works for objects inheriting from Autodesk.Revit.DB.Element

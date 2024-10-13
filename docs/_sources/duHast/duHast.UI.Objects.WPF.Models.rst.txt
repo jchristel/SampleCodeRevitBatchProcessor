@@ -1,0 +1,10 @@
+duHast.UI.Objects.WPF.Models package
+====================================
+
+Module contents
+---------------
+
+.. automodule:: duHast.UI.Objects.WPF.Models
+   :members:
+   :undoc-members:
+   :show-inheritance:

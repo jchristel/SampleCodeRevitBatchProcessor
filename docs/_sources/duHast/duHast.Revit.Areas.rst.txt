@@ -1,6 +1,14 @@
 duHast.Revit.Areas package
 ==========================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Revit.Areas.Reporting
+
 Submodules
 ----------
 

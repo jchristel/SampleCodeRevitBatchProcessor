@@ -1,4 +1,4 @@
-from duHast.Revit.UI.Objects.WPFWindowBase import WPFWindowBase
+from duHast.UI.Objects.WPFWindowBase import WPFWindowBase
 
 
 class MyWindow(WPFWindowBase):

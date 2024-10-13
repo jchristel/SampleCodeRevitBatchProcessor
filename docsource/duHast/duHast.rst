@@ -9,6 +9,7 @@ Subpackages
 
    duHast.Data
    duHast.Excel
+   duHast.Geometry
    duHast.Revit
    duHast.UI
    duHast.Utilities

@@ -55,6 +55,14 @@ duHast.Revit.Warnings.solver\_room\_tag\_to\_room module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Warnings.warning\_guids module
+-------------------------------------------
+
+.. automodule:: duHast.Revit.Warnings.warning_guids
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Warnings.warnings module
 -------------------------------------
 

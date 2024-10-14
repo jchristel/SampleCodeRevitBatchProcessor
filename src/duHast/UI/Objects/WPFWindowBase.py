@@ -1,24 +1,8 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-<<<<<<<< HEAD:Samples/WPF/RoomsInModel/Models/RoomId.py
-NVVM Revit RoomId class.
-========
-A class to handle navigation as a service.
->>>>>>>> origin/wip-1.1.3:src/duHast/UI/Objects/WPF/Services/NavigationService.py
+An implementation of a custom wpf window base class which can be shown in the Revit context.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Middle class in NVVM model schema. 
-
-<<<<<<<< HEAD:Samples/WPF/RoomsInModel/Models/RoomId.py
-This class contains the room id as integer value.
-========
-https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
->>>>>>>> origin/wip-1.1.3:src/duHast/UI/Objects/WPF/Services/NavigationService.py
-
 """
-
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 #
 # License:
 #
@@ -42,27 +26,45 @@ https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
 #
 #
 
+import clr
 
-<<<<<<<< HEAD:Samples/WPF/RoomsInModel/Models/RoomId.py
-class RoomId(object):
-    def __init__(self, room_id_integer):
+clr.AddReference("PresentationFramework")
+# clr.AddReference("PresentationCore")
 
-        if not isinstance(room_id_integer, int):
-            raise TypeError("room_id_integer must be of type int")
-        
-        self.room_id_integer = room_id_integer
-        
-========
-class NavigationService:
-    """
-    A class providing a navigation service between view models.
-    """
+from System.Windows import Window
+from duHast.UI.Objects.XamlLoader import XamlLoader
 
-    def __init__(self, navigation_store, create_view_model):
 
-        self._navigation_store = navigation_store
-        self._create_view_model = create_view_model
+class WPFWindowBase(Window):
+    def __init__(self, xaml_path, view_model):
 
-    def Navigate(self):
-        self._navigation_store.CurrentViewModel = self._create_view_model()
->>>>>>>> origin/wip-1.1.3:src/duHast/UI/Objects/WPF/Services/NavigationService.py
+        # make sure to initialize the base class
+        super(WPFWindowBase, self).__init__()
+
+        # load xaml data
+        xaml = XamlLoader(xaml_path)
+
+        # get the xaml root
+        xaml_window = xaml.Root
+
+        # Ensure xaml_window is of type Window and use it
+        if isinstance(xaml_window, Window):
+            self.Content = xaml_window.Content
+            self.Title = xaml_window.Title
+            self.Width = xaml_window.Width
+            self.SizeToContent = xaml_window.SizeToContent
+        else:
+            self.Content = xaml_window
+
+        # Set DataContext
+        self.DataContext = view_model
+
+        # Wire up the Closed event
+        self.Closed += self.on_closed
+
+        # print("view model: {}".format(view_model))
+        # print("xaml root: {}".format(self.Content))
+
+    def on_closed(self, sender, event):
+        # Handle cleanup here
+        pass

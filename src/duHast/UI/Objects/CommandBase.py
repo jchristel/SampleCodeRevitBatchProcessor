@@ -1,24 +1,14 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-<<<<<<<< HEAD:Samples/WPF/RoomsInModel/Models/RoomId.py
-NVVM Revit RoomId class.
-========
-A class to handle navigation as a service.
->>>>>>>> origin/wip-1.1.3:src/duHast/UI/Objects/WPF/Services/NavigationService.py
+A class to handle wpf command bindings.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Middle class in NVVM model schema. 
+Based on:
 
-<<<<<<<< HEAD:Samples/WPF/RoomsInModel/Models/RoomId.py
-This class contains the room id as integer value.
-========
-https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
->>>>>>>> origin/wip-1.1.3:src/duHast/UI/Objects/WPF/Services/NavigationService.py
+https://markheath.net/post/wpf-and-mvvm-in-ironpython
 
 """
 
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 #
 # License:
 #
@@ -26,7 +16,7 @@ https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2024, Jan Christel
+# Copyright 2023, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -42,27 +32,49 @@ https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
 #
 #
 
+from duHast.Utilities.Objects import base
+from System.Windows.Input import ICommand
+from System import EventArgs
 
-<<<<<<<< HEAD:Samples/WPF/RoomsInModel/Models/RoomId.py
-class RoomId(object):
-    def __init__(self, room_id_integer):
+class CommandBase(ICommand):
+    def __init__(self, execute):
+        """
+        A class to handle wpf command bindings.
 
-        if not isinstance(room_id_integer, int):
-            raise TypeError("room_id_integer must be of type int")
-        
-        self.room_id_integer = room_id_integer
-        
-========
-class NavigationService:
-    """
-    A class providing a navigation service between view models.
-    """
+        :param execute: The method to execute when the command is invoked.
+        :type execute: callable
+        :param can_execute: The method to determine if the command can be executed.
+        :type can_execute: callable
+        """
+        # ini super class to allow multi inheritance in children!
+        # super(Command, self).__init__()
 
-    def __init__(self, navigation_store, create_view_model):
+        self.execute = execute
+        self.can_execute_changed_handlers = []
 
-        self._navigation_store = navigation_store
-        self._create_view_model = create_view_model
+    def Execute(self, parameter):
+        self.execute()
 
-    def Navigate(self):
-        self._navigation_store.CurrentViewModel = self._create_view_model()
->>>>>>>> origin/wip-1.1.3:src/duHast/UI/Objects/WPF/Services/NavigationService.py
+    def on_can_execute_changed(self):
+        """
+        Raises the CanExecuteChanged event for subscribers.
+        """
+        if self.can_execute_changed_handlers:
+            for handler in self.can_execute_changed_handlers:
+                handler(self, EventArgs())
+                
+    def add_CanExecuteChanged(self, handler):
+        """
+        Adds a handler to the CanExecuteChanged event.
+        """
+        self.can_execute_changed_handlers.append(handler)
+
+    def remove_CanExecuteChanged(self, handler):
+        """
+        Removes a handler from the CanExecuteChanged event.
+        """
+        if handler in self.can_execute_changed_handlers:
+            self.can_execute_changed_handlers.remove(handler)
+
+    def CanExecute(self, parameter):
+        return True

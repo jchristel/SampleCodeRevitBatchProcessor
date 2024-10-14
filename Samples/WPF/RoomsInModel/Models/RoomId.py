@@ -1,19 +1,11 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-<<<<<<<< HEAD:Samples/WPF/RoomsInModel/Models/RoomId.py
 NVVM Revit RoomId class.
-========
-A class to handle navigation as a service.
->>>>>>>> origin/wip-1.1.3:src/duHast/UI/Objects/WPF/Services/NavigationService.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Middle class in NVVM model schema. 
-
-<<<<<<<< HEAD:Samples/WPF/RoomsInModel/Models/RoomId.py
 This class contains the room id as integer value.
-========
+
 https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
->>>>>>>> origin/wip-1.1.3:src/duHast/UI/Objects/WPF/Services/NavigationService.py
 
 """
 
@@ -42,8 +34,6 @@ https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
 #
 #
 
-
-<<<<<<<< HEAD:Samples/WPF/RoomsInModel/Models/RoomId.py
 class RoomId(object):
     def __init__(self, room_id_integer):
 
@@ -52,17 +42,4 @@ class RoomId(object):
         
         self.room_id_integer = room_id_integer
         
-========
-class NavigationService:
-    """
-    A class providing a navigation service between view models.
-    """
 
-    def __init__(self, navigation_store, create_view_model):
-
-        self._navigation_store = navigation_store
-        self._create_view_model = create_view_model
-
-    def Navigate(self):
-        self._navigation_store.CurrentViewModel = self._create_view_model()
->>>>>>>> origin/wip-1.1.3:src/duHast/UI/Objects/WPF/Services/NavigationService.py

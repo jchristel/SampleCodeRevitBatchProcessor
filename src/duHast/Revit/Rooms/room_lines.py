@@ -164,10 +164,10 @@ def filter_room_separation_lines_by_phase_demolished(
 
     :param doc: The Revit document.
     :type doc: Document
-    :param phase_demolished_name: The phase name of the phase the room separation lines was created in.
+    :param phase_demolished_name: The phase name of the phase the room separation lines was demolished in.
     :type phase_demolished_name: str
 
-    :return: A list of room separation lines filtered by phase created.
+    :return: A list of room separation lines filtered by phase demoplished.
     :rtype: list
 
     """

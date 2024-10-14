@@ -27,11 +27,7 @@ Utility functions writing data objects to file.
 #
 #
 
-from duHast.Utilities.Objects import result as res
 from duHast.Utilities import date_stamps as dateStamp
-
-import codecs
-import json
 
 CONSTANT_DATA_FIELDS = {"file name": "file name", "date processed": "date processed"}
 

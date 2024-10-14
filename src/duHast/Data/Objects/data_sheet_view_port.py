@@ -61,12 +61,12 @@ class DataSheetViewPort(data_base.DataBase):
 
         # initialise parent classes with values
         super(DataSheetViewPort, self).__init__(
-            data_type=DataSheetViewPort.data_type, j=j
+            data_type=DataSheetViewPort.data_type
         )
 
         # set default values
         self.bounding_box = DataBoundingBox()
-        self.vp_type = DataViewPortTypeNames.FLOOR_PLAN
+        self.vp_type = DataViewPortTypeNames.FLOOR_PLAN.value
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:

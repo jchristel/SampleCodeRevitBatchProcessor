@@ -51,14 +51,14 @@ def _get_view_port_type(doc, revit_view_port):
     view = doc.GetElement(revit_view_port.ViewId)
 
     if view.ViewType == ViewType.FloorPlan:
-        return DataViewPortTypeNames.FLOOR_PLAN
+        return DataViewPortTypeNames.FLOOR_PLAN.value
     elif view.ViewType == ViewType.Elevation:
-        return DataViewPortTypeNames.ELEVATION
+        return DataViewPortTypeNames.ELEVATION.value
     elif view.ViewType == ViewType.ThreeD:
-        return DataViewPortTypeNames.THREE_D
+        return DataViewPortTypeNames.THREE_D.value
     elif view.ViewType == ViewType.Schedule:
         # thats unlikely
-        return DataViewPortTypeNames.SCHEDULE
+        return DataViewPortTypeNames.SCHEDULE.value
     else:
         return None
 

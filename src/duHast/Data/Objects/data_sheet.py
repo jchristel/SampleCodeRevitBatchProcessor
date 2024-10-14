@@ -59,7 +59,7 @@ class DataSheet(data_base.DataBase):
         """
 
         # initialise parent classes with values
-        super(DataSheet, self).__init__(data_type=DataSheet.data_type, j=j)
+        super(DataSheet, self).__init__(data_type=DataSheet.data_type)
 
         # set default values
         self.instance_properties = data_instance_properties.DataInstanceProperties()

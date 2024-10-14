@@ -30,6 +30,8 @@ from duHast.Revit.Views.views import get_viewport_on_sheets
 from duHast.Revit.Views.Export.view_ports_to_data import convert_revit_viewport_to_data_instance
 from duHast.Data.Objects.data_sheet import DataSheet
 from duHast.Revit.Exports.export_data import get_instance_properties
+from duHast.Revit.Views.sheets import get_sheets_by_filters
+
 
 def convert_revit_sheet(doc, sheet):
     """
@@ -69,3 +71,22 @@ def convert_revit_sheet(doc, sheet):
     # add them to sheet
     data_sheet.view_ports = view_ports_converted
     return data_sheet
+
+
+def get_all_sheet_data(doc):
+    """
+    Gets a list of sheet data objects for each sheet element in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A list of data sheet instances.
+    :rtype: list of :class:`.DataSheet`
+    """
+
+    all_sheet_data = []
+    sheets = get_sheets_by_filters(doc=doc, view_rules=None)
+    for sheet in sheets:
+        sd = convert_revit_sheet(doc=doc, sheet=sheet)
+        if sd is not None:
+            all_sheet_data.append(sd)
+    return all_sheet_data

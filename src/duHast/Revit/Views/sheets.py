@@ -49,6 +49,7 @@ def get_sheets_by_filters(doc, view_rules=None):
     :type doc: Autodesk.Revit.DB.Document
     :param view_rules: A set of rules. If sheet matches rule it will be returned. Defaults to None which will return all sheets.
     :type view_rules: array in format [parameter name, condition test method, value to test against], optional
+    
     :return: Views matching filter
     :rtype: list of Autodesk.Revit.DB.View
     """

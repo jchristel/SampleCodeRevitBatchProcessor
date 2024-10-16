@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data property  names enum class.
+Data storage class for Revit element level properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -11,7 +11,7 @@ Data property  names enum class.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2024, Jan Christel
+# Copyright 2023, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -27,28 +27,51 @@ Data property  names enum class.
 #
 #
 
+import json
+from duHast.Data.Utils import data_base
+from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
-from enum import Enum
 
+class DataLevelBase(data_base.DataBase):
 
-class DataPropertyNames(Enum):
-    """
-    Contains property names used in data storage classes
-    """
+    data_type = "level"
 
-    ASSOCIATED_ELEMENTS = "associated_elements"
-    BOUNDING_BOX = "bounding_box"
-    CREATED = "created"
-    DATA_TYPE = "data_type"
-    DEMOLISHED = "demolished"
-    ELEVATION = "elevation"
-    ID = "id"
-    IS_PRIMARY = "is_primary"
-    MIN = "min"
-    MAX = "max"
-    NAME = "name"
-    OPTION_NAME = "option_name"
-    PROPERTIES = "properties"
-    SET_NAME = "set_name"
-    VALUE = "value"
-    VIEW_PORT_TYPE = "vp_type"
+    def __init__(self, j=None):
+        """
+        Class constructor
+
+        :param j:  json formatted dictionary of this class, defaults to {}
+        :type j: dict, optional
+        """
+
+        # store data type  in base class
+        super(DataLevelBase, self).__init__(DataLevelBase.data_type)
+
+        # set default values
+        self.name = "-"
+        self.id = -1
+
+        # check if any data was past in with constructor!
+        if j != None and len(j) > 0:
+            # check type of data that came in:
+            if isinstance(j, str):
+                # a string
+                j = json.loads(j)
+            elif isinstance(j, dict):
+                # no action required
+                pass
+            else:
+                raise TypeError(
+                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
+                        type(j)
+                    )
+                )
+
+            # attempt to populate from json
+            try:
+                self.name = j.get(DataPropertyNames.NAME.value, self.name)
+                self.id = j.get(DataPropertyNames.ID.value, self.id)
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

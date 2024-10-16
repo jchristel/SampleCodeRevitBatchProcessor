@@ -30,9 +30,9 @@ Data storage class for Revit project level properties.
 import json
 from duHast.Data.Objects.Properties.data_level_base import DataLevelBase
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Properties import data_revit_model
 
-
-class DataLevel(DataLevelBase):
+class DataLevelBuilding(DataLevelBase):
 
     data_type = "building level"
 
@@ -45,10 +45,11 @@ class DataLevel(DataLevelBase):
         """
 
         # store data type  in base class
-        super(DataLevel, self).__init__(j=j)
+        super(DataLevelBuilding, self).__init__(j=j)
 
         # set default values
         self.elevation = 0.0
+        self.revit_model = data_revit_model.DataRevitModel()
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -70,6 +71,9 @@ class DataLevel(DataLevelBase):
             try:
                 self.elevation = j.get(
                     DataPropertyNames.ELEVATION.value, self.elevation
+                )
+                self.revit_model = data_revit_model.DataRevitModel(
+                    j.get(data_revit_model.DataRevitModel.data_type, {})
                 )
             except Exception as e:
                 raise ValueError(

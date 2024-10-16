@@ -1,13 +1,12 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage base class used for Revit sheets.
+Data storage base class used for Revit views.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - contains 
 
-    - the title block
-    - a list of view ports
-    - a list of all sheet properties (instance and type)
+    - the view bounding box in model coordinates
+    - the view id
 
 """
 
@@ -37,37 +36,32 @@ Data storage base class used for Revit sheets.
 import json
 
 from duHast.Data.Utils import data_base
+
+from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
     DataBoundingBox,
 )
-from duHast.Data.Objects.Properties.data_view_port_type_names import (
-    DataViewPortTypeNames,
-)
 
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+class DataView(data_base.DataBase):
 
-
-class DataSheetViewPort(data_base.DataBase):
-
-    data_type = "sheet view port"
+    data_type = "view"
 
     def __init__(self, j=None):
         """
-        Class constructor for a sheet view port.
+        Class constructor for a view.
 
         :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
         # initialise parent classes with values
-        super(DataSheetViewPort, self).__init__(
-            data_type=DataSheetViewPort.data_type
+        super(DataView, self).__init__(
+            data_type=DataView.data_type
         )
 
         # set default values
         self.bounding_box = DataBoundingBox()
-        self.vp_type = DataViewPortTypeNames.FLOOR_PLAN.value
-        self.view_id = -1
+        self.id = -1
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -87,13 +81,11 @@ class DataSheetViewPort(data_base.DataBase):
 
             # attempt to populate from json
             try:
-
                 self.bounding_box = DataBoundingBox(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
-                self.vp_type = j.get(DataPropertyNames.VIEW_PORT_TYPE.value, self.vp_type)
-                self.view_id = j.get(DataPropertyNames.VIEW_ID,self.view_id)
-
+                self.id = j.get(DataPropertyNames.ID.value, self.vp_type)
+                
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

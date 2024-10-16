@@ -1,7 +1,17 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data property  names enum class.
+Data storage base class used for element tags in views.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- contains 
+
+    - the view id
+    - the element tagged id
+    - tag location
+    - has tag leader
+    - has tag elbow
+    - elbow location
+
 """
 
 #
@@ -26,30 +36,3 @@ Data property  names enum class.
 #
 #
 #
-
-
-from enum import Enum
-
-
-class DataPropertyNames(Enum):
-    """
-    Contains property names used in data storage classes
-    """
-
-    ASSOCIATED_ELEMENTS = "associated_elements"
-    BOUNDING_BOX = "bounding_box"
-    CREATED = "created"
-    DATA_TYPE = "data_type"
-    DEMOLISHED = "demolished"
-    ELEVATION = "elevation"
-    ID = "id"
-    IS_PRIMARY = "is_primary"
-    MIN = "min"
-    MAX = "max"
-    NAME = "name"
-    OPTION_NAME = "option_name"
-    PROPERTIES = "properties"
-    SET_NAME = "set_name"
-    VALUE = "value"
-    VIEW_PORT_TYPE = "vp_type"
-    VIEW_ID = "view_id"

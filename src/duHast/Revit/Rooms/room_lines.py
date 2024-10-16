@@ -27,9 +27,15 @@ Revit API utility functions for Room separation lines.
 #
 #
 
-from Autodesk.Revit.DB import BuiltInCategory, ElementId, FilteredElementCollector
+from Autodesk.Revit.DB import BuiltInCategory, ElementId, FilteredElementCollector, ModelCurve
 
 from duHast.Revit.Common.phases import get_all_phases_in_order
+from duHast.Revit.Warnings.warning_guids import (
+    ROOM_LINE_OFF_AXIS,
+    ROOM_AND_WALL_SEPARATION_LINE_OVERLAP,
+    ROOM_SEPARATION_LINES_OVERLAP,
+)
+from duHast.Revit.Warnings.warnings import get_unique_warnings_elements_by_guid
 
 
 def get_room_separation_lines(doc):
@@ -46,6 +52,92 @@ def get_room_separation_lines(doc):
     return FilteredElementCollector(doc).OfCategory(
         BuiltInCategory.OST_RoomSeparationLines
     )
+
+def _remove_wall_ids(doc, ids):
+    """
+    Filters list of ids and returns ids of room separtion lines (ModelCurve) only
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param ids: List of element ids to filter
+    :type ids: [Autodesk.Revit.DB.ElementId]
+
+    :return: List of element ids
+    :rtype: [Autodesk.Revit.DB.ElementId]
+    """
+
+    filtered_ids = []
+    for id in ids:
+        element = doc.GetElement(id)
+        if isinstance(element, ModelCurve):
+            filtered_ids.append(id)
+    return filtered_ids
+
+
+def get_all_room_separation_lines_ids_with_warnings(doc):
+    """
+    Returns the room separation line ids which have warnings associated with them.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids
+    :rtype: [Autodesk.Revit.DB.ElementId]
+    """
+
+    # get room lines with warnings
+    line_ids_of_axis = get_unique_warnings_elements_by_guid(
+        doc=doc, guid=ROOM_LINE_OFF_AXIS
+    )
+    line_ids_overlapping = get_unique_warnings_elements_by_guid(
+        doc=doc, guid=ROOM_SEPARATION_LINES_OVERLAP
+    )
+
+    # this will include wall ids...
+    line_ids_overlapping_walls = get_unique_warnings_elements_by_guid(
+        doc=doc, guid=ROOM_AND_WALL_SEPARATION_LINE_OVERLAP
+    )
+    # remove wall ids
+    filtered_line_ides_overlapping_walls = _remove_wall_ids(
+        doc=doc, ids=line_ids_overlapping_walls
+    )
+
+    # combine all ids
+    all_line_ids_with_warnings = []
+    if len(line_ids_of_axis) > 0:
+        all_line_ids_with_warnings = all_line_ids_with_warnings + line_ids_of_axis
+    if len(line_ids_overlapping) > 0:
+        all_line_ids_with_warnings = all_line_ids_with_warnings + line_ids_overlapping
+    if len(filtered_line_ides_overlapping_walls) > 0:
+        all_line_ids_with_warnings = (
+            all_line_ids_with_warnings + filtered_line_ides_overlapping_walls
+        )
+    
+    return all_line_ids_with_warnings
+
+
+def get_all_room_separation_lines_ids_without_warnings(doc):
+    """
+    returns the ids of all room separation lines in the model without any wanring associated with them.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: List of element ids
+    :rtype: [Autodesk.Revit.DB.ElementId]
+    """
+
+    all_room_separation_lines = get_room_separation_lines(doc=doc)
+    all_line_ids_with_warnings = get_all_room_separation_lines_ids_with_warnings(doc=doc)
+
+    all_room_separation_line_ids_without_warnings = []
+
+    for room_sep in all_room_separation_lines:
+        if(room_sep.Id not in all_line_ids_with_warnings):
+            all_room_separation_line_ids_without_warnings.append(room_sep.Id)
+    
+    return all_room_separation_line_ids_without_warnings
+
 
 
 def get_room_separation_lines_by_level_name(doc, level_name):

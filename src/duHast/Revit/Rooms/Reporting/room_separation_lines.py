@@ -29,37 +29,10 @@ Revit room separation lines reports functions.
 
 
 from duHast.Revit.Common.design_set_options import get_design_set_option_info
-from duHast.Revit.Warnings.warning_guids import (
-    ROOM_LINE_OFF_AXIS,
-    ROOM_AND_WALL_SEPARATION_LINE_OVERLAP,
-    ROOM_SEPARATION_LINES_OVERLAP,
-)
-from duHast.Revit.Warnings.warnings import get_unique_warnings_elements_by_guid
 from duHast.Revit.Common.Geometry.curve import get_curve_level
 from duHast.Revit.Common.Objects.design_set_property_names import DesignSetPropertyNames
+from duHast.Revit.Rooms.room_lines import get_all_room_separation_lines_ids_with_warnings, get_all_room_separation_lines_ids_without_warnings
 
-from Autodesk.Revit.DB import ModelCurve
-
-
-def _remove_wall_ids(doc, ids):
-    """
-    Filters list of ids and returns ids of room separtion lines (ModelCurve) only
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :param ids: List of element ids to filter
-    :type ids: [Autodesk.Revit.DB.ElementId]
-
-    :return: List of element ids
-    :rtype: [Autodesk.Revit.DB.ElementId]
-    """
-
-    filtered_ids = []
-    for id in ids:
-        element = doc.GetElement(id)
-        if isinstance(element, ModelCurve):
-            filtered_ids.append(id)
-    return filtered_ids
 
 
 def _sort_room_lines_by_design_option(doc, room_line_ids):
@@ -122,53 +95,23 @@ def _sort_room_lines_by_level(doc, room_lines_by_design_option):
     return room_lines_by_design_option_and_level
 
 
-def room_lines_with_warnings_by_design_option_and_level(doc):
+
+def _sort_room_sep_lines_by_design_option_and_level(doc, rooms_sep_line_ids):
     """
-    Reports all room separation line with warnings by design option and level they belong too
+    Sort room lines by design option and by level
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+    :param rooms_sep_line_ids: List of room separation line ids
+    :type rooms_sep_line_ids: [Autodesk.Revit.ElementId]
 
-    :return: dictionary where key is the design option name and value is a nested dictionary where key is the level name and value is a list of room line ids
-    :rtype: {str: Autodesk.Revit.DB.ElementId]}
+    :return: A dictionary where key is the design option name and value is a nested dictionary where key is the level name and value is a list of room lines.
+    :rtype: :rtype: {str: {str:[Autodesk.Revit.DB.ModelCurve]}}
     """
-
-    room_line_instances_by_design_option_and_level = {}
-
-    # get room lines with warnings
-    line_ids_of_axis = get_unique_warnings_elements_by_guid(
-        doc=doc, guid=ROOM_LINE_OFF_AXIS
-    )
-    line_ids_overlapping = get_unique_warnings_elements_by_guid(
-        doc=doc, guid=ROOM_SEPARATION_LINES_OVERLAP
-    )
-
-    # this will include wall ids...
-    line_ids_overlapping_walls = get_unique_warnings_elements_by_guid(
-        doc=doc, guid=ROOM_AND_WALL_SEPARATION_LINE_OVERLAP
-    )
-    filtered_line_ides_overlapping_walls = _remove_wall_ids(
-        doc=doc, ids=line_ids_overlapping_walls
-    )
-
-    # combine all ids
-    all_line_ids_with_warnings = []
-    if len(line_ids_of_axis) > 0:
-        all_line_ids_with_warnings = all_line_ids_with_warnings + line_ids_of_axis
-    if len(line_ids_overlapping) > 0:
-        all_line_ids_with_warnings = all_line_ids_with_warnings + line_ids_overlapping
-    if len(filtered_line_ides_overlapping_walls) > 0:
-        all_line_ids_with_warnings = (
-            all_line_ids_with_warnings + filtered_line_ides_overlapping_walls
-        )
-
-    # check if any warning is present
-    if len(all_line_ids_with_warnings) == 0:
-        return room_line_instances_by_design_option_and_level
 
     # sort offending elements by design option
     room_lines_by_design_option = _sort_room_lines_by_design_option(
-        doc=doc, room_line_ids=all_line_ids_with_warnings
+        doc=doc, room_line_ids=rooms_sep_line_ids
     )
 
     # sort offending elements by level
@@ -177,3 +120,60 @@ def room_lines_with_warnings_by_design_option_and_level(doc):
     )
 
     return room_line_instances_by_design_option_and_level
+
+
+def room_lines_with_warnings_by_design_option_and_level(doc):
+    """
+    Reports all room separation line with warnings by design option and level they belong too
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: dictionary where key is the design option name and value is a nested dictionary where key is the level name and value is a list of room lines.
+    :rtype: {str: {str:[Autodesk.Revit.DB.ModelCurve]}}
+    """
+
+    room_line_instances_by_design_option_and_level = {}
+
+    # get all ids which have warnings
+    all_line_ids_with_warnings = get_all_room_separation_lines_ids_with_warnings(doc=doc)
+
+    # check if any warning is present
+    if len(all_line_ids_with_warnings) == 0:
+        return room_line_instances_by_design_option_and_level
+
+    # sort by design option and level
+    room_line_instances_by_design_option_and_level = _sort_room_sep_lines_by_design_option_and_level (doc=doc, rooms_sep_line_ids= all_line_ids_with_warnings)
+   
+
+    return room_line_instances_by_design_option_and_level
+
+
+def room_lines_without_warnings_by_design_option_and_level(doc):
+
+    """
+    Reports all room separation line without warnings by design option and level they belong too
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary where key is the design option name and value is a nested dictionary where key is the level name and value is a list of room lines.
+    :rtype: {str: {str:[Autodesk.Revit.DB.ModelCurve]}}
+    """
+
+    room_line_instances_by_design_option_and_level = {}
+
+
+    # get all room separation lines without warnings
+    all_line_ids_without_warnings = get_all_room_separation_lines_ids_without_warnings(doc=doc)
+    
+    # check if any warning is present
+    if len(all_line_ids_without_warnings) == 0:
+        return room_line_instances_by_design_option_and_level
+
+    # sort by design option and level
+    room_line_instances_by_design_option_and_level = _sort_room_sep_lines_by_design_option_and_level (doc=doc, rooms_sep_line_ids= all_line_ids_without_warnings)
+   
+
+    return room_line_instances_by_design_option_and_level
+  

@@ -6,7 +6,6 @@ Data storage base class used for Revit views.
 - contains 
 
     - the view bounding box in model coordinates
-    - the view id
 
 """
 
@@ -35,33 +34,31 @@ Data storage base class used for Revit views.
 
 import json
 
-from duHast.Data.Utils import data_base
+from duHast.Data.Objects.data_view_base import DataViewBase
 
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
     DataBoundingBox,
 )
 
-class DataView(data_base.DataBase):
 
-    data_type = "view"
+class DataViewPlan(DataViewBase):
+
+    data_type = "view_plan"
 
     def __init__(self, j=None):
         """
-        Class constructor for a view.
+        Class constructor for a view_3d.
 
         :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
         # initialise parent classes with values
-        super(DataView, self).__init__(
-            data_type=DataView.data_type
-        )
+        super(DataViewPlan, self).__init__(data_type=DataViewPlan.data_type, j=j)
 
         # set default values
         self.bounding_box = DataBoundingBox()
-        self.id = -1
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -84,8 +81,7 @@ class DataView(data_base.DataBase):
                 self.bounding_box = DataBoundingBox(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
-                self.id = j.get(DataPropertyNames.ID.value, self.vp_type)
-                
+
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

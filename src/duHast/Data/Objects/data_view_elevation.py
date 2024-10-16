@@ -1,13 +1,11 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage base class used for Revit sheets.
+Data storage base class used for Revit views.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - contains 
 
-    - the title block
-    - a list of view ports
-    - a list of all sheet properties (instance and type)
+    - the view bounding box in model coordinates
 
 """
 
@@ -36,43 +34,31 @@ Data storage base class used for Revit sheets.
 
 import json
 
-from duHast.Data.Utils import data_base
+from duHast.Data.Objects.data_view_base import DataViewBase
+
+from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
     DataBoundingBox,
 )
-from duHast.Data.Objects.data_view_plan import DataViewPlan
-from duHast.Data.Objects.data_view_elevation import DataViewElevation
-from duHast.Data.Objects.data_view_3d import DataViewThreeD
-from duHast.Data.Objects.data_view_schedule import DataViewSchedule
-from duHast.Data.Objects.Properties.data_view_port_type_names import (
-    DataViewPortTypeNames,
-)
-
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 
-class DataSheetViewPort(data_base.DataBase):
+class DataViewElevation(DataViewBase):
 
-    data_type = "sheet view port"
+    data_type = "view_elevation"
 
     def __init__(self, j=None):
         """
-        Class constructor for a sheet view port.
+        Class constructor for a view_3d.
 
         :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
         # initialise parent classes with values
-        super(DataSheetViewPort, self).__init__(
-            data_type=DataSheetViewPort.data_type
-        )
+        super(DataViewElevation, self).__init__(data_type=DataViewElevation.data_type, j=j)
 
         # set default values
         self.bounding_box = DataBoundingBox()
-        self.vp_type = DataViewPortTypeNames.FLOOR_PLAN.value
-        self.view_id = -1
-        self.view = DataViewPlan()
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -92,24 +78,9 @@ class DataSheetViewPort(data_base.DataBase):
 
             # attempt to populate from json
             try:
-
                 self.bounding_box = DataBoundingBox(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
-                self.vp_type = j.get(DataPropertyNames.VIEW_PORT_TYPE.value, self.vp_type)
-                self.view_id = j.get(DataPropertyNames.VIEW_ID,self.view_id)
-                
-                # set up the view depending on the view port type
-                if self.vp_type == DataViewPortTypeNames.THREE_D.value:
-                    self.view = DataViewThreeD(j.get(DataPropertyNames.VIEW.value,{}))
-                elif self.vp_type == DataViewPortTypeNames.ELEVATION.value:
-                    self.view = DataViewElevation(j.get(DataPropertyNames.VIEW.value,{}))
-                elif self.vp_type == DataViewPortTypeNames.FLOOR_PLAN.value:
-                    self.view = DataViewPlan(j.get(DataPropertyNames.VIEW.value,{}))
-                elif self.vp_type == DataViewPortTypeNames.SCHEDULE.value:
-                    self.view = DataViewSchedule(j.get(DataPropertyNames.VIEW.value,{}))
-                else:
-                    raise TypeError("Unsupported viewport type: {}".format(self.vp_type))
 
             except Exception as e:
                 raise ValueError(

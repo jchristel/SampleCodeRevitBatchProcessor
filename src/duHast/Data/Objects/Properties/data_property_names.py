@@ -50,6 +50,6 @@ class DataPropertyNames(Enum):
     OPTION_NAME = "option_name"
     PROPERTIES = "properties"
     SET_NAME = "set_name"
-    VALUE = "value"
+    VIEW = "view"
     VIEW_PORT_TYPE = "vp_type"
     VIEW_ID = "view_id"

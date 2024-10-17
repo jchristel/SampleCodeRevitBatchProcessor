@@ -36,7 +36,7 @@ from duHast.Data.Objects.Properties import data_level
 from duHast.Data.Objects.Properties import data_type_properties
 from duHast.Data.Objects.Properties import data_instance_properties
 from duHast.Data.Objects.Properties import data_revit_model
-from duHast.Data.Utils import data_base
+from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties import data_element_geometry
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 

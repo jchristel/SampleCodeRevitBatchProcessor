@@ -36,7 +36,7 @@ Data storage base class used for Revit sheets.
 
 import json
 
-from duHast.Data.Utils import data_base
+from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties import data_type_properties
 from duHast.Data.Objects.Properties import data_instance_properties
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (

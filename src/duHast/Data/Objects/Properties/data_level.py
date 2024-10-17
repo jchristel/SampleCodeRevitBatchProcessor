@@ -69,7 +69,7 @@ class DataLevel(DataLevelBase):
             # attempt to populate from json
             try:
                 self.offset_from_level = j.get(
-                    "offset_from_level", self.offset_from_level
+                    DataPropertyNames.OFFSET_FROM_LEVEL.value, self.offset_from_level
                 )
             except Exception as e:
                 raise ValueError(

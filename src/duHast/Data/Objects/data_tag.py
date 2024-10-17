@@ -36,3 +36,66 @@ Data storage base class used for element tags in views.
 #
 #
 #
+
+import json
+
+from duHast.Data.Objects.data_base import DataBase
+
+from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
+    DataBoundingBox,
+)
+
+
+class DataTag(DataBase):
+
+    data_type = "tag"
+
+    def __init__(self, j=None):
+        """
+        Class constructor for a view_3d.
+
+        :param j: A json formatted dictionary of this class, defaults to {}
+        :type j: dict, optional
+        """
+
+        # initialise parent classes with values
+        super(DataTag, self).__init__(data_type=DataTag.data_type)
+
+        # set default values
+        self.bounding_box = DataBoundingBox()
+        self.elbow_location = [0,0,0]
+        self.leader_end = None
+        self.leader_reference = None
+        self.leader_element_reference_id =-1
+
+        # check if any data was past in with constructor!
+        if j != None and len(j) > 0:
+            # check type of data that came in:
+            if isinstance(j, str):
+                # a string
+                j = json.loads(j)
+            elif isinstance(j, dict):
+                # no action required
+                pass
+            else:
+                raise TypeError(
+                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
+                        type(j)
+                    )
+                )
+
+            # attempt to populate from json
+            try:
+                self.bounding_box = DataBoundingBox(
+                    j.get(DataPropertyNames.BOUNDING_BOX.value, {})
+                )
+                self.elbow_location = j.get(DataPropertyNames.TAG_ELBOW_LOCATION.value, self.elbow_location)
+                self.leader_end = j.get(DataPropertyNames.TAG_LEADER_END.value, self.leader_end)
+                self.leader_reference = j.get(DataPropertyNames.TAG_LEADER_REFERENCE.value, self.leader_reference)
+                self.leader_element_reference_id =j.get(DataPropertyNames.TAG_LEADER_ELEMENT_REFERENCE_ID.value, self.leader_element_reference_id)
+
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

@@ -28,7 +28,7 @@ Data storage class for Revit element phasing properties.
 #
 
 import json
-from duHast.Data.Utils import data_base
+from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 

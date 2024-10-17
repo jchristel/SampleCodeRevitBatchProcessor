@@ -28,7 +28,7 @@ Geometry data storage class.
 #
 
 import json
-from duHast.Data.Utils import data_base
+from duHast.Data.Objects import data_base
 
 
 class DataGeometryBase(data_base.DataBase):

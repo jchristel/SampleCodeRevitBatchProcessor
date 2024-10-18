@@ -58,6 +58,31 @@ FAMILY_PARAMETERS_TO_REPORT = [
     "Sample Parameter Three",
 ]
 
+from duHast.Revit.Family.Reporting.Objects.family_report_data import FamilyReportData
+
+
+def _get_type_properties_of_interest(family_symbol, parameter_names_filter, family_container):
+    
+    # get all type parameters of interest
+    for parameter_name in parameter_names_filter:
+        parameter_value = get_parameter_value_by_name(
+            family_symbol, parameter_name
+        )
+        
+        family_container.add_type_property({parameter_name:parameter_value})
+
+def _get_instances_placed(doc, family_symbol):
+
+    collector_instances_placed = get_family_instances_by_symbol_type_id(
+        doc, family_symbol.Id
+    )
+    return len(collector_instances_placed.ToList())
+
+def _get_host_family_status(doc, family_symbol,family_container):
+    # this will only work if there is an instance placed in the model....
+    
+    pass
+
 
 def report_loaded_families(doc, parameter_names_filter = FAMILY_PARAMETERS_TO_REPORT , progress_callback=None ):
     """
@@ -130,41 +155,26 @@ def report_loaded_families(doc, parameter_names_filter = FAMILY_PARAMETERS_TO_RE
             if(progress_callback):
                 progress_callback.update(fam_counter, max_fam_counter)
             
-            # build new data row
-            row_data = []
+            # build new data entry
+            family_container = FamilyReportData()
             if family_symbol.Family.IsInPlace == False:
-                custom_parameter_values = []
-                for parameter_name in parameter_names_filter:
-                    parameter_value = get_parameter_value_by_name(
-                        family_symbol, parameter_name
-                    )
-                    if parameter_value == None:
-                        parameter_value = "NA"
-                    custom_parameter_values.append(parameter_value)
 
+                # get type properties
+                _get_type_properties_of_interest(family_symbol=family_symbol, parameter_names_filter= parameter_names_filter, family_container=family_container)
+                # get the project name
+                family_container.project_name = revit_project_file_name
+                # get number of instances placed
+                family_container.family_instances_placed = _get_instances_placed(doc=doc, family_symbol=family_symbol)
+                # get the family category
                 family = doc.GetElement(family_symbol.Family.Id)
-                collector_instances_placed = get_family_instances_by_symbol_type_id(
-                    doc, family_symbol.Id
-                )
-                count_instances = len(collector_instances_placed.ToList())
-                category = family.FamilyCategory
-
-                row_data = [
-                    revit_project_file_name,
-                    encode_utf8(Element.Name.GetValue(family)),
-                    encode_utf8(Element.Name.GetValue(family_symbol)),
-                    category.Name,
-                    str(count_instances),
-                ]
-
-                # insert parameter values at index 4
-                if len(custom_parameter_values) > 0:
-                    row_data[4:4] = custom_parameter_values
-
-                data.append(row_data)
+                family_container.family_category = family.FamilyCategory.Name
+                # check if this is a host family
+                _get_host_family_status(doc=doc, family_symbol=family_symbol,family_container=family_container)
+                # add to return list
+                data.append(family_container)
 
                 # update progress:
-                fam_counter =fam_counter + 1
+                fam_counter = fam_counter + 1
 
                 # check for user cancel
                 if progress_callback != None:

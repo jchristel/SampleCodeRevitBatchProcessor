@@ -88,6 +88,8 @@ def _get_plan_view(doc, view):
     """
 
     data_instance = DataViewPlan()
+    # get bounding box
+    # get any tags in the view
     return data_instance
 
 
@@ -105,6 +107,10 @@ def _get_elevation_view(doc, view):
     """
 
     data_instance = DataViewElevation()
+    # get bounding box
+    # orientation (which edge of the bounding box is this elevation facing?)
+    # get any tags in the view
+    
     return data_instance
 
 
@@ -122,6 +128,8 @@ def _get_three_d_view(doc, view):
     """
 
     data_instance = DataViewThreeD()
+    # get bounding box
+    # orientation (eye point and view direction)
     return data_instance
 
 
@@ -149,6 +157,8 @@ def _get_schedule_view(doc, view):
     section = table.GetSectionData(SectionType.Body)
     number_of_rows = section.NumberOfRows
 
+    # get bounding box
+    
     return data_instance
 
 

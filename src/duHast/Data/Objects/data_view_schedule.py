@@ -48,14 +48,16 @@ class DataViewSchedule(DataViewBase):
 
     def __init__(self, j=None):
         """
-        Class constructor for a view_3d.
+        Class constructor for a view_schedule.
 
         :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
         # initialise parent classes with values
-        super(DataViewSchedule, self).__init__(data_type=DataViewSchedule.data_type, j=j)
+        super(DataViewSchedule, self).__init__(
+            data_type=DataViewSchedule.data_type, j=j
+        )
 
         # set default values
         self.bounding_box = DataBoundingBox()

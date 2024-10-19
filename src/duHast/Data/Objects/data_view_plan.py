@@ -48,7 +48,7 @@ class DataViewPlan(DataViewBase):
 
     def __init__(self, j=None):
         """
-        Class constructor for a view_3d.
+        Class constructor for a view_plan.
 
         :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional

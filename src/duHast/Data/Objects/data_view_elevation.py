@@ -49,14 +49,16 @@ class DataViewElevation(DataViewBase):
 
     def __init__(self, j=None):
         """
-        Class constructor for a view_3d.
+        Class constructor for a view_elevation.
 
         :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
         # initialise parent classes with values
-        super(DataViewElevation, self).__init__(data_type=DataViewElevation.data_type, j=j)
+        super(DataViewElevation, self).__init__(
+            data_type=DataViewElevation.data_type, j=j
+        )
 
         # set default values
         self.bounding_box = DataBoundingBox()

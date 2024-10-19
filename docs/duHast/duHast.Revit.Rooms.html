@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Rooms package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
+    <title>duHast.Revit.Rooms package &#8212; Sample Code Revit Batch Processor 1.1.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.3 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Rooms.Export package" href="duHast.Revit.Rooms.Export.html" />
     <link rel="prev" title="duHast.Revit.Roofs.Utility package" href="duHast.Revit.Roofs.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.3 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Rooms package</h1></div>
@@ -154,6 +154,7 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html#module-duHast.Revit.Rooms.Reporting.room_separation_lines">duHast.Revit.Rooms.Reporting.room_separation_lines module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html#revit-room-separation-lines-reports-functions">Revit room separation lines reports functions.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html#duHast.Revit.Rooms.Reporting.room_separation_lines.room_lines_with_warnings_by_design_option_and_level"><code class="docutils literal notranslate"><span class="pre">room_lines_with_warnings_by_design_option_and_level()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html#duHast.Revit.Rooms.Reporting.room_separation_lines.room_lines_without_warnings_by_design_option_and_level"><code class="docutils literal notranslate"><span class="pre">room_lines_without_warnings_by_design_option_and_level()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Reporting.html#module-duHast.Revit.Rooms.Reporting">Module contents</a></li>
@@ -398,6 +399,40 @@ False: Check if the location crosshair is in the view crop box
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_lines.get_all_room_separation_lines_ids_with_warnings">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_lines.</span></span><span class="sig-name descname"><span class="pre">get_all_room_separation_lines_ids_with_warnings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_lines.get_all_room_separation_lines_ids_with_warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the room separation line ids which have warnings associated with them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of element ids</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.ElementId]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.room_lines.get_all_room_separation_lines_ids_without_warnings">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_lines.</span></span><span class="sig-name descname"><span class="pre">get_all_room_separation_lines_ids_without_warnings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_lines.get_all_room_separation_lines_ids_without_warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the ids of all room separation lines in the model without any wanring associated with them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of element ids</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.ElementId]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.room_lines.get_room_separation_lines_by_level_name">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_lines.</span></span><span class="sig-name descname"><span class="pre">get_room_separation_lines_by_level_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_lines.get_room_separation_lines_by_level_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all room separation lines in the document on a specific level by name.</p>
@@ -482,11 +517,11 @@ False: Check if the location crosshair is in the view crop box
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Document</em>) – The Revit document.</p></li>
-<li><p><strong>phase_demolished_name</strong> (<em>str</em>) – The phase name of the phase the room separation lines was created in.</p></li>
+<li><p><strong>phase_demolished_name</strong> (<em>str</em>) – The phase name of the phase the room separation lines was demolished in.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of room separation lines filtered by phase created.</p>
+<dd class="field-even"><p>A list of room separation lines filtered by phase demoplished.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>

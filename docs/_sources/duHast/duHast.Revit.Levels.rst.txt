@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   duHast.Revit.Levels.Export
    duHast.Revit.Levels.Reporting
 
 Submodules

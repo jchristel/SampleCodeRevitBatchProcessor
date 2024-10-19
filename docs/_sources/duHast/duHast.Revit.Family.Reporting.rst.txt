@@ -1,0 +1,29 @@
+duHast.Revit.Family.Reporting package
+=====================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Revit.Family.Reporting.Objects
+
+Submodules
+----------
+
+duHast.Revit.Family.Reporting.report module
+-------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Reporting.report
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Family.Reporting
+   :members:
+   :undoc-members:
+   :show-inheritance:

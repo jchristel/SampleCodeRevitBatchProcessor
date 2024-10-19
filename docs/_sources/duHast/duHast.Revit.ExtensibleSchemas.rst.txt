@@ -1,0 +1,21 @@
+duHast.Revit.ExtensibleSchemas package
+======================================
+
+Submodules
+----------
+
+duHast.Revit.ExtensibleSchemas.extensible\_schemas module
+---------------------------------------------------------
+
+.. automodule:: duHast.Revit.ExtensibleSchemas.extensible_schemas
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.ExtensibleSchemas
+   :members:
+   :undoc-members:
+   :show-inheritance:

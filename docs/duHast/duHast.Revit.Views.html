@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Views package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
+    <title>duHast.Revit.Views package &#8212; Sample Code Revit Batch Processor 1.1.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.3 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Views.Export package" href="duHast.Revit.Views.Export.html" />
     <link rel="prev" title="duHast.Revit.UI.Objects package" href="duHast.Revit.UI.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.3 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Views package</h1></div>
@@ -100,6 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Export.html#module-duHast.Revit.Views.Export.sheets_to_data">duHast.Revit.Views.Export.sheets_to_data module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Export.html#this-module-contains-a-number-of-helper-functions-relating-to-revit-sheet-to-data-sheet-conversion">This module contains a number of helper functions relating to Revit sheet to data sheet conversion.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Export.html#duHast.Revit.Views.Export.sheets_to_data.convert_revit_sheet"><code class="docutils literal notranslate"><span class="pre">convert_revit_sheet()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Export.html#duHast.Revit.Views.Export.sheets_to_data.get_all_sheet_data"><code class="docutils literal notranslate"><span class="pre">get_all_sheet_data()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Export.html#module-duHast.Revit.Views.Export.view_ports_to_data">duHast.Revit.Views.Export.view_ports_to_data module</a><ul>
@@ -987,9 +988,15 @@ view reference types and view continuation types in the model.</p>
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
 :param view_rules: A set of rules. If sheet matches rule it will be returned. Defaults to None which will return all sheets.
-:type view_rules: array in format [parameter name, condition test method, value to test against], optional
-:return: Views matching filter
-:rtype: list of Autodesk.Revit.DB.View</p>
+:type view_rules: array in format [parameter name, condition test method, value to test against], optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Views matching filter</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of Autodesk.Revit.DB.View</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

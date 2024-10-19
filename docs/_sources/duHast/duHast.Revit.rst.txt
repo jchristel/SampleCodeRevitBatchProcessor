@@ -18,6 +18,7 @@ Subpackages
    duHast.Revit.DetailLines
    duHast.Revit.Doors
    duHast.Revit.Exports
+   duHast.Revit.ExtensibleSchemas
    duHast.Revit.Family
    duHast.Revit.Floors
    duHast.Revit.Grids

@@ -1,7 +1,12 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit element instance properties.
+Data storage base class used for Revit views.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- contains 
+
+    - the view bounding box in model coordinates
+
 """
 
 #
@@ -11,7 +16,7 @@ Data storage class for Revit element instance properties.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -28,28 +33,33 @@ Data storage class for Revit element instance properties.
 #
 
 import json
-from duHast.Data.Objects import data_base
+
+from duHast.Data.Objects.data_view_base import DataViewBase
+from duHast.Data.Objects.data_tag import DataTag
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
+    DataBoundingBox,
+)
 
 
-class DataInstanceProperties(data_base.DataBase):
+class DataViewPlan(DataViewBase):
 
-    data_type = "instance_properties"
+    data_type = "view_plan"
 
     def __init__(self, j=None):
         """
-        Class constructor
+        Class constructor for a view_plan.
 
-        :param j:  json formatted dictionary of this class, defaults to {}
+        :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
-        # store data type  in base class
-        super(DataInstanceProperties, self).__init__(DataInstanceProperties.data_type)
+        # initialise parent classes with values
+        super(DataViewPlan, self).__init__(data_type=DataViewPlan.data_type, j=j)
 
         # set default values
-        self.id = -1
-        self.properties = {}
+        self.bounding_box = DataBoundingBox()
+        self.tags = []
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -69,8 +79,15 @@ class DataInstanceProperties(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.id = j.get(DataPropertyNames.ID.value, self.id)
-                self.properties = j.get(DataPropertyNames.PROPERTIES.value, self.properties)
+                self.bounding_box = DataBoundingBox(
+                    j.get(DataPropertyNames.BOUNDING_BOX.value, {})
+                )
+                # get any tags
+                tags = j.get(DataPropertyNames.TAGS.value, [])
+                for tag in tags:
+                    data_tag = DataTag(j=tag)
+                    self.tags.append(data_tag)
+
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

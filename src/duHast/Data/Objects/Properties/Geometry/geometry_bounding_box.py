@@ -69,11 +69,11 @@ class DataBoundingBox(geometry_base.DataGeometryBase):
             # attempt to populate from json
             try:
                 self.min = j.get(
-                    DataPropertyNames.MIN,
+                    DataPropertyNames.MIN.value,
                     self.min,
                 )
                 self.type_properties = j.get(
-                    DataPropertyNames.MAX,
+                    DataPropertyNames.MAX.value,
                     self.max,
                 )
             except Exception as e:

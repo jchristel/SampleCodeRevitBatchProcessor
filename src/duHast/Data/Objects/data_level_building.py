@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit element instance properties.
+Data storage class for Revit project level properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -28,13 +28,13 @@ Data storage class for Revit element instance properties.
 #
 
 import json
-from duHast.Data.Objects import data_base
+from duHast.Data.Objects.Properties.data_level_base import DataLevelBase
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Properties import data_revit_model
 
+class DataLevelBuilding(DataLevelBase):
 
-class DataInstanceProperties(data_base.DataBase):
-
-    data_type = "instance_properties"
+    data_type = "building level"
 
     def __init__(self, j=None):
         """
@@ -45,11 +45,11 @@ class DataInstanceProperties(data_base.DataBase):
         """
 
         # store data type  in base class
-        super(DataInstanceProperties, self).__init__(DataInstanceProperties.data_type)
+        super(DataLevelBuilding, self).__init__(j=j)
 
         # set default values
-        self.id = -1
-        self.properties = {}
+        self.elevation = 0.0
+        self.revit_model = data_revit_model.DataRevitModel()
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -69,8 +69,12 @@ class DataInstanceProperties(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.id = j.get(DataPropertyNames.ID.value, self.id)
-                self.properties = j.get(DataPropertyNames.PROPERTIES.value, self.properties)
+                self.elevation = j.get(
+                    DataPropertyNames.ELEVATION.value, self.elevation
+                )
+                self.revit_model = data_revit_model.DataRevitModel(
+                    j.get(data_revit_model.DataRevitModel.data_type, {})
+                )
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

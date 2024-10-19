@@ -28,11 +28,11 @@ Data storage class for Revit element level properties.
 #
 
 import json
-from duHast.Data.Utils import data_base
+from duHast.Data.Objects.Properties.data_level_base import DataLevelBase
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 
-class DataLevel(data_base.DataBase):
+class DataLevel(DataLevelBase):
 
     data_type = "level"
 
@@ -45,11 +45,9 @@ class DataLevel(data_base.DataBase):
         """
 
         # store data type  in base class
-        super(DataLevel, self).__init__(DataLevel.data_type)
+        super(DataLevel, self).__init__(j=j)
 
         # set default values
-        self.name = "-"
-        self.id = -1
         self.offset_from_level = 0.0
 
         # check if any data was past in with constructor!
@@ -70,10 +68,8 @@ class DataLevel(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.name = j.get(DataPropertyNames.NAME, self.name)
-                self.id = j.get(DataPropertyNames.ID, self.id)
                 self.offset_from_level = j.get(
-                    "offset_from_level", self.offset_from_level
+                    DataPropertyNames.OFFSET_FROM_LEVEL.value, self.offset_from_level
                 )
             except Exception as e:
                 raise ValueError(

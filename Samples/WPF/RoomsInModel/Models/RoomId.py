@@ -3,9 +3,9 @@
 NVVM Revit RoomId class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Middle class in NVVM model schema. 
-
 This class contains the room id as integer value.
+
+https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
 
 """
 
@@ -34,7 +34,6 @@ This class contains the room id as integer value.
 #
 #
 
-
 class RoomId(object):
     def __init__(self, room_id_integer):
 
@@ -43,3 +42,4 @@ class RoomId(object):
         
         self.room_id_integer = room_id_integer
         
+

@@ -180,11 +180,11 @@ def get_design_set_data(doc, element):
     # get design set data
     design_set_data = get_design_set_option_info(doc, element)
     design_set_d.option_name = design_set_data[
-        DesignSetPropertyNames.DESIGN_OPTION_NAME
+        DesignSetPropertyNames.DESIGN_OPTION_NAME.value
     ]
-    design_set_d.set_name = design_set_data[DesignSetPropertyNames.DESIGN_SET_NAME]
+    design_set_d.set_name = design_set_data[DesignSetPropertyNames.DESIGN_SET_NAME.value]
     design_set_d.is_primary = design_set_data[
-        DesignSetPropertyNames.DESIGN_OPTION_IS_PRIMARY
+        DesignSetPropertyNames.DESIGN_OPTION_IS_PRIMARY.value
     ]
 
     return design_set_d

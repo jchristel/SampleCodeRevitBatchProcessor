@@ -43,4 +43,4 @@ class MissingXAMLException(Exception):
 
     def __str__(self):
         # Custom string representation of the exception
-        return "MissingXamlException: {}".format(self.args[0])
+        return "MissingXamlException: {} [{}]".format(self.args[0], self.view_model)

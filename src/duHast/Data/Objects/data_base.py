@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit element instance properties.
+Data base class for Revit object properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -27,51 +27,30 @@ Data storage class for Revit element instance properties.
 #
 #
 
-import json
-from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Utilities.Objects import base
 
 
-class DataInstanceProperties(data_base.DataBase):
-
-    data_type = "instance_properties"
-
-    def __init__(self, j=None):
+class DataBase(base.Base):
+    def __init__(self, data_type, **kwargs):
         """
         Class constructor
 
-        :param j:  json formatted dictionary of this class, defaults to {}
-        :type j: dict, optional
+        :param data_type: human readable data type
+        :type data_type: str
         """
 
-        # store data type  in base class
-        super(DataInstanceProperties, self).__init__(DataInstanceProperties.data_type)
+        # forwards all unused arguments
+        # ini super class to allow multi inheritance in children!
+        super(DataBase, self).__init__(**kwargs)
+        self.data_type = data_type
 
-        # set default values
-        self.id = -1
-        self.properties = {}
+    @property
+    def DataType(self):
+        """
+        Property: returns the data type of this class.
 
-        # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
-            # check type of data that came in:
-            if isinstance(j, str):
-                # a string
-                j = json.loads(j)
-            elif isinstance(j, dict):
-                # no action required
-                pass
-            else:
-                raise TypeError(
-                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
-                        type(j)
-                    )
-                )
+        :return:  A string representing the data type
+        :rtype: str
+        """
 
-            # attempt to populate from json
-            try:
-                self.id = j.get(DataPropertyNames.ID.value, self.id)
-                self.properties = j.get(DataPropertyNames.PROPERTIES.value, self.properties)
-            except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+        return self.data_type

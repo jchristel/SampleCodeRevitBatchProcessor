@@ -3,12 +3,12 @@
 A class to handle navigation as a service.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Based on:
-
 https://www.youtube.com/channel/UC7X9mQ_XtTYWzr9Tf_NYcIg
 
 """
 
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 #
 # License:
 #

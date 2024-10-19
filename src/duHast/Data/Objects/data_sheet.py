@@ -36,7 +36,7 @@ Data storage base class used for Revit sheets.
 
 import json
 
-from duHast.Data.Utils import data_base
+from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties import data_type_properties
 from duHast.Data.Objects.Properties import data_instance_properties
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
@@ -59,7 +59,7 @@ class DataSheet(data_base.DataBase):
         """
 
         # initialise parent classes with values
-        super(DataSheet, self).__init__(data_type=DataSheet.data_type, j=j)
+        super(DataSheet, self).__init__(data_type=DataSheet.data_type)
 
         # set default values
         self.instance_properties = data_instance_properties.DataInstanceProperties()
@@ -97,7 +97,7 @@ class DataSheet(data_base.DataBase):
                     j.get(data_type_properties.DataTypeProperties.data_type, {})
                 )
                 self.bounding_box = DataBoundingBox(
-                    j.get(DataPropertyNames.BOUNDING_BOX, {})
+                    j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
 
             except Exception as e:

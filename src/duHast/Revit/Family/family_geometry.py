@@ -59,11 +59,11 @@ def get_solids_based_bounding_box_from_family_instance(doc, family_instance):
     )
 
     # check if any nested shared families are in play
-    sub_elements = family_instance.GetSubComponentIds()
-    if sub_elements is not None:
+    sub_element_ids = family_instance.GetSubComponentIds()
+    if sub_element_ids is not None:
         # get the bounding box of the sub elements
-        for sub_element in sub_elements:
-            sub_element = doc.GetElement(sub_element)
+        for sub_element_id in sub_element_ids:
+            sub_element = doc.GetElement(sub_element_id)
             sub_element_bb = get_bounding_box_from_family_geometry(
                 sub_element.get_Geometry(opts)
             )

@@ -33,6 +33,7 @@ This class is used to store data from families placed in a project environment.
 
 from duHast.Utilities.Objects import base
 
+UNKNOWN_HOST_STATUS = "Host status could not be determined."
 
 class FamilyReportData(base.Base):
     def __init__(self):
@@ -96,10 +97,12 @@ class FamilyReportData(base.Base):
     def nested_families(self):
         return self._nested_families
 
-    def add_nested_family(self, family):
-        self._nested_families.append(family)
-        # set the host attribute
-        self.is_host = True
+    def add_nested_family(self, family_name):
+        self._nested_families.append(family_name)
+        # check if a family name was added or just a note
+        if(family_name!=UNKNOWN_HOST_STATUS):
+            # set the host attribute
+            self.is_host = True
 
     @property
     def is_host(self):

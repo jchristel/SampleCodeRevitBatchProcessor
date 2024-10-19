@@ -38,10 +38,14 @@ from System import Linq
 clr.ImportExtensions(Linq)
 
 # import Autodesk
-from Autodesk.Revit.DB import BuiltInCategory, Element
+from Autodesk.Revit.DB import BuiltInCategory, BuiltInParameter, Element
 from System.Collections.Generic import List
 
 from duHast.Utilities.Objects.result import Result
+from duHast.Revit.Common.parameter_get_utils import (
+    get_built_in_parameter_value,
+    get_parameter_value_as_integer,
+)
 from duHast.Revit.Family.Utility import loadable_family_categories as rFamUtilCats
 from duHast.Revit.Family.family_utils import (
     get_family_symbols,
@@ -58,33 +62,124 @@ FAMILY_PARAMETERS_TO_REPORT = [
     "Sample Parameter Three",
 ]
 
-from duHast.Revit.Family.Reporting.Objects.family_report_data import FamilyReportData
+from duHast.Revit.Family.Reporting.Objects.family_report_data import (
+    FamilyReportData,
+    UNKNOWN_HOST_STATUS,
+)
 
 
-def _get_type_properties_of_interest(family_symbol, parameter_names_filter, family_container):
-    
+def _get_type_properties_of_interest(
+    family_symbol, parameter_names_filter, family_container
+):
+    """
+    Get type properties matching property names in filter.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param parameter_names_filter: List of parameter nams of which to get values.
+    :type parameter_names_filter: [str]
+    :param family_container: The family data container.
+    :type family_container: :class:`.FamilyReportData`
+    """
+
     # get all type parameters of interest
     for parameter_name in parameter_names_filter:
-        parameter_value = get_parameter_value_by_name(
-            family_symbol, parameter_name
-        )
-        
-        family_container.add_type_property({parameter_name:parameter_value})
+        parameter_value = get_parameter_value_by_name(family_symbol, parameter_name)
+        family_container.add_type_property({parameter_name: parameter_value})
+
 
 def _get_instances_placed(doc, family_symbol):
+    """
+    Return number of instances in the model
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param family_symbol: A family type
+    :type family_symbol: Autodesk.Revit.DB.FamilySymbol
+
+    :return: Number of instances placed.
+    :rtype: int
+    """
 
     collector_instances_placed = get_family_instances_by_symbol_type_id(
         doc, family_symbol.Id
     )
     return len(collector_instances_placed.ToList())
 
-def _get_host_family_status(doc, family_symbol,family_container):
-    # this will only work if there is an instance placed in the model....
+
+def _get_host_family_status(doc, family_symbol):
+    """
+    Returns a list of nested shared families within host family
+
+    This will only work if there is an instance placed in the model....
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param family_symbol: A family type
+    :type family_symbol: Autodesk.Revit.DB.FamilySymbol
+
+    :return: List of family names and type names in format family name - type name
+    :rtype: [str]
+    """
+
+    nested_family_names = []
+    # get all instances in the model
+    instances = get_family_instances_by_symbol_type_id(doc, family_symbol.Id)
+
+    # make sure any instances are in the model placed
+    if len(instances) > 0:
+
+        # get the first one
+        for family_instance in instances:
+            # check if any nested shared families are in play
+            sub_element_ids = family_instance.GetSubComponentIds()
+            if sub_element_ids is not None:
+                for sub_element_id in sub_element_ids:
+                    # get the family name and type name
+                    nested_instance = doc.GetElement(sub_element_id)
+                    nested_type = nested_instance.FamilySymbol
+                    nested_family = nested_type.Family
+                    nested_family_names.append(
+                        "{}-{}".format(
+                            Element.Name.GetValue(nested_family),
+                            Element.Name.GetValue(nested_type),
+                        )
+                    )
+
+            break
+
+    return nested_family_names
+
+
+def _get_is_shared(doc, family_symbol):
+    """
+    Returns if the family is shared (true) or not (false)
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param family_symbol: _description_
+    :type family_symbol: _type_
+
+    :return: True if family is shared, otherwise False
+    :rtype: bool
+    """
+
+    fam = family_symbol.Family
+    p_value = get_built_in_parameter_value(
+        element=fam,
+        built_in_parameter_def=BuiltInParameter.FAMILY_SHARED,
+        parameter_value_getter=get_parameter_value_as_integer,
+    )
     
-    pass
+    if p_value==0:
+        return False
+    else:
+        return True
 
 
-def report_loaded_families(doc, parameter_names_filter = FAMILY_PARAMETERS_TO_REPORT , progress_callback=None ):
+def report_loaded_families(
+    doc, parameter_names_filter=FAMILY_PARAMETERS_TO_REPORT, progress_callback=None
+):
     """
     Reports on loaded families:
 
@@ -116,21 +211,22 @@ def report_loaded_families(doc, parameter_names_filter = FAMILY_PARAMETERS_TO_RE
     :rtype: :class:`.Result`
     """
 
-
     return_value = Result()
 
-
     # check callback class
-    if(progress_callback and isinstance(progress_callback, ProgressBase)==False ):
-        raise TypeError("Output needs to be inheriterd from ProgressBase. Got : {} instead.".format(type(progress_callback)))
+    if progress_callback and isinstance(progress_callback, ProgressBase) == False:
+        raise TypeError(
+            "Output needs to be inherited from ProgressBase. Got : {} instead.".format(
+                type(progress_callback)
+            )
+        )
 
     # give some initial update
-    if(progress_callback):
+    if progress_callback:
         progress_callback.update(0, 1, message="Reporting families...start")
-        
-    
+
     # build list of all categories we want families to be reloaded of
-    # TODO: add new Revit categories 
+    # TODO: add new Revit categories
     famCats = List[BuiltInCategory](rFamUtilCats.CATEGORIES_LOADABLE_TAGS)
     famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_TAGS_OTHER)
     famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_3D)
@@ -148,28 +244,57 @@ def report_loaded_families(doc, parameter_names_filter = FAMILY_PARAMETERS_TO_RE
         # get some progress data
         fam_counter = 0
         max_fam_counter = len(family_symbols.ToList())
-        
+
         # loop over all family types in the model
         for family_symbol in family_symbols:
             # update progress
-            if(progress_callback):
+            if progress_callback:
                 progress_callback.update(fam_counter, max_fam_counter)
-            
+
             # build new data entry
             family_container = FamilyReportData()
             if family_symbol.Family.IsInPlace == False:
 
                 # get type properties
-                _get_type_properties_of_interest(family_symbol=family_symbol, parameter_names_filter= parameter_names_filter, family_container=family_container)
+                _get_type_properties_of_interest(
+                    family_symbol=family_symbol,
+                    parameter_names_filter=parameter_names_filter,
+                    family_container=family_container,
+                )
                 # get the project name
                 family_container.project_name = revit_project_file_name
                 # get number of instances placed
-                family_container.family_instances_placed = _get_instances_placed(doc=doc, family_symbol=family_symbol)
+                family_container.family_instances_placed = _get_instances_placed(
+                    doc=doc, family_symbol=family_symbol
+                )
                 # get the family category
                 family = doc.GetElement(family_symbol.Family.Id)
                 family_container.family_category = family.FamilyCategory.Name
+
+                # shared
+                family_container.is_shared = _get_is_shared(
+                    doc=doc, family_symbol=family_symbol
+                )
+
                 # check if this is a host family
-                _get_host_family_status(doc=doc, family_symbol=family_symbol,family_container=family_container)
+                # this works only if a family instance is placed in the model :(
+                if family_container.family_instances_placed > 0:
+                    nested_shared_family_names = _get_host_family_status(
+                        doc=doc,
+                        family_symbol=family_symbol,
+                    )
+                    if len(nested_shared_family_names) > 0:
+                        # record the nested family names
+                        for fam_name in nested_shared_family_names:
+                            family_container.add_nested_family(family=fam_name)
+                elif (
+                    family_container.family_instances_placed == 0
+                    and family_container.is_shared
+                ):
+                    # put up note that status could not be determined...
+                    # for now...
+                    family_container.add_nested_family(UNKNOWN_HOST_STATUS)
+
                 # add to return list
                 data.append(family_container)
 
@@ -183,7 +308,9 @@ def report_loaded_families(doc, parameter_names_filter = FAMILY_PARAMETERS_TO_RE
                         break
 
     except Exception as e:
-        return_value.update_sep(False, "Failed to gather family data with exception: {}".format(e))
+        return_value.update_sep(
+            False, "Failed to gather family data with exception: {}".format(e)
+        )
 
     return_value.result = data
     return return_value

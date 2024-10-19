@@ -36,7 +36,6 @@ import json
 
 from duHast.Data.Objects.data_view_base import DataViewBase
 from duHast.Data.Objects.data_tag import DataTag
-
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
     DataBoundingBox,

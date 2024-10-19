@@ -35,7 +35,7 @@ Data storage base class used for Revit views.
 import json
 
 from duHast.Data.Objects.data_view_base import DataViewBase
-
+from duHast.Data.Objects.data_tag import DataTag
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
     DataBoundingBox,
@@ -59,6 +59,7 @@ class DataViewPlan(DataViewBase):
 
         # set default values
         self.bounding_box = DataBoundingBox()
+        self.tags = []
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -81,6 +82,11 @@ class DataViewPlan(DataViewBase):
                 self.bounding_box = DataBoundingBox(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
+                # get any tags
+                tags = j.get(DataPropertyNames.TAGS.value, [])
+                for tag in tags:
+                    data_tag = DataTag(j=tag)
+                    self.tags.append(data_tag)
 
             except Exception as e:
                 raise ValueError(

@@ -11,7 +11,7 @@ A logger class
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2024, Peter Smith
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -33,36 +33,7 @@ import sys
 
 from duHast.Utilities.directory_io import create_target_directory
 from duHast.Utilities.Objects.base import Base
-
-
-class FilterFile(logging.Filter):
-    """
-    Filter to stop logs to file handler.
-
-    To use change your log call to something like:
-    my_logger.info("This is a console only output", extra={"block": "file"})
-    """
-
-    def filter(self, record):
-        if "block" in record.__dict__.keys():
-            if record.block == "file":
-                return False
-        return True
-
-
-class FilterConsole(logging.Filter):
-    """
-    Filter to stop logs to console handler.
-
-    To use change your log call to something like:
-    my_logger.info("This is a file only output", extra={"block": "console"})
-    """
-
-    def filter(self, record):
-        if "block" in record.__dict__.keys():
-            if record.block == "console":
-                return False
-        return True
+from duHast.Utilities.logging_handlers import std_console_handler, std_file_handler
 
 
 class LoggerObject(Base):
@@ -71,9 +42,10 @@ class LoggerObject(Base):
         log_name="duHast",
         output_path=os.getenv("APPDATA"),
         log_level=(10, 30),
+        file_format=".txt",
+        cons_str_handler=None,
         **kwargs
     ):
-
         """
         Constructor for the LoggerObject class.
 
@@ -86,74 +58,45 @@ class LoggerObject(Base):
         """
 
         super(LoggerObject, self).__init__(**kwargs)
-
+        logging.basicConfig(level=logging.INFO)
         # Get log naming and output path
         self.log_name = log_name
         self.output_path = output_path
         self.log_file_dir = os.path.join(self.output_path, self.log_name)
+        # Create the directory and the full log file path
         create_target_directory(self.output_path, self.log_name)
-        self.log_file_path = os.path.join(self.log_file_dir, self.log_name + ".log")
+        self.log_file_path = os.path.join(self.log_file_dir, log_name + file_format)
         # Get log levels
         self.log_level = log_level
         self.file_log_level, self.console_log_level = self.log_level
-        # Establish handlers
-        self.file_log_format = self.get_standard_formatter()
-        self.file_handler = self.create_file_handler()
-        self.console_log_format = self.get_presentation_formatter()
-        self.console_handler = self.create_console_handler()
-        # Create logger object
-        new_logger = logging.getLogger(self.log_name)
-        new_logger.propagate = 0
-        while new_logger.handlers:
-            new_logger.handlers.pop()
-        new_logger.setLevel(logging.DEBUG)
-        new_logger.addHandler(self.file_handler)
-        new_logger.addHandler(self.console_handler)
+        # Set handlers
+        self.file_handler = std_file_handler(self)
+        self.console_handler = std_console_handler(self, cons_str_handler)
 
-        self.logger_object = new_logger
-        logging.basicConfig(level=logging.DEBUG)
+        # Create logger object
+        self.new_logger = logging.getLogger(self.log_name)
+        self.init_handlers()
+        self.logger_object = self.new_logger
+
+    def clear_handlers(self):
+        self.new_logger.propagate = 0
+        while self.new_logger.handlers:
+            self.new_logger.handlers.pop()
+
+    def init_handlers(self):
+        self.clear_handlers()
+        self.new_logger.setLevel(logging.DEBUG)
+        self.new_logger.addHandler(self.file_handler)
+        self.new_logger.addHandler(self.console_handler)
+
+    def set_stream_handler(self, st_handlr):
+        self.clear_handlers()
+        self.new_logger.setLevel(logging.DEBUG)
+        self.new_logger.addHandler(self.file_handler)
+        self.new_logger.addHandler(st_handlr)
 
     def get_logger_obj(self):
         return self.logger_object
-
-    def get_standard_formatter(self):
-        """Standard output formatting for console and file handlers"""
-        return logging.Formatter(
-            "%(levelname)s | %(asctime)s.%(msecs)03d | %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
-        )
-
-    def get_presentation_formatter(self):
-        """Output formatting for presentation"""
-        return logging.Formatter("%(message)s")
-
-    def create_file_handler(self):
-        """
-        Create file handler to self.log_file_path location
-        """
-        # Set file output
-        file_handler = logging.FileHandler(self.log_file_path)
-        # Default file level is INFO
-        file_handler.setLevel(self.file_log_level)
-        # Add the filter to the file handler
-        file_handler.addFilter(FilterFile())
-        file_handler.setFormatter(self.file_log_format)
-        file_handler.name = "file"
-        return file_handler
-
-    def create_console_handler(self):
-        """
-        Creates a console handler to output to stdout (console)
-        displaying only the message as default
-        """
-        # Create a console handler
-        console_handler = logging.StreamHandler(sys.stdout)
-        # Default console level is WARNING
-        console_handler.setLevel(self.console_log_level)
-        # Add the filter to the console handler
-        console_handler.addFilter(FilterConsole())
-        console_handler.setFormatter(self.console_log_format)
-        return console_handler
 
     def update_log_level(self, log_level):
         """

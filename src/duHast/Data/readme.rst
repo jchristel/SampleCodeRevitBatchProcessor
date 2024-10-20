@@ -55,17 +55,17 @@ Sheets and all their properties are exported in one report. That will require ex
 
 Properties are exported by view port and associated view:
 
-+-----------+-----------+------+
-| view type | view port | view |
-+===========+===========+======+
-| plan view | centre point on sheet, bounding box | bounding box, aspect ration, tags |
-+------------------------+------------+----------+
-| elevation views | centre point on sheet, bounding box | bounding box, tags, view direction (?) |
-+------------------------+------------+----------+
-| 3D view | centre point on sheet, bounding box | bounding box, view eye location, view direction |
-+------------------------+------------+----------+
-| schedule | location on sheet, bounding box | number of rows in schedule, is schedule split (0 no, > 0 yes, and number of columns ) |
-+------------------------+------------+----------+
++-----------------+-------------------------------------+---------------------------------------------------------------------------------------+
+| view type       | view port                           | view                                                                                  |
++=================+=====================================+=======================================================================================+
+| plan view       | centre point on sheet, bounding box | bounding box, aspect ration, tags                                                     |
++-----------------+-------------------------------------+---------------------------------------------------------------------------------------+
+| elevation views | centre point on sheet, bounding box | bounding box, tags, view direction (?)                                                |
++-----------------+-------------------------------------+---------------------------------------------------------------------------------------+
+| 3D view         | centre point on sheet, bounding box | bounding box, view eye location, view direction                                       |
++-----------------+-------------------------------------+---------------------------------------------------------------------------------------+
+| schedule        | location on sheet, bounding box     | number of rows in schedule, is schedule split (0 no, > 0 yes, and number of columns ) |
++-----------------+-------------------------------------+---------------------------------------------------------------------------------------+
 
 
 Setting up Templates

@@ -44,6 +44,14 @@ duHast.Data.Objects.Properties.data\_level module
    :undoc-members:
    :show-inheritance:
 
+duHast.Data.Objects.Properties.data\_level\_base module
+-------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Properties.data_level_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Data.Objects.Properties.data\_phasing module
 ---------------------------------------------------
 

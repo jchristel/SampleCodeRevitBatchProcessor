@@ -28,7 +28,7 @@ Data storage class for Revit elements model properties.
 #
 
 import json
-from duHast.Data.Utils import data_base
+from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 
@@ -68,7 +68,7 @@ class DataRevitModel(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.name = j.get(DataPropertyNames.NAME, self.name)
+                self.name = j.get(DataPropertyNames.NAME.value, self.name)
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

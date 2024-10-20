@@ -28,7 +28,7 @@ Data storage class for Revit element phasing properties.
 #
 
 import json
-from duHast.Data.Utils import data_base
+from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 
@@ -69,8 +69,8 @@ class DataPhasing(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.created = j.get(DataPropertyNames.CREATED, self.created)
-                self.demolished = j.get(DataPropertyNames.DEMOLISHED, self.demolished)
+                self.created = j.get(DataPropertyNames.CREATED.value, self.created)
+                self.demolished = j.get(DataPropertyNames.DEMOLISHED.value, self.demolished)
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

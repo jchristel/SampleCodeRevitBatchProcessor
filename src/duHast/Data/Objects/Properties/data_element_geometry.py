@@ -84,8 +84,8 @@ class DataElementGeometryBase(base.Base):
                 # this is stored as a list since there could be multiple polygons representing an object
                 geometry_data_list = []
                 for item in polygon_data:
-                    if DataPropertyNames.DATA_TYPE in item:
-                        if item[DataPropertyNames.DATA_TYPE]:
+                    if DataPropertyNames.DATA_TYPE.value in item:
+                        if item[DataPropertyNames.DATA_TYPE.value]:
                             dummy = geometry_polygon.DataPolygon(item)
                             geometry_data_list.append(dummy)
 

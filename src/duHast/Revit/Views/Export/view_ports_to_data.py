@@ -3,6 +3,7 @@
 This module contains a number of helper functions relating to Revit view port to data view port conversion. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -28,11 +29,21 @@ This module contains a number of helper functions relating to Revit view port to
 
 
 from duHast.Data.Objects.data_sheet_view_port import DataSheetViewPort
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import DataBoundingBox
-from duHast.Data.Objects.Properties.data_view_port_type_names import DataViewPortTypeNames
+from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
+    DataBoundingBox,
+)
+from duHast.Data.Objects.Properties.data_view_port_type_names import (
+    DataViewPortTypeNames,
+)
+from duHast.Data.Objects.data_view_3d import DataViewThreeD
+from duHast.Data.Objects.data_view_elevation import DataViewElevation
+from duHast.Data.Objects.data_view_plan import DataViewPlan
+from duHast.Data.Objects.data_view_schedule import DataViewSchedule
+
+
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
-from Autodesk.Revit.DB import ViewType
+from Autodesk.Revit.DB import SectionType, ViewType
 
 
 def _get_view_port_type(doc, revit_view_port):
@@ -51,21 +62,141 @@ def _get_view_port_type(doc, revit_view_port):
     view = doc.GetElement(revit_view_port.ViewId)
 
     if view.ViewType == ViewType.FloorPlan:
-        return DataViewPortTypeNames.FLOOR_PLAN
+        return DataViewPortTypeNames.FLOOR_PLAN.value
     elif view.ViewType == ViewType.Elevation:
-        return DataViewPortTypeNames.ELEVATION
+        return DataViewPortTypeNames.ELEVATION.value
     elif view.ViewType == ViewType.ThreeD:
-        return DataViewPortTypeNames.THREE_D
+        return DataViewPortTypeNames.THREE_D.value
     elif view.ViewType == ViewType.Schedule:
         # thats unlikely
-        return DataViewPortTypeNames.SCHEDULE
+        return DataViewPortTypeNames.SCHEDULE.value
     else:
         return None
 
 
+def _get_plan_view(doc, view):
+    """
+    Converts data from a Revit plan view to a data plan view instance
+
+    :param doc: The Revit document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view: The Revit view
+    :type view: Autodesk.Revit.DB.ViewPlan
+
+    :return: A data view instance
+    :rtype: :class:`.DataViewPlan`
+    """
+
+    data_instance = DataViewPlan()
+    # get bounding box
+    # get any tags in the view
+    return data_instance
+
+
+def _get_elevation_view(doc, view):
+    """
+    Converts data from a Revit elevation view to a data elevation view instance
+
+    :param doc: The Revit document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view: The Revit view
+    :type view: Autodesk.Revit.DB.ViewSection
+
+    :return: A data view instance
+    :rtype: :class:`.DataViewElevation`
+    """
+
+    data_instance = DataViewElevation()
+    # get bounding box
+    # orientation (which edge of the bounding box is this elevation facing?)
+    # get any tags in the view
+    
+    return data_instance
+
+
+def _get_three_d_view(doc, view):
+    """
+    Converts data from a Revit 3D view to a data 3D view instance
+
+    :param doc: The Revit document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view: The Revit view
+    :type view: Autodesk.Revit.DB.View3D
+
+    :return: A data view instance
+    :rtype: :class:`.DataViewThreeD`
+    """
+
+    data_instance = DataViewThreeD()
+    # get bounding box
+    # orientation (eye point and view direction)
+    return data_instance
+
+
+def _get_schedule_view(doc, view):
+    """
+    Converts data from a Revit schedule view to a data schedule view instance
+
+    :param doc: The Revit document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view: The Revit view
+    :type view: Autodesk.Revit.DB.ViewSchedule
+
+    :return: A data view instance
+    :rtype: :class:`.DataViewSchedule`
+    """
+
+    data_instance = DataViewSchedule()
+
+    # here is a way to extract number of rows: (old...)
+    # https://thebuildingcoder.typepad.com/blog/2012/05/the-schedule-api-and-access-to-schedule-data.html
+    # this might be better and mor up to date: https://forums.autodesk.com/t5/revit-api-forum/how-to-get-schedule-data/td-p/7319520
+    # in fact it does show how to get to number of rows easily...
+
+    table = view.GetTableData()
+    section = table.GetSectionData(SectionType.Body)
+    number_of_rows = section.NumberOfRows
+
+    # get bounding box
+    
+    return data_instance
+
+
+def _get_view_data(doc, view):
+    """
+    Set up view data instance depending ov view type
+
+    :param doc: The Revit document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view: The view to be converted
+    :type view: Autodesk.Revit.DB.View
+
+    :return: A data view instance
+    :rtype: :class:`.DataViewBase`
+    """
+
+    view_data_instance = None
+
+    # check view type
+    if view.ViewType == ViewType.FloorPlan:
+        # plan view
+        view_data_instance = _get_plan_view(doc=doc, view=view)
+    elif view.ViewType == ViewType.Elevation:
+        # elevation
+        view_data_instance = _get_elevation_view(doc=doc, view=view)
+    elif view.ViewType == ViewType.ThreeD:
+        # 3D
+        view_data_instance = _get_three_d_view(doc=doc, view=view)
+    elif view.ViewType == ViewType.Schedule:
+        # schedule
+        view_data_instance = _get_schedule_view(doc=doc, view=view)
+
+    return view_data_instance
+
+
 def convert_revit_viewport_to_data_instance(doc, revit_view_port):
     """
-    Convertes a Revit ViewPort into a data viewport
+    Converts a Revit ViewPort into a data viewport
 
     :param doc: The Revit document.
     :type doc: Autodesk.Revit.DB.Document
@@ -91,13 +222,26 @@ def convert_revit_viewport_to_data_instance(doc, revit_view_port):
     min_point = view_port_outline.MinimumPoint
 
     # get the min and max point from the outline
-    bbox.max = [convert_imperial_feet_to_metric_mm(max_point.X),convert_imperial_feet_to_metric_mm(max_point.Y),convert_imperial_feet_to_metric_mm(max_point.Z)]
-    bbox.min = [convert_imperial_feet_to_metric_mm(min_point.X),convert_imperial_feet_to_metric_mm(min_point.Y),convert_imperial_feet_to_metric_mm(min_point.Z)]
-    
+    bbox.max = [
+        convert_imperial_feet_to_metric_mm(max_point.X),
+        convert_imperial_feet_to_metric_mm(max_point.Y),
+        convert_imperial_feet_to_metric_mm(max_point.Z),
+    ]
+    bbox.min = [
+        convert_imperial_feet_to_metric_mm(min_point.X),
+        convert_imperial_feet_to_metric_mm(min_point.Y),
+        convert_imperial_feet_to_metric_mm(min_point.Z),
+    ]
+
     # update the bounding box property of the view port instance
     view_port_data.bounding_box = bbox
 
     # set the viewport type
-    view_port_data.vp_type =view_port_type
+    view_port_data.vp_type = view_port_type
+
+    # set the view
+    revit_view = doc.GetElement(revit_view_port.ViewId)
+    view_data = _get_view_data(doc=doc, view=revit_view)
+    view_port_data.view = view_data
 
     return view_port_data

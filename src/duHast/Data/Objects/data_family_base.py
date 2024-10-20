@@ -36,7 +36,7 @@ from duHast.Data.Objects.Properties import data_level
 from duHast.Data.Objects.Properties import data_type_properties
 from duHast.Data.Objects.Properties import data_instance_properties
 from duHast.Data.Objects.Properties import data_revit_model
-from duHast.Data.Utils import data_base
+from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties import data_element_geometry
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
@@ -107,7 +107,7 @@ class DataFamilyBase(data_base.DataBase, data_element_geometry.DataElementGeomet
                     j.get(data_design_set_option.DataDesignSetOption.data_type, {})
                 )
                 self.associated_elements = j.get(
-                    DataPropertyNames.ASSOCIATED_ELEMENTS, self.associated_elements
+                    DataPropertyNames.ASSOCIATED_ELEMENTS.value, self.associated_elements
                 )
             except Exception as e:
                 raise ValueError(

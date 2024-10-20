@@ -1,7 +1,11 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data base class for Revit object properties.
+Data storage view base class used for Revit views.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- contains 
+    - the view id
+
 """
 
 #
@@ -11,7 +15,7 @@ Data base class for Revit object properties.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -27,30 +31,55 @@ Data base class for Revit object properties.
 #
 #
 
-from duHast.Utilities.Objects import base
+import json
+
+from duHast.Data.Objects import data_base
+
+from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
+    DataBoundingBox,
+)
 
 
-class DataBase(base.Base):
-    def __init__(self, data_type, **kwargs):
+class DataViewBase(data_base.DataBase):
+
+    data_type = "view base"
+
+    def __init__(self, j=None):
         """
-        Class constructor
+        Class constructor for a view.
 
-        :param data_type: human readable data type
-        :type data_type: str
-        """
-
-        # forwards all unused arguments
-        # ini super class to allow multi inheritance in children!
-        super(DataBase, self).__init__()
-        self.data_type = data_type
-
-    @property
-    def DataType(self):
-        """
-        Property: returns the data type of this class.
-
-        :return:  A string representing the data type
-        :rtype: str
+        :param j: A json formatted dictionary of this class, defaults to {}
+        :type j: dict, optional
         """
 
-        return self.data_type
+        # initialise parent classes with values
+        super(DataViewBase, self).__init__(data_type=DataViewBase.data_type)
+
+        # set default values
+        self.id = -1
+
+        # check if any data was past in with constructor!
+        if j != None and len(j) > 0:
+            # check type of data that came in:
+            if isinstance(j, str):
+                # a string
+                j = json.loads(j)
+            elif isinstance(j, dict):
+                # no action required
+                pass
+            else:
+                raise TypeError(
+                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
+                        type(j)
+                    )
+                )
+
+            # attempt to populate from json
+            try:
+                self.id = j.get(DataPropertyNames.ID.value, self.vp_type)
+
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

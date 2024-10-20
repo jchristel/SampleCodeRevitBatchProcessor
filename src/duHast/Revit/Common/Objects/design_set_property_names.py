@@ -41,3 +41,17 @@ class DesignSetPropertyNames(Enum):
 
     DESIGN_SET_DEFAULT_NAME = "Main Model"
     DESIGN_OPTION_DEFAULT_NAME = "-"
+
+    @classmethod
+    def combine_set_and_option_name(cls,set_name, option_name):
+        """
+        Combines the set and option name is fixed format
+
+        :param set_name: The option set name
+        :type set_name: str
+        :param option_name: The option name
+        :type option_name: str
+        :return: Combination of set and option name
+        :rtype: str
+        """
+        return  "{}_{}".format(set_name,option_name)

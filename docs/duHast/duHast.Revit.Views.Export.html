@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Views.Export package &#8212; Sample Code Revit Batch Processor 1.1.2 documentation</title>
+    <title>duHast.Revit.Views.Export package &#8212; Sample Code Revit Batch Processor 1.1.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.2 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.3 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Views package" href="duHast.Revit.Views.html" />
     <link rel="next" title="duHast.Revit.Views.Geometry package" href="duHast.Revit.Views.Geometry.html" />
     <link rel="prev" title="duHast.Revit.Views package" href="duHast.Revit.Views.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.2 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.3 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Views.Export package</h1></div>
@@ -119,6 +119,23 @@
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.Export.sheets_to_data.get_all_sheet_data">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Export.sheets_to_data.</span></span><span class="sig-name descname"><span class="pre">get_all_sheet_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Export.sheets_to_data.get_all_sheet_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of sheet data objects for each sheet element in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of data sheet instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="duHast.Data.Objects.html#duHast.Data.Objects.data_sheet.DataSheet" title="duHast.Data.Objects.data_sheet.DataSheet"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataSheet</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Views.Export.view_ports_to_data">
 <span id="duhast-revit-views-export-view-ports-to-data-module"></span><h2>duHast.Revit.Views.Export.view_ports_to_data module<a class="headerlink" href="#module-duHast.Revit.Views.Export.view_ports_to_data" title="Permalink to this heading">¶</a></h2>
@@ -128,7 +145,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.Export.view_ports_to_data.convert_revit_viewport_to_data_instance">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.Export.view_ports_to_data.</span></span><span class="sig-name descname"><span class="pre">convert_revit_viewport_to_data_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_view_port</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.Export.view_ports_to_data.convert_revit_viewport_to_data_instance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convertes a Revit ViewPort into a data viewport</p>
+<dd><p>Converts a Revit ViewPort into a data viewport</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

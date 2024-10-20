@@ -101,7 +101,7 @@ class Base(object):
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
 
-        super(Base, self).__init__(**kwargs)
+        super(Base, self).__init__()
 
     def __repr__(self):
         """
@@ -229,7 +229,23 @@ class Base(object):
         :rtype: json
         """
 
-        return json.dumps(self, indent=None, default=lambda o: o.__dict__)
+        return json.dumps(self, indent=None, default=self._default_json_handler)
+    
+    
+    def _default_json_handler(self, o):
+        """
+        Ensure compatibility to ironpython 2.7 and 3.4
+
+        :param o: _description_
+        :type o: _type_
+        :return: _description_
+        :rtype: _type_
+        """
+        if hasattr(o, '__dict__'):
+            return vars(o)
+        else:
+            return str(o)
+        
 
     def string_to_utf(self, o):
         """

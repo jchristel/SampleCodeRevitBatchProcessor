@@ -30,7 +30,7 @@ Module containing reporting functions.
 #
 
 # required for .ToList() on FilteredElementCollector
-import clr, os
+import clr
 
 clr.AddReference("System.Core")
 from System import Linq
@@ -52,7 +52,6 @@ from duHast.Revit.Family.family_utils import (
     get_family_instances_by_symbol_type_id,
 )
 from duHast.Revit.Common.parameter_get_utils import get_parameter_value_by_name
-from duHast.Utilities.utility import encode_utf8
 from duHast.UI.Objects.ProgressBase import ProgressBase
 
 # default list of parameters to report on
@@ -126,12 +125,12 @@ def _get_host_family_status(doc, family_symbol):
     # get all instances in the model
     instances = get_family_instances_by_symbol_type_id(doc, family_symbol.Id)
 
-    # make sure any instances are in the model placed
-    if len(instances) > 0:
-
-        # get the first one
-        for family_instance in instances:
-            # check if any nested shared families are in play
+    
+    
+    # get the first one
+    for family_instance in instances:
+        # check if any nested shared families are in play
+        try:
             sub_element_ids = family_instance.GetSubComponentIds()
             if sub_element_ids is not None:
                 for sub_element_id in sub_element_ids:
@@ -145,8 +144,11 @@ def _get_host_family_status(doc, family_symbol):
                             Element.Name.GetValue(nested_type),
                         )
                     )
+        except Exception:
+            # some family categories do not have GetSubComponentIds() available, i.e. Tags
+            pass
 
-            break
+        break
 
     return nested_family_names
 
@@ -238,6 +240,7 @@ def report_loaded_families(
     # get data in format:
     #   revit file name , family name, family symbol name, instances placed
     data = []
+
     try:
         revit_project_file_name = doc.Title
 
@@ -254,19 +257,21 @@ def report_loaded_families(
             # build new data entry
             family_container = FamilyReportData()
             if family_symbol.Family.IsInPlace == False:
-
+                
                 # get type properties
                 _get_type_properties_of_interest(
                     family_symbol=family_symbol,
                     parameter_names_filter=parameter_names_filter,
                     family_container=family_container,
                 )
+                
                 # get the project name
                 family_container.project_name = revit_project_file_name
                 # get number of instances placed
                 family_container.family_instances_placed = _get_instances_placed(
                     doc=doc, family_symbol=family_symbol
                 )
+                
                 # get the family category
                 family = doc.GetElement(family_symbol.Family.Id)
                 family_container.family_category = family.FamilyCategory.Name

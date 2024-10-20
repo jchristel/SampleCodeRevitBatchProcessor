@@ -55,8 +55,9 @@ Sheets and all their properties are exported in one report. That will require ex
 
 Properties are exported by view port and associated view:
 
-| view type| view port | view |
-|----------|-----------|------|
++-----------+-----------+------+
+| view type | view port | view |
++===========+===========+======+
 | plan view | centre point on sheet, bounding box | bounding box, aspect ration, tags |
 | elevation views | centre point on sheet, bounding box | bounding box, tags, view direction (?) |
 | 3D view | centre point on sheet, bounding box | bounding box, view eye location, view direction |

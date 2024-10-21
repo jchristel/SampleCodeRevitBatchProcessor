@@ -33,6 +33,11 @@ from Autodesk.Revit.DB import (
     XYZ,
 )
 from duHast.Utilities.compare import is_close
+from duHast.Utilities.unit_conversion import (
+    convert_imperial_feet_to_metric_mm,
+    convert_mm_to_imperial_feet,
+)
+from duHast.Geometry.point_3 import Point3
 
 
 def rotate_point_around_z_with_origin(point, origin, angle_in_radians):
@@ -276,3 +281,43 @@ def get_point_as_string(point):
     """
 
     return str(point.X) + " : " + str(point.Y) + " : " + str(point.Z)
+
+
+# ---------------------- conversions -----------------------------
+
+
+def convert_XYZ_to_point3(point_xyz):
+    """
+    Converts a Revit XYZ to a duHast point3 instance. X,Y,Z coordinates are converted to metric mm.
+
+    :param point_xyz: A revit 3D point
+    :type point_xyz: Autodesk.Revit.DB.XYZ
+    :return: A point3 instance
+    :rtype: :class:`.Point3`
+    """
+
+    p = Point3(
+        x=convert_imperial_feet_to_metric_mm(point_xyz.X),
+        y=convert_imperial_feet_to_metric_mm(point_xyz.Y),
+        z=convert_imperial_feet_to_metric_mm(point_xyz.Z),
+    )
+    return p
+
+
+def convert_point3_to_xyz(point_3):
+    """
+    Converts duHast point_3 (metric mm) to Revit XYZ (imperial feet).
+
+    :param point_3: a duHast 3D point
+    :type point_3: :class:`.Point3`
+
+    :return: A revit XYZ instance
+    :rtype: Autodesk.Revit.DB.XYZ
+    """
+    p = XYZ(
+        convert_mm_to_imperial_feet(point_3.x),
+        convert_mm_to_imperial_feet(point_3.y),
+        convert_mm_to_imperial_feet(point_3.z),
+    )
+
+    return p

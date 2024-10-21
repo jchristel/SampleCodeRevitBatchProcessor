@@ -39,6 +39,7 @@ from duHast.Data.Objects.data_view_3d import DataViewThreeD
 from duHast.Data.Objects.data_view_elevation import DataViewElevation
 from duHast.Data.Objects.data_view_plan import DataViewPlan
 from duHast.Data.Objects.data_view_schedule import DataViewSchedule
+from duHast.Data.Objects.Properties.data_schedule_segement import DataScheduleSegment
 
 
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
@@ -157,8 +158,20 @@ def _get_schedule_view(doc, view):
     section = table.GetSectionData(SectionType.Body)
     number_of_rows = section.NumberOfRows
 
-    # get bounding box
+    # store the number of data rows
+    data_instance.total_number_of_rows = number_of_rows
+
+    # The total count of schedule segments. 1 means the schedule is not split yet.
+    counter = 0
+    for seg in view.GetSegmentCount():
+        seg_data = DataScheduleSegment()
+        seg_data.index = counter
+        seg_height  = view.GetSegmentHeight(counter)
+        seg_data.height = seg_height
+        data_instance.segments.append(seg_data)
+        counter = counter + 1
     
+    # get bounding box
     return data_instance
 
 

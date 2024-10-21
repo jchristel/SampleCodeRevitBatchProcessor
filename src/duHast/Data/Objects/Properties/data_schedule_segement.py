@@ -1,12 +1,7 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage base class used for Revit views.
+Data storage class for Revit schedule segement properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- contains 
-
-    - the view bounding box in model coordinates
-
 """
 
 #
@@ -33,36 +28,28 @@ Data storage base class used for Revit views.
 #
 
 import json
-
-from duHast.Data.Objects.data_view_base import DataViewBase
-
+from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
-    DataBoundingBox,
-)
-from duHast.Data.Objects.Properties.data_schedule_segement import DataScheduleSegment
 
-class DataViewSchedule(DataViewBase):
 
-    data_type = "view_schedule"
+class DataScheduleSegment(data_base.base):
+
+    data_type = "schedule segement"
 
     def __init__(self, j=None):
         """
-        Class constructor for a view_schedule.
+        Class constructor
 
-        :param j: A json formatted dictionary of this class, defaults to {}
+        :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
-        # initialise parent classes with values
-        super(DataViewSchedule, self).__init__(
-            data_type=DataViewSchedule.data_type, j=j
-        )
+        # store data type  in base class
+        super(DataScheduleSegment, self).__init__(data_type = DataScheduleSegment.data_type)
 
         # set default values
-        self.bounding_box = DataBoundingBox()
-        self.total_number_of_rows = 0
-        self.segments = []
+        self.index = 0
+        self.height = 0.0
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -82,14 +69,11 @@ class DataViewSchedule(DataViewBase):
 
             # attempt to populate from json
             try:
-                self.bounding_box = DataBoundingBox(
-                    j.get(DataPropertyNames.BOUNDING_BOX.value, {})
+                self.index = j.get(
+                    DataPropertyNames.INDEX, self.index
                 )
-                self.total_number_of_rows = j.get(DataPropertyNames.TOTAL_NUMBER_OF_ROWS.value, self.total_number_of_rows)
-                segment_data = j.get(DataPropertyNames.SEGMENTS,[])
-                for seg_d in segment_data:
-                    seg = DataScheduleSegment(j=seg_d)
-                    self.segments.append(seg)
+
+                self.height = j.get(DataPropertyNames.HEIGHT, self.height)
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

@@ -34,6 +34,13 @@ from duHast.Geometry.point_2 import Point2
 class BoundingBox2(BoundingBoxBase):
     def __init__(self, point1, point2):
         super(BoundingBox2, self).__init__()
+
+        # some type checking
+        if not isinstance(point1,Point2):
+            raise TypeError("point1 expected Point2 instance. Got {} instead:".format(type(point1)))
+        if not isinstance(point2,Point2):
+            raise TypeError("point3 expected Point2 instance. Got {} instead:".format(type(point1)))
+        
         self.min_x = min(point1.x, point2.x)
         self.max_x = max(point1.x, point2.x)
         self.min_y = min(point1.y, point2.y)

@@ -126,8 +126,6 @@ def _get_host_family_status(doc, family_symbol):
     # get all instances in the model
     instances = get_family_instances_by_symbol_type_id(doc, family_symbol.Id)
 
-    
-    
     # get the first one
     for family_instance in instances:
         # check if any nested shared families are in play
@@ -135,22 +133,25 @@ def _get_host_family_status(doc, family_symbol):
             sub_element_ids = family_instance.GetSubComponentIds()
             if sub_element_ids is not None:
                 for sub_element_id in sub_element_ids:
-                    # get the family name and type name
-                    nested_instance = doc.GetElement(sub_element_id)
-                    nested_type = nested_instance.FamilySymbol
-                    nested_family = nested_type.Family
-                    nested_family_names.append(
-                        "{}-{}".format(
-                            Element.Name.GetValue(nested_family),
-                            Element.Name.GetValue(nested_type),
-                        )
-                    )
-        except Exception:
+                    try:
+                        # get the family name and type name
+                        nested_instance = doc.GetElement(sub_element_id)
+                        nested_type = nested_instance.Symbol
+                        nested_family = nested_type.Family
+                        name = "{}-{}".format(
+                                Element.Name.GetValue(nested_family),
+                                Element.Name.GetValue(nested_type),
+                            )
+                        if name not in nested_family_names:
+                            nested_family_names.append(name)
+                    except Exception as e:
+                        pass
+        except Exception as e:
             # some family categories do not have GetSubComponentIds() available, i.e. Tags
             pass
-
+        
         break
-
+        
     return nested_family_names
 
 
@@ -300,8 +301,8 @@ def report_loaded_families(
                     )
                     if len(nested_shared_family_names) > 0:
                         # record the nested family names
-                        for fam_name in nested_shared_family_names:
-                            family_container.add_nested_family(family=fam_name)
+                            for fam_name in nested_shared_family_names:
+                                family_container.add_nested_family(family_name=fam_name)
                 elif (
                     family_container.family_instances_placed == 0
                 ):

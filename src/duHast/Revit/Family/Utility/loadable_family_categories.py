@@ -111,6 +111,9 @@ CATEGORIES_LOADABLE_3D_REVIT_2022 = List[BuiltInCategory]([
     BuiltInCategory.OST_BridgeCables,
     BuiltInCategory.OST_BridgeDecks,
     BuiltInCategory.OST_ExpansionJoints,
+    BuiltInCategory.OST_StairsRailing,
+    BuiltInCategory.OST_RailingTermination,
+    BuiltInCategory.OST_RailingSupport,
 ])
 
 
@@ -143,6 +146,7 @@ CATEGORIES_LOADABLE_TAGS = List[BuiltInCategory](
         BuiltInCategory.OST_FlexPipeTags,
         BuiltInCategory.OST_FloorTags,
         BuiltInCategory.OST_FoundationSlabAnalyticalTags,
+        BuiltInCategory.OST_FurnitureTags,
         BuiltInCategory.OST_FurnitureSystemTags,
         BuiltInCategory.OST_GenericModelTags,
         # BuiltInCategory.OST_GenericAnnotation, # purged separately tricky one...some of these might be used in dimensions for instance...

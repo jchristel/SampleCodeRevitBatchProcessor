@@ -46,6 +46,7 @@ from duHast.Revit.Common.parameter_get_utils import (
     get_built_in_parameter_value,
     get_parameter_value_as_integer,
 )
+from duHast.Revit.Common.revit_version import get_revit_version_number
 from duHast.Revit.Family.Utility import loadable_family_categories as rFamUtilCats
 from duHast.Revit.Family.family_utils import (
     get_family_symbols,
@@ -153,7 +154,7 @@ def _get_host_family_status(doc, family_symbol):
     return nested_family_names
 
 
-def _get_is_shared(doc, family_symbol):
+def _get_is_shared(family_symbol):
     """
     Returns if the family is shared (true) or not (false)
 
@@ -228,17 +229,21 @@ def report_loaded_families(
         progress_callback.update(0, 1, message="Reporting families...start")
 
     # build list of all categories we want families to be reloaded of
-    # TODO: add new Revit categories
     famCats = List[BuiltInCategory](rFamUtilCats.CATEGORIES_LOADABLE_TAGS)
     famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_TAGS_OTHER)
     famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_3D)
     famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_3D_OTHER)
 
+    # check Revit version and if 2022 and later, add new categories
+    revit_version = get_revit_version_number(doc=doc)
+    if revit_version >= 2022:
+        famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_3D_REVIT_2022)
+        famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_TAGS_REVIT_2022)
+
     # get all symbols in file
     family_symbols = get_family_symbols(doc, famCats)
+    
     # get families from symbols and filter out in place families
-    # get data in format:
-    #   revit file name , family name, family symbol name, instances placed
     data = []
 
     try:
@@ -267,6 +272,11 @@ def report_loaded_families(
                 
                 # get the project name
                 family_container.project_name = revit_project_file_name
+                # get the family name
+                family_container.family_name = Element.Name.GetValue(family_symbol.Family)
+                # get the type name
+                family_container.family_type_name = Element.Name.GetValue(family_symbol)
+
                 # get number of instances placed
                 family_container.family_instances_placed = _get_instances_placed(
                     doc=doc, family_symbol=family_symbol
@@ -278,7 +288,7 @@ def report_loaded_families(
 
                 # shared
                 family_container.is_shared = _get_is_shared(
-                    doc=doc, family_symbol=family_symbol
+                    family_symbol=family_symbol
                 )
 
                 # check if this is a host family
@@ -294,7 +304,6 @@ def report_loaded_families(
                             family_container.add_nested_family(family=fam_name)
                 elif (
                     family_container.family_instances_placed == 0
-                    and family_container.is_shared
                 ):
                     # put up note that status could not be determined...
                     # for now...

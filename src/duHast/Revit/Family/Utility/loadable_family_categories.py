@@ -94,6 +94,26 @@ CATEGORIES_LOADABLE_3D_OTHER = List[BuiltInCategory](
     ]
 )
 
+# categories which got added in Revit 2022
+CATEGORIES_LOADABLE_3D_REVIT_2022 = List[BuiltInCategory]([
+    BuiltInCategory.OST_FoodServiceEquipment,
+    BuiltInCategory.OST_MedicalEquipment,
+    BuiltInCategory.OST_FireProtection,
+    BuiltInCategory.OST_VerticalCirculation,
+    BuiltInCategory.OST_AudioVisualDevices,
+    BuiltInCategory.OST_Signage,
+    BuiltInCategory.OST_Hardscape,
+    BuiltInCategory.OST_TemporaryStructure,
+    BuiltInCategory.OST_Roads,
+    BuiltInCategory.OST_BridgeAbutments,
+    BuiltInCategory.OST_BridgeBearings,
+    BuiltInCategory.OST_BridgePiers,
+    BuiltInCategory.OST_BridgeCables,
+    BuiltInCategory.OST_BridgeDecks,
+    BuiltInCategory.OST_ExpansionJoints,
+])
+
+
 #: This list contains 2D element categories and is used in obsolete revit family purge function.\
 #: any revit category commented out with note 'purged else where' can be found in list 'catsLoadableTagsOther'
 CATEGORIES_LOADABLE_TAGS = List[BuiltInCategory](
@@ -200,3 +220,24 @@ CATEGORIES_LOADABLE_TAGS_OTHER = List[BuiltInCategory](
         BuiltInCategory.OST_ViewportLabel,
     ]
 )
+
+# categories which got added in Revit 2022
+CATEGORIES_LOADABLE_TAGS_REVIT_2022 = List[BuiltInCategory]([
+    BuiltInCategory.OST_FoodServiceEquipmentTags,
+    BuiltInCategory.OST_MedicalEquipmentTags,
+    BuiltInCategory.OST_FireProtectionTags,
+    BuiltInCategory.OST_VerticalCirculationTags,
+    BuiltInCategory.OST_AudioVisualDeviceTags,
+    BuiltInCategory.OST_SignageTags,
+    BuiltInCategory.OST_HardscapeTags,
+    BuiltInCategory.OST_TemporaryStructureTags,
+    BuiltInCategory.OST_RoadTags,
+    BuiltInCategory.OST_BridgeBearingTags,
+    BuiltInCategory.OST_BridgePierTags,
+    BuiltInCategory.OST_BridgeCableTags,
+    BuiltInCategory.OST_BridgeDeckTags,
+    BuiltInCategory.OST_AbutmentWallTags,	
+    BuiltInCategory.OST_AbutmentPileTags,
+    BuiltInCategory.OST_AbutmentFoundationTags,
+    BuiltInCategory.OST_ExpansionJointTags,
+])

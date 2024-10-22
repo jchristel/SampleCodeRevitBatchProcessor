@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A 2D bounding box base class.
+Geometry property  names enum class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -27,40 +27,15 @@ A 2D bounding box base class.
 #
 #
 
-from duHast.Geometry.bounding_box_base import BoundingBoxBase
-from duHast.Geometry.point_2 import Point2
-from duHast.Geometry.geometry_property_names import GeometryPropertyNames
-class BoundingBox2(BoundingBoxBase):
-    def __init__(self, point1=None, point2=None, j=None):
 
-        # ini super with json field
-        super(BoundingBox2, self).__init__(j=j)
+from enum import Enum
 
-        # check first if a json string / dictionary is provided
-        if j:
-            point1 = Point2(**self.json_ini[GeometryPropertyNames.POINT1.value])
-            point2 = Point2(**self.json_ini[GeometryPropertyNames.POINT2.value])
 
-        # If both point1 and point2 are None after handling JSON, raise an error
-        if point1 is None or point2 is None:
-            raise ValueError("Either two Point2 instances or a JSON string with point data needs to be provided.")
+class GeometryPropertyNames(Enum):
+    """
+    Contains property names used in geometry classes
+    """
 
-        # Type checking
-        if not isinstance(point1, Point2):
-            raise TypeError("point1 expected Point2 instance. Got {} instead:".format(type(point1)))
-        if not isinstance(point2, Point2):
-            raise TypeError("point2 expected Point2 instance. Got {} instead:".format(type(point2)))
-
-        self.min_x = min(point1.x, point2.x)
-        self.max_x = max(point1.x, point2.x)
-
-        self.min_y = min(point1.y, point2.y)
-        self.max_y = max(point1.y, point2.y)
-
-    def contains(self, point):
-        """Check if the bounding box contains a given point."""
-        return (self.min_x <= point.x <= self.max_x and
-                self.min_y <= point.y <= self.max_y)
-
-    def __str__(self):
-        return "BoundingBox2D({}, {}, {}, {})".format(self.min_x, self.min_y, self.max_x, self.max_y)
+    POINT1 = "point1"
+    POINT2 = "point2"
+    

@@ -49,6 +49,8 @@ class DataPropertyNames(Enum):
     MIN = "min"
     MAX = "max"
     NAME = "name"
+    POINT1 = "point1"
+    POINT2 = "point2"
     OPTION_NAME = "option_name"
     OFFSET_FROM_LEVEL = "offset_from_level"
     PROPERTIES = "properties"

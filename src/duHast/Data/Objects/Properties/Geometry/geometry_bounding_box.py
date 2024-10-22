@@ -30,6 +30,8 @@ Geometry data bounding_box storage class.
 import json
 from duHast.Data.Objects.Properties.Geometry import geometry_base
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Geometry.bounding_box_2 import BoundingBox2
+from duHast.Geometry.point_2 import Point2
 
 
 class DataBoundingBox(geometry_base.DataGeometryBase):
@@ -47,8 +49,7 @@ class DataBoundingBox(geometry_base.DataGeometryBase):
         super(DataBoundingBox, self).__init__(DataBoundingBox.data_type, j)
 
         # set default values
-        self.min = None
-        self.max = None
+        self.bounding_box = BoundingBox2(point1=Point2(0,0), point2=Point2(0,0))
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -68,14 +69,9 @@ class DataBoundingBox(geometry_base.DataGeometryBase):
 
             # attempt to populate from json
             try:
-                self.min = j.get(
-                    DataPropertyNames.MIN.value,
-                    self.min,
-                )
-                self.type_properties = j.get(
-                    DataPropertyNames.MAX.value,
-                    self.max,
-                )
+                # get the bounding box
+                bbox = j.get(DataPropertyNames.BOUNDING_BOX.value,{})
+                self.bounding_box = BoundingBox2(j=bbox)
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

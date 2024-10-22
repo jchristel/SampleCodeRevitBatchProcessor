@@ -26,21 +26,41 @@ A bounding box base class.
 #
 #
 #
-
+import json
 from duHast.Utilities.Objects import base
-
+from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 class BoundingBoxBase(base):
-    def __init__(self):
+    def __init__(self, j=None):
 
 
         # ini super class to allow multi inheritance in children!
         super(BoundingBoxBase, self).__init__()
 
+       # Check if a JSON string / dictionary is provided
+        if j:
+            if isinstance(j, str):
+                # Parse the JSON string
+                j = json.loads(j)
+            elif not isinstance(j, dict):
+                raise TypeError("Input must be a JSON string or a dictionary.")
+            
+            # Validate presence of required keys
+            if GeometryPropertyNames.POINT1.value not in j or GeometryPropertyNames.POINT2.value not in j:
+                raise ValueError("JSON must contain 'point1' and 'point2' keys.")
+            self._json_ini = j
+        else:
+            self._json_ini = None
+            
         self.min_x = float('inf')
         self.max_x = float('-inf')
         self.min_y = float('inf')
         self.max_y = float('-inf')
 
+    @property
+    def json_ini(self):
+        """Read-only property to access the parsed JSON data."""
+        return self._json_ini
+    
     def contains(self, point):
         raise NotImplementedError("Subclasses should implement this method")
 

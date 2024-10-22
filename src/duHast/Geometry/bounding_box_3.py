@@ -28,12 +28,22 @@ A 3D bounding box base class.
 #
 from duHast.Geometry.bounding_box_base import BoundingBoxBase
 from duHast.Geometry.point_3 import Point3
+from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 
 class BoundingBox3D(BoundingBoxBase):
-    def __init__(self, point1, point2):
+    def __init__(self, point1=None, point2=None, j=None):
 
-        super(BoundingBox3D, self).__init__()
+        # ini super with json field
+        super(BoundingBox3D, self).__init__(j=j)
 
+         # check first if a json string / dictionary is provided
+        if j:
+            point1 = Point3(**self.json_ini[GeometryPropertyNames.POINT1.value])
+            point2 = Point3(**self.json_ini[GeometryPropertyNames.POINT2.value])
+        
+        # If both point1 and point2 are None after handling JSON, raise an error
+        if point1 is None or point2 is None:
+            raise ValueError("Either two Point2 instances or a JSON string with point data needs to be provided.")
 
         # some type checking
         if not isinstance(point1,Point3):

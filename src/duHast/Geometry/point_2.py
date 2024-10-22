@@ -31,9 +31,9 @@ from duHast.Geometry.point_base import PointBase
 
 
 class Point2(PointBase):
-    def __init__(self, x,y):
+    def __init__(self, x=None, y=None, j=None):
         """
-        A 2D point base class. 
+        A 2D point base class.
 
         :param x: x-coordinate of point
         :type x: double
@@ -42,4 +42,4 @@ class Point2(PointBase):
         """
 
         # ini super class to allow multi inheritance in children!
-        super(Point2, self).__init__(x=x, y=y)
+        super(Point2, self).__init__(x=x, y=y, j=j)

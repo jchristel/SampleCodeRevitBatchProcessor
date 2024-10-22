@@ -28,12 +28,13 @@ A 3D point base class.
 #
 
 from duHast.Geometry.point_base import PointBase
+from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 
 
 class Point3(PointBase):
-    def __init__(self, x,y,z):
+    def __init__(self, x=None, y=None, z=None, j=None):
         """
-        A 2D point base class. 
+        A 2D point base class.
 
         :param x: x-coordinate of point
         :type x: double
@@ -44,6 +45,19 @@ class Point3(PointBase):
         """
 
         # ini super class to allow multi inheritance in children!
-        super(Point3, self).__init__(x=x, y=y)
+        super(Point3, self).__init__(x=x, y=y, j=j)
 
+        # check first if a json string / dictionary is provided
+        if j:
+            # Validate presence of required keys (stored in base class json)
+            if GeometryPropertyNames.Z.value not in self.json_ini:
+                raise ValueError("JSON must contain 'z' key.")
+
+            z = self.json_ini.get(GeometryPropertyNames.Z.value)
+
+        # Type checking
+        if not isinstance(z, float):
+            raise TypeError("z expected int. Got {} instead:".format(type(x)))
+
+        # store values
         self.z = z

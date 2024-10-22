@@ -27,11 +27,13 @@ A point base class.
 #
 #
 
+import json
 from duHast.Utilities.Objects import base
+from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 
 
 class PointBase(base.Base):
-    def __init__(self, x,y):
+    def __init__(self, x=None, y=None, j=None):
         """
         A point base class. Should not be used directly.
 
@@ -44,5 +46,39 @@ class PointBase(base.Base):
         # ini super class to allow multi inheritance in children!
         super(PointBase, self).__init__()
 
+        # Check if a JSON string / dictionary is provided
+        if j:
+            if isinstance(j, str):
+                # Parse the JSON string
+                j = json.loads(j)
+            elif not isinstance(j, dict):
+                raise TypeError("Input must be a JSON string or a dictionary.")
+
+            # Validate presence of required keys
+            if (
+                GeometryPropertyNames.X.value not in j
+                or GeometryPropertyNames.Y.value not in j
+            ):
+                raise ValueError("JSON must contain 'x' and 'y' keys.")
+
+            x = j.get(GeometryPropertyNames.X.value)
+            y = j.get(GeometryPropertyNames.Y.value)
+
+            self._json_ini = j
+        else:
+            self._json_ini = None
+
+        # Type checking
+        if not isinstance(x, float):
+            raise TypeError("x expected int. Got {} instead:".format(type(x)))
+        if not isinstance(y, float):
+            raise TypeError("y expected int. Got {} instead:".format(type(y)))
+
+        # store values
         self.x = x
         self.y = y
+
+    @property
+    def json_ini(self):
+        """Read-only property to access the parsed JSON data."""
+        return self._json_ini

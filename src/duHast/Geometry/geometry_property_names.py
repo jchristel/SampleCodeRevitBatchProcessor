@@ -38,4 +38,7 @@ class GeometryPropertyNames(Enum):
 
     POINT1 = "point1"
     POINT2 = "point2"
+    X="x"
+    Y="y"
+    Z="z"
     

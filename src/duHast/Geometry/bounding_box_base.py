@@ -26,6 +26,7 @@ A bounding box base class.
 #
 #
 #
+
 import json
 from duHast.Utilities.Objects import base
 from duHast.Geometry.geometry_property_names import GeometryPropertyNames
@@ -36,7 +37,7 @@ class BoundingBoxBase(base):
         # ini super class to allow multi inheritance in children!
         super(BoundingBoxBase, self).__init__()
 
-       # Check if a JSON string / dictionary is provided
+        # Check if a JSON string / dictionary is provided
         if j:
             if isinstance(j, str):
                 # Parse the JSON string

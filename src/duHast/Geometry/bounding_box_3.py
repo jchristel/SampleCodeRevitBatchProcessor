@@ -30,27 +30,33 @@ from duHast.Geometry.bounding_box_base import BoundingBoxBase
 from duHast.Geometry.point_3 import Point3
 from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 
+
 class BoundingBox3D(BoundingBoxBase):
     def __init__(self, point1=None, point2=None, j=None):
 
         # ini super with json field
         super(BoundingBox3D, self).__init__(j=j)
 
-         # check first if a json string / dictionary is provided
+        # check first if a json string / dictionary is provided
         if j:
             point1 = Point3(**self.json_ini[GeometryPropertyNames.POINT1.value])
             point2 = Point3(**self.json_ini[GeometryPropertyNames.POINT2.value])
-        
+
         # If both point1 and point2 are None after handling JSON, raise an error
         if point1 is None or point2 is None:
-            raise ValueError("Either two Point2 instances or a JSON string with point data needs to be provided.")
+            raise ValueError(
+                "Either two Point2 instances or a JSON string with point data needs to be provided."
+            )
 
         # some type checking
-        if not isinstance(point1,Point3):
-            raise TypeError("point1 expected Point3 instance. Got {} instead:".format(type(point1)))
-        if not isinstance(point2,Point3):
-            raise TypeError("point3 expected Point3 instance. Got {} instead:".format(type(point1)))
-
+        if not isinstance(point1, Point3):
+            raise TypeError(
+                "point1 expected Point3 instance. Got {} instead:".format(type(point1))
+            )
+        if not isinstance(point2, Point3):
+            raise TypeError(
+                "point3 expected Point3 instance. Got {} instead:".format(type(point1))
+            )
 
         self.min_x = min(point1.x, point2.x)
         self.max_x = max(point1.x, point2.x)
@@ -60,10 +66,13 @@ class BoundingBox3D(BoundingBoxBase):
         self.max_z = max(point1.z, point2.z)
 
     def contains(self, point):
-        return (self.min_x <= point.x <= self.max_x and
-                self.min_y <= point.y <= self.max_y and
-                self.min_z <= point.z <= self.max_z)
+        return (
+            self.min_x <= point.x <= self.max_x
+            and self.min_y <= point.y <= self.max_y
+            and self.min_z <= point.z <= self.max_z
+        )
 
     def __str__(self):
         return "BoundingBox3D({}, {}, {}, {}, {}, {})".format(
-            self.min_x, self.min_y, self.min_z, self.max_x, self.max_y, self.max_z)
+            self.min_x, self.min_y, self.min_z, self.max_x, self.max_y, self.max_z
+        )

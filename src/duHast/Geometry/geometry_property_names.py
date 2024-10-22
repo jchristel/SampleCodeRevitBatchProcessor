@@ -41,4 +41,7 @@ class GeometryPropertyNames(Enum):
     X="x"
     Y="y"
     Z="z"
+    ROWS = "rows"
+    COLUMNS ="columns"
+    DATA="data"
     

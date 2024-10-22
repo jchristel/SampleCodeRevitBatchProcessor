@@ -27,7 +27,12 @@ Revit API utility functions for Room separation lines.
 #
 #
 
-from Autodesk.Revit.DB import BuiltInCategory, ElementId, FilteredElementCollector, ModelCurve
+from Autodesk.Revit.DB import (
+    BuiltInCategory,
+    ElementId,
+    FilteredElementCollector,
+    ModelCurve,
+)
 
 from duHast.Revit.Common.phases import get_all_phases_in_order
 from duHast.Revit.Warnings.warning_guids import (
@@ -47,15 +52,17 @@ def get_room_separation_lines(doc):
 
     :return: A collector containing room separation lines.
     :rtype: FilteredElementCollector
+
     """
 
     return FilteredElementCollector(doc).OfCategory(
         BuiltInCategory.OST_RoomSeparationLines
     )
 
+
 def _remove_wall_ids(doc, ids):
     """
-    Filters list of ids and returns ids of room separtion lines (ModelCurve) only
+    Filters list of ids and returns ids of room separation lines (ModelCurve) only
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -64,6 +71,7 @@ def _remove_wall_ids(doc, ids):
 
     :return: List of element ids
     :rtype: [Autodesk.Revit.DB.ElementId]
+
     """
 
     filtered_ids = []
@@ -83,6 +91,7 @@ def get_all_room_separation_lines_ids_with_warnings(doc):
 
     :return: List of element ids
     :rtype: [Autodesk.Revit.DB.ElementId]
+
     """
 
     # get room lines with warnings
@@ -112,7 +121,7 @@ def get_all_room_separation_lines_ids_with_warnings(doc):
         all_line_ids_with_warnings = (
             all_line_ids_with_warnings + filtered_line_ides_overlapping_walls
         )
-    
+
     return all_line_ids_with_warnings
 
 
@@ -122,22 +131,24 @@ def get_all_room_separation_lines_ids_without_warnings(doc):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    
+
     :return: List of element ids
     :rtype: [Autodesk.Revit.DB.ElementId]
+
     """
 
     all_room_separation_lines = get_room_separation_lines(doc=doc)
-    all_line_ids_with_warnings = get_all_room_separation_lines_ids_with_warnings(doc=doc)
+    all_line_ids_with_warnings = get_all_room_separation_lines_ids_with_warnings(
+        doc=doc
+    )
 
     all_room_separation_line_ids_without_warnings = []
 
     for room_sep in all_room_separation_lines:
-        if(room_sep.Id not in all_line_ids_with_warnings):
+        if room_sep.Id not in all_line_ids_with_warnings:
             all_room_separation_line_ids_without_warnings.append(room_sep.Id)
-    
-    return all_room_separation_line_ids_without_warnings
 
+    return all_room_separation_line_ids_without_warnings
 
 
 def get_room_separation_lines_by_level_name(doc, level_name):
@@ -208,6 +219,7 @@ def sort_room_separation_line_by_phase_created(room_separation_lines):
     :rtype: {ElementId:[ModelLine]}
 
     """
+
     sorted_lines = {}
 
     for line in room_separation_lines:
@@ -307,6 +319,7 @@ def filter_room_separation_lines_by_phase_created_older_than_upper_bound_phase(
 
     :return: A list of room separation lines filtered by phase created.
     :rtype: list
+
     """
 
     if isinstance(upper_bound_phase_id, ElementId) == False:
@@ -355,6 +368,7 @@ def filter_room_separation_lines_by_level_id(room_separation_lines, level_id):
 
     :return: A list of room separation lines filtered by level placed on.
     :rtype: list
+
     """
 
     lines_filtered = []

@@ -38,6 +38,7 @@ from duHast.Utilities.unit_conversion import (
     convert_mm_to_imperial_feet,
 )
 from duHast.Geometry.point_3 import Point3
+from duHast.Geometry.point_2 import Point2
 
 
 def rotate_point_around_z_with_origin(point, origin, angle_in_radians):
@@ -300,6 +301,23 @@ def convert_XYZ_to_point3(point_xyz):
         x=convert_imperial_feet_to_metric_mm(point_xyz.X),
         y=convert_imperial_feet_to_metric_mm(point_xyz.Y),
         z=convert_imperial_feet_to_metric_mm(point_xyz.Z),
+    )
+    return p
+
+
+def convert_XYZ_to_point2(point_xyz):
+    """
+    Converts a Revit XYZ to a duHast point2 instance. X,Y coordinates are converted to metric mm. Z is dropped.
+
+    :param point_xyz: A revit 3D point
+    :type point_xyz: Autodesk.Revit.DB.XYZ
+    :return: A point2 instance
+    :rtype: :class:`.Point2`
+    """
+
+    p = Point2(
+        x=convert_imperial_feet_to_metric_mm(point_xyz.X),
+        y=convert_imperial_feet_to_metric_mm(point_xyz.Y),
     )
     return p
 

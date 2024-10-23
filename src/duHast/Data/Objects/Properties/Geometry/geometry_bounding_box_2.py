@@ -76,3 +76,22 @@ class DataBoundingBox2(geometry_base.DataGeometryBase):
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
+    
+    def set_bounding_box_by_points(self, min, max):
+        """
+        Update the geometry bounding box with new values
+
+        :param min: lower left corner of the bounding box
+        :type min: :class:`.Point2`
+        :param max: upper corner of the bounding box
+        :type max: :class:`.Point2`
+        :raises ValueError: _description_
+        :raises ValueError: _description_
+        """
+        if isinstance(min, Point2)==False:
+            raise ValueError ("Min needs to be a point2 instance, got {} instead:".format(type(min)))
+        
+        if isinstance(max, Point2)==False:
+            raise ValueError ("Max needs to be a point2 instance, got {} instead:".format(type(min)))
+        
+        self.bounding_box.update(point1=min, point2=max)

@@ -45,6 +45,23 @@ class BoundingBox2(BoundingBoxBase):
         if point1 is None or point2 is None:
             raise ValueError("Either two Point2 instances or a JSON string with point data needs to be provided.")
 
+        # set the bounding box
+        self.update(point1=point1, point2=point2)
+       
+
+    def update(self, point1, point2):
+        """
+        Update the size of the bounding box by points
+
+        :param point1: min point on bounding box 
+        :type point1: :class:`.Point2`
+        :param point2: max point of bounding box
+        :type point2: :class:`.Point2`
+        :raises TypeError: _description_
+        :raises TypeError: _description_
+        """
+        # set the bounding box
+
         # Type checking
         if not isinstance(point1, Point2):
             raise TypeError("point1 expected Point2 instance. Got {} instead:".format(type(point1)))

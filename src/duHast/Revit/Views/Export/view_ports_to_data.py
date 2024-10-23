@@ -44,6 +44,8 @@ from duHast.Data.Objects.Properties.data_schedule_segement import DataScheduleSe
 
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
+from duHast.Revit.Common.Geometry.points import convert_XYZ_to_point2
+
 from Autodesk.Revit.DB import SectionType, ViewType
 
 
@@ -230,21 +232,13 @@ def convert_revit_viewport_to_data_instance(doc, revit_view_port):
 
     # get an outline from the Revit view port
     view_port_outline = revit_view_port.GetBoxOutline()
-    # get the outlines min and max points
-    max_point = view_port_outline.MaximumPoint
-    min_point = view_port_outline.MinimumPoint
-
-    # get the min and max point from the outline
-    bbox.max = [
-        convert_imperial_feet_to_metric_mm(max_point.X),
-        convert_imperial_feet_to_metric_mm(max_point.Y),
-        convert_imperial_feet_to_metric_mm(max_point.Z),
-    ]
-    bbox.min = [
-        convert_imperial_feet_to_metric_mm(min_point.X),
-        convert_imperial_feet_to_metric_mm(min_point.Y),
-        convert_imperial_feet_to_metric_mm(min_point.Z),
-    ]
+    
+    # get the outlines min and max points as 2d points
+    bb_max_2d = convert_XYZ_to_point2(view_port_outline.MaximumPoint)
+    bb_min_2d = convert_XYZ_to_point2(view_port_outline.MinimumPoint)
+    
+    # set the bounding box size
+    bbox.set_bounding_box_by_points(min=bb_min_2d, max=bb_max_2d)
 
     # update the bounding box property of the view port instance
     view_port_data.bounding_box = bbox

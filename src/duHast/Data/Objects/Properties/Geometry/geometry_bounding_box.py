@@ -39,7 +39,7 @@ class DataBoundingBox(geometry_base.DataGeometryBase):
 
     def __init__(self, j=None):
         """
-        Class constructor
+        Class constructor for a 2D bounding box.
 
         :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional

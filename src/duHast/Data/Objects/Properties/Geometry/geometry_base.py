@@ -29,6 +29,9 @@ Geometry data storage class.
 
 import json
 from duHast.Data.Objects import data_base
+from duHast.Geometry.point_3 import Point3
+from duHast.Geometry.matrix import Matrix
+from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 
 class DataGeometryBase(data_base.DataBase):
@@ -45,13 +48,9 @@ class DataGeometryBase(data_base.DataBase):
 
         # set default values
         # translation as per shared coordinates in revit file
-        self.translation_coord = [0.0, 0.0, 0.0]
-        # rotation as per shared coordinates in revit file
-        self.rotation_coord = [
-            [0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0],
-        ]
+        self.translation_coord = Point3(0.0, 0.0, 0.0)
+        # rotation as per shared coordinates in revit file ( default )
+        self.rotation_coord = Matrix(rows=3, cols=3) 
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -71,10 +70,11 @@ class DataGeometryBase(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.translation_coord = j.get(
-                    "translation_coord", self.translation_coord
-                )
-                self.rotation_coord = j.get("rotation_coord", self.rotation_coord)
+                self.translation_coord = Point3(j=j.get(
+                    DataPropertyNames.TRANSLATION_COORDINATES.value, None
+                ))
+
+                self.rotation_coord = Matrix(j=j.get(DataPropertyNames.ROTATION_COORDINATES.value,None))
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

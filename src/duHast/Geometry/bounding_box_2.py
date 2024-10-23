@@ -30,8 +30,23 @@ A 2D bounding box base class.
 from duHast.Geometry.bounding_box_base import BoundingBoxBase
 from duHast.Geometry.point_2 import Point2
 from duHast.Geometry.geometry_property_names import GeometryPropertyNames
+
+
 class BoundingBox2(BoundingBoxBase):
     def __init__(self, point1=None, point2=None, j=None):
+        """
+        A 2D bounding box class.
+
+        :param point1: A 3D point describing a corner of bounding box, defaults to None
+        :type point1: :class:`.Point2`, optional
+        :param point2: A 3D point describing diagonal opposite corner of bounding box, defaults to None
+        :type point2: :class:`.Point2`, optional
+        :param j: A json formatted string, representing an instance of this class, defaults to None
+        :type j: [str], optional
+        :raises ValueError: "Either two Point2 instances or a JSON string with point data needs to be provided."
+        :raises TypeError: "point1 expected Point2 instance. Got type instead.
+        :raises TypeError: "point2 expected Point2 instance. Got type instead."
+        """
 
         # ini super with json field
         super(BoundingBox2, self).__init__(j=j)
@@ -47,15 +62,15 @@ class BoundingBox2(BoundingBoxBase):
 
         # Type checking
         if not isinstance(point1, Point2):
-            raise TypeError("point1 expected Point2 instance. Got {} instead:".format(type(point1)))
+            raise TypeError("point1 expected Point2 instance. Got {} instead.".format(type(point1)))
         if not isinstance(point2, Point2):
-            raise TypeError("point2 expected Point2 instance. Got {} instead:".format(type(point2)))
+            raise TypeError("point2 expected Point2 instance. Got {} instead.".format(type(point2)))
 
-        self.min_x = min(point1.x, point2.x)
-        self.max_x = max(point1.x, point2.x)
+        self._min_x = min(point1.x, point2.x)
+        self._max_x = max(point1.x, point2.x)
 
-        self.min_y = min(point1.y, point2.y)
-        self.max_y = max(point1.y, point2.y)
+        self._min_y = min(point1.y, point2.y)
+        self._max_y = max(point1.y, point2.y)
 
     def contains(self, point):
         """Check if the bounding box contains a given point."""

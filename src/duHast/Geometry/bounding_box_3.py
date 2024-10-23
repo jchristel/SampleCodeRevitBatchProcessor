@@ -33,6 +33,19 @@ from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 
 class BoundingBox3D(BoundingBoxBase):
     def __init__(self, point1=None, point2=None, j=None):
+        """
+        A 3D bounding box class.
+
+        :param point1: A 3D point describing a corner of bounding box, defaults to None
+        :type point1: :class:`.Point3`, optional
+        :param point2: A 3D point describing diagonal opposite corner of bounding box, defaults to None
+        :type point2: :class:`.Point3`, optional
+        :param j: A json formatted string, representing an instance of this class, defaults to None
+        :type j: [str], optional
+        :raises ValueError: "Either two Point2 instances or a JSON string with point data needs to be provided."
+        :raises TypeError: "point1 expected Point3 instance. Got type instead."
+        :raises TypeError: "point2 expected Point3 instance. Got type instead."
+        """
 
         # ini super with json field
         super(BoundingBox3D, self).__init__(j=j)
@@ -51,19 +64,30 @@ class BoundingBox3D(BoundingBoxBase):
         # some type checking
         if not isinstance(point1, Point3):
             raise TypeError(
-                "point1 expected Point3 instance. Got {} instead:".format(type(point1))
+                "point1 expected Point3 instance. Got {} instead.".format(type(point1))
             )
         if not isinstance(point2, Point3):
             raise TypeError(
-                "point3 expected Point3 instance. Got {} instead:".format(type(point1))
+                "point3 expected Point3 instance. Got {} instead.".format(type(point1))
             )
 
-        self.min_x = min(point1.x, point2.x)
-        self.max_x = max(point1.x, point2.x)
-        self.min_y = min(point1.y, point2.y)
-        self.max_y = max(point1.y, point2.y)
-        self.min_z = min(point1.z, point2.z)
-        self.max_z = max(point1.z, point2.z)
+        self._min_x = min(point1.x, point2.x)
+        self._max_x = max(point1.x, point2.x)
+        self._min_y = min(point1.y, point2.y)
+        self._max_y = max(point1.y, point2.y)
+        self._min_z = min(point1.z, point2.z)
+        self._max_z = max(point1.z, point2.z)
+
+    @property
+    def min_z(self):
+        """Read-only property for minimum z value."""
+        return self._min_z
+
+    @property
+    def max_z(self):
+        """Read-only property for maximum z value."""
+        return self._max_z
+
 
     def contains(self, point):
         return (

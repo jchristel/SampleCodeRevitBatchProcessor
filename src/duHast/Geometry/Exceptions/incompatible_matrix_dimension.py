@@ -1,7 +1,10 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A vector base class.
+A matrix exception class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is raised when matrix manipulation is attempted with two matrices of different dimension
+
 """
 
 #
@@ -27,47 +30,15 @@ A vector base class.
 #
 #
 
-import math
 
-from duHast.Utilities.Objects import base
-from duHast.Geometry.Exceptions.incompatible_vector_dimension import (
-    IncompatibleVectorDimensions,
-)
+class IncompatibleMatrixDimensions(Exception):
+    def __init__(self, message, matrix):
 
+        # Call the base class constructor with the message
+        super(IncompatibleMatrixDimensions, self).__init__(message, matrix)
 
-class VectorBase(base):
-    def __init__(self, *components):
-        """
-        A vector base class.
-        """
-        # ini super class to allow multi inheritance in children!
-        super(VectorBase, self).__init__()
-
-        self.components = components
-
-    def _check_dimension_compatibility(self, other):
-        if len(self.components) != len(other.components):
-            raise IncompatibleVectorDimensions(
-                "Dimension mismatch: {} vs {}".format(
-                    len(self.components), len(other.components)
-                ),
-                other,
-            )
-
-    def magnitude(self):
-        return math.sqrt(sum(c**2 for c in self.components))
+        self.matrix = matrix
 
     def __str__(self):
-        return "Vector ({})".format(", ".join(map(str, self.components)))
-
-    def __rmul__(self, s):
-        return self.__mul__(s)
-
-    def __neg__(self):
-        return self * -1
-
-    def __pos__(self):
-        return self
-
-    def __abs__(self):
-        return self.magnitude()
+        # Custom string representation of the exception
+        return "Incompatible Matrix Dimensions Exception: {} [{}]".format(self.args[0], self.matrix)

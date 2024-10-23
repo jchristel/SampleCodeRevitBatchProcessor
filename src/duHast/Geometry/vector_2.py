@@ -29,6 +29,7 @@ A 2D vector class.
 
 from duHast.Geometry.vector_base import VectorBase
 
+
 class Vector2(VectorBase):
     def __init__(self, x, y):
         """
@@ -40,7 +41,6 @@ class Vector2(VectorBase):
         :type y: double
         """
         super(Vector2, self).__init__(x, y)
-        
 
     @property
     def x(self):
@@ -50,5 +50,41 @@ class Vector2(VectorBase):
     def y(self):
         return self.components[1]
 
+    def __add__(self, other):
+        if not isinstance(other, Vector2):
+            raise TypeError("Expected vector, got: {}".format(type(other).__name__))
+        self._check_dimension_compatibility(other)
+        return Vector2(*(v + w for v, w in zip(self.components, other.components)))
+
+    def __radd__(self, other):
+        if not isinstance(
+            other, (list, tuple)
+        ):  # Assuming Sequence means list or tuple
+            return NotImplemented
+        return Vector2(*(w + v for v, w in zip(self.components, other)))
+
+    def __sub__(self, other):
+        if not isinstance(other, Vector2):
+            return NotImplemented
+        self._check_dimension_compatibility(other)
+        return Vector2(*(v - w for v, w in zip(self.components, other.components)))
+
+    def __rsub__(self, other):
+        if not isinstance(other, (list, tuple)):
+            return NotImplemented
+        return Vector2(*(w - v for v, w in zip(self.components, other)))
+
     def __str__(self):
-        return f"Vector2D({self.dx}, {self.dy})"
+        return "Vector3D({}, {}, {})".format(self.x, self.y, self.z)
+
+    def __mul__(self, s):
+        return Vector2(*(v * s for v in self.components))
+
+    def __truediv__(self, s):
+        return Vector2(*(v / s for v in self.components))
+
+    def __floordiv__(self, s):
+        return Vector2(*(v // s for v in self.components))
+
+    def __str__(self):
+        return "Vector2D({}, {})".format(self.x, self.y)

@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A 2D vector class.
+A 3D vector class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -33,7 +33,7 @@ from duHast.Geometry.vector_base import VectorBase
 class Vector3(VectorBase):
     def __init__(self, x, y, z):
         """
-        A 3D vector
+        A 3D vector class
 
         :param x: Delta x
         :type x: double

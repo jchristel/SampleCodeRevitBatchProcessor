@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A 3D point base class.
+A 3D point class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -34,7 +34,7 @@ from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 class Point3(PointBase):
     def __init__(self, x=None, y=None, z=None, j=None):
         """
-        A 2D point base class.
+        A #D point class.
 
         :param x: x-coordinate of point
         :type x: double

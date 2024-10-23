@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A 2D point base class.
+A 2D point class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -33,7 +33,7 @@ from duHast.Geometry.point_base import PointBase
 class Point2(PointBase):
     def __init__(self, x=None, y=None, j=None):
         """
-        A 2D point base class.
+        A 2D point class.
 
         :param x: x-coordinate of point
         :type x: double

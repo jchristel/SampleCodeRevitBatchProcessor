@@ -32,7 +32,7 @@ from duHast.Geometry.vector_base import VectorBase
 class Vector2(VectorBase):
     def __init__(self, x, y):
         """
-        A 2D vector
+        A 2D vector class
 
         :param x: Delta x
         :type x: double

@@ -45,13 +45,6 @@ class VectorBase(base):
 
         self.components = components
 
-    def magnitude(self):
-        return math.sqrt(sum(c**2 for c in self.components))
-
-    def _check_dimension_compatibility(self, other):
-        if len(self.components) != len(other.components):
-            raise IncompatibleVectorDimensions("Vectors are incompatible", other)
-
     def _check_dimension_compatibility(self, other):
         if len(self.components) != len(other.components):
             raise IncompatibleVectorDimensions(
@@ -61,44 +54,14 @@ class VectorBase(base):
                 other,
             )
 
-    def __add__(self, other):
-        if not isinstance(other, VectorBase):
-            raise TypeError("Expected vector, got: {}".format(type(other).__name__))
-        self._check_dimension_compatibility(other)
-        return VectorBase(*(v + w for v, w in zip(self.components, other.components)))
-
-    def __radd__(self, other):
-        if not isinstance(
-            other, (list, tuple)
-        ):  # Assuming Sequence means list or tuple
-            return NotImplemented
-        return VectorBase(*(w + v for v, w in zip(self.components, other)))
-
-    def __sub__(self, other):
-        if not isinstance(other, VectorBase):
-            return NotImplemented
-        self._check_dimension_compatibility(other)
-        return VectorBase(*(v - w for v, w in zip(self.components, other.components)))
-
-    def __rsub__(self, other):
-        if not isinstance(other, (list, tuple)):
-            return NotImplemented
-        return VectorBase(*(w - v for v, w in zip(self.components, other)))
+    def magnitude(self):
+        return math.sqrt(sum(c**2 for c in self.components))
 
     def __str__(self):
-        return f"Vector({', '.join(map(str, self.components))})"
-
-    def __mul__(self, s):
-        return VectorBase(*(v * s for v in self.components))
+        return "Vector ({})".format(", ".join(map(str, self.components)))
 
     def __rmul__(self, s):
         return self.__mul__(s)
-
-    def __truediv__(self, s):
-        return VectorBase(*(v / s for v in self.components))
-
-    def __floordiv__(self, s):
-        return VectorBase(*(v // s for v in self.components))
 
     def __neg__(self):
         return self * -1

@@ -84,12 +84,9 @@ class Matrix(Base):
                     [0.0 for _ in range(self._columns)] for _ in range(self._rows)
                 ]
             else:
-                if len(elements) != self._rows or any(
-                    len(row) != self._columns for row in elements
-                ):
-                    raise ValueError("Elements must match the specified dimensions.")
+                # make sure elements are of the right type and size
+                self._validate_elements(elements)
 
-                self._data = elements
 
     def _init_from_json(self, json_string):
         """
@@ -116,6 +113,7 @@ class Matrix(Base):
             self._validate_elements(elements_from_json)  # Validate after loading from JSON
         except (json.JSONDecodeError, ValueError) as e:
             raise ValueError("Invalid JSON input: {}".format(e))
+
 
     def _validate_elements(self, elements):
         """Validate that the elements are all floats."""

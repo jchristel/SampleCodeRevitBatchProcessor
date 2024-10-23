@@ -51,4 +51,4 @@ class Vector2(VectorBase):
         return self.components[1]
 
     def __str__(self):
-        return f"Vector2D({self.dx}, {self.dy})"
+        return "Vector2D({}, {})".format(self.x, self.y)

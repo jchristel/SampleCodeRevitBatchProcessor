@@ -37,8 +37,8 @@ import json
 from duHast.Data.Objects.data_view_base import DataViewBase
 
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
-    DataBoundingBox,
+from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
+    DataBoundingBox2,
 )
 
 
@@ -58,7 +58,7 @@ class DataViewThreeD(DataViewBase):
         super(DataViewThreeD, self).__init__(data_type=DataViewThreeD.data_type, j=j)
 
         # set default values
-        self.bounding_box = DataBoundingBox()
+        self.bounding_box = DataBoundingBox2()
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -78,7 +78,7 @@ class DataViewThreeD(DataViewBase):
 
             # attempt to populate from json
             try:
-                self.bounding_box = DataBoundingBox(
+                self.bounding_box = DataBoundingBox2(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
 

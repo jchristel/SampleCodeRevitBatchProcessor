@@ -28,7 +28,7 @@ Revit solids helper functions
 
 
 from Autodesk.Revit.DB import BoundingBoxXYZ, ElementId, Options, Solid
-from duHast.Data.Objects.Properties.Geometry.from_revit_conversion import (
+from duHast.Revit.Common.Geometry.to_data_conversion import (
     convert_solid_to_flattened_2d_points,
 )
 

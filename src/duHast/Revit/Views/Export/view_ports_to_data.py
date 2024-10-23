@@ -29,8 +29,8 @@ This module contains a number of helper functions relating to Revit view port to
 
 
 from duHast.Data.Objects.data_sheet_view_port import DataSheetViewPort
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
-    DataBoundingBox,
+from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
+    DataBoundingBox2,
 )
 from duHast.Data.Objects.Properties.data_view_port_type_names import (
     DataViewPortTypeNames,
@@ -226,7 +226,7 @@ def convert_revit_viewport_to_data_instance(doc, revit_view_port):
 
     # set up data instances
     view_port_data = DataSheetViewPort()
-    bbox = DataBoundingBox()
+    bbox = DataBoundingBox2()
 
     # get an outline from the Revit view port
     view_port_outline = revit_view_port.GetBoxOutline()

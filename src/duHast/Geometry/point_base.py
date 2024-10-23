@@ -70,9 +70,9 @@ class PointBase(base.Base):
 
         # Type checking
         if not isinstance(x, float):
-            raise TypeError("x expected int. Got {} instead:".format(type(x)))
+            raise TypeError("x expected float. Got {} instead:".format(type(x)))
         if not isinstance(y, float):
-            raise TypeError("y expected int. Got {} instead:".format(type(y)))
+            raise TypeError("y expected float. Got {} instead:".format(type(y)))
 
         # store values
         self.x = x

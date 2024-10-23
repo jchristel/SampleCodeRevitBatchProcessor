@@ -34,8 +34,8 @@ from duHast.Geometry.bounding_box_2 import BoundingBox2
 from duHast.Geometry.point_2 import Point2
 
 
-class DataBoundingBox(geometry_base.DataGeometryBase):
-    data_type = "bounding box"
+class DataBoundingBox2(geometry_base.DataGeometryBase):
+    data_type = "bounding box 2"
 
     def __init__(self, j=None):
         """
@@ -46,10 +46,10 @@ class DataBoundingBox(geometry_base.DataGeometryBase):
         """
 
         # store data type  in base class
-        super(DataBoundingBox, self).__init__(DataBoundingBox.data_type, j)
+        super(DataBoundingBox2, self).__init__(DataBoundingBox2.data_type, j)
 
         # set default values
-        self.bounding_box = BoundingBox2(point1=Point2(0,0), point2=Point2(0,0))
+        self.bounding_box = BoundingBox2(point1=Point2(0.0,0.0), point2=Point2(0.0,0.0))
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:

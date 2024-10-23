@@ -32,11 +32,11 @@ Supports matrices up to 4 x 4.
 #
 
 import json
-from duHast.Utilities.Objects import base
+from duHast.Utilities.Objects.base import Base
 from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 
 
-class Matrix(base):
+class Matrix(Base):
     def __init__(self, rows=None, cols=None, elements=None, j=None):
         """
         A basic matrix class. Matrices up to size of 4x4 are supported only.

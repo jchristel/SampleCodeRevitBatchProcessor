@@ -32,7 +32,7 @@ from Autodesk.Revit.DB import BuiltInParameter
 # from duHast.APISamples.Ceilings.Geometry import Geometry
 from duHast.Revit.Ceilings import ceilings as rCeiling
 from duHast.Data.Objects import data_ceiling as dCeiling
-from duHast.Data.Objects.Properties.Geometry import from_revit_conversion as rCon
+from duHast.Revit.Common.Geometry import to_data_conversion as rCon
 from duHast.Revit.Common.Geometry import solids as rSolid
 from duHast.Revit.Exports.export_data import (
     get_level_data,

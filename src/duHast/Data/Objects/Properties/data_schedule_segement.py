@@ -28,11 +28,11 @@ Data storage class for Revit schedule segement properties.
 #
 
 import json
-from duHast.Data.Objects import data_base
+from duHast.Data.Objects.data_base import DataBase
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 
-class DataScheduleSegment(data_base.base):
+class DataScheduleSegment(DataBase):
 
     data_type = "schedule segement"
 

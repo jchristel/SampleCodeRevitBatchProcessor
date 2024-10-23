@@ -37,8 +37,8 @@ Data storage base class used for Revit sheets.
 import json
 
 from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
-    DataBoundingBox,
+from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
+    DataBoundingBox2,
 )
 from duHast.Data.Objects.data_view_plan import DataViewPlan
 from duHast.Data.Objects.data_view_elevation import DataViewElevation
@@ -69,7 +69,7 @@ class DataSheetViewPort(data_base.DataBase):
         )
 
         # set default values
-        self.bounding_box = DataBoundingBox()
+        self.bounding_box = DataBoundingBox2()
         self.vp_type = DataViewPortTypeNames.FLOOR_PLAN.value
         self.view_id = -1
         self.view = DataViewPlan()
@@ -93,7 +93,7 @@ class DataSheetViewPort(data_base.DataBase):
             # attempt to populate from json
             try:
 
-                self.bounding_box = DataBoundingBox(
+                self.bounding_box = DataBoundingBox2(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
                 self.vp_type = j.get(DataPropertyNames.VIEW_PORT_TYPE.value, self.vp_type)

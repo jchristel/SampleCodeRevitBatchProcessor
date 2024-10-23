@@ -28,9 +28,10 @@ A bounding box base class.
 #
 
 import json
-from duHast.Utilities.Objects import base
+from duHast.Utilities.Objects.base import Base
 from duHast.Geometry.geometry_property_names import GeometryPropertyNames
-class BoundingBoxBase(base):
+
+class BoundingBoxBase(Base):
     def __init__(self, j=None):
 
 

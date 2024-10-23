@@ -3,7 +3,7 @@
 A matrix class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Supports matrices up to 4 x 4.
+Supports matrices from 1 x 1 up to 4 x 4.
 
 
 """
@@ -34,10 +34,14 @@ Supports matrices up to 4 x 4.
 import json
 from duHast.Utilities.Objects.base import Base
 from duHast.Geometry.geometry_property_names import GeometryPropertyNames
+from duHast.Geometry.Exceptions.incompatible_matrix_dimension import IncompatibleMatrixDimensions
 
+import json
+import copy
 
 class Matrix(Base):
     def __init__(self, rows=None, cols=None, elements=None, j=None):
+
         """
         A basic matrix class. Matrices up to size of 4x4 are supported only.
 
@@ -49,50 +53,43 @@ class Matrix(Base):
         :type elements: [[float]], optional
         :param j: A json formatted settings string or dictionary, defaults to None
         :type j: str or dic, optional
-        :raises TypeError: _description_
-        :raises TypeError: _description_
-        :raises ValueError: _description_
-        :raises ValueError: _description_
+        :raises TypeError: Thrown if row is not an integer and no json is provided
+        :raises TypeError: Thrown if cols is not an integer and no json is provided
+        :raises ValueError: Thrown if matrix size exceeds 4 x 4 or is rows or columns is less than 1
+        :raises ValueError: Thrown if elements provided do not match rows and cols count
         """
 
-        # ini super
         super(Matrix, self).__init__()
 
         if j is not None:
             self._init_from_json(j)
         else:
-            # type checking
-            if isinstance(rows, int) == False:
+            if not isinstance(rows, int):
                 raise TypeError(
                     "rows must be of type int, got {} instead.".format(type(rows))
                 )
-            if isinstance(cols, int) == False:
+            if not isinstance(cols, int):
                 raise TypeError(
                     "cols must be of type int, got {} instead.".format(type(cols))
                 )
 
-            # check matrix size
             if rows < 1 or cols < 1 or rows > 4 or cols > 4:
                 raise ValueError("Matrix dimensions must be between 1 and 4.")
 
-            # store rows and columns
-            self.rows = rows
-            self.columns = cols
+            self._rows = rows
+            self._columns = cols
 
             if elements is None:
-                # Initialize with zeros if no elements are provided
-                self.data = [
-                    [0.0 for _ in range(self.columns)] for _ in range(self.rows)
+                self._data = [
+                    [0.0 for _ in range(self._columns)] for _ in range(self._rows)
                 ]
             else:
-                # Ensure the provided elements match the specified dimensions
-                if len(elements) != self.rows or any(
-                    len(row) != self.columns for row in elements
+                if len(elements) != self._rows or any(
+                    len(row) != self._columns for row in elements
                 ):
                     raise ValueError("Elements must match the specified dimensions.")
 
-                # store elements
-                self.data = elements
+                self._data = elements
 
     def _init_from_json(self, json_string):
         """
@@ -100,59 +97,74 @@ class Matrix(Base):
 
         :param json_string: A json formatted settings string or dictionary.
         :type json_string: str or dic
-        :raises ValueError: _description_
-        :raises ValueError: _description_
-        :raises ValueError: _description_
+        :raises ValueError: Input must be a JSON string or a dictionary
         """
 
         try:
-            # check type of json_string
             if isinstance(json_string, str):
-                # Parse the JSON string
                 json_string = json.loads(json_string)
-            elif not isinstance(j, dict):
+            elif not isinstance(json_string, dict):
                 raise TypeError("Input must be a JSON string or a dictionary.")
 
-            # attempt to populate from json
-            try:
-                self.rows = json_string.get(GeometryPropertyNames.ROWS.value, 0)
-                self.columns = json_string.get(GeometryPropertyNames.COLUMNS.value, 0)
+            self._rows = json_string.get(GeometryPropertyNames.ROWS.value, 0)
+            self._columns = json_string.get(GeometryPropertyNames.COLUMNS.value, 0)
 
-                # populate data
-                self.data = json_string.get(
-                    GeometryPropertyNames.DATA.value,
-                    [[0.0 for _ in range(self.columns)] for _ in range(self.rows)],
-                )
-            except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+            elements_from_json = json_string.get(
+                GeometryPropertyNames.DATA.value,
+                [[0.0 for _ in range(self._columns)] for _ in range(self._rows)],
+            )
+            self._validate_elements(elements_from_json)  # Validate after loading from JSON
         except (json.JSONDecodeError, ValueError) as e:
             raise ValueError("Invalid JSON input: {}".format(e))
 
+    def _validate_elements(self, elements):
+        """Validate that the elements are all floats."""
+        if len(elements) != self._rows or any(len(row) != self._columns for row in elements):
+            raise ValueError("Elements must match the specified dimensions.")
+
+        for row in elements:
+            for value in row:
+                if not isinstance(value, (float, int)):  # Allow both float and int
+                    raise TypeError("All elements must be of type float or int.")
+
+        self._data = elements
+
+    @property
+    def rows(self):
+        """Read-only property for the number of rows."""
+        return self._rows
+
+    @property
+    def columns(self):
+        """Read-only property for the number of columns."""
+        return self._columns
+
+    @property
+    def data(self):
+        """Read-only property for the matrix data."""
+        return copy.deepcopy(self._data)
+
     def __getitem__(self, idx):
-        return self.data[idx]
+        return self._data[idx]
 
     def __setitem__(self, idx, value):
         if len(value) != self.columns:
             raise ValueError("Row must have exactly {} elements.".format(self.columns))
-        self.data[idx] = value
+        self._data[idx] = value
 
     def __add__(self, other):
-        if (
-            not isinstance(other, Matrix)
-            or self.rows != other.rows
-            or self.columns != other.columns
-        ):
-            raise ValueError("Can only add another matrix with the same dimensions.")
+        if (not isinstance(other, Matrix)):
+            raise TypeError("other must be of type matrix, got {} instead.".format(other))
+        elif(self.rows != other.rows or self.columns != other.columns):
+            raise IncompatibleMatrixDimensions("Can only add another matrix with the same dimensions.",other)
         return Matrix(
             self.rows,
             self.columns,
             [
-                [self.data[i][j] + other[i][j] for j in range(self.columns)]
+                [self._data[i][j] + other[i][j] for j in range(self.columns)]
                 for i in range(self.rows)
             ],
         )
 
     def __str__(self):
-        return "\n".join(["\t".join(map(str, row)) for row in self.data])
+        return "\n".join(["\t".join(map(str, row)) for row in self._data])

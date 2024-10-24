@@ -20,7 +20,7 @@ sys.path.insert(0, ROOT_REPO_DIRECTORY)
 from duHast.UI import file_list as fl
 from duHast.UI.Objects.file_select_settings import FileSelectionSettings
 from duHast.UI.file_list import get_revit_files_for_processing
-from duHast.UI.Objects.XamlLoader import XamlLoader
+from duHast.UI.Objects.WPF.Xaml.XamlLoader import XamlLoader
 from duHast.UI import workloader as wl
 
 from duHast.Utilities.files_io import file_exist

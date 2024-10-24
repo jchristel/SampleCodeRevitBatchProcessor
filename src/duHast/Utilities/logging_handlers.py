@@ -1,7 +1,6 @@
 import logging
 import sys
 from logger_filtering import FilterConsole, FilterFile
-from logger_formatting import get_standard_formatter, get_presentation_formatter
 
 
 class CustomStreamHandler(logging.StreamHandler):
@@ -13,34 +12,38 @@ class CustomStreamHandler(logging.StreamHandler):
         self.custom_function(msg)
 
 
-def std_file_handler(obj):
+def std_file_handler(obj, file_hndlr, file_formatter):
     """
     Create file handler to obj.log_file_path location
     """
     # Set file output
-    file_handler = logging.FileHandler(obj.log_file_path)
+    if file_hndlr == logging.FileHandler:
+        file_handler = logging.FileHandler(obj.log_file_path)
+    else:
+        file_handler = file_hndlr(obj.log_file_path)
     # Default file level is INFO
     file_handler.setLevel(obj.file_log_level)
     # Add the filter to the file handler
     file_handler.addFilter(FilterFile())
-    file_handler.setFormatter(get_standard_formatter())
+    file_handler.setFormatter(file_formatter())
     file_handler.name = "file"
     return file_handler
 
 
-def std_console_handler(obj, console_out):
+def std_console_handler(obj, cons_hndlr, cons_formatter):
     """
     Creates a console handler to output to stdout (console)
     displaying only the message as default
     """
     # Create a console handler
-    if console_out != None:
-        console_handler = logging.StreamHandler(console_out)
-    else:
+    if cons_hndlr == logging.StreamHandler:
         console_handler = logging.StreamHandler(sys.stdout)
+    else:
+        console_handler = cons_hndlr(sys.stdout)
     # Default console level is WARNING
     console_handler.setLevel(obj.console_log_level)
     # Add the filter to the console handler
     console_handler.addFilter(FilterConsole())
-    console_handler.setFormatter(get_presentation_formatter())
+    console_handler.setFormatter(cons_formatter())
+    console_handler.name = "console"
     return console_handler

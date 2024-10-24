@@ -56,7 +56,7 @@ class XamlLoader(object):
         :rtype: System.Windows.UIElement
         """
         # Read the XAML file
-        with open(xaml_path, 'r', encoding='utf-8-sig') as file:
+        with open(xaml_path, "r") as file:
             xaml_content = file.read()
 
         # Parse the XAML content

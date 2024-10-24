@@ -133,7 +133,7 @@ def get_add_logger_decorator(
                         return result
 
                 except Exception as e:
-                    msg = "ERROR raised in {}.\n\n{}\n".format(
+                    msg = "ERROR raised in {} function.\n\n{}\n".format(
                         func_name, traceback.format_exc()
                     )
                     if errors_in_console:

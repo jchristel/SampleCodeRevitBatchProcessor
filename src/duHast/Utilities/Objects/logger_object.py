@@ -34,16 +34,20 @@ import sys
 from duHast.Utilities.directory_io import create_target_directory
 from duHast.Utilities.Objects.base import Base
 from duHast.Utilities.logging_handlers import std_console_handler, std_file_handler
+from duHast.Utilities.logger_formatting import level_time_local_msg_formatter, msg_only
 
 
-class LoggerObject(Base):
+class LoggerObject(logging.Logger, Base):
     def __init__(
         self,
         log_name="duHast",
         output_path=os.getenv("APPDATA"),
         log_level=(10, 30),
         file_format=".txt",
-        cons_str_handler=None,
+        fil_stream_hndlr=logging.FileHandler,
+        fil_stream_frmt=level_time_local_msg_formatter,
+        cons_stream_hndlr=logging.StreamHandler,
+        cons_stream_frmt=msg_only,
         **kwargs
     ):
         """
@@ -56,9 +60,6 @@ class LoggerObject(Base):
         :param log_level: The log levels for the file and console handlers.
         :type log_level: tuple
         """
-
-        super(LoggerObject, self).__init__(**kwargs)
-        logging.basicConfig(level=logging.INFO)
         # Get log naming and output path
         self.log_name = log_name
         self.output_path = output_path
@@ -66,12 +67,18 @@ class LoggerObject(Base):
         # Create the directory and the full log file path
         create_target_directory(self.output_path, self.log_name)
         self.log_file_path = os.path.join(self.log_file_dir, log_name + file_format)
+        logging.Logger.__init__(self, log_name)
+        logging.basicConfig(filename=self.log_file_path, level=logging.INFO)
         # Get log levels
-        self.log_level = log_level
-        self.file_log_level, self.console_log_level = self.log_level
+        self.level = log_level
+        self.file_log_level, self.console_log_level = self.level
         # Set handlers
-        self.file_handler = std_file_handler(self)
-        self.console_handler = std_console_handler(self, cons_str_handler)
+        self.file_handler = std_file_handler(
+            self, file_hndlr=fil_stream_hndlr, file_formatter=fil_stream_frmt
+        )
+        self.console_handler = std_console_handler(
+            self, cons_hndlr=cons_stream_hndlr, cons_formatter=cons_stream_frmt
+        )
 
         # Create logger object
         self.new_logger = logging.getLogger(self.log_name)
@@ -80,20 +87,20 @@ class LoggerObject(Base):
 
     def clear_handlers(self):
         self.new_logger.propagate = 0
-        while self.new_logger.handlers:
-            self.new_logger.handlers.pop()
+        for handler in self.new_logger.handlers:
+            handler.flush()
+            handler.close()
+            self.new_logger.removeHandler(handler)
 
     def init_handlers(self):
         self.clear_handlers()
-        self.new_logger.setLevel(logging.DEBUG)
-        self.new_logger.addHandler(self.file_handler)
-        self.new_logger.addHandler(self.console_handler)
+        ex_handlers = [h.__class__.__name__ for h in self.new_logger.handlers]
+        self.new_logger.setLevel(logging.INFO)
 
-    def set_stream_handler(self, st_handlr):
-        self.clear_handlers()
-        self.new_logger.setLevel(logging.DEBUG)
-        self.new_logger.addHandler(self.file_handler)
-        self.new_logger.addHandler(st_handlr)
+        if not "FileHandler" in ex_handlers:
+            self.new_logger.addHandler(self.file_handler)
+        if not "StreamHandler" in ex_handlers:
+            self.new_logger.addHandler(self.console_handler)
 
     def get_logger_obj(self):
         return self.logger_object

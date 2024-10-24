@@ -1,5 +1,5 @@
-from duHast.UI.Objects.ViewModelBase import ViewModelBase
-from duHast.UI.Objects.CommandBase import CommandBase
+from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
+from duHast.UI.Objects.WPF.Commands.CommandBase import CommandBase
 from duHast.UI.Objects.file_item import MyFileItem
 from duHast.UI.file_list import get_revit_files_for_processing
 

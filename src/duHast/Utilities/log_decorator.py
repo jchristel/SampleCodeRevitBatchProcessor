@@ -133,14 +133,16 @@ def get_add_logger_decorator(
                         return result
 
                 except Exception as e:
-                    msg = "ERROR raised in {} function.\n\n{}\n".format(
-                        func_name, traceback.format_exc()
+                    tb = traceback.format_exc().strip().split("\n")
+
+                    log_msg = "Error raised in {} function. {}\n\n{}".format(
+                        func_name, tb[-1], "\n".join(tb)
                     )
                     if errors_in_console:
-                        logger.error(msg)
+                        logger.error(log_msg)
 
                     else:
-                        logger.error(msg, extra={"block": "console"})
+                        logger.error(log_msg, extra={"block": "console"})
 
                     if not suppress_exceptions:
                         raise e

@@ -247,7 +247,11 @@ class Base(object):
         # Include public attributes
         for key, value in self.__dict__.items():
             if not key.startswith('_'):
-                json_data[key] = value
+                # Check if the value is an instance of a class that inherits from Base
+                if isinstance(value, Base):
+                    json_data[key] = json.loads(value.to_json())  # Call to_json() on nested objects
+                else:
+                    json_data[key] = value
 
         # Include properties from this class and its parents
         for cls in self.__class__.__mro__:
@@ -296,8 +300,11 @@ class Base(object):
         for cls in self.__class__.__mro__:
             for key in dir(self):
                 attr = getattr(self, key)
-                if isinstance(attr, property) and key not in json_data:
-                    json_data[key] = attr.fget(self)
+                # Check if the value is an instance of a class that inherits from Base
+                if isinstance(value, Base):
+                    json_data[key] = json.loads(value.to_json_utf())  # Call to_json() on nested objects
+                else:
+                    json_data[key] = value
 
         return json.dumps(
             json_data, indent=None, default=self.string_to_utf, ensure_ascii=False

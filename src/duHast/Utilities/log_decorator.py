@@ -119,6 +119,7 @@ def get_add_logger_decorator(
                     pass
 
                 result = None
+                error = False
 
                 try:
                     # Execute the wrapped function either with or without time measurement
@@ -146,17 +147,23 @@ def get_add_logger_decorator(
 
                     if not suppress_exceptions:
                         raise e
-
+                    error = True
                 finally:
                     # Log the return value
-                    if result:
+                    if error:
+                        # TODO: add support message
                         logger.info(
-                            "Finished function: {}. Return value is: {}".format(
-                                func_name, repr(result)
-                            )
+                            "Finished function {} with errors.".format(func_name)
                         )
                     else:
-                        logger.info("Finished function: {}".format(func_name))
+                        if result:
+                            logger.info(
+                                "Finished function: {}. Return value is: {}".format(
+                                    func_name, repr(result)
+                                )
+                            )
+                        else:
+                            logger.info("Finished function: {}".format(func_name))
                     # Reset the log levels if they were updated
                     if updated_levels:
                         logger = logger_in.update_log_level(

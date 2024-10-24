@@ -88,11 +88,11 @@ def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
         # Check if UTF-8 is to be enforced
         if enforce_utf8:
             json_object = json.dumps(
-                json_data, indent=None, default=serialize, ensure_ascii=False
+                json_data, indent=None, default=serialize_utf, ensure_ascii=False
             )
         else:
             json_object = json.dumps(
-                json_data, indent=None, default=serialize_utf
+                json_data, indent=None, default=serialize, ensure_ascii=False
             )
         with codecs.open(data_output_file_path, "w", encoding="utf-8") as f:
             f.write(json_object)

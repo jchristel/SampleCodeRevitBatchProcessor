@@ -75,8 +75,10 @@ class BoundingBox2(BoundingBoxBase):
         :raises TypeError: _description_
         :raises TypeError: _description_
         """
-        # set the bounding box
-
+        # check if both points are provided
+        if point1 is None or point2 is None:
+            raise ValueError("Both point1 and point2 must be provided.")
+    
         # Type checking
         if not isinstance(point1, Point2):
             raise TypeError("point1 expected Point2 instance. Got {} instead.".format(type(point1)))

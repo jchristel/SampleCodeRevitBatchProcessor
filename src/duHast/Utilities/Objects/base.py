@@ -233,7 +233,14 @@ class Base(object):
         else:
             return str(o)
     
-
+    def _sort_dict(self, d):
+        if isinstance(d, dict):
+            return {k: self._sort_dict(v) for k, v in sorted(d.items())}
+        elif isinstance(d, list):
+            return [self._sort_dict(item) for item in d]
+        else:
+            return d
+    
     def to_json(self):
         """
         Convert the instance of this class to JSON, including public attributes and properties.
@@ -268,7 +275,10 @@ class Base(object):
                 if isinstance(attr, property) and key not in json_data:
                     json_data[key] = attr.fget(self)
 
-        return json.dumps(json_data, indent=None, default=self._default_json_handler)
+        # Sort the dictionary by keys to be able to unit test output
+        sorted_json_data = self._sort_dict(json_data)
+
+        return json.dumps(sorted_json_data, indent=None, default=self._default_json_handler)
         
 
     def string_to_utf(self, o):
@@ -322,7 +332,10 @@ class Base(object):
                 if isinstance(attr, property) and key not in json_data:
                     json_data[key] = attr.fget(self)
 
-        return json.dumps(json_data, indent=None, default=self._default_json_handler)
+        # Sort the dictionary by keys to be able to unit test output
+        sorted_json_data = self._sort_dict(json_data)
+
+        return json.dumps(sorted_json_data, indent=None, default=self._default_json_handler)
 
     def _is_primitive(self, obj):
         """

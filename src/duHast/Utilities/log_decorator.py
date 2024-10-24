@@ -119,6 +119,7 @@ def get_add_logger_decorator(
                     pass
 
                 result = None
+                error = False
 
                 try:
                     # Execute the wrapped function either with or without time measurement
@@ -133,28 +134,36 @@ def get_add_logger_decorator(
                         return result
 
                 except Exception as e:
-                    msg = "ERROR raised in {}.\n\n{}\n".format(
-                        func_name, traceback.format_exc()
+                    tb = traceback.format_exc().strip().split("\n")
+
+                    log_msg = "Error raised in {} function. {}\n\n{}".format(
+                        func_name, tb[-1], "\n".join(tb)
                     )
                     if errors_in_console:
-                        logger.error(msg)
+                        logger.error(log_msg)
 
                     else:
-                        logger.error(msg, extra={"block": "console"})
+                        logger.error(log_msg, extra={"block": "console"})
 
                     if not suppress_exceptions:
                         raise e
-
+                    error = True
                 finally:
                     # Log the return value
-                    if result:
+                    if error:
+                        # TODO: add support message
                         logger.info(
-                            "Finished function: {}. Return value is: {}".format(
-                                func_name, repr(result)
-                            )
+                            "Finished function {} with errors.".format(func_name)
                         )
                     else:
-                        logger.info("Finished function: {}".format(func_name))
+                        if result:
+                            logger.info(
+                                "Finished function: {}. Return value is: {}".format(
+                                    func_name, repr(result)
+                                )
+                            )
+                        else:
+                            logger.info("Finished function: {}".format(func_name))
                     # Reset the log levels if they were updated
                     if updated_levels:
                         logger = logger_in.update_log_level(

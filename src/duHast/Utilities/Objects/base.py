@@ -221,30 +221,42 @@ class Base(object):
                 )
             )
 
-    def to_json(self):
-        """
-        Convert the instance of this class to json.
-
-        :return: A Json object.
-        :rtype: json
-        """
-
-        return json.dumps(self, indent=None, default=self._default_json_handler)
-    
-    
     def _default_json_handler(self, o):
         """
-        Ensure compatibility to ironpython 2.7 and 3.4
+        Ensure compatibility to ironpython 2.7 and 3.4.
 
-        :param o: _description_
-        :type o: _type_
-        :return: _description_
-        :rtype: _type_
+        :param o: The object to serialize.
+        :return: A dictionary representation of the object or its string.
         """
         if hasattr(o, '__dict__'):
             return vars(o)
         else:
             return str(o)
+    
+
+    def to_json(self):
+        """
+        Convert the instance of this class to JSON, including public attributes and properties.
+
+        :return: A JSON object.
+        :rtype: str
+        """
+        # Create a dictionary to hold the JSON data
+        json_data = {}
+
+        # Include public attributes
+        for key, value in self.__dict__.items():
+            if not key.startswith('_'):
+                json_data[key] = value
+
+        # Include properties from this class and its parents
+        for cls in self.__class__.__mro__:
+            for key in dir(cls):
+                attr = getattr(cls, key)
+                if isinstance(attr, property) and key not in json_data:
+                    json_data[key] = attr.fget(self)
+
+        return json.dumps(json_data, indent=None, default=self._default_json_handler)
         
 
     def string_to_utf(self, o):
@@ -263,6 +275,7 @@ class Base(object):
             )  # Encoding and decoding to ensure the type is str
         return o.__dict__
 
+
     def to_json_utf(self):
         """
         Convert the instance of this class to json, any string properties are converted to utf-8
@@ -271,8 +284,23 @@ class Base(object):
         :rtype: json
         """
 
+        # Create a dictionary to hold the JSON data
+        json_data = {}
+
+        # Include public attributes
+        for key, value in self.__dict__.items():
+            if not key.startswith('_'):
+                json_data[key] = value
+
+        # Include properties from this class and its parents
+        for cls in self.__class__.__mro__:
+            for key in dir(self):
+                attr = getattr(self, key)
+                if isinstance(attr, property) and key not in json_data:
+                    json_data[key] = attr.fget(self)
+
         return json.dumps(
-            self, indent=None, default=self.string_to_utf, ensure_ascii=False
+            json_data, indent=None, default=self.string_to_utf, ensure_ascii=False
         )
 
     def _is_primitive(self, obj):

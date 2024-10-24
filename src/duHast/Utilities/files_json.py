@@ -31,64 +31,71 @@ from duHast.Utilities.Objects import result as res
 import codecs
 import json
 
-
 def _custom_default(o):
     """
-    Encode string values to utf-8 for json formatted outputs
+    Encode string values to utf-8 for JSON formatted outputs.
 
-    :param o: The value to be encoded if of type string
-    :type o: var
-    :return: Encoded string or var
-    :rtype: str, var
+    :param o: The value to be encoded if of type string.
+    :return: Encoded string or the object's __dict__.
     """
-
     if isinstance(o, str):
-        # only encode if required
+        # Only encode if required
         if any(ord(char) > 127 for char in o):
-            return o.encode("utf-8").decode(
-                "utf-8"
-            )  # Encoding and decoding to ensure the type is str
+            return o.encode("utf-8").decode("utf-8")  # Encoding and decoding to ensure the type is str
     return o.__dict__
+
+
+def serialize(obj):
+    """
+    Serialize the object for JSON output, using to_json() if available.
+
+    :param obj: The object to serialize.
+    :return: A dictionary representation of the object.
+    """
+    if hasattr(obj, 'to_json') and callable(getattr(obj, 'to_json')):
+        return json.loads(obj.to_json())  # Use the to_json method
+    else:
+        return _custom_default(obj)  # Fallback to custom default
+
+
+def serialize_utf(obj):
+    """
+    Serialize the object for JSON output inluding utf 8, using to_json_utf() if available.
+
+    :param obj: The object to serialize.
+    :return: A dictionary representation of the object.
+    """
+    if hasattr(obj, 'to_json_utf') and callable(getattr(obj, 'to_json_utf')):
+        return json.loads(obj.to_json())  # Use the to_json method
+    else:
+        return _custom_default(obj)  # Fallback to custom default
 
 
 def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
     """
-    Writes collected data to a new json formatted file.
+    Writes collected data to a new JSON formatted file.
 
     :param json_data: A dictionary to be written to file.
-    :type json_data: json object (dictionary)
-    :param data_output_file_path: Fully qualified file path to json data file.
-    :type data_output_file_path: str
-    :param enforce_utf8: Will encode any string value as utf-8, Default is true (recommended!!).
-    :type enforce_utf8: bool
-    :return:
-        Result class instance.
-        - result.status. True if json data file was written successfully, otherwise False.
-        - result.message will confirm path of json data file.
-        - result.result empty list
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain exception message.
-        - result.result will be empty
-    :rtype: :class:`.Result`
+    :param data_output_file_path: Fully qualified file path to JSON data file.
+    :param enforce_utf8: Will encode any string value as UTF-8, Default is True (recommended!!).
+    :return: Result class instance with status and message.
     """
 
     result = res.Result()
 
     try:
         json_object = None
-        # check if utf-8 is to be enforced
+        # Check if UTF-8 is to be enforced
         if enforce_utf8:
             json_object = json.dumps(
-                json_data, indent=None, default=_custom_default, ensure_ascii=False
+                json_data, indent=None, default=serialize, ensure_ascii=False
             )
         else:
             json_object = json.dumps(
-                json_data, indent=None, default=lambda o: o.__dict__
+                json_data, indent=None, default=serialize_utf
             )
         with codecs.open(data_output_file_path, "w", encoding="utf-8") as f:
             f.write(json_object)
-            f.close()
 
         result.update_sep(
             True, "Data written to file: {}".format(data_output_file_path)

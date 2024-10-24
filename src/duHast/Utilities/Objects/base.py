@@ -241,17 +241,25 @@ class Base(object):
         :return: A JSON object.
         :rtype: str
         """
+    
+        def serialize(obj):
+            """Helper function to recursively serialize objects."""
+            if isinstance(obj, Base):
+                return json.loads(obj.to_json())  # Call to_json() if it's an instance of Base
+            elif isinstance(obj, list):
+                return [serialize(item) for item in obj]  # Recursively serialize list items
+            elif isinstance(obj, dict):
+                return {key: serialize(value) for key, value in obj.items()}  # Recursively serialize dict values
+            else:
+                return obj  # Return the object as is
+
         # Create a dictionary to hold the JSON data
         json_data = {}
 
         # Include public attributes
         for key, value in self.__dict__.items():
             if not key.startswith('_'):
-                # Check if the value is an instance of a class that inherits from Base
-                if isinstance(value, Base):
-                    json_data[key] = json.loads(value.to_json())  # Call to_json() on nested objects
-                else:
-                    json_data[key] = value
+                json_data[key] = serialize(value)  # Use the recursive serialize function
 
         # Include properties from this class and its parents
         for cls in self.__class__.__mro__:
@@ -288,27 +296,33 @@ class Base(object):
         :rtype: json
         """
 
+        def serialize(obj):
+            """Helper function to recursively serialize objects."""
+            if isinstance(obj, Base):
+                return json.loads(obj.to_json_utf())  # Call to_json() if it's an instance of Base
+            elif isinstance(obj, list):
+                return [serialize(item) for item in obj]  # Recursively serialize list items
+            elif isinstance(obj, dict):
+                return {key: serialize(value) for key, value in obj.items()}  # Recursively serialize dict values
+            else:
+                return obj  # Return the object as is
+
         # Create a dictionary to hold the JSON data
         json_data = {}
 
         # Include public attributes
         for key, value in self.__dict__.items():
             if not key.startswith('_'):
-                json_data[key] = value
+                json_data[key] = serialize(value)  # Use the recursive serialize function
 
         # Include properties from this class and its parents
         for cls in self.__class__.__mro__:
-            for key in dir(self):
-                attr = getattr(self, key)
-                # Check if the value is an instance of a class that inherits from Base
-                if isinstance(value, Base):
-                    json_data[key] = json.loads(value.to_json_utf())  # Call to_json() on nested objects
-                else:
-                    json_data[key] = value
+            for key in dir(cls):
+                attr = getattr(cls, key)
+                if isinstance(attr, property) and key not in json_data:
+                    json_data[key] = attr.fget(self)
 
-        return json.dumps(
-            json_data, indent=None, default=self.string_to_utf, ensure_ascii=False
-        )
+        return json.dumps(json_data, indent=None, default=self._default_json_handler)
 
     def _is_primitive(self, obj):
         """

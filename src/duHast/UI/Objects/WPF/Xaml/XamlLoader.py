@@ -32,7 +32,7 @@ https://markheath.net/post/wpf-and-mvvm-in-ironpython
 #
 #
 
-
+import codecs
 from System.Windows.Markup import XamlReader
 
 
@@ -56,7 +56,7 @@ class XamlLoader(object):
         :rtype: System.Windows.UIElement
         """
         # Read the XAML file
-        with open(xaml_path, "r") as file:
+        with codecs.open(xaml_path, "r", encoding="utf-8-sig") as file:
             xaml_content = file.read()
 
         # Parse the XAML content

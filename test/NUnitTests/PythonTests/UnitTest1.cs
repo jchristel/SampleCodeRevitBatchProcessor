@@ -4,56 +4,54 @@ using Microsoft.Scripting.Hosting;
 
 namespace PythonTests
 {
-    public class Tests
+    public class Point2Tests
     {
-        private dynamic myClass;
+        private dynamic point2Instance;
 
         [SetUp]
         public void Setup()
         {
-            // Get the directory of the current assembly (where test project is located)
-            var currentAssemblyLocation = Path.GetDirectoryName(typeof(Tests).Assembly.Location);
-
-            // Move up two directories to reach the solution folder
-            var solutionDirectory = Directory.GetParent(currentAssemblyLocation).Parent.FullName;
-            var oneUp = Directory.GetParent(solutionDirectory).Parent.FullName;
-            
-            // Move two directories up and then three down to reach MyClass.py
-            var pythonFilePath = Path.Combine(oneUp, @"..\..\src\duHast\Geometry\point_2.py");
-
-            // add referece to duHast
-            var duHastDir = Path.Combine(oneUp, @"..\..\src");
-            
-            // set up the engine
-            ScriptRuntimeSetup setup = Python.CreateRuntimeSetup(null);
-            ScriptRuntime runtime = new ScriptRuntime(setup);
-
-            // get the engine
-            ScriptEngine engine = Python.GetEngine(runtime);
+            // get a python engine
+            ScriptEngine engine = PythonRunner.SetupEngine();
             var scope = engine.CreateScope();
 
-            // need to add path (might need to be to duHast??)
-            var path = engine.GetSearchPaths();
-            path.Add(duHastDir);
-            // add local python 3.4 install lib
-            path.Add(@"C:\Program Files\IronPython 3.4\Lib");
-            engine.SetSearchPaths(path);
+            // get the repository path
+            string repoPath = PythonRunner.GetRepositoryPath();
+
+            // set path to point2 class
+            var pythonFilePath = Path.Combine(repoPath, @"duHast\Geometry\point_2.py");
             
            //run the file
             engine.ExecuteFile(pythonFilePath, scope);
-            myClass = scope.GetVariable("Point2")(0.0,0.0);
+
+            // set up a point2 instance
+            point2Instance = scope.GetVariable("Point2")(0.0,0.0);
         }
 
         [Test]
-        public void Test1()
+        public void TestToJson()
         {
-            var result = myClass.to_json();
+            var result = point2Instance.to_json();
 
             // Output the result to the console
             Console.WriteLine($"Result of to_json: {result}");
 
             // The expected JSON string
-            string jsonString = "{\"json_ini\": null, \"y\": 0.0, \"x\": 0.0}";
+            string jsonString = "{\"x\": 0.0, \"y\": 0.0, \"json_ini\": null}";
+
+            Assert.AreEqual(jsonString, result);
+        }
+
+        [Test]
+        public void TestToJsonUtf()
+        {
+            var result = point2Instance.to_json_utf();
+
+            // Output the result to the console
+            Console.WriteLine($"Result of to_json: {result}");
+
+            // The expected JSON string
+            string jsonString = "{\"x\": 0.0, \"y\": 0.0, \"json_ini\": null}";
 
             Assert.AreEqual(jsonString, result);
         }

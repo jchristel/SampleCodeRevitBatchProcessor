@@ -29,13 +29,13 @@ A vector base class.
 
 import math
 
-from duHast.Utilities.Objects import base
+from duHast.Utilities.Objects.base import Base
 from duHast.Geometry.Exceptions.incompatible_vector_dimension import (
     IncompatibleVectorDimensions,
 )
 
 
-class VectorBase(base):
+class VectorBase(Base):
     def __init__(self, *components):
         """
         A vector base class.

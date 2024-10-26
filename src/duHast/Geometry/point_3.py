@@ -57,7 +57,7 @@ class Point3(PointBase):
 
         # Type checking
         if not isinstance(z, float):
-            raise TypeError("z expected int. Got {} instead:".format(type(x)))
+            raise TypeError("z expected float. Got {} instead.".format(type(z)))
 
         # store values
         self.z = z

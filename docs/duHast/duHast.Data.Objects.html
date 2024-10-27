@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Data.Objects package &#8212; Sample Code Revit Batch Processor 1.1.3 documentation</title>
+    <title>duHast.Data.Objects package &#8212; Sample Code Revit Batch Processor 1.1.4 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.3 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.4 documentation" href="../index.html" />
     <link rel="up" title="duHast.Data package" href="duHast.Data.html" />
     <link rel="next" title="duHast.Data.Objects.Properties package" href="duHast.Data.Objects.Properties.html" />
     <link rel="prev" title="duHast.Data package" href="duHast.Data.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.3 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.4 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Data.Objects package</h1></div>
@@ -99,10 +99,8 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Data.Objects.Properties.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html">duHast.Data.Objects.Properties.Geometry package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#module-duHast.Data.Objects.Properties.Geometry.from_revit_conversion">duHast.Data.Objects.Properties.Geometry.from_revit_conversion module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#module-duHast.Data.Objects.Properties.Geometry.from_revit_elements">duHast.Data.Objects.Properties.Geometry.from_revit_elements module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#module-duHast.Data.Objects.Properties.Geometry.geometry_base">duHast.Data.Objects.Properties.Geometry.geometry_base module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#module-duHast.Data.Objects.Properties.Geometry.geometry_bounding_box">duHast.Data.Objects.Properties.Geometry.geometry_bounding_box module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#module-duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2">duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#module-duHast.Data.Objects.Properties.Geometry.geometry_polygon">duHast.Data.Objects.Properties.Geometry.geometry_polygon module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#module-duHast.Data.Objects.Properties.Geometry.geometry_topo_cell">duHast.Data.Objects.Properties.Geometry.geometry_topo_cell module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.Geometry.html#module-duHast.Data.Objects.Properties.Geometry">Module contents</a></li>
@@ -173,20 +171,30 @@
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.DATA_TYPE"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.DATA_TYPE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.DEMOLISHED"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.DEMOLISHED</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.ELEVATION"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.ELEVATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.HEIGHT"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.HEIGHT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.ID"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.ID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.INDEX"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.INDEX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.INNER_LOOPS"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.INNER_LOOPS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.IS_PRIMARY"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.IS_PRIMARY</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.MIN"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.MIN</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.MAX"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.MAX</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.NAME"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.POINT1"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.POINT1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.POINT2"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.POINT2</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.OPTION_NAME"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.OPTION_NAME</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.OFFSET_FROM_LEVEL"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.OFFSET_FROM_LEVEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.OUTER_LOOP"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.OUTER_LOOP</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.PROPERTIES"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.PROPERTIES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.SEGMENTS"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.SEGMENTS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.SET_NAME"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.SET_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.ROTATION_COORDINATES"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.ROTATION_COORDINATES</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.TAGS"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.TAGS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.TAG_ELBOW_LOCATION"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.TAG_ELBOW_LOCATION</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.TAG_LEADER_END"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.TAG_LEADER_END</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.TAG_LEADER_REFERENCE"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.TAG_LEADER_REFERENCE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.TAG_LEADER_ELEMENT_REFERENCE_ID"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.TAG_LEADER_ELEMENT_REFERENCE_ID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.TOTAL_NUMBER_OF_ROWS"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.TOTAL_NUMBER_OF_ROWS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.TRANSLATION_COORDINATES"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.TRANSLATION_COORDINATES</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.VIEW"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.VIEW</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.VIEW_PORT_TYPE"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.VIEW_PORT_TYPE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_property_names.DataPropertyNames.VIEW_ID"><code class="docutils literal notranslate"><span class="pre">DataPropertyNames.VIEW_ID</span></code></a></li>
@@ -198,6 +206,14 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.Properties.html#data-storage-class-for-revit-elements-model-properties">Data storage class for Revit elements model properties.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_revit_model.DataRevitModel"><code class="docutils literal notranslate"><span class="pre">DataRevitModel</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_revit_model.DataRevitModel.data_type"><code class="docutils literal notranslate"><span class="pre">DataRevitModel.data_type</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Data.Objects.Properties.html#module-duHast.Data.Objects.Properties.data_schedule_segement">duHast.Data.Objects.Properties.data_schedule_segement module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.Properties.html#data-storage-class-for-revit-schedule-segement-properties">Data storage class for Revit schedule segement properties.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_schedule_segement.DataScheduleSegment"><code class="docutils literal notranslate"><span class="pre">DataScheduleSegment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Data.Objects.Properties.html#duHast.Data.Objects.Properties.data_schedule_segement.DataScheduleSegment.data_type"><code class="docutils literal notranslate"><span class="pre">DataScheduleSegment.data_type</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -530,7 +546,7 @@
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Data.Objects.data_view_base.DataViewBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.data_view_base.</span></span><span class="sig-name descname"><span class="pre">DataViewBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.data_view_base.DataViewBase" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Data.Objects.data_view_base.</span></span><span class="sig-name descname"><span class="pre">DataViewBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.Objects.data_view_base.DataViewBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#duHast.Data.Objects.data_base.DataBase" title="duHast.Data.Objects.data_base.DataBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataBase</span></code></a></p>
 <p>Class constructor for a view.</p>
 <dl class="field-list simple">
@@ -538,11 +554,6 @@
 <dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – A json formatted dictionary of this class, defaults to {}</p>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="duHast.Data.Objects.data_view_base.DataViewBase.data_type">
-<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'view</span> <span class="pre">base'</span></em><a class="headerlink" href="#duHast.Data.Objects.data_view_base.DataViewBase.data_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </section>

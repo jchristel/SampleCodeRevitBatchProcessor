@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.3 documentation</title>
+    <title>duHast.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.4 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.3 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.4 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
-    <link rel="next" title="duHast.Revit package" href="duHast.Revit.html" />
+    <link rel="next" title="duHast.Geometry.Exceptions package" href="duHast.Geometry.Exceptions.html" />
     <link rel="prev" title="duHast.Excel package" href="duHast.Excel.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.3 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.4 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Geometry package</h1></div>
@@ -31,7 +31,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="duHast.Revit.html" title="duHast.Revit package" accesskey="N">next</a></div>
+            <div class="headerButton"><a href="duHast.Geometry.Exceptions.html" title="duHast.Geometry.Exceptions package" accesskey="N">next</a></div>
             <div class="headerButton"><a href="duHast.Excel.html" title="duHast.Excel package" accesskey="P">previous</a></div>
         </li>
     </ul>
@@ -91,6 +91,467 @@
             
   <section id="duhast-geometry-package">
 <h1>duHast.Geometry package<a class="headerlink" href="#duhast-geometry-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Geometry.Exceptions.html">duHast.Geometry.Exceptions package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Geometry.Exceptions.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Geometry.Exceptions.html#module-duHast.Geometry.Exceptions.incompatible_matrix_dimension">duHast.Geometry.Exceptions.incompatible_matrix_dimension module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Geometry.Exceptions.html#a-matrix-exception-class">A matrix exception class.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Geometry.Exceptions.html#duHast.Geometry.Exceptions.incompatible_matrix_dimension.IncompatibleMatrixDimensions"><code class="docutils literal notranslate"><span class="pre">IncompatibleMatrixDimensions</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Geometry.Exceptions.html#module-duHast.Geometry.Exceptions.incompatible_vector_dimension">duHast.Geometry.Exceptions.incompatible_vector_dimension module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Geometry.Exceptions.html#a-vector-exception-class">A vector exception class.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Geometry.Exceptions.html#duHast.Geometry.Exceptions.incompatible_vector_dimension.IncompatibleVectorDimensions"><code class="docutils literal notranslate"><span class="pre">IncompatibleVectorDimensions</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Geometry.Exceptions.html#module-duHast.Geometry.Exceptions">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Geometry.bounding_box_2">
+<span id="duhast-geometry-bounding-box-2-module"></span><h2>duHast.Geometry.bounding_box_2 module<a class="headerlink" href="#module-duHast.Geometry.bounding_box_2" title="Permalink to this heading">¶</a></h2>
+<section id="a-2d-bounding-box-base-class">
+<h3>A 2D bounding box base class.<a class="headerlink" href="#a-2d-bounding-box-base-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_2.BoundingBox2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.bounding_box_2.</span></span><span class="sig-name descname"><span class="pre">BoundingBox2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.bounding_box_2.BoundingBox2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Geometry.bounding_box_base.BoundingBoxBase" title="duHast.Geometry.bounding_box_base.BoundingBoxBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">BoundingBoxBase</span></code></a></p>
+<p>A 2D bounding box class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point1</strong> (<a class="reference internal" href="#duHast.Geometry.point_2.Point2" title="duHast.Geometry.point_2.Point2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point2</span></code></a>, optional) – A 3D point describing a corner of bounding box, defaults to None</p></li>
+<li><p><strong>point2</strong> (<a class="reference internal" href="#duHast.Geometry.point_2.Point2" title="duHast.Geometry.point_2.Point2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point2</span></code></a>, optional) – A 3D point describing diagonal opposite corner of bounding box, defaults to None</p></li>
+<li><p><strong>j</strong> (<em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – A json formatted string, representing an instance of this class, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – “Either two Point2 instances or a JSON string with point data needs to be provided.”</p></li>
+<li><p><strong>TypeError</strong> – “point1 expected Point2 instance. Got type instead.</p></li>
+<li><p><strong>TypeError</strong> – “point2 expected Point2 instance. Got type instead.”</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_2.BoundingBox2.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.bounding_box_2.BoundingBox2.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the size of the bounding box by points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point1</strong> (<a class="reference internal" href="#duHast.Geometry.point_2.Point2" title="duHast.Geometry.point_2.Point2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point2</span></code></a>) – min point on bounding box</p></li>
+<li><p><strong>point2</strong> (<a class="reference internal" href="#duHast.Geometry.point_2.Point2" title="duHast.Geometry.point_2.Point2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point2</span></code></a>) – max point of bounding box</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – _description_</p></li>
+<li><p><strong>TypeError</strong> – _description_</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_2.BoundingBox2.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.bounding_box_2.BoundingBox2.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the bounding box contains a given point.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Geometry.bounding_box_3">
+<span id="duhast-geometry-bounding-box-3-module"></span><h2>duHast.Geometry.bounding_box_3 module<a class="headerlink" href="#module-duHast.Geometry.bounding_box_3" title="Permalink to this heading">¶</a></h2>
+<section id="a-3d-bounding-box-base-class">
+<h3>A 3D bounding box base class.<a class="headerlink" href="#a-3d-bounding-box-base-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_3.BoundingBox3">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.bounding_box_3.</span></span><span class="sig-name descname"><span class="pre">BoundingBox3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.bounding_box_3.BoundingBox3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Geometry.bounding_box_base.BoundingBoxBase" title="duHast.Geometry.bounding_box_base.BoundingBoxBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">BoundingBoxBase</span></code></a></p>
+<p>A 3D bounding box class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point1</strong> (<a class="reference internal" href="#duHast.Geometry.point_3.Point3" title="duHast.Geometry.point_3.Point3"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point3</span></code></a>, optional) – A 3D point describing a corner of bounding box, defaults to None</p></li>
+<li><p><strong>point2</strong> (<a class="reference internal" href="#duHast.Geometry.point_3.Point3" title="duHast.Geometry.point_3.Point3"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point3</span></code></a>, optional) – A 3D point describing diagonal opposite corner of bounding box, defaults to None</p></li>
+<li><p><strong>j</strong> (<em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – A json formatted string, representing an instance of this class, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – “Either two Point2 instances or a JSON string with point data needs to be provided.”</p></li>
+<li><p><strong>TypeError</strong> – “point1 expected Point3 instance. Got type instead.”</p></li>
+<li><p><strong>TypeError</strong> – “point2 expected Point3 instance. Got type instead.”</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_3.BoundingBox3.min_z">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">min_z</span></span><a class="headerlink" href="#duHast.Geometry.bounding_box_3.BoundingBox3.min_z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property for minimum z value.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_3.BoundingBox3.max_z">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_z</span></span><a class="headerlink" href="#duHast.Geometry.bounding_box_3.BoundingBox3.max_z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property for maximum z value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_3.BoundingBox3.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.bounding_box_3.BoundingBox3.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the size of the bounding box by points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point1</strong> (<a class="reference internal" href="#duHast.Geometry.point_3.Point3" title="duHast.Geometry.point_3.Point3"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point3</span></code></a>) – min point on bounding box</p></li>
+<li><p><strong>point2</strong> (<a class="reference internal" href="#duHast.Geometry.point_3.Point3" title="duHast.Geometry.point_3.Point3"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point3</span></code></a>) – max point of bounding box</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – _description_</p></li>
+<li><p><strong>TypeError</strong> – _description_</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_3.BoundingBox3.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.bounding_box_3.BoundingBox3.contains" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Geometry.bounding_box_base">
+<span id="duhast-geometry-bounding-box-base-module"></span><h2>duHast.Geometry.bounding_box_base module<a class="headerlink" href="#module-duHast.Geometry.bounding_box_base" title="Permalink to this heading">¶</a></h2>
+<section id="a-bounding-box-base-class">
+<h3>A bounding box base class.<a class="headerlink" href="#a-bounding-box-base-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_base.BoundingBoxBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.bounding_box_base.</span></span><span class="sig-name descname"><span class="pre">BoundingBoxBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.bounding_box_base.BoundingBoxBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Base implementation of a bounding box.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> – “Input must be a JSON string or a dictionary.”</p></li>
+<li><p><strong>ValueError</strong> – “JSON must contain ‘point1’ and ‘point2’ keys.”</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_base.BoundingBoxBase.json_ini">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_ini</span></span><a class="headerlink" href="#duHast.Geometry.bounding_box_base.BoundingBoxBase.json_ini" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property to access the parsed JSON data.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_base.BoundingBoxBase.min_x">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">min_x</span></span><a class="headerlink" href="#duHast.Geometry.bounding_box_base.BoundingBoxBase.min_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property for minimum x value.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_base.BoundingBoxBase.max_x">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_x</span></span><a class="headerlink" href="#duHast.Geometry.bounding_box_base.BoundingBoxBase.max_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property for maximum x value.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_base.BoundingBoxBase.min_y">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">min_y</span></span><a class="headerlink" href="#duHast.Geometry.bounding_box_base.BoundingBoxBase.min_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property for minimum y value.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_base.BoundingBoxBase.max_y">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_y</span></span><a class="headerlink" href="#duHast.Geometry.bounding_box_base.BoundingBoxBase.max_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property for maximum y value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Geometry.bounding_box_base.BoundingBoxBase.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.bounding_box_base.BoundingBoxBase.contains" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Geometry.geometry_property_names">
+<span id="duhast-geometry-geometry-property-names-module"></span><h2>duHast.Geometry.geometry_property_names module<a class="headerlink" href="#module-duHast.Geometry.geometry_property_names" title="Permalink to this heading">¶</a></h2>
+<section id="geometry-property-names-enum-class">
+<h3>Geometry property  names enum class.<a class="headerlink" href="#geometry-property-names-enum-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Geometry.geometry_property_names.GeometryPropertyNames">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.geometry_property_names.</span></span><span class="sig-name descname"><span class="pre">GeometryPropertyNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.geometry_property_names.GeometryPropertyNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Contains property names used in geometry classes</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Geometry.geometry_property_names.GeometryPropertyNames.POINT1">
+<span class="sig-name descname"><span class="pre">POINT1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'point1'</span></em><a class="headerlink" href="#duHast.Geometry.geometry_property_names.GeometryPropertyNames.POINT1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Geometry.geometry_property_names.GeometryPropertyNames.POINT2">
+<span class="sig-name descname"><span class="pre">POINT2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'point2'</span></em><a class="headerlink" href="#duHast.Geometry.geometry_property_names.GeometryPropertyNames.POINT2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Geometry.geometry_property_names.GeometryPropertyNames.X">
+<span class="sig-name descname"><span class="pre">X</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'x'</span></em><a class="headerlink" href="#duHast.Geometry.geometry_property_names.GeometryPropertyNames.X" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Geometry.geometry_property_names.GeometryPropertyNames.Y">
+<span class="sig-name descname"><span class="pre">Y</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'y'</span></em><a class="headerlink" href="#duHast.Geometry.geometry_property_names.GeometryPropertyNames.Y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Geometry.geometry_property_names.GeometryPropertyNames.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'z'</span></em><a class="headerlink" href="#duHast.Geometry.geometry_property_names.GeometryPropertyNames.Z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Geometry.geometry_property_names.GeometryPropertyNames.ROWS">
+<span class="sig-name descname"><span class="pre">ROWS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rows'</span></em><a class="headerlink" href="#duHast.Geometry.geometry_property_names.GeometryPropertyNames.ROWS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Geometry.geometry_property_names.GeometryPropertyNames.COLUMNS">
+<span class="sig-name descname"><span class="pre">COLUMNS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'columns'</span></em><a class="headerlink" href="#duHast.Geometry.geometry_property_names.GeometryPropertyNames.COLUMNS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Geometry.geometry_property_names.GeometryPropertyNames.DATA">
+<span class="sig-name descname"><span class="pre">DATA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'data'</span></em><a class="headerlink" href="#duHast.Geometry.geometry_property_names.GeometryPropertyNames.DATA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Geometry.matrix">
+<span id="duhast-geometry-matrix-module"></span><h2>duHast.Geometry.matrix module<a class="headerlink" href="#module-duHast.Geometry.matrix" title="Permalink to this heading">¶</a></h2>
+<section id="a-matrix-class">
+<h3>A matrix class.<a class="headerlink" href="#a-matrix-class" title="Permalink to this heading">¶</a></h3>
+<p>Supports matrices from 1 x 1 up to 4 x 4.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Geometry.matrix.Matrix">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.matrix.</span></span><span class="sig-name descname"><span class="pre">Matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.matrix.Matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>A basic matrix class. Matrices up to size of 4x4 are supported only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rows</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of rows, defaults to None</p></li>
+<li><p><strong>cols</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of columns, defaults to None</p></li>
+<li><p><strong>elements</strong> (<em>[</em><em>[</em><em>float</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The matrix, defaults to None</p></li>
+<li><p><strong>j</strong> (<em>str</em><em> or </em><em>dic</em><em>, </em><em>optional</em>) – A json formatted settings string or dictionary, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Thrown if row is not an integer and no json is provided</p></li>
+<li><p><strong>TypeError</strong> – Thrown if cols is not an integer and no json is provided</p></li>
+<li><p><strong>ValueError</strong> – Thrown if matrix size exceeds 4 x 4 or is rows or columns is less than 1</p></li>
+<li><p><strong>ValueError</strong> – Thrown if elements provided do not match rows and cols count</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.matrix.Matrix.rows">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rows</span></span><a class="headerlink" href="#duHast.Geometry.matrix.Matrix.rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property for the number of rows.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.matrix.Matrix.columns">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">columns</span></span><a class="headerlink" href="#duHast.Geometry.matrix.Matrix.columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property for the number of columns.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.matrix.Matrix.data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#duHast.Geometry.matrix.Matrix.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property for the matrix data.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Geometry.point_2">
+<span id="duhast-geometry-point-2-module"></span><h2>duHast.Geometry.point_2 module<a class="headerlink" href="#module-duHast.Geometry.point_2" title="Permalink to this heading">¶</a></h2>
+<section id="a-2d-point-class">
+<h3>A 2D point class.<a class="headerlink" href="#a-2d-point-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Geometry.point_2.Point2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.point_2.</span></span><span class="sig-name descname"><span class="pre">Point2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.point_2.Point2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Geometry.point_base.PointBase" title="duHast.Geometry.point_base.PointBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointBase</span></code></a></p>
+<p>A 2D point class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>double</em>) – x-coordinate of point</p></li>
+<li><p><strong>y</strong> (<em>double</em>) – y-coordinate of point</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Geometry.point_3">
+<span id="duhast-geometry-point-3-module"></span><h2>duHast.Geometry.point_3 module<a class="headerlink" href="#module-duHast.Geometry.point_3" title="Permalink to this heading">¶</a></h2>
+<section id="a-3d-point-class">
+<h3>A 3D point class.<a class="headerlink" href="#a-3d-point-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Geometry.point_3.Point3">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.point_3.</span></span><span class="sig-name descname"><span class="pre">Point3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.point_3.Point3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Geometry.point_base.PointBase" title="duHast.Geometry.point_base.PointBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointBase</span></code></a></p>
+<p>A #D point class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>double</em>) – x-coordinate of point</p></li>
+<li><p><strong>y</strong> (<em>double</em>) – y-coordinate of point</p></li>
+<li><p><strong>z</strong> (<em>double</em>) – z-coordinate of point</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Geometry.point_base">
+<span id="duhast-geometry-point-base-module"></span><h2>duHast.Geometry.point_base module<a class="headerlink" href="#module-duHast.Geometry.point_base" title="Permalink to this heading">¶</a></h2>
+<section id="a-point-base-class">
+<h3>A point base class.<a class="headerlink" href="#a-point-base-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Geometry.point_base.PointBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.point_base.</span></span><span class="sig-name descname"><span class="pre">PointBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.point_base.PointBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>A point base class. Should not be used directly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>double</em>) – x-coordinate of point</p></li>
+<li><p><strong>y</strong> (<em>double</em>) – y-coordinate of point</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.point_base.PointBase.json_ini">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_ini</span></span><a class="headerlink" href="#duHast.Geometry.point_base.PointBase.json_ini" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-only property to access the parsed JSON data.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Geometry.vector_2">
+<span id="duhast-geometry-vector-2-module"></span><h2>duHast.Geometry.vector_2 module<a class="headerlink" href="#module-duHast.Geometry.vector_2" title="Permalink to this heading">¶</a></h2>
+<section id="a-2d-vector-class">
+<h3>A 2D vector class.<a class="headerlink" href="#a-2d-vector-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Geometry.vector_2.Vector2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.vector_2.</span></span><span class="sig-name descname"><span class="pre">Vector2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.vector_2.Vector2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Geometry.vector_base.VectorBase" title="duHast.Geometry.vector_base.VectorBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorBase</span></code></a></p>
+<p>A 2D vector class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>double</em>) – Delta x</p></li>
+<li><p><strong>y</strong> (<em>double</em>) – Delta y</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.vector_2.Vector2.x">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#duHast.Geometry.vector_2.Vector2.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.vector_2.Vector2.y">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#duHast.Geometry.vector_2.Vector2.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Geometry.vector_3">
+<span id="duhast-geometry-vector-3-module"></span><h2>duHast.Geometry.vector_3 module<a class="headerlink" href="#module-duHast.Geometry.vector_3" title="Permalink to this heading">¶</a></h2>
+<section id="a-3d-vector-class">
+<h3>A 3D vector class.<a class="headerlink" href="#a-3d-vector-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Geometry.vector_3.Vector3">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.vector_3.</span></span><span class="sig-name descname"><span class="pre">Vector3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.vector_3.Vector3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Geometry.vector_base.VectorBase" title="duHast.Geometry.vector_base.VectorBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorBase</span></code></a></p>
+<p>A 3D vector class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>double</em>) – Delta x</p></li>
+<li><p><strong>y</strong> (<em>double</em>) – Delta y</p></li>
+<li><p><strong>z</strong> (<em>double</em>) – Delta z</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.vector_3.Vector3.x">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#duHast.Geometry.vector_3.Vector3.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.vector_3.Vector3.y">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#duHast.Geometry.vector_3.Vector3.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Geometry.vector_3.Vector3.z">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">z</span></span><a class="headerlink" href="#duHast.Geometry.vector_3.Vector3.z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Geometry.vector_base">
+<span id="duhast-geometry-vector-base-module"></span><h2>duHast.Geometry.vector_base module<a class="headerlink" href="#module-duHast.Geometry.vector_base" title="Permalink to this heading">¶</a></h2>
+<section id="a-vector-base-class">
+<h3>A vector base class.<a class="headerlink" href="#a-vector-base-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Geometry.vector_base.VectorBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.vector_base.</span></span><span class="sig-name descname"><span class="pre">VectorBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">components</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.vector_base.VectorBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>A vector base class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Geometry.vector_base.VectorBase.magnitude">
+<span class="sig-name descname"><span class="pre">magnitude</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.vector_base.VectorBase.magnitude" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-duHast.Geometry">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Geometry" title="Permalink to this heading">¶</a></h2>
 </section>

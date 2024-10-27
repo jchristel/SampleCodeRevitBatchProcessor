@@ -1,0 +1,29 @@
+duHast.Geometry.Exceptions package
+==================================
+
+Submodules
+----------
+
+duHast.Geometry.Exceptions.incompatible\_matrix\_dimension module
+-----------------------------------------------------------------
+
+.. automodule:: duHast.Geometry.Exceptions.incompatible_matrix_dimension
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Geometry.Exceptions.incompatible\_vector\_dimension module
+-----------------------------------------------------------------
+
+.. automodule:: duHast.Geometry.Exceptions.incompatible_vector_dimension
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Geometry.Exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:

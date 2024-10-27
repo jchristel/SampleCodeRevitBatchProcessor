@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Common.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.3 documentation</title>
+    <title>duHast.Revit.Common.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.4 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.3 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.4 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Common package" href="duHast.Revit.Common.html" />
     <link rel="next" title="duHast.Revit.Common.Objects package" href="duHast.Revit.Common.Objects.html" />
     <link rel="prev" title="duHast.Revit.Common package" href="duHast.Revit.Common.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.3 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.4 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Common.Geometry package</h1></div>
@@ -921,6 +921,57 @@ If d=0 then the point lies exactly line.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.convert_XYZ_to_point3">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">convert_XYZ_to_point3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_xyz</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.convert_XYZ_to_point3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a Revit XYZ to a duHast point3 instance. X,Y,Z coordinates are converted to metric mm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point_xyz</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit 3D point</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A point3 instance</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Geometry.html#duHast.Geometry.point_3.Point3" title="duHast.Geometry.point_3.Point3"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point3</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.convert_XYZ_to_point2">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">convert_XYZ_to_point2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_xyz</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.convert_XYZ_to_point2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a Revit XYZ to a duHast point2 instance. X,Y coordinates are converted to metric mm. Z is dropped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point_xyz</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit 3D point</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A point2 instance</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Geometry.html#duHast.Geometry.point_2.Point2" title="duHast.Geometry.point_2.Point2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point2</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.points.convert_point3_to_xyz">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.points.</span></span><span class="sig-name descname"><span class="pre">convert_point3_to_xyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.points.convert_point3_to_xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts duHast point_3 (metric mm) to Revit XYZ (imperial feet).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point_3</strong> (<a class="reference internal" href="duHast.Geometry.html#duHast.Geometry.point_3.Point3" title="duHast.Geometry.point_3.Point3"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point3</span></code></a>) – a duHast 3D point</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A revit XYZ instance</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.XYZ</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Common.Geometry.solids">
 <span id="duhast-revit-common-geometry-solids-module"></span><h2>duHast.Revit.Common.Geometry.solids module<a class="headerlink" href="#module-duHast.Revit.Common.Geometry.solids" title="Permalink to this heading">¶</a></h2>
@@ -977,6 +1028,68 @@ This is different from the family instance bounding box!</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.BoundingBoxXYZ</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Common.Geometry.to_data_conversion">
+<span id="duhast-revit-common-geometry-to-data-conversion-module"></span><h2>duHast.Revit.Common.Geometry.to_data_conversion module<a class="headerlink" href="#module-duHast.Revit.Common.Geometry.to_data_conversion" title="Permalink to this heading">¶</a></h2>
+<section id="revit-geometry-to-data-geometry-conversion-helper-functions">
+<h3>Revit Geometry to data geometry conversion helper functions.<a class="headerlink" href="#revit-geometry-to-data-geometry-conversion-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.to_data_conversion.convert_xyz_in_data_geometry_polygons">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.to_data_conversion.</span></span><span class="sig-name descname"><span class="pre">convert_xyz_in_data_geometry_polygons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dgObject</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.to_data_conversion.convert_xyz_in_data_geometry_polygons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts Revit XYZ objects stored in a data geometry object into groups of doubles for inner and outer loops        and stores them in new data geometry object. It also populates translation and rotation matrix data of            coordinate system information.
+:param doc: _description_
+:type doc: _type_
+:param dgObject: A data geometry object.
+:type dgObject: <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryPolygon</span></code>
+:return: A data geometry object.
+:rtype: <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryPolygon</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.to_data_conversion.convert_solid_to_flattened_2d_points">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.to_data_conversion.</span></span><span class="sig-name descname"><span class="pre">convert_solid_to_flattened_2d_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.to_data_conversion.convert_solid_to_flattened_2d_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a solid into a 2D polygon by projecting it onto a plane.( Removes Z values…)
+First nested list is the outer loop, any other following lists describe holes within the area of the polygon defined be points in first list.
+Arcs, circles will be tessellated to polygons.
+:param solid: A solid.
+:type solid: Autodesk.Revit.DB.Solid
+:return: A list of data geometry instances.
+:rtype: list of <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryPolygon</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.to_data_conversion.convert_bounding_box_to_flattened_2d_points">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.to_data_conversion.</span></span><span class="sig-name descname"><span class="pre">convert_bounding_box_to_flattened_2d_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounding_box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.to_data_conversion.convert_bounding_box_to_flattened_2d_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a bounding box into a 2D polygon by projecting it onto a plane.( Removes Z values…)
+:param bounding_box: A bounding box.
+:type bounding_box: Autodesk.Revit.DB.BoundingBoxXYZ
+:return: A list of data geometry instances.
+:rtype: list of <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometryPolygon</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.Geometry.to_data_conversion.get_2d_points_from_revit_element_type_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.Geometry.to_data_conversion.</span></span><span class="sig-name descname"><span class="pre">get_2d_points_from_revit_element_type_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_instance_getter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.Geometry.to_data_conversion.get_2d_points_from_revit_element_type_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of lists of points representing the flattened(2D geometry) of the elements
+List of Lists because a elements can be made up of multiple solids. Each nested list represents one solid within the elements geometry.
+Does not work with in place elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element_instance_getter</strong> (<em>func</em><em>(</em><em>doc</em><em>)</em>) – Function returning all element instances of a particular category in the model as an element collector</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of data geometry instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></p>
 </dd>
 </dl>
 </dd></dl>

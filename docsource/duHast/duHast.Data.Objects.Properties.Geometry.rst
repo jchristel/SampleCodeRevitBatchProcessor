@@ -4,22 +4,6 @@ duHast.Data.Objects.Properties.Geometry package
 Submodules
 ----------
 
-duHast.Data.Objects.Properties.Geometry.from\_revit\_conversion module
-----------------------------------------------------------------------
-
-.. automodule:: duHast.Data.Objects.Properties.Geometry.from_revit_conversion
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Data.Objects.Properties.Geometry.from\_revit\_elements module
---------------------------------------------------------------------
-
-.. automodule:: duHast.Data.Objects.Properties.Geometry.from_revit_elements
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 duHast.Data.Objects.Properties.Geometry.geometry\_base module
 -------------------------------------------------------------
 
@@ -28,10 +12,10 @@ duHast.Data.Objects.Properties.Geometry.geometry\_base module
    :undoc-members:
    :show-inheritance:
 
-duHast.Data.Objects.Properties.Geometry.geometry\_bounding\_box module
-----------------------------------------------------------------------
+duHast.Data.Objects.Properties.Geometry.geometry\_bounding\_box\_2 module
+-------------------------------------------------------------------------
 
-.. automodule:: duHast.Data.Objects.Properties.Geometry.geometry_bounding_box
+.. automodule:: duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2
    :members:
    :undoc-members:
    :show-inheritance:

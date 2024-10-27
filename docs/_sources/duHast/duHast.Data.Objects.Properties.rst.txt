@@ -84,6 +84,14 @@ duHast.Data.Objects.Properties.data\_revit\_model module
    :undoc-members:
    :show-inheritance:
 
+duHast.Data.Objects.Properties.data\_schedule\_segement module
+--------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Properties.data_schedule_segement
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Data.Objects.Properties.data\_type\_properties module
 ------------------------------------------------------------
 

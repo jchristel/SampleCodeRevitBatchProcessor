@@ -36,6 +36,14 @@ duHast.Revit.Common.Geometry.solids module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Common.Geometry.to\_data\_conversion module
+--------------------------------------------------------
+
+.. automodule:: duHast.Revit.Common.Geometry.to_data_conversion
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

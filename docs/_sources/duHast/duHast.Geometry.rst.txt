@@ -1,6 +1,105 @@
 duHast.Geometry package
 =======================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Geometry.Exceptions
+
+Submodules
+----------
+
+duHast.Geometry.bounding\_box\_2 module
+---------------------------------------
+
+.. automodule:: duHast.Geometry.bounding_box_2
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Geometry.bounding\_box\_3 module
+---------------------------------------
+
+.. automodule:: duHast.Geometry.bounding_box_3
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Geometry.bounding\_box\_base module
+------------------------------------------
+
+.. automodule:: duHast.Geometry.bounding_box_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Geometry.geometry\_property\_names module
+------------------------------------------------
+
+.. automodule:: duHast.Geometry.geometry_property_names
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Geometry.matrix module
+-----------------------------
+
+.. automodule:: duHast.Geometry.matrix
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Geometry.point\_2 module
+-------------------------------
+
+.. automodule:: duHast.Geometry.point_2
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Geometry.point\_3 module
+-------------------------------
+
+.. automodule:: duHast.Geometry.point_3
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Geometry.point\_base module
+----------------------------------
+
+.. automodule:: duHast.Geometry.point_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Geometry.vector\_2 module
+--------------------------------
+
+.. automodule:: duHast.Geometry.vector_2
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Geometry.vector\_3 module
+--------------------------------
+
+.. automodule:: duHast.Geometry.vector_3
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Geometry.vector\_base module
+-----------------------------------
+
+.. automodule:: duHast.Geometry.vector_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

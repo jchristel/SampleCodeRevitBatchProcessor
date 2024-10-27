@@ -116,6 +116,30 @@ duHast.Utilities.log\_decorator module
    :undoc-members:
    :show-inheritance:
 
+duHast.Utilities.logger\_filtering module
+-----------------------------------------
+
+.. automodule:: duHast.Utilities.logger_filtering
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Utilities.logger\_formatting module
+------------------------------------------
+
+.. automodule:: duHast.Utilities.logger_formatting
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Utilities.logging\_handlers module
+-----------------------------------------
+
+.. automodule:: duHast.Utilities.logging_handlers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Utilities.padding module
 -------------------------------
 

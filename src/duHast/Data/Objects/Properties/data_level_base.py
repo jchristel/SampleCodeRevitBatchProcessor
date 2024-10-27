@@ -70,7 +70,13 @@ class DataLevelBase(data_base.DataBase):
             # attempt to populate from json
             try:
                 self.name = j.get(DataPropertyNames.NAME.value, self.name)
+                if not isinstance(self.name, str):
+                    raise TypeError("Expected 'name' to be a string, got {}".format(type(self.name)))
+                
                 self.id = j.get(DataPropertyNames.ID.value, self.id)
+                if not isinstance(self.id, int):
+                    raise TypeError("Expected 'id' to be an int, got {}".format(type(self.id)))
+                
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

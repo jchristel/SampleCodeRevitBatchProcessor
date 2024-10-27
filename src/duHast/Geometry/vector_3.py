@@ -67,7 +67,7 @@ class Vector3(VectorBase):
         if not isinstance(
             other, (list, tuple)
         ):  # Assuming Sequence means list or tuple
-            return NotImplemented
+            raise TypeError("Expected list or tuple, got: {}".format(type(other).__name__))
         return Vector3(*(w + v for v, w in zip(self.components, other)))
 
     def __sub__(self, other):
@@ -78,7 +78,7 @@ class Vector3(VectorBase):
 
     def __rsub__(self, other):
         if not isinstance(other, (list, tuple)):
-            return NotImplemented
+            raise TypeError("Expected list or tuple, got: {}".format(type(other).__name__))
         return Vector3(*(w - v for v, w in zip(self.components, other)))
 
     def __str__(self):

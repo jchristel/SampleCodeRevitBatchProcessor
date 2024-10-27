@@ -31,7 +31,7 @@ from duHast.Geometry.point_3 import Point3
 from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 
 
-class BoundingBox3D(BoundingBoxBase):
+class BoundingBox3(BoundingBoxBase):
     def __init__(self, point1=None, point2=None, j=None):
         """
         A 3D bounding box class.
@@ -48,7 +48,7 @@ class BoundingBox3D(BoundingBoxBase):
         """
 
         # ini super with json field
-        super(BoundingBox3D, self).__init__(j=j)
+        super(BoundingBox3, self).__init__(j=j)
 
         # check first if a json string / dictionary is provided
         if j:
@@ -88,6 +88,39 @@ class BoundingBox3D(BoundingBoxBase):
         """Read-only property for maximum z value."""
         return self._max_z
 
+    def update(self, point1, point2):
+        """
+        Update the size of the bounding box by points
+
+        :param point1: min point on bounding box
+        :type point1: :class:`.Point3`
+        :param point2: max point of bounding box
+        :type point2: :class:`.Point3`
+        :raises TypeError: _description_
+        :raises TypeError: _description_
+        """
+        # check if both points are provided
+        if point1 is None or point2 is None:
+            raise ValueError("Both point1 and point2 must be provided.")
+
+        # Type checking
+        if not isinstance(point1, Point3):
+            raise TypeError(
+                "point1 expected Point2 instance. Got {} instead.".format(type(point1))
+            )
+        if not isinstance(point2, Point3):
+            raise TypeError(
+                "point2 expected Point2 instance. Got {} instead.".format(type(point2))
+            )
+
+        self._min_x = min(point1.x, point2.x)
+        self._max_x = max(point1.x, point2.x)
+
+        self._min_y = min(point1.y, point2.y)
+        self._max_y = max(point1.y, point2.y)
+
+        self._min_z = min(point1.z, point2.z)
+        self._max_z = max(point1.z, point2.z)
 
     def contains(self, point):
         return (

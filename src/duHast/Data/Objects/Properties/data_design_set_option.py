@@ -51,7 +51,7 @@ class DataDesignSetOption(data_base.DataBase):
         self.is_primary = True
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j != None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -69,8 +69,17 @@ class DataDesignSetOption(data_base.DataBase):
             # attempt to populate from json
             try:
                 self.set_name = j.get(DataPropertyNames.SET_NAME.value, self.set_name)
+                if not isinstance(self.set_name, str):
+                    raise TypeError("Expected 'set_name' to be a string, got {}".format(type(self.set_name)))
+                
                 self.option_name = j.get(DataPropertyNames.OPTION_NAME.value, self.option_name)
+                if not isinstance(self.option_name, str):
+                    raise TypeError("Expected 'option_name' to be a string, got {}".format(type(self.option_name)))
+                
                 self.is_primary = j.get(DataPropertyNames.IS_PRIMARY.value, self.is_primary)
+                if not isinstance(self.is_primary, bool):
+                    raise TypeError("Expected 'is_primary' to be a boolean, got {}".format(type(self.is_primary)))
+                
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

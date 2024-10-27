@@ -32,7 +32,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void ToJson()
+        public void Point2_ToJson()
         {
             // set up a point2 instance
             dynamic point2Instance = _scope.GetVariable("Point2")(0.0, 0.0);
@@ -49,7 +49,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void ToJsonUtf()
+        public void Point2_ToJsonUtf()
         {
             // set up a point2 instance
             dynamic point2Instance = _scope.GetVariable("Point2")(0.0, 0.0);
@@ -66,7 +66,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void IniFromJson()
+        public void Point2_IniFromJson()
         {
             string json = "{\"x\": 5.0, \"y\": 10.0}";
 

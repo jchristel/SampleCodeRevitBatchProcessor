@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IronPython.Runtime;
 using Microsoft.Scripting.Hosting;
 using IronPython.Runtime.Exceptions;
 
@@ -35,7 +36,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void TestToJson()
+        public void Vector2_TestToJson()
         {
             // set up a point2 instance
             dynamic vector2Instance = _scope.GetVariable("Vector2")(0.0, 0.0);
@@ -52,7 +53,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void TestToJsonUtf()
+        public void Vector2_TestToJsonUtf()
         {
             // set up a point2 instance
             dynamic vector2Instance = _scope.GetVariable("Vector2")(0.0, 0.0);
@@ -76,6 +77,16 @@ namespace PythonTests
 
             Assert.AreEqual(3.0, vector.x);
             Assert.AreEqual(4.0, vector.y);
+        }
+
+        [Test]
+        public void Vector2_Constructor_InvalidType_ShouldThrowTypeError()
+        {
+            var ex = Assert.Throws<TypeErrorException>(() =>
+                _scope.GetVariable("Vector2")("1.0", "2.0")
+            );
+
+            Assert.That(ex.Message, Does.Contain("All components must be of type float or int"));
         }
 
         [Test]
@@ -108,6 +119,19 @@ namespace PythonTests
         }
 
         [Test]
+        public void Vector2_RightAddition_WithTuple_ShouldReturnNewVector()
+        {
+            dynamic vector = _scope.GetVariable("Vector2")(1.0, 2.0);
+
+            // Create a Python-compatible list using PythonList since that is what __radd__ expects
+            var pythonList = new PythonList { 4.0, 5.0};
+
+            var result = vector.__radd__(pythonList);
+            Assert.AreEqual(5.0, result.x);
+            Assert.AreEqual(7.0, result.y);
+        }
+
+        [Test]
         public void Vector2_Subtraction_ReturnsNewVector()
         {
             dynamic Vector2 = _scope.GetVariable("Vector2");
@@ -134,6 +158,17 @@ namespace PythonTests
 
             var ex = Assert.Throws<Microsoft.CSharp.RuntimeBinder.RuntimeBinderException>(() => SubVector(vector, "not a vector"));
             Assert.IsTrue(ex.Message.Contains("Operator '-' cannot be applied"));
+        }
+
+        [Test]
+        public void Vector2_RightSubtraction_WithTuple_ShouldReturnNewVector()
+        {
+            dynamic vector = _scope.GetVariable("Vector2")(1.0, 2.0);
+            var pythonList = new PythonList { 4.0, 5.0};
+            var result = vector.__rsub__(pythonList);
+
+            Assert.AreEqual(3.0, result.x);
+            Assert.AreEqual(3.0, result.y);
         }
 
         [Test]

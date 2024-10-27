@@ -111,7 +111,7 @@ class Matrix(Base):
                 [[0.0 for _ in range(self._columns)] for _ in range(self._rows)],
             )
             self._validate_elements(elements_from_json)  # Validate after loading from JSON
-        except (json.JSONDecodeError, ValueError) as e:
+        except Exception as e:
             raise ValueError("Invalid JSON input: {}".format(e))
 
 

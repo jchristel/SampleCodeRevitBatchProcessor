@@ -1,8 +1,9 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Utility function getting 2D points from element solids.
+A 3D point class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -10,7 +11,7 @@ Utility function getting 2D points from element solids.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -26,28 +27,37 @@ Utility function getting 2D points from element solids.
 #
 #
 
-from duHast.Revit.Common.Geometry import solids as rSolid
+from duHast.Geometry.point_base import PointBase
+from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 
 
-def get_2d_points_from_revit_element_type_in_model(doc, element_instance_getter):
-    """
-    Returns a list of lists of points representing the flattened(2D geometry) of the elements
-    List of Lists because a elements can be made up of multiple solids. Each nested list represents one solid within the elements geometry.
-    Does not work with in place elements.
+class Point3(PointBase):
+    def __init__(self, x=None, y=None, z=None, j=None):
+        """
+        A #D point class.
 
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :param element_instance_getter: Function returning all element instances of a particular category in the model as an element collector
-    :type element_instance_getter: func(doc)
+        :param x: x-coordinate of point
+        :type x: double
+        :param y: y-coordinate of point
+        :type y: double
+        :param z: z-coordinate of point
+        :type z: double
+        """
 
-    :return: A list of data geometry instances.
-    :rtype: list of :class:`.DataGeometry`
-    """
+        # ini super class to allow multi inheritance in children!
+        super(Point3, self).__init__(x=x, y=y, j=j)
 
-    element_instances = element_instance_getter(doc)
-    all_element_points = []
-    for element_instance in element_instances:
-        element_points = rSolid.get_2d_points_from_solid(element_instance)
-        if len(element_points) > 0:
-            all_element_points.append(element_points)
-    return all_element_points
+        # check first if a json string / dictionary is provided
+        if j:
+            # Validate presence of required keys (stored in base class json)
+            if GeometryPropertyNames.Z.value not in self.json_ini:
+                raise ValueError("JSON must contain 'z' key.")
+
+            z = self.json_ini.get(GeometryPropertyNames.Z.value)
+
+        # Type checking
+        if not isinstance(z, float):
+            raise TypeError("z expected float. Got {} instead.".format(type(z)))
+
+        # store values
+        self.z = z

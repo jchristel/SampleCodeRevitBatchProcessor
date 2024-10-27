@@ -42,8 +42,8 @@ import json
 from duHast.Data.Objects.data_base import DataBase
 
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
-    DataBoundingBox,
+from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
+    DataBoundingBox2,
 )
 
 
@@ -63,7 +63,7 @@ class DataTag(DataBase):
         super(DataTag, self).__init__(data_type=DataTag.data_type)
 
         # set default values
-        self.bounding_box = DataBoundingBox()
+        self.bounding_box = DataBoundingBox2()
         self.elbow_location = [0,0,0]
         self.leader_end = None
         self.leader_reference = None
@@ -87,7 +87,7 @@ class DataTag(DataBase):
 
             # attempt to populate from json
             try:
-                self.bounding_box = DataBoundingBox(
+                self.bounding_box = DataBoundingBox2(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
                 self.elbow_location = j.get(DataPropertyNames.TAG_ELBOW_LOCATION.value, self.elbow_location)

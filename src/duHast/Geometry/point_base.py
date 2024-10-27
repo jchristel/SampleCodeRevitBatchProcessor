@@ -1,12 +1,7 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A class to load xaml files.
+A point base class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Based on:
-
-https://markheath.net/post/wpf-and-mvvm-in-ironpython
-
 """
 
 #
@@ -16,7 +11,7 @@ https://markheath.net/post/wpf-and-mvvm-in-ironpython
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -32,46 +27,58 @@ https://markheath.net/post/wpf-and-mvvm-in-ironpython
 #
 #
 
-import codecs
-from System.Windows.Markup import XamlReader
+import json
+from duHast.Utilities.Objects import base
+from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 
 
-class XamlLoader(object):
-    def __init__(self, xaml_path):
+class PointBase(base.Base):
+    def __init__(self, x=None, y=None, j=None):
         """
-        Loads a XAML file and provides access to its objects.
+        A point base class. Should not be used directly.
 
-        :param xaml_path: The path to the XAML file to load
-        :type xaml_path: str
+        :param x: x-coordinate of point
+        :type x: double
+        :param y: y-coordinate of point
+        :type y: double
         """
-        self.Root = self.load_xaml(xaml_path)
 
-    def load_xaml(self, xaml_path):
-        """
-        Load the XAML file and parse it.
+        # ini super class to allow multi inheritance in children!
+        super(PointBase, self).__init__()
 
-        :param xaml_path: The path to the XAML file to load
-        :type xaml_path: str
-        :return: The root element of the loaded XAML
-        :rtype: System.Windows.UIElement
-        """
-        # Read the XAML fil
-        with codecs.open(xaml_path, 'r', encoding='utf-8-sig') as file:
-            xaml_content = file.read()
+        # Check if a JSON string / dictionary is provided
+        if j:
+            if isinstance(j, str):
+                # Parse the JSON string
+                j = json.loads(j)
+            elif not isinstance(j, dict):
+                raise TypeError("Input must be a JSON string or a dictionary.")
 
-        # Parse the XAML content
-        return XamlReader.Parse(xaml_content)
+            # Validate presence of required keys
+            if (
+                GeometryPropertyNames.X.value not in j
+                or GeometryPropertyNames.Y.value not in j
+            ):
+                raise ValueError("JSON must contain 'x' and 'y' keys.")
 
-    def __getattr__(self, item):
-        """
-        Maps values to attributes.
-        Only called if there *isn't* an attribute with this name.
+            x = j.get(GeometryPropertyNames.X.value)
+            y = j.get(GeometryPropertyNames.Y.value)
 
-        :param item: The name of the attribute
-        :return: The value of the attribute, if found
-        """
-        if hasattr(self.Root, "FindName"):
-            return self.Root.FindName(item)
-        raise AttributeError(
-            "{} object has no attribute {}".format(self.__class__.__name__, item)
-        )
+            self._json_ini = j
+        else:
+            self._json_ini = None
+
+        # Type checking
+        if not isinstance(x, float):
+            raise TypeError("x expected float. Got {} instead.".format(type(x)))
+        if not isinstance(y, float):
+            raise TypeError("y expected float. Got {} instead.".format(type(y)))
+
+        # store values
+        self.x = x
+        self.y = y
+
+    @property
+    def json_ini(self):
+        """Read-only property to access the parsed JSON data."""
+        return self._json_ini

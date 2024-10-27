@@ -1,12 +1,7 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A class to load xaml files.
+Data storage class for Revit schedule segement properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Based on:
-
-https://markheath.net/post/wpf-and-mvvm-in-ironpython
-
 """
 
 #
@@ -16,7 +11,7 @@ https://markheath.net/post/wpf-and-mvvm-in-ironpython
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -32,46 +27,54 @@ https://markheath.net/post/wpf-and-mvvm-in-ironpython
 #
 #
 
-import codecs
-from System.Windows.Markup import XamlReader
+import json
+from duHast.Data.Objects.data_base import DataBase
+from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 
-class XamlLoader(object):
-    def __init__(self, xaml_path):
+class DataScheduleSegment(DataBase):
+
+    data_type = "schedule segement"
+
+    def __init__(self, j=None):
         """
-        Loads a XAML file and provides access to its objects.
+        Class constructor
 
-        :param xaml_path: The path to the XAML file to load
-        :type xaml_path: str
+        :param j:  json formatted dictionary of this class, defaults to {}
+        :type j: dict, optional
         """
-        self.Root = self.load_xaml(xaml_path)
 
-    def load_xaml(self, xaml_path):
-        """
-        Load the XAML file and parse it.
+        # store data type  in base class
+        super(DataScheduleSegment, self).__init__(data_type = DataScheduleSegment.data_type)
 
-        :param xaml_path: The path to the XAML file to load
-        :type xaml_path: str
-        :return: The root element of the loaded XAML
-        :rtype: System.Windows.UIElement
-        """
-        # Read the XAML fil
-        with codecs.open(xaml_path, 'r', encoding='utf-8-sig') as file:
-            xaml_content = file.read()
+        # set default values
+        self.index = 0
+        self.height = 0.0
 
-        # Parse the XAML content
-        return XamlReader.Parse(xaml_content)
+        # check if any data was past in with constructor!
+        if j != None and len(j) > 0:
+            # check type of data that came in:
+            if isinstance(j, str):
+                # a string
+                j = json.loads(j)
+            elif isinstance(j, dict):
+                # no action required
+                pass
+            else:
+                raise TypeError(
+                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
+                        type(j)
+                    )
+                )
 
-    def __getattr__(self, item):
-        """
-        Maps values to attributes.
-        Only called if there *isn't* an attribute with this name.
+            # attempt to populate from json
+            try:
+                self.index = j.get(
+                    DataPropertyNames.INDEX, self.index
+                )
 
-        :param item: The name of the attribute
-        :return: The value of the attribute, if found
-        """
-        if hasattr(self.Root, "FindName"):
-            return self.Root.FindName(item)
-        raise AttributeError(
-            "{} object has no attribute {}".format(self.__class__.__name__, item)
-        )
+                self.height = j.get(DataPropertyNames.HEIGHT, self.height)
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

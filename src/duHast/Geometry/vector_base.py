@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Geometry data bounding_box storage class.
+A vector base class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -11,7 +11,7 @@ Geometry data bounding_box storage class.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -27,56 +27,54 @@ Geometry data bounding_box storage class.
 #
 #
 
-import json
-from duHast.Data.Objects.Properties.Geometry import geometry_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+import math
+
+from duHast.Utilities.Objects.base import Base
+from duHast.Geometry.Exceptions.incompatible_vector_dimension import (
+    IncompatibleVectorDimensions,
+)
 
 
-class DataBoundingBox(geometry_base.DataGeometryBase):
-    data_type = "bounding box"
-
-    def __init__(self, j=None):
+class VectorBase(Base):
+    def __init__(self, *components):
         """
-        Class constructor
-
-        :param j:  json formatted dictionary of this class, defaults to {}
-        :type j: dict, optional
+        A vector base class.
         """
-
-        # store data type  in base class
-        super(DataBoundingBox, self).__init__(DataBoundingBox.data_type, j)
-
-        # set default values
-        self.min = None
-        self.max = None
-
-        # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
-            # check type of data that came in:
-            if isinstance(j, str):
-                # a string
-                j = json.loads(j)
-            elif isinstance(j, dict):
-                # no action required
-                pass
-            else:
+        # ini super class to allow multi inheritance in children!
+        super(VectorBase, self).__init__()
+        
+        # check components are either int ort floats
+        for component in components:
+            if not isinstance(component, (float, int)):
                 raise TypeError(
-                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
-                        type(j)
-                    )
+                    "All components must be of type float or int, got {} instead.".format(type(component).__name__)
                 )
 
-            # attempt to populate from json
-            try:
-                self.min = j.get(
-                    DataPropertyNames.MIN.value,
-                    self.min,
-                )
-                self.type_properties = j.get(
-                    DataPropertyNames.MAX.value,
-                    self.max,
-                )
-            except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+        self.components = components
+
+    def _check_dimension_compatibility(self, other):
+        if len(self.components) != len(other.components):
+            raise IncompatibleVectorDimensions(
+                "Dimension mismatch: {} vs {}".format(
+                    len(self.components), len(other.components)
+                ),
+                other,
+            )
+
+    def magnitude(self):
+        return math.sqrt(sum(c**2 for c in self.components))
+
+    def __str__(self):
+        return "Vector ({})".format(", ".join(map(str, self.components)))
+
+    def __rmul__(self, s):
+        return self.__mul__(s)
+
+    def __neg__(self):
+        return self * -1
+
+    def __pos__(self):
+        return self
+
+    def __abs__(self):
+        return self.magnitude()

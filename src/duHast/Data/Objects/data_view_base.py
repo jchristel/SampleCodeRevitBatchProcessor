@@ -34,18 +34,14 @@ Data storage view base class used for Revit views.
 import json
 
 from duHast.Data.Objects import data_base
-
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
-    DataBoundingBox,
-)
 
 
 class DataViewBase(data_base.DataBase):
 
-    data_type = "view base"
+    #data_type = "view base"
 
-    def __init__(self, j=None):
+    def __init__(self, data_type, j=None):
         """
         Class constructor for a view.
 
@@ -54,7 +50,7 @@ class DataViewBase(data_base.DataBase):
         """
 
         # initialise parent classes with values
-        super(DataViewBase, self).__init__(data_type=DataViewBase.data_type)
+        super(DataViewBase, self).__init__(data_type=data_type)
 
         # set default values
         self.id = -1

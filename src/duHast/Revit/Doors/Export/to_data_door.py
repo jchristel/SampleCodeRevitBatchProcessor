@@ -37,7 +37,7 @@ from Autodesk.Revit.DB import (
 # from duHast.APISamples.Ceilings.Geometry import Geometry
 from duHast.Revit.Doors.doors import get_door_instances
 from duHast.Data.Objects import data_door as dDoor
-from duHast.Data.Objects.Properties.Geometry.from_revit_conversion import (
+from duHast.Revit.Common.Geometry.to_data_conversion import (
     convert_bounding_box_to_flattened_2d_points,
     convert_xyz_in_data_geometry_polygons,
 )

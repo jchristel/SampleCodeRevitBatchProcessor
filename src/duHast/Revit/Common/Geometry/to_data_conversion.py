@@ -28,7 +28,7 @@ Revit Geometry to data geometry conversion helper functions.
 #
 
 from duHast.Data.Objects.Properties.Geometry import geometry_polygon as dGeometryPoly
-from duHast.Revit.Common.Geometry import geometry as rGeo
+from duHast.Revit.Common.Geometry import geometry as rGeo, solids as rSolid
 from collections import namedtuple
 from duHast.Revit.Common.Geometry.points import get_point_as_doubles, flatten_xyz_point
 
@@ -164,3 +164,27 @@ def convert_bounding_box_to_flattened_2d_points(bounding_box):
     dataGeometry = dGeometryPoly.DataPolygon()
     dataGeometry.outer_loop = bounding_box_points
     return dataGeometry
+
+
+def get_2d_points_from_revit_element_type_in_model(doc, element_instance_getter):
+    """
+    Returns a list of lists of points representing the flattened(2D geometry) of the elements
+    List of Lists because a elements can be made up of multiple solids. Each nested list represents one solid within the elements geometry.
+    Does not work with in place elements.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param element_instance_getter: Function returning all element instances of a particular category in the model as an element collector
+    :type element_instance_getter: func(doc)
+
+    :return: A list of data geometry instances.
+    :rtype: list of :class:`.DataGeometry`
+    """
+
+    element_instances = element_instance_getter(doc)
+    all_element_points = []
+    for element_instance in element_instances:
+        element_points = rSolid.get_2d_points_from_solid(element_instance)
+        if len(element_points) > 0:
+            all_element_points.append(element_points)
+    return all_element_points

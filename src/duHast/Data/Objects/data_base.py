@@ -27,10 +27,10 @@ Data base class for Revit object properties.
 #
 #
 
-from duHast.Utilities.Objects import base
+from duHast.Utilities.Objects.base import Base
 
 
-class DataBase(base.Base):
+class DataBase(Base):
     def __init__(self, data_type, **kwargs):
         """
         Class constructor
@@ -41,7 +41,7 @@ class DataBase(base.Base):
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
-        super(DataBase, self).__init__(**kwargs)
+        super(DataBase, self).__init__()
         self.data_type = data_type
 
     @property

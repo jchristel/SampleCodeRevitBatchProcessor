@@ -29,8 +29,8 @@ This module contains a number of helper functions relating to Revit view port to
 
 
 from duHast.Data.Objects.data_sheet_view_port import DataSheetViewPort
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box import (
-    DataBoundingBox,
+from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
+    DataBoundingBox2,
 )
 from duHast.Data.Objects.Properties.data_view_port_type_names import (
     DataViewPortTypeNames,
@@ -39,9 +39,12 @@ from duHast.Data.Objects.data_view_3d import DataViewThreeD
 from duHast.Data.Objects.data_view_elevation import DataViewElevation
 from duHast.Data.Objects.data_view_plan import DataViewPlan
 from duHast.Data.Objects.data_view_schedule import DataViewSchedule
+from duHast.Data.Objects.Properties.data_schedule_segement import DataScheduleSegment
 
 
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
+
+from duHast.Revit.Common.Geometry.points import convert_XYZ_to_point2
 
 from Autodesk.Revit.DB import SectionType, ViewType
 
@@ -157,8 +160,20 @@ def _get_schedule_view(doc, view):
     section = table.GetSectionData(SectionType.Body)
     number_of_rows = section.NumberOfRows
 
-    # get bounding box
+    # store the number of data rows
+    data_instance.total_number_of_rows = number_of_rows
+
+    # The total count of schedule segments. 1 means the schedule is not split yet.
+    counter = 0
+    for seg in view.GetSegmentCount():
+        seg_data = DataScheduleSegment()
+        seg_data.index = counter
+        seg_height  = view.GetSegmentHeight(counter)
+        seg_data.height = seg_height
+        data_instance.segments.append(seg_data)
+        counter = counter + 1
     
+    # get bounding box
     return data_instance
 
 
@@ -213,25 +228,17 @@ def convert_revit_viewport_to_data_instance(doc, revit_view_port):
 
     # set up data instances
     view_port_data = DataSheetViewPort()
-    bbox = DataBoundingBox()
+    bbox = DataBoundingBox2()
 
     # get an outline from the Revit view port
     view_port_outline = revit_view_port.GetBoxOutline()
-    # get the outlines min and max points
-    max_point = view_port_outline.MaximumPoint
-    min_point = view_port_outline.MinimumPoint
-
-    # get the min and max point from the outline
-    bbox.max = [
-        convert_imperial_feet_to_metric_mm(max_point.X),
-        convert_imperial_feet_to_metric_mm(max_point.Y),
-        convert_imperial_feet_to_metric_mm(max_point.Z),
-    ]
-    bbox.min = [
-        convert_imperial_feet_to_metric_mm(min_point.X),
-        convert_imperial_feet_to_metric_mm(min_point.Y),
-        convert_imperial_feet_to_metric_mm(min_point.Z),
-    ]
+    
+    # get the outlines min and max points as 2d points
+    bb_max_2d = convert_XYZ_to_point2(view_port_outline.MaximumPoint)
+    bb_min_2d = convert_XYZ_to_point2(view_port_outline.MinimumPoint)
+    
+    # set the bounding box size
+    bbox.set_bounding_box_by_points(min=bb_min_2d, max=bb_max_2d)
 
     # update the bounding box property of the view port instance
     view_port_data.bounding_box = bbox

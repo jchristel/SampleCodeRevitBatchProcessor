@@ -34,7 +34,7 @@ This class provides some utility functions to all child classes:
 #
 
 import json
-
+from collections import OrderedDict
 
 """
 The `Base` class is a parent class that provides common functionalities and methods for its subclasses. It includes a constructor, a debug output method, a comparison method, a hash method, a method to convert the instance to JSON, a method to convert string properties to UTF-8 in JSON conversion, a method to check if an object is a Python primitive, and a method to convert the class to a dictionary.
@@ -221,31 +221,63 @@ class Base(object):
                 )
             )
 
-    def to_json(self):
-        """
-        Convert the instance of this class to json.
-
-        :return: A Json object.
-        :rtype: json
-        """
-
-        return json.dumps(self, indent=None, default=self._default_json_handler)
-    
-    
     def _default_json_handler(self, o):
         """
-        Ensure compatibility to ironpython 2.7 and 3.4
+        Ensure compatibility to iron python 2.7 and 3.4.
 
-        :param o: _description_
-        :type o: _type_
-        :return: _description_
-        :rtype: _type_
+        :param o: The object to serialize.
+        :return: A dictionary representation of the object or its string.
         """
-        if hasattr(o, '__dict__'):
+        
+        if hasattr(o, "__dict__"):
             return vars(o)
         else:
             return str(o)
-        
+
+    def to_json(self):
+        """
+        Convert the instance of this class to JSON, including public attributes and properties.
+
+        :return: A JSON object.
+        :rtype: str
+        """
+
+        def serialize(obj):
+            """Helper function to recursively serialize objects."""
+            if isinstance(obj, Base):
+                return json.loads(
+                    obj.to_json()
+                )  # Call to_json() if it's an instance of Base
+            elif isinstance(obj, list):
+                return [
+                    serialize(item) for item in obj
+                ]  # Recursively serialize list items
+            elif isinstance(obj, dict):
+                return {
+                    key: serialize(value) for key, value in obj.items()
+                }  # Recursively serialize dict values
+            else:
+                return obj  # Return the object as is
+
+        # Create an OrderedDict to hold the JSON data
+        # Sort the dictionary by keys to be able to unit test output
+        json_data = OrderedDict()
+
+        # Include public attributes
+        for key, value in self.__dict__.items():
+            if not key.startswith("_"):
+                json_data[key] = serialize(
+                    value
+                )  # Use the recursive serialize function
+
+        # Include properties from this class and its parents
+        for cls in self.__class__.__mro__:
+            for key in dir(cls):
+                attr = getattr(cls, key)
+                if isinstance(attr, property) and key not in json_data:
+                    json_data[key] = attr.fget(self)
+
+        return json.dumps(json_data, indent=None, default=self._default_json_handler)
 
     def string_to_utf(self, o):
         """
@@ -271,9 +303,42 @@ class Base(object):
         :rtype: json
         """
 
-        return json.dumps(
-            self, indent=None, default=self.string_to_utf, ensure_ascii=False
-        )
+        def serialize(obj):
+            """Helper function to recursively serialize objects."""
+            if isinstance(obj, Base):
+                return json.loads(
+                    obj.to_json_utf()
+                )  # Call to_json() if it's an instance of Base
+            elif isinstance(obj, list):
+                return [
+                    serialize(item) for item in obj
+                ]  # Recursively serialize list items
+            elif isinstance(obj, dict):
+                return {
+                    key: serialize(value) for key, value in obj.items()
+                }  # Recursively serialize dict values
+            else:
+                return obj  # Return the object as is
+
+        # Create an OrderedDict to hold the JSON data
+        # Sort the dictionary by keys to be able to unit test output
+        json_data = OrderedDict()
+
+        # Include public attributes
+        for key, value in self.__dict__.items():
+            if not key.startswith("_"):
+                json_data[key] = serialize(
+                    value
+                )  # Use the recursive serialize function
+
+        # Include properties from this class and its parents
+        for cls in self.__class__.__mro__:
+            for key in dir(cls):
+                attr = getattr(cls, key)
+                if isinstance(attr, property) and key not in json_data:
+                    json_data[key] = attr.fget(self)
+
+        return json.dumps(json_data, indent=None, default=self._default_json_handler)
 
     def _is_primitive(self, obj):
         """

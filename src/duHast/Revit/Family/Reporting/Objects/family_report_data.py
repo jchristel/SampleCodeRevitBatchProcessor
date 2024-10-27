@@ -40,16 +40,16 @@ class FamilyReportData(base.Base):
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
-        super(FamilyReportData, self).__init__(None)
+        super(FamilyReportData, self).__init__()
 
         self.project_name = None
         self.family_category = None
         self.family_name = None
         self.family_type_name = None
         self.family_instances_placed = -1
-        self.nested_families = []
+        self._nested_families = [] #(set underlying list)
         self.is_host = False
-        self.type_properties = []
+        self._type_properties = [] #(set underlying list)
         self.is_shared = False
 
 
@@ -117,7 +117,8 @@ class FamilyReportData(base.Base):
         return self._type_properties
 
     def add_type_property(self, property):
-        self._type_properties(property)
+        self._type_properties.append(property)
+
        
     @property
     def is_shared(self):
@@ -126,3 +127,63 @@ class FamilyReportData(base.Base):
     @is_shared.setter
     def is_shared(self, value):
         self._is_shared = value
+    
+
+    def get_properties_as_list_str(self):
+        """
+        returns all property values  as a list of strings
+
+        :return: A list of all property values.
+        :rtype: [str]
+        """
+
+        data = []
+        data.append(self.project_name)
+        data.append(self.family_name)
+        data.append(self.family_type_name)
+        data.append(self.family_category)
+        data.append(str(self.is_shared))
+        data.append(str(self.is_host))
+
+        # build nested family names
+        nested_family_names = []
+        for fam_name in self.nested_families:
+            nested_family_names.append(fam_name)
+        data.append(",".join(nested_family_names))
+
+       
+        # build type properties
+        for type_p in self.type_properties:
+            for property_name, property_value in type_p.items():
+                if(isinstance(property_value, str)==False):
+                    data.append(str(property_value))
+                else:
+                    data.append(property_value)
+        
+        data.append(str(self.family_instances_placed))
+        return data
+
+    def get_property_headers(self):
+        """
+        Builds a list of all proprty names.
+
+        :return: A list of all property names.
+        :rtype: [str]
+        """
+
+        data = []
+        data.append("Project Name")
+        data.append("Family Name")
+        data.append("Family Type Name")
+        data.append("Family Category")
+        data.append("Is Family Shared")
+        data.append("Is Family hosting shared families")
+        data.append("Nested Family Names")
+       
+        # build type property names
+        for type_p in self.type_properties:
+            for property_name, property_value in type_p.items():
+                data.append("Type Property: {}".format(property_name))
+        
+        data.append("Number Of Instances Placed")
+        return data

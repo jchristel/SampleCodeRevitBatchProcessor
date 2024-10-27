@@ -30,7 +30,7 @@ This module contains a Revit ceilings geometry extraction functions.
 from Autodesk.Revit.DB import Options, Solid
 
 from duHast.Revit.Ceilings import ceilings as rCeiling
-from duHast.Data.Objects.Properties.Geometry import from_revit_conversion as rCon
+from duHast.Revit.Common.Geometry import to_data_conversion as rCon
 
 
 def get_2d_points_from_revit_ceiling(ceiling):

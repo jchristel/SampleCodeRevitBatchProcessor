@@ -1,14 +1,7 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage base class used for Revit sheets.
+Geometry data bounding_box storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- contains 
-
-    - the title block
-    - a list of view ports
-    - a list of all sheet properties (instance and type)
-
 """
 
 #
@@ -18,7 +11,7 @@ Data storage base class used for Revit sheets.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2024, Jan Christel
+# Copyright 2023, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -35,44 +28,28 @@ Data storage base class used for Revit sheets.
 #
 
 import json
-
-from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
-    DataBoundingBox2,
-)
-from duHast.Data.Objects.data_view_plan import DataViewPlan
-from duHast.Data.Objects.data_view_elevation import DataViewElevation
-from duHast.Data.Objects.data_view_3d import DataViewThreeD
-from duHast.Data.Objects.data_view_schedule import DataViewSchedule
-from duHast.Data.Objects.Properties.data_view_port_type_names import (
-    DataViewPortTypeNames,
-)
-
+from duHast.Data.Objects.Properties.Geometry import geometry_base
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Geometry.bounding_box_2 import BoundingBox2
+from duHast.Geometry.point_2 import Point2
 
 
-class DataSheetViewPort(data_base.DataBase):
-
-    data_type = "sheet view port"
+class DataBoundingBox2(geometry_base.DataGeometryBase):
+    data_type = "bounding box 2"
 
     def __init__(self, j=None):
         """
-        Class constructor for a sheet view port.
+        Class constructor for a 2D bounding box.
 
-        :param j: A json formatted dictionary of this class, defaults to {}
+        :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
-        # initialise parent classes with values
-        super(DataSheetViewPort, self).__init__(
-            data_type=DataSheetViewPort.data_type
-        )
+        # store data type  in base class
+        super(DataBoundingBox2, self).__init__(DataBoundingBox2.data_type, j)
 
         # set default values
-        self.bounding_box = DataBoundingBox2()
-        self.vp_type = DataViewPortTypeNames.FLOOR_PLAN.value
-        self.view_id = -1
-        self.view = DataViewPlan()
+        self.bounding_box = BoundingBox2(point1=Point2(0.0,0.0), point2=Point2(0.0,0.0))
 
         # check if any data was past in with constructor!
         if j != None and len(j) > 0:
@@ -92,26 +69,29 @@ class DataSheetViewPort(data_base.DataBase):
 
             # attempt to populate from json
             try:
-
-                self.bounding_box = DataBoundingBox2(
-                    j.get(DataPropertyNames.BOUNDING_BOX.value, {})
-                )
-                self.vp_type = j.get(DataPropertyNames.VIEW_PORT_TYPE.value, self.vp_type)
-                self.view_id = j.get(DataPropertyNames.VIEW_ID,self.view_id)
-                
-                # set up the view depending on the view port type
-                if self.vp_type == DataViewPortTypeNames.THREE_D.value:
-                    self.view = DataViewThreeD(j.get(DataPropertyNames.VIEW.value,{}))
-                elif self.vp_type == DataViewPortTypeNames.ELEVATION.value:
-                    self.view = DataViewElevation(j.get(DataPropertyNames.VIEW.value,{}))
-                elif self.vp_type == DataViewPortTypeNames.FLOOR_PLAN.value:
-                    self.view = DataViewPlan(j.get(DataPropertyNames.VIEW.value,{}))
-                elif self.vp_type == DataViewPortTypeNames.SCHEDULE.value:
-                    self.view = DataViewSchedule(j.get(DataPropertyNames.VIEW.value,{}))
-                else:
-                    raise TypeError("Unsupported viewport type: {}".format(self.vp_type))
-
+                # get the bounding box
+                bbox = j.get(DataPropertyNames.BOUNDING_BOX.value,{})
+                self.bounding_box = BoundingBox2(j=bbox)
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
+    
+    def set_bounding_box_by_points(self, min, max):
+        """
+        Update the geometry bounding box with new values
+
+        :param min: lower left corner of the bounding box
+        :type min: :class:`.Point2`
+        :param max: upper corner of the bounding box
+        :type max: :class:`.Point2`
+        :raises ValueError: _description_
+        :raises ValueError: _description_
+        """
+        if isinstance(min, Point2)==False:
+            raise ValueError ("Min needs to be a point2 instance, got {} instead:".format(type(min)))
+        
+        if isinstance(max, Point2)==False:
+            raise ValueError ("Max needs to be a point2 instance, got {} instead:".format(type(min)))
+        
+        self.bounding_box.update(point1=min, point2=max)

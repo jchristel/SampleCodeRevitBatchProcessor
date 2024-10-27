@@ -1,7 +1,12 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Geometry data storage class.
+Polygon geometry data storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A polygon consists, as a minimym, of an outer loop, but may also have any number of inner loops. Those inner loops describe holes in the surface the outer loop decribes.
+
+Loops are made up of a numer of 2D points.
+
+
 """
 
 #
@@ -29,6 +34,8 @@ Geometry data storage class.
 
 import json
 from duHast.Data.Objects.Properties.Geometry import geometry_base
+from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Geometry.point_2 import Point2
 
 
 class DataPolygon(geometry_base.DataGeometryBase):
@@ -36,7 +43,7 @@ class DataPolygon(geometry_base.DataGeometryBase):
 
     def __init__(self, j=None):
         """
-        Class constructor
+        Class constructor for a 2d polygon.
 
         :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
@@ -67,8 +74,20 @@ class DataPolygon(geometry_base.DataGeometryBase):
 
             # attempt to populate from json
             try:
-                self.outer_loop = j.get("outer_loop", self.outer_loop)
-                self.inner_loops = j.get("inner_loops", self.inner_loops)
+                # get outer points loop
+                outer_loop = j.get(DataPropertyNames.OUTER_LOOP, self.outer_loop)
+                for p in outer_loop:
+                    self.outer_loop.append(Point2(j=p))
+                
+                # get inner loops
+                inner_loops = j.get(DataPropertyNames.INNER_LOOPS, self.inner_loops)
+                if(len(inner_loops)>0):
+                    for loop in inner_loops:
+                        loop_points = []
+                        for p in loop:
+                            loop_points.append(Point2(j=p))
+                        self.inner_loops.append(loop_points)
+
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

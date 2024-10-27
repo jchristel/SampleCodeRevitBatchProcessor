@@ -30,7 +30,7 @@ Module containing reporting functions.
 #
 
 # required for .ToList() on FilteredElementCollector
-import clr, os
+import clr
 
 clr.AddReference("System.Core")
 from System import Linq
@@ -46,13 +46,13 @@ from duHast.Revit.Common.parameter_get_utils import (
     get_built_in_parameter_value,
     get_parameter_value_as_integer,
 )
+from duHast.Revit.Common.revit_version import get_revit_version_number
 from duHast.Revit.Family.Utility import loadable_family_categories as rFamUtilCats
 from duHast.Revit.Family.family_utils import (
     get_family_symbols,
     get_family_instances_by_symbol_type_id,
 )
 from duHast.Revit.Common.parameter_get_utils import get_parameter_value_by_name
-from duHast.Utilities.utility import encode_utf8
 from duHast.UI.Objects.ProgressBase import ProgressBase
 
 # default list of parameters to report on
@@ -126,32 +126,36 @@ def _get_host_family_status(doc, family_symbol):
     # get all instances in the model
     instances = get_family_instances_by_symbol_type_id(doc, family_symbol.Id)
 
-    # make sure any instances are in the model placed
-    if len(instances) > 0:
-
-        # get the first one
-        for family_instance in instances:
-            # check if any nested shared families are in play
+    # get the first one
+    for family_instance in instances:
+        # check if any nested shared families are in play
+        try:
             sub_element_ids = family_instance.GetSubComponentIds()
             if sub_element_ids is not None:
                 for sub_element_id in sub_element_ids:
-                    # get the family name and type name
-                    nested_instance = doc.GetElement(sub_element_id)
-                    nested_type = nested_instance.FamilySymbol
-                    nested_family = nested_type.Family
-                    nested_family_names.append(
-                        "{}-{}".format(
-                            Element.Name.GetValue(nested_family),
-                            Element.Name.GetValue(nested_type),
-                        )
-                    )
-
-            break
-
+                    try:
+                        # get the family name and type name
+                        nested_instance = doc.GetElement(sub_element_id)
+                        nested_type = nested_instance.Symbol
+                        nested_family = nested_type.Family
+                        name = "{}-{}".format(
+                                Element.Name.GetValue(nested_family),
+                                Element.Name.GetValue(nested_type),
+                            )
+                        if name not in nested_family_names:
+                            nested_family_names.append(name)
+                    except Exception as e:
+                        pass
+        except Exception as e:
+            # some family categories do not have GetSubComponentIds() available, i.e. Tags
+            pass
+        
+        break
+        
     return nested_family_names
 
 
-def _get_is_shared(doc, family_symbol):
+def _get_is_shared(family_symbol):
     """
     Returns if the family is shared (true) or not (false)
 
@@ -226,18 +230,23 @@ def report_loaded_families(
         progress_callback.update(0, 1, message="Reporting families...start")
 
     # build list of all categories we want families to be reloaded of
-    # TODO: add new Revit categories
     famCats = List[BuiltInCategory](rFamUtilCats.CATEGORIES_LOADABLE_TAGS)
     famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_TAGS_OTHER)
     famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_3D)
     famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_3D_OTHER)
 
+    # check Revit version and if 2022 and later, add new categories
+    revit_version = get_revit_version_number(doc=doc)
+    if revit_version >= 2022:
+        famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_3D_REVIT_2022)
+        famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_TAGS_REVIT_2022)
+
     # get all symbols in file
     family_symbols = get_family_symbols(doc, famCats)
+    
     # get families from symbols and filter out in place families
-    # get data in format:
-    #   revit file name , family name, family symbol name, instances placed
     data = []
+
     try:
         revit_project_file_name = doc.Title
 
@@ -254,26 +263,33 @@ def report_loaded_families(
             # build new data entry
             family_container = FamilyReportData()
             if family_symbol.Family.IsInPlace == False:
-
+                
                 # get type properties
                 _get_type_properties_of_interest(
                     family_symbol=family_symbol,
                     parameter_names_filter=parameter_names_filter,
                     family_container=family_container,
                 )
+                
                 # get the project name
                 family_container.project_name = revit_project_file_name
+                # get the family name
+                family_container.family_name = Element.Name.GetValue(family_symbol.Family)
+                # get the type name
+                family_container.family_type_name = Element.Name.GetValue(family_symbol)
+
                 # get number of instances placed
                 family_container.family_instances_placed = _get_instances_placed(
                     doc=doc, family_symbol=family_symbol
                 )
+                
                 # get the family category
                 family = doc.GetElement(family_symbol.Family.Id)
                 family_container.family_category = family.FamilyCategory.Name
 
                 # shared
                 family_container.is_shared = _get_is_shared(
-                    doc=doc, family_symbol=family_symbol
+                    family_symbol=family_symbol
                 )
 
                 # check if this is a host family
@@ -285,11 +301,10 @@ def report_loaded_families(
                     )
                     if len(nested_shared_family_names) > 0:
                         # record the nested family names
-                        for fam_name in nested_shared_family_names:
-                            family_container.add_nested_family(family=fam_name)
+                            for fam_name in nested_shared_family_names:
+                                family_container.add_nested_family(family_name=fam_name)
                 elif (
                     family_container.family_instances_placed == 0
-                    and family_container.is_shared
                 ):
                     # put up note that status could not be determined...
                     # for now...

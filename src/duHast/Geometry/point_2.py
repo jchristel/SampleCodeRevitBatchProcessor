@@ -1,12 +1,7 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A class to load xaml files.
+A 2D point class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Based on:
-
-https://markheath.net/post/wpf-and-mvvm-in-ironpython
-
 """
 
 #
@@ -16,7 +11,7 @@ https://markheath.net/post/wpf-and-mvvm-in-ironpython
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -32,46 +27,19 @@ https://markheath.net/post/wpf-and-mvvm-in-ironpython
 #
 #
 
-import codecs
-from System.Windows.Markup import XamlReader
+from duHast.Geometry.point_base import PointBase
 
 
-class XamlLoader(object):
-    def __init__(self, xaml_path):
+class Point2(PointBase):
+    def __init__(self, x=None, y=None, j=None):
         """
-        Loads a XAML file and provides access to its objects.
+        A 2D point class.
 
-        :param xaml_path: The path to the XAML file to load
-        :type xaml_path: str
+        :param x: x-coordinate of point
+        :type x: double
+        :param y: y-coordinate of point
+        :type y: double
         """
-        self.Root = self.load_xaml(xaml_path)
 
-    def load_xaml(self, xaml_path):
-        """
-        Load the XAML file and parse it.
-
-        :param xaml_path: The path to the XAML file to load
-        :type xaml_path: str
-        :return: The root element of the loaded XAML
-        :rtype: System.Windows.UIElement
-        """
-        # Read the XAML fil
-        with codecs.open(xaml_path, 'r', encoding='utf-8-sig') as file:
-            xaml_content = file.read()
-
-        # Parse the XAML content
-        return XamlReader.Parse(xaml_content)
-
-    def __getattr__(self, item):
-        """
-        Maps values to attributes.
-        Only called if there *isn't* an attribute with this name.
-
-        :param item: The name of the attribute
-        :return: The value of the attribute, if found
-        """
-        if hasattr(self.Root, "FindName"):
-            return self.Root.FindName(item)
-        raise AttributeError(
-            "{} object has no attribute {}".format(self.__class__.__name__, item)
-        )
+        # ini super class to allow multi inheritance in children!
+        super(Point2, self).__init__(x=x, y=y, j=j)

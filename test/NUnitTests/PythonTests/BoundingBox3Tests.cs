@@ -44,7 +44,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void bbox3_ToJson()
+        public void Bbox3_ToJson()
         {
             // Initialize two points
             dynamic point1 = point3Class(1.0, 2.0, 3.0);
@@ -65,7 +65,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void bbox3_ToJsonUtf()
+        public void Bbox3_ToJsonUtf()
         {
             // Initialize two points
             dynamic point1 = point3Class(1.0, 2.0, 3.0);
@@ -86,7 +86,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void bbox3_Initialize_WithPoints_ShouldSetCorrectBoundaries()
+        public void Bbox3_Initialize_WithPoints_ShouldSetCorrectBoundaries()
         {
             // Initialize two points
             dynamic point1 = point3Class(1.0, 2.0,3.0);
@@ -104,7 +104,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void bbox3_Initialize_WithJson_ShouldSetCorrectBoundaries()
+        public void Bbox3_Initialize_WithJson_ShouldSetCorrectBoundaries()
         {
             // JSON input string with point1 and point2 data
             string json = "{\"point1\": {\"x\": 0.0, \"y\": 1.0, \"z\": 2.0}, \"point2\": {\"x\": 5.0, \"y\": 6.0, \"z\": 7.0}}";
@@ -121,7 +121,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void bbox3_Update_WithNewPoints_ShouldUpdateBoundaries()
+        public void Bbox3_Update_WithNewPoints_ShouldUpdateBoundaries()
         {
             dynamic point1 = point3Class(1.0, 1.0, 1.0);
             dynamic point2 = point3Class(2.0, 2.0, 2.0);

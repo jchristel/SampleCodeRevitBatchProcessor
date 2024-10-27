@@ -42,6 +42,13 @@ class VectorBase(Base):
         """
         # ini super class to allow multi inheritance in children!
         super(VectorBase, self).__init__()
+        
+        # check components are either int ort floats
+        for component in components:
+            if not isinstance(component, (float, int)):
+                raise TypeError(
+                    "All components must be of type float or int, got {} instead.".format(type(component).__name__)
+                )
 
         self.components = components
 

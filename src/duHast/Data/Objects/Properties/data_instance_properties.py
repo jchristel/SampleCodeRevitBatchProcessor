@@ -30,6 +30,7 @@ Data storage class for Revit element instance properties.
 import json
 from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Properties.data_property import DataProperty
 
 
 class DataInstanceProperties(data_base.DataBase):
@@ -73,7 +74,11 @@ class DataInstanceProperties(data_base.DataBase):
                 if not isinstance(self.id, int):
                     raise TypeError("Expected 'id' to be an int, got {}".format(type(self.set_name)))
                 
-                self.properties = j.get(DataPropertyNames.PROPERTIES.value, self.properties)
+                # needs to be converted to list of property objects!
+                properties = j.get(DataPropertyNames.PROPERTIES.value, self.properties)
+                for prop in properties:
+                    self.properties.append(DataProperty(j=prop))
+                
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

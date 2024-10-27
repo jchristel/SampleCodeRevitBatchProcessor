@@ -66,6 +66,7 @@ class DataPropertyNames(Enum):
     TAG_LEADER_ELEMENT_REFERENCE_ID = "leader_element_reference_id"
     TOTAL_NUMBER_OF_ROWS = "total_number_of_rows"
     TRANSLATION_COORDINATES = "translation_coord"
+    VALUE_FIELD = "value"
     VIEW = "view"
     VIEW_PORT_TYPE = "vp_type"
     VIEW_ID = "view_id"

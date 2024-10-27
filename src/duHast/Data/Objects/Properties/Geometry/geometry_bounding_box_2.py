@@ -52,7 +52,7 @@ class DataBoundingBox2(geometry_base.DataGeometryBase):
         self.bounding_box = BoundingBox2(point1=Point2(0.0,0.0), point2=Point2(0.0,0.0))
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j != None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string

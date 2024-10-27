@@ -70,7 +70,7 @@ class ParameterDirectiveBase(base.Base):
         self.parameter_value = parameter_value
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j != None:
             # check type of data that came in:
             if type(j) == str:
                 # a string

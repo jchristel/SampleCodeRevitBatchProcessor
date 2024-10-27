@@ -61,7 +61,7 @@ class DataElementGeometryBase(base.Base):
         self.topologic_cell = geometry_topo_cell.DataTopologyCell()
 
         # check valid j input
-        if j != None and len(j) > 0:
+        if j != None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string

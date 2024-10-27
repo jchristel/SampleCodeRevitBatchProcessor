@@ -62,7 +62,7 @@ class LineGraphicBase(base.Base):
         self.weight = -1
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j != None:
             # check type of data that came in:
             if type(j) == str:
                 # a string

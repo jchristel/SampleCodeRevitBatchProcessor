@@ -56,7 +56,7 @@ class DataViewBase(data_base.DataBase):
         self.id = -1
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j != None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string

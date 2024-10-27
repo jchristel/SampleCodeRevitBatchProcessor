@@ -53,7 +53,7 @@ class DataGeometryBase(data_base.DataBase):
         self.rotation_coord = Matrix(rows=3, cols=3) 
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j != None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string

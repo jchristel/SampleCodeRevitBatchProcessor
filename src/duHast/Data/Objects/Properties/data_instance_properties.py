@@ -52,7 +52,7 @@ class DataInstanceProperties(data_base.DataBase):
         self.properties = {}
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j != None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -70,6 +70,9 @@ class DataInstanceProperties(data_base.DataBase):
             # attempt to populate from json
             try:
                 self.id = j.get(DataPropertyNames.ID.value, self.id)
+                if not isinstance(self.id, int):
+                    raise TypeError("Expected 'id' to be an int, got {}".format(type(self.set_name)))
+                
                 self.properties = j.get(DataPropertyNames.PROPERTIES.value, self.properties)
             except Exception as e:
                 raise ValueError(

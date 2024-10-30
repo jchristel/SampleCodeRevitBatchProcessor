@@ -49,7 +49,9 @@ class DataBoundingBox2(geometry_base.DataGeometryBase):
         super(DataBoundingBox2, self).__init__(DataBoundingBox2.data_type, j)
 
         # set default values
-        self.bounding_box = BoundingBox2(point1=Point2(0.0,0.0), point2=Point2(0.0,0.0))
+        self.bounding_box = BoundingBox2(
+            point1=Point2(0.0, 0.0), point2=Point2(0.0, 0.0)
+        )
 
         # check if any data was past in with constructor!
         if j is not None:
@@ -70,10 +72,16 @@ class DataBoundingBox2(geometry_base.DataGeometryBase):
             # attempt to populate from json
             try:
                 # get the bounding box
-                bbox = j.get(DataPropertyNames.BOUNDING_BOX.value,{})
-                self.bounding_box = BoundingBox2(j=bbox)
+                bbox = j.get(DataPropertyNames.BOUNDING_BOX.value, None)
+                # check if we got None back...if so use what is the default
+                # since a bounding box ini from an empty dictionary will fail
+                if bbox is not None:
+                    self.bounding_box = BoundingBox2(j=bbox)
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                ) from e
+
     def set_bounding_box_by_points(self, min, max):
         """
         Update the geometry bounding box with new values
@@ -85,10 +93,14 @@ class DataBoundingBox2(geometry_base.DataGeometryBase):
         :raises ValueError: _description_
         :raises ValueError: _description_
         """
-        if isinstance(min, Point2)==False:
-            raise ValueError ("Min needs to be a point2 instance, got {} instead:".format(type(min)))
-        
-        if isinstance(max, Point2)==False:
-            raise ValueError ("Max needs to be a point2 instance, got {} instead:".format(type(min)))
-        
+        if isinstance(min, Point2) == False:
+            raise ValueError(
+                "Min needs to be a point2 instance, got {} instead:".format(type(min))
+            )
+
+        if isinstance(max, Point2) == False:
+            raise ValueError(
+                "Max needs to be a point2 instance, got {} instead:".format(type(min))
+            )
+
         self.bounding_box.update(point1=min, point2=max)

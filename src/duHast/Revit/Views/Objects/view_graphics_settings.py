@@ -60,7 +60,7 @@ class ViewGraphicsSettings(base.Base):
         self.override_by_filter = []
 
         # check if any data was past in with constructor!
-        if j != None:
+        if j is not None:
             # check type of data that came in:
             if type(j) == str:
                 # a string

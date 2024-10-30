@@ -72,10 +72,7 @@ class IFamilyDataStorageUsedBy(base.Base):
                 self.data_type = j.get("data_type", self.data_type)
             except Exception as e:
                 print("Failed to initialise object with JSON data: {}".format(e))
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
-
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e
     def __eq__(self, other):
         """
         Custom compare is equal override.

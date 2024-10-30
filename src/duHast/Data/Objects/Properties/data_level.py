@@ -51,7 +51,7 @@ class DataLevel(DataLevelBase):
         self.offset_from_level = 0.0
 
         # check if any data was past in with constructor!
-        if j != None:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -75,6 +75,4 @@ class DataLevel(DataLevelBase):
                     raise TypeError("Expected 'offset_from_level' to be a float, got {}".format(type(self.offset_from_level)))
                 
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e

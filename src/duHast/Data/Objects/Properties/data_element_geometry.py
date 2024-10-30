@@ -6,7 +6,6 @@ Data storage base class used for geometry aspects of Revit elements.
 - contains 
 
     - polygon
-    - topology cell (WIP)
 
 """
 
@@ -37,11 +36,11 @@ import json
 from duHast.Utilities.Objects import base
 
 from duHast.Data.Objects.Properties.Geometry import geometry_polygon
-from duHast.Data.Objects.Properties.Geometry import geometry_topo_cell
 
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 class DataElementGeometryBase(base.Base):
+    data_type = "element geometry base"
     def __init__(self, j, **kwargs):
         """
         Class constructor
@@ -57,11 +56,10 @@ class DataElementGeometryBase(base.Base):
         super(DataElementGeometryBase, self).__init__(**kwargs)
 
         # set default values
-        self.polygon = []
-        self.topologic_cell = geometry_topo_cell.DataTopologyCell()
+        self.polygon = geometry_polygon.DataPolygon()
 
         # check valid j input
-        if j != None:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -79,23 +77,7 @@ class DataElementGeometryBase(base.Base):
             # attempt to populate from json
             try:
                 # check for polygon data
-                polygon_data = j.get(geometry_polygon.DataPolygon.data_type, [])
-
-                # this is stored as a list since there could be multiple polygons representing an object
-                geometry_data_list = []
-                for item in polygon_data:
-                    if DataPropertyNames.DATA_TYPE.value in item:
-                        if item[DataPropertyNames.DATA_TYPE.value]:
-                            dummy = geometry_polygon.DataPolygon(item)
-                            geometry_data_list.append(dummy)
-
-                self.polygon = geometry_data_list
-
-                self.topologic_cell = geometry_topo_cell.DataTopologyCell(
-                    j.get(geometry_topo_cell.DataTopologyCell.data_type, {})
-                )
-
+                polygon_data = j.get(DataPropertyNames.POLYGON.value, {})
+                self.polygon = geometry_polygon.DataPolygon(j=polygon_data)
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e

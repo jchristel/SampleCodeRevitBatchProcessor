@@ -66,7 +66,7 @@ class DataFamilyBase(data_base.DataBase, data_element_geometry.DataElementGeomet
         self.design_set_and_option = data_design_set_option.DataDesignSetOption()
 
         # check if any data was past in with constructor!
-        if j != None:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -110,6 +110,4 @@ class DataFamilyBase(data_base.DataBase, data_element_geometry.DataElementGeomet
                     DataPropertyNames.ASSOCIATED_ELEMENTS.value, self.associated_elements
                 )
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e

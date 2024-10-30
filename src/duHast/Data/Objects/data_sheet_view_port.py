@@ -75,7 +75,7 @@ class DataSheetViewPort(data_base.DataBase):
         self.view = DataViewPlan()
 
         # check if any data was past in with constructor!
-        if j != None:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -112,6 +112,4 @@ class DataSheetViewPort(data_base.DataBase):
                     raise TypeError("Unsupported viewport type: {}".format(self.vp_type))
 
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e

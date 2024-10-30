@@ -53,7 +53,7 @@ class DataGeometryBase(data_base.DataBase):
         self.rotation_coord = Matrix(rows=3, cols=3) 
 
         # check if any data was past in with constructor!
-        if j != None:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -76,6 +76,4 @@ class DataGeometryBase(data_base.DataBase):
 
                 self.rotation_coord = Matrix(j=j.get(DataPropertyNames.ROTATION_COORDINATES.value,None))
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e

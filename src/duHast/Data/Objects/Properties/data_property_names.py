@@ -52,6 +52,7 @@ class DataPropertyNames(Enum):
     NAME = "name"
     POINT1 = "point1"
     POINT2 = "point2"
+    POLYGON = "polygon"
     OPTION_NAME = "option_name"
     OFFSET_FROM_LEVEL = "offset_from_level"
     OUTER_LOOP = "outer_loop"

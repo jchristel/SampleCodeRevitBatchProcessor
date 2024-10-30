@@ -83,8 +83,8 @@ namespace PythonTests
         {
             string invalidJson = "{\"set_name\": \"Set1\", \"option_name\": \"OptionA\", \"is_primary\": \"invalid_bool\"}";
 
-            var ex = Assert.Throws<ValueErrorException>(() => dataDesignSetOptionClass(invalidJson));
-            Assert.That(ex.Message, Does.Contain("failed to initialise"));
+            var ex = Assert.Throws<TypeErrorException>(() => dataDesignSetOptionClass(invalidJson));
+            Assert.That(ex.Message, Does.Contain("Expected 'is_primary' to be a boolean"));
         }
     }
 }

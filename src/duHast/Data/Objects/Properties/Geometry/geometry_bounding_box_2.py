@@ -52,7 +52,7 @@ class DataBoundingBox2(geometry_base.DataGeometryBase):
         self.bounding_box = BoundingBox2(point1=Point2(0.0,0.0), point2=Point2(0.0,0.0))
 
         # check if any data was past in with constructor!
-        if j != None:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -73,10 +73,7 @@ class DataBoundingBox2(geometry_base.DataGeometryBase):
                 bbox = j.get(DataPropertyNames.BOUNDING_BOX.value,{})
                 self.bounding_box = BoundingBox2(j=bbox)
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
-    
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e
     def set_bounding_box_by_points(self, min, max):
         """
         Update the geometry bounding box with new values

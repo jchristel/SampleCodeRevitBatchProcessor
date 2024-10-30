@@ -33,6 +33,14 @@ This is raised when matrix manipulation is attempted with two matrices of differ
 
 class IncompatibleMatrixDimensions(Exception):
     def __init__(self, message, matrix):
+        """
+        Exception raised when, in a matrix operation, one matrix is incompatible in terms of its dimensions to the other.
+
+        :param message: The exception message text.
+        :type message: str
+        :param matrix: The other, incompatible, matrix
+        :type matrix: :class:`.Matrix`
+        """
 
         # Call the base class constructor with the message
         super(IncompatibleMatrixDimensions, self).__init__(message, matrix)
@@ -40,5 +48,8 @@ class IncompatibleMatrixDimensions(Exception):
         self.matrix = matrix
 
     def __str__(self):
-        # Custom string representation of the exception
+        """
+        Custom string representation of the exception
+        """
+
         return "Incompatible Matrix Dimensions Exception: {} [{}]".format(self.args[0], self.matrix)

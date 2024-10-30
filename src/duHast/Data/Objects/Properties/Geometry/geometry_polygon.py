@@ -49,7 +49,7 @@ class DataPolygon(geometry_base.DataGeometryBase):
         :type j: dict, optional
         """
 
-        # store data type  in base class
+        # store data type  in base class and pass on json string!!!
         super(DataPolygon, self).__init__(DataPolygon.data_type, j)
 
         # set default values
@@ -57,7 +57,7 @@ class DataPolygon(geometry_base.DataGeometryBase):
         self.inner_loops = []
 
         # check if any data was past in with constructor!
-        if j != None:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -75,13 +75,17 @@ class DataPolygon(geometry_base.DataGeometryBase):
             # attempt to populate from json
             try:
                 # get outer points loop
-                outer_loop = j.get(DataPropertyNames.OUTER_LOOP, self.outer_loop)
-                for p in outer_loop:
-                    self.outer_loop.append(Point2(j=p))
-                
+                outer_loop = j.get(DataPropertyNames.OUTER_LOOP.value, [])
+                if len(outer_loop) > 0:
+                    for p in outer_loop:
+                        self.outer_loop.append(Point2(j=p))
+                else:
+                    # a polygon must contain at least an outer loop...
+                    raise ValueError("Json did not contain any outer loop data")
+
                 # get inner loops
-                inner_loops = j.get(DataPropertyNames.INNER_LOOPS, self.inner_loops)
-                if(len(inner_loops)>0):
+                inner_loops = j.get(DataPropertyNames.INNER_LOOPS.value, [])
+                if len(inner_loops) > 0:
                     for loop in inner_loops:
                         loop_points = []
                         for p in loop:
@@ -89,6 +93,6 @@ class DataPolygon(geometry_base.DataGeometryBase):
                         self.inner_loops.append(loop_points)
 
             except Exception as e:
-                raise ValueError(
+                raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                ) from e

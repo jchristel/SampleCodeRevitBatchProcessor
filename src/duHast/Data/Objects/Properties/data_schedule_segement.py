@@ -52,7 +52,7 @@ class DataScheduleSegment(DataBase):
         self.height = 0.0
 
         # check if any data was past in with constructor!
-        if j != None:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -75,6 +75,4 @@ class DataScheduleSegment(DataBase):
 
                 self.height = j.get(DataPropertyNames.HEIGHT, self.height)
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e

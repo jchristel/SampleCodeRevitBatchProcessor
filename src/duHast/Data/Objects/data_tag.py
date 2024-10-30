@@ -70,7 +70,7 @@ class DataTag(DataBase):
         self.leader_element_reference_id =-1
 
         # check if any data was past in with constructor!
-        if j != None:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -96,6 +96,4 @@ class DataTag(DataBase):
                 self.leader_element_reference_id =j.get(DataPropertyNames.TAG_LEADER_ELEMENT_REFERENCE_ID.value, self.leader_element_reference_id)
 
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e

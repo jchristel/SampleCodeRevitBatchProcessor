@@ -23,7 +23,7 @@ namespace PythonTests
             // get the repository path
             string repoPath = PythonRunner.GetRepositoryPath();
 
-            // set path to point2 class
+            // set path to matrix class
             var pythonFilePath = Path.Combine(repoPath, @"duHast\Geometry\matrix.py");
 
             //run the file
@@ -35,7 +35,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void matrix_ToJson()
+        public void Matrix_ToJson()
         {
             // set up a point2 instance
             dynamic matrixInstance = _scope.GetVariable("Matrix")(3, 3);
@@ -52,7 +52,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void matrix_ToJsonUtf()
+        public void Matrix_ToJsonUtf()
         {
             // set up a point2 instance
             dynamic matrixInstance = _scope.GetVariable("Matrix")(3, 3);
@@ -69,7 +69,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void matrix_JsonInitialization_ValidJson_ShouldInitializeMatrix()
+        public void Matrix_JsonInitialization_ValidJson_ShouldInitializeMatrix()
         {
             string json = "{\"rows\": 2, \"columns\": 2, \"data\": [[1.0, 2.0], [3.0, 4.0]]}";
             dynamic matrixInstance = _scope.GetVariable("Matrix")(null, null, null, json);
@@ -81,7 +81,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void matrix_sonInitialization_InvalidJson_ShouldThrowValueError()
+        public void Matrix_sonInitialization_InvalidJson_ShouldThrowValueError()
         {
             string json = "{\"rows\": 2, \"columns\": 2, \"data\": \"invalid data\"}";
 
@@ -90,7 +90,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void matrix_Constructor_ValidDimensions_ShouldInitializeMatrix()
+        public void Matrix_Constructor_ValidDimensions_ShouldInitializeMatrix()
         {
             dynamic matrixInstance = _scope.GetVariable("Matrix")(2, 3);
 
@@ -99,14 +99,14 @@ namespace PythonTests
         }
 
         [Test]
-        public void matrix_Constructor_InvalidRowType_ShouldThrowTypeError()
+        public void Matrix_Constructor_InvalidRowType_ShouldThrowTypeError()
         {
             var ex = Assert.Throws<TypeErrorException>(() => _scope.GetVariable("Matrix")("2",3));
             Assert.That(ex.Message, Does.Contain("rows must be of type int"));
         }
 
         [Test]
-        public void matrix_Constructor_InvalidColType_ShouldThrowTypeError()
+        public void Matrix_Constructor_InvalidColType_ShouldThrowTypeError()
         {
             var ex = Assert.Throws<TypeErrorException>(() => _scope.GetVariable("Matrix")(2, "3"));
             Assert.That(ex.Message, Does.Contain("cols must be of type int"));
@@ -120,7 +120,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void matrix_Constructor_ElementsMismatch_ShouldThrowValueError()
+        public void Matrix_Constructor_ElementsMismatch_ShouldThrowValueError()
         {
             var elements = new[] { new[] { 1.0, 2.0 }, new[] { 3.0 } };
 
@@ -130,7 +130,7 @@ namespace PythonTests
 
 
         [Test]
-        public void matrix_MatrixAddition_SameDimensions_ShouldReturnNewMatrix()
+        public void Matrix_MatrixAddition_SameDimensions_ShouldReturnNewMatrix()
         {
             dynamic matrixA = _scope.GetVariable("Matrix")(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
             dynamic matrixB = _scope.GetVariable("Matrix")(2, 2, new[] { new[] { 5.0, 6.0 }, new[] { 7.0, 8.0 } });
@@ -143,13 +143,13 @@ namespace PythonTests
         }
 
         // Helper method to perform the addition
-        private dynamic AddMatrices(dynamic matrix, dynamic other)
+        private static dynamic AddMatrices(dynamic matrix, dynamic other)
         {
             return matrix + other;
         }
 
         [Test]
-        public void matrix_MatrixAddition_DifferentDimensions_ShouldThrowIncompatibleMatrixDimensions()
+        public void Matrix_MatrixAddition_DifferentDimensions_ShouldThrowIncompatibleMatrixDimensions()
         {
             dynamic matrixA = _scope.GetVariable("Matrix")(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
             dynamic matrixB = _scope.GetVariable("Matrix")(3, 2, new[] { new[] { 5.0, 6.0 }, new[] { 7.0, 8.0 }, new[] { 9.0, 10.0 } });
@@ -162,7 +162,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void matrix_MatrixData_Accessor_ShouldReturnCopyOfData()
+        public void Matrix_MatrixData_Accessor_ShouldReturnCopyOfData()
         {
             dynamic matrix = _scope.GetVariable("Matrix")(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
             dynamic data = matrix.data;

@@ -44,7 +44,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void bbox2_ToJson()
+        public void Bbox2_ToJson()
         {
             // Initialize two points
             dynamic point1 = point2Class(1.0, 2.0);
@@ -65,7 +65,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void bbox2_ToJsonUtf()
+        public void Bbox2_ToJsonUtf()
         {
             // Initialize two points
             dynamic point1 = point2Class(1.0, 2.0);
@@ -86,7 +86,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void bbox2_Initialize_WithPoints_ShouldSetCorrectBoundaries()
+        public void Bbox2_Initialize_WithPoints_ShouldSetCorrectBoundaries()
         {
             // Initialize two points
             dynamic point1 = point2Class(1.0, 2.0);
@@ -102,7 +102,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void bbox2_Initialize_WithJson_ShouldSetCorrectBoundaries()
+        public void Bbox2_Initialize_WithJson_ShouldSetCorrectBoundaries()
         {
             // JSON input string with point1 and point2 data
             string json = "{\"point1\": {\"x\": 0.0, \"y\": 1.0}, \"point2\": {\"x\": 5.0, \"y\": 6.0}}";
@@ -117,7 +117,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void bbox2_Update_WithNewPoints_ShouldUpdateBoundaries()
+        public void Bbox2_Update_WithNewPoints_ShouldUpdateBoundaries()
         {
             dynamic point1 = point2Class(1.0, 1.0);
             dynamic point2 = point2Class(2.0, 2.0);
@@ -134,7 +134,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void bbox2_Contains_PointWithinBounds_ShouldReturnTrue()
+        public void Bbox2_Contains_PointWithinBounds_ShouldReturnTrue()
         {
             dynamic point1 = point2Class(1.0, 1.0);
             dynamic point2 = point2Class(3.0, 3.0);
@@ -145,7 +145,7 @@ namespace PythonTests
         }
 
         [Test]
-        public void bbox2_Contains_PointOutsideBounds_ShouldReturnFalse()
+        public void Bbox2_Contains_PointOutsideBounds_ShouldReturnFalse()
         {
             dynamic point1 = point2Class(1.0, 1.0);
             dynamic point2 = point2Class(3.0, 3.0);
@@ -156,34 +156,34 @@ namespace PythonTests
         }
 
         [Test]
-        public void bbox2_Initialize_WithInvalidPoint_ShouldThrowTypeError()
+        public void Bbox2_Initialize_WithInvalidPoint_ShouldThrowTypeError()
         {
             dynamic invalidPoint = new { x = 1.0, y = 2.0 }; // Not a Point2 instance
 
             var ex = Assert.Throws<TypeErrorException>(() => boundingBox2Class(invalidPoint, invalidPoint));
-            Assert.IsTrue(ex.Message.Contains("Point2 instance"));
+            Assert.That(ex.Message, Does.Contain("Point2 instance"));
         }
 
         [Test]
-        public void bbox2_Initialize_WithMissingPoints_ShouldThrowValueError()
+        public void Bbox2_Initialize_WithMissingPoints_ShouldThrowValueError()
         {
             var ex = Assert.Throws<ValueErrorException>(() => boundingBox2Class(null, null));
-            Assert.IsTrue(ex.Message.Contains("Either two Point2 instances or a JSON string with point data"));
+            Assert.That(ex.Message, Does.Contain("Either two Point2 instances or a JSON string with point data"));
         }
 
         [Test]
-        public void bbox2_Update_WithInvalidType_ShouldThrowTypeError()
+        public void Bbox2_Update_WithInvalidType_ShouldThrowTypeError()
         {
             dynamic point1 = point2Class(1.0, 1.0);
             dynamic point2 = point2Class(2.0, 2.0);
             dynamic bbox = boundingBox2Class(point1, point2);
 
             var ex = Assert.Throws<TypeErrorException>(() => bbox.update(point1, new { x = 3.0, y = 3.0 }));
-            Assert.IsTrue(ex.Message.Contains("Point2 instance"));
+            Assert.That(ex.Message, Does.Contain("Point2 instance"));
         }
 
         [Test]
-        public void bbox2_StringRepresentation_ReturnsCorrectFormat()
+        public void Bbox2_StringRepresentation_ReturnsCorrectFormat()
         {
             dynamic point1 = point2Class(1.0, 1.0);
             dynamic point2 = point2Class(2.0, 2.0);

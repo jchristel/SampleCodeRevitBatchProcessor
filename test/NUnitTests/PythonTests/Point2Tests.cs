@@ -83,14 +83,14 @@ namespace PythonTests
             string json = "{\"x\": 5.0}";
 
             var ex = Assert.Throws<ValueErrorException>(() => _scope.GetVariable("Point2")(j: json));
-            Assert.IsTrue(ex.Message.Contains("JSON must contain 'x' and 'y' keys."));
+            Assert.That(ex.Message, Does.Contain("JSON must contain 'x' and 'y' keys."));
         }
 
         [Test]
         public void Point2_WithNullJsonAndCoordinates_ThrowsValueError()
         { 
             var ex = Assert.Throws<TypeErrorException>(() => _scope.GetVariable("Point2")());
-            Assert.IsTrue(ex.Message.Contains("x expected float. Got <class 'NoneType'> instead."));
+            Assert.That(ex.Message, Does.Contain("x expected float. Got <class 'NoneType'> instead."));
         }
 
 
@@ -100,15 +100,16 @@ namespace PythonTests
             var ex = Assert.Throws<TypeErrorException>(() => _scope.GetVariable("Point2")(x: -1, y: 0));
             // Output the result to the console
             //Console.WriteLine($"Result of int: {ex.Message}");
-            Assert.IsTrue(ex.Message.Contains("x expected float. Got <class 'int'> instead."));
+            Assert.That(ex.Message, Does.Contain("x expected float. Got <class 'int'> instead."));
         }
 
+        [Test]
         public void Point2_WithIntegerYCoordinates_ThrowsValueError()
         {
             var ex = Assert.Throws<TypeErrorException>(() => _scope.GetVariable("Point2")(x: -1.0, y: 0));
             // Output the result to the console
             Console.WriteLine($"Result of int: {ex.Message}");
-            Assert.IsTrue(ex.Message.Contains("y expected float. Got <class 'int'> instead."));
+            Assert.That(ex.Message, Does.Contain("y expected float. Got <class 'int'> instead."));
         }
 
         [Test]

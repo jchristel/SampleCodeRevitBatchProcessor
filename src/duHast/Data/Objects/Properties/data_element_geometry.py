@@ -77,7 +77,7 @@ class DataElementGeometryBase(base.Base):
             # attempt to populate from json
             try:
                 # check for polygon data
-                polygon_data = j.get(DataPropertyNames.POLYGON.value, {})
+                polygon_data = j.get(DataPropertyNames.POLYGON.value, None)
                 self.polygon = geometry_polygon.DataPolygon(j=polygon_data)
             except Exception as e:
                 raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e

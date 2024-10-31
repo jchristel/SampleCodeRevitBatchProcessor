@@ -53,6 +53,11 @@ from duHast.Revit.Family import family_load_option as famLoadOpt
 from duHast.Revit.Family.family_load_option import *
 from duHast.Revit.Common import transaction as rTran
 
+from duHast.Revit.Common.parameter_get_utils import (
+    get_built_in_parameter_value,
+    get_parameter_value_as_integer,
+)
+
 # import Autodesk Revit DataBase namespace
 from Autodesk.Revit.DB import (
     BuiltInCategory,
@@ -475,3 +480,48 @@ def get_all_non_shared_family_symbol_ids(doc):
     all_loadable_tags_type_ids = get_family_symbols_ids(doc, CATEGORIES_LOADABLE_TAGS)
     ids = all_loadable_three_d_type_ids + all_loadable_tags_type_ids
     return ids
+
+
+def is_shared_from_family(family):
+    """
+    Returns if the family is shared (true) or not (false)
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param family_symbol: The family 
+    :type family_symbol: Autodesk.Revit.DB.Family
+
+    :return: True if family is shared, otherwise False
+    :rtype: bool
+    """
+
+    p_value = get_built_in_parameter_value(
+        element=family,
+        built_in_parameter_def=BuiltInParameter.FAMILY_SHARED,
+        parameter_value_getter=get_parameter_value_as_integer,
+    )
+    
+    if p_value==0:
+        return False
+    else:
+        return True
+    
+    
+def is_shared_from_symbol(family_symbol):
+    """
+    Returns if the family is shared (true) or not (false)
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param family_symbol: The family symbol (type)
+    :type family_symbol: Autodesk.Revit.DB.FamilySymbol
+
+    :return: True if family is shared, otherwise False
+    :rtype: bool
+    """
+
+    fam = family_symbol.Family
+    return is_shared_from_family(family=fam)
+    
+
+    

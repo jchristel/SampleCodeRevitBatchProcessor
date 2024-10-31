@@ -110,4 +110,4 @@ class DataFamilyBase(data_base.DataBase, data_element_geometry.DataElementGeomet
                     DataPropertyNames.ASSOCIATED_ELEMENTS.value, self.associated_elements
                 )
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

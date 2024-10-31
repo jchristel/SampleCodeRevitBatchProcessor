@@ -91,4 +91,4 @@ class DataViewSchedule(DataViewBase):
                     seg = DataScheduleSegment(j=seg_d)
                     self.segments.append(seg)
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

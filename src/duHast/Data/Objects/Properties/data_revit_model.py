@@ -70,4 +70,4 @@ class DataRevitModel(data_base.DataBase):
             try:
                 self.name = j.get(DataPropertyNames.NAME.value, self.name)
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

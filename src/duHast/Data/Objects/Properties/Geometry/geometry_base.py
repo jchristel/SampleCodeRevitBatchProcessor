@@ -89,4 +89,4 @@ class DataGeometryBase(data_base.DataBase):
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
-                ) from e
+                ) 

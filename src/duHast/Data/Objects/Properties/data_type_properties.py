@@ -73,4 +73,4 @@ class DataTypeProperties(data_base.DataBase):
                 self.id = j.get(DataPropertyNames.ID.value, self.id)
                 self.properties = j.get(DataPropertyNames.PROPERTIES.value,self.properties)
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

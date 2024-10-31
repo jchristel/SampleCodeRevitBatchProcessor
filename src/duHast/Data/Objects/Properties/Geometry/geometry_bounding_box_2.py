@@ -80,7 +80,8 @@ class DataBoundingBox2(geometry_base.DataGeometryBase):
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
-                ) from e
+                    )
+        
 
     def set_bounding_box_by_points(self, min, max):
         """

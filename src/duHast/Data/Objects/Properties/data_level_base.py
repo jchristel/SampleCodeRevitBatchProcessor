@@ -78,4 +78,4 @@ class DataLevelBase(data_base.DataBase):
                     raise TypeError("Expected 'id' to be an int, got {}".format(type(self.id)))
                 
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

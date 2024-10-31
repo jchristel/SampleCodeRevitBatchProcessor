@@ -81,4 +81,4 @@ class DataDesignSetOption(data_base.DataBase):
                     raise TypeError("Expected 'is_primary' to be a boolean, got {}".format(type(self.is_primary)))
                 
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

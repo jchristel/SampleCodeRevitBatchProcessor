@@ -96,4 +96,4 @@ class DataTag(DataBase):
                 self.leader_element_reference_id =j.get(DataPropertyNames.TAG_LEADER_ELEMENT_REFERENCE_ID.value, self.leader_element_reference_id)
 
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

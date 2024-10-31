@@ -75,4 +75,4 @@ class DataLevel(DataLevelBase):
                     raise TypeError("Expected 'offset_from_level' to be a float, got {}".format(type(self.offset_from_level)))
                 
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e)) from e
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

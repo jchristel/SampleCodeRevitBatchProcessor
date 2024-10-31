@@ -31,9 +31,9 @@ import json
 from duHast.Utilities.Objects.base import Base
 from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 
+
 class BoundingBoxBase(Base):
     def __init__(self, j=None):
-
         """
         Base implementation of a bounding box.
 
@@ -50,24 +50,29 @@ class BoundingBoxBase(Base):
                 j = json.loads(j)
             elif not isinstance(j, dict):
                 raise TypeError("Input must be a JSON string or a dictionary.")
-            
+
             # Validate presence of required keys
-            if GeometryPropertyNames.POINT1.value not in j or GeometryPropertyNames.POINT2.value not in j:
-                raise ValueError("JSON must contain 'point1' and 'point2' keys.")
+            if (
+                GeometryPropertyNames.MAX_X.value not in j
+                or GeometryPropertyNames.MAX_Y.value not in j
+                or GeometryPropertyNames.MIN_X.value not in j
+                or GeometryPropertyNames.MIN_Y.value not in j
+            ):
+                raise ValueError("JSON must contain 'max_x', 'max_y', 'min_x', 'min_y' keys.")
             self._json_ini = j
         else:
             self._json_ini = None
-            
-        self._min_x = float('inf')
-        self._max_x = float('-inf')
-        self._min_y = float('inf')
-        self._max_y = float('-inf')
+
+        self._min_x = float("inf")
+        self._max_x = float("-inf")
+        self._min_y = float("inf")
+        self._max_y = float("-inf")
 
     @property
     def json_ini(self):
         """Read-only property to access the parsed JSON data."""
         return self._json_ini
-    
+
     @property
     def min_x(self):
         """Read-only property for minimum x value."""
@@ -88,9 +93,10 @@ class BoundingBoxBase(Base):
         """Read-only property for maximum y value."""
         return self._max_y
 
-
     def contains(self, point):
         raise NotImplementedError("Subclasses should implement this method")
 
     def __str__(self):
-        return "BoundingBoxBase({}, {}, {}, {})".format(self.min_x, self.min_y, self.max_x, self.max_y)
+        return "BoundingBoxBase({}, {}, {}, {})".format(
+            self.min_x, self.min_y, self.max_x, self.max_y
+        )

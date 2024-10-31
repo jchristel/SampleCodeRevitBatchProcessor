@@ -2,9 +2,9 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Polygon geometry data storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A polygon consists, as a minimym, of an outer loop, but may also have any number of inner loops. Those inner loops describe holes in the surface the outer loop decribes.
+A polygon consists, as a minimum, of an outer loop, but may also have any number of inner loops. Those inner loops describe holes in the surface the outer loop decribes.
 
-Loops are made up of a numer of 2D points.
+Loops are made up of a number of 2D points.
 
 
 """

@@ -107,17 +107,17 @@ namespace PythonTests
         public void Bbox3_Initialize_WithJson_ShouldSetCorrectBoundaries()
         {
             // JSON input string with point1 and point2 data
-            string json = "{\"point1\": {\"x\": 0.0, \"y\": 1.0, \"z\": 2.0}, \"point2\": {\"x\": 5.0, \"y\": 6.0, \"z\": 7.0}}";
+            string json = @"{ ""min_x"": 1.1, ""min_y"": 2.2, ""min_z"": 3.3, ""max_x"": 4.4, ""max_y"": 5.5, ""max_z"": 6.6 }";
 
             // Initialize bounding box with JSON
             dynamic bbox = boundingBox3Class(j: json);
 
-            Assert.AreEqual(0.0, bbox.min_x);
-            Assert.AreEqual(1.0, bbox.min_y);
-            Assert.AreEqual(2.0, bbox.min_z);
-            Assert.AreEqual(5.0, bbox.max_x);
-            Assert.AreEqual(6.0, bbox.max_y);
-            Assert.AreEqual(7.0, bbox.max_z);
+            Assert.AreEqual(1.1, bbox.min_x);
+            Assert.AreEqual(2.2, bbox.min_y);
+            Assert.AreEqual(3.3, bbox.min_z);
+            Assert.AreEqual(4.4, bbox.max_x);
+            Assert.AreEqual(5.5, bbox.max_y);
+            Assert.AreEqual(6.6, bbox.max_z);
         }
 
         [Test]

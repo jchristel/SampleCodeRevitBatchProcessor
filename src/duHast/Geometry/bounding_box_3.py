@@ -52,8 +52,16 @@ class BoundingBox3(BoundingBoxBase):
 
         # check first if a json string / dictionary is provided
         if j:
-            point1 = Point3(**self.json_ini[GeometryPropertyNames.POINT1.value])
-            point2 = Point3(**self.json_ini[GeometryPropertyNames.POINT2.value])
+            point1 = Point3(
+                x=self.json_ini[GeometryPropertyNames.MIN_X.value],
+                y=self.json_ini[GeometryPropertyNames.MIN_Y.value],
+                z=self.json_ini[GeometryPropertyNames.MIN_Z.value]
+            )
+            point2 = Point3(
+                x=self.json_ini[GeometryPropertyNames.MAX_X.value],
+                y=self.json_ini[GeometryPropertyNames.MAX_Y.value],
+                z=self.json_ini[GeometryPropertyNames.MAX_Z.value]
+            )
 
         # If both point1 and point2 are None after handling JSON, raise an error
         if point1 is None or point2 is None:

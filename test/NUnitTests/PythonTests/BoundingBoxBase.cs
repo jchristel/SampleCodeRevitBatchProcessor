@@ -42,21 +42,20 @@ namespace PythonTests
         public void Constructor_WithValidJson_ShouldSetJsonIni()
         {
             // Arrange
-            string json = @"
-            {
-                ""point1"": { ""x"": 1.1, ""y"": 2.2 },
-                ""point2"": { ""x"": 3.3, ""y"": 4.4 }
-            }";
+            string json = @"{ ""min_x"": 1.1, ""min_y"": 2.2, ""max_x"": 3.3, ""max_y"": 4.4 }";
+
+            Console.WriteLine(json);
 
             // Act
             dynamic instance = boundingBoxBaseClass(json);
+            
 
             // Assert
             Assert.IsNotNull(instance.json_ini);
-            Assert.AreEqual(1.1, instance.json_ini["point1"]["x"]);
-            Assert.AreEqual(2.2, instance.json_ini["point1"]["y"]);
-            Assert.AreEqual(3.3, instance.json_ini["point2"]["x"]);
-            Assert.AreEqual(4.4, instance.json_ini["point2"]["y"]);
+            Assert.AreEqual(1.1, instance.json_ini["min_x"]);
+            Assert.AreEqual(2.2, instance.json_ini["min_y"]);
+            Assert.AreEqual(3.3, instance.json_ini["max_x"]);
+            Assert.AreEqual(4.4, instance.json_ini["max_y"]);
         }
 
         [Test]
@@ -67,7 +66,7 @@ namespace PythonTests
 
             // Act & Assert
             var ex = Assert.Throws<ValueErrorException>(() => boundingBoxBaseClass(invalidJson));
-            Assert.IsTrue(ex.Message.Contains("JSON must contain 'point1' and 'point2' keys."));
+            Assert.That(ex.Message, Does.Contain("JSON must contain 'max_x', 'max_y', 'min_x', 'min_y' keys."));
         }
 
         [Test]
@@ -79,7 +78,7 @@ namespace PythonTests
             // Act & Assert
             var ex = Assert.Throws<ValueErrorException>(() => boundingBoxBaseClass(invalidJson));
             Console.WriteLine(ex.Message);
-            Assert.IsTrue(ex.Message.Contains("JSON must contain"));
+            Assert.That(ex.Message, Does.Contain("JSON must contain"));
         }
 
         [Test]
@@ -103,8 +102,8 @@ namespace PythonTests
             dynamic instance = boundingBoxBaseClass();
 
             // Act & Assert
-            var ex = Assert.Throws<ValueErrorException>(() => instance.contains(new { x = 0, y = 0 }));
-            Assert.IsTrue(ex.Message.Contains("Subclasses should implement this method"));
+            var ex = Assert.Throws<System.NotImplementedException>(() => instance.contains(new { x = 0, y = 0 }));
+            Assert.That(ex.Message, Does.Contain("Subclasses should implement this method"));
         }
 
         [Test]
@@ -114,10 +113,10 @@ namespace PythonTests
             dynamic instance = boundingBoxBaseClass();
 
             // Act
-            string result = instance.ToString();
+            string result = instance.__str__();
 
             // Assert
-            Assert.AreEqual("BoundingBoxBase(inf, inf, -inf, -inf)", result);
+            Assert.That(result, Is.EqualTo("BoundingBoxBase(inf, inf, -inf, -inf)"));
         }
     }
 }

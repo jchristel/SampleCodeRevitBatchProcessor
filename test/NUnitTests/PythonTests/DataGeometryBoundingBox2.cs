@@ -47,13 +47,7 @@ namespace PythonTests
         public void Constructor_WithValidJson_ShouldSetBoundingBox()
         {
             // Arrange
-            string json = @"
-            {
-                ""bounding_box"": {
-                    ""point1"": { ""x"": 1.1, ""y"": 2.2 },
-                    ""point2"": { ""x"": 3.3, ""y"": 4.4 }
-                }
-            }";
+            string json = @"{""bounding_box"":{ ""min_x"": 1.1, ""min_y"": 2.2, ""max_x"": 3.3, ""max_y"": 4.4 }}";
 
             // Act
             dynamic instance = dataBoundingBox2Class(json);

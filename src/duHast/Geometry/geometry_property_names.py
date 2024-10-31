@@ -36,12 +36,17 @@ class GeometryPropertyNames(Enum):
     Contains property names used in geometry classes
     """
 
+    MIN_X = "min_x"
+    MIN_Y = "min_y"
+    MIN_Z = "min_z"
+    MAX_X = "max_x"
+    MAX_Y = "max_y"
+    MAX_Z = "max_z"
     POINT1 = "point1"
     POINT2 = "point2"
-    X="x"
-    Y="y"
-    Z="z"
+    X = "x"
+    Y = "y"
+    Z = "z"
     ROWS = "rows"
-    COLUMNS ="columns"
-    DATA="data"
-    
+    COLUMNS = "columns"
+    DATA = "data"

@@ -93,6 +93,5 @@ class DataPolygon(geometry_base.DataGeometryBase):
                         self.inner_loops.append(loop_points)
 
             except Exception as e:
-                raise type(e)(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                msg = "Node {} failed to initialise with: {}".format(self.data_type, e)
+                raise type(e)(msg)

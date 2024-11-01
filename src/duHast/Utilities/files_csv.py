@@ -27,11 +27,14 @@ Helper functions relating to comma separated text files.
 #
 #
 
+import clr
 import codecs
 import csv
+import System.IO
 
-from duHast.Utilities.files_io import get_file_name_without_ext
+from duHast.Utilities.files_io import get_file_name_without_ext, remove_null_bytes, file_delete
 from duHast.Utilities.utility import encode_ascii
+from duHast.Utilities.Objects.result import Result
 
 
 def get_unique_headers(files):
@@ -66,9 +69,76 @@ def get_unique_headers(files):
     return sorted(headers_unique)
 
 
+def process_csv(file_path):
+    """
+    Process a CSV file by removing null bytes and then reading its content.
+
+    :param file_path: The path to the CSV file to be processed.
+    :type file_path: str
+    """
+    # Create a temporary file in the system's temp directory
+    temp_file_path = System.IO.Path.GetTempFileName()
+    
+    row_list = []
+
+    try:
+        # Remove null bytes and save to a temporary file
+        remove_null_bytes(file_path, temp_file_path)
+
+        # Read the cleaned file with the CSV reader
+        with open(temp_file_path, 'r') as cleaned_file:
+            reader = csv.reader(cleaned_file)
+            for row in reader:
+                row_list.append(row)
+            cleaned_file.close()
+    finally:
+        # Clean up the temporary file
+        if System.IO.File.Exists(temp_file_path):
+            System.IO.File.Delete(temp_file_path)
+    
+    return row_list
+
+
+def read_csv_file_with_encoding(file_path_csv, increase_max_field_size_limit=False):
+    """
+    Read a csv file, attempting to detect and handle encoding, including BOMs.
+
+    :param filepathCSV: The fully qualified file path to the csv file.
+    :type filepathCSV: str
+    :return: A list of list of strings representing the data in each row.
+    :rtype: list of list of str
+    """
+
+    row_list = []
+    encodings = ['utf-8-sig', 'utf-16']
+
+    return_value = Result()
+    if increase_max_field_size_limit:
+        csv.field_size_limit(2147483647)
+
+    for encoding in encodings:
+        try:
+            with codecs.open(file_path_csv, 'r', encoding=encoding) as csv_file:
+                reader = csv.reader(csv_file)
+                row_list = [row for row in reader]
+            
+            # Successful read
+            return_value.append_message("read file succesfully")
+            return_value.status=True
+            return_value.result=row_list
+            return return_value
+        except (UnicodeDecodeError, csv.Error) as e:
+            return_value.update_sep(False, "Failed with encoding {}: {}".format(encoding, e))
+
+    # statsu should be false 
+    return_value.update_sep("Failed to decode using known encodings.")
+    return return_value
+
+
 def read_csv_file(filepathCSV, increaseMaxFieldSizeLimit=False):
     """
     Read a csv file into a list of rows, where each row is another list.
+
     :param filepathCSV: The fully qualified file path to the csv file.
     :type filepathCSV: str
     :return: A list of list of strings representing the data in each row.
@@ -77,6 +147,13 @@ def read_csv_file(filepathCSV, increaseMaxFieldSizeLimit=False):
 
     row_list = []
 
+    # read with encoding enabled
+    read_result = read_csv_file_with_encoding(filepathCSV, increaseMaxFieldSizeLimit)
+    if read_result.status:
+        return read_result.result
+    
+    # if that failed try the below...
+
     # hard coded hack
     if increaseMaxFieldSizeLimit:
         csv.field_size_limit(2147483647)
@@ -84,9 +161,16 @@ def read_csv_file(filepathCSV, increaseMaxFieldSizeLimit=False):
     try:
         with open(filepathCSV) as csv_file:
             reader = csv.reader(csv_file)
-            for row in reader:  # each row is a list
-                row_list.append(row)
+            row_list = [row for row in reader]
             csv_file.close()
+    except csv.Error as e:
+        # maybe a nullbyte exception?
+        if "line contains NULL byte" in str(e):
+            print("Null byte encountered, processing CSV.")
+            row_list = process_csv(filepathCSV)
+        else:
+            print(str(e))
+            row_list = []
     except Exception as e:
         print(str(e))
         row_list = []

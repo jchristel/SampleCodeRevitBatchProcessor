@@ -20,10 +20,10 @@ duHast.Data.Objects.Properties.Geometry.geometry\_bounding\_box\_2 module
    :undoc-members:
    :show-inheritance:
 
-duHast.Data.Objects.Properties.Geometry.geometry\_polygon module
-----------------------------------------------------------------
+duHast.Data.Objects.Properties.Geometry.geometry\_polygon\_2 module
+-------------------------------------------------------------------
 
-.. automodule:: duHast.Data.Objects.Properties.Geometry.geometry_polygon
+.. automodule:: duHast.Data.Objects.Properties.Geometry.geometry_polygon_2
    :members:
    :undoc-members:
    :show-inheritance:

@@ -12,6 +12,14 @@ duHast.Utilities.Objects.base module
    :undoc-members:
    :show-inheritance:
 
+duHast.Utilities.Objects.file\_encoding\_bom module
+---------------------------------------------------
+
+.. automodule:: duHast.Utilities.Objects.file_encoding_bom
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Utilities.Objects.logger\_object module
 ----------------------------------------------
 

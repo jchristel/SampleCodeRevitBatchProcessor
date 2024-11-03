@@ -100,10 +100,26 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Utilities.Objects.html#module-duHast.Utilities.Objects.base">duHast.Utilities.Objects.base module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#base-class-for-objects">Base class for objects.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base"><code class="docutils literal notranslate"><span class="pre">Base</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base.default_format"><code class="docutils literal notranslate"><span class="pre">Base.default_format()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base.formatted_indented_str"><code class="docutils literal notranslate"><span class="pre">Base.formatted_indented_str()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base.to_json"><code class="docutils literal notranslate"><span class="pre">Base.to_json()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base.string_to_utf"><code class="docutils literal notranslate"><span class="pre">Base.string_to_utf()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base.to_json_utf"><code class="docutils literal notranslate"><span class="pre">Base.to_json_utf()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base.class_to_dict"><code class="docutils literal notranslate"><span class="pre">Base.class_to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Utilities.Objects.html#module-duHast.Utilities.Objects.file_encoding_bom">duHast.Utilities.Objects.file_encoding_bom module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#helper-functions-relating-to-comma-separated-text-files">Helper functions relating to comma separated text files.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.file_encoding_bom.BOMValue"><code class="docutils literal notranslate"><span class="pre">BOMValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.file_encoding_bom.BOMValue.UTF_8"><code class="docutils literal notranslate"><span class="pre">BOMValue.UTF_8</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.file_encoding_bom.BOMValue.UTF_16"><code class="docutils literal notranslate"><span class="pre">BOMValue.UTF_16</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.file_encoding_bom.BOMValue.UTF_16_LITTLE_ENDIAN"><code class="docutils literal notranslate"><span class="pre">BOMValue.UTF_16_LITTLE_ENDIAN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.file_encoding_bom.BOMValue.UTF_16_BIG_ENDIAN"><code class="docutils literal notranslate"><span class="pre">BOMValue.UTF_16_BIG_ENDIAN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.file_encoding_bom.BOMValue.UTF_32"><code class="docutils literal notranslate"><span class="pre">BOMValue.UTF_32</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.file_encoding_bom.BOMValue.UTF_32_LITTLE_ENDIAN"><code class="docutils literal notranslate"><span class="pre">BOMValue.UTF_32_LITTLE_ENDIAN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.file_encoding_bom.BOMValue.UTF_32_BIG_ENDIAN"><code class="docutils literal notranslate"><span class="pre">BOMValue.UTF_32_BIG_ENDIAN</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1096,13 +1112,48 @@ Assumes:</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_csv.process_csv">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_csv.</span></span><span class="sig-name descname"><span class="pre">process_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_csv.process_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a CSV file by removing null bytes and then reading its content.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The path to the CSV file to be processed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_csv.read_csv_file_with_encoding">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_csv.</span></span><span class="sig-name descname"><span class="pre">read_csv_file_with_encoding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path_csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increase_max_field_size_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_csv.read_csv_file_with_encoding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a csv file, attempting to detect and handle encoding, including BOMs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepathCSV</strong> (<em>str</em>) – The fully qualified file path to the csv file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of list of strings representing the data in each row.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_csv.read_csv_file">
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_csv.</span></span><span class="sig-name descname"><span class="pre">read_csv_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepathCSV</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increaseMaxFieldSizeLimit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_csv.read_csv_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a csv file into a list of rows, where each row is another list.
-:param filepathCSV: The fully qualified file path to the csv file.
-:type filepathCSV: str
-:return: A list of list of strings representing the data in each row.
-:rtype: list of list of str</p>
+<dd><p>Read a csv file into a list of rows, where each row is another list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepathCSV</strong> (<em>str</em>) – The fully qualified file path to the csv file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of list of strings representing the data in each row.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of list of str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -1117,7 +1168,7 @@ Assumes:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_csv.write_report_data_as_csv">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_csv.</span></span><span class="sig-name descname"><span class="pre">write_report_data_as_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforce_ascci</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_csv.write_report_data_as_csv" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_csv.</span></span><span class="sig-name descname"><span class="pre">write_report_data_as_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforce_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_csv.write_report_data_as_csv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function writing out report information as CSV file.
 :param file_name: The reports fully qualified file path.
 :type file_name: str
@@ -1126,7 +1177,13 @@ Assumes:</p>
 :param data: list of list of strings representing row data
 :type data: [[str,str,..]]
 :param write_type: Flag indicating whether existing report file is to be overwritten ‘w’ or appended to ‘a’, defaults to ‘w’
-:type write_type: str, optional</p>
+:type write_type: str, optional
+:param enforce_ascci: Flag to enforce ASCII encoding on data. If True, data will be encoded to ASCII. Defaults to False.
+:type enforce_ascci: bool, optional
+:param encoding: Encoding used to write the file. Defaults to ‘utf-8’.
+:type encoding: str, optional
+:param bom: the byte order mark, Default is None (none will be written). BOM: “utf-16” = , “utf-16-le” = ,  utf-8 =
+:type bom: str, default is NoneType</p>
 </dd></dl>
 
 </section>
@@ -1583,6 +1640,20 @@ value: lit of str</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.remove_null_bytes">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_io.</span></span><span class="sig-name descname"><span class="pre">remove_null_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.remove_null_bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove null bytes from a source CSV file and write to a temporary file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) – The path to the original CSV file.</p></li>
+<li><p><strong>temp_file_path</strong> (<em>str</em>) – The path to the temporary file where cleaned data is written.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

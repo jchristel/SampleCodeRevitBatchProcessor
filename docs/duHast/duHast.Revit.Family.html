@@ -1196,6 +1196,46 @@ value is a list of all symbol(family type) ids as Autodesk.Revit.DB.ElementId be
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.is_shared_from_family">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">is_shared_from_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.is_shared_from_family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns if the family is shared (true) or not (false)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>family_symbol</strong> (<em>Autodesk.Revit.DB.Family</em>) – The family</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if family is shared, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.is_shared_from_symbol">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">is_shared_from_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_symbol</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.is_shared_from_symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns if the family is shared (true) or not (false)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>family_symbol</strong> (<em>Autodesk.Revit.DB.FamilySymbol</em>) – The family symbol (type)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if family is shared, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Family.purge_unused_family_types">
 <span id="duhast-revit-family-purge-unused-family-types-module"></span><h2>duHast.Revit.Family.purge_unused_family_types module<a class="headerlink" href="#module-duHast.Revit.Family.purge_unused_family_types" title="Permalink to this heading">¶</a></h2>

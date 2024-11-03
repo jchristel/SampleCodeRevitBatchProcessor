@@ -20,10 +20,10 @@ duHast.Data.Objects.Properties.data\_design\_set\_option module
    :undoc-members:
    :show-inheritance:
 
-duHast.Data.Objects.Properties.data\_element\_geometry module
--------------------------------------------------------------
+duHast.Data.Objects.Properties.data\_element\_geometry\_base module
+-------------------------------------------------------------------
 
-.. automodule:: duHast.Data.Objects.Properties.data_element_geometry
+.. automodule:: duHast.Data.Objects.Properties.data_element_geometry_base
    :members:
    :undoc-members:
    :show-inheritance:

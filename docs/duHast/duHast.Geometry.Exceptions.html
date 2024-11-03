@@ -104,6 +104,15 @@
 <dt class="sig sig-object py" id="duHast.Geometry.Exceptions.incompatible_matrix_dimension.IncompatibleMatrixDimensions">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.Exceptions.incompatible_matrix_dimension.</span></span><span class="sig-name descname"><span class="pre">IncompatibleMatrixDimensions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.Exceptions.incompatible_matrix_dimension.IncompatibleMatrixDimensions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised when, in a matrix operation, one matrix is incompatible in terms of its dimensions to the other.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – The exception message text.</p></li>
+<li><p><strong>matrix</strong> (<a class="reference internal" href="duHast.Geometry.html#duHast.Geometry.matrix.Matrix" title="duHast.Geometry.matrix.Matrix"><code class="xref py py-class docutils literal notranslate"><span class="pre">Matrix</span></code></a>) – The other, incompatible, matrix</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -117,6 +126,11 @@
 <dt class="sig sig-object py" id="duHast.Geometry.Exceptions.incompatible_vector_dimension.IncompatibleVectorDimensions">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Geometry.Exceptions.incompatible_vector_dimension.</span></span><span class="sig-name descname"><span class="pre">IncompatibleVectorDimensions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vector</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Geometry.Exceptions.incompatible_vector_dimension.IncompatibleVectorDimensions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>This is raised when vector manipulation is attempted with two vectors of different length (dimension).</p>
+<p>:param message:The exception message text.
+:type message: str
+:param vector: The other, incompatible, vector.
+:type vector: <a class="reference internal" href="duHast.Geometry.html#duHast.Geometry.vector_base.VectorBase" title="duHast.Geometry.vector_base.VectorBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorBase</span></code></a></p>
 </dd></dl>
 
 </section>

@@ -38,6 +38,10 @@ namespace PythonTests
                 PythonEngineManager.DataGeometryBaseClass = scope.GetVariable("DataGeometryBase");
                 PythonEngineManager.DataGeometryBoundingBox2Class = scope.GetVariable("DataGeometryBoundingBox2");
                 PythonEngineManager.DataInstancePropertiesClass = scope.GetVariable("DataInstanceProperties");
+                PythonEngineManager.DataLevelBaseClass = scope.GetVariable("DataLevelBase");
+                PythonEngineManager.DataLevelClass = scope.GetVariable("DataLevel");
+                PythonEngineManager.DataPhasingClass = scope.GetVariable("DataPhasing");
+                PythonEngineManager.DataRevitModelClass = scope.GetVariable("DataRevitModel");
                 PythonEngineManager.DataGeometryPolygon2Class = scope.GetVariable("DataGeometryPolygon2");
                 PythonEngineManager.DataPropertyClass = scope.GetVariable("DataProperty");
 

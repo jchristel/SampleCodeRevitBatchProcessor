@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Scripting.Hosting;
-using IronPython.Runtime.Exceptions;
+﻿using IronPython.Runtime.Exceptions;
 using PythonTests.Setup;
 
-namespace PythonTests
+namespace PythonTests.DataTests.PropertyTests.GeometryTests
 {
     public class DataGeometryBoundingBox2
     {

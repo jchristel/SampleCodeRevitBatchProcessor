@@ -1,9 +1,7 @@
-﻿using System;
-using Microsoft.Scripting.Hosting;
-using IronPython.Runtime.Exceptions;
+﻿using IronPython.Runtime.Exceptions;
 using PythonTests.Setup;
 
-namespace PythonTests
+namespace PythonTests.DataTests.PropertyTests
 {
     public class DataInstanceProperties
     {

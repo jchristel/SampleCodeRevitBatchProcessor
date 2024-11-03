@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Scripting.Hosting;
 using IronPython.Runtime.Exceptions;
 
-namespace PythonTests
+namespace PythonTests.DataTests
 {
     public class DataBaseTests
     {

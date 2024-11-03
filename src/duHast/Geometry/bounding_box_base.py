@@ -30,7 +30,7 @@ A bounding box base class.
 import json
 from duHast.Utilities.Objects.base import Base
 from duHast.Geometry.geometry_property_names import GeometryPropertyNames
-
+from duHast.Utilities.compare import is_close
 
 class BoundingBoxBase(Base):
     def __init__(self, j=None):
@@ -100,3 +100,14 @@ class BoundingBoxBase(Base):
         return "BoundingBoxBase({}, {}, {}, {})".format(
             self.min_x, self.min_y, self.max_x, self.max_y
         )
+
+    def __eq__(self, other):
+        if not isinstance(other, BoundingBoxBase):
+            return NotImplemented
+        return (is_close(self.min_x, other.min_x) and
+                is_close(self.max_x, other.max_x) and
+                is_close(self.min_y, other.min_y) and
+                is_close(self.max_y, other.max_y))
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

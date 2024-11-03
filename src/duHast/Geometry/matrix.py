@@ -32,16 +32,18 @@ Supports matrices from 1 x 1 up to 4 x 4.
 #
 
 import json
+import copy
+
 from duHast.Utilities.Objects.base import Base
 from duHast.Geometry.geometry_property_names import GeometryPropertyNames
-from duHast.Geometry.Exceptions.incompatible_matrix_dimension import IncompatibleMatrixDimensions
+from duHast.Geometry.Exceptions.incompatible_matrix_dimension import (
+    IncompatibleMatrixDimensions,
+)
+from duHast.Utilities.compare import is_close
 
-import json
-import copy
 
 class Matrix(Base):
     def __init__(self, rows=None, cols=None, elements=None, j=None):
-
         """
         A basic matrix class. Matrices up to size of 4x4 are supported only.
 
@@ -87,7 +89,6 @@ class Matrix(Base):
                 # make sure elements are of the right type and size
                 self._validate_elements(elements)
 
-
     def _init_from_json(self, json_string):
         """
         Initialise class using the past in json string.
@@ -110,14 +111,17 @@ class Matrix(Base):
                 GeometryPropertyNames.DATA.value,
                 [[0.0 for _ in range(self._columns)] for _ in range(self._rows)],
             )
-            self._validate_elements(elements_from_json)  # Validate after loading from JSON
+            self._validate_elements(
+                elements_from_json
+            )  # Validate after loading from JSON
         except Exception as e:
             raise ValueError("Invalid JSON input: {}".format(e))
 
-
     def _validate_elements(self, elements):
         """Validate that the elements are all floats."""
-        if len(elements) != self._rows or any(len(row) != self._columns for row in elements):
+        if len(elements) != self._rows or any(
+            len(row) != self._columns for row in elements
+        ):
             raise ValueError("Elements must match the specified dimensions.")
 
         for row in elements:
@@ -151,10 +155,14 @@ class Matrix(Base):
         self._data[idx] = value
 
     def __add__(self, other):
-        if (not isinstance(other, Matrix)):
-            raise TypeError("other must be of type matrix, got {} instead.".format(other))
-        elif(self.rows != other.rows or self.columns != other.columns):
-            raise IncompatibleMatrixDimensions("Can only add another matrix with the same dimensions.",other)
+        if not isinstance(other, Matrix):
+            raise TypeError(
+                "other must be of type matrix, got {} instead.".format(other)
+            )
+        elif self.rows != other.rows or self.columns != other.columns:
+            raise IncompatibleMatrixDimensions(
+                "Can only add another matrix with the same dimensions.", other
+            )
         return Matrix(
             self.rows,
             self.columns,
@@ -166,3 +174,19 @@ class Matrix(Base):
 
     def __str__(self):
         return "\n".join(["\t".join(map(str, row)) for row in self._data])
+
+    def __eq__(self, other):
+        if not isinstance(other, Matrix):
+            return NotImplemented
+
+        if self.rows != other.rows or self.columns != other.columns:
+            return False
+
+        return all(
+            is_close(self._data[i][j], other[i][j])
+            for i in range(self.rows)
+            for j in range(self.columns)
+        )
+
+    def __ne__(self, other):
+        return not (self == other)

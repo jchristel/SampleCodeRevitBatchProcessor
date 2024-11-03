@@ -29,7 +29,7 @@ A 3D point class.
 
 from duHast.Geometry.point_base import PointBase
 from duHast.Geometry.geometry_property_names import GeometryPropertyNames
-
+from duHast.Utilities.compare import is_close
 
 class Point3(PointBase):
     def __init__(self, x=None, y=None, z=None, j=None):
@@ -61,3 +61,11 @@ class Point3(PointBase):
 
         # store values
         self.z = z
+    
+    def __eq__(self, other):
+        if not isinstance(other,Point3):
+            return NotImplemented
+        return is_close(self.x, other.x) and is_close(self.y, other.y)and is_close(self.z, other.z)
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)

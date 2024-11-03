@@ -116,12 +116,82 @@ class Base(object):
             ", ".join("{}={!r}".format(k, v) for k, v in self.__dict__.items()),
         )
 
-    def __str__(self, indent=0):
+    def __str__(self):
+        return self.default_format()
+    
+    def default_format(self):
+        """
+        Provides a formatted output of all class properties and their values without indentation.
+        
+        :return: A string representing all class properties and their values
+        :rtype: str
+        """
+        output = []
+        for attr_name, attr_value in self.__dict__.items():
+            if isinstance(attr_value, list):
+                output.append("{}:".format(attr_name))
+                output.append(self._default_format_list(attr_value))
+            elif isinstance(attr_value, dict):
+                output.append("{}:".format(attr_name))
+                output.append(self._default_format_dict(attr_value))
+            elif isinstance(attr_value, Base):
+                output.append("{}:".format(attr_name))
+                output.append(attr_value.default_format())
+            else:
+                output.append("{}: {}".format(attr_name, attr_value))
+        return "\n".join(output)
+
+    def _default_format_list(self, lst):
+        """
+        A helper function to format list properties without indentation.
+        
+        :param lst: A list
+        :type lst: []
+        :return: A string formatted representation of the list passed in without indentation.
+        :rtype: str
+        """
+        output = []
+        for item in lst:
+            if isinstance(item, Base):
+                output.append(item.default_format())
+            elif isinstance(item, dict):
+                output.append(self._default_format_dict(item))
+            else:
+                output.append(str(item))
+        return "\n".join(output)
+
+    def _default_format_dict(self, d):
+        """
+        A helper function to format dictionary properties without indentation.
+        
+        :param d: A dictionary
+        :type d: {}
+        :return: A string formatted representation of the dictionary passed in without indentation.
+        :rtype: str
+        """
+        output = []
+        for key, value in d.items():
+            output.append("{}:".format(key))
+            if isinstance(value, Base):
+                output.append(value.default_format())
+            elif isinstance(value, dict):
+                output.append(self._default_format_dict(value))
+            elif isinstance(value, list):
+                output.append("{}:".format(key))
+                output.append(self._default_format_list(value))
+            else:
+                output.append(str(value))
+        return "\n".join(output)
+
+    
+    def formatted_indented_str(self, indent=0, indent_character=" "):
         """
         formatted output including indentation
 
         :param indent: The level of indentation, defaults to 0
         :type indent: int, optional
+        :param indent_character: the indentation character used, defaults to " "
+        :type indent_character: str
 
         :return: A string representing all class properties and their values
         :rtype: str
@@ -130,19 +200,19 @@ class Base(object):
         output = []
         for attr_name, attr_value in self.__dict__.items():
             if isinstance(attr_value, list):
-                output.append(" " * indent + "{}:".format(attr_name))
-                output.append(self._format_list(attr_value, indent + 2))
+                output.append(indent_character * indent + "{}:".format(attr_name))
+                output.append(self._indented_format_list(attr_value, indent + 2, indent_character))
             elif isinstance(attr_value, dict):
-                output.append(" " * indent + "{}:".format(attr_name))
-                output.append(self._format_dict(attr_value, indent + 2))
+                output.append(indent_character * indent + "{}:".format(attr_name))
+                output.append(self._indented_format_dict(attr_value, indent + 2, indent_character))
             elif isinstance(attr_value, Base):
-                output.append(" " * indent + "{}:".format(attr_name))
-                output.append(attr_value.__str__(indent + 2))
+                output.append(indent_character * indent + "{}".format(attr_name, indent))
+                output.append(attr_value.formatted_indented_str(indent + 2, indent_character))
             else:
-                output.append(" " * indent + "{}: {}".format(attr_name, attr_value))
+                output.append(indent_character * indent + "{}: {}".format(attr_name, attr_value))
         return "\n".join(output)
 
-    def _format_list(self, lst, indent):
+    def _indented_format_list(self, lst, indent, indent_character):
         """
         A helper function to format list properties
 
@@ -157,14 +227,14 @@ class Base(object):
         output = []
         for item in lst:
             if isinstance(item, Base):
-                output.append(item.__str__(indent))
+                output.append(item.formatted_indented_str(indent, indent_character))
             elif isinstance(item, dict):
-                output.append(self._format_dict(item, indent))
+                output.append(self._indented_format_dict(item, indent, indent_character))
             else:
-                output.append(" " * indent + str(item))
+                output.append(indent_character * indent + str(item))
         return "\n".join(output)
 
-    def _format_dict(self, d, indent):
+    def _indented_format_dict(self, d, indent, indent_character):
         """
         A helper function to format dictionary properties.
 
@@ -178,16 +248,16 @@ class Base(object):
         """
         output = []
         for key, value in d.items():
-            output.append(" " * indent + "{}:".format(key))
+            output.append(indent_character * indent + "{}:".format(key))
             if isinstance(value, Base):
-                output.append(value.__str__(indent + 2))
+                output.append(value.formatted_indented_str(indent + 2, indent_character))
             elif isinstance(value, dict):
-                output.append(self._format_dict(value, indent + 2))
+                output.append(self._indented_format_dict(value, indent + 2, indent_character))
             elif isinstance(value, list):
-                output.append(" " * (indent + 2) + "{}:".format(key))
-                output.append(self._format_list(value, indent + 4))
+                output.append(indent_character * (indent + 2) + "{}:".format(key))
+                output.append(self._indented_format_list(value, indent + 4, indent_character))
             else:
-                output.append(" " * (indent + 2) + str(value))
+                output.append(indent_character * (indent + 2) + str(value))
         return "\n".join(output)
 
     def __eq__(self, other):

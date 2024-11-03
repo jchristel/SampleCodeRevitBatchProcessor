@@ -43,7 +43,7 @@ from duHast.Data.Objects.data_base import DataBase
 
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
-    DataBoundingBox2,
+    DataGeometryBoundingBox2,
 )
 
 
@@ -63,14 +63,14 @@ class DataTag(DataBase):
         super(DataTag, self).__init__(data_type=DataTag.data_type)
 
         # set default values
-        self.bounding_box = DataBoundingBox2()
+        self.bounding_box = DataGeometryBoundingBox2()
         self.elbow_location = [0,0,0]
         self.leader_end = None
         self.leader_reference = None
         self.leader_element_reference_id =-1
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -87,7 +87,7 @@ class DataTag(DataBase):
 
             # attempt to populate from json
             try:
-                self.bounding_box = DataBoundingBox2(
+                self.bounding_box = DataGeometryBoundingBox2(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
                 self.elbow_location = j.get(DataPropertyNames.TAG_ELBOW_LOCATION.value, self.elbow_location)
@@ -96,6 +96,4 @@ class DataTag(DataBase):
                 self.leader_element_reference_id =j.get(DataPropertyNames.TAG_LEADER_ELEMENT_REFERENCE_ID.value, self.leader_element_reference_id)
 
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

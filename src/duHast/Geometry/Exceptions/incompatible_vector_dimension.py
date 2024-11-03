@@ -33,12 +33,21 @@ This is raised when vector manipulation is attempted with two vectors of differe
 
 class IncompatibleVectorDimensions(Exception):
     def __init__(self, message, vector):
+        """
+        This is raised when vector manipulation is attempted with two vectors of different length (dimension).
 
+        :param message:The exception message text.
+        :type message: str
+        :param vector: The other, incompatible, vector.
+        :type vector: :class:`.VectorBase`
+        """
         # Call the base class constructor with the message
         super(IncompatibleVectorDimensions, self).__init__(message, vector)
 
         self.vector = vector
 
     def __str__(self):
-        # Custom string representation of the exception
+        """
+        Custom string representation of the exception
+        """
         return "Incompatible Vector Dimensions Exception: {} [{}]".format(self.args[0], self.vector)

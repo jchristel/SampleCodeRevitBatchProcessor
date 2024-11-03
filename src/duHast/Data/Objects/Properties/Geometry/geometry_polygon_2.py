@@ -2,9 +2,9 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Polygon geometry data storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A polygon consists, as a minimym, of an outer loop, but may also have any number of inner loops. Those inner loops describe holes in the surface the outer loop decribes.
+A polygon consists, as a minimum, of an outer loop, but may also have any number of inner loops. Those inner loops describe holes in the surface the outer loop decribes.
 
-Loops are made up of a numer of 2D points.
+Loops are made up of a number of 2D points.
 
 
 """
@@ -38,7 +38,7 @@ from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 from duHast.Geometry.point_2 import Point2
 
 
-class DataPolygon(geometry_base.DataGeometryBase):
+class DataGeometryPolygon2(geometry_base.DataGeometryBase):
     data_type = "polygon"
 
     def __init__(self, j=None):
@@ -49,15 +49,15 @@ class DataPolygon(geometry_base.DataGeometryBase):
         :type j: dict, optional
         """
 
-        # store data type  in base class
-        super(DataPolygon, self).__init__(DataPolygon.data_type, j)
+        # store data type  in base class and pass on json string!!!
+        super(DataGeometryPolygon2, self).__init__(DataGeometryPolygon2.data_type, j)
 
         # set default values
         self.outer_loop = []
         self.inner_loops = []
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -75,13 +75,24 @@ class DataPolygon(geometry_base.DataGeometryBase):
             # attempt to populate from json
             try:
                 # get outer points loop
-                outer_loop = j.get(DataPropertyNames.OUTER_LOOP, self.outer_loop)
-                for p in outer_loop:
-                    self.outer_loop.append(Point2(j=p))
-                
+                outer_loop = j.get(DataPropertyNames.OUTER_LOOP.value, [])
+
+                # need a minimum of 3 points to form a polygon
+                if len(outer_loop) >= 3:
+                    for p in outer_loop:
+                        self.outer_loop.append(Point2(j=p))
+                elif 3 > len(outer_loop) > 0:
+                    # not enough points
+                    raise ValueError(
+                        "outer loop data needs to contain at least 3 points"
+                    )
+                else:
+                    # a polygon must contain at least an outer loop...
+                    raise ValueError("Json did not contain any outer loop data")
+
                 # get inner loops
-                inner_loops = j.get(DataPropertyNames.INNER_LOOPS, self.inner_loops)
-                if(len(inner_loops)>0):
+                inner_loops = j.get(DataPropertyNames.INNER_LOOPS.value, [])
+                if len(inner_loops) > 0:
                     for loop in inner_loops:
                         loop_points = []
                         for p in loop:
@@ -89,6 +100,34 @@ class DataPolygon(geometry_base.DataGeometryBase):
                         self.inner_loops.append(loop_points)
 
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                msg = "Node {} failed to initialise with: {}".format(self.data_type, e)
+                raise type(e)(msg)
+
+    def add_point_to_outer_loop(self, point):
+        """
+        Adds a point to the outer loop.
+
+        :param point: Point2 instance to add to the outer loop
+        :type point: Point2
+        :raises TypeError: if the point is not an instance of Point2
+        """
+
+        if not isinstance(point, Point2):
+            raise TypeError("Point must be an instance of Point2.")
+        self.outer_loop.append(point)
+
+    def add_inner_loop(self, loop):
+        """
+        Adds a new inner loop to the inner loops list.
+
+        :param loop: List of Point2 instances representing an inner loop
+        :type loop: list[Point2]
+        :raises ValueError: if the loop does not contain at least 3 points
+        :raises TypeError: if any element in the loop is not an instance of Point2
+        """
+
+        if len(loop) < 3:
+            raise ValueError("An inner loop must contain at least 3 points.")
+        if not all(isinstance(point, Point2) for point in loop):
+            raise TypeError("All points in the loop must be instances of Point2.")
+        self.inner_loops.append(loop)

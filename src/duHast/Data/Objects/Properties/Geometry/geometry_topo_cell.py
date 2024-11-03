@@ -49,7 +49,7 @@ class DataTopologyCell(geometry_base.DataGeometryBase):
         # TODO:
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -68,6 +68,4 @@ class DataTopologyCell(geometry_base.DataGeometryBase):
             try:
                 pass
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

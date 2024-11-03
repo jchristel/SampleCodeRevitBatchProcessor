@@ -38,7 +38,7 @@ from duHast.Data.Objects.data_view_base import DataViewBase
 
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
-    DataBoundingBox2,
+    DataGeometryBoundingBox2,
 )
 from duHast.Data.Objects.Properties.data_schedule_segement import DataScheduleSegment
 
@@ -60,12 +60,12 @@ class DataViewSchedule(DataViewBase):
         )
 
         # set default values
-        self.bounding_box = DataBoundingBox2()
+        self.bounding_box = DataGeometryBoundingBox2()
         self.total_number_of_rows = 0
         self.segments = []
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -82,7 +82,7 @@ class DataViewSchedule(DataViewBase):
 
             # attempt to populate from json
             try:
-                self.bounding_box = DataBoundingBox2(
+                self.bounding_box = DataGeometryBoundingBox2(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
                 self.total_number_of_rows = j.get(DataPropertyNames.TOTAL_NUMBER_OF_ROWS.value, self.total_number_of_rows)
@@ -91,6 +91,4 @@ class DataViewSchedule(DataViewBase):
                     seg = DataScheduleSegment(j=seg_d)
                     self.segments.append(seg)
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

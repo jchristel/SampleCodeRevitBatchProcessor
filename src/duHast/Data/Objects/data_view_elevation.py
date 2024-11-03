@@ -38,7 +38,7 @@ from duHast.Data.Objects.data_view_base import DataViewBase
 from duHast.Data.Objects.data_tag import DataTag
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
-    DataBoundingBox2,
+    DataGeometryBoundingBox2,
 )
 
 
@@ -60,11 +60,11 @@ class DataViewElevation(DataViewBase):
         )
 
         # set default values
-        self.bounding_box = DataBoundingBox2()
+        self.bounding_box = DataGeometryBoundingBox2()
         self.tags = []
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -81,7 +81,7 @@ class DataViewElevation(DataViewBase):
 
             # attempt to populate from json
             try:
-                self.bounding_box = DataBoundingBox2(
+                self.bounding_box = DataGeometryBoundingBox2(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
                 # get any tags
@@ -91,6 +91,4 @@ class DataViewElevation(DataViewBase):
                     self.tags.append(data_tag)
 
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

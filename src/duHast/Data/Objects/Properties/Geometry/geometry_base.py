@@ -50,10 +50,10 @@ class DataGeometryBase(data_base.DataBase):
         # translation as per shared coordinates in revit file
         self.translation_coord = Point3(0.0, 0.0, 0.0)
         # rotation as per shared coordinates in revit file ( default )
-        self.rotation_coord = Matrix(rows=3, cols=3) 
+        self.rotation_coord = Matrix(rows=3, cols=3)
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -70,12 +70,23 @@ class DataGeometryBase(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.translation_coord = Point3(j=j.get(
+                translation_coord = j.get(
                     DataPropertyNames.TRANSLATION_COORDINATES.value, None
-                ))
+                )
+                # check if we got None back...if so use what is the default
+                # since a point can be initialized with None
+                if translation_coord is not None:
+                    self.translation_coord = Point3(j=translation_coord)
 
-                self.rotation_coord = Matrix(j=j.get(DataPropertyNames.ROTATION_COORDINATES.value,None))
+                rotation_coord = j.get(
+                    DataPropertyNames.ROTATION_COORDINATES.value, None
+                )
+                # check if we got None back...if so use what is the default
+                # since a matrix ini from an empty dictionary got 0 x 0 size, meanwhile our default is 3 x 3
+                if rotation_coord is not None:
+                    self.rotation_coord = Matrix(j=rotation_coord)
+
             except Exception as e:
-                raise ValueError(
+                raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )

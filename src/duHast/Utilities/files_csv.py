@@ -27,11 +27,14 @@ Helper functions relating to comma separated text files.
 #
 #
 
+import clr
 import codecs
 import csv
+import System.IO
 
-from duHast.Utilities.files_io import get_file_name_without_ext
+from duHast.Utilities.files_io import get_file_name_without_ext, remove_null_bytes, file_delete
 from duHast.Utilities.utility import encode_ascii
+from duHast.Utilities.Objects.result import Result
 
 
 def get_unique_headers(files):
@@ -66,9 +69,76 @@ def get_unique_headers(files):
     return sorted(headers_unique)
 
 
+def process_csv(file_path):
+    """
+    Process a CSV file by removing null bytes and then reading its content.
+
+    :param file_path: The path to the CSV file to be processed.
+    :type file_path: str
+    """
+    # Create a temporary file in the system's temp directory
+    temp_file_path = System.IO.Path.GetTempFileName()
+    
+    row_list = []
+
+    try:
+        # Remove null bytes and save to a temporary file
+        remove_null_bytes(file_path, temp_file_path)
+
+        # Read the cleaned file with the CSV reader
+        with open(temp_file_path, 'r') as cleaned_file:
+            reader = csv.reader(cleaned_file)
+            for row in reader:
+                row_list.append(row)
+            cleaned_file.close()
+    finally:
+        # Clean up the temporary file
+        if System.IO.File.Exists(temp_file_path):
+            System.IO.File.Delete(temp_file_path)
+    
+    return row_list
+
+
+def read_csv_file_with_encoding(file_path_csv, increase_max_field_size_limit=False):
+    """
+    Read a csv file, attempting to detect and handle encoding, including BOMs.
+
+    :param filepathCSV: The fully qualified file path to the csv file.
+    :type filepathCSV: str
+    :return: A list of list of strings representing the data in each row.
+    :rtype: list of list of str
+    """
+
+    row_list = []
+    encodings = ['utf-8-sig', 'utf-16']
+
+    return_value = Result()
+    if increase_max_field_size_limit:
+        csv.field_size_limit(2147483647)
+
+    for encoding in encodings:
+        try:
+            with codecs.open(file_path_csv, 'r', encoding=encoding) as csv_file:
+                reader = csv.reader(csv_file)
+                row_list = [row for row in reader]
+            
+            # Successful read
+            return_value.append_message("read file succesfully")
+            return_value.status=True
+            return_value.result=row_list
+            return return_value
+        except (UnicodeDecodeError, csv.Error) as e:
+            return_value.update_sep(False, "Failed with encoding {}: {}".format(encoding, e))
+
+    # statsu should be false 
+    return_value.update_sep("Failed to decode using known encodings.")
+    return return_value
+
+
 def read_csv_file(filepathCSV, increaseMaxFieldSizeLimit=False):
     """
     Read a csv file into a list of rows, where each row is another list.
+
     :param filepathCSV: The fully qualified file path to the csv file.
     :type filepathCSV: str
     :return: A list of list of strings representing the data in each row.
@@ -77,6 +147,13 @@ def read_csv_file(filepathCSV, increaseMaxFieldSizeLimit=False):
 
     row_list = []
 
+    # read with encoding enabled
+    read_result = read_csv_file_with_encoding(filepathCSV, increaseMaxFieldSizeLimit)
+    if read_result.status:
+        return read_result.result
+    
+    # if that failed try the below...
+
     # hard coded hack
     if increaseMaxFieldSizeLimit:
         csv.field_size_limit(2147483647)
@@ -84,9 +161,16 @@ def read_csv_file(filepathCSV, increaseMaxFieldSizeLimit=False):
     try:
         with open(filepathCSV) as csv_file:
             reader = csv.reader(csv_file)
-            for row in reader:  # each row is a list
-                row_list.append(row)
+            row_list = [row for row in reader]
             csv_file.close()
+    except csv.Error as e:
+        # maybe a nullbyte exception?
+        if "line contains NULL byte" in str(e):
+            print("Null byte encountered, processing CSV.")
+            row_list = process_csv(filepathCSV)
+        else:
+            print(str(e))
+            row_list = []
     except Exception as e:
         print(str(e))
         row_list = []
@@ -116,7 +200,7 @@ def get_first_row_in_csv_file(filePath):
 
 
 def write_report_data_as_csv(
-    file_name, header, data, write_type="w", enforce_ascci=False
+    file_name, header, data, write_type="w", enforce_ascii=False,  encoding="utf-8", bom=None
 ):
     """
     Function writing out report information as CSV file.
@@ -128,22 +212,36 @@ def write_report_data_as_csv(
     :type data: [[str,str,..]]
     :param write_type: Flag indicating whether existing report file is to be overwritten 'w' or appended to 'a', defaults to 'w'
     :type write_type: str, optional
+    :param enforce_ascci: Flag to enforce ASCII encoding on data. If True, data will be encoded to ASCII. Defaults to False.
+    :type enforce_ascci: bool, optional
+    :param encoding: Encoding used to write the file. Defaults to 'utf-8'.
+    :type encoding: str, optional
+    :param bom: the byte order mark, Default is None (none will be written). BOM: "utf-16" = , "utf-16-le" = ,  utf-8 =
+    :type bom: str, default is NoneType
     """
 
-    # open the file in the write mode
-    with codecs.open(file_name, write_type, encoding="utf-8") as f:
-        # create the csv writer
+    # Open the file with the codecs.open method to specify encoding
+    with codecs.open(file_name, write_type, encoding=encoding) as f:
+        # Write BOM manually if specified
+        if bom and 'w' in write_type:
+            f.write(bom.decode(encoding))
+
+        # Create the CSV writer
         writer = csv.writer(f)
-        # check header
-        if len(header) > 0:
-            writer.writerow(header)
-        if len(data) > 0:
-            for d in data:
-                # check if ascii encoding is required
-                if enforce_ascci:
-                    ascii_encoded_list = [encode_ascii(s) for s in d]
-                    writer.writerow(ascii_encoded_list)
-                else:
-                    # write a row to the csv file
-                    writer.writerow(d)
+
+        def encoded_row(row):
+            if enforce_ascii:
+                return [s.encode('ascii', 'ignore').decode('ascii') for s in row]
+            else:
+                return row  # Keep the strings in their current state for writing
+
+        # Write header
+        if header:
+            writer.writerow(encoded_row(header))
+
+        # Write data rows
+        for row in data:
+            writer.writerow(encoded_row(row))
+                    
         f.close()
+

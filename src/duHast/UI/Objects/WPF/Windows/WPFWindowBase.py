@@ -29,7 +29,7 @@ An implementation of a custom wpf window base class which can be shown in the Re
 import clr
 clr.AddReference("PresentationFramework")
 
-from System.Windows import Window
+from System.Windows import Window, VerticalAlignment, HorizontalAlignment
 from duHast.UI.Objects.WPF.Xaml.XamlLoader import XamlLoader
 from duHast.UI.Objects.WPF.Exceptions.MissingXAMLException import MissingXAMLException
 
@@ -109,6 +109,11 @@ class WPFWindowBase(Window):
             
             # Clear the existing children in the main grid
             self.main_grid.Children.Clear()
+
+            # Set alignment for full stretching (not sure whether this is doing anything??)
+            xaml_loader_current_view.VerticalAlignment = VerticalAlignment.Stretch
+            xaml_loader_current_view.HorizontalAlignment = HorizontalAlignment.Stretch
+
             # Add the new view to the main grid
             self.main_grid.Children.Add(xaml_loader_current_view.Root)
         else:

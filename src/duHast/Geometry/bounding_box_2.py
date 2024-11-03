@@ -53,22 +53,29 @@ class BoundingBox2(BoundingBoxBase):
 
         # check first if a json string / dictionary is provided
         if j:
-            point1 = Point2(**self.json_ini[GeometryPropertyNames.POINT1.value])
-            point2 = Point2(**self.json_ini[GeometryPropertyNames.POINT2.value])
+            point1 = Point2(
+                x=self.json_ini[GeometryPropertyNames.MIN_X.value],
+                y=self.json_ini[GeometryPropertyNames.MIN_Y.value],
+            )
+            point2 = Point2(
+                x=self.json_ini[GeometryPropertyNames.MAX_X.value],
+                y=self.json_ini[GeometryPropertyNames.MAX_Y.value],
+            )
 
         # If both point1 and point2 are None after handling JSON, raise an error
         if point1 is None or point2 is None:
-            raise ValueError("Either two Point2 instances or a JSON string with point data needs to be provided.")
+            raise ValueError(
+                "Either two Point2 instances or a JSON string with point data needs to be provided."
+            )
 
         # set the bounding box
         self.update(point1=point1, point2=point2)
-       
 
     def update(self, point1, point2):
         """
         Update the size of the bounding box by points
 
-        :param point1: min point on bounding box 
+        :param point1: min point on bounding box
         :type point1: :class:`.Point2`
         :param point2: max point of bounding box
         :type point2: :class:`.Point2`
@@ -78,12 +85,16 @@ class BoundingBox2(BoundingBoxBase):
         # check if both points are provided
         if point1 is None or point2 is None:
             raise ValueError("Both point1 and point2 must be provided.")
-    
+
         # Type checking
         if not isinstance(point1, Point2):
-            raise TypeError("point1 expected Point2 instance. Got {} instead.".format(type(point1)))
+            raise TypeError(
+                "point1 expected Point2 instance. Got {} instead.".format(type(point1))
+            )
         if not isinstance(point2, Point2):
-            raise TypeError("point2 expected Point2 instance. Got {} instead.".format(type(point2)))
+            raise TypeError(
+                "point2 expected Point2 instance. Got {} instead.".format(type(point2))
+            )
 
         self._min_x = min(point1.x, point2.x)
         self._max_x = max(point1.x, point2.x)
@@ -93,8 +104,11 @@ class BoundingBox2(BoundingBoxBase):
 
     def contains(self, point):
         """Check if the bounding box contains a given point."""
-        return (self.min_x <= point.x <= self.max_x and
-                self.min_y <= point.y <= self.max_y)
+        return (
+            self.min_x <= point.x <= self.max_x and self.min_y <= point.y <= self.max_y
+        )
 
     def __str__(self):
-        return "BoundingBox2D({}, {}, {}, {})".format(self.min_x, self.min_y, self.max_x, self.max_y)
+        return "BoundingBox2D({}, {}, {}, {})".format(
+            self.min_x, self.min_y, self.max_x, self.max_y
+        )

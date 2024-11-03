@@ -37,11 +37,11 @@ from duHast.Data.Objects.Properties import data_type_properties
 from duHast.Data.Objects.Properties import data_instance_properties
 from duHast.Data.Objects.Properties import data_revit_model
 from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties import data_element_geometry
+from duHast.Data.Objects.Properties import data_element_geometry_base
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 
-class DataFamilyBase(data_base.DataBase, data_element_geometry.DataElementGeometryBase):
+class DataFamilyBase(data_base.DataBase, data_element_geometry_base.DataElementGeometryBase):
 
     data_type = "family_instance"
 
@@ -66,7 +66,7 @@ class DataFamilyBase(data_base.DataBase, data_element_geometry.DataElementGeomet
         self.design_set_and_option = data_design_set_option.DataDesignSetOption()
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -110,6 +110,4 @@ class DataFamilyBase(data_base.DataBase, data_element_geometry.DataElementGeomet
                     DataPropertyNames.ASSOCIATED_ELEMENTS.value, self.associated_elements
                 )
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

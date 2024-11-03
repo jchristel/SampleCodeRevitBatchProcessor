@@ -41,7 +41,7 @@ import numpy as np
 from duHast.Data.Objects import data_ceiling as dc
 from duHast.Data.Objects import data_room as dr
 
-from duHast.Data.Objects.Properties.Geometry import geometry_polygon
+from duHast.Data.Objects.Properties.Geometry import geometry_polygon_2
 
 # --------------- shapely polygon creation ------------------
 
@@ -92,7 +92,7 @@ def get_outer_loop_as_shapely_points(geometry_object, translation_matrix):
     """
 
     single_polygon_loop = []
-    if geometry_object.data_type == geometry_polygon.DataPolygon.data_type:
+    if geometry_object.data_type == geometry_polygon_2.DataGeometryPolygon2.data_type:
         for point_double in geometry_object.outer_loop:
             # check if a 2D or 3D point
             if len(point_double) == 2:
@@ -215,7 +215,7 @@ def get_shapely_polygons_from_data_instance(data_instance):
     # loop over data geometry and convert into shapely polygons
 
     for geometry_object in data_instance.polygon:
-        if geometry_object.data_type == geometry_polygon.DataPolygon.data_type:
+        if geometry_object.data_type == geometry_polygon_2.DataGeometryPolygon2.data_type:
             translation_matrix = get_translation_matrix(geometry_object)
             shape_shapely = []
             outer_loop = get_outer_loop_as_shapely_points(

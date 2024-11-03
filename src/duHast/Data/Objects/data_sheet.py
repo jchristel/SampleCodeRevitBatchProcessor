@@ -40,7 +40,7 @@ from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties import data_type_properties
 from duHast.Data.Objects.Properties import data_instance_properties
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
-    DataBoundingBox2,
+    DataGeometryBoundingBox2,
 )
 
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
@@ -65,10 +65,10 @@ class DataSheet(data_base.DataBase):
         self.instance_properties = data_instance_properties.DataInstanceProperties()
         self.type_properties = data_type_properties.DataTypeProperties()
         self.view_ports = []
-        self.bounding_box = DataBoundingBox2()
+        self.bounding_box = DataGeometryBoundingBox2()
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -96,11 +96,9 @@ class DataSheet(data_base.DataBase):
                 self.type_properties = data_type_properties.DataTypeProperties(
                     j.get(data_type_properties.DataTypeProperties.data_type, {})
                 )
-                self.bounding_box = DataBoundingBox2(
+                self.bounding_box = DataGeometryBoundingBox2(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
 
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

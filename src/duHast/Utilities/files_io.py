@@ -368,3 +368,21 @@ def is_back_up_file(file_path):
         except Exception:
             pass
     return is_backup
+
+
+def remove_null_bytes(file_path, temp_file_path):
+    """
+    Remove null bytes from a source CSV file and write to a temporary file.
+
+    :param file_path: The path to the original CSV file.
+    :type file_path: str
+    :param temp_file_path: The path to the temporary file where cleaned data is written.
+    :type temp_file_path: str
+    """
+    with open(file_path, 'rb') as source_file:
+        # Read the entire file and replace null bytes with an empty string
+        content = source_file.read().replace(b'\0', b'')
+
+    # Write content to a temporary file
+    with open(temp_file_path, 'wb') as temp_file:
+        temp_file.write(content)

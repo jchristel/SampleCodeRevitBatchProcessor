@@ -37,10 +37,10 @@ from duHast.Data.Objects.Properties import data_type_properties
 from duHast.Data.Objects.Properties import data_instance_properties
 from duHast.Data.Objects.Properties import data_revit_model
 from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties import data_element_geometry
+from duHast.Data.Objects.Properties import data_element_geometry_base
 
 
-class DataCeiling(data_base.DataBase, data_element_geometry.DataElementGeometryBase):
+class DataCeiling(data_base.DataBase, data_element_geometry_base.DataElementGeometryBase):
 
     data_type = "ceiling"
 
@@ -65,7 +65,7 @@ class DataCeiling(data_base.DataBase, data_element_geometry.DataElementGeometryB
         self.design_set_and_option = data_design_set_option.DataDesignSetOption()
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -109,6 +109,4 @@ class DataCeiling(data_base.DataBase, data_element_geometry.DataElementGeometryB
                     "associated_elements", self.associated_elements
                 )
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

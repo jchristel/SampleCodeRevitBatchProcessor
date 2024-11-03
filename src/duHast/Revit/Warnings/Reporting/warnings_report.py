@@ -145,7 +145,7 @@ def write_warnings_data(file_name, data):
             file_name=file_name,
             header=REPORT_WARNINGS_HEADER,
             data=data_converted,
-            enforce_ascci=True,
+            enforce_ascii=True,
         )
         return_value.update_sep(
             True, "Successfully wrote data file at {}".format(file_name)

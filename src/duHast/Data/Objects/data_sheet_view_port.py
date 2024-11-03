@@ -38,7 +38,7 @@ import json
 
 from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
-    DataBoundingBox2,
+    DataGeometryBoundingBox2,
 )
 from duHast.Data.Objects.data_view_plan import DataViewPlan
 from duHast.Data.Objects.data_view_elevation import DataViewElevation
@@ -69,13 +69,13 @@ class DataSheetViewPort(data_base.DataBase):
         )
 
         # set default values
-        self.bounding_box = DataBoundingBox2()
+        self.bounding_box = DataGeometryBoundingBox2()
         self.vp_type = DataViewPortTypeNames.FLOOR_PLAN.value
         self.view_id = -1
         self.view = DataViewPlan()
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -93,7 +93,7 @@ class DataSheetViewPort(data_base.DataBase):
             # attempt to populate from json
             try:
 
-                self.bounding_box = DataBoundingBox2(
+                self.bounding_box = DataGeometryBoundingBox2(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
                 self.vp_type = j.get(DataPropertyNames.VIEW_PORT_TYPE.value, self.vp_type)
@@ -112,6 +112,4 @@ class DataSheetViewPort(data_base.DataBase):
                     raise TypeError("Unsupported viewport type: {}".format(self.vp_type))
 
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

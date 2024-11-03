@@ -42,15 +42,13 @@ from Autodesk.Revit.DB import BuiltInCategory, BuiltInParameter, Element
 from System.Collections.Generic import List
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Revit.Common.parameter_get_utils import (
-    get_built_in_parameter_value,
-    get_parameter_value_as_integer,
-)
+
 from duHast.Revit.Common.revit_version import get_revit_version_number
 from duHast.Revit.Family.Utility import loadable_family_categories as rFamUtilCats
 from duHast.Revit.Family.family_utils import (
     get_family_symbols,
     get_family_instances_by_symbol_type_id,
+    is_shared_from_symbol
 )
 from duHast.Revit.Common.parameter_get_utils import get_parameter_value_by_name
 from duHast.UI.Objects.ProgressBase import ProgressBase
@@ -153,32 +151,6 @@ def _get_host_family_status(doc, family_symbol):
         break
         
     return nested_family_names
-
-
-def _get_is_shared(family_symbol):
-    """
-    Returns if the family is shared (true) or not (false)
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :param family_symbol: _description_
-    :type family_symbol: _type_
-
-    :return: True if family is shared, otherwise False
-    :rtype: bool
-    """
-
-    fam = family_symbol.Family
-    p_value = get_built_in_parameter_value(
-        element=fam,
-        built_in_parameter_def=BuiltInParameter.FAMILY_SHARED,
-        parameter_value_getter=get_parameter_value_as_integer,
-    )
-    
-    if p_value==0:
-        return False
-    else:
-        return True
 
 
 def report_loaded_families(
@@ -288,7 +260,7 @@ def report_loaded_families(
                 family_container.family_category = family.FamilyCategory.Name
 
                 # shared
-                family_container.is_shared = _get_is_shared(
+                family_container.is_shared = is_shared_from_symbol(
                     family_symbol=family_symbol
                 )
 

@@ -30,7 +30,7 @@ This module contains a Revit rooms geometry extraction functions.
 import Autodesk.Revit.DB as rdb
 
 from duHast.Revit.Rooms.rooms import get_all_rooms
-from duHast.Data.Objects.Properties.Geometry import geometry_polygon as dGeometryPoly
+from duHast.Data.Objects.Properties.Geometry import geometry_polygon_2 as dGeometryPoly
 
 
 def get_room_boundary_loops(
@@ -74,7 +74,7 @@ def get_points_from_room_boundaries(boundary_loops):
 
     loop_counter = 0
     has_inner_loops = False
-    data_geo_polygon = dGeometryPoly.DataPolygon()
+    data_geo_polygon = dGeometryPoly.DataGeometryPolygon2()
     for boundary_loop in boundary_loops:
         for room_loop in boundary_loop:
             p = None  # segment start point

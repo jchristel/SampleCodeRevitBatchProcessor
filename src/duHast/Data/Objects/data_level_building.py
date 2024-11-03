@@ -52,7 +52,7 @@ class DataLevelBuilding(DataLevelBase):
         self.revit_model = data_revit_model.DataRevitModel()
 
         # check if any data was past in with constructor!
-        if j != None and len(j) > 0:
+        if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
@@ -76,6 +76,4 @@ class DataLevelBuilding(DataLevelBase):
                     j.get(data_revit_model.DataRevitModel.data_type, {})
                 )
             except Exception as e:
-                raise ValueError(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

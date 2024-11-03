@@ -27,7 +27,7 @@ Revit Geometry to data geometry conversion helper functions.
 #
 #
 
-from duHast.Data.Objects.Properties.Geometry import geometry_polygon as dGeometryPoly
+from duHast.Data.Objects.Properties.Geometry import geometry_polygon_2 as dGeometryPoly
 from duHast.Revit.Common.Geometry import geometry as rGeo, solids as rSolid
 from collections import namedtuple
 from duHast.Revit.Common.Geometry.points import get_point_as_doubles, flatten_xyz_point
@@ -48,7 +48,7 @@ def convert_xyz_in_data_geometry_polygons(doc, dgObject):
     :rtype: :class:`.DataGeometryPolygon`
     """
 
-    data_geometry = dGeometryPoly.DataPolygon()
+    data_geometry = dGeometryPoly.DataGeometryPolygon2()
     outer_loop = []
     for xyz_point in dgObject.outer_loop:
         point_as_double = get_point_as_doubles(xyz_point)
@@ -128,7 +128,7 @@ def convert_solid_to_flattened_2d_points(solid):
         # sort loops into exterior and hole loops
         loopDic = rGeo.build_loops_dictionary(uvLoops)
         for key in loopDic:
-            dataGeometry = dGeometryPoly.DataPolygon()
+            dataGeometry = dGeometryPoly.DataGeometryPolygon2()
             keyList = []
             # find matching loop by id
             for x in uvLoops:
@@ -161,7 +161,7 @@ def convert_bounding_box_to_flattened_2d_points(bounding_box):
         XYZ(bounding_box.Min.X, bounding_box.Max.Y, bounding_box.Min.Z),
     ]
     # set up data class object and store points in outer loop property
-    dataGeometry = dGeometryPoly.DataPolygon()
+    dataGeometry = dGeometryPoly.DataGeometryPolygon2()
     dataGeometry.outer_loop = bounding_box_points
     return dataGeometry
 

@@ -82,7 +82,7 @@ class DataGeometryBoundingBox2(geometry_base.DataGeometryBase):
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
 
-    def set_bounding_box_by_points(self, min, max):
+    def update(self, min, max):
         """
         Update the geometry bounding box with new values
 

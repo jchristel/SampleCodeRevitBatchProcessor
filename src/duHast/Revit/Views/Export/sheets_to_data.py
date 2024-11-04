@@ -53,8 +53,8 @@ def convert_revit_sheet(doc, sheet):
     data_sheet.instance_properties.id = sheet.Id.IntegerValue
     
     # get any instance parameters properties
-    instance_properties = get_instance_properties(sheet) 
-    data_sheet.instance_properties = instance_properties
+    #instance_properties = get_instance_properties(sheet) 
+    #data_sheet.instance_properties = instance_properties
     
     # get view ports on sheet
     revit_view_ports = get_viewport_on_sheets(doc=doc,sheets= [sheet])

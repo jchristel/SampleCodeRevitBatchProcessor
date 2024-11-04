@@ -92,6 +92,16 @@ def _get_plan_view(doc, view):
 
     data_instance = DataViewPlan()
     # get bounding box
+    crop_box = view.CropBox
+
+    # there is a very very slight chance that view is notr cropped ...it should be but...
+    if crop_box:
+        # get the outlines min and max points as 2d points
+        bb_max_2d = convert_XYZ_to_point2(crop_box.Max)
+        bb_min_2d = convert_XYZ_to_point2(crop_box.Min)
+
+        data_instance.bounding_box.update(min=bb_min_2d, max=bb_max_2d)
+
     # get any tags in the view
     return data_instance
 
@@ -228,7 +238,6 @@ def convert_revit_viewport_to_data_instance(doc, revit_view_port):
 
     # set up data instances
     view_port_data = DataSheetViewPort()
-    bbox = DataGeometryBoundingBox2()
 
     # get an outline from the Revit view port
     view_port_outline = revit_view_port.GetBoxOutline()
@@ -237,11 +246,8 @@ def convert_revit_viewport_to_data_instance(doc, revit_view_port):
     bb_max_2d = convert_XYZ_to_point2(view_port_outline.MaximumPoint)
     bb_min_2d = convert_XYZ_to_point2(view_port_outline.MinimumPoint)
     
-    # set the bounding box size
-    bbox.set_bounding_box_by_points(min=bb_min_2d, max=bb_max_2d)
-
     # update the bounding box property of the view port instance
-    view_port_data.bounding_box = bbox
+    view_port_data.bounding_box.update(bb_min_2d, bb_max_2d)
 
     # set the viewport type
     view_port_data.vp_type = view_port_type

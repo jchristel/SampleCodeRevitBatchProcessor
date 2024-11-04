@@ -72,7 +72,29 @@ class DataLevel(DataLevelBase):
                     DataPropertyNames.OFFSET_FROM_LEVEL.value, self.offset_from_level
                 )
                 if not isinstance(self.offset_from_level, float):
-                    raise TypeError("Expected 'offset_from_level' to be a float, got {}".format(type(self.offset_from_level)))
-                
+                    raise TypeError(
+                        "Expected 'offset_from_level' to be a float, got {}".format(
+                            type(self.offset_from_level)
+                        )
+                    )
+
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )
+
+    def __eq__(self, other):
+        if not isinstance(other, DataLevel):
+            raise ValueError(
+                "other needs to be of type DataLevel, got {} instead.".format(
+                    type(other)
+                )
+            )
+        return (
+            self.name == other.name
+            and self.id == other.id
+            and self.offset_from_level == other.offset_from_level
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

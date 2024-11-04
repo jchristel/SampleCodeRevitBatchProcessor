@@ -70,6 +70,22 @@ class DataPhasing(data_base.DataBase):
             # attempt to populate from json
             try:
                 self.created = j.get(DataPropertyNames.CREATED.value, self.created)
-                self.demolished = j.get(DataPropertyNames.DEMOLISHED.value, self.demolished)
+                self.demolished = j.get(
+                    DataPropertyNames.DEMOLISHED.value, self.demolished
+                )
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )
+
+    def __eq__(self, other):
+        if not isinstance(other, DataPhasing):
+            raise ValueError(
+                "other needs to be of type DataPhasing, got {} instead.".format(
+                    type(other)
+                )
+            )
+        return self.created == other.created and self.demolished == other.demolished
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

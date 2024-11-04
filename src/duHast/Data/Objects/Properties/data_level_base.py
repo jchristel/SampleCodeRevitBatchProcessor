@@ -71,11 +71,29 @@ class DataLevelBase(data_base.DataBase):
             try:
                 self.name = j.get(DataPropertyNames.NAME.value, self.name)
                 if not isinstance(self.name, str):
-                    raise TypeError("Expected 'name' to be a string, got {}".format(type(self.name)))
-                
+                    raise TypeError(
+                        "Expected 'name' to be a string, got {}".format(type(self.name))
+                    )
+
                 self.id = j.get(DataPropertyNames.ID.value, self.id)
                 if not isinstance(self.id, int):
-                    raise TypeError("Expected 'id' to be an int, got {}".format(type(self.id)))
-                
+                    raise TypeError(
+                        "Expected 'id' to be an int, got {}".format(type(self.id))
+                    )
+
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )
+
+    def __eq__(self, other):
+        if not isinstance(other, DataLevelBase):
+            raise ValueError(
+                "other needs to be of type DataBase, got {} instead.".format(
+                    type(other)
+                )
+            )
+        return self.name == other.name and self.id == other.id
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

@@ -64,7 +64,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             dynamic maxPoint = PythonEngineManager.Point2Class(7.7, 8.8);
 
             // Act
-            instance.set_bounding_box_by_points(minPoint, maxPoint);
+            instance.update(minPoint, maxPoint);
 
             // Assert
             Assert.AreEqual(5.5, instance.bounding_box.min_x);
@@ -81,7 +81,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             dynamic maxPoint = PythonEngineManager.Point2Class(7.7, 8.8);
 
             // Act & Assert
-            var ex = Assert.Throws<ValueErrorException>(() => instance.set_bounding_box_by_points("invalid", maxPoint));
+            var ex = Assert.Throws<ValueErrorException>(() => instance.update("invalid", maxPoint));
             Assert.That(ex.Message, Does.Contain("Min needs to be a point2 instance"));
         }
 
@@ -93,7 +93,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             dynamic minPoint = PythonEngineManager.Point2Class(5.5, 6.6);
 
             // Act & Assert
-            var ex = Assert.Throws<ValueErrorException>(() => instance.set_bounding_box_by_points(minPoint, "invalid"));
+            var ex = Assert.Throws<ValueErrorException>(() => instance.update(minPoint, "invalid"));
             Assert.That(ex.Message, Does.Contain("Max needs to be a point2 instance"));
         }
     }

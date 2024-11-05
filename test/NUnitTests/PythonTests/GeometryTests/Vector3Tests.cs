@@ -221,7 +221,7 @@ namespace PythonTests.GeometryTests
             Assert.That(ex.Message, Does.Contain("Expected vector3, got: Vector2"));
         }
 
-        public void Vector2_Equality_WithCloseFloatingPoints_ShouldBeEqual()
+        public void Vector3_Equality_WithCloseFloatingPoints_ShouldBeEqual()
         {
             // Arrange
             dynamic vector1 = PythonEngineManager.Vector3Class(1.000000001, 2.000000002, 3.000000003);

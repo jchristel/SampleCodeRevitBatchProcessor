@@ -1,5 +1,6 @@
 ﻿using IronPython.Runtime.Exceptions;
 using PythonTests.Setup;
+using Newtonsoft.Json;
 
 
 namespace PythonTests.DataTests.PropertyTests.GeometryTests
@@ -64,6 +65,8 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             // Act
             dynamic instance = PythonEngineManager.DataGeometryBaseClass(dataType, json);
 
+            Console.WriteLine(instance.to_json());
+
             // Act & Assert
             Assert.AreEqual(1.1, instance.translation_coord.x);
             Assert.AreEqual(2.2, instance.translation_coord.y);
@@ -94,6 +97,127 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             // Assert
             Assert.IsInstanceOf(PythonEngineManager.Point3Class, instance.translation_coord);
             Assert.IsInstanceOf(PythonEngineManager.MatrixClass, instance.rotation_coord);
+        }
+
+        [Test]
+        public void EqualInstances_ShouldReturnTrue()
+        {
+            // JSON representation with identical translation and rotation coordinates
+            var jsonString = JsonConvert.SerializeObject(new
+            {
+                translation_coord = new { x = 1.0, y = 2.0, z = 3.0 },
+                rotation_coord = new
+                {
+                    data = new[] { new[] { 1.0, 0.0, 0.0 }, new[] { 0.0, 1.0, 0.0 }, new[] { 0.0, 0.0, 1.0 } },
+                    rows = 3,
+                    columns = 3
+                }
+            });
+
+            Console.WriteLine(jsonString);
+
+            // Initialize two instances with the same JSON data
+            var dataGeometryA = PythonEngineManager.DataGeometryBaseClass("geometry_type", jsonString);
+            var dataGeometryB = PythonEngineManager.DataGeometryBaseClass("geometry_type", jsonString);
+
+            // Assert that the two instances are equal
+            Assert.IsTrue(dataGeometryA == dataGeometryB, "Expected equal instances to return true.");
+        }
+
+        [Test]
+        public void UnequalInstances_ShouldReturnFalse()
+        {
+            // JSON representation for first instance
+            var jsonStringA = JsonConvert.SerializeObject(new
+            {
+                translation_coord = new { x = 1.0, y = 2.0, z = 3.0 },
+                rotation_coord = new
+                {
+                    data = new[] { new[] { 1.0, 0.0, 0.0 }, new[] { 0.0, 1.0, 0.0 }, new[] { 0.0, 0.0, 1.0 } },
+                    rows = 3,
+                    columns = 3
+                }
+            });
+
+            // JSON representation for second instance with different translation
+            var jsonStringB = JsonConvert.SerializeObject(new
+            {
+                translation_coord = new { x = 4.0, y = 5.0, z = 6.0 },
+                rotation_coord = new
+                {
+                    data = new[] { new[] { 1.0, 0.0, 0.0 }, new[] { 0.0, 1.0, 0.0 }, new[] { 0.0, 0.0, 1.0 } },
+                    rows = 3,
+                    columns = 3
+                }
+
+            });
+
+            Console.WriteLine(jsonStringA);
+            Console.WriteLine(jsonStringB);
+
+            // Initialize two instances with different JSON data
+            var dataGeometryA = PythonEngineManager.DataGeometryBaseClass("geometry_type", jsonStringA);
+            var dataGeometryB = PythonEngineManager.DataGeometryBaseClass("geometry_type", jsonStringB);
+
+            // Assert that the two instances are not equal
+            Assert.IsFalse(dataGeometryA == dataGeometryB, "Expected unequal instances to return false.");
+        }
+
+        [Test]
+        public void UnequalRotation_ShouldReturnFalse()
+        {
+            // JSON representation for first instance
+            var jsonStringA = JsonConvert.SerializeObject(new
+            {
+                translation_coord = new { x = 1.0, y = 2.0, z = 3.0 },
+                rotation_coord = new
+                {
+                    data = new[] { new[] { 1.0, 0.0, 0.0 }, new[] { 0.0, 1.0, 0.0 }, new[] { 0.0, 0.0, 1.0 } },
+                    rows = 3,
+                    columns = 3
+                }
+            });
+
+            // JSON representation for second instance with different rotation
+            var jsonStringB = JsonConvert.SerializeObject(new
+            {
+                translation_coord = new { x = 1.0, y = 2.0, z = 3.0 },
+                rotation_coord = new
+                {
+                    data = new[] { new[] { 0.0, 1.0, 0.0 }, new[] { 1.0, 0.0, 0.0 }, new[] { 0.0, 0.0, 1.0 } },
+                    rows = 3,
+                    columns = 3
+                }
+            });
+
+            // Initialize two instances with different rotation matrices
+            var dataGeometryA = PythonEngineManager.DataGeometryBaseClass("geometry_type", jsonStringA);
+            var dataGeometryB = PythonEngineManager.DataGeometryBaseClass("geometry_type", jsonStringB);
+
+            // Assert that the two instances are not equal due to different rotation coordinates
+            Assert.IsFalse(dataGeometryA == dataGeometryB, "Expected instances with different rotations to be unequal.");
+        }
+
+        [Test]
+        public void NullComparison_ShouldReturnFalse()
+        {
+            // JSON representation for instance
+            var jsonString = JsonConvert.SerializeObject(new
+            {
+                translation_coord = new { x = 1.0, y = 2.0, z = 3.0 },
+                rotation_coord = new
+                {
+                    data = new[] { new[] { 0.0, 1.0, 0.0 }, new[] { 1.0, 0.0, 0.0 }, new[] { 0.0, 0.0, 1.0 } },
+                    rows = 3,
+                    columns = 3
+                }
+            });
+
+            // Initialize instance with JSON data
+            var dataGeometry = PythonEngineManager.DataGeometryBaseClass("geometry_type", jsonString);
+
+            // Assert that the instance is not equal to null
+            Assert.IsFalse(dataGeometry == null, "Expected instance comparison with null to be false.");
         }
     }
 }

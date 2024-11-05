@@ -1,5 +1,6 @@
 ﻿using IronPython.Runtime.Exceptions;
 using PythonTests.Setup;
+using Newtonsoft.Json;
 
 namespace PythonTests.DataTests.PropertyTests.GeometryTests
 {
@@ -66,6 +67,8 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             // Act
             instance.update(minPoint, maxPoint);
 
+            Console.WriteLine(instance.to_json());
+
             // Assert
             Assert.AreEqual(5.5, instance.bounding_box.min_x);
             Assert.AreEqual(6.6, instance.bounding_box.min_y);
@@ -95,6 +98,127 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             // Act & Assert
             var ex = Assert.Throws<ValueErrorException>(() => instance.update(minPoint, "invalid"));
             Assert.That(ex.Message, Does.Contain("Max needs to be a point2 instance"));
+        }
+
+        [Test]
+        public void EqualInstances_ShouldReturnTrue()
+        {
+            // JSON representation with identical bounding box min and max coordinates
+            var jsonString = JsonConvert.SerializeObject(new
+            {
+                bounding_box = new
+                {
+                    min_x = 5.5,
+                    max_x = 7.7,
+                    min_y = 6.6,
+                    max_y = 8.8
+                }
+            });
+
+            Console.WriteLine(jsonString);
+
+            // Initialize two instances with the same JSON data
+            var dataGeometryA = PythonEngineManager.DataGeometryBoundingBox2Class(jsonString);
+            var dataGeometryB = PythonEngineManager.DataGeometryBoundingBox2Class(jsonString);
+
+            // Assert that the two instances are equal
+            Assert.IsTrue(dataGeometryA == dataGeometryB, "Expected equal instances to return true.");
+        }
+
+        [Test]
+        public void NotEqualInstances_ShouldReturnTrue()
+        {
+            // JSON representation for the first instance
+            var jsonStringA = JsonConvert.SerializeObject(new
+            {
+                bounding_box = new
+                {
+                    min_x = 5.5,
+                    max_x = 7.7,
+                    min_y = 6.6,
+                    max_y = 8.8
+                }
+            });
+
+            // JSON representation for the second instance with different bounding box coordinates
+            var jsonStringB = JsonConvert.SerializeObject(new
+            {
+                bounding_box = new
+                {
+                    min_x = 4.0,
+                    max_x = 6.5,
+                    min_y = 3.3,
+                    max_y = 9.0
+                }
+            });
+
+            Console.WriteLine($"jsonStringA: {jsonStringA}");
+            Console.WriteLine($"jsonStringB: {jsonStringB}");
+
+            // Initialize two instances with different JSON data
+            var dataGeometryA = PythonEngineManager.DataGeometryBoundingBox2Class(jsonStringA);
+            var dataGeometryB = PythonEngineManager.DataGeometryBoundingBox2Class(jsonStringB);
+
+            // Assert that the two instances are not equal
+            Assert.IsTrue(dataGeometryA != dataGeometryB, "Expected instances with different data to return true for inequality.");
+        }
+
+        [Test]
+        public void EqualOperator_WithIdenticalBoundingBox_ShouldReturnTrue()
+        {
+            // JSON representation with identical bounding box min and max coordinates
+            var jsonString = JsonConvert.SerializeObject(new
+            {
+                bounding_box = new
+                {
+                    min_x = 1.0,
+                    max_x = 5.0,
+                    min_y = 2.0,
+                    max_y = 6.0
+                }
+            });
+
+            // Initialize two instances with the same JSON data
+            var dataGeometryA = PythonEngineManager.DataGeometryBoundingBox2Class(jsonString);
+            var dataGeometryB = PythonEngineManager.DataGeometryBoundingBox2Class(jsonString);
+
+            // Assert that the '==' operator returns true for equal instances
+            Assert.IsTrue(dataGeometryA == dataGeometryB, "Expected '==' to return true for identical bounding boxes.");
+        }
+
+        [Test]
+        public void NotEqualOperator_WithDifferentBoundingBox_ShouldReturnTrue()
+        {
+            // JSON representation for the first instance
+            var jsonStringA = JsonConvert.SerializeObject(new
+            {
+                bounding_box = new
+                {
+                    min_x = 1.0,
+                    max_x = 5.0,
+                    min_y = 2.0,
+                    max_y = 6.0
+                }
+            });
+
+            // JSON representation for the second instance with different bounding box coordinates
+            var jsonStringB = JsonConvert.SerializeObject(new
+            {
+                bounding_box = new
+                {
+                    min_x = 3.0,
+                    max_x = 4.0,
+                    min_y = 1.5,
+                    max_y = 5.5
+                }
+            });
+
+            // Initialize two instances with different JSON data
+            var dataGeometryA = PythonEngineManager.DataGeometryBoundingBox2Class(jsonStringA);
+            var dataGeometryB = PythonEngineManager.DataGeometryBoundingBox2Class(jsonStringB);
+
+            // Assert that the '!=' operator returns true for non-equal instances
+            Assert.IsTrue(dataGeometryA != dataGeometryB, "Expected '!=' to return true for different bounding boxes.");
         }
     }
 }

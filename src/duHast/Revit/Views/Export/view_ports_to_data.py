@@ -77,6 +77,21 @@ def _get_view_port_type(doc, revit_view_port):
         return None
 
 
+def _get_vierw_crop(view):
+    # get bounding box
+    crop_box = view.CropBox
+
+    # there is a very very slight chance that view is notr cropped ...it should be but...
+    if crop_box:
+        # get the outlines min and max points as 2d points
+        bb_max_2d = convert_XYZ_to_point2(crop_box.Max)
+        bb_min_2d = convert_XYZ_to_point2(crop_box.Min)
+
+        return bb_min_2d, bb_max_2d
+    else:
+        return None
+
+
 def _get_plan_view(doc, view):
     """
     Converts data from a Revit plan view to a data plan view instance
@@ -91,15 +106,10 @@ def _get_plan_view(doc, view):
     """
 
     data_instance = DataViewPlan()
-    # get bounding box
-    crop_box = view.CropBox
-
-    # there is a very very slight chance that view is notr cropped ...it should be but...
-    if crop_box:
-        # get the outlines min and max points as 2d points
-        bb_max_2d = convert_XYZ_to_point2(crop_box.Max)
-        bb_min_2d = convert_XYZ_to_point2(crop_box.Min)
-
+    
+    # get the view crop
+    bb_min_2d, bb_max_2d=_get_vierw_crop(view)
+    if bb_min_2d and bb_max_2d:
         data_instance.bounding_box.update(min=bb_min_2d, max=bb_max_2d)
 
     # get any tags in the view
@@ -120,7 +130,12 @@ def _get_elevation_view(doc, view):
     """
 
     data_instance = DataViewElevation()
+
     # get bounding box
+    bb_min_2d, bb_max_2d=_get_vierw_crop(view)
+    if bb_min_2d and bb_max_2d:
+        data_instance.bounding_box.update(min=bb_min_2d, max=bb_max_2d)
+
     # orientation (which edge of the bounding box is this elevation facing?)
     # get any tags in the view
     
@@ -141,7 +156,12 @@ def _get_three_d_view(doc, view):
     """
 
     data_instance = DataViewThreeD()
+    
     # get bounding box
+    bb_min_2d, bb_max_2d=_get_vierw_crop(view)
+    if bb_min_2d and bb_max_2d:
+        data_instance.bounding_box.update(min=bb_min_2d, max=bb_max_2d)
+
     # orientation (eye point and view direction)
     return data_instance
 
@@ -248,6 +268,10 @@ def convert_revit_viewport_to_data_instance(doc, revit_view_port):
     
     # update the bounding box property of the view port instance
     view_port_data.bounding_box.update(bb_min_2d, bb_max_2d)
+
+    # get the viewport centre
+    centre_point=convert_XYZ_to_point2(revit_view_port.GetBoxCenter())
+    view_port_data.centre_point=centre_point
 
     # set the viewport type
     view_port_data.vp_type = view_port_type

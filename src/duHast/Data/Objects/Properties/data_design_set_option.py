@@ -31,6 +31,7 @@ import json
 from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
+
 class DataDesignSetOption(data_base.DataBase):
     data_type = "design_set"
 
@@ -70,15 +71,45 @@ class DataDesignSetOption(data_base.DataBase):
             try:
                 self.set_name = j.get(DataPropertyNames.SET_NAME.value, self.set_name)
                 if not isinstance(self.set_name, str):
-                    raise TypeError("Expected 'set_name' to be a string, got {}".format(type(self.set_name)))
-                
-                self.option_name = j.get(DataPropertyNames.OPTION_NAME.value, self.option_name)
+                    raise TypeError(
+                        "Expected 'set_name' to be a string, got {}".format(
+                            type(self.set_name)
+                        )
+                    )
+
+                self.option_name = j.get(
+                    DataPropertyNames.OPTION_NAME.value, self.option_name
+                )
                 if not isinstance(self.option_name, str):
-                    raise TypeError("Expected 'option_name' to be a string, got {}".format(type(self.option_name)))
-                
-                self.is_primary = j.get(DataPropertyNames.IS_PRIMARY.value, self.is_primary)
+                    raise TypeError(
+                        "Expected 'option_name' to be a string, got {}".format(
+                            type(self.option_name)
+                        )
+                    )
+
+                self.is_primary = j.get(
+                    DataPropertyNames.IS_PRIMARY.value, self.is_primary
+                )
                 if not isinstance(self.is_primary, bool):
-                    raise TypeError("Expected 'is_primary' to be a boolean, got {}".format(type(self.is_primary)))
-                
+                    raise TypeError(
+                        "Expected 'is_primary' to be a boolean, got {}".format(
+                            type(self.is_primary)
+                        )
+                    )
+
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )
+
+    def __eq__(self, other):
+        if not isinstance(other, DataDesignSetOption):
+            return NotImplemented
+        return (
+            self.set_name == other.set_name
+            and self.option_name == other.option_name
+            and self.is_primary == other.is_primary
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

@@ -45,7 +45,9 @@ class DataScheduleSegment(DataBase):
         """
 
         # store data type  in base class
-        super(DataScheduleSegment, self).__init__(data_type = DataScheduleSegment.data_type)
+        super(DataScheduleSegment, self).__init__(
+            data_type=DataScheduleSegment.data_type
+        )
 
         # set default values
         self.index = 0
@@ -69,10 +71,18 @@ class DataScheduleSegment(DataBase):
 
             # attempt to populate from json
             try:
-                self.index = j.get(
-                    DataPropertyNames.INDEX, self.index
-                )
+                self.index = j.get(DataPropertyNames.INDEX, self.index)
 
                 self.height = j.get(DataPropertyNames.HEIGHT, self.height)
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )
+
+    def __eq__(self, other):
+        if not isinstance(other, DataScheduleSegment):
+            return NotImplemented
+        return self.index == other.index and self.height == other.height
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

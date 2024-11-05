@@ -37,7 +37,8 @@ namespace PythonTests.Setup
         public static dynamic DataLevelClass { get; set; }
         public static dynamic DataPhasingClass { get; set; }
         public static dynamic DataRevitModelClass { get; set; }
-
+        public static dynamic DataScheduleSegmentClass { get; set; }
+        public static dynamic DataTypePropertiesClass { get; set; }
         public static ScriptEngine PythonEngine => _pythonEngine ??= InitializePythonEngine();
         public static ScriptScope Scope => _scope ??= PythonEngine.CreateScope();
 
@@ -70,6 +71,8 @@ namespace PythonTests.Setup
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_level.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_phasing.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_revit_model.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_schedule_segement.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_type_properties.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\Geometry\geometry_base.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\Geometry\geometry_bounding_box_2.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\Geometry\geometry_polygon_2.py")

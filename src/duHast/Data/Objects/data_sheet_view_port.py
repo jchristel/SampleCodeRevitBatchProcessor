@@ -47,6 +47,7 @@ from duHast.Data.Objects.data_view_schedule import DataViewSchedule
 from duHast.Data.Objects.Properties.data_view_port_type_names import (
     DataViewPortTypeNames,
 )
+from duHast.Geometry.point_2 import Point2
 
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
@@ -73,6 +74,7 @@ class DataSheetViewPort(data_base.DataBase):
         self.vp_type = DataViewPortTypeNames.FLOOR_PLAN.value
         self.view_id = -1
         self.view = DataViewPlan()
+        self.centre_point = Point2(0.0, 0.0)
 
         # check if any data was past in with constructor!
         if j is not None:
@@ -98,6 +100,11 @@ class DataSheetViewPort(data_base.DataBase):
                 )
                 self.vp_type = j.get(DataPropertyNames.VIEW_PORT_TYPE.value, self.vp_type)
                 self.view_id = j.get(DataPropertyNames.VIEW_ID,self.view_id)
+                # get the centre point value
+                centre_point_value = j.get(DataPropertyNames.CENTRE_POINT.value, None)
+                # if there is a json value take that, otherwise leave default unchanged.
+                if(centre_point_value):
+                    self.centre_point = Point2(j=centre_point_value)
                 
                 # set up the view depending on the view port type
                 if self.vp_type == DataViewPortTypeNames.THREE_D.value:

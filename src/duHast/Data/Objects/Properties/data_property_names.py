@@ -38,6 +38,7 @@ class DataPropertyNames(Enum):
 
     ASSOCIATED_ELEMENTS = "associated_elements"
     BOUNDING_BOX = "bounding_box"
+    CENTRE_POINT = "centre_point"
     CREATED = "created"
     DATA_TYPE = "data_type"
     DEMOLISHED = "demolished"

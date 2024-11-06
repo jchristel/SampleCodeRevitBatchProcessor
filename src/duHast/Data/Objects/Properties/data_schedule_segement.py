@@ -34,7 +34,7 @@ from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 class DataScheduleSegment(DataBase):
 
-    data_type = "schedule segement"
+    data_type = "schedule segment"
 
     def __init__(self, j=None):
         """
@@ -71,9 +71,21 @@ class DataScheduleSegment(DataBase):
 
             # attempt to populate from json
             try:
-                self.index = j.get(DataPropertyNames.INDEX, self.index)
+                self.index = j.get(DataPropertyNames.INDEX.value, self.index)
+                if not (isinstance(self.index, int)):
+                    raise ValueError(
+                        "index needs to be of type int, got {} instead.".format(
+                            type(self.index)
+                        )
+                    )
 
-                self.height = j.get(DataPropertyNames.HEIGHT, self.height)
+                self.height = j.get(DataPropertyNames.HEIGHT.value, self.height)
+                if not (isinstance(self.height, float)):
+                    raise ValueError(
+                        "height needs to be of type float, got {} instead.".format(
+                            type(self.index)
+                        )
+                    )
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

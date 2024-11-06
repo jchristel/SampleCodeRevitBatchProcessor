@@ -69,6 +69,13 @@ class DataRevitModel(data_base.DataBase):
             # attempt to populate from json
             try:
                 self.name = j.get(DataPropertyNames.NAME.value, self.name)
+                if not (isinstance(self.name, str)):
+                    raise ValueError(
+                        "name needs to be of type str, got {} instead.".format(
+                            type(self.name)
+                        )
+                    )
+
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

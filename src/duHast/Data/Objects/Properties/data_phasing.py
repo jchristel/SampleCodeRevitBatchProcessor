@@ -70,9 +70,23 @@ class DataPhasing(data_base.DataBase):
             # attempt to populate from json
             try:
                 self.created = j.get(DataPropertyNames.CREATED.value, self.created)
+                if not (isinstance(self.created, str)):
+                    raise ValueError(
+                        "created needs to be of type str, got {} instead.".format(
+                            type(self.created)
+                        )
+                    )
+
                 self.demolished = j.get(
                     DataPropertyNames.DEMOLISHED.value, self.demolished
                 )
+                if not (isinstance(self.demolished, str)):
+                    raise ValueError(
+                        "demolished needs to be of type str, got {} instead.".format(
+                            type(self.demolished)
+                        )
+                    )
+
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

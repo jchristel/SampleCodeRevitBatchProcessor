@@ -29,9 +29,6 @@ This module contains a number of helper functions relating to Revit view port to
 
 
 from duHast.Data.Objects.data_sheet_view_port import DataSheetViewPort
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
-    DataGeometryBoundingBox2,
-)
 from duHast.Data.Objects.Properties.data_view_port_type_names import (
     DataViewPortTypeNames,
 )
@@ -183,7 +180,7 @@ def _get_schedule_view(doc, view):
 
     # here is a way to extract number of rows: (old...)
     # https://thebuildingcoder.typepad.com/blog/2012/05/the-schedule-api-and-access-to-schedule-data.html
-    # this might be better and mor up to date: https://forums.autodesk.com/t5/revit-api-forum/how-to-get-schedule-data/td-p/7319520
+    # this might be better and more up to date: https://forums.autodesk.com/t5/revit-api-forum/how-to-get-schedule-data/td-p/7319520
     # in fact it does show how to get to number of rows easily...
 
     table = view.GetTableData()
@@ -194,16 +191,15 @@ def _get_schedule_view(doc, view):
     data_instance.total_number_of_rows = number_of_rows
 
     # The total count of schedule segments. 1 means the schedule is not split yet.
-    counter = 0
-    for seg in view.GetSegmentCount():
+    for i in range(view.GetSegmentCount()-1):
         seg_data = DataScheduleSegment()
-        seg_data.index = counter
-        seg_height  = view.GetSegmentHeight(counter)
+        seg_data.index = i
+        seg_height  =  convert_imperial_feet_to_metric_mm(view.GetSegmentHeight(i))
         seg_data.height = seg_height
         data_instance.segments.append(seg_data)
-        counter = counter + 1
     
     # get bounding box
+    # TODO:
     return data_instance
 
 
@@ -282,3 +278,49 @@ def convert_revit_viewport_to_data_instance(doc, revit_view_port):
     view_port_data.view = view_data
 
     return view_port_data
+
+def convert_revit_schedule_sheet_instances_to_data_instance(doc, sheet, revit_schedule_sheet_instances):
+    """
+    Convertes a list of schedule sheet instances to view port data instances
+
+    :param doc: The Revit document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param sheet: The sheet of which to get the schedule instance from.
+    :type sheet: Autodesk.Revit.DB.ViewSheet
+    :param revit_schedule_sheet_instances: A list of schedule sheet instances
+    :type revit_schedule_sheet_instances: [Autodesk.Revit.DB.ScheduleSheetInstance]
+    :return: A list of populated data viewport instances
+    :rtype: [:class:`.DataSheetViewPort`]
+    """
+
+    all_view_port_data = []
+    
+    # loop over all schedule sheet instances
+    for schedule_sheet_instance in revit_schedule_sheet_instances:
+    
+        # set up data instances
+        view_port_data = DataSheetViewPort()
+        view_port_data.vp_type = DataViewPortTypeNames.SCHEDULE.value
+
+        # bounding box:
+        bbox = schedule_sheet_instance.get_BoundingBox(sheet)
+        # get the outlines min and max points as 2d points
+        bb_max_2d = convert_XYZ_to_point2(bbox.Max)
+        bb_min_2d = convert_XYZ_to_point2(bbox.Min)
+
+        # get the viewport centre
+        centre_point=convert_XYZ_to_point2(schedule_sheet_instance.Point)
+        view_port_data.centre_point=centre_point
+        
+        # update the bounding box property of the view port instance
+        view_port_data.bounding_box.update(bb_min_2d, bb_max_2d)
+
+        # get the schedule view data
+        schedule_view = doc.GetElement(schedule_sheet_instance.ScheduleId)
+        view_data = _get_schedule_view(doc, schedule_view)
+        view_port_data.view = view_data
+
+        # append to list to be returned
+        all_view_port_data.append(view_port_data)
+    
+    return all_view_port_data

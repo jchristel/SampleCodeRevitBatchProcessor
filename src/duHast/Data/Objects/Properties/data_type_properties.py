@@ -51,7 +51,7 @@ class DataTypeProperties(data_base.DataBase):
         # set default values
         self.name = "-"
         self.id = -1
-        self.properties = {}
+        self.properties = []
 
         # check if any data was past in with constructor!
         if j is not None:
@@ -72,7 +72,20 @@ class DataTypeProperties(data_base.DataBase):
             # attempt to populate from json
             try:
                 self.name = j.get(DataPropertyNames.NAME.value, self.name)
+                if not (isinstance(self.name, str)):
+                    raise ValueError(
+                        "name needs to be of type str, got {} instead.".format(
+                            type(self.name)
+                        )
+                    )
+
                 self.id = j.get(DataPropertyNames.ID.value, self.id)
+                if not (isinstance(self.id, int)):
+                    raise ValueError(
+                        "id needs to be of type int, got {} instead.".format(
+                            type(self.id)
+                        )
+                    )
 
                 # needs to be converted to list of property objects!
                 properties = j.get(DataPropertyNames.PROPERTIES.value, self.properties)

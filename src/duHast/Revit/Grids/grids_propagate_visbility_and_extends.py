@@ -321,6 +321,9 @@ def change_grid_extends_in_views(
             if callback and callback.is_cancelled():
                 return_value.append_message("User cancelled.")
                 break
+            
+            # update the progress counter
+            view_counter = view_counter + 1
 
     except Exception as e:
         return_value.update_sep(

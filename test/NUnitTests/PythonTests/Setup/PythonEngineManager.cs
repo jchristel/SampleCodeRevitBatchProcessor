@@ -26,6 +26,21 @@ namespace PythonTests.Setup
 
 
         public static dynamic DataBaseClass { get; set; }
+        public static dynamic DataCeilingClass { get; set; }
+        public static dynamic DataDoorClass { get; set; }
+        public static dynamic DataFamilyBaseClass { get; set; }
+        public static dynamic DataLevelBuildingClass { get; set; }
+        public static dynamic DataRoomClass { get; set; }
+        public static dynamic DataSheetViewPortClass { get; set; }
+        public static dynamic DataSheetClass { get; set; }
+        public static dynamic DataTagClass { get; set; }
+
+        public static dynamic DataView3DClass { get; set; }
+        public static dynamic DataViewBaseClass { get; set; }
+        public static dynamic DataViewElevationClass { get; set; }
+        public static dynamic DataViewPlanClass { get; set; }
+        public static dynamic DataViewScheduleClass { get; set; }
+
         public static dynamic DataDesingSetOptionClass { get; set; }
         public static dynamic DataElementGeometryBaseClass { get; set; }
         public static dynamic DataGeometryBaseClass { get; set; }

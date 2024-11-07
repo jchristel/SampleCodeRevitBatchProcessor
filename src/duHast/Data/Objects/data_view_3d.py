@@ -79,7 +79,7 @@ class DataViewThreeD(DataViewBase):
             # attempt to populate from json
             try:
                 self.bounding_box = DataGeometryBoundingBox2(
-                    j.get(DataPropertyNames.BOUNDING_BOX.value, {})
+                    j.get(DataPropertyNames.BOUNDING_BOX.value, None)
                 )
 
             except Exception as e:

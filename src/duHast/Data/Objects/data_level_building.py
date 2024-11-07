@@ -72,8 +72,17 @@ class DataLevelBuilding(DataLevelBase):
                 self.elevation = j.get(
                     DataPropertyNames.ELEVATION.value, self.elevation
                 )
+                
+                if not(isinstance(self.elevation, float)):
+                    raise TypeError(
+                        "Expected 'elevation' to be a float, got {}".format(
+                            type(self.elevation)
+                        )
+                    )
+                
                 self.revit_model = data_revit_model.DataRevitModel(
-                    j.get(data_revit_model.DataRevitModel.data_type, {})
+                    j.get(data_revit_model.DataRevitModel.data_type, None)
                 )
+                
             except Exception as e:
                 raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

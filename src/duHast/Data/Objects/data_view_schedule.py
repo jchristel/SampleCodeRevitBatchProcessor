@@ -42,6 +42,7 @@ from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
 )
 from duHast.Data.Objects.Properties.data_schedule_segement import DataScheduleSegment
 
+
 class DataViewSchedule(DataViewBase):
 
     data_type = "view_schedule"
@@ -85,10 +86,24 @@ class DataViewSchedule(DataViewBase):
                 self.bounding_box = DataGeometryBoundingBox2(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
-                self.total_number_of_rows = j.get(DataPropertyNames.TOTAL_NUMBER_OF_ROWS.value, self.total_number_of_rows)
-                segment_data = j.get(DataPropertyNames.SEGMENTS,[])
+
+                self.total_number_of_rows = j.get(
+                    DataPropertyNames.TOTAL_NUMBER_OF_ROWS.value,
+                    self.total_number_of_rows,
+                )
+                if not isinstance(self.total_number_of_rows, int):
+                    raise TypeError(
+                        "Expected 'total_number_of_rows' to be an int, got {}".format(
+                            type(self.total_number_of_rows)
+                        )
+                    )
+
+                segment_data = j.get(DataPropertyNames.SEGMENTS, [])
                 for seg_d in segment_data:
                     seg = DataScheduleSegment(j=seg_d)
                     self.segments.append(seg)
+
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

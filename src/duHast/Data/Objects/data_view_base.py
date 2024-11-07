@@ -39,8 +39,6 @@ from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 class DataViewBase(data_base.DataBase):
 
-    #data_type = "view base"
-
     def __init__(self, data_type, j=None):
         """
         Class constructor for a view.
@@ -73,7 +71,14 @@ class DataViewBase(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.id = j.get(DataPropertyNames.ID.value, self.vp_type)
+                self.id = j.get(DataPropertyNames.ID.value, self.id)
+
+                if not isinstance(self.id, int):
+                    raise TypeError(
+                        "Expected 'id' to be an int, got {}".format(type(self.id))
+                    )
 
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

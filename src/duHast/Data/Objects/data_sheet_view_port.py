@@ -65,9 +65,7 @@ class DataSheetViewPort(data_base.DataBase):
         """
 
         # initialise parent classes with values
-        super(DataSheetViewPort, self).__init__(
-            data_type=DataSheetViewPort.data_type
-        )
+        super(DataSheetViewPort, self).__init__(data_type=DataSheetViewPort.data_type)
 
         # set default values
         self.bounding_box = DataGeometryBoundingBox2()
@@ -98,25 +96,35 @@ class DataSheetViewPort(data_base.DataBase):
                 self.bounding_box = DataGeometryBoundingBox2(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
-                self.vp_type = j.get(DataPropertyNames.VIEW_PORT_TYPE.value, self.vp_type)
-                self.view_id = j.get(DataPropertyNames.VIEW_ID,self.view_id)
+                self.vp_type = j.get(
+                    DataPropertyNames.VIEW_PORT_TYPE.value, self.vp_type
+                )
+                self.view_id = j.get(DataPropertyNames.VIEW_ID, self.view_id)
                 # get the centre point value
                 centre_point_value = j.get(DataPropertyNames.CENTRE_POINT.value, None)
                 # if there is a json value take that, otherwise leave default unchanged.
-                if(centre_point_value):
+                if centre_point_value:
                     self.centre_point = Point2(j=centre_point_value)
-                
+
                 # set up the view depending on the view port type
                 if self.vp_type == DataViewPortTypeNames.THREE_D.value:
-                    self.view = DataViewThreeD(j.get(DataPropertyNames.VIEW.value,{}))
+                    self.view = DataViewThreeD(j.get(DataPropertyNames.VIEW.value, {}))
                 elif self.vp_type == DataViewPortTypeNames.ELEVATION.value:
-                    self.view = DataViewElevation(j.get(DataPropertyNames.VIEW.value,{}))
+                    self.view = DataViewElevation(
+                        j.get(DataPropertyNames.VIEW.value, {})
+                    )
                 elif self.vp_type == DataViewPortTypeNames.FLOOR_PLAN.value:
-                    self.view = DataViewPlan(j.get(DataPropertyNames.VIEW.value,{}))
+                    self.view = DataViewPlan(j.get(DataPropertyNames.VIEW.value, {}))
                 elif self.vp_type == DataViewPortTypeNames.SCHEDULE.value:
-                    self.view = DataViewSchedule(j.get(DataPropertyNames.VIEW.value,{}))
+                    self.view = DataViewSchedule(
+                        j.get(DataPropertyNames.VIEW.value, {})
+                    )
                 else:
-                    raise TypeError("Unsupported viewport type: {}".format(self.vp_type))
+                    raise TypeError(
+                        "Unsupported viewport type: {}".format(self.vp_type)
+                    )
 
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

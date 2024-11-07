@@ -42,7 +42,7 @@ from duHast.Data.Objects.Properties import data_instance_properties
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
     DataGeometryBoundingBox2,
 )
-
+from duHast.Data.Objects.data_sheet_view_port import DataSheetViewPort
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 
@@ -89,16 +89,24 @@ class DataSheet(data_base.DataBase):
                     data_instance_properties.DataInstanceProperties(
                         j.get(
                             data_instance_properties.DataInstanceProperties.data_type,
-                            {},
+                            None,
                         )
                     )
                 )
                 self.type_properties = data_type_properties.DataTypeProperties(
-                    j.get(data_type_properties.DataTypeProperties.data_type, {})
+                    j.get(data_type_properties.DataTypeProperties.data_type, None)
                 )
                 self.bounding_box = DataGeometryBoundingBox2(
-                    j.get(DataPropertyNames.BOUNDING_BOX.value, {})
+                    j.get(DataPropertyNames.BOUNDING_BOX.value, None)
                 )
 
+                # get sheet view port data
+                view_port_data = j.get(DataPropertyNames.VIEW_PORTS.value, None)
+                if view_port_data:
+                    for vp in view_port_data:
+                        self.view_ports.append(DataSheetViewPort(j=vp))
+
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

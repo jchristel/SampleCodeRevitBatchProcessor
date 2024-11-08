@@ -40,7 +40,7 @@ Data storage base class used for element tags in views.
 import json
 
 from duHast.Data.Objects.data_base import DataBase
-
+from duHast.Geometry.point_3 import Point3
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
     DataGeometryBoundingBox2,
@@ -53,9 +53,9 @@ class DataTag(DataBase):
 
     def __init__(self, j=None):
         """
-        Class constructor for a view_3d.
+        Class constructor for a annotation tag.
 
-        :param j: A json formatted dictionary of this class, defaults to {}
+        :param j: A json formatted dictionary of this class, defaults to None
         :type j: dict, optional
         """
 
@@ -64,10 +64,11 @@ class DataTag(DataBase):
 
         # set default values
         self.bounding_box = DataGeometryBoundingBox2()
-        self.elbow_location = [0,0,0]
+        self.elbow_location = Point3(0, 0, 0)
+        self.point = Point3(0, 0, 0)
         self.leader_end = None
         self.leader_reference = None
-        self.leader_element_reference_id =-1
+        self.leader_element_reference_id = -1
 
         # check if any data was past in with constructor!
         if j is not None:
@@ -88,12 +89,38 @@ class DataTag(DataBase):
             # attempt to populate from json
             try:
                 self.bounding_box = DataGeometryBoundingBox2(
-                    j.get(DataPropertyNames.BOUNDING_BOX.value, {})
+                    j.get(DataPropertyNames.BOUNDING_BOX.value, None)
                 )
-                self.elbow_location = j.get(DataPropertyNames.TAG_ELBOW_LOCATION.value, self.elbow_location)
-                self.leader_end = j.get(DataPropertyNames.TAG_LEADER_END.value, self.leader_end)
-                self.leader_reference = j.get(DataPropertyNames.TAG_LEADER_REFERENCE.value, self.leader_reference)
-                self.leader_element_reference_id =j.get(DataPropertyNames.TAG_LEADER_ELEMENT_REFERENCE_ID.value, self.leader_element_reference_id)
+
+                # get the point location
+                point = j.get(DataPropertyNames.POINT.value, None)
+                if point:
+                    self.point = Point3(j=point)
+
+                # get the elbow location
+                elbow_location = j.get(DataPropertyNames.TAG_ELBOW_LOCATION.value, None)
+                if elbow_location:
+                    self.elbow_location = Point3(j=elbow_location)
+
+                self.leader_end = j.get(
+                    DataPropertyNames.TAG_LEADER_END.value, self.leader_end
+                )
+                self.leader_reference = j.get(
+                    DataPropertyNames.TAG_LEADER_REFERENCE.value, self.leader_reference
+                )
+
+                self.leader_element_reference_id = j.get(
+                    DataPropertyNames.TAG_LEADER_ELEMENT_REFERENCE_ID.value,
+                    self.leader_element_reference_id,
+                )
+                if not isinstance(self.leader_element_reference_id, int):
+                    raise TypeError(
+                        "Expected 'leader_element_reference_id' to be an int, got {}".format(
+                            type(self.leader_element_reference_id)
+                        )
+                    )
 
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

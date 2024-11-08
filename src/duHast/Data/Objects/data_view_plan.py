@@ -82,6 +82,7 @@ class DataViewPlan(DataViewBase):
                 self.bounding_box = DataGeometryBoundingBox2(
                     j.get(DataPropertyNames.BOUNDING_BOX.value, {})
                 )
+
                 # get any tags
                 tags = j.get(DataPropertyNames.TAGS.value, [])
                 for tag in tags:
@@ -89,4 +90,6 @@ class DataViewPlan(DataViewBase):
                     self.tags.append(data_tag)
 
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )

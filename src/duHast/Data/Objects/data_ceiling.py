@@ -38,6 +38,7 @@ from duHast.Data.Objects.Properties import data_instance_properties
 from duHast.Data.Objects.Properties import data_revit_model
 from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties import data_element_geometry_base
+from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 
 class DataCeiling(data_base.DataBase, data_element_geometry_base.DataElementGeometryBase):
@@ -91,22 +92,27 @@ class DataCeiling(data_base.DataBase, data_element_geometry_base.DataElementGeom
                     )
                 )
                 self.type_properties = data_type_properties.DataTypeProperties(
-                    j.get(data_type_properties.DataTypeProperties.data_type, {})
+                    j.get(data_type_properties.DataTypeProperties.data_type, None)
                 )
                 self.level = data_level.DataLevel(
-                    j.get(data_level.DataLevel.data_type, {})
+                    j.get(data_level.DataLevel.data_type, None)
                 )
                 self.revit_model = data_revit_model.DataRevitModel(
-                    j.get(data_revit_model.DataRevitModel.data_type, {})
+                    j.get(data_revit_model.DataRevitModel.data_type, None)
                 )
                 self.phasing = data_phasing.DataPhasing(
-                    j.get(data_phasing.DataPhasing.data_type, {})
+                    j.get(data_phasing.DataPhasing.data_type, None)
                 )
                 self.design_set_and_option = data_design_set_option.DataDesignSetOption(
-                    j.get(data_design_set_option.DataDesignSetOption.data_type, {})
+                    j.get(data_design_set_option.DataDesignSetOption.data_type, None)
                 )
-                self.associated_elements = j.get(
-                    "associated_elements", self.associated_elements
+                
+                # get associated elements
+                associated_elements = j.get(
+                    DataPropertyNames.ASSOCIATED_ELEMENTS.value, self.associated_elements
                 )
+                # these can be all sorts of types...
+                #TODO: convert json to actual elements
+                
             except Exception as e:
                 raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))

@@ -34,6 +34,7 @@ namespace PythonTests
                 // data classes
                 PythonEngineManager.DataBaseClass = scope.GetVariable("DataBase");
 
+
                 //data properties
                 PythonEngineManager.DataDesingSetOptionClass = scope.GetVariable("DataDesignSetOption");
                 PythonEngineManager.DataElementGeometryBaseClass = scope.GetVariable("DataElementGeometryBase");

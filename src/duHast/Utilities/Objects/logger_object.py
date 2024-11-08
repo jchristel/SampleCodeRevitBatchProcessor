@@ -28,6 +28,7 @@ A logger class
 #
 
 import logging
+from logging.handlers import RotatingFileHandler
 import os
 import sys
 
@@ -44,7 +45,7 @@ class LoggerObject(logging.Logger, Base):
         output_path=os.getenv("APPDATA"),
         log_level=(10, 30),
         file_format=".txt",
-        fil_stream_hndlr=logging.FileHandler,
+        fil_stream_hndlr=RotatingFileHandler,
         fil_stream_frmt=level_time_local_msg_formatter,
         cons_stream_hndlr=logging.StreamHandler,
         cons_stream_frmt=msg_only,

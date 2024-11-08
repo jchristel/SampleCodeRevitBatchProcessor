@@ -1,4 +1,5 @@
 import logging
+from logging.handlers import RotatingFileHandler
 import sys
 from logger_filtering import FilterConsole, FilterFile
 
@@ -17,8 +18,10 @@ def std_file_handler(obj, file_hndlr, file_formatter):
     Create file handler to obj.log_file_path location
     """
     # Set file output
-    if file_hndlr == logging.FileHandler:
-        file_handler = logging.FileHandler(obj.log_file_path)
+    if file_hndlr == RotatingFileHandler:
+        file_handler = file_handler = RotatingFileHandler(
+            filename=obj.log_file_path, maxBytes=5 * 1024 * 1024, backupCount=1
+        )
     else:
         file_handler = file_hndlr(obj.log_file_path)
     # Default file level is INFO

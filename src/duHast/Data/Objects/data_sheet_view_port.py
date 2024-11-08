@@ -128,3 +128,26 @@ class DataSheetViewPort(data_base.DataBase):
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
+    
+    def __eq__(self, other):
+        """
+        equal compare
+
+        Args:
+            other (DataSheetViewPort): another DataSheetViewPort instance
+
+        Returns:
+            bool: True if equal, otherwise False
+        """
+        if not isinstance(other, DataSheetViewPort):
+            return NotImplemented
+        return (
+            self.bounding_box == other.bounding_box
+            and self.view_id == other.view_id
+            and self.vp_type == other.vp_type
+            and self.view == other.view
+            and self.centre_point == other.centre_point
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

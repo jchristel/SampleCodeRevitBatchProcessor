@@ -34,12 +34,12 @@ namespace PythonTests.Setup
         public static dynamic DataSheetViewPortClass { get; set; }
         public static dynamic DataSheetClass { get; set; }
         public static dynamic DataTagClass { get; set; }
-
         public static dynamic DataView3DClass { get; set; }
         public static dynamic DataViewBaseClass { get; set; }
         public static dynamic DataViewElevationClass { get; set; }
         public static dynamic DataViewPlanClass { get; set; }
         public static dynamic DataViewScheduleClass { get; set; }
+
 
         public static dynamic DataDesingSetOptionClass { get; set; }
         public static dynamic DataElementGeometryBaseClass { get; set; }
@@ -78,6 +78,22 @@ namespace PythonTests.Setup
                 Path.Combine(repoPath, @"duHast\Geometry\vector_2.py"),
                 Path.Combine(repoPath, @"duHast\Geometry\vector_3.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\data_base.py"),
+
+                Path.Combine(repoPath, @"duHast\Data\Objects\data_base.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\data_ceiling.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\data_door.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\data_family_base.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\data_level_building.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\data_room.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\data_sheet_view_port.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\data_sheet.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\data_tag.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\data_view_3d.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\data_view_base.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\data_view_plan.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\data_view_elevation.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\data_view_schedule.py"),
+                
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_design_set_option.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_element_geometry_base.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_instance_properties.py"),

@@ -82,3 +82,11 @@ class DataViewBase(data_base.DataBase):
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
+
+    def __eq__(self, other):
+        if not isinstance(other, DataViewBase):
+            return NotImplemented
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

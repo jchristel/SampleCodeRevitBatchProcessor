@@ -43,8 +43,10 @@ class DataBase(Base):
         # ini super class to allow multi inheritance in children!
         super(DataBase, self).__init__()
         self.data_type = data_type
-        if (isinstance(self.data_type,str)==False):
-            raise TypeError("data_type must be a string, got {} instead.".format(type(data_type)))
+        if isinstance(self.data_type, str) == False:
+            raise TypeError(
+                "data_type must be a string, got {} instead.".format(type(data_type))
+            )
 
     @property
     def DataType(self):
@@ -56,3 +58,11 @@ class DataBase(Base):
         """
 
         return self.data_type
+
+    def __eq__(self, other):
+        if not isinstance(other, DataBase):
+            return NotImplemented
+        return self.DataType == other.DataType
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

@@ -124,3 +124,27 @@ class DataTag(DataBase):
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
+
+    def __eq__(self, other):
+        """
+        equal compare
+
+        Args:
+            other (DataTag): another DataTag instance
+
+        Returns:
+            bool: True if equal, otherwise False
+        """
+        if not isinstance(other, DataTag):
+            return NotImplemented
+        return (
+            self.bounding_box == other.bounding_box
+            and self.elbow_location == other.elbow_location
+            and self.point == other.point
+            and self.leader_end == other.leader_end
+            and self.leader_reference == other.leader_reference
+            and self.leader_element_reference_id == other.leader_element_reference_id     
+            )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

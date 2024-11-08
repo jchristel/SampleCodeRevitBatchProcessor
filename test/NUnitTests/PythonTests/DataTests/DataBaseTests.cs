@@ -1,40 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Scripting.Hosting;
 using IronPython.Runtime.Exceptions;
+using PythonTests.Setup;
+using Newtonsoft.Json;
 
 namespace PythonTests.DataTests
 {
     public class DataBaseTests
     {
-        ScriptEngine _engine;
-        ScriptScope _scope;
 
-        private dynamic _dataBaseClass;
-
-        [SetUp]
-        public void Setup()
+        [Test]
+        public void ClassesShouldBeLoaded()
         {
-            // get a python engine
-            ScriptEngine engine = PythonRunner.SetupEngine();
-            _scope = engine.CreateScope();
-
-            // get the repository path
-            string repoPath = PythonRunner.GetRepositoryPath();
-
-            // set path to bounding box 2 class
-            var pythonFilePath_dataBase = Path.Combine(repoPath, @"duHast\Data\Objects\data_base.py");
-
-            //run the file
-            engine.ExecuteFile(pythonFilePath_dataBase, _scope);
-
-            _dataBaseClass = _scope.GetVariable("DataBase");
-
-            //store the engine instance
-            _engine = engine;
+            Assert.IsNotNull(PythonEngineManager.DataBaseClass, "DataTypeProperties should be loaded.");
         }
 
 
@@ -45,7 +24,7 @@ namespace PythonTests.DataTests
             string dataType = "example_type";
 
             // Act
-            dynamic instance = _dataBaseClass(dataType);
+            dynamic instance = PythonEngineManager.DataBaseClass(dataType);
             
             // Assert
             Assert.AreEqual(dataType, instance.DataType);
@@ -56,7 +35,7 @@ namespace PythonTests.DataTests
         {
             // Arrange
             string dataType = "test_type";
-            dynamic instance = _dataBaseClass(dataType);
+            dynamic instance = PythonEngineManager.DataBaseClass(dataType);
 
             // Act
             string result = instance.DataType;
@@ -72,7 +51,7 @@ namespace PythonTests.DataTests
             string dataType = "";
 
             // Act
-            dynamic instance = _dataBaseClass(dataType);
+            dynamic instance = PythonEngineManager.DataBaseClass(dataType);
 
             // Assert
             Assert.AreEqual(dataType, instance.DataType);
@@ -82,7 +61,7 @@ namespace PythonTests.DataTests
         public void Constructor_WithNullDataType_ShouldThrowTypeError()
         {
             // Act & Assert
-            var ex=Assert.Throws<TypeErrorException>(() => _dataBaseClass(null));
+            var ex=Assert.Throws<TypeErrorException>(() => PythonEngineManager.DataBaseClass(null));
             Assert.That(ex.Message, Does.Contain("data_type must be a string, got"));
         }
     }

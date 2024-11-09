@@ -64,8 +64,8 @@ class DataTag(DataBase):
 
         # set default values
         self.bounding_box = DataGeometryBoundingBox2()
-        self.elbow_location = Point3(0, 0, 0)
-        self.point = Point3(0, 0, 0)
+        self.elbow_location = Point3(0.0, 0.0, 0.0)
+        self.point = Point3(0.0, 0.0, 0.0)
         self.leader_end = None
         self.leader_reference = None
         self.leader_element_reference_id = -1

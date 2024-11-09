@@ -41,7 +41,7 @@ namespace PythonTests
                 PythonEngineManager.DataSheetViewPortClass = scope.GetVariable("DataSheetViewPort");
                 PythonEngineManager.DataSheetClass = scope.GetVariable("DataSheet");
                 PythonEngineManager.DataTagClass = scope.GetVariable("DataTag");
-                PythonEngineManager.DataView3DClass = scope.GetVariable("DataViewThreeD");
+                PythonEngineManager.DataViewThreeDClass = scope.GetVariable("DataViewThreeD");
                 PythonEngineManager.DataViewBaseClass = scope.GetVariable("DataViewBase");
                 PythonEngineManager.DataViewElevationClass = scope.GetVariable("DataViewElevation");
                 PythonEngineManager.DataViewPlanClass = scope.GetVariable("DataViewPlan");

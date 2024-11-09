@@ -42,7 +42,7 @@ namespace PythonTests.DataTests.PropertyTests
             // Initialize without JSON data
             dynamic dataOption = PythonEngineManager.DataDesingSetOptionClass();
 
-            Assert.AreEqual("design_set", dataOption.DataType);
+            Assert.AreEqual("design_set_and_option", dataOption.DataType);
         }
 
         [Test]

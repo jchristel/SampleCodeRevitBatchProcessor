@@ -34,7 +34,7 @@ namespace PythonTests.Setup
         public static dynamic DataSheetViewPortClass { get; set; }
         public static dynamic DataSheetClass { get; set; }
         public static dynamic DataTagClass { get; set; }
-        public static dynamic DataView3DClass { get; set; }
+        public static dynamic DataViewThreeDClass { get; set; }
         public static dynamic DataViewBaseClass { get; set; }
         public static dynamic DataViewElevationClass { get; set; }
         public static dynamic DataViewPlanClass { get; set; }

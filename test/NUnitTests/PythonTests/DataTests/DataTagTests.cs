@@ -23,39 +23,39 @@ namespace PythonTests.DataTests
         {
             // Arrange: valid JSON with bounding box, point, elbow_location, and other properties
             var jsonString = CreateJson(new Dictionary<string, object>
-        {
-            { "data_type", "tag" },
-            { "bounding_box", new Dictionary<string, object>
-                {
-                    { "DataType", "bounding box 2" },
-                    { "bounding_box", new Dictionary<string, object>
-                        {
-                            { "min_x", 0.0 },
-                            { "max_x", 10.0 },
-                            { "min_y", 0.0 },
-                            { "max_y", 10.0 }
+            {
+                { "data_type", "tag" },
+                { "bounding_box", new Dictionary<string, object>
+                    {
+                        { "DataType", "bounding box 2" },
+                        { "bounding_box", new Dictionary<string, object>
+                            {
+                                { "min_x", 0.0 },
+                                { "max_x", 10.0 },
+                                { "min_y", 0.0 },
+                                { "max_y", 10.0 }
+                            }
                         }
                     }
-                }
-            },
-            { "point", new Dictionary<string, object>
-                {
-                    { "x", 5.0 },
-                    { "y", 5.0 },
-                    { "z", 5.0 }
-                }
-            },
-            { "elbow_location", new Dictionary<string, object>
-                {
-                    { "x", 1.0 },
-                    { "y", 1.0 },
-                    { "z", 1.0 }
-                }
-            },
-            { "leader_end", "end_point" },
-            { "leader_reference", "reference_point" },
-            { "leader_element_reference_id", 123 }
-        });
+                },
+                { "point", new Dictionary<string, object>
+                    {
+                        { "x", 5.0 },
+                        { "y", 5.0 },
+                        { "z", 5.0 }
+                    }
+                },
+                { "elbow_location", new Dictionary<string, object>
+                    {
+                        { "x", 1.0 },
+                        { "y", 1.0 },
+                        { "z", 1.0 }
+                    }
+                },
+                { "leader_end", "end_point" },
+                { "leader_reference", "reference_point" },
+                { "leader_element_reference_id", 123 }
+            });
 
             // Act
             var dataTag = PythonEngineManager.DataTagClass(jsonString);

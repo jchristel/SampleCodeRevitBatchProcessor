@@ -99,7 +99,7 @@ class DataSheetViewPort(data_base.DataBase):
                 self.vp_type = j.get(
                     DataPropertyNames.VIEW_PORT_TYPE.value, self.vp_type
                 )
-                self.view_id = j.get(DataPropertyNames.VIEW_ID, self.view_id)
+                self.view_id = j.get(DataPropertyNames.VIEW_ID.value, self.view_id)
                 # get the centre point value
                 centre_point_value = j.get(DataPropertyNames.CENTRE_POINT.value, None)
                 # if there is a json value take that, otherwise leave default unchanged.

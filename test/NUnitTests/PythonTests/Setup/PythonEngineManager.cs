@@ -32,6 +32,8 @@ namespace PythonTests.Setup
         public static dynamic DataLevelBuildingClass { get; set; }
         public static dynamic DataRoomClass { get; set; }
         public static dynamic DataSheetViewPortClass { get; set; }
+
+        public static dynamic DataViewPortTypeNames { get; set; }
         public static dynamic DataSheetClass { get; set; }
         public static dynamic DataTagClass { get; set; }
         public static dynamic DataViewThreeDClass { get; set; }
@@ -47,6 +49,7 @@ namespace PythonTests.Setup
         public static dynamic DataGeometryBoundingBox2Class { get; set; }
         public static dynamic DataInstancePropertiesClass { get; set; }
         public static dynamic DataGeometryPolygon2Class { get; set; }
+        public static dynamic DataPropertyNamesClass { get; set; }
         public static dynamic DataPropertyClass { get; set; }
         public static dynamic DataLevelBaseClass { get; set; }
         public static dynamic DataLevelClass { get; set; }
@@ -97,10 +100,12 @@ namespace PythonTests.Setup
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_design_set_option.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_element_geometry_base.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_instance_properties.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_property_names.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_property.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_level_base.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_level.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_phasing.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_view_port_type_names.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_revit_model.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_schedule_segement.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_type_properties.py"),

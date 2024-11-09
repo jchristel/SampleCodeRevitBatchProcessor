@@ -98,7 +98,7 @@ class DataViewSchedule(DataViewBase):
                         )
                     )
 
-                segment_data = j.get(DataPropertyNames.SEGMENTS, [])
+                segment_data = j.get(DataPropertyNames.SEGMENTS.value, [])
                 for seg_d in segment_data:
                     seg = DataScheduleSegment(j=seg_d)
                     self.segments.append(seg)

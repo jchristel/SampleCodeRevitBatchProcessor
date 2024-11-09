@@ -41,7 +41,7 @@ class DataBase(Base):
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
-        super(DataBase, self).__init__()
+        super(DataBase, self).__init__(**kwargs)
         self.data_type = data_type
         if isinstance(self.data_type, str) == False:
             raise TypeError(

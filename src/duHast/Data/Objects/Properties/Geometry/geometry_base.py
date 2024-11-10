@@ -35,16 +35,16 @@ from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 
 class DataGeometryBase(data_base.DataBase):
-    def __init__(self, data_type, j=None):
+    def __init__(self, data_type, j=None, **kwargs):
         """
         Class constructor
 
         :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
-
+        
         # store data type  in base class
-        super(DataGeometryBase, self).__init__(data_type)
+        super(DataGeometryBase, self).__init__(data_type=data_type, j=j, **kwargs)
 
         # set default values
         # translation as per shared coordinates in revit file
@@ -52,15 +52,16 @@ class DataGeometryBase(data_base.DataBase):
         # rotation as per shared coordinates in revit file ( default )
         self.rotation_coord = Matrix(rows=3, cols=3)
 
+        json_string=None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                j = json.loads(j)
+                json_string = json.loads(j)
             elif isinstance(j, dict):
-                # no action required
-                pass
+                # make a copy
+                json_string=j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -70,7 +71,7 @@ class DataGeometryBase(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                translation_coord = j.get(
+                translation_coord = json_string.get(
                     DataPropertyNames.TRANSLATION_COORDINATES.value, None
                 )
                 # check if we got None back...if so use what is the default
@@ -78,7 +79,7 @@ class DataGeometryBase(data_base.DataBase):
                 if translation_coord is not None:
                     self.translation_coord = Point3(j=translation_coord)
 
-                rotation_coord = j.get(
+                rotation_coord = json_string.get(
                     DataPropertyNames.ROTATION_COORDINATES.value, None
                 )
                 # check if we got None back...if so use what is the default

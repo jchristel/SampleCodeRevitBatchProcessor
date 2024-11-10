@@ -38,7 +38,7 @@ class DataBase(Base):
         :param data_type: human readable data type
         :type data_type: str
         """
-
+        
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
         super(DataBase, self).__init__(**kwargs)

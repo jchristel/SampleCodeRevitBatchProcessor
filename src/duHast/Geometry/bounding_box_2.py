@@ -34,7 +34,7 @@ from duHast.Utilities.compare import is_close
 
 
 class BoundingBox2(BoundingBoxBase):
-    def __init__(self, point1=None, point2=None, j=None):
+    def __init__(self, point1=None, point2=None, j=None, **kwargs):
         """
         A 2D bounding box class.
 
@@ -50,7 +50,7 @@ class BoundingBox2(BoundingBoxBase):
         """
 
         # ini super with json field
-        super(BoundingBox2, self).__init__(j=j)
+        super(BoundingBox2, self).__init__(j=j, **kwargs)
 
         # check first if a json string / dictionary is provided
         if j:

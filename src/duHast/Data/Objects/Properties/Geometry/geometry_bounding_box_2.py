@@ -31,13 +31,12 @@ import json
 from duHast.Data.Objects.Properties.Geometry import geometry_base
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 from duHast.Geometry.bounding_box_2 import BoundingBox2
-from duHast.Geometry.point_2 import Point2
 
 
-class DataGeometryBoundingBox2(geometry_base.DataGeometryBase):
+class DataGeometryBoundingBox2(geometry_base.DataGeometryBase, BoundingBox2):
     data_type = "bounding box 2"
 
-    def __init__(self, j=None):
+    def __init__(self, j=None, *args, **kwargs):
         """
         Class constructor for a 2D bounding box.
 
@@ -47,23 +46,19 @@ class DataGeometryBoundingBox2(geometry_base.DataGeometryBase):
 
         # store data type  in base class
         super(DataGeometryBoundingBox2, self).__init__(
-            DataGeometryBoundingBox2.data_type, j
-        )
-
-        # set default values
-        self.bounding_box = BoundingBox2(
-            point1=Point2(0.0, 0.0), point2=Point2(0.0, 0.0)
+            data_type=DataGeometryBoundingBox2.data_type, j=j, *args, **kwargs
         )
 
         # check if any data was past in with constructor!
+        json_string = None
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                j = json.loads(j)
+                json_string = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                pass
+                json_string=j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -74,7 +69,7 @@ class DataGeometryBoundingBox2(geometry_base.DataGeometryBase):
             # attempt to populate from json
             try:
                 # get the bounding box
-                bbox = j.get(DataPropertyNames.BOUNDING_BOX.value, None)
+                bbox = json_string.get(DataPropertyNames.BOUNDING_BOX.value, None)
                 # check if we got None back...if so use what is the default
                 # since a bounding box ini from an empty dictionary will fail
                 if bbox is not None:
@@ -84,28 +79,6 @@ class DataGeometryBoundingBox2(geometry_base.DataGeometryBase):
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
 
-    def update(self, min, max):
-        """
-        Update the geometry bounding box with new values
-
-        :param min: lower left corner of the bounding box
-        :type min: :class:`.Point2`
-        :param max: upper corner of the bounding box
-        :type max: :class:`.Point2`
-        :raises ValueError: _description_
-        :raises ValueError: _description_
-        """
-        if isinstance(min, Point2) == False:
-            raise ValueError(
-                "Min needs to be a point2 instance, got {} instead:".format(type(min))
-            )
-
-        if isinstance(max, Point2) == False:
-            raise ValueError(
-                "Max needs to be a point2 instance, got {} instead:".format(type(min))
-            )
-
-        self.bounding_box.update(point1=min, point2=max)
 
     def __eq__(self, other):
         if not isinstance(other, DataGeometryBoundingBox2):

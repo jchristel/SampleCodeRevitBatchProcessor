@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   duHast.Data.Objects.BluePrints
    duHast.Data.Objects.Properties
 
 Submodules

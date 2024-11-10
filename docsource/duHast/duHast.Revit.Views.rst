@@ -80,6 +80,14 @@ duHast.Revit.Views.sheets module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Views.sheets\_create module
+----------------------------------------
+
+.. automodule:: duHast.Revit.Views.sheets_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Views.templates module
 -----------------------------------
 

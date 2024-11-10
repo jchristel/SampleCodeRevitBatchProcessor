@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Views package &#8212; Sample Code Revit Batch Processor 1.1.5 documentation</title>
+    <title>duHast.Revit.Views package &#8212; Sample Code Revit Batch Processor 1.1.6 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.5 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.6 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Views.Export package" href="duHast.Revit.Views.Export.html" />
     <link rel="prev" title="duHast.Revit.UI.Objects package" href="duHast.Revit.UI.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.5 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.6 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Views package</h1></div>
@@ -106,6 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Export.html#module-duHast.Revit.Views.Export.view_ports_to_data">duHast.Revit.Views.Export.view_ports_to_data module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Export.html#this-module-contains-a-number-of-helper-functions-relating-to-revit-view-port-to-data-view-port-conversion">This module contains a number of helper functions relating to Revit view port to data view port conversion.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Export.html#duHast.Revit.Views.Export.view_ports_to_data.convert_revit_viewport_to_data_instance"><code class="docutils literal notranslate"><span class="pre">convert_revit_viewport_to_data_instance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Views.Export.html#duHast.Revit.Views.Export.view_ports_to_data.convert_revit_schedule_sheet_instances_to_data_instance"><code class="docutils literal notranslate"><span class="pre">convert_revit_schedule_sheet_instances_to_data_instance()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Views.Export.html#module-duHast.Revit.Views.Export">Module contents</a></li>
@@ -429,7 +430,7 @@ If None is passed as the override_graphics_settings parameter, the default setti
 <dd class="field-even"><p>A result object.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -919,21 +920,55 @@ view reference types and view continuation types in the model.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.schedules.get_schedule_ids_on_sheets">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules.</span></span><span class="sig-name descname"><span class="pre">get_schedule_ids_on_sheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules.get_schedule_ids_on_sheets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets view ids of all schedules with instances placed on a sheet
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:return: List containing schedule Id’s.
-:rtype: list of Autodesk.Revit.DB.ElementId</p>
+<dd><p>Gets view ids of all schedules with instances placed on a sheet</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List containing schedule Id’s.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.schedules.get_schedules_not_on_sheets">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules.</span></span><span class="sig-name descname"><span class="pre">get_schedules_not_on_sheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules.get_schedules_not_on_sheets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all schedules without an instance placed on a sheet.
-:param doc: Current Revit model document.
-:type doc: Autodesk.Revit.DB.Document
-:return: list of schedules without a sheet schedule instance.
-:rtype: list of Autodesk.Revit.DB.View</p>
+<dd><p>Gets all schedules without an instance placed on a sheet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of schedules without a sheet schedule instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.View</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules.get_schedule_instance_on_sheet">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules.</span></span><span class="sig-name descname"><span class="pre">get_schedule_instance_on_sheet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules.get_schedule_instance_on_sheet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list containing all schedule sheet instances on a sheet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>sheet</strong> (<em>Autodesk.Revit.DB.ViewSheet</em>) – A sheet</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a list of schedule sheet instances or empty list if none found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[Autodesk.revit.DB.ScheduleSheetInstance]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -1064,6 +1099,49 @@ view reference types and view continuation types in the model.</p>
 :type rvt_doc: Document
 :return: A dictionary of sheet numbers and sheets
 :rtype: dict</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.sheets_create">
+<span id="duhast-revit-views-sheets-create-module"></span><h2>duHast.Revit.Views.sheets_create module<a class="headerlink" href="#module-duHast.Revit.Views.sheets_create" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-sheet-creation">
+<h3>This module contains a number of helper functions relating to Revit sheet creation.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-sheet-creation" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.sheets_create.create_sheet">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.sheets_create.</span></span><span class="sig-name descname"><span class="pre">create_sheet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_block_family_symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.sheets_create.create_sheet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a revit sheet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Document</em>) – The Revit document.</p></li>
+<li><p><strong>sheet_number</strong> (<em>str</em>) – The new sheet number</p></li>
+<li><p><strong>sheet_name</strong> (<em>str</em>) – The new sheet name</p></li>
+<li><p><strong>title_block_family_symbol</strong> (<em>Autodesk.Revit.DB.FamilySymbol</em>) – The title block type to be used</p></li>
+<li><p><strong>additional_properties</strong> (<em>dict</em><em>, </em><em>optional</em>) – a dictionary representing parameter names on the new sheet and their value, defaults to {}</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If sheet number is not a string</p></li>
+<li><p><strong>ValueError</strong> – If sheet name is not a string</p></li>
+<li><p><strong>ValueError</strong> – If title_block_family_symbol is not a Autodesk.Revit.DB.FamilySymbol</p></li>
+<li><p><strong>ValueError</strong> – If sheet failed to create</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.status True if sheet was created and parameters where updated successfully. Otherwise False.</p></li>
+<li><p>.message will contain stats.</p></li>
+<li><p>.result will be a list containing the sheet instance created.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

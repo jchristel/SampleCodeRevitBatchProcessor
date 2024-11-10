@@ -83,4 +83,23 @@ class DataViewThreeD(DataViewBase):
                 )
 
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )
+
+    def __eq__(self, other):
+        """
+        equal compare
+
+        Args:
+            other (DataView3D): another DataView#d instance
+
+        Returns:
+            bool: True if equal, otherwise False
+        """
+        if not isinstance(other, DataViewThreeD):
+            return NotImplemented
+        return self.bounding_box == other.bounding_box
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

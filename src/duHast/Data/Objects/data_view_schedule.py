@@ -98,7 +98,7 @@ class DataViewSchedule(DataViewBase):
                         )
                     )
 
-                segment_data = j.get(DataPropertyNames.SEGMENTS, [])
+                segment_data = j.get(DataPropertyNames.SEGMENTS.value, [])
                 for seg_d in segment_data:
                     seg = DataScheduleSegment(j=seg_d)
                     self.segments.append(seg)
@@ -107,3 +107,24 @@ class DataViewSchedule(DataViewBase):
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
+
+    def __eq__(self, other):
+        """
+        equal compare
+
+        Args:
+            other (DataViewSchedule): another DataViewSchedule instance
+
+        Returns:
+            bool: True if equal, otherwise False
+        """
+        if not isinstance(other, DataViewSchedule):
+            return NotImplemented
+        return (
+            self.bounding_box == other.bounding_box
+            and self.total_number_of_rows == other.total_number_of_rows
+            and self.segments == other.segments
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

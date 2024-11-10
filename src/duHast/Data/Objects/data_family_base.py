@@ -108,7 +108,7 @@ class DataFamilyBase(
                 self.design_set_and_option = data_design_set_option.DataDesignSetOption(
                     j.get(data_design_set_option.DataDesignSetOption.data_type, None)
                 )
-                
+
                 # get associated elements
                 associated_elements = j.get(
                     DataPropertyNames.ASSOCIATED_ELEMENTS.value,
@@ -121,3 +121,27 @@ class DataFamilyBase(
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
+
+    def __eq__(self, other):
+        """
+        equal compare ( ignores associated elements property)
+
+        Args:
+            other (DataFamilyBase): another DataFamilyBase instance
+
+        Returns:
+            bool: True if equal, otherwise False
+        """
+        if not isinstance(other, DataFamilyBase):
+            return NotImplemented
+        return (
+            self.instance_properties == other.instance_properties
+            and self.type_properties == other.type_properties
+            and self.level == other.level
+            and self.revit_model == other.revit_model
+            and self.phasing == other.phasing
+            and self.design_set_and_option == other.design_set_and_option
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

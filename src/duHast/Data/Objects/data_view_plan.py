@@ -93,3 +93,20 @@ class DataViewPlan(DataViewBase):
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
+
+    def __eq__(self, other):
+        """
+        equal compare
+
+        Args:
+            other (DataViewPlan): another DataViewPlan instance
+
+        Returns:
+            bool: True if equal, otherwise False
+        """
+        if not isinstance(other, DataViewPlan):
+            return NotImplemented
+        return self.bounding_box == other.bounding_box and self.tags == other.tags
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

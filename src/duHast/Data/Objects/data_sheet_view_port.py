@@ -99,7 +99,7 @@ class DataSheetViewPort(data_base.DataBase):
                 self.vp_type = j.get(
                     DataPropertyNames.VIEW_PORT_TYPE.value, self.vp_type
                 )
-                self.view_id = j.get(DataPropertyNames.VIEW_ID, self.view_id)
+                self.view_id = j.get(DataPropertyNames.VIEW_ID.value, self.view_id)
                 # get the centre point value
                 centre_point_value = j.get(DataPropertyNames.CENTRE_POINT.value, None)
                 # if there is a json value take that, otherwise leave default unchanged.
@@ -128,3 +128,26 @@ class DataSheetViewPort(data_base.DataBase):
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
+    
+    def __eq__(self, other):
+        """
+        equal compare
+
+        Args:
+            other (DataSheetViewPort): another DataSheetViewPort instance
+
+        Returns:
+            bool: True if equal, otherwise False
+        """
+        if not isinstance(other, DataSheetViewPort):
+            return NotImplemented
+        return (
+            self.bounding_box == other.bounding_box
+            and self.view_id == other.view_id
+            and self.vp_type == other.vp_type
+            and self.view == other.view
+            and self.centre_point == other.centre_point
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

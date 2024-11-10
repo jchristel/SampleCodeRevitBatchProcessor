@@ -32,6 +32,7 @@ from duHast.Data.Objects.Properties.data_level_base import DataLevelBase
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 from duHast.Data.Objects.Properties import data_revit_model
 
+
 class DataLevelBuilding(DataLevelBase):
 
     data_type = "building level"
@@ -72,17 +73,29 @@ class DataLevelBuilding(DataLevelBase):
                 self.elevation = j.get(
                     DataPropertyNames.ELEVATION.value, self.elevation
                 )
-                
-                if not(isinstance(self.elevation, float)):
+
+                if not (isinstance(self.elevation, float)):
                     raise TypeError(
                         "Expected 'elevation' to be a float, got {}".format(
                             type(self.elevation)
                         )
                     )
-                
+
                 self.revit_model = data_revit_model.DataRevitModel(
                     j.get(data_revit_model.DataRevitModel.data_type, None)
                 )
-                
+
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )
+
+    def __eq__(self, other):
+        if not isinstance(other, DataLevelBuilding):
+            return NotImplemented
+        return (
+            self.elevation == other.elevation and self.revit_model == other.revit_model
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

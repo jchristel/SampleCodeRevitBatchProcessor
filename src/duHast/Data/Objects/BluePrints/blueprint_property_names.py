@@ -1,12 +1,7 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage base class used for Revit views.
+Blueprint property  names enum class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- contains 
-
-    - the view bounding box in model coordinates
-
 """
 
 #
@@ -32,55 +27,16 @@ Data storage base class used for Revit views.
 #
 #
 
-import json
 
-from duHast.Data.Objects.data_view_base import DataViewBase
-
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
-    DataGeometryBoundingBox2,
-)
+from enum import Enum
 
 
-class DataViewThreeD(DataViewBase):
+class BlueprintPropertyNames(Enum):
+    """
+    Contains property names used in blueprint classes
+    """
 
-    data_type = "view_3d"
-
-    def __init__(self, j=None):
-        """
-        Class constructor for a view_3d.
-
-        :param j: A json formatted dictionary of this class, defaults to {}
-        :type j: dict, optional
-        """
-
-        # initialise parent classes with values
-        super(DataViewThreeD, self).__init__(data_type=DataViewThreeD.data_type, j=j)
-
-        # set default values
-        self.bounding_box = DataGeometryBoundingBox2()
-
-        # check if any data was past in with constructor!
-        if j is not None:
-            # check type of data that came in:
-            if isinstance(j, str):
-                # a string
-                j = json.loads(j)
-            elif isinstance(j, dict):
-                # no action required
-                pass
-            else:
-                raise TypeError(
-                    "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
-                        type(j)
-                    )
-                )
-
-            # attempt to populate from json
-            try:
-                self.bounding_box = DataGeometryBoundingBox2(
-                    j.get(DataPropertyNames.BOUNDING_BOX.value, None)
-                )
-
-            except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+    ROOM_SIZE = "room_size"
+    ROOM_PROPORTIONS = "room_proportions"
+    ROOM_NUMBER_OF_ITEMS = "room_number_of_items"
+    SHEETS = "sheets"

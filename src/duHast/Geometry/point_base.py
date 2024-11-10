@@ -30,7 +30,7 @@ A point base class.
 import json
 from duHast.Utilities.Objects import base
 from duHast.Geometry.geometry_property_names import GeometryPropertyNames
-
+from duHast.Utilities.compare import is_close
 
 class PointBase(base.Base):
     def __init__(self, x=None, y=None, j=None):
@@ -82,3 +82,11 @@ class PointBase(base.Base):
     def json_ini(self):
         """Read-only property to access the parsed JSON data."""
         return self._json_ini
+
+    def __eq__(self, other):
+        if not isinstance(other,PointBase):
+            return NotImplemented
+        return is_close(self.x, other.x) and is_close(self.y, other.y)
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)

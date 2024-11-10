@@ -3,6 +3,7 @@
 Data storage class for Revit element type properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -29,6 +30,7 @@ Data storage class for Revit element type properties.
 import json
 from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Properties.data_property import DataProperty
 
 
 class DataTypeProperties(data_base.DataBase):
@@ -49,8 +51,8 @@ class DataTypeProperties(data_base.DataBase):
         # set default values
         self.name = "-"
         self.id = -1
-        self.properties = {}
-        
+        self.properties = []
+
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
@@ -69,8 +71,45 @@ class DataTypeProperties(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.name = j.get(DataPropertyNames.NAME.value,self.name)
+                self.name = j.get(DataPropertyNames.NAME.value, self.name)
+                if not (isinstance(self.name, str)):
+                    raise ValueError(
+                        "name needs to be of type str, got {} instead.".format(
+                            type(self.name)
+                        )
+                    )
+
                 self.id = j.get(DataPropertyNames.ID.value, self.id)
-                self.properties = j.get(DataPropertyNames.PROPERTIES.value,self.properties)
+                if not (isinstance(self.id, int)):
+                    raise ValueError(
+                        "id needs to be of type int, got {} instead.".format(
+                            type(self.id)
+                        )
+                    )
+
+                # needs to be converted to list of property objects!
+                properties = j.get(DataPropertyNames.PROPERTIES.value, self.properties)
+                for prop in properties:
+                    self.properties.append(DataProperty(j=prop))
+
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )
+
+    def __eq__(self, other):
+        if not isinstance(other, DataTypeProperties):
+            return NotImplemented
+
+        if not (self.name == other.name and self.id == other.id):
+            return False
+
+        # Check if properties lists are the same length
+        if len(self.properties) != len(other.properties):
+            return False
+
+        # Check each property in the properties list
+        return all(sp == op for sp, op in zip(self.properties, other.properties))
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

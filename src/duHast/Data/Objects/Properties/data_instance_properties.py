@@ -72,12 +72,34 @@ class DataInstanceProperties(data_base.DataBase):
             try:
                 self.id = j.get(DataPropertyNames.ID.value, self.id)
                 if not isinstance(self.id, int):
-                    raise TypeError("Expected 'id' to be an int, got {}".format(type(self.id)))
-                
+                    raise TypeError(
+                        "Expected 'id' to be an int, got {}".format(type(self.id))
+                    )
+
                 # needs to be converted to list of property objects!
                 properties = j.get(DataPropertyNames.PROPERTIES.value, self.properties)
                 for prop in properties:
                     self.properties.append(DataProperty(j=prop))
-                
+
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )
+
+    def __eq__(self, other):
+        if not isinstance(other, DataInstanceProperties):
+            return NotImplemented
+
+        # Check if IDs are the same
+        if self.id != other.id:
+            return False
+
+        # Check if properties lists are the same length
+        if len(self.properties) != len(other.properties):
+            return False
+
+        # Check each property in the properties list
+        return all(sp == op for sp, op in zip(self.properties, other.properties))
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

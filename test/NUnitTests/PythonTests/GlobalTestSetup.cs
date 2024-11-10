@@ -33,13 +33,24 @@ namespace PythonTests
 
                 // data classes
                 PythonEngineManager.DataBaseClass = scope.GetVariable("DataBase");
+
+
+                //data properties
                 PythonEngineManager.DataDesingSetOptionClass = scope.GetVariable("DataDesignSetOption");
                 PythonEngineManager.DataElementGeometryBaseClass = scope.GetVariable("DataElementGeometryBase");
+                PythonEngineManager.DataInstancePropertiesClass = scope.GetVariable("DataInstanceProperties");
+                PythonEngineManager.DataLevelBaseClass = scope.GetVariable("DataLevelBase");
+                PythonEngineManager.DataLevelClass = scope.GetVariable("DataLevel");
+                PythonEngineManager.DataPhasingClass = scope.GetVariable("DataPhasing");
+                PythonEngineManager.DataRevitModelClass = scope.GetVariable("DataRevitModel");
+                PythonEngineManager.DataScheduleSegmentClass = scope.GetVariable("DataScheduleSegment");
+                PythonEngineManager.DataTypePropertiesClass = scope.GetVariable("DataTypeProperties");
+                PythonEngineManager.DataPropertyClass = scope.GetVariable("DataProperty");
+
+                //data properties -- geometry
                 PythonEngineManager.DataGeometryBaseClass = scope.GetVariable("DataGeometryBase");
                 PythonEngineManager.DataGeometryBoundingBox2Class = scope.GetVariable("DataGeometryBoundingBox2");
-                PythonEngineManager.DataInstancePropertiesClass = scope.GetVariable("DataInstanceProperties");
                 PythonEngineManager.DataGeometryPolygon2Class = scope.GetVariable("DataGeometryPolygon2");
-                PythonEngineManager.DataPropertyClass = scope.GetVariable("DataProperty");
 
             }
             catch (MissingMemberException ex)

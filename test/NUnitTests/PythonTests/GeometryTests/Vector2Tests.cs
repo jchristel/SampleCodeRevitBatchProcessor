@@ -2,7 +2,7 @@
 using IronPython.Runtime.Exceptions;
 using PythonTests.Setup;
 
-namespace PythonTests
+namespace PythonTests.GeometryTests
 {
     public class Vector2Tests
     {
@@ -229,6 +229,51 @@ namespace PythonTests
             var magnitude = vector.__abs__();// Math.Abs(vector); // Testing __abs__
 
             Assert.AreEqual(5.0, magnitude, 1e-9); // Using a tolerance for floating point comparison
+        }
+
+        [Test]
+        public void Vector2_Equality_SameComponents_ShouldBeEqual()
+        {
+            // Arrange
+            dynamic vector1 = PythonEngineManager.Vector2Class(1.0, 2.0);
+            dynamic vector2 = PythonEngineManager.Vector2Class(1.0, 2.0);
+
+            // Act & Assert
+            Assert.IsTrue(vector1 == vector2, "Vector2 instances with the same components should be equal.");
+        }
+
+        [Test]
+        public void Vector2_Equality_DifferentComponents_ShouldNotBeEqual()
+        {
+            // Arrange
+            dynamic vector1 = PythonEngineManager.Vector2Class(1.0, 2.0);
+            dynamic vector2 = PythonEngineManager.Vector2Class(3.0, 4.0);
+
+            // Act & Assert
+            Assert.IsFalse(vector1 == vector2, "Vector2 instances with different components should not be equal.");
+        }
+
+        [Test]
+        public void Vector2_Equality_WithVector3_ShouldNotBeEqual()
+        {
+            // Arrange
+            dynamic vector2 = PythonEngineManager.Vector2Class(1.0, 2.0);
+            dynamic vector3 = PythonEngineManager.Vector3Class(1.0, 2.0, 3.0);
+
+            // Act & Assert
+            var ex = Assert.Throws<TypeErrorException>(() => { var result = vector2 == vector3; });
+            Assert.That(ex.Message, Does.Contain("Expected vector2, got: Vector3"));
+        }
+
+        [Test]
+        public void Vector2_Equality_WithCloseFloatingPoints_ShouldBeEqual()
+        {
+            // Arrange
+            dynamic vector1 = PythonEngineManager.Vector2Class(1.000000001, 2.000000002);
+            dynamic vector2 = PythonEngineManager.Vector2Class(1.000000002, 2.000000001);
+
+            // Act & Assert
+            Assert.IsTrue(vector1 == vector2, "Vector2 instances with components close to each other should be considered equal.");
         }
     }
 }

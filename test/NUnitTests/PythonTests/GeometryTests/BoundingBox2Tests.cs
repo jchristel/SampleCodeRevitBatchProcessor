@@ -1,7 +1,7 @@
 ﻿using IronPython.Runtime.Exceptions;
 using PythonTests.Setup;
 
-namespace PythonTests
+namespace PythonTests.GeometryTests
 {
     public class BoundingBox2Tests
     {
@@ -163,6 +163,47 @@ namespace PythonTests
             var str = bbox.__str__();
 
             Assert.AreEqual("BoundingBox2D(1.0, 1.0, 2.0, 2.0)", str);
+        }
+
+        [Test]
+        public void EqualBoundingBoxesShouldReturnTrue()
+        {
+            dynamic point1 = PythonEngineManager.Point2Class(1.0, 1.0);
+            dynamic point2 = PythonEngineManager.Point2Class(2.0, 2.0);
+            // Initialize two bounding boxes with the same values
+            dynamic _boundingBox1 = PythonEngineManager.BoundingBox2Class(point1, point2);
+            dynamic _boundingBox2 = PythonEngineManager.BoundingBox2Class(point1, point2);
+            
+
+            Assert.IsTrue(_boundingBox1 == _boundingBox2, "Expected equal bounding boxes to return true.");
+        }
+
+        [Test]
+        public void DifferentBoundingBoxesShouldReturnFalse()
+        {
+            dynamic point1 = PythonEngineManager.Point2Class(1.0, 1.0);
+            dynamic point2 = PythonEngineManager.Point2Class(2.0, 2.0);
+            dynamic point3 = PythonEngineManager.Point2Class(0.0, 0.0);
+            dynamic point4 = PythonEngineManager.Point2Class(3.0, 3.0);
+            // Initialize two bounding boxes with the same values
+            dynamic _boundingBox1 = PythonEngineManager.BoundingBox2Class(point1, point2);
+            dynamic _boundingBox3 = PythonEngineManager.BoundingBox2Class(point3, point4);
+           
+
+            Assert.IsTrue(_boundingBox1 != _boundingBox3, "Expected different bounding boxes to return true.");
+        }
+
+        [Test]
+        public void DifferentTypesShouldReturnNotImplemented()
+        {
+            dynamic point1 = PythonEngineManager.Point2Class(1.0, 1.0);
+            dynamic point2 = PythonEngineManager.Point2Class(2.0, 2.0);
+            // Here we test against a different type to check for NotImplemented
+            var differentType = new object();
+            // Initialize bounding box
+            dynamic _boundingBox1 = PythonEngineManager.BoundingBox2Class(point1, point2);
+
+            Assert.IsFalse(_boundingBox1 == differentType, "Expected different bounding boxes to return false.");
         }
     }
 }

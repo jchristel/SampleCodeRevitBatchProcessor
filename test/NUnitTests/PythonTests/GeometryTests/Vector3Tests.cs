@@ -9,7 +9,7 @@ using Microsoft.Scripting.Hosting;
 using IronPython.Runtime.Exceptions;
 using PythonTests.Setup;
 
-namespace PythonTests
+namespace PythonTests.GeometryTests
 {
     public class Vector3Tests
     {
@@ -142,6 +142,21 @@ namespace PythonTests
         }
 
         [Test]
+        public void Negation_ShouldNegateComponents_Vector3()
+        {
+            // Arrange
+            dynamic vector = PythonEngineManager.Vector3Class(1.0, -2.0, 3.0);
+
+            // Act
+            dynamic negatedVector = -vector;
+
+            // Assert
+            Assert.AreEqual(-1.0, negatedVector.x);
+            Assert.AreEqual(2.0, negatedVector.y);
+            Assert.AreEqual(-3.0, negatedVector.z);
+        }
+
+        [Test]
         public void Vector3_ScalarMultiplication_ShouldReturnScaledVector()
         {
             dynamic vector = PythonEngineManager.Vector3Class(1.0, 2.0, 3.0);
@@ -169,6 +184,51 @@ namespace PythonTests
             dynamic vector = PythonEngineManager.Vector3Class(1.0, 2.0, 3.0);
             string result = vector.__str__();
             Assert.That(result, Is.EqualTo("Vector3D(1.0, 2.0, 3.0)"));
+        }
+
+        [Test]
+        public void Vector3_Equality_SameComponents_ShouldBeEqual()
+        {
+            // Arrange
+            dynamic vector1 = PythonEngineManager.Vector3Class(1.0, 2.0, 3.0);
+            dynamic vector2 = PythonEngineManager.Vector3Class(1.0, 2.0, 3.0);
+
+            // Act & Assert
+            Assert.IsTrue(vector1 == vector2, "Vector3 instances with the same components should be equal.");
+        }
+
+        [Test]
+        public void Vector3_Equality_DifferentComponents_ShouldNotBeEqual()
+        {
+            // Arrange
+            dynamic vector1 = PythonEngineManager.Vector3Class(1.0, 2.0, 3.0);
+            dynamic vector2 = PythonEngineManager.Vector3Class(4.0, 5.0, 6.0);
+
+            // Act & Assert
+            Assert.IsFalse(vector1 == vector2, "Vector3 instances with different components should not be equal.");
+        }
+
+        [Test]
+        public void Vector3_Equality_WithVector2_ShouldNotBeEqual()
+        {
+            // Arrange
+            dynamic vector2 = PythonEngineManager.Vector2Class(1.0, 2.0);
+            dynamic vector3 = PythonEngineManager.Vector3Class(1.0, 2.0, 3.0);
+
+            // Act & Assert
+            // Act & Assert
+            var ex = Assert.Throws<TypeErrorException>(() => { var result = vector3 == vector2; });
+            Assert.That(ex.Message, Does.Contain("Expected vector3, got: Vector2"));
+        }
+
+        public void Vector3_Equality_WithCloseFloatingPoints_ShouldBeEqual()
+        {
+            // Arrange
+            dynamic vector1 = PythonEngineManager.Vector3Class(1.000000001, 2.000000002, 3.000000003);
+            dynamic vector2 = PythonEngineManager.Vector3Class(1.000000002, 2.000000001, 3.000000002);
+
+            // Act & Assert
+            Assert.IsTrue(vector1 == vector2, "Vector3 instances with components close to each other should be considered equal.");
         }
 
     }

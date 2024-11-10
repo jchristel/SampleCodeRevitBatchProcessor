@@ -27,10 +27,10 @@ This module contains a number of helper functions relating to Revit sheet to dat
 #
 
 from duHast.Revit.Views.views import get_viewport_on_sheets
-from duHast.Revit.Views.Export.view_ports_to_data import convert_revit_viewport_to_data_instance
+from duHast.Revit.Views.Export.view_ports_to_data import convert_revit_viewport_to_data_instance, convert_revit_schedule_sheet_instances_to_data_instance
 from duHast.Data.Objects.data_sheet import DataSheet
-from duHast.Revit.Exports.export_data import get_instance_properties
 from duHast.Revit.Views.sheets import get_sheets_by_filters
+from duHast.Revit.Views.schedules import get_schedule_instance_on_sheet
 
 
 def convert_revit_sheet(doc, sheet):
@@ -53,8 +53,8 @@ def convert_revit_sheet(doc, sheet):
     data_sheet.instance_properties.id = sheet.Id.IntegerValue
     
     # get any instance parameters properties
-    instance_properties = get_instance_properties(sheet) 
-    data_sheet.instance_properties = instance_properties
+    #instance_properties = get_instance_properties(sheet) 
+    #data_sheet.instance_properties = instance_properties
     
     # get view ports on sheet
     revit_view_ports = get_viewport_on_sheets(doc=doc,sheets= [sheet])
@@ -68,6 +68,12 @@ def convert_revit_sheet(doc, sheet):
         if view_port_data:
             view_ports_converted.append(view_port_data)
     
+    # get schedule instances on sheet
+    schedule_sheet_instances = get_schedule_instance_on_sheet(doc, sheet)
+    if (schedule_sheet_instances and len(schedule_sheet_instances)>0):
+        instances_converted = convert_revit_schedule_sheet_instances_to_data_instance(doc=doc, sheet=sheet, revit_schedule_sheet_instances=schedule_sheet_instances)
+        view_ports_converted = view_ports_converted + instances_converted
+
     # add them to sheet
     data_sheet.view_ports = view_ports_converted
     return data_sheet

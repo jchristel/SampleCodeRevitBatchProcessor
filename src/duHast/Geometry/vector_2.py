@@ -28,7 +28,7 @@ A 2D vector class.
 #
 
 from duHast.Geometry.vector_base import VectorBase
-
+from duHast.Utilities.compare import is_close
 
 class Vector2(VectorBase):
     def __init__(self, x, y):
@@ -74,6 +74,9 @@ class Vector2(VectorBase):
             raise TypeError("Expected list or tuple, got: {}".format(type(other).__name__))
         return Vector2(*(w - v for v, w in zip(self.components, other)))
 
+    def __neg__(self):
+        return Vector2(*(-v for v in self.components))
+    
     def __str__(self):
         return "Vector3D({}, {}, {})".format(self.x, self.y, self.z)
 
@@ -88,3 +91,15 @@ class Vector2(VectorBase):
 
     def __str__(self):
         return "Vector2D({}, {})".format(self.x, self.y)
+
+    def __eq__(self, other):
+        """
+        Compares two 2D vectors using is_close() function.
+
+        """
+        if not isinstance(other, Vector2):
+            raise TypeError("Expected vector2, got: {}".format(type(other).__name__))
+        return is_close(self.x, other.x) and is_close(self.y, other.y)
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)

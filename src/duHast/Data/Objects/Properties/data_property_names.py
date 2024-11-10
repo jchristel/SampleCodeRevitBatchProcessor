@@ -38,6 +38,7 @@ class DataPropertyNames(Enum):
 
     ASSOCIATED_ELEMENTS = "associated_elements"
     BOUNDING_BOX = "bounding_box"
+    CENTRE_POINT = "centre_point"
     CREATED = "created"
     DATA_TYPE = "data_type"
     DEMOLISHED = "demolished"
@@ -50,6 +51,7 @@ class DataPropertyNames(Enum):
     MIN = "min"
     MAX = "max"
     NAME = "name"
+    POINT = "point"
     POINT1 = "point1"
     POINT2 = "point2"
     POLYGON = "polygon"
@@ -70,4 +72,5 @@ class DataPropertyNames(Enum):
     VALUE_FIELD = "value"
     VIEW = "view"
     VIEW_PORT_TYPE = "vp_type"
+    VIEW_PORTS = "view_ports"
     VIEW_ID = "view_id"

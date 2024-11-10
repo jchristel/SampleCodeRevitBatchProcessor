@@ -3,6 +3,7 @@
 Data storage class for Revit properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -30,6 +31,7 @@ import json
 from duHast.Data.Objects import data_base
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
+
 class DataProperty(data_base.DataBase):
 
     data_type = "property"
@@ -48,7 +50,7 @@ class DataProperty(data_base.DataBase):
         # set default values
         self.name = "-"
         self.value = None
-        
+
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
@@ -67,13 +69,22 @@ class DataProperty(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.name = j.get(DataPropertyNames.NAME.value,self.name)
+                self.name = j.get(DataPropertyNames.NAME.value, self.name)
                 if not isinstance(self.name, str):
-                    raise TypeError("Expected 'name' to be a string, got {}".format(type(self.name)))
-                
-                self.value = j.get(DataPropertyNames.VALUE_FIELD.value, self.value)
-            except Exception as e:
-                    raise ValueError(
-                        "Node {} failed to initialise with: {}".format(self.data_type, e)
+                    raise TypeError(
+                        "Expected 'name' to be a string, got {}".format(type(self.name))
                     )
 
+                self.value = j.get(DataPropertyNames.VALUE_FIELD.value, self.value)
+            except Exception as e:
+                raise ValueError(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )
+
+    def __eq__(self, other):
+        if not isinstance(other, DataProperty):
+            return NotImplemented
+        return self.name == other.name and self.value == other.value
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

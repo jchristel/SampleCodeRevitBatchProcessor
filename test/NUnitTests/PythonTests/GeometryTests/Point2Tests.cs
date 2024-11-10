@@ -1,10 +1,7 @@
-using NUnit.Framework;
-using IronPython.Hosting;
-using Microsoft.Scripting.Hosting;
 using IronPython.Runtime.Exceptions;
 using PythonTests.Setup;
 
-namespace PythonTests
+namespace PythonTests.GeometryTests
 {
     public class Point2Tests
     {

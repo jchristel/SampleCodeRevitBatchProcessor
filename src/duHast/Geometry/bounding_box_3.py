@@ -26,9 +26,11 @@ A 3D bounding box base class.
 #
 #
 #
+
 from duHast.Geometry.bounding_box_base import BoundingBoxBase
 from duHast.Geometry.point_3 import Point3
 from duHast.Geometry.geometry_property_names import GeometryPropertyNames
+from duHast.Utilities.compare import is_close
 
 
 class BoundingBox3(BoundingBoxBase):
@@ -55,12 +57,12 @@ class BoundingBox3(BoundingBoxBase):
             point1 = Point3(
                 x=self.json_ini[GeometryPropertyNames.MIN_X.value],
                 y=self.json_ini[GeometryPropertyNames.MIN_Y.value],
-                z=self.json_ini[GeometryPropertyNames.MIN_Z.value]
+                z=self.json_ini[GeometryPropertyNames.MIN_Z.value],
             )
             point2 = Point3(
                 x=self.json_ini[GeometryPropertyNames.MAX_X.value],
                 y=self.json_ini[GeometryPropertyNames.MAX_Y.value],
-                z=self.json_ini[GeometryPropertyNames.MAX_Z.value]
+                z=self.json_ini[GeometryPropertyNames.MAX_Z.value],
             )
 
         # If both point1 and point2 are None after handling JSON, raise an error
@@ -141,3 +143,18 @@ class BoundingBox3(BoundingBoxBase):
         return "BoundingBox3D({}, {}, {}, {}, {}, {})".format(
             self.min_x, self.min_y, self.min_z, self.max_x, self.max_y, self.max_z
         )
+
+    def __eq__(self, other):
+        if not isinstance(other, BoundingBox3):
+            return NotImplemented
+        return (
+            is_close(self.min_x, other.min_x)
+            and is_close(self.max_x, other.max_x)
+            and is_close(self.min_y, other.min_y)
+            and is_close(self.max_y, other.max_y)
+            and is_close(self.min_z, other.min_z)
+            and is_close(self.max_z, other.max_z)
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

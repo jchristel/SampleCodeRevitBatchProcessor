@@ -90,3 +90,14 @@ class DataGeometryBase(data_base.DataBase):
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
+
+    def __eq__(self, other):
+        if not isinstance(other, DataGeometryBase):
+            return NotImplemented
+        return (
+            self.translation_coord == other.translation_coord
+            and self.rotation_coord == other.rotation_coord
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

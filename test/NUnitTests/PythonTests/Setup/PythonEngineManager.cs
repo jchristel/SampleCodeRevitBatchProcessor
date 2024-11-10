@@ -26,6 +26,21 @@ namespace PythonTests.Setup
 
 
         public static dynamic DataBaseClass { get; set; }
+        public static dynamic DataCeilingClass { get; set; }
+        public static dynamic DataDoorClass { get; set; }
+        public static dynamic DataFamilyBaseClass { get; set; }
+        public static dynamic DataLevelBuildingClass { get; set; }
+        public static dynamic DataRoomClass { get; set; }
+        public static dynamic DataSheetViewPortClass { get; set; }
+        public static dynamic DataSheetClass { get; set; }
+        public static dynamic DataTagClass { get; set; }
+
+        public static dynamic DataView3DClass { get; set; }
+        public static dynamic DataViewBaseClass { get; set; }
+        public static dynamic DataViewElevationClass { get; set; }
+        public static dynamic DataViewPlanClass { get; set; }
+        public static dynamic DataViewScheduleClass { get; set; }
+
         public static dynamic DataDesingSetOptionClass { get; set; }
         public static dynamic DataElementGeometryBaseClass { get; set; }
         public static dynamic DataGeometryBaseClass { get; set; }
@@ -33,8 +48,12 @@ namespace PythonTests.Setup
         public static dynamic DataInstancePropertiesClass { get; set; }
         public static dynamic DataGeometryPolygon2Class { get; set; }
         public static dynamic DataPropertyClass { get; set; }
-
-
+        public static dynamic DataLevelBaseClass { get; set; }
+        public static dynamic DataLevelClass { get; set; }
+        public static dynamic DataPhasingClass { get; set; }
+        public static dynamic DataRevitModelClass { get; set; }
+        public static dynamic DataScheduleSegmentClass { get; set; }
+        public static dynamic DataTypePropertiesClass { get; set; }
         public static ScriptEngine PythonEngine => _pythonEngine ??= InitializePythonEngine();
         public static ScriptScope Scope => _scope ??= PythonEngine.CreateScope();
 
@@ -63,6 +82,12 @@ namespace PythonTests.Setup
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_element_geometry_base.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_instance_properties.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_property.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_level_base.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_level.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_phasing.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_revit_model.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_schedule_segement.py"),
+                Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_type_properties.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\Geometry\geometry_base.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\Geometry\geometry_bounding_box_2.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\Geometry\geometry_polygon_2.py")

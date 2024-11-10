@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Scripting.Hosting;
-using IronPython.Runtime.Exceptions;
+﻿using IronPython.Runtime.Exceptions;
 using PythonTests.Setup;
 
-namespace PythonTests
+namespace PythonTests.GeometryTests
 {
     public class MatrixTests
     {
@@ -154,6 +148,72 @@ namespace PythonTests
             data[0][0] = 99.0;
 
             Assert.AreEqual(1.0, matrix[0][0]);
+        }
+
+        [Test]
+        public void EqualMatricesShouldReturnTrue()
+        {
+            // Assuming PythonEngineManager.MatrixClass can accept a list of lists instead of a double[,]
+            var elementsA = new List<List<double>>
+                {
+                    new List<double> { 1.0, 2.0 },
+                    new List<double> { 3.0, 4.0 }
+                };
+            var elementsB = new List<List<double>>
+                {
+                    new List<double> { 1.0, 2.0 },
+                    new List<double> { 3.0, 4.0 }
+                };
+
+            // Initialize matrices with lists of lists
+            var matrixA = PythonEngineManager.MatrixClass(2, 2, elementsA);
+            var matrixB = PythonEngineManager.MatrixClass(2, 2, elementsB);
+
+            Assert.IsTrue(matrixA == matrixB, "Expected equal matrices to return true.");
+        }
+
+        [Test]
+        public void MatricesWithDifferentSizesShouldReturnFalse()
+        {
+            var matrixA = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
+            var matrixB = PythonEngineManager.MatrixClass(3, 3, new[] { new[] { 1.0, 2.0, 3.0 }, new[] { 4.0, 5.0, 6.0 }, new[] { 7.0, 8.0, 9.0 } });
+
+            Assert.IsFalse(matrixA == matrixB, "Expected unequal matrices to return false.");
+        }
+
+        [Test]
+        public void MatricesWithDifferentElementsShouldReturnFalse()
+        {
+            var matrixA = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
+            var matrixB = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.1 }, new[] { 3.0, 4.0 } }); // 2.1 instead of 2.0
+
+            Assert.IsFalse(matrixA == matrixB, "Expected matrices with different elements to return false.");
+        }
+
+        [Test]
+        public void EqualMatricesShouldNotBeNotEqual()
+        {
+            var matrixA = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
+            var matrixB = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
+
+            Assert.IsFalse(matrixA != matrixB, "Expected equal matrices to return false for not equal.");
+        }
+
+        [Test]
+        public void DifferentMatricesShouldReturnTrueForNotEqual()
+        {
+            var matrixA = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
+            var matrixB = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.1 }, new[] { 3.0, 4.0 } });
+
+            Assert.IsTrue(matrixA != matrixB, "Expected different matrices to return true for not equal.");
+        }
+
+        [Test]
+        public void ComparingMatrixWithNullShouldReturnFalse()
+        {
+            var matrixA = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
+
+            Assert.IsFalse(matrixA == null, "Expected a matrix to not equal null.");
         }
     }
 }

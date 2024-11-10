@@ -51,7 +51,7 @@ def overwrite_element_graphics_in_view(
     :type override_graphics_settings: Autodesk.Revit.DB.OverrideGraphicSettings
 
     :return: A result object.
-    :rtype: Result
+    :rtype: :class:`.Result`
     """
 
     # set up a default return value object

@@ -33,7 +33,7 @@ from duHast.Utilities.Objects.base import Base
 from duHast.Geometry.Exceptions.incompatible_vector_dimension import (
     IncompatibleVectorDimensions,
 )
-
+from duHast.Utilities.compare import is_close
 
 class VectorBase(Base):
     def __init__(self, *components):
@@ -71,10 +71,20 @@ class VectorBase(Base):
         return self.__mul__(s)
 
     def __neg__(self):
-        return self * -1
+        # Raise a NotImplementedError to force child classes to implement their own
+        raise NotImplementedError("Negation is not implemented in VectorBase; child classes must provide their own implementation.")
 
     def __pos__(self):
         return self
 
     def __abs__(self):
         return self.magnitude()
+
+    def __eq__(self, other):
+        if not isinstance(other, VectorBase):
+            return NotImplemented
+        self._check_dimension_compatibility(other)
+        return all(is_close(a, b) for a, b in zip(self.components, other.components))
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)

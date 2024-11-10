@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using PythonTests.Setup;
 
-namespace PythonTests
+namespace PythonTests.DataTests.PropertyTests
 {
     public class DataElementGeometry
     {

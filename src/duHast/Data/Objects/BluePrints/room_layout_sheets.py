@@ -1,7 +1,15 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit element level properties.
+Data bljueprint class for Room Layout sheets.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This class has the following properties:
+
+- room size
+- room proportion
+- number of items in room
+- sheets
+
 """
 
 #
@@ -11,7 +19,7 @@ Data storage class for Revit element level properties.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -28,29 +36,25 @@ Data storage class for Revit element level properties.
 #
 
 import json
-from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Utilities.Objects.base import Base
 
 
-class DataLevelBase(data_base.DataBase):
-
-    data_type = "level"
-
-    def __init__(self, j=None):
+class RoomLayoutSheet(Base):
+    def __init__(self, j=None, **kwargs):
         """
         Class constructor
-
-        :param j:  json formatted dictionary of this class, defaults to {}
-        :type j: dict, optional
         """
 
-        # store data type  in base class
-        super(DataLevelBase, self).__init__(DataLevelBase.data_type)
-
-        # set default values
-        self.name = "-"
-        self.id = -1
-
+        # forwards all unused arguments
+        # ini super class to allow multi inheritance in children!
+        super(RoomLayoutSheet, self).__init__(**kwargs)
+        
+        self._room_size = 0.0
+        self._room_proportions = 1.0
+        self._room_number_of_items = 0
+        
+        self._sheets = []
+        
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
@@ -69,16 +73,32 @@ class DataLevelBase(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.name = j.get(DataPropertyNames.NAME.value, self.name)
-                if not isinstance(self.name, str):
+                self.set_name = j.get(DataPropertyNames.SET_NAME.value, self.set_name)
+                if not isinstance(self.set_name, str):
                     raise TypeError(
-                        "Expected 'name' to be a string, got {}".format(type(self.name))
+                        "Expected 'set_name' to be a string, got {}".format(
+                            type(self.set_name)
+                        )
                     )
 
-                self.id = j.get(DataPropertyNames.ID.value, self.id)
-                if not isinstance(self.id, int):
+                self.option_name = j.get(
+                    DataPropertyNames.OPTION_NAME.value, self.option_name
+                )
+                if not isinstance(self.option_name, str):
                     raise TypeError(
-                        "Expected 'id' to be an int, got {}".format(type(self.id))
+                        "Expected 'option_name' to be a string, got {}".format(
+                            type(self.option_name)
+                        )
+                    )
+
+                self.is_primary = j.get(
+                    DataPropertyNames.IS_PRIMARY.value, self.is_primary
+                )
+                if not isinstance(self.is_primary, bool):
+                    raise TypeError(
+                        "Expected 'is_primary' to be a boolean, got {}".format(
+                            type(self.is_primary)
+                        )
                     )
 
             except Exception as e:
@@ -87,13 +107,15 @@ class DataLevelBase(data_base.DataBase):
                 )
 
     def __eq__(self, other):
-        if not isinstance(other, DataLevelBase):
-            raise ValueError(
-                "other needs to be of type DataBase, got {} instead.".format(
-                    type(other)
-                )
-            )
-        return self.name == other.name and self.id == other.id
+        if not isinstance(other, DataDesignSetOption):
+            return NotImplemented
+        return (
+            self.set_name == other.set_name
+            and self.option_name == other.option_name
+            and self.is_primary == other.is_primary
+        )
 
     def __ne__(self, other):
         return not self.__eq__(other)
+        
+        

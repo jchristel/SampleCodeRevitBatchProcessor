@@ -39,8 +39,10 @@ from duHast.Data.Objects.Properties.Geometry import geometry_polygon_2
 
 from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
+
 class DataElementGeometryBase(base.Base):
     data_type = "element geometry base"
+
     def __init__(self, j, **kwargs):
         """
         Class constructor
@@ -80,4 +82,14 @@ class DataElementGeometryBase(base.Base):
                 polygon_data = j.get(DataPropertyNames.POLYGON.value, None)
                 self.polygon = geometry_polygon_2.DataGeometryPolygon2(j=polygon_data)
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )
+
+    def __eq__(self, other):
+        if not isinstance(other, DataElementGeometryBase):
+            return NotImplemented
+        return self.polygon == other.polygon
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

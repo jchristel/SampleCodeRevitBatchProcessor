@@ -46,7 +46,9 @@ class DataGeometryBoundingBox2(geometry_base.DataGeometryBase):
         """
 
         # store data type  in base class
-        super(DataGeometryBoundingBox2, self).__init__(DataGeometryBoundingBox2.data_type, j)
+        super(DataGeometryBoundingBox2, self).__init__(
+            DataGeometryBoundingBox2.data_type, j
+        )
 
         # set default values
         self.bounding_box = BoundingBox2(
@@ -82,7 +84,7 @@ class DataGeometryBoundingBox2(geometry_base.DataGeometryBase):
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
 
-    def set_bounding_box_by_points(self, min, max):
+    def update(self, min, max):
         """
         Update the geometry bounding box with new values
 
@@ -104,3 +106,11 @@ class DataGeometryBoundingBox2(geometry_base.DataGeometryBase):
             )
 
         self.bounding_box.update(point1=min, point2=max)
+
+    def __eq__(self, other):
+        if not isinstance(other, DataGeometryBoundingBox2):
+            return NotImplemented
+        return self.bounding_box == other.bounding_box
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

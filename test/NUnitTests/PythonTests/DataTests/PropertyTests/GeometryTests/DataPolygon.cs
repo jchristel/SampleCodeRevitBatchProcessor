@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Scripting.Hosting;
-using IronPython.Runtime.Exceptions;
+﻿using IronPython.Runtime.Exceptions;
 using PythonTests.Setup;
+using Newtonsoft.Json;
 
-namespace PythonTests
+namespace PythonTests.DataTests.PropertyTests.GeometryTests
 {
     public class DataPolygon
     {
@@ -164,6 +159,7 @@ namespace PythonTests
             // Act
             polygon.add_inner_loop(innerLoop);
 
+            Console.WriteLine(polygon.to_json());
             // Assert
             Assert.AreEqual(1, polygon.inner_loops.Count);
             Assert.AreEqual(3, polygon.inner_loops[0].Count);
@@ -197,6 +193,163 @@ namespace PythonTests
             // Act & Assert
             var ex = Assert.Throws<TypeErrorException>(() => polygon.add_inner_loop(innerLoop));
             StringAssert.Contains("All points in the loop must be instances of Point2", ex.Message);
+        }
+
+        [Test]
+        public void EqualInstances_ShouldReturnTrue()
+        {
+            var jsonString = JsonConvert.SerializeObject(new
+            {
+                outer_loop = new[]
+                {
+                new { x = 0.0, y = 0.0 },
+                new { x = 1.0, y = 0.0 },
+                new { x = 1.0, y = 1.0 }
+            },
+                inner_loops = new[]
+                {
+                new[]
+                {
+                    new { x = 0.5, y = 0.5 },
+                    new { x = 0.6, y = 0.5 },
+                    new { x = 0.5, y = 0.6 }
+                }
+            }
+            });
+
+            
+
+            var polygonA = PythonEngineManager.DataGeometryPolygon2Class(jsonString);
+            var polygonB = PythonEngineManager.DataGeometryPolygon2Class(jsonString);
+
+            Console.WriteLine(polygonA.to_json());
+
+            Assert.IsTrue(polygonA == polygonB, "Expected equal instances to return true.");
+        }
+
+        [Test]
+        public void NotEqualInstances_ShouldReturnTrue()
+        {
+            var jsonStringA = JsonConvert.SerializeObject(new
+            {
+                outer_loop = new[]
+                {
+                new { x = 0.0, y = 0.0 },
+                new { x = 1.0, y = 0.0 },
+                new { x = 1.0, y = 1.0 }
+            },
+                inner_loops = new[]
+                {
+                new[]
+                {
+                    new { x = 0.5, y = 0.5 },
+                    new { x = 0.6, y = 0.5 },
+                    new { x = 0.5, y = 0.6 }
+                }
+            }
+            });
+
+            var jsonStringB = JsonConvert.SerializeObject(new
+            {
+                outer_loop = new[]
+                {
+                new { x = 0.0, y = 0.0 },
+                new { x = 1.0, y = 0.0 },
+                new { x = 2.0, y = 2.0 } // Different point for inequality
+            },
+                inner_loops = new[]
+                {
+                new[]
+                {
+                    new { x = 0.5, y = 0.5 },
+                    new { x = 0.6, y = 0.5 },
+                    new { x = 0.5, y = 0.6 }
+                }
+            }
+            });
+
+            Console.WriteLine($"jsonStringA: {jsonStringA}");
+            Console.WriteLine($"jsonStringB: {jsonStringB}");
+
+            var polygonA = PythonEngineManager.DataGeometryPolygon2Class(jsonStringA);
+            var polygonB = PythonEngineManager.DataGeometryPolygon2Class(jsonStringB);
+
+            Assert.IsTrue(polygonA != polygonB, "Expected unequal instances to return true.");
+        }
+
+        [Test]
+        public void EqualOperator_WithIdenticalPolygonData_ShouldReturnTrue()
+        {
+            var jsonString = JsonConvert.SerializeObject(new
+            {
+                outer_loop = new[]
+                {
+                new { x = 1.0, y = 1.0 },
+                new { x = 2.0, y = 2.0 },
+                new { x = 3.0, y = 3.0 }
+            },
+                inner_loops = new[]
+                {
+                new[]
+                {
+                    new { x = 1.5, y = 1.5 },
+                    new { x = 1.6, y = 1.5 },
+                    new { x = 1.5, y = 1.6 }
+                }
+            }
+            });
+
+            var polygonA = PythonEngineManager.DataGeometryPolygon2Class(jsonString);
+            var polygonB = PythonEngineManager.DataGeometryPolygon2Class(jsonString);
+
+            Assert.IsTrue(polygonA == polygonB, "Expected '==' to return true for identical polygon data.");
+        }
+
+        [Test]
+        public void NotEqualOperator_WithDifferentPolygonData_ShouldReturnTrue()
+        {
+            var jsonStringA = JsonConvert.SerializeObject(new
+            {
+                outer_loop = new[]
+                {
+                new { x = 1.0, y = 1.0 },
+                new { x = 2.0, y = 2.0 },
+                new { x = 3.0, y = 3.0 }
+            },
+                inner_loops = new[]
+                {
+                new[]
+                {
+                    new { x = 1.5, y = 1.5 },
+                    new { x = 1.6, y = 1.5 },
+                    new { x = 1.5, y = 1.6 }
+                }
+            }
+            });
+
+            var jsonStringB = JsonConvert.SerializeObject(new
+            {
+                outer_loop = new[]
+                {
+                new { x = 1.0, y = 1.0 },
+                new { x = 2.0, y = 2.0 },
+                new { x = 4.0, y = 4.0 } // Different point
+            },
+                inner_loops = new[]
+                {
+                new[]
+                {
+                    new { x = 1.5, y = 1.5 },
+                    new { x = 1.6, y = 1.5 },
+                    new { x = 1.5, y = 1.6 }
+                }
+            }
+            });
+
+            var polygonA = PythonEngineManager.DataGeometryPolygon2Class(jsonStringA);
+            var polygonB = PythonEngineManager.DataGeometryPolygon2Class(jsonStringB);
+
+            Assert.IsTrue(polygonA != polygonB, "Expected '!=' to return true for different polygon data.");
         }
     }
 }

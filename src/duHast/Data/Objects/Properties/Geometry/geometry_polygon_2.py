@@ -131,3 +131,14 @@ class DataGeometryPolygon2(geometry_base.DataGeometryBase):
         if not all(isinstance(point, Point2) for point in loop):
             raise TypeError("All points in the loop must be instances of Point2.")
         self.inner_loops.append(loop)
+
+    def __eq__(self, other):
+        if not isinstance(other, DataGeometryPolygon2):
+            return NotImplemented
+        return (
+            self.outer_loop == other.outer_loop
+            and self.inner_loops == other.inner_loops
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

@@ -28,7 +28,7 @@ A 3D vector class.
 #
 
 from duHast.Geometry.vector_base import VectorBase
-
+from duHast.Utilities.compare import is_close
 
 class Vector3(VectorBase):
 
@@ -59,7 +59,7 @@ class Vector3(VectorBase):
 
     def __add__(self, other):
         if not isinstance(other, Vector3):
-            raise TypeError("Expected vector, got: {}".format(type(other).__name__))
+            raise TypeError("Expected vector3, got: {}".format(type(other).__name__))
         self._check_dimension_compatibility(other)
         return Vector3(*(v + w for v, w in zip(self.components, other.components)))
 
@@ -81,6 +81,9 @@ class Vector3(VectorBase):
             raise TypeError("Expected list or tuple, got: {}".format(type(other).__name__))
         return Vector3(*(w - v for v, w in zip(self.components, other)))
 
+    def __neg__(self):
+        return Vector3(*(-v for v in self.components))
+    
     def __str__(self):
         return "Vector3D({}, {}, {})".format(self.x, self.y, self.z)
 
@@ -95,3 +98,11 @@ class Vector3(VectorBase):
     
     def __str__(self):
         return "Vector3D({}, {}, {})".format(self.x, self.y, self.z)
+    
+    def __eq__(self, other):
+        if not isinstance(other, Vector3):
+            raise TypeError("Expected vector3, got: {}".format(type(other).__name__))
+        return is_close(self.x, other.x) and is_close(self.y, other.y) and is_close(self.z, other.z)
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)

@@ -26,7 +26,12 @@ This module contains a number of helper functions relating to Revit view schedul
 #
 #
 
-from Autodesk.Revit.DB import FilteredElementCollector, ScheduleSheetInstance, ViewType
+from Autodesk.Revit.DB import (
+    FilteredElementCollector,
+    FilteredElementCollector, 
+    ScheduleSheetInstance, 
+    ViewType
+    )
 
 from duHast.Revit.Views.views import get_views_of_type
 
@@ -34,6 +39,7 @@ from duHast.Revit.Views.views import get_views_of_type
 def get_schedule_ids_on_sheets(doc):
     """
     Gets view ids of all schedules with instances placed on a sheet
+    
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: List containing schedule Id's.
@@ -51,6 +57,7 @@ def get_schedule_ids_on_sheets(doc):
 def get_schedules_not_on_sheets(doc):
     """
     Gets all schedules without an instance placed on a sheet.
+    
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: list of schedules without a sheet schedule instance.
@@ -67,3 +74,23 @@ def get_schedules_not_on_sheets(doc):
         if schedule.Id not in ids_on_sheets:
             schedules_not_on_sheets.append(schedule)
     return schedules_not_on_sheets
+
+def get_schedule_instance_on_sheet(doc, sheet):
+    """
+    Returns a list containing all schedule sheet instances on a sheet.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param sheet: A sheet
+    :type sheet: Autodesk.Revit.DB.ViewSheet
+    :return: a list of schedule sheet instances or empty list if none found
+    :rtype: [Autodesk.revit.DB.ScheduleSheetInstance]
+    """
+
+    schedule_instances_on_sheet = []
+    col = FilteredElementCollector(doc).OfClass(ScheduleSheetInstance)
+    # Filter the instances where the OwnerViewId matches the specified sheet_id
+    schedule_instances_on_sheet = [instance for instance in col if instance.OwnerViewId == sheet.Id]
+
+    return schedule_instances_on_sheet
+

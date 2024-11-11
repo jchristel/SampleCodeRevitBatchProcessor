@@ -84,7 +84,8 @@ class DataGeometryBoundingBox2(BoundingBox2, geometry_base.DataGeometryBase):
     def __eq__(self, other):
         if not isinstance(other, DataGeometryBoundingBox2):
             return NotImplemented
-        return True
+        # Check equality of each superclass
+        return BoundingBox2.__eq__(self, other) and geometry_base.DataGeometryBase.__eq__(self, other)
         #return self.bounding_box == other.bounding_box
 
     def __ne__(self, other):

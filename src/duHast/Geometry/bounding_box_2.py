@@ -63,14 +63,10 @@ class BoundingBox2(BoundingBoxBase):
                 y=self.json_ini[GeometryPropertyNames.MAX_Y.value],
             )
 
-        # If both point1 and point2 are None after handling JSON, raise an error
-        if point1 is None or point2 is None:
-            raise ValueError(
-                "Either two Point2 instances or a JSON string with point data needs to be provided."
-            )
-
-        # set the bounding box
-        self.update(point1=point1, point2=point2)
+        # If both point1 and point2 are provided update the bounding box
+        if point1 and point2:
+            # set the bounding box
+            self.update(point1=point1, point2=point2)
 
     def update(self, point1, point2):
         """

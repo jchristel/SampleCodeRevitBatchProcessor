@@ -51,15 +51,16 @@ class DataPhasing(data_base.DataBase):
         self.created = "-"
         self.demolished = "-"
 
+        json_var = None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                j = json.loads(j)
+                json_var = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                pass
+                json_var = j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -69,7 +70,7 @@ class DataPhasing(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.created = j.get(DataPropertyNames.CREATED.value, self.created)
+                self.created = json_var.get(DataPropertyNames.CREATED.value, self.created)
                 if not (isinstance(self.created, str)):
                     raise ValueError(
                         "created needs to be of type str, got {} instead.".format(
@@ -77,7 +78,7 @@ class DataPhasing(data_base.DataBase):
                         )
                     )
 
-                self.demolished = j.get(
+                self.demolished = json_var.get(
                     DataPropertyNames.DEMOLISHED.value, self.demolished
                 )
                 if not (isinstance(self.demolished, str)):

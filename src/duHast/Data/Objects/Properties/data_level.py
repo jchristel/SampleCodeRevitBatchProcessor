@@ -50,15 +50,16 @@ class DataLevel(DataLevelBase):
         # set default values
         self.offset_from_level = 0.0
 
+        json_var = None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                j = json.loads(j)
+                json_var = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                pass
+                json_var = j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -68,7 +69,7 @@ class DataLevel(DataLevelBase):
 
             # attempt to populate from json
             try:
-                self.offset_from_level = j.get(
+                self.offset_from_level = json_var.get(
                     DataPropertyNames.OFFSET_FROM_LEVEL.value, self.offset_from_level
                 )
                 if not isinstance(self.offset_from_level, float):

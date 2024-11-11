@@ -48,15 +48,16 @@ class DataTopologyCell(geometry_base.DataGeometryBase):
         # set default values
         # TODO:
 
+        json_var = None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                j = json.loads(j)
+                json_var = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                pass
+                json_var = j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(

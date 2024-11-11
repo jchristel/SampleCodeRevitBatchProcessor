@@ -52,16 +52,16 @@ class DataGeometryBase(data_base.DataBase):
         # rotation as per shared coordinates in revit file ( default )
         self.rotation_coord = Matrix(rows=3, cols=3)
 
-        json_string=None
+        json_var=None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                json_string = json.loads(j)
+                json_var = json.loads(j)
             elif isinstance(j, dict):
                 # make a copy
-                json_string=j.copy()
+                json_var=j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -71,7 +71,7 @@ class DataGeometryBase(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                translation_coord = json_string.get(
+                translation_coord = json_var.get(
                     DataPropertyNames.TRANSLATION_COORDINATES.value, None
                 )
                 # check if we got None back...if so use what is the default
@@ -79,7 +79,7 @@ class DataGeometryBase(data_base.DataBase):
                 if translation_coord is not None:
                     self.translation_coord = Point3(j=translation_coord)
 
-                rotation_coord = json_string.get(
+                rotation_coord = json_var.get(
                     DataPropertyNames.ROTATION_COORDINATES.value, None
                 )
                 # check if we got None back...if so use what is the default

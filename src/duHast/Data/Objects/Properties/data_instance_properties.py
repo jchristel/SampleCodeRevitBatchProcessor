@@ -52,15 +52,16 @@ class DataInstanceProperties(data_base.DataBase):
         self.id = -1
         self.properties = []
 
+        json_var = None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                j = json.loads(j)
+                json_var = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                pass
+                json_var = j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -70,14 +71,14 @@ class DataInstanceProperties(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.id = j.get(DataPropertyNames.ID.value, self.id)
+                self.id = json_var.get(DataPropertyNames.ID.value, self.id)
                 if not isinstance(self.id, int):
                     raise TypeError(
                         "Expected 'id' to be an int, got {}".format(type(self.id))
                     )
 
                 # needs to be converted to list of property objects!
-                properties = j.get(DataPropertyNames.PROPERTIES.value, self.properties)
+                properties = json_var.get(DataPropertyNames.PROPERTIES.value, self.properties)
                 for prop in properties:
                     self.properties.append(DataProperty(j=prop))
 

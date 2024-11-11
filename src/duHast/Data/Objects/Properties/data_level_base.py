@@ -51,15 +51,16 @@ class DataLevelBase(data_base.DataBase):
         self.name = "-"
         self.id = -1
 
+        json_var = None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                j = json.loads(j)
+                json_var = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                pass
+                json_var = j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -69,13 +70,13 @@ class DataLevelBase(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.name = j.get(DataPropertyNames.NAME.value, self.name)
+                self.name = json_var.get(DataPropertyNames.NAME.value, self.name)
                 if not isinstance(self.name, str):
                     raise TypeError(
                         "Expected 'name' to be a string, got {}".format(type(self.name))
                     )
 
-                self.id = j.get(DataPropertyNames.ID.value, self.id)
+                self.id = json_var.get(DataPropertyNames.ID.value, self.id)
                 if not isinstance(self.id, int):
                     raise TypeError(
                         "Expected 'id' to be an int, got {}".format(type(self.id))

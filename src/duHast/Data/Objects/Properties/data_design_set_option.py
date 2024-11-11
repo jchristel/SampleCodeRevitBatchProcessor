@@ -51,15 +51,16 @@ class DataDesignSetOption(data_base.DataBase):
         self.option_name = "-"
         self.is_primary = True
 
+        json_var = None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                j = json.loads(j)
+                json_var = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                pass
+                json_var = j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -69,7 +70,7 @@ class DataDesignSetOption(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.set_name = j.get(DataPropertyNames.SET_NAME.value, self.set_name)
+                self.set_name = json_var.get(DataPropertyNames.SET_NAME.value, self.set_name)
                 if not isinstance(self.set_name, str):
                     raise TypeError(
                         "Expected 'set_name' to be a string, got {}".format(
@@ -77,7 +78,7 @@ class DataDesignSetOption(data_base.DataBase):
                         )
                     )
 
-                self.option_name = j.get(
+                self.option_name = json_var.get(
                     DataPropertyNames.OPTION_NAME.value, self.option_name
                 )
                 if not isinstance(self.option_name, str):
@@ -87,7 +88,7 @@ class DataDesignSetOption(data_base.DataBase):
                         )
                     )
 
-                self.is_primary = j.get(
+                self.is_primary = json_var.get(
                     DataPropertyNames.IS_PRIMARY.value, self.is_primary
                 )
                 if not isinstance(self.is_primary, bool):

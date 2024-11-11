@@ -65,15 +65,16 @@ class DataCeiling(data_base.DataBase, data_element_geometry_base.DataElementGeom
         self.phasing = data_phasing.DataPhasing()
         self.design_set_and_option = data_design_set_option.DataDesignSetOption()
 
+        json_var = None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                j = json.loads(j)
+                json_var = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                pass
+                json_var = j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -85,30 +86,30 @@ class DataCeiling(data_base.DataBase, data_element_geometry_base.DataElementGeom
             try:
                 self.instance_properties = (
                     data_instance_properties.DataInstanceProperties(
-                        j.get(
+                        json_var.get(
                             data_instance_properties.DataInstanceProperties.data_type,
                             {},
                         )
                     )
                 )
                 self.type_properties = data_type_properties.DataTypeProperties(
-                    j.get(data_type_properties.DataTypeProperties.data_type, None)
+                    json_var.get(data_type_properties.DataTypeProperties.data_type, None)
                 )
                 self.level = data_level.DataLevel(
-                    j.get(data_level.DataLevel.data_type, None)
+                    json_var.get(data_level.DataLevel.data_type, None)
                 )
                 self.revit_model = data_revit_model.DataRevitModel(
-                    j.get(data_revit_model.DataRevitModel.data_type, None)
+                    json_var.get(data_revit_model.DataRevitModel.data_type, None)
                 )
                 self.phasing = data_phasing.DataPhasing(
-                    j.get(data_phasing.DataPhasing.data_type, None)
+                    json_var.get(data_phasing.DataPhasing.data_type, None)
                 )
                 self.design_set_and_option = data_design_set_option.DataDesignSetOption(
-                    j.get(data_design_set_option.DataDesignSetOption.data_type, None)
+                    json_var.get(data_design_set_option.DataDesignSetOption.data_type, None)
                 )
                 
                 # get associated elements
-                associated_elements = j.get(
+                associated_elements = json_var.get(
                     DataPropertyNames.ASSOCIATED_ELEMENTS.value, self.associated_elements
                 )
                 # these can be all sorts of types...

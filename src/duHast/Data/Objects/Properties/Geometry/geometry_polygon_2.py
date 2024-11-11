@@ -56,15 +56,16 @@ class DataGeometryPolygon2(geometry_base.DataGeometryBase):
         self.outer_loop = []
         self.inner_loops = []
 
+        json_var = None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                j = json.loads(j)
+                json_var = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                pass
+                json_var = j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -75,7 +76,7 @@ class DataGeometryPolygon2(geometry_base.DataGeometryBase):
             # attempt to populate from json
             try:
                 # get outer points loop
-                outer_loop = j.get(DataPropertyNames.OUTER_LOOP.value, [])
+                outer_loop = json_var.get(DataPropertyNames.OUTER_LOOP.value, [])
 
                 # need a minimum of 3 points to form a polygon
                 if len(outer_loop) >= 3:
@@ -91,7 +92,7 @@ class DataGeometryPolygon2(geometry_base.DataGeometryBase):
                     raise ValueError("Json did not contain any outer loop data")
 
                 # get inner loops
-                inner_loops = j.get(DataPropertyNames.INNER_LOOPS.value, [])
+                inner_loops = json_var.get(DataPropertyNames.INNER_LOOPS.value, [])
                 if len(inner_loops) > 0:
                     for loop in inner_loops:
                         loop_points = []

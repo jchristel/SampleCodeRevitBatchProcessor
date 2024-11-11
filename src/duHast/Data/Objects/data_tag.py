@@ -70,15 +70,16 @@ class DataTag(DataBase):
         self.leader_reference = None
         self.leader_element_reference_id = -1
 
+        json_var = None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                j = json.loads(j)
+                json_var = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                pass
+                json_var = j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -89,27 +90,27 @@ class DataTag(DataBase):
             # attempt to populate from json
             try:
                 self.bounding_box = DataGeometryBoundingBox2(
-                    j.get(DataPropertyNames.BOUNDING_BOX.value, None)
+                    json_var.get(DataPropertyNames.BOUNDING_BOX.value, None)
                 )
 
                 # get the point location
-                point = j.get(DataPropertyNames.POINT.value, None)
+                point = json_var.get(DataPropertyNames.POINT.value, None)
                 if point:
                     self.point = Point3(j=point)
 
                 # get the elbow location
-                elbow_location = j.get(DataPropertyNames.TAG_ELBOW_LOCATION.value, None)
+                elbow_location = json_var.get(DataPropertyNames.TAG_ELBOW_LOCATION.value, None)
                 if elbow_location:
                     self.elbow_location = Point3(j=elbow_location)
 
-                self.leader_end = j.get(
+                self.leader_end = json_var.get(
                     DataPropertyNames.TAG_LEADER_END.value, self.leader_end
                 )
-                self.leader_reference = j.get(
+                self.leader_reference = json_var.get(
                     DataPropertyNames.TAG_LEADER_REFERENCE.value, self.leader_reference
                 )
 
-                self.leader_element_reference_id = j.get(
+                self.leader_element_reference_id = json_var.get(
                     DataPropertyNames.TAG_LEADER_ELEMENT_REFERENCE_ID.value,
                     self.leader_element_reference_id,
                 )

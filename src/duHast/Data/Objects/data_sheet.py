@@ -67,15 +67,16 @@ class DataSheet(data_base.DataBase):
         self.view_ports = []
         self.bounding_box = DataGeometryBoundingBox2()
 
+        json_var = None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                j = json.loads(j)
+                json_var = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                pass
+                json_var = j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -87,21 +88,21 @@ class DataSheet(data_base.DataBase):
             try:
                 self.instance_properties = (
                     data_instance_properties.DataInstanceProperties(
-                        j.get(
+                        json_var.get(
                             data_instance_properties.DataInstanceProperties.data_type,
                             None,
                         )
                     )
                 )
                 self.type_properties = data_type_properties.DataTypeProperties(
-                    j.get(data_type_properties.DataTypeProperties.data_type, None)
+                    json_var.get(data_type_properties.DataTypeProperties.data_type, None)
                 )
                 self.bounding_box = DataGeometryBoundingBox2(
-                    j.get(DataPropertyNames.BOUNDING_BOX.value, None)
+                    json_var.get(DataPropertyNames.BOUNDING_BOX.value, None)
                 )
 
                 # get sheet view port data
-                view_port_data = j.get(DataPropertyNames.VIEW_PORTS.value, None)
+                view_port_data = json_var.get(DataPropertyNames.VIEW_PORTS.value, None)
                 if view_port_data:
                     for vp in view_port_data:
                         self.view_ports.append(DataSheetViewPort(j=vp))

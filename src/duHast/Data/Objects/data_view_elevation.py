@@ -63,15 +63,16 @@ class DataViewElevation(DataViewBase):
         self.bounding_box = DataGeometryBoundingBox2()
         self.tags = []
 
+        json_var = None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                j = json.loads(j)
+                json_var = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                pass
+                json_var = j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -82,11 +83,11 @@ class DataViewElevation(DataViewBase):
             # attempt to populate from json
             try:
                 self.bounding_box = DataGeometryBoundingBox2(
-                    j.get(DataPropertyNames.BOUNDING_BOX.value, None)
+                    json_var.get(DataPropertyNames.BOUNDING_BOX.value, None)
                 )
 
                 # get any tags
-                tags = j.get(DataPropertyNames.TAGS.value, [])
+                tags = json_var.get(DataPropertyNames.TAGS.value, [])
                 for tag in tags:
                     data_tag = DataTag(j=tag)
                     self.tags.append(data_tag)

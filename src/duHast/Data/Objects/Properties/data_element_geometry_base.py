@@ -60,15 +60,16 @@ class DataElementGeometryBase(base.Base):
         # set default values
         self.polygon = geometry_polygon_2.DataGeometryPolygon2()
 
+        json_var = None
         # check valid j input
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
                 # a string
-                j = json.loads(j)
+                json_var = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                pass
+                json_var = j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -79,7 +80,7 @@ class DataElementGeometryBase(base.Base):
             # attempt to populate from json
             try:
                 # check for polygon data
-                polygon_data = j.get(DataPropertyNames.POLYGON.value, None)
+                polygon_data = json_var.get(DataPropertyNames.POLYGON.value, None)
                 self.polygon = geometry_polygon_2.DataGeometryPolygon2(j=polygon_data)
             except Exception as e:
                 raise type(e)(

@@ -33,7 +33,7 @@ from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 from duHast.Geometry.bounding_box_2 import BoundingBox2
 
 
-class DataGeometryBoundingBox2(geometry_base.DataGeometryBase, BoundingBox2):
+class DataGeometryBoundingBox2(BoundingBox2, geometry_base.DataGeometryBase):
     data_type = "bounding box 2"
 
     def __init__(self, j=None, *args, **kwargs):
@@ -68,12 +68,13 @@ class DataGeometryBoundingBox2(geometry_base.DataGeometryBase, BoundingBox2):
 
             # attempt to populate from json
             try:
+                pass
                 # get the bounding box
-                bbox = json_var.get(DataPropertyNames.BOUNDING_BOX.value, None)
+                #bbox = json_var.get(DataPropertyNames.BOUNDING_BOX.value, None)
                 # check if we got None back...if so use what is the default
                 # since a bounding box ini from an empty dictionary will fail
-                if bbox is not None:
-                    self.bounding_box = BoundingBox2(j=bbox)
+                #if bbox is not None:
+                #    self.bounding_box = BoundingBox2(j=bbox)
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
@@ -83,7 +84,8 @@ class DataGeometryBoundingBox2(geometry_base.DataGeometryBase, BoundingBox2):
     def __eq__(self, other):
         if not isinstance(other, DataGeometryBoundingBox2):
             return NotImplemented
-        return self.bounding_box == other.bounding_box
+        return True
+        #return self.bounding_box == other.bounding_box
 
     def __ne__(self, other):
         return not self.__eq__(other)

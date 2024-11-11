@@ -83,7 +83,6 @@ from duHast.Revit.Family.Utility.loadable_family_categories import (
 
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
-
 def load_family(doc, family_file_path):
     """
     Loads or reloads a single family into a Revit document.
@@ -129,7 +128,8 @@ def load_family(doc, family_file_path):
                     reload_status,
                     "Loaded family: {} :: {}".format(family_file_path, reload_status),
                 )
-                if reload_status:
+                # return the family reloaded if there is any...
+                if return_family:
                     action_return_value.result.append(return_family.Value)
             except Exception as e:
                 action_return_value.update_sep(
@@ -151,6 +151,7 @@ def load_family(doc, family_file_path):
     except Exception as e:
         result.update_sep(False, "Failed to load families with exception: " + str(e))
     return result
+
 
 
 # ------------------------ filter functions -------------------------------------------------------------------------------------

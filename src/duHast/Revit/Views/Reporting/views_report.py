@@ -79,7 +79,7 @@ def get_views_report_data(doc, host_name):
             info = WorksharingUtils.GetWorksharingTooltipInfo(doc, v.Id)
             # check values and substitute any empty strings
             owner = info.Owner
-            last_changed_by = (info.LastChangedBy,)
+            last_changed_by = info.LastChangedBy
             if info.Owner == "":
                 owner = "not applicable"
             if info.LastChangedBy == "":

@@ -109,7 +109,11 @@ class DataViewElevation(DataViewBase):
         """
         if not isinstance(other, DataViewElevation):
             return NotImplemented
-        return self.bounding_box == other.bounding_box and self.tags == other.tags
+        return self.bounding_box == other.bounding_box and sorted(
+            self.tags, key=lambda data_tag: data_tag.leader_element_reference_id
+        ) == sorted(
+            other.tags, key=lambda data_tag: data_tag.leader_element_reference_id
+        )
 
     def __ne__(self, other):
         return not self.__eq__(other)

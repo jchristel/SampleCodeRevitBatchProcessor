@@ -20,14 +20,10 @@ namespace PythonTests.DataTests
                 { "bounding_box", new Dictionary<string, object>
                     {
                         { "DataType", "bounding box 2" },
-                        { "bounding_box", new Dictionary<string, object>
-                            {
-                                { "min_x", 0.0 },
-                                { "max_x", 10.0 },
-                                { "min_y", 0.0 },
-                                { "max_y", 10.0 }
-                            }
-                        },
+                        { "min_x", 0.0 },
+                        { "max_x", 10.0 },
+                        { "min_y", 0.0 },
+                        { "max_y", 10.0 },
                         { "rotation_coord", new Dictionary<string, object>
                             {
                                 { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
@@ -72,7 +68,7 @@ namespace PythonTests.DataTests
         }
 
         // Helper method to create JSON strings
-        private string CreateJson(Dictionary<string, object> properties)
+        private static string CreateJson(Dictionary<string, object> properties)
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(properties);
         }
@@ -88,10 +84,10 @@ namespace PythonTests.DataTests
             Assert.AreEqual("view_schedule", dataViewSchedule.data_type);
             Assert.AreEqual(101, dataViewSchedule.id);
             Assert.IsNotNull(dataViewSchedule.bounding_box);
-            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.bounding_box.min_x);
-            Assert.AreEqual(10.0, dataViewSchedule.bounding_box.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.bounding_box.min_y);
-            Assert.AreEqual(10.0, dataViewSchedule.bounding_box.bounding_box.max_y);
+            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.min_x);
+            Assert.AreEqual(10.0, dataViewSchedule.bounding_box.max_x);
+            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.min_y);
+            Assert.AreEqual(10.0, dataViewSchedule.bounding_box.max_y);
             Assert.AreEqual(10, dataViewSchedule.total_number_of_rows);
             Assert.IsNotNull(dataViewSchedule.segments);
             Assert.AreEqual(2, dataViewSchedule.segments.Count);
@@ -111,10 +107,10 @@ namespace PythonTests.DataTests
             Assert.AreEqual("view_schedule", dataViewSchedule.data_type);
             Assert.AreEqual(0, dataViewSchedule.total_number_of_rows);
             Assert.IsNotNull(dataViewSchedule.bounding_box);
-            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.bounding_box.min_x);
-            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.bounding_box.min_y);
-            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.bounding_box.max_y);
+            Assert.AreEqual(double.PositiveInfinity, dataViewSchedule.bounding_box.min_x);
+            Assert.AreEqual(double.NegativeInfinity, dataViewSchedule.bounding_box.max_x);
+            Assert.AreEqual(double.PositiveInfinity, dataViewSchedule.bounding_box.min_y);
+            Assert.AreEqual(double.NegativeInfinity, dataViewSchedule.bounding_box.max_y);
             Assert.IsNotNull(dataViewSchedule.segments);
             Assert.AreEqual(0, dataViewSchedule.segments.Count);
         }

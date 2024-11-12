@@ -6,37 +6,25 @@ namespace PythonTests.DataTests
 {
     public class DataViewPlanTests
     {
-        [Test]
-        public void ClassesShouldBeLoaded()
-        {
-            Assert.IsNotNull(PythonEngineManager.DataViewPlanClass, "DataTypeProperties should be loaded.");
-        }
+        private string validJsonString;
+        private Dictionary<string, object> validJsonDictionary;
 
-        // Helper method to create JSON strings
-        private string CreateJson(Dictionary<string, object> properties)
+        [SetUp]
+        public void SetUp()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(properties);
-        }
-
-        [Test]
-        public void DataViewPlan_Constructor_ValidJson_ShouldInitializeCorrectly()
-        {
-            // Sample valid JSON for testing
-            var jsonString = CreateJson(new Dictionary<string, object>
+            // Sample valid JSON for testing DataSheetViewPort
+            validJsonDictionary = new Dictionary<string, object>
             {
                 { "data_type", "view_plan" },
                 { "id", 101 },
                 { "bounding_box", new Dictionary<string, object>
                     {
                         { "DataType", "bounding box 2" },
-                        { "bounding_box", new Dictionary<string, object>
-                            {
-                                { "min_x", 0.0 },
-                                { "max_x", 10.0 },
-                                { "min_y", 0.0 },
-                                { "max_y", 10.0 }
-                            }
-                        },
+                        { "min_x", 0.0 },
+                        { "max_x", 10.0 },
+                        { "min_y", 0.0 },
+                        { "max_y", 10.0 },
+                           
                         { "rotation_coord", new Dictionary<string, object>
                             {
                                 { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
@@ -61,12 +49,14 @@ namespace PythonTests.DataTests
                             { "data_type", "tag" },
                             { "bounding_box", new Dictionary<string, object>
                                 {
-                                    { "min_x", 0.0 },
-                                    { "max_x", 10.0 },
-                                    { "min_y", 0.0 },
-                                    { "max_y", 10.0 }
+                                    { "DataType", "bounding box 2" },
+                                    { "min_x", 1.0 },
+                                    { "max_x", 11.0 },
+                                    { "min_y", 1.0 },
+                                    { "max_y", 11.0 },
                                 }
                             },
+
                             { "point", new Dictionary<string, object> { { "x", 5.0 }, { "y", 5.0 }, { "z", 5.0 } } },
                             { "elbow_location", new Dictionary<string, object> { { "x", 1.0 }, { "y", 1.0 }, { "z", 1.0 } } },
                             { "leader_end", "end_point" },
@@ -75,20 +65,39 @@ namespace PythonTests.DataTests
                         }
                     }
                 }
-            });
+            };
 
+
+            validJsonString = JsonConvert.SerializeObject(validJsonDictionary);
+        }
+
+        [Test]
+        public void ClassesShouldBeLoaded()
+        {
+            Assert.IsNotNull(PythonEngineManager.DataViewPlanClass, "DataTypeProperties should be loaded.");
+        }
+
+        // Helper method to create JSON strings
+        private string CreateJson(Dictionary<string, object> properties)
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(properties);
+        }
+
+        [Test]
+        public void DataViewPlan_Constructor_ValidJson_ShouldInitializeCorrectly()
+        {
 
             // Act
-            var dataViewPlan = PythonEngineManager.DataViewPlanClass(jsonString);
+            var dataViewPlan = PythonEngineManager.DataViewPlanClass(validJsonString);
 
             // Assert
             Assert.AreEqual("view_plan", dataViewPlan.data_type);
             Assert.AreEqual(101, dataViewPlan.id);
             Assert.IsNotNull(dataViewPlan.bounding_box);
-            Assert.AreEqual(0.0, dataViewPlan.bounding_box.bounding_box.min_x);
-            Assert.AreEqual(10.0, dataViewPlan.bounding_box.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataViewPlan.bounding_box.bounding_box.min_y);
-            Assert.AreEqual(10.0, dataViewPlan.bounding_box.bounding_box.max_y);
+            Assert.AreEqual(0.0, dataViewPlan.bounding_box.min_x);
+            Assert.AreEqual(10.0, dataViewPlan.bounding_box.max_x);
+            Assert.AreEqual(0.0, dataViewPlan.bounding_box.min_y);
+            Assert.AreEqual(10.0, dataViewPlan.bounding_box.max_y);
             Assert.IsNotNull(dataViewPlan.tags);
             Assert.AreEqual(1, dataViewPlan.tags.Count);
             Assert.AreEqual("tag", dataViewPlan.tags[0].data_type);
@@ -104,10 +113,10 @@ namespace PythonTests.DataTests
             Assert.AreEqual("view_plan", dataViewPlan.data_type);
             Assert.AreEqual(-1, dataViewPlan.id);
             Assert.IsNotNull(dataViewPlan.bounding_box);
-            Assert.AreEqual(0.0, dataViewPlan.bounding_box.bounding_box.min_x);
-            Assert.AreEqual(0.0, dataViewPlan.bounding_box.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataViewPlan.bounding_box.bounding_box.min_y);
-            Assert.AreEqual(0.0, dataViewPlan.bounding_box.bounding_box.max_y);
+            Assert.AreEqual(double.PositiveInfinity, dataViewPlan.bounding_box.min_x);
+            Assert.AreEqual(double.NegativeInfinity, dataViewPlan.bounding_box.max_x);
+            Assert.AreEqual(double.PositiveInfinity, dataViewPlan.bounding_box.min_y);
+            Assert.AreEqual(double.NegativeInfinity, dataViewPlan.bounding_box.max_y);
             Assert.IsNotNull(dataViewPlan.tags);
             Assert.AreEqual(0, dataViewPlan.tags.Count);
         }
@@ -126,64 +135,14 @@ namespace PythonTests.DataTests
         [Test]
         public void DataViewPlan_Equals_ValidComparison_ShouldReturnTrue()
         {
-            var jsonString = CreateJson(new Dictionary<string, object>
-            {
-                { "data_type", "view_plan" },
-                { "id", 101 },
-                { "bounding_box", new Dictionary<string, object>
-                    {
-                        { "DataType", "bounding box 2" },
-                        { "bounding_box", new Dictionary<string, object>
-                            {
-                                { "min_x", 0.0 },
-                                { "max_x", 10.0 },
-                                { "min_y", 0.0 },
-                                { "max_y", 10.0 }
-                            }
-                        },
-                        { "rotation_coord", new Dictionary<string, object>
-                            {
-                                { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
-                                { "rows", 3 },
-                                { "columns", 3 }
-                            }
-                        },
-                        { "translation_coord", new Dictionary<string, object>
-                            {
-                                { "x", 0.0 },
-                                { "y", 0.0 },
-                                { "z", 0.0 },
-                                { "json_ini", null }
-                            }
-                        }
-                    }
-                },
-                { "tags", new List<Dictionary<string, object>>
-                    {
-                        new Dictionary<string, object>
-                        {
-                            { "data_type", "tag" },
-                            { "bounding_box", new Dictionary<string, object>
-                                {
-                                    { "min_x", 0.0 },
-                                    { "max_x", 10.0 },
-                                    { "min_y", 0.0 },
-                                    { "max_y", 10.0 }
-                                }
-                            },
-                            { "point", new Dictionary<string, object> { { "x", 5.0 }, { "y", 5.0 }, { "z", 5.0 } } },
-                            { "elbow_location", new Dictionary<string, object> { { "x", 1.0 }, { "y", 1.0 }, { "z", 1.0 } } },
-                            { "leader_end", "end_point" },
-                            { "leader_reference", "reference_point" },
-                            { "leader_element_reference_id", 123 }
-                        }
-                    }
-                }
-            });
+            
             // Arrange
-            var dataViewPlan1 = PythonEngineManager.DataViewPlanClass(jsonString);
-            var dataViewPlan2 = PythonEngineManager.DataViewPlanClass(jsonString);
+            var dataViewPlan1 = PythonEngineManager.DataViewPlanClass(validJsonString);
+            var dataViewPlan2 = PythonEngineManager.DataViewPlanClass(validJsonString);
 
+
+            Console.WriteLine(dataViewPlan1.to_json());
+            Console.WriteLine(dataViewPlan2.to_json());
             // Act
             var areEqual = dataViewPlan1==dataViewPlan2;
 
@@ -194,46 +153,13 @@ namespace PythonTests.DataTests
         [Test]
         public void DataViewPlan_Equals_InvalidComparison_ShouldReturnFalse()
         {
-            var jsonString = CreateJson(new Dictionary<string, object>
-            {
-                { "data_type", "view_plan" },
-                { "id", 101 },
-                { "bounding_box", new Dictionary<string, object>
-                    {
-                        { "min_x", 0.0 },
-                        { "max_x", 10.0 },
-                        { "min_y", 0.0 },
-                        { "max_y", 10.0 }
-                    }
-                },
-                { "tags", new List<Dictionary<string, object>>
-                    {
-                        new Dictionary<string, object>
-                        {
-                            { "data_type", "tag" },
-                            { "bounding_box", new Dictionary<string, object>
-                                {
-                                    { "min_x", 0.0 },
-                                    { "max_x", 10.0 },
-                                    { "min_y", 0.0 },
-                                    { "max_y", 10.0 }
-                                }
-                            },
-                            { "point", new Dictionary<string, object> { { "x", 5.0 }, { "y", 5.0 }, { "z", 5.0 } } },
-                            { "elbow_location", new Dictionary<string, object> { { "x", 1.0 }, { "y", 1.0 }, { "z", 1.0 } } },
-                            { "leader_end", "end_point" },
-                            { "leader_reference", "reference_point" },
-                            { "leader_element_reference_id", 123 }
-                        }
-                    }
-                }
-            });
+            
             // Arrange
-            var dataViewPlan1 = PythonEngineManager.DataViewPlanClass(jsonString);
+            var dataViewPlan1 = PythonEngineManager.DataViewPlanClass(validJsonString);
             var dataViewPlan2 = PythonEngineManager.DataViewPlanClass(); // Empty object
 
             // Act
-            var areEqual = dataViewPlan1.Equals(dataViewPlan2);
+            var areEqual = dataViewPlan1==dataViewPlan2;
 
             // Assert
             Assert.IsFalse(areEqual);
@@ -242,94 +168,24 @@ namespace PythonTests.DataTests
         [Test]
         public void DataViewPlan_Equals_NonDataViewPlan_ShouldReturnNotImplemented()
         {
-            // Sample valid JSON for testing
-            var jsonString = CreateJson(new Dictionary<string, object>
-            {
-                { "data_type", "view_plan" },
-                { "id", 101 },
-                { "bounding_box", new Dictionary<string, object>
-                    {
-                        { "min_x", 0.0 },
-                        { "max_x", 10.0 },
-                        { "min_y", 0.0 },
-                        { "max_y", 10.0 }
-                    }
-                },
-                { "tags", new List<Dictionary<string, object>>
-                    {
-                        new Dictionary<string, object>
-                        {
-                            { "data_type", "tag" },
-                            { "bounding_box", new Dictionary<string, object>
-                                {
-                                    { "min_x", 0.0 },
-                                    { "max_x", 10.0 },
-                                    { "min_y", 0.0 },
-                                    { "max_y", 10.0 }
-                                }
-                            },
-                            { "point", new Dictionary<string, object> { { "x", 5.0 }, { "y", 5.0 }, { "z", 5.0 } } },
-                            { "elbow_location", new Dictionary<string, object> { { "x", 1.0 }, { "y", 1.0 }, { "z", 1.0 } } },
-                            { "leader_end", "end_point" },
-                            { "leader_reference", "reference_point" },
-                            { "leader_element_reference_id", 123 }
-                        }
-                    }
-                }
-            });
-
             // Arrange
-            var dataViewPlan = PythonEngineManager.DataViewPlanClass(jsonString);
+            var dataViewPlan = PythonEngineManager.DataViewPlanClass(validJsonString);
             var nonDataViewPlan = new object();
 
             // Act
             var areEqual = dataViewPlan == nonDataViewPlan;
 
             // Assert
-            Assert.AreEqual(areEqual, false);
+            Assert.IsFalse(areEqual);
         }
 
         [Test]
         public void DataViewPlan_Nequality_Comparison_ShouldReturnTrueForNonEqualObjects()
         {
-            // Sample valid JSON for testing
-            var jsonString = CreateJson(new Dictionary<string, object>
-            {
-                { "data_type", "view_plan" },
-                { "id", 101 },
-                { "bounding_box", new Dictionary<string, object>
-                    {
-                        { "min_x", 0.0 },
-                        { "max_x", 10.0 },
-                        { "min_y", 0.0 },
-                        { "max_y", 10.0 }
-                    }
-                },
-                { "tags", new List<Dictionary<string, object>>
-                    {
-                        new Dictionary<string, object>
-                        {
-                            { "data_type", "tag" },
-                            { "bounding_box", new Dictionary<string, object>
-                                {
-                                    { "min_x", 0.0 },
-                                    { "max_x", 10.0 },
-                                    { "min_y", 0.0 },
-                                    { "max_y", 10.0 }
-                                }
-                            },
-                            { "point", new Dictionary<string, object> { { "x", 5.0 }, { "y", 5.0 }, { "z", 5.0 } } },
-                            { "elbow_location", new Dictionary<string, object> { { "x", 1.0 }, { "y", 1.0 }, { "z", 1.0 } } },
-                            { "leader_end", "end_point" },
-                            { "leader_reference", "reference_point" },
-                            { "leader_element_reference_id", 123 }
-                        }
-                    }
-                }
-            });
+           
 
             // Arrange
-            var dataViewPlan1 = PythonEngineManager.DataViewPlanClass(jsonString);
+            var dataViewPlan1 = PythonEngineManager.DataViewPlanClass(validJsonString);
             var dataViewPlan2 = PythonEngineManager.DataViewPlanClass(); // Empty object
 
             // Act

@@ -63,15 +63,17 @@ namespace PythonTests.Setup
 
         private static ScriptEngine InitializePythonEngine()
         {
-            // get a python engine
-            ScriptEngine _pythonEngine = PythonRunner.SetupEngine();
-            _scope = _pythonEngine.CreateScope();
-
-            // get the repository path
-            string repoPath = PythonRunner.GetRepositoryPath();
-
-            var pythonFilePaths = new[]
+            try
             {
+                // get a python engine
+                ScriptEngine _pythonEngine = PythonRunner.SetupEngine();
+                _scope = _pythonEngine.CreateScope();
+
+                // get the repository path
+                string repoPath = PythonRunner.GetRepositoryPath();
+
+                var pythonFilePaths = new[]
+                {
                 Path.Combine(repoPath, @"duHast\Geometry\bounding_box_2.py"),
                 Path.Combine(repoPath, @"duHast\Geometry\bounding_box_3.py"),
                 Path.Combine(repoPath, @"duHast\Geometry\point_2.py"),
@@ -96,7 +98,7 @@ namespace PythonTests.Setup
                 Path.Combine(repoPath, @"duHast\Data\Objects\data_view_plan.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\data_view_elevation.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\data_view_schedule.py"),
-                
+
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_design_set_option.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_element_geometry_base.py"),
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\data_instance_properties.py"),
@@ -114,12 +116,19 @@ namespace PythonTests.Setup
                 Path.Combine(repoPath, @"duHast\Data\Objects\Properties\Geometry\geometry_polygon_2.py")
             };
 
-            foreach (var filePath in pythonFilePaths)
-            {
-                _pythonEngine.ExecuteFile(filePath, _scope);
-            }
+                foreach (var filePath in pythonFilePaths)
+                {
+                    _pythonEngine.ExecuteFile(filePath, _scope);
+                }
 
-            return _pythonEngine;
+                return _pythonEngine;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: Python class not found in scope - " + ex.Message);
+                throw;
+            }
+            
         }
 
         public static void Shutdown()

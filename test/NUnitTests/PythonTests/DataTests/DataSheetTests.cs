@@ -22,14 +22,12 @@ namespace PythonTests.DataTests
                 { "bounding_box", new Dictionary<string, object>
                         {
                             { "DataType", "bounding box 2" },
-                            { "bounding_box", new Dictionary<string, object>
-                                {
-                                    { "min_x", 0.0 },
-                                    { "max_x", 10.0 },
-                                    { "min_y", 0.0 },
-                                    { "max_y", 10.0 }
-                                }
-                            },
+                            
+                            { "min_x", 0.0 },
+                            { "max_x", 10.0 },
+                            { "min_y", 0.0 },
+                            { "max_y", 10.0 },
+                               
                             { "rotation_coord", new Dictionary<string, object>
                                 {
                                     { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
@@ -55,14 +53,10 @@ namespace PythonTests.DataTests
                         { "bounding_box", new Dictionary<string, object>
                             {
                                 { "DataType", "bounding box 2" },
-                                { "bounding_box", new Dictionary<string, object>
-                                    {
-                                        { "min_x", 0.0 },
-                                        { "max_x", 10.0 },
-                                        { "min_y", 0.0 },
-                                        { "max_y", 10.0 }
-                                    }
-                                },
+                                { "min_x", 0.0 },
+                                { "max_x", 10.0 },
+                                { "min_y", 0.0 },
+                                { "max_y", 10.0 },
                                 { "rotation_coord", new Dictionary<string, object>
                                     {
                                         { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
@@ -92,14 +86,10 @@ namespace PythonTests.DataTests
                                 { "bounding_box", new Dictionary<string, object>
                                     {
                                         { "DataType", "bounding box 2" },
-                                        { "bounding_box", new Dictionary<string, object>
-                                            {
-                                                { "min_x", 0.0 },
-                                                { "max_x", 10.0 },
-                                                { "min_y", 0.0 },
-                                                { "max_y", 10.0 }
-                                            }
-                                        },
+                                        { "min_x", 0.0 },
+                                        { "max_x", 10.0 },
+                                        { "min_y", 0.0 },
+                                        { "max_y", 10.0 },
                                         { "rotation_coord", new Dictionary<string, object>
                                             {
                                                 { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
@@ -149,8 +139,8 @@ namespace PythonTests.DataTests
             Assert.IsNotNull(dataSheet.view_ports[0]);
             Assert.AreEqual(1001, dataSheet.view_ports[0].view_id);
             Assert.AreEqual(PythonEngineManager.DataViewPortTypeNames.THREE_D, dataSheet.view_ports[0].vp_type);
-            Assert.AreEqual(0.0, dataSheet.bounding_box.bounding_box.min_x);
-            Assert.AreEqual(10.0, dataSheet.bounding_box.bounding_box.max_x);
+            Assert.AreEqual(0.0, dataSheet.bounding_box.min_x);
+            Assert.AreEqual(10.0, dataSheet.bounding_box.max_x);
         }
 
         [Test]
@@ -175,8 +165,8 @@ namespace PythonTests.DataTests
             Assert.IsNotNull(dataSheet.instance_properties);
             Assert.IsNotNull(dataSheet.type_properties);
             Assert.AreEqual(0, dataSheet.view_ports.Count);
-            Assert.AreEqual(0.0, dataSheet.bounding_box.bounding_box.min_x);
-            Assert.AreEqual(0.0, dataSheet.bounding_box.bounding_box.max_x);
+            Assert.AreEqual(double.PositiveInfinity, dataSheet.bounding_box.min_x);
+            Assert.AreEqual(double.NegativeInfinity, dataSheet.bounding_box.max_x);
         }
 
         [Test]

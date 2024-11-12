@@ -6,37 +6,26 @@ namespace PythonTests.DataTests
 {
     public class DataViewElevationTests
     {
-        [Test]
-        public void ClassesShouldBeLoaded()
-        {
-            Assert.IsNotNull(PythonEngineManager.DataViewElevationClass, "DataTypeProperties should be loaded.");
-        }
+        private string validJsonString;
+        private Dictionary<string, object> validJsonDictionary;
 
-        // Helper method to create JSON strings
-        private string CreateJson(Dictionary<string, object> properties)
+        [SetUp]
+        public void SetUp()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(properties);
-        }
-
-        [Test]
-        public void InitializeWithValidJson_ShouldSetPropertiesCorrectly()
-        {
-            // Arrange: valid JSON with id, data_type, bounding box, and tags fields
-            var jsonString = CreateJson(new Dictionary<string, object>
+            // Sample valid JSON for testing DataSheetViewPort
+            validJsonDictionary = new Dictionary<string, object>
             {
                 { "data_type", "view_elevation" },
                 { "id", 101 },
                 { "bounding_box", new Dictionary<string, object>
                     {
                         { "DataType", "bounding box 2" },
-                        { "bounding_box", new Dictionary<string, object>
-                            {
+                        
                                 { "min_x", 0.0 },
                                 { "max_x", 10.0 },
                                 { "min_y", 0.0 },
-                                { "max_y", 10.0 }
-                            }
-                        },
+                                { "max_y", 10.0 },
+                           
                         { "rotation_coord", new Dictionary<string, object>
                             {
                                 { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
@@ -62,12 +51,23 @@ namespace PythonTests.DataTests
                             { "bounding_box", new Dictionary<string, object>
                                 {
                                     { "DataType", "bounding box 2" },
-                                    { "bounding_box", new Dictionary<string, object>
+                                    { "min_x", 0.0 },
+                                    { "max_x", 10.0 },
+                                    { "min_y", 0.0 },
+                                    { "max_y", 10.0 },
+                                    { "rotation_coord", new Dictionary<string, object>
                                         {
-                                            { "min_x", 0.0 },
-                                            { "max_x", 10.0 },
-                                            { "min_y", 0.0 },
-                                            { "max_y", 10.0 }
+                                            { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
+                                            { "rows", 3 },
+                                            { "columns", 3 }
+                                        }
+                                    },
+                                    { "translation_coord", new Dictionary<string, object>
+                                        {
+                                            { "x", 0.0 },
+                                            { "y", 0.0 },
+                                            { "z", 0.0 },
+                                            { "json_ini", null }
                                         }
                                     }
                                 }
@@ -96,14 +96,10 @@ namespace PythonTests.DataTests
                             { "bounding_box", new Dictionary<string, object>
                                 {
                                     { "DataType", "bounding box 2" },
-                                    { "bounding_box", new Dictionary<string, object>
-                                        {
-                                            { "min_x", 1.0 },
-                                            { "max_x", 11.0 },
-                                            { "min_y", 1.0 },
-                                            { "max_y", 11.0 }
-                                        }
-                                    }
+                                    { "min_x", 1.0 },
+                                    { "max_x", 11.0 },
+                                    { "min_y", 1.0 },
+                                    { "max_y", 11.0 },
                                 }
                             },
                             { "point", new Dictionary<string, object>
@@ -126,18 +122,39 @@ namespace PythonTests.DataTests
                         }
                     }
                 }
-            });
+            };
+
+
+            validJsonString = JsonConvert.SerializeObject(validJsonDictionary);
+        }
+
+        [Test]
+        public void ClassesShouldBeLoaded()
+        {
+            Assert.IsNotNull(PythonEngineManager.DataViewElevationClass, "DataTypeProperties should be loaded.");
+        }
+
+        // Helper method to create JSON strings
+        private string CreateJson(Dictionary<string, object> properties)
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(properties);
+        }
+
+        [Test]
+        public void InitializeWithValidJson_ShouldSetPropertiesCorrectly()
+        {
+            
 
             // Act
-            var dataViewElevation = PythonEngineManager.DataViewElevationClass(jsonString);
+            var dataViewElevation = PythonEngineManager.DataViewElevationClass(validJsonString);
 
             // Assert
             Assert.AreEqual(101, dataViewElevation.id, "Expected id to be initialized correctly.");
             Assert.IsNotNull(dataViewElevation.bounding_box, "Expected bounding_box to be initialized.");
-            Assert.AreEqual(0.0, dataViewElevation.bounding_box.bounding_box.min_x, "Expected bounding_box.min_x to match input.");
-            Assert.AreEqual(10.0, dataViewElevation.bounding_box.bounding_box.max_x, "Expected bounding_box.max_x to match input.");
-            Assert.AreEqual(0.0, dataViewElevation.bounding_box.bounding_box.min_y, "Expected bounding_box.min_y to match input.");
-            Assert.AreEqual(10.0, dataViewElevation.bounding_box.bounding_box.max_y, "Expected bounding_box.max_y to match input.");
+            Assert.AreEqual(0.0, dataViewElevation.bounding_box.min_x, "Expected bounding_box.min_x to match input.");
+            Assert.AreEqual(10.0, dataViewElevation.bounding_box.max_x, "Expected bounding_box.max_x to match input.");
+            Assert.AreEqual(0.0, dataViewElevation.bounding_box.min_y, "Expected bounding_box.min_y to match input.");
+            Assert.AreEqual(10.0, dataViewElevation.bounding_box.max_y, "Expected bounding_box.max_y to match input.");
 
             // Assert rotation and translation coords if relevant
             Assert.IsNotNull(dataViewElevation.bounding_box.rotation_coord, "Expected rotation_coord to be initialized.");
@@ -155,8 +172,8 @@ namespace PythonTests.DataTests
 
             var firstTag = dataViewElevation.tags[0];
             Assert.AreEqual("tag", firstTag.data_type, "Expected first tag data_type to be 'tag'.");
-            Assert.AreEqual(0.0, firstTag.bounding_box.bounding_box.min_x, "Expected first tag bounding_box.min_x to match input.");
-            Assert.AreEqual(10.0, firstTag.bounding_box.bounding_box.max_x, "Expected first tag bounding_box.max_x to match input.");
+            Assert.AreEqual(0.0, firstTag.bounding_box.min_x, "Expected first tag bounding_box.min_x to match input.");
+            Assert.AreEqual(10.0, firstTag.bounding_box.max_x, "Expected first tag bounding_box.max_x to match input.");
             Assert.AreEqual(5.0, firstTag.point.x, "Expected first tag point.x to be 5.0.");
             Assert.AreEqual(5.0, firstTag.point.y, "Expected first tag point.y to be 5.0.");
             Assert.AreEqual(5.0, firstTag.point.z, "Expected first tag point.z to be 5.0.");
@@ -169,8 +186,8 @@ namespace PythonTests.DataTests
 
             var secondTag = dataViewElevation.tags[1];
             Assert.AreEqual("tag", secondTag.data_type, "Expected second tag data_type to be 'tag'.");
-            Assert.AreEqual(1.0, secondTag.bounding_box.bounding_box.min_x, "Expected second tag bounding_box.min_x to match input.");
-            Assert.AreEqual(11.0, secondTag.bounding_box.bounding_box.max_x, "Expected second tag bounding_box.max_x to match input.");
+            Assert.AreEqual(1.0, secondTag.bounding_box.min_x, "Expected second tag bounding_box.min_x to match input.");
+            Assert.AreEqual(11.0, secondTag.bounding_box.max_x, "Expected second tag bounding_box.max_x to match input.");
             Assert.AreEqual(6.0, secondTag.point.x, "Expected second tag point.x to be 6.0.");
             Assert.AreEqual(6.0, secondTag.point.y, "Expected second tag point.y to be 6.0.");
             Assert.AreEqual(6.0, secondTag.point.z, "Expected second tag point.z to be 6.0.");
@@ -215,7 +232,7 @@ namespace PythonTests.DataTests
 
             // Act & Assert: initialization should throw a ValueError
             var ex = Assert.Throws<ValueErrorException>(() => PythonEngineManager.DataViewElevationClass(jsonString));
-            StringAssert.Contains("Node view_elevation failed to initialise with: Node bounding box 2 failed to initialise with: Expecting value", ex.Message, "Expected ValueError for incorrect bounding_box type.");
+            StringAssert.Contains("Node view_elevation failed to initialise with: JSON must contain 'max_x',", ex.Message, "Expected ValueError for incorrect bounding_box type.");
         }
 
         [Test]
@@ -229,12 +246,10 @@ namespace PythonTests.DataTests
                 { "bounding_box", new Dictionary<string, object>
                     {
                         { "DataType", "bounding box 2" },
-                        { "bounding_box", new Dictionary<string, object>
-                            {
+                        
                                 { "min_x", 0.0 },
-                                { "max_x", 10.0 }
-                            }
-                        },
+                                { "max_x", 10.0 },
+                            
                         { "rotation_coord", new Dictionary<string, object>
                             {
                                 { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
@@ -256,122 +271,16 @@ namespace PythonTests.DataTests
 
             // Act & Assert: initialization should throw a ValueError due to missing fields
             var ex = Assert.Throws<ValueErrorException>(() => PythonEngineManager.DataViewElevationClass(jsonString));
-            StringAssert.Contains("Node view_elevation failed to initialise with: Node bounding box 2 failed to initialise with: JSON must contain 'max_x', 'max_y', 'min_x', 'min_y' keys.", ex.Message, "Expected ValueError for missing bounding box fields.");
+            StringAssert.Contains("Node view_elevation failed to initialise with: JSON must contain 'max_x',", ex.Message, "Expected ValueError for missing bounding box fields.");
         }
 
         [Test]
         public void EqualityCheckWithSameBoundingBoxAndTags_ShouldReturnTrue()
         {
-            // Arrange: valid JSON with id, data_type, bounding box, and tags fields
-            var jsonString = CreateJson(new Dictionary<string, object>
-            {
-                { "data_type", "view_elevation" },
-                { "id", 101 },
-                { "bounding_box", new Dictionary<string, object>
-                    {
-                        { "DataType", "bounding box 2" },
-                        { "bounding_box", new Dictionary<string, object>
-                            {
-                                { "min_x", 0.0 },
-                                { "max_x", 10.0 },
-                                { "min_y", 0.0 },
-                                { "max_y", 10.0 }
-                            }
-                        },
-                        { "rotation_coord", new Dictionary<string, object>
-                            {
-                                { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
-                                { "rows", 3 },
-                                { "columns", 3 }
-                            }
-                        },
-                        { "translation_coord", new Dictionary<string, object>
-                            {
-                                { "x", 0.0 },
-                                { "y", 0.0 },
-                                { "z", 0.0 },
-                                { "json_ini", null }
-                            }
-                        }
-                    }
-                },
-                { "tags", new List<Dictionary<string, object>>
-                    {
-                        new Dictionary<string, object>
-                        {
-                            { "data_type", "tag" },
-                            { "bounding_box", new Dictionary<string, object>
-                                {
-                                    { "DataType", "bounding box 2" },
-                                    { "bounding_box", new Dictionary<string, object>
-                                        {
-                                            { "min_x", 0.0 },
-                                            { "max_x", 10.0 },
-                                            { "min_y", 0.0 },
-                                            { "max_y", 10.0 }
-                                        }
-                                    }
-                                }
-                            },
-                            { "point", new Dictionary<string, object>
-                                {
-                                    { "x", 5.0 },
-                                    { "y", 5.0 },
-                                    { "z", 5.0 }
-                                }
-                            },
-                            { "elbow_location", new Dictionary<string, object>
-                                {
-                                    { "x", 1.0 },
-                                    { "y", 1.0 },
-                                    { "z", 1.0 }
-                                }
-                            },
-                            { "leader_end", "end_point" },
-                            { "leader_reference", "reference_point" },
-                            { "leader_element_reference_id", 123 }
-                        },
-                        new Dictionary<string, object>
-                        {
-                            { "data_type", "tag" },
-                            { "bounding_box", new Dictionary<string, object>
-                                {
-                                    { "DataType", "bounding box 2" },
-                                    { "bounding_box", new Dictionary<string, object>
-                                        {
-                                            { "min_x", 1.0 },
-                                            { "max_x", 11.0 },
-                                            { "min_y", 1.0 },
-                                            { "max_y", 11.0 }
-                                        }
-                                    }
-                                }
-                            },
-                            { "point", new Dictionary<string, object>
-                                {
-                                    { "x", 6.0 },
-                                    { "y", 6.0 },
-                                    { "z", 6.0 }
-                                }
-                            },
-                            { "elbow_location", new Dictionary<string, object>
-                                {
-                                    { "x", 2.0 },
-                                    { "y", 2.0 },
-                                    { "z", 2.0 }
-                                }
-                            },
-                            { "leader_end", "start_point" },
-                            { "leader_reference", "reference_point" },
-                            { "leader_element_reference_id", 456 }
-                        }
-                    }
-                }
-            });
 
             // Act: Create two DataViewElevation instances using the same JSON data
-            var dataViewElevation1 = PythonEngineManager.DataViewElevationClass(jsonString);
-            var dataViewElevation2 = PythonEngineManager.DataViewElevationClass(jsonString);
+            var dataViewElevation1 = PythonEngineManager.DataViewElevationClass(validJsonString);
+            var dataViewElevation2 = PythonEngineManager.DataViewElevationClass(validJsonString);
 
             // Assert: The two instances should be equal
             Assert.IsTrue(dataViewElevation1 == dataViewElevation2, "Operator == should return true for instances with the same bounding box.");
@@ -380,112 +289,6 @@ namespace PythonTests.DataTests
         [Test]
         public void EqualityCheckWithDifferentTags_ShouldReturnTrue()
         {
-            // Arrange: valid JSON with id, data_type, bounding box, and tags fields
-            var jsonString1 = CreateJson(new Dictionary<string, object>
-            {
-                { "data_type", "view_elevation" },
-                { "id", 101 },
-                { "bounding_box", new Dictionary<string, object>
-                    {
-                        { "DataType", "bounding box 2" },
-                        { "bounding_box", new Dictionary<string, object>
-                            {
-                                { "min_x", 0.0 },
-                                { "max_x", 10.0 },
-                                { "min_y", 0.0 },
-                                { "max_y", 10.0 }
-                            }
-                        },
-                        { "rotation_coord", new Dictionary<string, object>
-                            {
-                                { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
-                                { "rows", 3 },
-                                { "columns", 3 }
-                            }
-                        },
-                        { "translation_coord", new Dictionary<string, object>
-                            {
-                                { "x", 0.0 },
-                                { "y", 0.0 },
-                                { "z", 0.0 },
-                                { "json_ini", null }
-                            }
-                        }
-                    }
-                },
-                { "tags", new List<Dictionary<string, object>>
-                    {
-                        new Dictionary<string, object>
-                        {
-                            { "data_type", "tag" },
-                            { "bounding_box", new Dictionary<string, object>
-                                {
-                                    { "DataType", "bounding box 2" },
-                                    { "bounding_box", new Dictionary<string, object>
-                                        {
-                                            { "min_x", 0.0 },
-                                            { "max_x", 10.0 },
-                                            { "min_y", 0.0 },
-                                            { "max_y", 10.0 }
-                                        }
-                                    }
-                                }
-                            },
-                            { "point", new Dictionary<string, object>
-                                {
-                                    { "x", 6.0 },
-                                    { "y", 5.0 },
-                                    { "z", 5.0 }
-                                }
-                            },
-                            { "elbow_location", new Dictionary<string, object>
-                                {
-                                    { "x", 1.0 },
-                                    { "y", 1.0 },
-                                    { "z", 1.0 }
-                                }
-                            },
-                            { "leader_end", "end_point" },
-                            { "leader_reference", "reference_point" },
-                            { "leader_element_reference_id", 123 }
-                        },
-                        new Dictionary<string, object>
-                        {
-                            { "data_type", "tag" },
-                            { "bounding_box", new Dictionary<string, object>
-                                {
-                                    { "DataType", "bounding box 2" },
-                                    { "bounding_box", new Dictionary<string, object>
-                                        {
-                                            { "min_x", 1.0 },
-                                            { "max_x", 11.0 },
-                                            { "min_y", 1.0 },
-                                            { "max_y", 11.0 }
-                                        }
-                                    }
-                                }
-                            },
-                            { "point", new Dictionary<string, object>
-                                {
-                                    { "x", 6.0 },
-                                    { "y", 6.0 },
-                                    { "z", 6.0 }
-                                }
-                            },
-                            { "elbow_location", new Dictionary<string, object>
-                                {
-                                    { "x", 2.0 },
-                                    { "y", 2.0 },
-                                    { "z", 2.0 }
-                                }
-                            },
-                            { "leader_end", "start_point" },
-                            { "leader_reference", "reference_point" },
-                            { "leader_element_reference_id", 456 }
-                        }
-                    }
-                }
-            });
 
 
             // Arrange: valid JSON with id, data_type, bounding box, and tags fields
@@ -496,14 +299,11 @@ namespace PythonTests.DataTests
                 { "bounding_box", new Dictionary<string, object>
                     {
                         { "DataType", "bounding box 2" },
-                        { "bounding_box", new Dictionary<string, object>
-                            {
-                                { "min_x", 0.0 },
-                                { "max_x", 10.0 },
-                                { "min_y", 0.0 },
-                                { "max_y", 10.0 }
-                            }
-                        },
+                        { "min_x", 0.0 },
+                        { "max_x", 10.0 },
+                        { "min_y", 0.0 },
+                        { "max_y", 10.0 },
+                           
                         { "rotation_coord", new Dictionary<string, object>
                             {
                                 { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
@@ -529,14 +329,12 @@ namespace PythonTests.DataTests
                             { "bounding_box", new Dictionary<string, object>
                                 {
                                     { "DataType", "bounding box 2" },
-                                    { "bounding_box", new Dictionary<string, object>
-                                        {
+                                   
                                             { "min_x", 0.0 },
                                             { "max_x", 10.0 },
                                             { "min_y", 0.0 },
-                                            { "max_y", 10.0 }
-                                        }
-                                    }
+                                            { "max_y", 10.0 },
+                                       
                                 }
                             },
                             { "point", new Dictionary<string, object>
@@ -563,14 +361,12 @@ namespace PythonTests.DataTests
                             { "bounding_box", new Dictionary<string, object>
                                 {
                                     { "DataType", "bounding box 2" },
-                                    { "bounding_box", new Dictionary<string, object>
-                                        {
-                                            { "min_x", 1.0 },
-                                            { "max_x", 11.0 },
-                                            { "min_y", 1.0 },
-                                            { "max_y", 11.0 }
-                                        }
-                                    }
+                                    
+                                    { "min_x", 1.0 },
+                                    { "max_x", 11.0 },
+                                    { "min_y", 1.0 },
+                                    { "max_y", 11.0 },
+                                        
                                 }
                             },
                             { "point", new Dictionary<string, object>
@@ -589,18 +385,18 @@ namespace PythonTests.DataTests
                             },
                             { "leader_end", "start_point" },
                             { "leader_reference", "reference_point" },
-                            { "leader_element_reference_id", 456 }
+                            { "leader_element_reference_id", 1000 }
                         }
                     }
                 }
             });
             // Act: Create two DataViewElevation instances using the same JSON data
-            var dataViewElevation1 = PythonEngineManager.DataViewElevationClass(jsonString1);
+            var dataViewElevation1 = PythonEngineManager.DataViewElevationClass(validJsonString);
             var dataViewElevation2 = PythonEngineManager.DataViewElevationClass(jsonString2);
 
             // Assert: The two instances should not be equal
-            Assert.IsTrue(dataViewElevation1 != dataViewElevation2, "Operator != should return true for instances with the same bounding box.");
-            Assert.IsFalse(dataViewElevation1 == dataViewElevation2, "Operator = should return false for instances with the same bounding box.");
+            Assert.IsTrue(dataViewElevation1 != dataViewElevation2, "Operator != should return true for instances with the different tags.");
+            Assert.IsFalse(dataViewElevation1 == dataViewElevation2, "Operator = should return false for instances with the different tags.");
         }
     }
 }

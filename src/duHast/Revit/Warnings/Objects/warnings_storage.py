@@ -67,7 +67,7 @@ class RevitWarning(base.Base):
         self.id = id
         self.description = description
         self.element_ids = element_ids
-        self.date = (get_date_stamp(FILE_DATE_STAMP_YYYYMMDD_SPACE),)
+        self.date = get_date_stamp(FILE_DATE_STAMP_YYYYMMDD_SPACE)
         self.time = get_date_stamp(TIME_STAMP_HHMMSEC_COLON)
 
     def class_to_csv(self, headers):
@@ -85,7 +85,10 @@ class RevitWarning(base.Base):
             csv_list = []
             for prop in headers:
                 if prop in self.__dict__:
-                    csv_list.append(self.__dict__[prop])
+                    if isinstance(self.__dict__[prop], str):
+                        csv_list.append(self.__dict__[prop])
+                    else:
+                        csv_list.append("{}".format(self.__dict__[prop]))
                 else:
                     csv_list.append("Property {} does not exist!".format(prop))
             return csv_list

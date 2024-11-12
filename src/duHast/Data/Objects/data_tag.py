@@ -94,7 +94,7 @@ class DataTag(DataBase):
                 )
 
                 # get the point location
-                point = json_var.get(DataPropertyNames.POINT None)
+                point = json_var.get(DataPropertyNames.POINT, None)
                 if point:
                     self.point = Point3(j=point)
 

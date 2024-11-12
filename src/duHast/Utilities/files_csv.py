@@ -27,7 +27,7 @@ Helper functions relating to comma separated text files.
 #
 #
 
-import clr
+#import clr
 import codecs
 import csv
 import System.IO

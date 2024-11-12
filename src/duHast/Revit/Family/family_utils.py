@@ -119,15 +119,18 @@ def load_family(doc, family_file_path):
             return_family = clr.Reference[Family]()
             action_return_value = res.Result()
             try:
+                # load the family
                 reload_status = doc.LoadFamily(
                     family_file_path,
                     famLoadOpt.FamilyLoadOption(),  # overwrite parameter values etc
                     return_family,
                 )
+
                 action_return_value.update_sep(
                     reload_status,
                     "Loaded family: {} :: {}".format(family_file_path, reload_status),
                 )
+
                 # return the family reloaded if there is any...
                 if return_family:
                     action_return_value.result.append(return_family.Value)

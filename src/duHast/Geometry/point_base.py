@@ -56,13 +56,13 @@ class PointBase(base.Base):
 
             # Validate presence of required keys
             if (
-                GeometryPropertyNames.X.value not in j
-                or GeometryPropertyNames.Y.value not in j
+                GeometryPropertyNames.X not in j
+                or GeometryPropertyNames.Y not in j
             ):
                 raise ValueError("JSON must contain 'x' and 'y' keys.")
 
-            x = j.get(GeometryPropertyNames.X.value)
-            y = j.get(GeometryPropertyNames.Y.value)
+            x = j.get(GeometryPropertyNames.X)
+            y = j.get(GeometryPropertyNames.Y)
 
             self._json_ini = j
         else:

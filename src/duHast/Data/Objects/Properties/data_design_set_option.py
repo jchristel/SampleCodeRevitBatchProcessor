@@ -70,7 +70,7 @@ class DataDesignSetOption(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.set_name = json_var.get(DataPropertyNames.SET_NAME.value, self.set_name)
+                self.set_name = json_var.get(DataPropertyNames.SET_NAME, self.set_name)
                 if not isinstance(self.set_name, str):
                     raise TypeError(
                         "Expected 'set_name' to be a string, got {}".format(
@@ -79,7 +79,7 @@ class DataDesignSetOption(data_base.DataBase):
                     )
 
                 self.option_name = json_var.get(
-                    DataPropertyNames.OPTION_NAME.value, self.option_name
+                    DataPropertyNames.OPTION_NAME, self.option_name
                 )
                 if not isinstance(self.option_name, str):
                     raise TypeError(
@@ -89,7 +89,7 @@ class DataDesignSetOption(data_base.DataBase):
                     )
 
                 self.is_primary = json_var.get(
-                    DataPropertyNames.IS_PRIMARY.value, self.is_primary
+                    DataPropertyNames.IS_PRIMARY, self.is_primary
                 )
                 if not isinstance(self.is_primary, bool):
                     raise TypeError(

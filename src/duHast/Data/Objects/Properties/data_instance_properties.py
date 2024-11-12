@@ -71,14 +71,14 @@ class DataInstanceProperties(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.id = json_var.get(DataPropertyNames.ID.value, self.id)
+                self.id = json_var.get(DataPropertyNames.ID, self.id)
                 if not isinstance(self.id, int):
                     raise TypeError(
                         "Expected 'id' to be an int, got {}".format(type(self.id))
                     )
 
                 # needs to be converted to list of property objects!
-                properties = json_var.get(DataPropertyNames.PROPERTIES.value, self.properties)
+                properties = json_var.get(DataPropertyNames.PROPERTIES, self.properties)
                 for prop in properties:
                     self.properties.append(DataProperty(j=prop))
 

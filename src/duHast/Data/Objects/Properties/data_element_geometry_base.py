@@ -80,7 +80,7 @@ class DataElementGeometryBase(base.Base):
             # attempt to populate from json
             try:
                 # check for polygon data
-                polygon_data = json_var.get(DataPropertyNames.POLYGON.value, None)
+                polygon_data = json_var.get(DataPropertyNames.POLYGON, None)
                 self.polygon = geometry_polygon_2.DataGeometryPolygon2(j=polygon_data)
             except Exception as e:
                 raise type(e)(

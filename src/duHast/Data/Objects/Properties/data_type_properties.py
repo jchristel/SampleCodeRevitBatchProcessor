@@ -72,7 +72,7 @@ class DataTypeProperties(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.name = json_var.get(DataPropertyNames.NAME.value, self.name)
+                self.name = json_var.get(DataPropertyNames.NAME, self.name)
                 if not (isinstance(self.name, str)):
                     raise ValueError(
                         "name needs to be of type str, got {} instead.".format(
@@ -80,7 +80,7 @@ class DataTypeProperties(data_base.DataBase):
                         )
                     )
 
-                self.id = json_var.get(DataPropertyNames.ID.value, self.id)
+                self.id = json_var.get(DataPropertyNames.ID, self.id)
                 if not (isinstance(self.id, int)):
                     raise ValueError(
                         "id needs to be of type int, got {} instead.".format(
@@ -89,7 +89,7 @@ class DataTypeProperties(data_base.DataBase):
                     )
 
                 # needs to be converted to list of property objects!
-                properties = json_var.get(DataPropertyNames.PROPERTIES.value, self.properties)
+                properties = json_var.get(DataPropertyNames.PROPERTIES, self.properties)
                 for prop in properties:
                     self.properties.append(DataProperty(j=prop))
 

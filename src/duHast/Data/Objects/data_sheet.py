@@ -98,11 +98,11 @@ class DataSheet(data_base.DataBase):
                     json_var.get(data_type_properties.DataTypeProperties.data_type, None)
                 )
                 self.bounding_box = DataGeometryBoundingBox2(
-                    json_var.get(DataPropertyNames.BOUNDING_BOX.value, None)
+                    json_var.get(DataPropertyNames.BOUNDING_BOX, None)
                 )
 
                 # get sheet view port data
-                view_port_data = json_var.get(DataPropertyNames.VIEW_PORTS.value, None)
+                view_port_data = json_var.get(DataPropertyNames.VIEW_PORTS, None)
                 if view_port_data:
                     for vp in view_port_data:
                         self.view_ports.append(DataSheetViewPort(j=vp))

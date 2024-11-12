@@ -72,7 +72,7 @@ class DataLevelBuilding(DataLevelBase):
             # attempt to populate from json
             try:
                 self.elevation = json_var.get(
-                    DataPropertyNames.ELEVATION.value, self.elevation
+                    DataPropertyNames.ELEVATION, self.elevation
                 )
 
                 if not (isinstance(self.elevation, float)):

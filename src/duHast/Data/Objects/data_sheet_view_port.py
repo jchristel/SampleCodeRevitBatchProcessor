@@ -69,7 +69,7 @@ class DataSheetViewPort(data_base.DataBase):
 
         # set default values
         self.bounding_box = DataGeometryBoundingBox2()
-        self.vp_type = DataViewPortTypeNames.FLOOR_PLAN.value
+        self.vp_type = DataViewPortTypeNames.FLOOR_PLAN
         self.view_id = -1
         self.view = DataViewPlan()
         self.centre_point = Point2(0.0, 0.0)
@@ -95,30 +95,30 @@ class DataSheetViewPort(data_base.DataBase):
             try:
 
                 self.bounding_box = DataGeometryBoundingBox2(
-                    json_var.get(DataPropertyNames.BOUNDING_BOX.value, {})
+                    json_var.get(DataPropertyNames.BOUNDING_BOX, {})
                 )
                 self.vp_type = json_var.get(
-                    DataPropertyNames.VIEW_PORT_TYPE.value, self.vp_type
+                    DataPropertyNames.VIEW_PORT_TYPE, self.vp_type
                 )
-                self.view_id = json_var.get(DataPropertyNames.VIEW_ID.value, self.view_id)
+                self.view_id = json_var.get(DataPropertyNames.VIEW_ID, self.view_id)
                 # get the centre point value
-                centre_point_value = json_var.get(DataPropertyNames.CENTRE_POINT.value, None)
+                centre_point_value = json_var.get(DataPropertyNames.CENTRE_POINT, None)
                 # if there is a json value take that, otherwise leave default unchanged.
                 if centre_point_value:
                     self.centre_point = Point2(j=centre_point_value)
 
                 # set up the view depending on the view port type
-                if self.vp_type == DataViewPortTypeNames.THREE_D.value:
-                    self.view = DataViewThreeD(json_var.get(DataPropertyNames.VIEW.value, {}))
-                elif self.vp_type == DataViewPortTypeNames.ELEVATION.value:
+                if self.vp_type == DataViewPortTypeNames.THREE_D:
+                    self.view = DataViewThreeD(json_var.get(DataPropertyNames.VIEW, {}))
+                elif self.vp_type == DataViewPortTypeNames.ELEVATION:
                     self.view = DataViewElevation(
-                        json_var.get(DataPropertyNames.VIEW.value, {})
+                        json_var.get(DataPropertyNames.VIEW, {})
                     )
-                elif self.vp_type == DataViewPortTypeNames.FLOOR_PLAN.value:
-                    self.view = DataViewPlan(json_var.get(DataPropertyNames.VIEW.value, {}))
-                elif self.vp_type == DataViewPortTypeNames.SCHEDULE.value:
+                elif self.vp_type == DataViewPortTypeNames.FLOOR_PLAN:
+                    self.view = DataViewPlan(json_var.get(DataPropertyNames.VIEW, {}))
+                elif self.vp_type == DataViewPortTypeNames.SCHEDULE:
                     self.view = DataViewSchedule(
-                        json_var.get(DataPropertyNames.VIEW.value, {})
+                        json_var.get(DataPropertyNames.VIEW, {})
                     )
                 else:
                     raise TypeError(

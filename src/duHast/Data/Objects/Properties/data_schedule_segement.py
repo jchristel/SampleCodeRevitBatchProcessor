@@ -72,7 +72,7 @@ class DataScheduleSegment(DataBase):
 
             # attempt to populate from json
             try:
-                self.index = json_var.get(DataPropertyNames.INDEX.value, self.index)
+                self.index = json_var.get(DataPropertyNames.INDEX, self.index)
                 if not (isinstance(self.index, int)):
                     raise ValueError(
                         "index needs to be of type int, got {} instead.".format(
@@ -80,7 +80,7 @@ class DataScheduleSegment(DataBase):
                         )
                     )
 
-                self.height = json_var.get(DataPropertyNames.HEIGHT.value, self.height)
+                self.height = json_var.get(DataPropertyNames.HEIGHT, self.height)
                 if not (isinstance(self.height, float)):
                     raise ValueError(
                         "height needs to be of type float, got {} instead.".format(

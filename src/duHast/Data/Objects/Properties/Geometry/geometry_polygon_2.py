@@ -76,7 +76,7 @@ class DataGeometryPolygon2(geometry_base.DataGeometryBase):
             # attempt to populate from json
             try:
                 # get outer points loop
-                outer_loop = json_var.get(DataPropertyNames.OUTER_LOOP.value, [])
+                outer_loop = json_var.get(DataPropertyNames.OUTER_LOOP, [])
 
                 # need a minimum of 3 points to form a polygon
                 if len(outer_loop) >= 3:
@@ -92,7 +92,7 @@ class DataGeometryPolygon2(geometry_base.DataGeometryBase):
                     raise ValueError("Json did not contain any outer loop data")
 
                 # get inner loops
-                inner_loops = json_var.get(DataPropertyNames.INNER_LOOPS.value, [])
+                inner_loops = json_var.get(DataPropertyNames.INNER_LOOPS, [])
                 if len(inner_loops) > 0:
                     for loop in inner_loops:
                         loop_points = []

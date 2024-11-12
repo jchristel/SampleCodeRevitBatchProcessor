@@ -70,13 +70,13 @@ class DataLevelBase(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.name = json_var.get(DataPropertyNames.NAME.value, self.name)
+                self.name = json_var.get(DataPropertyNames.NAME, self.name)
                 if not isinstance(self.name, str):
                     raise TypeError(
                         "Expected 'name' to be a string, got {}".format(type(self.name))
                     )
 
-                self.id = json_var.get(DataPropertyNames.ID.value, self.id)
+                self.id = json_var.get(DataPropertyNames.ID, self.id)
                 if not isinstance(self.id, int):
                     raise TypeError(
                         "Expected 'id' to be an int, got {}".format(type(self.id))

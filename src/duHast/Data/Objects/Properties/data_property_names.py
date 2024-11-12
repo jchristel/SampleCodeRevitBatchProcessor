@@ -28,10 +28,7 @@ Data property  names enum class.
 #
 
 
-from enum import Enum
-
-
-class DataPropertyNames(Enum):
+class DataPropertyNames():
     """
     Contains property names used in data storage classes
     """

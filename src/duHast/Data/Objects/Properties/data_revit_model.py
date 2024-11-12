@@ -69,7 +69,7 @@ class DataRevitModel(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.name = json_var.get(DataPropertyNames.NAME.value, self.name)
+                self.name = json_var.get(DataPropertyNames.NAME, self.name)
                 if not (isinstance(self.name, str)):
                     raise ValueError(
                         "name needs to be of type str, got {} instead.".format(

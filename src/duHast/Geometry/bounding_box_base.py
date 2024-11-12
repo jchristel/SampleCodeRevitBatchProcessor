@@ -57,10 +57,10 @@ class BoundingBoxBase(Base):
 
             # Validate presence of required keys
             if (
-                GeometryPropertyNames.MAX_X.value not in json_string
-                or GeometryPropertyNames.MAX_Y.value not in json_string
-                or GeometryPropertyNames.MIN_X.value not in json_string
-                or GeometryPropertyNames.MIN_Y.value not in json_string
+                GeometryPropertyNames.MAX_X not in json_string
+                or GeometryPropertyNames.MAX_Y not in json_string
+                or GeometryPropertyNames.MIN_X not in json_string
+                or GeometryPropertyNames.MIN_Y not in json_string
             ):
                 raise ValueError("JSON must contain 'max_x', 'max_y', 'min_x', 'min_y' keys.")
             self._json_ini = json_string

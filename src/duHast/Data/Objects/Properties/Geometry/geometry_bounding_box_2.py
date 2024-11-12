@@ -70,7 +70,7 @@ class DataGeometryBoundingBox2(BoundingBox2, geometry_base.DataGeometryBase):
             try:
                 pass
                 # get the bounding box
-                #bbox = json_var.get(DataPropertyNames.BOUNDING_BOX.value, None)
+                #bbox = json_var.get(DataPropertyNames.BOUNDING_BOX, None)
                 # check if we got None back...if so use what is the default
                 # since a bounding box ini from an empty dictionary will fail
                 #if bbox is not None:

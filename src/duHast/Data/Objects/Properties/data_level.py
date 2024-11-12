@@ -70,7 +70,7 @@ class DataLevel(DataLevelBase):
             # attempt to populate from json
             try:
                 self.offset_from_level = json_var.get(
-                    DataPropertyNames.OFFSET_FROM_LEVEL.value, self.offset_from_level
+                    DataPropertyNames.OFFSET_FROM_LEVEL, self.offset_from_level
                 )
                 if not isinstance(self.offset_from_level, float):
                     raise TypeError(

@@ -72,7 +72,7 @@ class DataViewBase(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.id = json_var.get(DataPropertyNames.ID.value, self.id)
+                self.id = json_var.get(DataPropertyNames.ID, self.id)
 
                 if not isinstance(self.id, int):
                     raise TypeError(

@@ -85,11 +85,11 @@ class DataViewSchedule(DataViewBase):
             # attempt to populate from json
             try:
                 self.bounding_box = DataGeometryBoundingBox2(
-                    json_var.get(DataPropertyNames.BOUNDING_BOX.value, {})
+                    json_var.get(DataPropertyNames.BOUNDING_BOX, {})
                 )
 
                 self.total_number_of_rows = json_var.get(
-                    DataPropertyNames.TOTAL_NUMBER_OF_ROWS.value,
+                    DataPropertyNames.TOTAL_NUMBER_OF_ROWS,
                     self.total_number_of_rows,
                 )
                 if not isinstance(self.total_number_of_rows, int):
@@ -99,7 +99,7 @@ class DataViewSchedule(DataViewBase):
                         )
                     )
 
-                segment_data = json_var.get(DataPropertyNames.SEGMENTS.value, [])
+                segment_data = json_var.get(DataPropertyNames.SEGMENTS, [])
                 for seg_d in segment_data:
                     seg = DataScheduleSegment(j=seg_d)
                     self.segments.append(seg)

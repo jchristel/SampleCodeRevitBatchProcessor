@@ -55,12 +55,12 @@ class BoundingBox2(BoundingBoxBase):
         # check first if a json string / dictionary is provided
         if j:
             point1 = Point2(
-                x=self.json_ini[GeometryPropertyNames.MIN_X.value],
-                y=self.json_ini[GeometryPropertyNames.MIN_Y.value],
+                x=self.json_ini[GeometryPropertyNames.MIN_X],
+                y=self.json_ini[GeometryPropertyNames.MIN_Y],
             )
             point2 = Point2(
-                x=self.json_ini[GeometryPropertyNames.MAX_X.value],
-                y=self.json_ini[GeometryPropertyNames.MAX_Y.value],
+                x=self.json_ini[GeometryPropertyNames.MAX_X],
+                y=self.json_ini[GeometryPropertyNames.MAX_Y],
             )
 
         # If both point1 and point2 are provided update the bounding box

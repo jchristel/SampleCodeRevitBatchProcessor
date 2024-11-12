@@ -81,11 +81,11 @@ class DataViewPlan(DataViewBase):
             # attempt to populate from json
             try:
                 self.bounding_box = DataGeometryBoundingBox2(
-                    json_var.get(DataPropertyNames.BOUNDING_BOX.value, {})
+                    json_var.get(DataPropertyNames.BOUNDING_BOX, {})
                 )
 
                 # get any tags
-                tags = json_var.get(DataPropertyNames.TAGS.value, [])
+                tags = json_var.get(DataPropertyNames.TAGS, [])
                 for tag in tags:
                     data_tag = DataTag(j=tag)
                     self.tags.append(data_tag)

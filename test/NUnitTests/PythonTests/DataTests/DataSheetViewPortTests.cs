@@ -17,7 +17,7 @@ namespace PythonTests.DataTests
             {
                 { "data_type", "sheet view port" },
                 { "view_id", 1001 },
-                { "vp_type", PythonEngineManager.DataViewPortTypeNames.THREE_D.value },
+                { "vp_type", PythonEngineManager.DataViewPortTypeNames.THREE_D},
                 { "bounding_box", new Dictionary<string, object>
                     {
                         { "DataType", "bounding box 2" },
@@ -106,7 +106,7 @@ namespace PythonTests.DataTests
             // Assert
             Assert.AreEqual("sheet view port", dataSheetViewPort.data_type);
             Assert.AreEqual(1001, dataSheetViewPort.view_id);
-            Assert.AreEqual(PythonEngineManager.DataViewPortTypeNames.THREE_D.value, dataSheetViewPort.vp_type);
+            Assert.AreEqual(PythonEngineManager.DataViewPortTypeNames.THREE_D, dataSheetViewPort.vp_type);
             Assert.IsNotNull(dataSheetViewPort.bounding_box);
             Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.bounding_box.min_x);
             Assert.AreEqual(10.0, dataSheetViewPort.bounding_box.bounding_box.max_x);
@@ -142,7 +142,7 @@ namespace PythonTests.DataTests
             // Assert
             Assert.AreEqual("sheet view port", dataSheetViewPort.data_type);
             Assert.AreEqual(-1, dataSheetViewPort.view_id);
-            Assert.AreEqual(PythonEngineManager.DataViewPortTypeNames.FLOOR_PLAN.value, dataSheetViewPort.vp_type);
+            Assert.AreEqual(PythonEngineManager.DataViewPortTypeNames.FLOOR_PLAN, dataSheetViewPort.vp_type);
             Assert.IsNotNull(dataSheetViewPort.bounding_box);
             Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.bounding_box.min_x);
             Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.bounding_box.max_x);

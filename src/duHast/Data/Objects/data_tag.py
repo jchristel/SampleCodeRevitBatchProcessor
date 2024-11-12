@@ -90,28 +90,28 @@ class DataTag(DataBase):
             # attempt to populate from json
             try:
                 self.bounding_box = DataGeometryBoundingBox2(
-                    json_var.get(DataPropertyNames.BOUNDING_BOX.value, None)
+                    json_var.get(DataPropertyNames.BOUNDING_BOX, None)
                 )
 
                 # get the point location
-                point = json_var.get(DataPropertyNames.POINT.value, None)
+                point = json_var.get(DataPropertyNames.POINT None)
                 if point:
                     self.point = Point3(j=point)
 
                 # get the elbow location
-                elbow_location = json_var.get(DataPropertyNames.TAG_ELBOW_LOCATION.value, None)
+                elbow_location = json_var.get(DataPropertyNames.TAG_ELBOW_LOCATION, None)
                 if elbow_location:
                     self.elbow_location = Point3(j=elbow_location)
 
                 self.leader_end = json_var.get(
-                    DataPropertyNames.TAG_LEADER_END.value, self.leader_end
+                    DataPropertyNames.TAG_LEADER_END, self.leader_end
                 )
                 self.leader_reference = json_var.get(
-                    DataPropertyNames.TAG_LEADER_REFERENCE.value, self.leader_reference
+                    DataPropertyNames.TAG_LEADER_REFERENCE, self.leader_reference
                 )
 
                 self.leader_element_reference_id = json_var.get(
-                    DataPropertyNames.TAG_LEADER_ELEMENT_REFERENCE_ID.value,
+                    DataPropertyNames.TAG_LEADER_ELEMENT_REFERENCE_ID,
                     self.leader_element_reference_id,
                 )
                 if not isinstance(self.leader_element_reference_id, int):

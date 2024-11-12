@@ -70,7 +70,7 @@ class DataPhasing(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.created = json_var.get(DataPropertyNames.CREATED.value, self.created)
+                self.created = json_var.get(DataPropertyNames.CREATED, self.created)
                 if not (isinstance(self.created, str)):
                     raise ValueError(
                         "created needs to be of type str, got {} instead.".format(
@@ -79,7 +79,7 @@ class DataPhasing(data_base.DataBase):
                     )
 
                 self.demolished = json_var.get(
-                    DataPropertyNames.DEMOLISHED.value, self.demolished
+                    DataPropertyNames.DEMOLISHED, self.demolished
                 )
                 if not (isinstance(self.demolished, str)):
                     raise ValueError(

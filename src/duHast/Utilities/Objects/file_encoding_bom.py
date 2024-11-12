@@ -27,10 +27,8 @@ Helper functions relating to comma separated text files.
 #
 #
 
-from enum import Enum
 
-
-class BOMValue(Enum):
+class BOMValue():
     """
     Contains BOM values for different encodings.
     """

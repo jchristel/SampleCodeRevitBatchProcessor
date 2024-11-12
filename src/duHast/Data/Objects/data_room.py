@@ -104,7 +104,7 @@ class DataRoom(data_base.DataBase, data_element_geometry_base.DataElementGeometr
                 
                 # get associated elements
                 associated_elements = json_var.get(
-                    DataPropertyNames.ASSOCIATED_ELEMENTS.value,
+                    DataPropertyNames.ASSOCIATED_ELEMENTS,
                     self.associated_elements,
                 )
                 # these can be all sorts of types...

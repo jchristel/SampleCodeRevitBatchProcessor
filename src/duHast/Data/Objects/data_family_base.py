@@ -112,7 +112,7 @@ class DataFamilyBase(
 
                 # get associated elements
                 associated_elements = json_var.get(
-                    DataPropertyNames.ASSOCIATED_ELEMENTS.value,
+                    DataPropertyNames.ASSOCIATED_ELEMENTS,
                     self.associated_elements,
                 )
                 # these can be all sorts of types...

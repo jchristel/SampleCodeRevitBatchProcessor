@@ -62,14 +62,14 @@ def _get_view_port_type(doc, revit_view_port):
     view = doc.GetElement(revit_view_port.ViewId)
 
     if view.ViewType == ViewType.FloorPlan:
-        return DataViewPortTypeNames.FLOOR_PLAN.value
+        return DataViewPortTypeNames.FLOOR_PLAN
     elif view.ViewType == ViewType.Elevation:
-        return DataViewPortTypeNames.ELEVATION.value
+        return DataViewPortTypeNames.ELEVATION
     elif view.ViewType == ViewType.ThreeD:
-        return DataViewPortTypeNames.THREE_D.value
+        return DataViewPortTypeNames.THREE_D
     elif view.ViewType == ViewType.Schedule:
         # thats unlikely
-        return DataViewPortTypeNames.SCHEDULE.value
+        return DataViewPortTypeNames.SCHEDULE
     else:
         return None
 
@@ -300,7 +300,7 @@ def convert_revit_schedule_sheet_instances_to_data_instance(doc, sheet, revit_sc
     
         # set up data instances
         view_port_data = DataSheetViewPort()
-        view_port_data.vp_type = DataViewPortTypeNames.SCHEDULE.value
+        view_port_data.vp_type = DataViewPortTypeNames.SCHEDULE
 
         # bounding box:
         bbox = schedule_sheet_instance.get_BoundingBox(sheet)

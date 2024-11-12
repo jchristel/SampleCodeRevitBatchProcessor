@@ -72,7 +72,7 @@ class DataGeometryBase(data_base.DataBase):
             # attempt to populate from json
             try:
                 translation_coord = json_var.get(
-                    DataPropertyNames.TRANSLATION_COORDINATES.value, None
+                    DataPropertyNames.TRANSLATION_COORDINATES, None
                 )
                 # check if we got None back...if so use what is the default
                 # since a point can be initialized with None
@@ -80,7 +80,7 @@ class DataGeometryBase(data_base.DataBase):
                     self.translation_coord = Point3(j=translation_coord)
 
                 rotation_coord = json_var.get(
-                    DataPropertyNames.ROTATION_COORDINATES.value, None
+                    DataPropertyNames.ROTATION_COORDINATES, None
                 )
                 # check if we got None back...if so use what is the default
                 # since a matrix ini from an empty dictionary got 0 x 0 size, meanwhile our default is 3 x 3

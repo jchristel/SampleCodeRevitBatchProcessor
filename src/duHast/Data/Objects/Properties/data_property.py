@@ -70,13 +70,13 @@ class DataProperty(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.name = json_var.get(DataPropertyNames.NAME.value, self.name)
+                self.name = json_var.get(DataPropertyNames.NAME, self.name)
                 if not isinstance(self.name, str):
                     raise TypeError(
                         "Expected 'name' to be a string, got {}".format(type(self.name))
                     )
 
-                self.value = json_var.get(DataPropertyNames.VALUE_FIELD.value, self.value)
+                self.value = json_var.get(DataPropertyNames.VALUE_FIELD, self.value)
             except Exception as e:
                 raise ValueError(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)

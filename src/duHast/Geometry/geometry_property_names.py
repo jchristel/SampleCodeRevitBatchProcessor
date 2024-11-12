@@ -28,10 +28,7 @@ Geometry property  names enum class.
 #
 
 
-from enum import Enum
-
-
-class GeometryPropertyNames(Enum):
+class GeometryPropertyNames():
     """
     Contains property names used in geometry classes
     """

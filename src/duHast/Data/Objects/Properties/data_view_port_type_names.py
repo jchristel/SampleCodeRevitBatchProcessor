@@ -27,11 +27,7 @@ Data view port type  names enum class.
 #
 #
 
-
-from enum import Enum
-
-
-class DataViewPortTypeNames(Enum):
+class DataViewPortTypeNames():
     """
     Contains viewport type names
     """

@@ -99,8 +99,8 @@ class DataInstanceProperties(data_base.DataBase):
         if len(self.properties) != len(other.properties):
             return False
 
-        # Check each property in the properties list
-        return all(sp == op for sp, op in zip(self.properties, other.properties))
+        # Check each property in the properties list regardless of order
+        return set(self.properties) == set(other.properties)
 
     def __ne__(self, other):
         return not self.__eq__(other)

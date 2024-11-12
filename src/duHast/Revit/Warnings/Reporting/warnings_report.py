@@ -112,10 +112,10 @@ def convert_warnings_data_to_list(warnings_data):
                 dummy.file_name,
                 dummy.date,
                 dummy.time,
-                dummy.id,
-                len(warnings_data[key]),
+                dummy.id.ToString(), # c# guid
+                str(len(warnings_data[key])),
                 dummy.description,
-                number_elements_affected,
+                str(number_elements_affected),
             ]
         )
     return data

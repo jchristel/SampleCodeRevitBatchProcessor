@@ -26,11 +26,7 @@ Design set property names enum class.
 #
 #
 
-
-from enum import Enum
-
-
-class DesignSetPropertyNames(Enum):
+class DesignSetPropertyNames():
     """
     Contains property names used in data set dictionary
     """

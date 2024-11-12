@@ -67,10 +67,11 @@ class BoundingBoxBase(Base):
         else:
             self._json_ini = None
 
-        self._min_x = float("inf")
-        self._max_x = float("-inf")
-        self._min_y = float("inf")
-        self._max_y = float("-inf")
+        # set default values
+        self._min_x = 0.0
+        self._max_x = 0.0
+        self._min_y = 0.0
+        self._max_y = 0.0
 
     @property
     def json_ini(self):

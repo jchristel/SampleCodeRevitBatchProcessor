@@ -74,11 +74,11 @@ def _get_view_port_type(doc, revit_view_port):
         return None
 
 
-def _get_vierw_crop(view):
+def _get_view_crop(view):
     # get bounding box
     crop_box = view.CropBox
 
-    # there is a very very slight chance that view is notr cropped ...it should be but...
+    # there is a very very slight chance that view is not cropped ...it should be but...
     if crop_box:
         # get the outlines min and max points as 2d points
         bb_max_2d = convert_XYZ_to_point2(crop_box.Max)
@@ -89,12 +89,10 @@ def _get_vierw_crop(view):
         return None
 
 
-def _get_plan_view(doc, view):
+def _get_plan_view(view):
     """
     Converts data from a Revit plan view to a data plan view instance
 
-    :param doc: The Revit document.
-    :type doc: Autodesk.Revit.DB.Document
     :param view: The Revit view
     :type view: Autodesk.Revit.DB.ViewPlan
 
@@ -103,9 +101,9 @@ def _get_plan_view(doc, view):
     """
 
     data_instance = DataViewPlan()
-    
+
     # get the view crop
-    bb_min_2d, bb_max_2d=_get_vierw_crop(view)
+    bb_min_2d, bb_max_2d = _get_view_crop(view)
     if bb_min_2d and bb_max_2d:
         data_instance.bounding_box.update(bb_min_2d, bb_max_2d)
 
@@ -113,12 +111,10 @@ def _get_plan_view(doc, view):
     return data_instance
 
 
-def _get_elevation_view(doc, view):
+def _get_elevation_view(view):
     """
     Converts data from a Revit elevation view to a data elevation view instance
 
-    :param doc: The Revit document.
-    :type doc: Autodesk.Revit.DB.Document
     :param view: The Revit view
     :type view: Autodesk.Revit.DB.ViewSection
 
@@ -129,22 +125,20 @@ def _get_elevation_view(doc, view):
     data_instance = DataViewElevation()
 
     # get bounding box
-    bb_min_2d, bb_max_2d=_get_vierw_crop(view)
+    bb_min_2d, bb_max_2d = _get_view_crop(view)
     if bb_min_2d and bb_max_2d:
         data_instance.bounding_box.update(bb_min_2d, bb_max_2d)
 
     # orientation (which edge of the bounding box is this elevation facing?)
     # get any tags in the view
-    
+
     return data_instance
 
 
-def _get_three_d_view(doc, view):
+def _get_three_d_view(view):
     """
     Converts data from a Revit 3D view to a data 3D view instance
 
-    :param doc: The Revit document.
-    :type doc: Autodesk.Revit.DB.Document
     :param view: The Revit view
     :type view: Autodesk.Revit.DB.View3D
 
@@ -153,9 +147,9 @@ def _get_three_d_view(doc, view):
     """
 
     data_instance = DataViewThreeD()
-    
+
     # get bounding box
-    bb_min_2d, bb_max_2d=_get_vierw_crop(view)
+    bb_min_2d, bb_max_2d = _get_view_crop(view)
     if bb_min_2d and bb_max_2d:
         data_instance.bounding_box.update(bb_min_2d, bb_max_2d)
 
@@ -163,12 +157,10 @@ def _get_three_d_view(doc, view):
     return data_instance
 
 
-def _get_schedule_view(doc, view):
+def _get_schedule_view(view):
     """
     Converts data from a Revit schedule view to a data schedule view instance
 
-    :param doc: The Revit document.
-    :type doc: Autodesk.Revit.DB.Document
     :param view: The Revit view
     :type view: Autodesk.Revit.DB.ViewSchedule
 
@@ -191,24 +183,22 @@ def _get_schedule_view(doc, view):
     data_instance.total_number_of_rows = number_of_rows
 
     # The total count of schedule segments. 1 means the schedule is not split yet.
-    for i in range(view.GetSegmentCount()-1):
+    for i in range(view.GetSegmentCount() - 1):
         seg_data = DataScheduleSegment()
         seg_data.index = i
-        seg_height  =  convert_imperial_feet_to_metric_mm(view.GetSegmentHeight(i))
+        seg_height = convert_imperial_feet_to_metric_mm(view.GetSegmentHeight(i))
         seg_data.height = seg_height
         data_instance.segments.append(seg_data)
-    
+
     # get bounding box
     # TODO:
     return data_instance
 
 
-def _get_view_data(doc, view):
+def _get_view_data(view):
     """
     Set up view data instance depending ov view type
 
-    :param doc: The Revit document.
-    :type doc: Autodesk.Revit.DB.Document
     :param view: The view to be converted
     :type view: Autodesk.Revit.DB.View
 
@@ -221,16 +211,16 @@ def _get_view_data(doc, view):
     # check view type
     if view.ViewType == ViewType.FloorPlan:
         # plan view
-        view_data_instance = _get_plan_view(doc=doc, view=view)
+        view_data_instance = _get_plan_view(view=view)
     elif view.ViewType == ViewType.Elevation:
         # elevation
-        view_data_instance = _get_elevation_view(doc=doc, view=view)
+        view_data_instance = _get_elevation_view(view=view)
     elif view.ViewType == ViewType.ThreeD:
         # 3D
-        view_data_instance = _get_three_d_view(doc=doc, view=view)
+        view_data_instance = _get_three_d_view(view=view)
     elif view.ViewType == ViewType.Schedule:
         # schedule
-        view_data_instance = _get_schedule_view(doc=doc, view=view)
+        view_data_instance = _get_schedule_view(view=view)
 
     return view_data_instance
 
@@ -257,31 +247,34 @@ def convert_revit_viewport_to_data_instance(doc, revit_view_port):
 
     # get an outline from the Revit view port
     view_port_outline = revit_view_port.GetBoxOutline()
-    
+
     # get the outlines min and max points as 2d points
     bb_max_2d = convert_XYZ_to_point2(view_port_outline.MaximumPoint)
     bb_min_2d = convert_XYZ_to_point2(view_port_outline.MinimumPoint)
-    
+
     # update the bounding box property of the view port instance
     view_port_data.bounding_box.update(bb_min_2d, bb_max_2d)
 
     # get the viewport centre
-    centre_point=convert_XYZ_to_point2(revit_view_port.GetBoxCenter())
-    view_port_data.centre_point=centre_point
+    centre_point = convert_XYZ_to_point2(revit_view_port.GetBoxCenter())
+    view_port_data.centre_point = centre_point
 
     # set the viewport type
     view_port_data.vp_type = view_port_type
 
     # set the view
     revit_view = doc.GetElement(revit_view_port.ViewId)
-    view_data = _get_view_data(doc=doc, view=revit_view)
+    view_data = _get_view_data(view=revit_view)
     view_port_data.view = view_data
 
     return view_port_data
 
-def convert_revit_schedule_sheet_instances_to_data_instance(doc, sheet, revit_schedule_sheet_instances):
+
+def convert_revit_schedule_sheet_instances_to_data_instance(
+    doc, sheet, revit_schedule_sheet_instances
+):
     """
-    Convertes a list of schedule sheet instances to view port data instances
+    Converts a list of schedule sheet instances to view port data instances
 
     :param doc: The Revit document.
     :type doc: Autodesk.Revit.DB.Document
@@ -294,10 +287,10 @@ def convert_revit_schedule_sheet_instances_to_data_instance(doc, sheet, revit_sc
     """
 
     all_view_port_data = []
-    
+
     # loop over all schedule sheet instances
     for schedule_sheet_instance in revit_schedule_sheet_instances:
-    
+
         # set up data instances
         view_port_data = DataSheetViewPort()
         view_port_data.vp_type = DataViewPortTypeNames.SCHEDULE
@@ -309,9 +302,9 @@ def convert_revit_schedule_sheet_instances_to_data_instance(doc, sheet, revit_sc
         bb_min_2d = convert_XYZ_to_point2(bbox.Min)
 
         # get the viewport centre
-        centre_point=convert_XYZ_to_point2(schedule_sheet_instance.Point)
-        view_port_data.centre_point=centre_point
-        
+        centre_point = convert_XYZ_to_point2(schedule_sheet_instance.Point)
+        view_port_data.centre_point = centre_point
+
         # update the bounding box property of the view port instance
         view_port_data.bounding_box.update(bb_min_2d, bb_max_2d)
 
@@ -322,5 +315,5 @@ def convert_revit_schedule_sheet_instances_to_data_instance(doc, sheet, revit_sc
 
         # append to list to be returned
         all_view_port_data.append(view_port_data)
-    
+
     return all_view_port_data

@@ -100,7 +100,7 @@ def load_family(doc, family_file_path):
         Result class instance.
 
         - Reload status (bool) returned in result.status.
-        - Reload status returned from Revit in result.message property.
+        - Reload message: contains the reload log messages.
         - Return family reference stored in result.result property on successful reload only
 
         On exception
@@ -119,20 +119,22 @@ def load_family(doc, family_file_path):
             return_family = clr.Reference[Family]()
             action_return_value = res.Result()
             try:
-                # load the family
+                # attempt to reload the family
                 reload_status = doc.LoadFamily(
                     family_file_path,
                     famLoadOpt.FamilyLoadOption(),  # overwrite parameter values etc
                     return_family,
                 )
-
+                # update reload status
                 action_return_value.update_sep(
                     reload_status,
                     "Loaded family: {} :: {}".format(family_file_path, reload_status),
                 )
-
-                # return the family reloaded if there is any...
-                if return_family:
+                
+                # check if reload returned a family and if so return it to caller
+                # needs to be 'is not None test sincean exception will thrown otherwise:
+                # Can't convert a Reference<> instance to a bool
+                if return_family is not None:
                     action_return_value.result.append(return_family.Value)
             except Exception as e:
                 action_return_value.update_sep(
@@ -152,7 +154,7 @@ def load_family(doc, family_file_path):
         dummy = rTran.in_transaction(transaction, action)
         result.update(dummy)
     except Exception as e:
-        result.update_sep(False, "Failed to load families with exception: " + str(e))
+        result.update_sep(False, "Failed to load family with exception: {}".format(e))
     return result
 
 

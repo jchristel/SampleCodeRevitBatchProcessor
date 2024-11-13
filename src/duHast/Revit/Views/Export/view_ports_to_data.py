@@ -107,7 +107,7 @@ def _get_plan_view(doc, view):
     # get the view crop
     bb_min_2d, bb_max_2d=_get_vierw_crop(view)
     if bb_min_2d and bb_max_2d:
-        data_instance.bounding_box.update(min=bb_min_2d, max=bb_max_2d)
+        data_instance.bounding_box.update(bb_min_2d, bb_max_2d)
 
     # get any tags in the view
     return data_instance
@@ -131,7 +131,7 @@ def _get_elevation_view(doc, view):
     # get bounding box
     bb_min_2d, bb_max_2d=_get_vierw_crop(view)
     if bb_min_2d and bb_max_2d:
-        data_instance.bounding_box.update(min=bb_min_2d, max=bb_max_2d)
+        data_instance.bounding_box.update(bb_min_2d, bb_max_2d)
 
     # orientation (which edge of the bounding box is this elevation facing?)
     # get any tags in the view
@@ -157,7 +157,7 @@ def _get_three_d_view(doc, view):
     # get bounding box
     bb_min_2d, bb_max_2d=_get_vierw_crop(view)
     if bb_min_2d and bb_max_2d:
-        data_instance.bounding_box.update(min=bb_min_2d, max=bb_max_2d)
+        data_instance.bounding_box.update(bb_min_2d, bb_max_2d)
 
     # orientation (eye point and view direction)
     return data_instance

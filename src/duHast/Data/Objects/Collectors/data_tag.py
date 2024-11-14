@@ -41,7 +41,9 @@ import json
 
 from duHast.Data.Objects.Collectors.data_base import DataBase
 from duHast.Geometry.point_3 import Point3
-from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.data_property_names import (
+    DataPropertyNames,
+)
 from duHast.Data.Objects.Collectors.Properties.Geometry.geometry_bounding_box_2 import (
     DataGeometryBoundingBox2,
 )
@@ -99,7 +101,9 @@ class DataTag(DataBase):
                     self.point = Point3(j=point)
 
                 # get the elbow location
-                elbow_location = json_var.get(DataPropertyNames.TAG_ELBOW_LOCATION, None)
+                elbow_location = json_var.get(
+                    DataPropertyNames.TAG_ELBOW_LOCATION, None
+                )
                 if elbow_location:
                     self.elbow_location = Point3(j=elbow_location)
 
@@ -144,8 +148,20 @@ class DataTag(DataBase):
             and self.point == other.point
             and self.leader_end == other.leader_end
             and self.leader_reference == other.leader_reference
-            and self.leader_element_reference_id == other.leader_element_reference_id     
-            )
+            and self.leader_element_reference_id == other.leader_element_reference_id
+        )
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash(
+            (
+                self.bounding_box,
+                self.elbow_location,
+                self.point,
+                self.leader_end,
+                self.leader_reference,
+                self.leader_element_reference_id,
+            )
+        )

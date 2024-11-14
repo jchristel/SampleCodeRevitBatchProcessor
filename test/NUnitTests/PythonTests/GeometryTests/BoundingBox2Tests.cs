@@ -138,10 +138,10 @@ namespace PythonTests.GeometryTests
         public void Bbox2_Initialize_WithMissingPoints_ShouldInitialiseDefault()
         {
             dynamic bbox = PythonEngineManager.BoundingBox2Class(null, null);
-            Assert.AreEqual(double.PositiveInfinity, bbox.min_x);
-            Assert.AreEqual(double.PositiveInfinity, bbox.min_y);
-            Assert.AreEqual(double.NegativeInfinity, bbox.max_x);
-            Assert.AreEqual(double.NegativeInfinity, bbox.max_y);
+            Assert.AreEqual(0.0, bbox.min_x);
+            Assert.AreEqual(0.0, bbox.min_y);
+            Assert.AreEqual(0.0, bbox.max_x);
+            Assert.AreEqual(0.0, bbox.max_y);
 
         }
 

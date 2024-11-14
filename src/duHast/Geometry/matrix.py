@@ -190,3 +190,8 @@ class Matrix(Base):
 
     def __ne__(self, other):
         return not (self == other)
+
+    def __hash__(self):
+        # Convert self._data to a tuple of tuples for hashing
+        data_as_tuple = tuple(tuple(row) for row in self._data)
+        return hash((self.rows, self.columns, data_as_tuple))

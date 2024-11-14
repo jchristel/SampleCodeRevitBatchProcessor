@@ -38,10 +38,14 @@ from duHast.Data.Objects.Collectors.Properties import data_instance_properties
 from duHast.Data.Objects.Collectors.Properties import data_revit_model
 from duHast.Data.Objects.Collectors import data_base
 from duHast.Data.Objects.Collectors.Properties import data_element_geometry_base
-from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.data_property_names import (
+    DataPropertyNames,
+)
 
 
-class DataCeiling(data_base.DataBase, data_element_geometry_base.DataElementGeometryBase):
+class DataCeiling(
+    data_base.DataBase, data_element_geometry_base.DataElementGeometryBase
+):
 
     data_type = "ceiling"
 
@@ -93,7 +97,9 @@ class DataCeiling(data_base.DataBase, data_element_geometry_base.DataElementGeom
                     )
                 )
                 self.type_properties = data_type_properties.DataTypeProperties(
-                    json_var.get(data_type_properties.DataTypeProperties.data_type, None)
+                    json_var.get(
+                        data_type_properties.DataTypeProperties.data_type, None
+                    )
                 )
                 self.level = data_level.DataLevel(
                     json_var.get(data_level.DataLevel.data_type, None)
@@ -105,20 +111,23 @@ class DataCeiling(data_base.DataBase, data_element_geometry_base.DataElementGeom
                     json_var.get(data_phasing.DataPhasing.data_type, None)
                 )
                 self.design_set_and_option = data_design_set_option.DataDesignSetOption(
-                    json_var.get(data_design_set_option.DataDesignSetOption.data_type, None)
+                    json_var.get(
+                        data_design_set_option.DataDesignSetOption.data_type, None
+                    )
                 )
-                
+
                 # get associated elements
                 associated_elements = json_var.get(
                     DataPropertyNames.ASSOCIATED_ELEMENTS, self.associated_elements
                 )
                 # these can be all sorts of types...
-                #TODO: convert json to actual elements
-                
+                # TODO: convert json to actual elements
+
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
-    
-    
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )
+
     def __eq__(self, other):
         """
         equal compare ( ignores associated elements property)
@@ -142,3 +151,21 @@ class DataCeiling(data_base.DataBase, data_element_geometry_base.DataElementGeom
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        """
+        hash ( ignores associated elements property)
+
+        Returns:
+            _type_: hash value
+        """
+        return hash(
+            (
+                self.instance_properties,
+                self.type_properties,
+                self.level,
+                self.revit_model,
+                self.phasing,
+                self.design_set_and_option,
+            )
+        )

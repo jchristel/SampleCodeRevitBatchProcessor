@@ -89,3 +89,7 @@ class DataGeometryBoundingBox2(BoundingBox2, geometry_base.DataGeometryBase):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        # Combine the hash values of each base class
+        return hash((BoundingBox2.__hash__(self), geometry_base.DataGeometryBase.__hash__(self)))

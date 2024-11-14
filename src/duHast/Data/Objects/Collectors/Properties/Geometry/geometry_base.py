@@ -101,3 +101,6 @@ class DataGeometryBase(data_base.DataBase):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+    
+    def __hash__(self):
+        return hash((self.translation_coord, self.rotation_coord))

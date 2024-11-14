@@ -37,7 +37,9 @@ This class has the following properties:
 
 import json
 from duHast.Utilities.Objects.base import Base
-from duHast.Data.Objects.BluePrints.blueprint_property_names import BlueprintPropertyNames
+from duHast.Data.Objects.BluePrints.blueprint_property_names import (
+    BlueprintPropertyNames,
+)
 
 
 class RoomLayoutSheet(Base):
@@ -49,13 +51,13 @@ class RoomLayoutSheet(Base):
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
         super(RoomLayoutSheet, self).__init__(**kwargs)
-        
+
         self._room_size = 0.0
         self._room_proportions = 1.0
         self._room_number_of_items = 0
-        
+
         self._sheets = []
-        
+
         json_var = None
         # check if any data was past in with constructor!
         if j is not None:
@@ -75,8 +77,7 @@ class RoomLayoutSheet(Base):
 
             # attempt to populate from json
             try:
-               pass
-                
+                pass
 
             except Exception as e:
                 raise type(e)(
@@ -94,5 +95,8 @@ class RoomLayoutSheet(Base):
 
     def __ne__(self, other):
         return not self.__eq__(other)
-        
-        
+
+    def __hash__(self):
+        return hash(
+            (self._room_size, self._room_proportions, self._room_number_of_items)
+        )

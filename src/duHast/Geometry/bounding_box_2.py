@@ -120,3 +120,6 @@ class BoundingBox2(BoundingBoxBase):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+    
+    def __hash__(self):
+        return hash((self.min_x, self.max_x, self.min_y, self.max_y))

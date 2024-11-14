@@ -43,7 +43,9 @@ from duHast.Data.Objects.Collectors.Properties.Geometry.geometry_bounding_box_2 
     DataGeometryBoundingBox2,
 )
 from duHast.Data.Objects.Collectors.data_sheet_view_port import DataSheetViewPort
-from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.data_property_names import (
+    DataPropertyNames,
+)
 
 
 class DataSheet(data_base.DataBase):
@@ -95,7 +97,9 @@ class DataSheet(data_base.DataBase):
                     )
                 )
                 self.type_properties = data_type_properties.DataTypeProperties(
-                    json_var.get(data_type_properties.DataTypeProperties.data_type, None)
+                    json_var.get(
+                        data_type_properties.DataTypeProperties.data_type, None
+                    )
                 )
                 self.bounding_box = DataGeometryBoundingBox2(
                     json_var.get(DataPropertyNames.BOUNDING_BOX, None)
@@ -111,7 +115,7 @@ class DataSheet(data_base.DataBase):
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
-                
+
     def __eq__(self, other):
         """
         equal compare
@@ -133,3 +137,13 @@ class DataSheet(data_base.DataBase):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash(
+            (
+                self.instance_properties,
+                self.type_properties,
+                self.view_ports,
+                self.bounding_box,
+            )
+        )

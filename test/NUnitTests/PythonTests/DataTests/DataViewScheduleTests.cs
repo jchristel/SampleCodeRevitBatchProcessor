@@ -107,10 +107,10 @@ namespace PythonTests.DataTests
             Assert.AreEqual("view_schedule", dataViewSchedule.data_type);
             Assert.AreEqual(0, dataViewSchedule.total_number_of_rows);
             Assert.IsNotNull(dataViewSchedule.bounding_box);
-            Assert.AreEqual(double.PositiveInfinity, dataViewSchedule.bounding_box.min_x);
-            Assert.AreEqual(double.NegativeInfinity, dataViewSchedule.bounding_box.max_x);
-            Assert.AreEqual(double.PositiveInfinity, dataViewSchedule.bounding_box.min_y);
-            Assert.AreEqual(double.NegativeInfinity, dataViewSchedule.bounding_box.max_y);
+            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.min_x);
+            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.max_x);
+            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.min_y);
+            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.max_y);
             Assert.IsNotNull(dataViewSchedule.segments);
             Assert.AreEqual(0, dataViewSchedule.segments.Count);
         }

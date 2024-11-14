@@ -29,7 +29,9 @@ Data storage class for Revit design option properties.
 
 import json
 from duHast.Data.Objects.Collectors import data_base
-from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.data_property_names import (
+    DataPropertyNames,
+)
 
 
 class DataDesignSetOption(data_base.DataBase):
@@ -114,3 +116,6 @@ class DataDesignSetOption(data_base.DataBase):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash((self.set_name, self.option_name, self.is_primary))

@@ -140,18 +140,18 @@ namespace PythonTests.DataTests
             Assert.AreEqual(-1, dataSheetViewPort.view_id);
             Assert.AreEqual(PythonEngineManager.DataViewPortTypeNames.FLOOR_PLAN, dataSheetViewPort.vp_type);
             Assert.IsNotNull(dataSheetViewPort.bounding_box);
-            Assert.AreEqual(double.PositiveInfinity, dataSheetViewPort.bounding_box.min_x);
-            Assert.AreEqual(double.NegativeInfinity, dataSheetViewPort.bounding_box.max_x);
-            Assert.AreEqual(double.PositiveInfinity, dataSheetViewPort.bounding_box.min_y);
-            Assert.AreEqual(double.NegativeInfinity, dataSheetViewPort.bounding_box.max_y);
+            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.min_x);
+            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.max_x);
+            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.min_y);
+            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.max_y);
             Assert.AreEqual(0.0, dataSheetViewPort.centre_point.x);
             Assert.AreEqual(0.0, dataSheetViewPort.centre_point.y);
 
             Assert.AreEqual(-1, dataSheetViewPort.view.id);
-            Assert.AreEqual(double.PositiveInfinity, dataSheetViewPort.view.bounding_box.min_x);
-            Assert.AreEqual(double.NegativeInfinity, dataSheetViewPort.view.bounding_box.max_x);
-            Assert.AreEqual(double.PositiveInfinity, dataSheetViewPort.view.bounding_box.min_y);
-            Assert.AreEqual(double.NegativeInfinity, dataSheetViewPort.view.bounding_box.max_y);
+            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.min_x);
+            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.max_x);
+            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.min_y);
+            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.max_y);
             Assert.AreEqual(0, dataSheetViewPort.view.tags.Count);
         }
 

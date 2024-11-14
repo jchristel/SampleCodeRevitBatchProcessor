@@ -49,7 +49,9 @@ from duHast.Data.Objects.Collectors.Properties.data_view_port_type_names import 
 )
 from duHast.Geometry.point_2 import Point2
 
-from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.data_property_names import (
+    DataPropertyNames,
+)
 
 
 class DataSheetViewPort(data_base.DataBase):
@@ -129,7 +131,7 @@ class DataSheetViewPort(data_base.DataBase):
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
-    
+
     def __eq__(self, other):
         """
         equal compare
@@ -152,3 +154,14 @@ class DataSheetViewPort(data_base.DataBase):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash(
+            (
+                self.bounding_box,
+                self.view_id,
+                self.vp_type,
+                self.view,
+                self.centre_point,
+            )
+        )

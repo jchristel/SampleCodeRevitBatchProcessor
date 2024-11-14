@@ -143,3 +143,6 @@ class DataGeometryPolygon2(geometry_base.DataGeometryBase):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash((self.outer_loop, self.inner_loops))

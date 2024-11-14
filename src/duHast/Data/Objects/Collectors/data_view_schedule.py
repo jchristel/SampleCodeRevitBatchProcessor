@@ -36,11 +36,15 @@ import json
 
 from duHast.Data.Objects.Collectors.data_view_base import DataViewBase
 
-from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.data_property_names import (
+    DataPropertyNames,
+)
 from duHast.Data.Objects.Collectors.Properties.Geometry.geometry_bounding_box_2 import (
     DataGeometryBoundingBox2,
 )
-from duHast.Data.Objects.Collectors.Properties.data_schedule_segement import DataScheduleSegment
+from duHast.Data.Objects.Collectors.Properties.data_schedule_segement import (
+    DataScheduleSegment,
+)
 
 
 class DataViewSchedule(DataViewBase):
@@ -129,3 +133,6 @@ class DataViewSchedule(DataViewBase):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash((self.bounding_box, self.total_number_of_rows, self.segments))

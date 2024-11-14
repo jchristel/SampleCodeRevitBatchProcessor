@@ -165,8 +165,8 @@ namespace PythonTests.DataTests
             Assert.IsNotNull(dataSheet.instance_properties);
             Assert.IsNotNull(dataSheet.type_properties);
             Assert.AreEqual(0, dataSheet.view_ports.Count);
-            Assert.AreEqual(double.PositiveInfinity, dataSheet.bounding_box.min_x);
-            Assert.AreEqual(double.NegativeInfinity, dataSheet.bounding_box.max_x);
+            Assert.AreEqual(0.0, dataSheet.bounding_box.min_x);
+            Assert.AreEqual(0.0, dataSheet.bounding_box.max_x);
         }
 
         [Test]

@@ -38,7 +38,9 @@ from duHast.Data.Objects.Collectors.Properties import data_instance_properties
 from duHast.Data.Objects.Collectors.Properties import data_revit_model
 from duHast.Data.Objects.Collectors import data_base
 from duHast.Data.Objects.Collectors.Properties import data_element_geometry_base
-from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.data_property_names import (
+    DataPropertyNames,
+)
 
 
 class DataFamilyBase(
@@ -95,7 +97,9 @@ class DataFamilyBase(
                     )
                 )
                 self.type_properties = data_type_properties.DataTypeProperties(
-                    json_var.get(data_type_properties.DataTypeProperties.data_type, None)
+                    json_var.get(
+                        data_type_properties.DataTypeProperties.data_type, None
+                    )
                 )
                 self.level = data_level.DataLevel(
                     json_var.get(data_level.DataLevel.data_type, None)
@@ -107,7 +111,9 @@ class DataFamilyBase(
                     json_var.get(data_phasing.DataPhasing.data_type, None)
                 )
                 self.design_set_and_option = data_design_set_option.DataDesignSetOption(
-                    json_var.get(data_design_set_option.DataDesignSetOption.data_type, None)
+                    json_var.get(
+                        data_design_set_option.DataDesignSetOption.data_type, None
+                    )
                 )
 
                 # get associated elements
@@ -146,3 +152,15 @@ class DataFamilyBase(
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash(
+            (
+                self.instance_properties,
+                self.type_properties,
+                self.level,
+                self.revit_model,
+                self.phasing,
+                self.design_set_and_option,
+            )
+        )

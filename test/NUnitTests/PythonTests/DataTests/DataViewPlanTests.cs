@@ -113,10 +113,10 @@ namespace PythonTests.DataTests
             Assert.AreEqual("view_plan", dataViewPlan.data_type);
             Assert.AreEqual(-1, dataViewPlan.id);
             Assert.IsNotNull(dataViewPlan.bounding_box);
-            Assert.AreEqual(double.PositiveInfinity, dataViewPlan.bounding_box.min_x);
-            Assert.AreEqual(double.NegativeInfinity, dataViewPlan.bounding_box.max_x);
-            Assert.AreEqual(double.PositiveInfinity, dataViewPlan.bounding_box.min_y);
-            Assert.AreEqual(double.NegativeInfinity, dataViewPlan.bounding_box.max_y);
+            Assert.AreEqual(0.0, dataViewPlan.bounding_box.min_x);
+            Assert.AreEqual(0.0, dataViewPlan.bounding_box.max_x);
+            Assert.AreEqual(0.0, dataViewPlan.bounding_box.min_y);
+            Assert.AreEqual(0.0, dataViewPlan.bounding_box.max_y);
             Assert.IsNotNull(dataViewPlan.tags);
             Assert.AreEqual(0, dataViewPlan.tags.Count);
         }

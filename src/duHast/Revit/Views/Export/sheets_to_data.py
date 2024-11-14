@@ -33,7 +33,7 @@ from duHast.Revit.Views.Export.view_ports_to_data import (
     convert_revit_viewport_to_data_instance,
     convert_revit_schedule_sheet_instances_to_data_instance,
 )
-from duHast.Data.Objects.data_sheet import DataSheet
+from duHast.Data.Objects.Collectors.data_sheet import DataSheet
 from duHast.Revit.Views.sheets import get_sheets_by_filters
 from duHast.Revit.Views.schedules import get_schedule_instance_on_sheet
 

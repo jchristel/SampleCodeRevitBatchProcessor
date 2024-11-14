@@ -1,13 +1,11 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage base class used for Revit sheets.
+Data storage base class used for Revit views.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - contains 
 
-    - the title block
-    - a list of view ports
-    - a list of all sheet properties (instance and type)
+    - the view bounding box in model coordinates
 
 """
 
@@ -36,36 +34,34 @@ Data storage base class used for Revit sheets.
 
 import json
 
-from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties import data_type_properties
-from duHast.Data.Objects.Properties import data_instance_properties
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
+from duHast.Data.Objects.Collectors.data_view_base import DataViewBase
+from duHast.Data.Objects.Collectors.data_tag import DataTag
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.Geometry.geometry_bounding_box_2 import (
     DataGeometryBoundingBox2,
 )
-from duHast.Data.Objects.data_sheet_view_port import DataSheetViewPort
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
 
-class DataSheet(data_base.DataBase):
+class DataViewElevation(DataViewBase):
 
-    data_type = "sheet"
+    data_type = "view_elevation"
 
     def __init__(self, j=None):
         """
-        Class constructor.
+        Class constructor for a view_elevation.
 
         :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
         # initialise parent classes with values
-        super(DataSheet, self).__init__(data_type=DataSheet.data_type)
+        super(DataViewElevation, self).__init__(
+            data_type=DataViewElevation.data_type, j=j
+        )
 
         # set default values
-        self.instance_properties = data_instance_properties.DataInstanceProperties()
-        self.type_properties = data_type_properties.DataTypeProperties()
-        self.view_ports = []
         self.bounding_box = DataGeometryBoundingBox2()
+        self.tags = []
 
         json_var = None
         # check if any data was past in with constructor!
@@ -86,49 +82,37 @@ class DataSheet(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.instance_properties = (
-                    data_instance_properties.DataInstanceProperties(
-                        json_var.get(
-                            data_instance_properties.DataInstanceProperties.data_type,
-                            None,
-                        )
-                    )
-                )
-                self.type_properties = data_type_properties.DataTypeProperties(
-                    json_var.get(data_type_properties.DataTypeProperties.data_type, None)
-                )
                 self.bounding_box = DataGeometryBoundingBox2(
                     json_var.get(DataPropertyNames.BOUNDING_BOX, None)
                 )
 
-                # get sheet view port data
-                view_port_data = json_var.get(DataPropertyNames.VIEW_PORTS, None)
-                if view_port_data:
-                    for vp in view_port_data:
-                        self.view_ports.append(DataSheetViewPort(j=vp))
+                # get any tags
+                tags = json_var.get(DataPropertyNames.TAGS, [])
+                for tag in tags:
+                    data_tag = DataTag(j=tag)
+                    self.tags.append(data_tag)
 
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
-                
+
     def __eq__(self, other):
         """
         equal compare
 
         Args:
-            other (DataSheet): another DataSheet instance
+            other (DataViewElevation): another DataViewElevation instance
 
         Returns:
             bool: True if equal, otherwise False
         """
-        if not isinstance(other, DataSheet):
+        if not isinstance(other, DataViewElevation):
             return NotImplemented
-        return (
-            self.instance_properties == other.instance_properties
-            and self.type_properties == other.type_properties
-            and self.view_ports == other.view_ports
-            and self.bounding_box == other.bounding_box
+        return self.bounding_box == other.bounding_box and sorted(
+            self.tags, key=lambda data_tag: data_tag.leader_element_reference_id
+        ) == sorted(
+            other.tags, key=lambda data_tag: data_tag.leader_element_reference_id
         )
 
     def __ne__(self, other):

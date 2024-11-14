@@ -1,11 +1,7 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage view base class used for Revit views.
+Data storage class for Revit schedule segement properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- contains 
-    - the view id
-
 """
 
 #
@@ -32,26 +28,30 @@ Data storage view base class used for Revit views.
 #
 
 import json
+from duHast.Data.Objects.Collectors.data_base import DataBase
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
 
-from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
 
+class DataScheduleSegment(DataBase):
 
-class DataViewBase(data_base.DataBase):
+    data_type = "schedule segment"
 
-    def __init__(self, data_type, j=None):
+    def __init__(self, j=None):
         """
-        Class constructor for a view.
+        Class constructor
 
-        :param j: A json formatted dictionary of this class, defaults to {}
+        :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
-        # initialise parent classes with values
-        super(DataViewBase, self).__init__(data_type=data_type)
+        # store data type  in base class
+        super(DataScheduleSegment, self).__init__(
+            data_type=DataScheduleSegment.data_type
+        )
 
         # set default values
-        self.id = -1
+        self.index = 0
+        self.height = 0.0
 
         json_var = None
         # check if any data was past in with constructor!
@@ -72,22 +72,30 @@ class DataViewBase(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.id = json_var.get(DataPropertyNames.ID, self.id)
-
-                if not isinstance(self.id, int):
-                    raise TypeError(
-                        "Expected 'id' to be an int, got {}".format(type(self.id))
+                self.index = json_var.get(DataPropertyNames.INDEX, self.index)
+                if not (isinstance(self.index, int)):
+                    raise ValueError(
+                        "index needs to be of type int, got {} instead.".format(
+                            type(self.index)
+                        )
                     )
 
+                self.height = json_var.get(DataPropertyNames.HEIGHT, self.height)
+                if not (isinstance(self.height, float)):
+                    raise ValueError(
+                        "height needs to be of type float, got {} instead.".format(
+                            type(self.index)
+                        )
+                    )
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
 
     def __eq__(self, other):
-        if not isinstance(other, DataViewBase):
+        if not isinstance(other, DataScheduleSegment):
             return NotImplemented
-        return self.id == other.id
+        return self.index == other.index and self.height == other.height
 
     def __ne__(self, other):
         return not self.__eq__(other)

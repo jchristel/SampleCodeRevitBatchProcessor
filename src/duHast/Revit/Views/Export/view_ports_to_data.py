@@ -28,15 +28,15 @@ This module contains a number of helper functions relating to Revit view port to
 #
 
 
-from duHast.Data.Objects.data_sheet_view_port import DataSheetViewPort
-from duHast.Data.Objects.Properties.data_view_port_type_names import (
+from duHast.Data.Objects.Collectors.data_sheet_view_port import DataSheetViewPort
+from duHast.Data.Objects.Collectors.Properties.data_view_port_type_names import (
     DataViewPortTypeNames,
 )
-from duHast.Data.Objects.data_view_3d import DataViewThreeD
-from duHast.Data.Objects.data_view_elevation import DataViewElevation
-from duHast.Data.Objects.data_view_plan import DataViewPlan
-from duHast.Data.Objects.data_view_schedule import DataViewSchedule
-from duHast.Data.Objects.Properties.data_schedule_segement import DataScheduleSegment
+from duHast.Data.Objects.Collectors.data_view_3d import DataViewThreeD
+from duHast.Data.Objects.Collectors.data_view_elevation import DataViewElevation
+from duHast.Data.Objects.Collectors.data_view_plan import DataViewPlan
+from duHast.Data.Objects.Collectors.data_view_schedule import DataViewSchedule
+from duHast.Data.Objects.Collectors.Properties.data_schedule_segement import DataScheduleSegment
 
 
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
@@ -310,7 +310,7 @@ def convert_revit_schedule_sheet_instances_to_data_instance(
 
         # get the schedule view data
         schedule_view = doc.GetElement(schedule_sheet_instance.ScheduleId)
-        view_data = _get_schedule_view(doc, schedule_view)
+        view_data = _get_schedule_view(schedule_view)
         view_port_data.view = view_data
 
         # append to list to be returned

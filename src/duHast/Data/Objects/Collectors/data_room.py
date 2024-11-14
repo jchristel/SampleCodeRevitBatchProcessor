@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit ceiling properties.
+Data storage class for Revit room properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -29,21 +29,18 @@ Data storage class for Revit ceiling properties.
 
 import json
 
-# from duHast.DataSamples import DataGeometry
-from duHast.Data.Objects.Properties import data_design_set_option
-from duHast.Data.Objects.Properties import data_phasing
-from duHast.Data.Objects.Properties import data_level
-from duHast.Data.Objects.Properties import data_type_properties
-from duHast.Data.Objects.Properties import data_instance_properties
-from duHast.Data.Objects.Properties import data_revit_model
-from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties import data_element_geometry_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties import data_design_set_option
+from duHast.Data.Objects.Collectors.Properties import data_phasing
+from duHast.Data.Objects.Collectors.Properties import data_level
+from duHast.Data.Objects.Collectors.Properties import data_instance_properties
+from duHast.Data.Objects.Collectors.Properties import data_revit_model
+from duHast.Data.Objects.Collectors import data_base
+from duHast.Data.Objects.Collectors.Properties import data_element_geometry_base
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
 
 
-class DataCeiling(data_base.DataBase, data_element_geometry_base.DataElementGeometryBase):
-
-    data_type = "ceiling"
+class DataRoom(data_base.DataBase, data_element_geometry_base.DataElementGeometryBase):
+    data_type = "room"
 
     def __init__(self, j=None):
         """
@@ -53,13 +50,12 @@ class DataCeiling(data_base.DataBase, data_element_geometry_base.DataElementGeom
         :type j: dict, optional
         """
 
-        # store data type  in base class
-        super(DataCeiling, self).__init__(data_type=DataCeiling.data_type, j=j)
+        # initialise parent classes with values
+        super(DataRoom, self).__init__(data_type=DataRoom.data_type, j=j)
 
-        # set default values
+        # initialise classes with default values
         self.associated_elements = []
         self.instance_properties = data_instance_properties.DataInstanceProperties()
-        self.type_properties = data_type_properties.DataTypeProperties()
         self.level = data_level.DataLevel()
         self.revit_model = data_revit_model.DataRevitModel()
         self.phasing = data_phasing.DataPhasing()
@@ -88,12 +84,12 @@ class DataCeiling(data_base.DataBase, data_element_geometry_base.DataElementGeom
                     data_instance_properties.DataInstanceProperties(
                         json_var.get(
                             data_instance_properties.DataInstanceProperties.data_type,
-                            {},
+                            None,
                         )
                     )
                 )
-                self.type_properties = data_type_properties.DataTypeProperties(
-                    json_var.get(data_type_properties.DataTypeProperties.data_type, None)
+                self.design_set_and_option = data_design_set_option.DataDesignSetOption(
+                    json_var.get(data_design_set_option.DataDesignSetOption.data_type, None)
                 )
                 self.level = data_level.DataLevel(
                     json_var.get(data_level.DataLevel.data_type, None)
@@ -101,39 +97,37 @@ class DataCeiling(data_base.DataBase, data_element_geometry_base.DataElementGeom
                 self.revit_model = data_revit_model.DataRevitModel(
                     json_var.get(data_revit_model.DataRevitModel.data_type, None)
                 )
+                
                 self.phasing = data_phasing.DataPhasing(
                     json_var.get(data_phasing.DataPhasing.data_type, None)
-                )
-                self.design_set_and_option = data_design_set_option.DataDesignSetOption(
-                    json_var.get(data_design_set_option.DataDesignSetOption.data_type, None)
                 )
                 
                 # get associated elements
                 associated_elements = json_var.get(
-                    DataPropertyNames.ASSOCIATED_ELEMENTS, self.associated_elements
+                    DataPropertyNames.ASSOCIATED_ELEMENTS,
+                    self.associated_elements,
                 )
                 # these can be all sorts of types...
-                #TODO: convert json to actual elements
+                # TODO: convert json to actual elements
                 
+
             except Exception as e:
                 raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
-    
     
     def __eq__(self, other):
         """
         equal compare ( ignores associated elements property)
 
         Args:
-            other (DataCeiling): another DataCeiling instance
+            other (DataRoom): another DataRoom instance
 
         Returns:
             bool: True if equal, otherwise False
         """
-        if not isinstance(other, DataCeiling):
+        if not isinstance(other, DataRoom):
             return NotImplemented
         return (
             self.instance_properties == other.instance_properties
-            and self.type_properties == other.type_properties
             and self.level == other.level
             and self.revit_model == other.revit_model
             and self.phasing == other.phasing

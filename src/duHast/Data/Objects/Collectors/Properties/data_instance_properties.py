@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit element type properties.
+Data storage class for Revit element instance properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -28,14 +28,14 @@ Data storage class for Revit element type properties.
 #
 
 import json
-from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
-from duHast.Data.Objects.Properties.data_property import DataProperty
+from duHast.Data.Objects.Collectors import data_base
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.data_property import DataProperty
 
 
-class DataTypeProperties(data_base.DataBase):
+class DataInstanceProperties(data_base.DataBase):
 
-    data_type = "type_properties"
+    data_type = "instance_properties"
 
     def __init__(self, j=None):
         """
@@ -46,10 +46,9 @@ class DataTypeProperties(data_base.DataBase):
         """
 
         # store data type  in base class
-        super(DataTypeProperties, self).__init__(DataTypeProperties.data_type)
+        super(DataInstanceProperties, self).__init__(DataInstanceProperties.data_type)
 
         # set default values
-        self.name = "-"
         self.id = -1
         self.properties = []
 
@@ -72,20 +71,10 @@ class DataTypeProperties(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.name = json_var.get(DataPropertyNames.NAME, self.name)
-                if not (isinstance(self.name, str)):
-                    raise ValueError(
-                        "name needs to be of type str, got {} instead.".format(
-                            type(self.name)
-                        )
-                    )
-
                 self.id = json_var.get(DataPropertyNames.ID, self.id)
-                if not (isinstance(self.id, int)):
-                    raise ValueError(
-                        "id needs to be of type int, got {} instead.".format(
-                            type(self.id)
-                        )
+                if not isinstance(self.id, int):
+                    raise TypeError(
+                        "Expected 'id' to be an int, got {}".format(type(self.id))
                     )
 
                 # needs to be converted to list of property objects!
@@ -99,17 +88,18 @@ class DataTypeProperties(data_base.DataBase):
                 )
 
     def __eq__(self, other):
-        if not isinstance(other, DataTypeProperties):
+        if not isinstance(other, DataInstanceProperties):
             return NotImplemented
 
-        if not (self.name == other.name and self.id == other.id):
+        # Check if IDs are the same
+        if self.id != other.id:
             return False
 
         # Check if properties lists are the same length
         if len(self.properties) != len(other.properties):
             return False
 
-        # Check each property in the properties list regardless of order!
+        # Check each property in the properties list regardless of order
         return set(self.properties) == set(other.properties)
 
     def __ne__(self, other):

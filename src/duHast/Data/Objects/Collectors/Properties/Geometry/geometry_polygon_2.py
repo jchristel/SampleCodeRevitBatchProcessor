@@ -33,8 +33,8 @@ Loops are made up of a number of 2D points.
 #
 
 import json
-from duHast.Data.Objects.Properties.Geometry import geometry_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.Geometry import geometry_base
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
 from duHast.Geometry.point_2 import Point2
 
 

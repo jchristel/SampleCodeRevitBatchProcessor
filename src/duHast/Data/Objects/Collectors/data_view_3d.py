@@ -34,36 +34,31 @@ Data storage base class used for Revit views.
 
 import json
 
-from duHast.Data.Objects.data_view_base import DataViewBase
+from duHast.Data.Objects.Collectors.data_view_base import DataViewBase
 
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.Geometry.geometry_bounding_box_2 import (
     DataGeometryBoundingBox2,
 )
-from duHast.Data.Objects.Properties.data_schedule_segement import DataScheduleSegment
 
 
-class DataViewSchedule(DataViewBase):
+class DataViewThreeD(DataViewBase):
 
-    data_type = "view_schedule"
+    data_type = "view_3d"
 
     def __init__(self, j=None):
         """
-        Class constructor for a view_schedule.
+        Class constructor for a view_3d.
 
         :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
         # initialise parent classes with values
-        super(DataViewSchedule, self).__init__(
-            data_type=DataViewSchedule.data_type, j=j
-        )
+        super(DataViewThreeD, self).__init__(data_type=DataViewThreeD.data_type, j=j)
 
         # set default values
         self.bounding_box = DataGeometryBoundingBox2()
-        self.total_number_of_rows = 0
-        self.segments = []
 
         json_var = None
         # check if any data was past in with constructor!
@@ -85,24 +80,8 @@ class DataViewSchedule(DataViewBase):
             # attempt to populate from json
             try:
                 self.bounding_box = DataGeometryBoundingBox2(
-                    json_var.get(DataPropertyNames.BOUNDING_BOX, {})
+                    json_var.get(DataPropertyNames.BOUNDING_BOX, None)
                 )
-
-                self.total_number_of_rows = json_var.get(
-                    DataPropertyNames.TOTAL_NUMBER_OF_ROWS,
-                    self.total_number_of_rows,
-                )
-                if not isinstance(self.total_number_of_rows, int):
-                    raise TypeError(
-                        "Expected 'total_number_of_rows' to be an int, got {}".format(
-                            type(self.total_number_of_rows)
-                        )
-                    )
-
-                segment_data = json_var.get(DataPropertyNames.SEGMENTS, [])
-                for seg_d in segment_data:
-                    seg = DataScheduleSegment(j=seg_d)
-                    self.segments.append(seg)
 
             except Exception as e:
                 raise type(e)(
@@ -114,18 +93,14 @@ class DataViewSchedule(DataViewBase):
         equal compare
 
         Args:
-            other (DataViewSchedule): another DataViewSchedule instance
+            other (DataView3D): another DataView#d instance
 
         Returns:
             bool: True if equal, otherwise False
         """
-        if not isinstance(other, DataViewSchedule):
+        if not isinstance(other, DataViewThreeD):
             return NotImplemented
-        return (
-            self.bounding_box == other.bounding_box
-            and self.total_number_of_rows == other.total_number_of_rows
-            and self.segments == other.segments
-        )
+        return self.bounding_box == other.bounding_box
 
     def __ne__(self, other):
         return not self.__eq__(other)

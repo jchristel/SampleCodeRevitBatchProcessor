@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit design option properties.
+Geometry data bounding_box storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -28,31 +28,28 @@ Data storage class for Revit design option properties.
 #
 
 import json
-from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.Geometry import geometry_base
+from duHast.Geometry.bounding_box_2 import BoundingBox2
 
 
-class DataDesignSetOption(data_base.DataBase):
-    data_type = "design_set_and_option"
+class DataGeometryBoundingBox2(BoundingBox2, geometry_base.DataGeometryBase):
+    data_type = "bounding box 2"
 
-    def __init__(self, j=None):
+    def __init__(self, j=None, *args, **kwargs):
         """
-        Class constructor.
+        Class constructor for a 2D bounding box.
 
-        :param j: A json formatted dictionary of this class, defaults to {}
+        :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
         # store data type  in base class
-        super(DataDesignSetOption, self).__init__(DataDesignSetOption.data_type)
+        super(DataGeometryBoundingBox2, self).__init__(
+            data_type=DataGeometryBoundingBox2.data_type, j=j, *args, **kwargs
+        )
 
-        # set default values
-        self.set_name = "-"
-        self.option_name = "-"
-        self.is_primary = True
-
-        json_var = None
         # check if any data was past in with constructor!
+        json_var = None
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
@@ -60,7 +57,7 @@ class DataDesignSetOption(data_base.DataBase):
                 json_var = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                json_var = j.copy()
+                json_var=j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -70,47 +67,25 @@ class DataDesignSetOption(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.set_name = json_var.get(DataPropertyNames.SET_NAME, self.set_name)
-                if not isinstance(self.set_name, str):
-                    raise TypeError(
-                        "Expected 'set_name' to be a string, got {}".format(
-                            type(self.set_name)
-                        )
-                    )
-
-                self.option_name = json_var.get(
-                    DataPropertyNames.OPTION_NAME, self.option_name
-                )
-                if not isinstance(self.option_name, str):
-                    raise TypeError(
-                        "Expected 'option_name' to be a string, got {}".format(
-                            type(self.option_name)
-                        )
-                    )
-
-                self.is_primary = json_var.get(
-                    DataPropertyNames.IS_PRIMARY, self.is_primary
-                )
-                if not isinstance(self.is_primary, bool):
-                    raise TypeError(
-                        "Expected 'is_primary' to be a boolean, got {}".format(
-                            type(self.is_primary)
-                        )
-                    )
-
+                pass
+                # get the bounding box
+                #bbox = json_var.get(DataPropertyNames.BOUNDING_BOX, None)
+                # check if we got None back...if so use what is the default
+                # since a bounding box ini from an empty dictionary will fail
+                #if bbox is not None:
+                #    self.bounding_box = BoundingBox2(j=bbox)
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
 
+
     def __eq__(self, other):
-        if not isinstance(other, DataDesignSetOption):
+        if not isinstance(other, DataGeometryBoundingBox2):
             return NotImplemented
-        return (
-            self.set_name == other.set_name
-            and self.option_name == other.option_name
-            and self.is_primary == other.is_primary
-        )
+        # Check equality of each superclass
+        return BoundingBox2.__eq__(self, other) and geometry_base.DataGeometryBase.__eq__(self, other)
+        #return self.bounding_box == other.bounding_box
 
     def __ne__(self, other):
         return not self.__eq__(other)

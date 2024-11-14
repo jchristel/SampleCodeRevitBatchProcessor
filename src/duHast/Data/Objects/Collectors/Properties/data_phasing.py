@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit schedule segement properties.
+Data storage class for Revit element phasing properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -11,7 +11,7 @@ Data storage class for Revit schedule segement properties.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2024, Jan Christel
+# Copyright 2023, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -28,13 +28,13 @@ Data storage class for Revit schedule segement properties.
 #
 
 import json
-from duHast.Data.Objects.data_base import DataBase
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors import data_base
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
 
 
-class DataScheduleSegment(DataBase):
+class DataPhasing(data_base.DataBase):
 
-    data_type = "schedule segment"
+    data_type = "phasing"
 
     def __init__(self, j=None):
         """
@@ -45,13 +45,11 @@ class DataScheduleSegment(DataBase):
         """
 
         # store data type  in base class
-        super(DataScheduleSegment, self).__init__(
-            data_type=DataScheduleSegment.data_type
-        )
+        super(DataPhasing, self).__init__(DataPhasing.data_type)
 
         # set default values
-        self.index = 0
-        self.height = 0.0
+        self.created = "-"
+        self.demolished = "-"
 
         json_var = None
         # check if any data was past in with constructor!
@@ -72,30 +70,37 @@ class DataScheduleSegment(DataBase):
 
             # attempt to populate from json
             try:
-                self.index = json_var.get(DataPropertyNames.INDEX, self.index)
-                if not (isinstance(self.index, int)):
+                self.created = json_var.get(DataPropertyNames.CREATED, self.created)
+                if not (isinstance(self.created, str)):
                     raise ValueError(
-                        "index needs to be of type int, got {} instead.".format(
-                            type(self.index)
+                        "created needs to be of type str, got {} instead.".format(
+                            type(self.created)
                         )
                     )
 
-                self.height = json_var.get(DataPropertyNames.HEIGHT, self.height)
-                if not (isinstance(self.height, float)):
+                self.demolished = json_var.get(
+                    DataPropertyNames.DEMOLISHED, self.demolished
+                )
+                if not (isinstance(self.demolished, str)):
                     raise ValueError(
-                        "height needs to be of type float, got {} instead.".format(
-                            type(self.index)
+                        "demolished needs to be of type str, got {} instead.".format(
+                            type(self.demolished)
                         )
                     )
+
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
 
     def __eq__(self, other):
-        if not isinstance(other, DataScheduleSegment):
-            return NotImplemented
-        return self.index == other.index and self.height == other.height
+        if not isinstance(other, DataPhasing):
+            raise ValueError(
+                "other needs to be of type DataPhasing, got {} instead.".format(
+                    type(other)
+                )
+            )
+        return self.created == other.created and self.demolished == other.demolished
 
     def __ne__(self, other):
         return not self.__eq__(other)

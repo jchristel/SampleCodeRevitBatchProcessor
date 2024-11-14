@@ -28,27 +28,30 @@ Geometry data storage class.
 #
 
 import json
-from duHast.Data.Objects.Properties.Geometry import geometry_base
+from duHast.Data.Objects.Collectors import data_base
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Geometry.point_3 import Point3
+from duHast.Geometry.matrix import Matrix
 
-
-class DataTopologyCell(geometry_base.DataGeometryBase):
-    data_type = "topology cell"
-
-    def __init__(self, j=None):
+class DataGeometryBase(data_base.DataBase):
+    def __init__(self, data_type, j=None, **kwargs):
         """
         Class constructor
 
         :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
-
+        
         # store data type  in base class
-        super(DataTopologyCell, self).__init__(DataTopologyCell.data_type, j)
+        super(DataGeometryBase, self).__init__(data_type=data_type, j=j, **kwargs)
 
         # set default values
-        # TODO:
+        # translation as per shared coordinates in revit file
+        self.translation_coord = Point3(0.0, 0.0, 0.0)
+        # rotation as per shared coordinates in revit file ( default )
+        self.rotation_coord = Matrix(rows=3, cols=3)
 
-        json_var = None
+        json_var=None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
@@ -56,8 +59,8 @@ class DataTopologyCell(geometry_base.DataGeometryBase):
                 # a string
                 json_var = json.loads(j)
             elif isinstance(j, dict):
-                # no action required
-                json_var = j.copy()
+                # make a copy
+                json_var=j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -67,6 +70,34 @@ class DataTopologyCell(geometry_base.DataGeometryBase):
 
             # attempt to populate from json
             try:
-                pass
+                translation_coord = json_var.get(
+                    DataPropertyNames.TRANSLATION_COORDINATES, None
+                )
+                # check if we got None back...if so use what is the default
+                # since a point can be initialized with None
+                if translation_coord is not None:
+                    self.translation_coord = Point3(j=translation_coord)
+
+                rotation_coord = json_var.get(
+                    DataPropertyNames.ROTATION_COORDINATES, None
+                )
+                # check if we got None back...if so use what is the default
+                # since a matrix ini from an empty dictionary got 0 x 0 size, meanwhile our default is 3 x 3
+                if rotation_coord is not None:
+                    self.rotation_coord = Matrix(j=rotation_coord)
+
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )
+
+    def __eq__(self, other):
+        if not isinstance(other, DataGeometryBase):
+            return NotImplemented
+        return (
+            self.translation_coord == other.translation_coord
+            and self.rotation_coord == other.rotation_coord
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

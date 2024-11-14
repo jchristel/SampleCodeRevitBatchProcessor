@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit elements model properties.
+Data storage class for Revit element level properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -28,13 +28,13 @@ Data storage class for Revit elements model properties.
 #
 
 import json
-from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.data_level_base import DataLevelBase
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
 
 
-class DataRevitModel(data_base.DataBase):
+class DataLevel(DataLevelBase):
 
-    data_type = "revit_model"
+    data_type = "level"
 
     def __init__(self, j=None):
         """
@@ -45,10 +45,10 @@ class DataRevitModel(data_base.DataBase):
         """
 
         # store data type  in base class
-        super(DataRevitModel, self).__init__(DataRevitModel.data_type)
+        super(DataLevel, self).__init__(j=j)
 
         # set default values
-        self.name = "-"
+        self.offset_from_level = 0.0
 
         json_var = None
         # check if any data was past in with constructor!
@@ -69,11 +69,13 @@ class DataRevitModel(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.name = json_var.get(DataPropertyNames.NAME, self.name)
-                if not (isinstance(self.name, str)):
-                    raise ValueError(
-                        "name needs to be of type str, got {} instead.".format(
-                            type(self.name)
+                self.offset_from_level = json_var.get(
+                    DataPropertyNames.OFFSET_FROM_LEVEL, self.offset_from_level
+                )
+                if not isinstance(self.offset_from_level, float):
+                    raise TypeError(
+                        "Expected 'offset_from_level' to be a float, got {}".format(
+                            type(self.offset_from_level)
                         )
                     )
 
@@ -83,9 +85,17 @@ class DataRevitModel(data_base.DataBase):
                 )
 
     def __eq__(self, other):
-        if not isinstance(other, DataRevitModel):
-            return NotImplemented
-        return self.name == other.name
+        if not isinstance(other, DataLevel):
+            raise ValueError(
+                "other needs to be of type DataLevel, got {} instead.".format(
+                    type(other)
+                )
+            )
+        return (
+            self.name == other.name
+            and self.id == other.id
+            and self.offset_from_level == other.offset_from_level
+        )
 
     def __ne__(self, other):
         return not self.__eq__(other)

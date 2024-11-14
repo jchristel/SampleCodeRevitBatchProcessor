@@ -1,12 +1,7 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage base class used for Revit views.
+Data storage class for Revit design option properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- contains 
-
-    - the view bounding box in model coordinates
-
 """
 
 #
@@ -16,7 +11,7 @@ Data storage base class used for Revit views.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2024, Jan Christel
+# Copyright 2023, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -33,33 +28,28 @@ Data storage base class used for Revit views.
 #
 
 import json
-
-from duHast.Data.Objects.data_view_base import DataViewBase
-from duHast.Data.Objects.data_tag import DataTag
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
-    DataGeometryBoundingBox2,
-)
+from duHast.Data.Objects.Collectors import data_base
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
 
 
-class DataViewPlan(DataViewBase):
-
-    data_type = "view_plan"
+class DataDesignSetOption(data_base.DataBase):
+    data_type = "design_set_and_option"
 
     def __init__(self, j=None):
         """
-        Class constructor for a view_plan.
+        Class constructor.
 
         :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
-        # initialise parent classes with values
-        super(DataViewPlan, self).__init__(data_type=DataViewPlan.data_type, j=j)
+        # store data type  in base class
+        super(DataDesignSetOption, self).__init__(DataDesignSetOption.data_type)
 
         # set default values
-        self.bounding_box = DataGeometryBoundingBox2()
-        self.tags = []
+        self.set_name = "-"
+        self.option_name = "-"
+        self.is_primary = True
 
         json_var = None
         # check if any data was past in with constructor!
@@ -80,15 +70,33 @@ class DataViewPlan(DataViewBase):
 
             # attempt to populate from json
             try:
-                self.bounding_box = DataGeometryBoundingBox2(
-                    json_var.get(DataPropertyNames.BOUNDING_BOX, {})
-                )
+                self.set_name = json_var.get(DataPropertyNames.SET_NAME, self.set_name)
+                if not isinstance(self.set_name, str):
+                    raise TypeError(
+                        "Expected 'set_name' to be a string, got {}".format(
+                            type(self.set_name)
+                        )
+                    )
 
-                # get any tags
-                tags = json_var.get(DataPropertyNames.TAGS, [])
-                for tag in tags:
-                    data_tag = DataTag(j=tag)
-                    self.tags.append(data_tag)
+                self.option_name = json_var.get(
+                    DataPropertyNames.OPTION_NAME, self.option_name
+                )
+                if not isinstance(self.option_name, str):
+                    raise TypeError(
+                        "Expected 'option_name' to be a string, got {}".format(
+                            type(self.option_name)
+                        )
+                    )
+
+                self.is_primary = json_var.get(
+                    DataPropertyNames.IS_PRIMARY, self.is_primary
+                )
+                if not isinstance(self.is_primary, bool):
+                    raise TypeError(
+                        "Expected 'is_primary' to be a boolean, got {}".format(
+                            type(self.is_primary)
+                        )
+                    )
 
             except Exception as e:
                 raise type(e)(
@@ -96,21 +104,12 @@ class DataViewPlan(DataViewBase):
                 )
 
     def __eq__(self, other):
-        """
-        equal compare
-
-        Args:
-            other (DataViewPlan): another DataViewPlan instance
-
-        Returns:
-            bool: True if equal, otherwise False
-        """
-        if not isinstance(other, DataViewPlan):
+        if not isinstance(other, DataDesignSetOption):
             return NotImplemented
-        return self.bounding_box == other.bounding_box and sorted(
-            self.tags, key=lambda data_tag: data_tag.leader_element_reference_id
-        ) == sorted(
-            other.tags, key=lambda data_tag: data_tag.leader_element_reference_id
+        return (
+            self.set_name == other.set_name
+            and self.option_name == other.option_name
+            and self.is_primary == other.is_primary
         )
 
     def __ne__(self, other):

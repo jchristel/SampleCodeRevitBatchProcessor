@@ -1,16 +1,11 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage base class used for element tags in views.
+Data storage base class used for Revit views.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - contains 
 
-    - the view id
-    - the element tagged id
-    - tag location
-    - has tag leader
-    - has tag elbow
-    - elbow location
+    - the view bounding box in model coordinates
 
 """
 
@@ -39,36 +34,36 @@ Data storage base class used for element tags in views.
 
 import json
 
-from duHast.Data.Objects.data_base import DataBase
-from duHast.Geometry.point_3 import Point3
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
+from duHast.Data.Objects.Collectors.data_view_base import DataViewBase
+
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.Geometry.geometry_bounding_box_2 import (
     DataGeometryBoundingBox2,
 )
+from duHast.Data.Objects.Collectors.Properties.data_schedule_segement import DataScheduleSegment
 
 
-class DataTag(DataBase):
+class DataViewSchedule(DataViewBase):
 
-    data_type = "tag"
+    data_type = "view_schedule"
 
     def __init__(self, j=None):
         """
-        Class constructor for a annotation tag.
+        Class constructor for a view_schedule.
 
-        :param j: A json formatted dictionary of this class, defaults to None
+        :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
         # initialise parent classes with values
-        super(DataTag, self).__init__(data_type=DataTag.data_type)
+        super(DataViewSchedule, self).__init__(
+            data_type=DataViewSchedule.data_type, j=j
+        )
 
         # set default values
         self.bounding_box = DataGeometryBoundingBox2()
-        self.elbow_location = Point3(0.0, 0.0, 0.0)
-        self.point = Point3(0.0, 0.0, 0.0)
-        self.leader_end = None
-        self.leader_reference = None
-        self.leader_element_reference_id = -1
+        self.total_number_of_rows = 0
+        self.segments = []
 
         json_var = None
         # check if any data was past in with constructor!
@@ -90,36 +85,24 @@ class DataTag(DataBase):
             # attempt to populate from json
             try:
                 self.bounding_box = DataGeometryBoundingBox2(
-                    json_var.get(DataPropertyNames.BOUNDING_BOX, None)
+                    json_var.get(DataPropertyNames.BOUNDING_BOX, {})
                 )
 
-                # get the point location
-                point = json_var.get(DataPropertyNames.POINT, None)
-                if point:
-                    self.point = Point3(j=point)
-
-                # get the elbow location
-                elbow_location = json_var.get(DataPropertyNames.TAG_ELBOW_LOCATION, None)
-                if elbow_location:
-                    self.elbow_location = Point3(j=elbow_location)
-
-                self.leader_end = json_var.get(
-                    DataPropertyNames.TAG_LEADER_END, self.leader_end
+                self.total_number_of_rows = json_var.get(
+                    DataPropertyNames.TOTAL_NUMBER_OF_ROWS,
+                    self.total_number_of_rows,
                 )
-                self.leader_reference = json_var.get(
-                    DataPropertyNames.TAG_LEADER_REFERENCE, self.leader_reference
-                )
-
-                self.leader_element_reference_id = json_var.get(
-                    DataPropertyNames.TAG_LEADER_ELEMENT_REFERENCE_ID,
-                    self.leader_element_reference_id,
-                )
-                if not isinstance(self.leader_element_reference_id, int):
+                if not isinstance(self.total_number_of_rows, int):
                     raise TypeError(
-                        "Expected 'leader_element_reference_id' to be an int, got {}".format(
-                            type(self.leader_element_reference_id)
+                        "Expected 'total_number_of_rows' to be an int, got {}".format(
+                            type(self.total_number_of_rows)
                         )
                     )
+
+                segment_data = json_var.get(DataPropertyNames.SEGMENTS, [])
+                for seg_d in segment_data:
+                    seg = DataScheduleSegment(j=seg_d)
+                    self.segments.append(seg)
 
             except Exception as e:
                 raise type(e)(
@@ -131,21 +114,18 @@ class DataTag(DataBase):
         equal compare
 
         Args:
-            other (DataTag): another DataTag instance
+            other (DataViewSchedule): another DataViewSchedule instance
 
         Returns:
             bool: True if equal, otherwise False
         """
-        if not isinstance(other, DataTag):
+        if not isinstance(other, DataViewSchedule):
             return NotImplemented
         return (
             self.bounding_box == other.bounding_box
-            and self.elbow_location == other.elbow_location
-            and self.point == other.point
-            and self.leader_end == other.leader_end
-            and self.leader_reference == other.leader_reference
-            and self.leader_element_reference_id == other.leader_element_reference_id     
-            )
+            and self.total_number_of_rows == other.total_number_of_rows
+            and self.segments == other.segments
+        )
 
     def __ne__(self, other):
         return not self.__eq__(other)

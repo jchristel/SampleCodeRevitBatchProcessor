@@ -1,12 +1,7 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage base class used for geometry aspects of Revit elements.
+Data storage class for Revit element type properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- contains 
-
-    - polygon
-
 """
 
 #
@@ -33,35 +28,33 @@ Data storage base class used for geometry aspects of Revit elements.
 #
 
 import json
-from duHast.Utilities.Objects import base
-
-from duHast.Data.Objects.Properties.Geometry import geometry_polygon_2
-
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors import data_base
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.data_property import DataProperty
 
 
-class DataElementGeometryBase(base.Base):
-    data_type = "element geometry base"
+class DataTypeProperties(data_base.DataBase):
 
-    def __init__(self, j, **kwargs):
+    data_type = "type_properties"
+
+    def __init__(self, j=None):
         """
         Class constructor
 
-        :param j: Json formatted string or dictionary
-        :type j: str or dic
-
-        :raises ValueError: 'Argument supplied must be of type string or type dictionary'
+        :param j:  json formatted dictionary of this class, defaults to {}
+        :type j: dict, optional
         """
 
-        # ini super class to allow multi inheritance in children!
-        # forwards all unused arguments
-        super(DataElementGeometryBase, self).__init__(**kwargs)
+        # store data type  in base class
+        super(DataTypeProperties, self).__init__(DataTypeProperties.data_type)
 
         # set default values
-        self.polygon = geometry_polygon_2.DataGeometryPolygon2()
+        self.name = "-"
+        self.id = -1
+        self.properties = []
 
         json_var = None
-        # check valid j input
+        # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
@@ -79,18 +72,45 @@ class DataElementGeometryBase(base.Base):
 
             # attempt to populate from json
             try:
-                # check for polygon data
-                polygon_data = json_var.get(DataPropertyNames.POLYGON, None)
-                self.polygon = geometry_polygon_2.DataGeometryPolygon2(j=polygon_data)
+                self.name = json_var.get(DataPropertyNames.NAME, self.name)
+                if not (isinstance(self.name, str)):
+                    raise ValueError(
+                        "name needs to be of type str, got {} instead.".format(
+                            type(self.name)
+                        )
+                    )
+
+                self.id = json_var.get(DataPropertyNames.ID, self.id)
+                if not (isinstance(self.id, int)):
+                    raise ValueError(
+                        "id needs to be of type int, got {} instead.".format(
+                            type(self.id)
+                        )
+                    )
+
+                # needs to be converted to list of property objects!
+                properties = json_var.get(DataPropertyNames.PROPERTIES, self.properties)
+                for prop in properties:
+                    self.properties.append(DataProperty(j=prop))
+
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
 
     def __eq__(self, other):
-        if not isinstance(other, DataElementGeometryBase):
+        if not isinstance(other, DataTypeProperties):
             return NotImplemented
-        return self.polygon == other.polygon
+
+        if not (self.name == other.name and self.id == other.id):
+            return False
+
+        # Check if properties lists are the same length
+        if len(self.properties) != len(other.properties):
+            return False
+
+        # Check each property in the properties list regardless of order!
+        return set(self.properties) == set(other.properties)
 
     def __ne__(self, other):
         return not self.__eq__(other)

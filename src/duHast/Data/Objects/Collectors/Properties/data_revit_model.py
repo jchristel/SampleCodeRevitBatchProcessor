@@ -1,12 +1,7 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage base class used for Revit views.
+Data storage class for Revit elements model properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- contains 
-
-    - the view bounding box in model coordinates
-
 """
 
 #
@@ -16,7 +11,7 @@ Data storage base class used for Revit views.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2024, Jan Christel
+# Copyright 2023, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -33,35 +28,27 @@ Data storage base class used for Revit views.
 #
 
 import json
-
-from duHast.Data.Objects.data_view_base import DataViewBase
-from duHast.Data.Objects.data_tag import DataTag
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
-    DataGeometryBoundingBox2,
-)
+from duHast.Data.Objects.Collectors import data_base
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
 
 
-class DataViewElevation(DataViewBase):
+class DataRevitModel(data_base.DataBase):
 
-    data_type = "view_elevation"
+    data_type = "revit_model"
 
     def __init__(self, j=None):
         """
-        Class constructor for a view_elevation.
+        Class constructor
 
-        :param j: A json formatted dictionary of this class, defaults to {}
+        :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
-        # initialise parent classes with values
-        super(DataViewElevation, self).__init__(
-            data_type=DataViewElevation.data_type, j=j
-        )
+        # store data type  in base class
+        super(DataRevitModel, self).__init__(DataRevitModel.data_type)
 
         # set default values
-        self.bounding_box = DataGeometryBoundingBox2()
-        self.tags = []
+        self.name = "-"
 
         json_var = None
         # check if any data was past in with constructor!
@@ -82,15 +69,13 @@ class DataViewElevation(DataViewBase):
 
             # attempt to populate from json
             try:
-                self.bounding_box = DataGeometryBoundingBox2(
-                    json_var.get(DataPropertyNames.BOUNDING_BOX, None)
-                )
-
-                # get any tags
-                tags = json_var.get(DataPropertyNames.TAGS, [])
-                for tag in tags:
-                    data_tag = DataTag(j=tag)
-                    self.tags.append(data_tag)
+                self.name = json_var.get(DataPropertyNames.NAME, self.name)
+                if not (isinstance(self.name, str)):
+                    raise ValueError(
+                        "name needs to be of type str, got {} instead.".format(
+                            type(self.name)
+                        )
+                    )
 
             except Exception as e:
                 raise type(e)(
@@ -98,22 +83,9 @@ class DataViewElevation(DataViewBase):
                 )
 
     def __eq__(self, other):
-        """
-        equal compare
-
-        Args:
-            other (DataViewElevation): another DataViewElevation instance
-
-        Returns:
-            bool: True if equal, otherwise False
-        """
-        if not isinstance(other, DataViewElevation):
+        if not isinstance(other, DataRevitModel):
             return NotImplemented
-        return self.bounding_box == other.bounding_box and sorted(
-            self.tags, key=lambda data_tag: data_tag.leader_element_reference_id
-        ) == sorted(
-            other.tags, key=lambda data_tag: data_tag.leader_element_reference_id
-        )
+        return self.name == other.name
 
     def __ne__(self, other):
         return not self.__eq__(other)

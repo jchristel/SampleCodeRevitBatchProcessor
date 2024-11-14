@@ -1,7 +1,12 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Geometry data bounding_box storage class.
+Data storage base class used for geometry aspects of Revit elements.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- contains 
+
+    - polygon
+
 """
 
 #
@@ -28,29 +33,35 @@ Geometry data bounding_box storage class.
 #
 
 import json
-from duHast.Data.Objects.Properties.Geometry import geometry_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
-from duHast.Geometry.bounding_box_2 import BoundingBox2
+from duHast.Utilities.Objects import base
+
+from duHast.Data.Objects.Collectors.Properties.Geometry import geometry_polygon_2
+
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
 
 
-class DataGeometryBoundingBox2(BoundingBox2, geometry_base.DataGeometryBase):
-    data_type = "bounding box 2"
+class DataElementGeometryBase(base.Base):
+    data_type = "element geometry base"
 
-    def __init__(self, j=None, *args, **kwargs):
+    def __init__(self, j, **kwargs):
         """
-        Class constructor for a 2D bounding box.
+        Class constructor
 
-        :param j:  json formatted dictionary of this class, defaults to {}
-        :type j: dict, optional
+        :param j: Json formatted string or dictionary
+        :type j: str or dic
+
+        :raises ValueError: 'Argument supplied must be of type string or type dictionary'
         """
 
-        # store data type  in base class
-        super(DataGeometryBoundingBox2, self).__init__(
-            data_type=DataGeometryBoundingBox2.data_type, j=j, *args, **kwargs
-        )
+        # ini super class to allow multi inheritance in children!
+        # forwards all unused arguments
+        super(DataElementGeometryBase, self).__init__(**kwargs)
 
-        # check if any data was past in with constructor!
+        # set default values
+        self.polygon = geometry_polygon_2.DataGeometryPolygon2()
+
         json_var = None
+        # check valid j input
         if j is not None:
             # check type of data that came in:
             if isinstance(j, str):
@@ -58,7 +69,7 @@ class DataGeometryBoundingBox2(BoundingBox2, geometry_base.DataGeometryBase):
                 json_var = json.loads(j)
             elif isinstance(j, dict):
                 # no action required
-                json_var=j.copy()
+                json_var = j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -68,25 +79,18 @@ class DataGeometryBoundingBox2(BoundingBox2, geometry_base.DataGeometryBase):
 
             # attempt to populate from json
             try:
-                pass
-                # get the bounding box
-                #bbox = json_var.get(DataPropertyNames.BOUNDING_BOX, None)
-                # check if we got None back...if so use what is the default
-                # since a bounding box ini from an empty dictionary will fail
-                #if bbox is not None:
-                #    self.bounding_box = BoundingBox2(j=bbox)
+                # check for polygon data
+                polygon_data = json_var.get(DataPropertyNames.POLYGON, None)
+                self.polygon = geometry_polygon_2.DataGeometryPolygon2(j=polygon_data)
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
 
-
     def __eq__(self, other):
-        if not isinstance(other, DataGeometryBoundingBox2):
+        if not isinstance(other, DataElementGeometryBase):
             return NotImplemented
-        # Check equality of each superclass
-        return BoundingBox2.__eq__(self, other) and geometry_base.DataGeometryBase.__eq__(self, other)
-        #return self.bounding_box == other.bounding_box
+        return self.polygon == other.polygon
 
     def __ne__(self, other):
         return not self.__eq__(other)

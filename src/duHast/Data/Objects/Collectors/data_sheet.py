@@ -36,43 +36,36 @@ Data storage base class used for Revit sheets.
 
 import json
 
-from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
+from duHast.Data.Objects.Collectors import data_base
+from duHast.Data.Objects.Collectors.Properties import data_type_properties
+from duHast.Data.Objects.Collectors.Properties import data_instance_properties
+from duHast.Data.Objects.Collectors.Properties.Geometry.geometry_bounding_box_2 import (
     DataGeometryBoundingBox2,
 )
-from duHast.Data.Objects.data_view_plan import DataViewPlan
-from duHast.Data.Objects.data_view_elevation import DataViewElevation
-from duHast.Data.Objects.data_view_3d import DataViewThreeD
-from duHast.Data.Objects.data_view_schedule import DataViewSchedule
-from duHast.Data.Objects.Properties.data_view_port_type_names import (
-    DataViewPortTypeNames,
-)
-from duHast.Geometry.point_2 import Point2
-
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.data_sheet_view_port import DataSheetViewPort
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
 
 
-class DataSheetViewPort(data_base.DataBase):
+class DataSheet(data_base.DataBase):
 
-    data_type = "sheet view port"
+    data_type = "sheet"
 
     def __init__(self, j=None):
         """
-        Class constructor for a sheet view port.
+        Class constructor.
 
         :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
         # initialise parent classes with values
-        super(DataSheetViewPort, self).__init__(data_type=DataSheetViewPort.data_type)
+        super(DataSheet, self).__init__(data_type=DataSheet.data_type)
 
         # set default values
+        self.instance_properties = data_instance_properties.DataInstanceProperties()
+        self.type_properties = data_type_properties.DataTypeProperties()
+        self.view_ports = []
         self.bounding_box = DataGeometryBoundingBox2()
-        self.vp_type = DataViewPortTypeNames.FLOOR_PLAN
-        self.view_id = -1
-        self.view = DataViewPlan()
-        self.centre_point = Point2(0.0, 0.0)
 
         json_var = None
         # check if any data was past in with constructor!
@@ -93,61 +86,49 @@ class DataSheetViewPort(data_base.DataBase):
 
             # attempt to populate from json
             try:
-
+                self.instance_properties = (
+                    data_instance_properties.DataInstanceProperties(
+                        json_var.get(
+                            data_instance_properties.DataInstanceProperties.data_type,
+                            None,
+                        )
+                    )
+                )
+                self.type_properties = data_type_properties.DataTypeProperties(
+                    json_var.get(data_type_properties.DataTypeProperties.data_type, None)
+                )
                 self.bounding_box = DataGeometryBoundingBox2(
-                    json_var.get(DataPropertyNames.BOUNDING_BOX, {})
+                    json_var.get(DataPropertyNames.BOUNDING_BOX, None)
                 )
-                self.vp_type = json_var.get(
-                    DataPropertyNames.VIEW_PORT_TYPE, self.vp_type
-                )
-                self.view_id = json_var.get(DataPropertyNames.VIEW_ID, self.view_id)
-                # get the centre point value
-                centre_point_value = json_var.get(DataPropertyNames.CENTRE_POINT, None)
-                # if there is a json value take that, otherwise leave default unchanged.
-                if centre_point_value:
-                    self.centre_point = Point2(j=centre_point_value)
 
-                # set up the view depending on the view port type
-                if self.vp_type == DataViewPortTypeNames.THREE_D:
-                    self.view = DataViewThreeD(json_var.get(DataPropertyNames.VIEW, {}))
-                elif self.vp_type == DataViewPortTypeNames.ELEVATION:
-                    self.view = DataViewElevation(
-                        json_var.get(DataPropertyNames.VIEW, {})
-                    )
-                elif self.vp_type == DataViewPortTypeNames.FLOOR_PLAN:
-                    self.view = DataViewPlan(json_var.get(DataPropertyNames.VIEW, {}))
-                elif self.vp_type == DataViewPortTypeNames.SCHEDULE:
-                    self.view = DataViewSchedule(
-                        json_var.get(DataPropertyNames.VIEW, {})
-                    )
-                else:
-                    raise TypeError(
-                        "Unsupported viewport type: {}".format(self.vp_type)
-                    )
+                # get sheet view port data
+                view_port_data = json_var.get(DataPropertyNames.VIEW_PORTS, None)
+                if view_port_data:
+                    for vp in view_port_data:
+                        self.view_ports.append(DataSheetViewPort(j=vp))
 
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
                 )
-    
+                
     def __eq__(self, other):
         """
         equal compare
 
         Args:
-            other (DataSheetViewPort): another DataSheetViewPort instance
+            other (DataSheet): another DataSheet instance
 
         Returns:
             bool: True if equal, otherwise False
         """
-        if not isinstance(other, DataSheetViewPort):
+        if not isinstance(other, DataSheet):
             return NotImplemented
         return (
-            self.bounding_box == other.bounding_box
-            and self.view_id == other.view_id
-            and self.vp_type == other.vp_type
-            and self.view == other.view
-            and self.centre_point == other.centre_point
+            self.instance_properties == other.instance_properties
+            and self.type_properties == other.type_properties
+            and self.view_ports == other.view_ports
+            and self.bounding_box == other.bounding_box
         )
 
     def __ne__(self, other):

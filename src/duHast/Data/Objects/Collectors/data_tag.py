@@ -1,11 +1,16 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage base class used for Revit views.
+Data storage base class used for element tags in views.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - contains 
 
-    - the view bounding box in model coordinates
+    - the view id
+    - the element tagged id
+    - tag location
+    - has tag leader
+    - has tag elbow
+    - elbow location
 
 """
 
@@ -34,31 +39,36 @@ Data storage base class used for Revit views.
 
 import json
 
-from duHast.Data.Objects.data_view_base import DataViewBase
-
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
-from duHast.Data.Objects.Properties.Geometry.geometry_bounding_box_2 import (
+from duHast.Data.Objects.Collectors.data_base import DataBase
+from duHast.Geometry.point_3 import Point3
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.Geometry.geometry_bounding_box_2 import (
     DataGeometryBoundingBox2,
 )
 
 
-class DataViewThreeD(DataViewBase):
+class DataTag(DataBase):
 
-    data_type = "view_3d"
+    data_type = "tag"
 
     def __init__(self, j=None):
         """
-        Class constructor for a view_3d.
+        Class constructor for a annotation tag.
 
-        :param j: A json formatted dictionary of this class, defaults to {}
+        :param j: A json formatted dictionary of this class, defaults to None
         :type j: dict, optional
         """
 
         # initialise parent classes with values
-        super(DataViewThreeD, self).__init__(data_type=DataViewThreeD.data_type, j=j)
+        super(DataTag, self).__init__(data_type=DataTag.data_type)
 
         # set default values
         self.bounding_box = DataGeometryBoundingBox2()
+        self.elbow_location = Point3(0.0, 0.0, 0.0)
+        self.point = Point3(0.0, 0.0, 0.0)
+        self.leader_end = None
+        self.leader_reference = None
+        self.leader_element_reference_id = -1
 
         json_var = None
         # check if any data was past in with constructor!
@@ -83,6 +93,34 @@ class DataViewThreeD(DataViewBase):
                     json_var.get(DataPropertyNames.BOUNDING_BOX, None)
                 )
 
+                # get the point location
+                point = json_var.get(DataPropertyNames.POINT, None)
+                if point:
+                    self.point = Point3(j=point)
+
+                # get the elbow location
+                elbow_location = json_var.get(DataPropertyNames.TAG_ELBOW_LOCATION, None)
+                if elbow_location:
+                    self.elbow_location = Point3(j=elbow_location)
+
+                self.leader_end = json_var.get(
+                    DataPropertyNames.TAG_LEADER_END, self.leader_end
+                )
+                self.leader_reference = json_var.get(
+                    DataPropertyNames.TAG_LEADER_REFERENCE, self.leader_reference
+                )
+
+                self.leader_element_reference_id = json_var.get(
+                    DataPropertyNames.TAG_LEADER_ELEMENT_REFERENCE_ID,
+                    self.leader_element_reference_id,
+                )
+                if not isinstance(self.leader_element_reference_id, int):
+                    raise TypeError(
+                        "Expected 'leader_element_reference_id' to be an int, got {}".format(
+                            type(self.leader_element_reference_id)
+                        )
+                    )
+
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
@@ -93,14 +131,21 @@ class DataViewThreeD(DataViewBase):
         equal compare
 
         Args:
-            other (DataView3D): another DataView#d instance
+            other (DataTag): another DataTag instance
 
         Returns:
             bool: True if equal, otherwise False
         """
-        if not isinstance(other, DataViewThreeD):
+        if not isinstance(other, DataTag):
             return NotImplemented
-        return self.bounding_box == other.bounding_box
+        return (
+            self.bounding_box == other.bounding_box
+            and self.elbow_location == other.elbow_location
+            and self.point == other.point
+            and self.leader_end == other.leader_end
+            and self.leader_reference == other.leader_reference
+            and self.leader_element_reference_id == other.leader_element_reference_id     
+            )
 
     def __ne__(self, other):
         return not self.__eq__(other)

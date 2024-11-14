@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit element phasing properties.
+Data storage class for Revit element level properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -28,13 +28,13 @@ Data storage class for Revit element phasing properties.
 #
 
 import json
-from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors import data_base
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
 
 
-class DataPhasing(data_base.DataBase):
+class DataLevelBase(data_base.DataBase):
 
-    data_type = "phasing"
+    data_type = "level"
 
     def __init__(self, j=None):
         """
@@ -45,11 +45,11 @@ class DataPhasing(data_base.DataBase):
         """
 
         # store data type  in base class
-        super(DataPhasing, self).__init__(DataPhasing.data_type)
+        super(DataLevelBase, self).__init__(DataLevelBase.data_type)
 
         # set default values
-        self.created = "-"
-        self.demolished = "-"
+        self.name = "-"
+        self.id = -1
 
         json_var = None
         # check if any data was past in with constructor!
@@ -70,22 +70,16 @@ class DataPhasing(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.created = json_var.get(DataPropertyNames.CREATED, self.created)
-                if not (isinstance(self.created, str)):
-                    raise ValueError(
-                        "created needs to be of type str, got {} instead.".format(
-                            type(self.created)
-                        )
+                self.name = json_var.get(DataPropertyNames.NAME, self.name)
+                if not isinstance(self.name, str):
+                    raise TypeError(
+                        "Expected 'name' to be a string, got {}".format(type(self.name))
                     )
 
-                self.demolished = json_var.get(
-                    DataPropertyNames.DEMOLISHED, self.demolished
-                )
-                if not (isinstance(self.demolished, str)):
-                    raise ValueError(
-                        "demolished needs to be of type str, got {} instead.".format(
-                            type(self.demolished)
-                        )
+                self.id = json_var.get(DataPropertyNames.ID, self.id)
+                if not isinstance(self.id, int):
+                    raise TypeError(
+                        "Expected 'id' to be an int, got {}".format(type(self.id))
                     )
 
             except Exception as e:
@@ -94,13 +88,13 @@ class DataPhasing(data_base.DataBase):
                 )
 
     def __eq__(self, other):
-        if not isinstance(other, DataPhasing):
+        if not isinstance(other, DataLevelBase):
             raise ValueError(
-                "other needs to be of type DataPhasing, got {} instead.".format(
+                "other needs to be of type DataBase, got {} instead.".format(
                     type(other)
                 )
             )
-        return self.created == other.created and self.demolished == other.demolished
+        return self.name == other.name and self.id == other.id
 
     def __ne__(self, other):
         return not self.__eq__(other)

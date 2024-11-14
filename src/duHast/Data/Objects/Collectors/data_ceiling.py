@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data base storage class for Revit family properties.
+Data storage class for Revit ceiling properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -11,7 +11,7 @@ Data base storage class for Revit family properties.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2024, Jan Christel
+# Copyright 2023, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -30,22 +30,20 @@ Data base storage class for Revit family properties.
 import json
 
 # from duHast.DataSamples import DataGeometry
-from duHast.Data.Objects.Properties import data_design_set_option
-from duHast.Data.Objects.Properties import data_phasing
-from duHast.Data.Objects.Properties import data_level
-from duHast.Data.Objects.Properties import data_type_properties
-from duHast.Data.Objects.Properties import data_instance_properties
-from duHast.Data.Objects.Properties import data_revit_model
-from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties import data_element_geometry_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties import data_design_set_option
+from duHast.Data.Objects.Collectors.Properties import data_phasing
+from duHast.Data.Objects.Collectors.Properties import data_level
+from duHast.Data.Objects.Collectors.Properties import data_type_properties
+from duHast.Data.Objects.Collectors.Properties import data_instance_properties
+from duHast.Data.Objects.Collectors.Properties import data_revit_model
+from duHast.Data.Objects.Collectors import data_base
+from duHast.Data.Objects.Collectors.Properties import data_element_geometry_base
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
 
 
-class DataFamilyBase(
-    data_base.DataBase, data_element_geometry_base.DataElementGeometryBase
-):
+class DataCeiling(data_base.DataBase, data_element_geometry_base.DataElementGeometryBase):
 
-    data_type = "family_instance"
+    data_type = "ceiling"
 
     def __init__(self, j=None):
         """
@@ -56,7 +54,7 @@ class DataFamilyBase(
         """
 
         # store data type  in base class
-        super(DataFamilyBase, self).__init__(data_type=DataFamilyBase.data_type, j=j)
+        super(DataCeiling, self).__init__(data_type=DataCeiling.data_type, j=j)
 
         # set default values
         self.associated_elements = []
@@ -109,31 +107,29 @@ class DataFamilyBase(
                 self.design_set_and_option = data_design_set_option.DataDesignSetOption(
                     json_var.get(data_design_set_option.DataDesignSetOption.data_type, None)
                 )
-
+                
                 # get associated elements
                 associated_elements = json_var.get(
-                    DataPropertyNames.ASSOCIATED_ELEMENTS,
-                    self.associated_elements,
+                    DataPropertyNames.ASSOCIATED_ELEMENTS, self.associated_elements
                 )
                 # these can be all sorts of types...
-                # TODO: convert json to actual elements
-
+                #TODO: convert json to actual elements
+                
             except Exception as e:
-                raise type(e)(
-                    "Node {} failed to initialise with: {}".format(self.data_type, e)
-                )
-
+                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
+    
+    
     def __eq__(self, other):
         """
         equal compare ( ignores associated elements property)
 
         Args:
-            other (DataFamilyBase): another DataFamilyBase instance
+            other (DataCeiling): another DataCeiling instance
 
         Returns:
             bool: True if equal, otherwise False
         """
-        if not isinstance(other, DataFamilyBase):
+        if not isinstance(other, DataCeiling):
             return NotImplemented
         return (
             self.instance_properties == other.instance_properties

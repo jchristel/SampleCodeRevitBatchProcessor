@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Geometry data storage class.
+Data storage class for Revit project level properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -28,31 +28,31 @@ Geometry data storage class.
 #
 
 import json
-from duHast.Data.Objects import data_base
-from duHast.Geometry.point_3 import Point3
-from duHast.Geometry.matrix import Matrix
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.data_level_base import DataLevelBase
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties import data_revit_model
 
 
-class DataGeometryBase(data_base.DataBase):
-    def __init__(self, data_type, j=None, **kwargs):
+class DataLevelBuilding(DataLevelBase):
+
+    data_type = "building level"
+
+    def __init__(self, j=None):
         """
         Class constructor
 
         :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
-        
+
         # store data type  in base class
-        super(DataGeometryBase, self).__init__(data_type=data_type, j=j, **kwargs)
+        super(DataLevelBuilding, self).__init__(j=j)
 
         # set default values
-        # translation as per shared coordinates in revit file
-        self.translation_coord = Point3(0.0, 0.0, 0.0)
-        # rotation as per shared coordinates in revit file ( default )
-        self.rotation_coord = Matrix(rows=3, cols=3)
+        self.elevation = 0.0
+        self.revit_model = data_revit_model.DataRevitModel()
 
-        json_var=None
+        json_var = None
         # check if any data was past in with constructor!
         if j is not None:
             # check type of data that came in:
@@ -60,8 +60,8 @@ class DataGeometryBase(data_base.DataBase):
                 # a string
                 json_var = json.loads(j)
             elif isinstance(j, dict):
-                # make a copy
-                json_var=j.copy()
+                # no action required
+                json_var = j.copy()
             else:
                 raise TypeError(
                     "Argument j supplied must be of type string or type dictionary. Got {} instead.".format(
@@ -71,21 +71,20 @@ class DataGeometryBase(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                translation_coord = json_var.get(
-                    DataPropertyNames.TRANSLATION_COORDINATES, None
+                self.elevation = json_var.get(
+                    DataPropertyNames.ELEVATION, self.elevation
                 )
-                # check if we got None back...if so use what is the default
-                # since a point can be initialized with None
-                if translation_coord is not None:
-                    self.translation_coord = Point3(j=translation_coord)
 
-                rotation_coord = json_var.get(
-                    DataPropertyNames.ROTATION_COORDINATES, None
+                if not (isinstance(self.elevation, float)):
+                    raise TypeError(
+                        "Expected 'elevation' to be a float, got {}".format(
+                            type(self.elevation)
+                        )
+                    )
+
+                self.revit_model = data_revit_model.DataRevitModel(
+                    json_var.get(data_revit_model.DataRevitModel.data_type, None)
                 )
-                # check if we got None back...if so use what is the default
-                # since a matrix ini from an empty dictionary got 0 x 0 size, meanwhile our default is 3 x 3
-                if rotation_coord is not None:
-                    self.rotation_coord = Matrix(j=rotation_coord)
 
             except Exception as e:
                 raise type(e)(
@@ -93,11 +92,10 @@ class DataGeometryBase(data_base.DataBase):
                 )
 
     def __eq__(self, other):
-        if not isinstance(other, DataGeometryBase):
+        if not isinstance(other, DataLevelBuilding):
             return NotImplemented
         return (
-            self.translation_coord == other.translation_coord
-            and self.rotation_coord == other.rotation_coord
+            self.elevation == other.elevation and self.revit_model == other.revit_model
         )
 
     def __ne__(self, other):

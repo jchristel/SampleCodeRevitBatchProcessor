@@ -40,21 +40,21 @@ from duHast.Revit.Common.parameter_get_utils import (
 )
 from duHast.Revit.Common.design_set_options import get_design_set_option_info
 from duHast.Utilities.utility import encode_utf8
-from duHast.Data.Objects.Properties.data_property import DataProperty
+from duHast.Data.Objects.Collectors.Properties.data_property import DataProperty
 from duHast.Revit.Common.phases import (
     get_phase_id_created,
     get_phase_id_demolished,
     get_phase_name_by_id,
 )
 from duHast.Revit.Common.Objects.design_set_property_names import DesignSetPropertyNames
-from duHast.Data.Objects.Properties.data_phasing import DataPhasing
-from duHast.Data.Objects.Properties.data_revit_model import DataRevitModel
-from duHast.Data.Objects.Properties.data_level import DataLevel
-from duHast.Data.Objects.Properties.data_type_properties import DataTypeProperties
-from duHast.Data.Objects.Properties.data_instance_properties import (
+from duHast.Data.Objects.Collectors.Properties.data_phasing import DataPhasing
+from duHast.Data.Objects.Collectors.Properties.data_revit_model import DataRevitModel
+from duHast.Data.Objects.Collectors.Properties.data_level import DataLevel
+from duHast.Data.Objects.Collectors.Properties.data_type_properties import DataTypeProperties
+from duHast.Data.Objects.Collectors.Properties.data_instance_properties import (
     DataInstanceProperties,
 )
-from duHast.Data.Objects.Properties.data_design_set_option import DataDesignSetOption
+from duHast.Data.Objects.Collectors.Properties.data_design_set_option import DataDesignSetOption
 
 
 def get_element_properties(element):

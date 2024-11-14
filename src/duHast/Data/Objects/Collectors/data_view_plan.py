@@ -1,7 +1,12 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit element instance properties.
+Data storage base class used for Revit views.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- contains 
+
+    - the view bounding box in model coordinates
+
 """
 
 #
@@ -11,7 +16,7 @@ Data storage class for Revit element instance properties.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -28,29 +33,33 @@ Data storage class for Revit element instance properties.
 #
 
 import json
-from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
-from duHast.Data.Objects.Properties.data_property import DataProperty
+
+from duHast.Data.Objects.Collectors.data_view_base import DataViewBase
+from duHast.Data.Objects.Collectors.data_tag import DataTag
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
+from duHast.Data.Objects.Collectors.Properties.Geometry.geometry_bounding_box_2 import (
+    DataGeometryBoundingBox2,
+)
 
 
-class DataInstanceProperties(data_base.DataBase):
+class DataViewPlan(DataViewBase):
 
-    data_type = "instance_properties"
+    data_type = "view_plan"
 
     def __init__(self, j=None):
         """
-        Class constructor
+        Class constructor for a view_plan.
 
-        :param j:  json formatted dictionary of this class, defaults to {}
+        :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
-        # store data type  in base class
-        super(DataInstanceProperties, self).__init__(DataInstanceProperties.data_type)
+        # initialise parent classes with values
+        super(DataViewPlan, self).__init__(data_type=DataViewPlan.data_type, j=j)
 
         # set default values
-        self.id = -1
-        self.properties = []
+        self.bounding_box = DataGeometryBoundingBox2()
+        self.tags = []
 
         json_var = None
         # check if any data was past in with constructor!
@@ -71,16 +80,15 @@ class DataInstanceProperties(data_base.DataBase):
 
             # attempt to populate from json
             try:
-                self.id = json_var.get(DataPropertyNames.ID, self.id)
-                if not isinstance(self.id, int):
-                    raise TypeError(
-                        "Expected 'id' to be an int, got {}".format(type(self.id))
-                    )
+                self.bounding_box = DataGeometryBoundingBox2(
+                    json_var.get(DataPropertyNames.BOUNDING_BOX, {})
+                )
 
-                # needs to be converted to list of property objects!
-                properties = json_var.get(DataPropertyNames.PROPERTIES, self.properties)
-                for prop in properties:
-                    self.properties.append(DataProperty(j=prop))
+                # get any tags
+                tags = json_var.get(DataPropertyNames.TAGS, [])
+                for tag in tags:
+                    data_tag = DataTag(j=tag)
+                    self.tags.append(data_tag)
 
             except Exception as e:
                 raise type(e)(
@@ -88,19 +96,22 @@ class DataInstanceProperties(data_base.DataBase):
                 )
 
     def __eq__(self, other):
-        if not isinstance(other, DataInstanceProperties):
+        """
+        equal compare
+
+        Args:
+            other (DataViewPlan): another DataViewPlan instance
+
+        Returns:
+            bool: True if equal, otherwise False
+        """
+        if not isinstance(other, DataViewPlan):
             return NotImplemented
-
-        # Check if IDs are the same
-        if self.id != other.id:
-            return False
-
-        # Check if properties lists are the same length
-        if len(self.properties) != len(other.properties):
-            return False
-
-        # Check each property in the properties list regardless of order
-        return set(self.properties) == set(other.properties)
+        return self.bounding_box == other.bounding_box and sorted(
+            self.tags, key=lambda data_tag: data_tag.leader_element_reference_id
+        ) == sorted(
+            other.tags, key=lambda data_tag: data_tag.leader_element_reference_id
+        )
 
     def __ne__(self, other):
         return not self.__eq__(other)

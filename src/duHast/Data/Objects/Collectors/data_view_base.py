@@ -1,7 +1,11 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit project level properties.
+Data storage view base class used for Revit views.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- contains 
+    - the view id
+
 """
 
 #
@@ -11,7 +15,7 @@ Data storage class for Revit project level properties.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -28,29 +32,26 @@ Data storage class for Revit project level properties.
 #
 
 import json
-from duHast.Data.Objects.Properties.data_level_base import DataLevelBase
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
-from duHast.Data.Objects.Properties import data_revit_model
+
+from duHast.Data.Objects.Collectors import data_base
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
 
 
-class DataLevelBuilding(DataLevelBase):
+class DataViewBase(data_base.DataBase):
 
-    data_type = "building level"
-
-    def __init__(self, j=None):
+    def __init__(self, data_type, j=None):
         """
-        Class constructor
+        Class constructor for a view.
 
-        :param j:  json formatted dictionary of this class, defaults to {}
+        :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         """
 
-        # store data type  in base class
-        super(DataLevelBuilding, self).__init__(j=j)
+        # initialise parent classes with values
+        super(DataViewBase, self).__init__(data_type=data_type)
 
         # set default values
-        self.elevation = 0.0
-        self.revit_model = data_revit_model.DataRevitModel()
+        self.id = -1
 
         json_var = None
         # check if any data was past in with constructor!
@@ -71,20 +72,12 @@ class DataLevelBuilding(DataLevelBase):
 
             # attempt to populate from json
             try:
-                self.elevation = json_var.get(
-                    DataPropertyNames.ELEVATION, self.elevation
-                )
+                self.id = json_var.get(DataPropertyNames.ID, self.id)
 
-                if not (isinstance(self.elevation, float)):
+                if not isinstance(self.id, int):
                     raise TypeError(
-                        "Expected 'elevation' to be a float, got {}".format(
-                            type(self.elevation)
-                        )
+                        "Expected 'id' to be an int, got {}".format(type(self.id))
                     )
-
-                self.revit_model = data_revit_model.DataRevitModel(
-                    json_var.get(data_revit_model.DataRevitModel.data_type, None)
-                )
 
             except Exception as e:
                 raise type(e)(
@@ -92,11 +85,9 @@ class DataLevelBuilding(DataLevelBase):
                 )
 
     def __eq__(self, other):
-        if not isinstance(other, DataLevelBuilding):
+        if not isinstance(other, DataViewBase):
             return NotImplemented
-        return (
-            self.elevation == other.elevation and self.revit_model == other.revit_model
-        )
+        return self.id == other.id
 
     def __ne__(self, other):
         return not self.__eq__(other)

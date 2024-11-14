@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit room properties.
+Data base storage class for Revit family properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -11,7 +11,7 @@ Data storage class for Revit room properties.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -29,18 +29,23 @@ Data storage class for Revit room properties.
 
 import json
 
-from duHast.Data.Objects.Properties import data_design_set_option
-from duHast.Data.Objects.Properties import data_phasing
-from duHast.Data.Objects.Properties import data_level
-from duHast.Data.Objects.Properties import data_instance_properties
-from duHast.Data.Objects.Properties import data_revit_model
-from duHast.Data.Objects import data_base
-from duHast.Data.Objects.Properties import data_element_geometry_base
-from duHast.Data.Objects.Properties.data_property_names import DataPropertyNames
+# from duHast.DataSamples import DataGeometry
+from duHast.Data.Objects.Collectors.Properties import data_design_set_option
+from duHast.Data.Objects.Collectors.Properties import data_phasing
+from duHast.Data.Objects.Collectors.Properties import data_level
+from duHast.Data.Objects.Collectors.Properties import data_type_properties
+from duHast.Data.Objects.Collectors.Properties import data_instance_properties
+from duHast.Data.Objects.Collectors.Properties import data_revit_model
+from duHast.Data.Objects.Collectors import data_base
+from duHast.Data.Objects.Collectors.Properties import data_element_geometry_base
+from duHast.Data.Objects.Collectors.Properties.data_property_names import DataPropertyNames
 
 
-class DataRoom(data_base.DataBase, data_element_geometry_base.DataElementGeometryBase):
-    data_type = "room"
+class DataFamilyBase(
+    data_base.DataBase, data_element_geometry_base.DataElementGeometryBase
+):
+
+    data_type = "family_instance"
 
     def __init__(self, j=None):
         """
@@ -50,12 +55,13 @@ class DataRoom(data_base.DataBase, data_element_geometry_base.DataElementGeometr
         :type j: dict, optional
         """
 
-        # initialise parent classes with values
-        super(DataRoom, self).__init__(data_type=DataRoom.data_type, j=j)
+        # store data type  in base class
+        super(DataFamilyBase, self).__init__(data_type=DataFamilyBase.data_type, j=j)
 
-        # initialise classes with default values
+        # set default values
         self.associated_elements = []
         self.instance_properties = data_instance_properties.DataInstanceProperties()
+        self.type_properties = data_type_properties.DataTypeProperties()
         self.level = data_level.DataLevel()
         self.revit_model = data_revit_model.DataRevitModel()
         self.phasing = data_phasing.DataPhasing()
@@ -84,12 +90,12 @@ class DataRoom(data_base.DataBase, data_element_geometry_base.DataElementGeometr
                     data_instance_properties.DataInstanceProperties(
                         json_var.get(
                             data_instance_properties.DataInstanceProperties.data_type,
-                            None,
+                            {},
                         )
                     )
                 )
-                self.design_set_and_option = data_design_set_option.DataDesignSetOption(
-                    json_var.get(data_design_set_option.DataDesignSetOption.data_type, None)
+                self.type_properties = data_type_properties.DataTypeProperties(
+                    json_var.get(data_type_properties.DataTypeProperties.data_type, None)
                 )
                 self.level = data_level.DataLevel(
                     json_var.get(data_level.DataLevel.data_type, None)
@@ -97,11 +103,13 @@ class DataRoom(data_base.DataBase, data_element_geometry_base.DataElementGeometr
                 self.revit_model = data_revit_model.DataRevitModel(
                     json_var.get(data_revit_model.DataRevitModel.data_type, None)
                 )
-                
                 self.phasing = data_phasing.DataPhasing(
                     json_var.get(data_phasing.DataPhasing.data_type, None)
                 )
-                
+                self.design_set_and_option = data_design_set_option.DataDesignSetOption(
+                    json_var.get(data_design_set_option.DataDesignSetOption.data_type, None)
+                )
+
                 # get associated elements
                 associated_elements = json_var.get(
                     DataPropertyNames.ASSOCIATED_ELEMENTS,
@@ -109,25 +117,27 @@ class DataRoom(data_base.DataBase, data_element_geometry_base.DataElementGeometr
                 )
                 # these can be all sorts of types...
                 # TODO: convert json to actual elements
-                
 
             except Exception as e:
-                raise type(e)("Node {} failed to initialise with: {}".format(self.data_type, e))
-    
+                raise type(e)(
+                    "Node {} failed to initialise with: {}".format(self.data_type, e)
+                )
+
     def __eq__(self, other):
         """
         equal compare ( ignores associated elements property)
 
         Args:
-            other (DataRoom): another DataRoom instance
+            other (DataFamilyBase): another DataFamilyBase instance
 
         Returns:
             bool: True if equal, otherwise False
         """
-        if not isinstance(other, DataRoom):
+        if not isinstance(other, DataFamilyBase):
             return NotImplemented
         return (
             self.instance_properties == other.instance_properties
+            and self.type_properties == other.type_properties
             and self.level == other.level
             and self.revit_model == other.revit_model
             and self.phasing == other.phasing

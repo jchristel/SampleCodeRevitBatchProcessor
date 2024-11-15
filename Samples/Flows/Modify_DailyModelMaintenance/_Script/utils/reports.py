@@ -54,6 +54,8 @@ import duHast.Utilities.Objects.result as res
 from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Utilities.files_csv import write_report_data_as_csv
 
+from duHast.Revit.Family.Reporting.report import report_loaded_families
+
 from duHast.Revit.Views.Reporting.sheets_report import (
     write_sheet_data,
     write_sheet_data_by_property_names,
@@ -380,68 +382,32 @@ def report_families(doc, revit_file_path, output):
         + settings.REPORT_EXTENSION_FAMILIES
         + settings.REPORT_FILE_NAME_EXTENSION
     )
-    # build list of all categories we want families to be reloaded of
-    famCats = List[rdb.BuiltInCategory](rFamUtilCats.CATEGORIES_LOADABLE_TAGS)
-    famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_TAGS_OTHER)
-    famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_3D)
-    famCats.AddRange(rFamUtilCats.CATEGORIES_LOADABLE_3D_OTHER)
 
-    # get all symbols in file
-    family_symbols = get_family_symbols(doc, famCats)
-    # get families from symbols and filter out in place families
-    # get data in format:
-    #   revit file name , family name, family symbol name, instances placed
-    data = []
-    revit_project_file_name = get_file_name_without_ext(revit_file_path)
-    for family_symbol in family_symbols:
-        row_data = []
-        if family_symbol.Family.IsInPlace == False:
-            custom_parameter_values = []
-            for parameter_name in settings.FAMILY_PARAMETERS_TO_REPORT:
-                parameter_value = get_parameter_value_by_name(
-                    family_symbol, parameter_name
-                )
-                if parameter_value == None:
-                    parameter_value = "NA"
-                custom_parameter_values.append(parameter_value)
+    data_result = report_loaded_families(doc=doc, parameter_names_filter= settings.FAMILY_PARAMETERS_TO_REPORT,progress_callback=None)
 
-            family = doc.GetElement(family_symbol.Family.Id)
-            collector_instances_placed = get_family_instances_by_symbol_type_id(
-                doc, family_symbol.Id
-            )
-            count_instances = len(collector_instances_placed.ToList())
-            category = family.FamilyCategory
-
-            row_data = [
-                revit_project_file_name,
-                encode_utf8(rdb.Element.Name.GetValue(family)),
-                category.Name,
-                encode_utf8(rdb.Element.Name.GetValue(family_symbol)),
-                str(count_instances),
-            ]
-
-            # insert parameter values at index 4
-            if len(custom_parameter_values) > 0:
-                row_data[4:4] = custom_parameter_values
-
-            data.append(row_data)
     try:
-        header = [
-            "Project File Name",
-            "Family Name",
-            "Family Category",
-            "Family Type Name",
-            "Number of Instances Placed",
-        ]
-        # insert custom parameter names to headers if any
-        if len(settings.FAMILY_PARAMETERS_TO_REPORT) > 0:
-            header[4:4] = settings.FAMILY_PARAMETERS_TO_REPORT
+        if(data_result.status == False):
+            raise ValueError("Failed to get family data: {}".format(data_result.message))
+        
+        # get family data
+        fam_data = data_result.result
 
+        # convert to csv writeable
+        data = []
+        for fam_data_instance in fam_data:
+            row = fam_data_instance.get_properties_as_list_str()
+            data.append(row)
+
+        # get file headers
+        header = fam_data[0].get_property_headers()
+        
+        # write data to file
         write_report_data_as_csv(
             file_name=file_name,
             header=header,
             data=data,
             write_type="w",
+            enforce_ascii=True,
         )
         return_value.update_sep(True, "Successfully wrote family data to file.")
     except Exception as e:

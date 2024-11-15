@@ -59,6 +59,11 @@ def get_cad_link_type_data_by_name(cad_link_name, doc, revit_file_path):
                     model_path = fileIO.convert_relative_path_to_full_path(
                         model_path, revit_file_path
                     )
+                else:
+                    ex_resource_references = p.GetExternalResourceReferences()
+                    # check if that returned anything...
+                    
+
                 break
             except Exception as e:
                 model_path = str(e)

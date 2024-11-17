@@ -78,6 +78,14 @@ duHast.Revit.Family.family\_reload module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.family\_reload\_single module
+-------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_reload_single
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.family\_rename\_files\_utils module
 -------------------------------------------------------
 

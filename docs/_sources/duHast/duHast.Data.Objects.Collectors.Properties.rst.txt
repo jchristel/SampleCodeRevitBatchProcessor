@@ -1,0 +1,117 @@
+duHast.Data.Objects.Collectors.Properties package
+=================================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Data.Objects.Collectors.Properties.Geometry
+
+Submodules
+----------
+
+duHast.Data.Objects.Collectors.Properties.data\_design\_set\_option module
+--------------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_design_set_option
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.Properties.data\_element\_geometry\_base module
+------------------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_element_geometry_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.Properties.data\_instance\_properties module
+---------------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_instance_properties
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.Properties.data\_level module
+------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_level
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.Properties.data\_level\_base module
+------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_level_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.Properties.data\_phasing module
+--------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_phasing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.Properties.data\_property module
+---------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_property
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.Properties.data\_property\_names module
+----------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_property_names
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.Properties.data\_revit\_model module
+-------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_revit_model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.Properties.data\_schedule\_segement module
+-------------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_schedule_segement
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.Properties.data\_type\_properties module
+-----------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_type_properties
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.Properties.data\_view\_port\_type\_names module
+------------------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_view_port_type_names
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties
+   :members:
+   :undoc-members:
+   :show-inheritance:

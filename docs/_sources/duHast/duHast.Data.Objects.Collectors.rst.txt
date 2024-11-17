@@ -1,0 +1,133 @@
+duHast.Data.Objects.Collectors package
+======================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Data.Objects.Collectors.Properties
+
+Submodules
+----------
+
+duHast.Data.Objects.Collectors.data\_base module
+------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_ceiling module
+---------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_ceiling
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_door module
+------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_door
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_family\_base module
+--------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_family_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_level\_building module
+-----------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_level_building
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_room module
+------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_room
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_sheet module
+-------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_sheet
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_sheet\_view\_port module
+-------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_sheet_view_port
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_tag module
+-----------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_tag
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_view\_3d module
+----------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_view_3d
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_view\_base module
+------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_view_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_view\_elevation module
+-----------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_view_elevation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_view\_plan module
+------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_view_plan
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.data\_view\_schedule module
+----------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.data_view_schedule
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Data.Objects.Collectors
+   :members:
+   :undoc-members:
+   :show-inheritance:

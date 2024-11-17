@@ -12,6 +12,14 @@ duHast.Revit.Rooms.Objects.RoomBaseObject module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Rooms.Objects.RoomSpatialObject module
+---------------------------------------------------
+
+.. automodule:: duHast.Revit.Rooms.Objects.RoomSpatialObject
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

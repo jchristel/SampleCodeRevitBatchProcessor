@@ -4,6 +4,14 @@ duHast.Data.Utils package
 Submodules
 ----------
 
+duHast.Data.Utils.collectors\_to\_blueprints module
+---------------------------------------------------
+
+.. automodule:: duHast.Data.Utils.collectors_to_blueprints
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Data.Utils.data\_export module
 -------------------------------------
 

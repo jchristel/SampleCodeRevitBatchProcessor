@@ -34,7 +34,7 @@ from duHast.Utilities.compare import is_close
 
 
 class BoundingBox2(BoundingBoxBase):
-    def __init__(self, point1=None, point2=None, j=None):
+    def __init__(self, point1=None, point2=None, j=None, **kwargs):
         """
         A 2D bounding box class.
 
@@ -50,27 +50,23 @@ class BoundingBox2(BoundingBoxBase):
         """
 
         # ini super with json field
-        super(BoundingBox2, self).__init__(j=j)
+        super(BoundingBox2, self).__init__(j=j, **kwargs)
 
         # check first if a json string / dictionary is provided
         if j:
             point1 = Point2(
-                x=self.json_ini[GeometryPropertyNames.MIN_X.value],
-                y=self.json_ini[GeometryPropertyNames.MIN_Y.value],
+                x=self.json_ini[GeometryPropertyNames.MIN_X],
+                y=self.json_ini[GeometryPropertyNames.MIN_Y],
             )
             point2 = Point2(
-                x=self.json_ini[GeometryPropertyNames.MAX_X.value],
-                y=self.json_ini[GeometryPropertyNames.MAX_Y.value],
+                x=self.json_ini[GeometryPropertyNames.MAX_X],
+                y=self.json_ini[GeometryPropertyNames.MAX_Y],
             )
 
-        # If both point1 and point2 are None after handling JSON, raise an error
-        if point1 is None or point2 is None:
-            raise ValueError(
-                "Either two Point2 instances or a JSON string with point data needs to be provided."
-            )
-
-        # set the bounding box
-        self.update(point1=point1, point2=point2)
+        # If both point1 and point2 are provided update the bounding box
+        if point1 and point2:
+            # set the bounding box
+            self.update(point1=point1, point2=point2)
 
     def update(self, point1, point2):
         """
@@ -124,3 +120,6 @@ class BoundingBox2(BoundingBoxBase):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+    
+    def __hash__(self):
+        return hash((self.min_x, self.max_x, self.min_y, self.max_y))

@@ -30,7 +30,7 @@ This module contains a Revit ceilings geometry extraction functions.
 from Autodesk.Revit.DB import Options, Solid
 
 from duHast.Revit.Ceilings import ceilings as rCeiling
-from duHast.Revit.Common.Geometry import to_data_conversion as rCon
+from duHast.Revit.Common.Geometry.solids import convert_solid_to_flattened_2d_points
 
 
 def get_2d_points_from_revit_ceiling(ceiling):
@@ -60,7 +60,7 @@ def get_2d_points_from_revit_ceiling(ceiling):
     # process solids to points
     # in place families may have more then one solid
     for s in solids:
-        point_per_ceilings = rCon.convert_solid_to_flattened_2d_points(s)
+        point_per_ceilings = convert_solid_to_flattened_2d_points(s)
         if len(point_per_ceilings) > 0:
             for p_lists in point_per_ceilings:
                 all_ceiling_points.append(p_lists)

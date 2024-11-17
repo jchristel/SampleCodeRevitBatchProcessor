@@ -91,14 +91,14 @@ if ($exitCode -eq 0) {
     # start batch processor sessions with individual settings scripts
     start-batchProcessor -settings_directory $settings_directory -settings_file_names $settings_step_one
 
-    # post processing script�
+    # post processing script
     Write-ToLogAndConsole -Message "*" -IsHeader $True
     Write-ToLogAndConsole -Message "-"
     Write-ToLogAndConsole -Message "Post Processing Script" -IsHeader $True
     # execute post processing script using c-python in order to get access to latest python libraries
     # this particular bit of code may need to run in secure enclave...
     $process_post = start-wrapper -path "$standard_python_path" -arguments $_post_step_one_script
-    $exit_code_post_processing = $process_post
+    $exit_code_post_processing = $process_post.ExitCode
     Write-ToLogAndConsole -Message "Post processing script finished with code: $exit_code_post_processing"
 
     # clean up script

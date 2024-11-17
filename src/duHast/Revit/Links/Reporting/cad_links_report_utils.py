@@ -51,14 +51,36 @@ def get_cad_link_type_data_by_name(cad_link_name, doc, revit_file_path):
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.CADLinkType):
         if rdb.Element.Name.GetValue(p) == cad_link_name:
             try:
-                ex_file_ref = p.GetExternalFileReference()
-                if ex_file_ref.IsValidExternalFileReference(ex_file_ref):
-                    model_path = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(
-                        ex_file_ref.GetPath()
-                    )
-                    model_path = fileIO.convert_relative_path_to_full_path(
-                        model_path, revit_file_path
-                    )
+                ex_file_ref = None
+
+                # trying to get the external file reference will throw an exception if not a file
+                try:
+                    ex_file_ref = p.GetExternalFileReference()
+                except Exception:
+                    pass
+                
+                # check if file reference
+                if ex_file_ref is not None:
+                    if (ex_file_ref.IsValidExternalFileReference(ex_file_ref)):
+                        print("hereh")
+                        model_path = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(
+                            ex_file_ref.GetPath()
+                        )
+                        model_path = fileIO.convert_relative_path_to_full_path(
+                            model_path, revit_file_path
+                        )
+                else:
+                    # try external resource instead
+                    ex_resource_references = p.GetExternalResourceReferences()
+                    # check if that returned anything...
+                    # the path value will be empty if the link is not loaded
+                    for ref in ex_resource_references:
+                        # these are c# key value pairs
+                        if ref.Value.InSessionPath == "":
+                            model_path = "unknown since link is unloaded"
+                        else:
+                            model_path = ref.Value.InSessionPath
+                        break
                 break
             except Exception as e:
                 model_path = str(e)

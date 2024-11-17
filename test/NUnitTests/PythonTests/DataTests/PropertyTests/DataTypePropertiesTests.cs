@@ -133,13 +133,13 @@ namespace PythonTests.DataTests.PropertyTests
         {
             // Arrange: different property lists for two instances
             var jsonStringA = CreateJson(123, "TypeName", new List<object>
-        {
-            new { name = "Property1", value = 456 }
-        });
+            {
+                new { name = "Property1", value = 456 }
+            });
             var jsonStringB = CreateJson(123, "TypeName", new List<object>
-        {
-            new { name = "Property2", value = "TestValue" }
-        });
+            {
+                new { name = "Property2", value = "TestValue" }
+            });
             var modelA = PythonEngineManager.DataTypePropertiesClass(jsonStringA);
             var modelB = PythonEngineManager.DataTypePropertiesClass(jsonStringB);
 

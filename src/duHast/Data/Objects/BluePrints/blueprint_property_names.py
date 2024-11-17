@@ -28,10 +28,8 @@ Blueprint property  names enum class.
 #
 
 
-from enum import Enum
 
-
-class BlueprintPropertyNames(Enum):
+class BlueprintPropertyNames():
     """
     Contains property names used in blueprint classes
     """

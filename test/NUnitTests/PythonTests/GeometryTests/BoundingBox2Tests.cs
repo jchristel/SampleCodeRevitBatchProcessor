@@ -135,10 +135,14 @@ namespace PythonTests.GeometryTests
         }
 
         [Test]
-        public void Bbox2_Initialize_WithMissingPoints_ShouldThrowValueError()
+        public void Bbox2_Initialize_WithMissingPoints_ShouldInitialiseDefault()
         {
-            var ex = Assert.Throws<ValueErrorException>(() => PythonEngineManager.BoundingBox2Class(null, null));
-            Assert.That(ex.Message, Does.Contain("Either two Point2 instances or a JSON string with point data"));
+            dynamic bbox = PythonEngineManager.BoundingBox2Class(null, null);
+            Assert.AreEqual(0.0, bbox.min_x);
+            Assert.AreEqual(0.0, bbox.min_y);
+            Assert.AreEqual(0.0, bbox.max_x);
+            Assert.AreEqual(0.0, bbox.max_y);
+
         }
 
         [Test]

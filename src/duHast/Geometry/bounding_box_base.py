@@ -33,7 +33,7 @@ from duHast.Geometry.geometry_property_names import GeometryPropertyNames
 from duHast.Utilities.compare import is_close
 
 class BoundingBoxBase(Base):
-    def __init__(self, j=None):
+    def __init__(self, j=None, **kwargs):
         """
         Base implementation of a bounding box.
 
@@ -41,32 +41,37 @@ class BoundingBoxBase(Base):
         :raises ValueError: "JSON must contain 'point1' and 'point2' keys."
         """
         # ini super class to allow multi inheritance in children!
-        super(BoundingBoxBase, self).__init__()
+        super(BoundingBoxBase, self).__init__(**kwargs)
 
+        json_string=None
         # Check if a JSON string / dictionary is provided
         if j:
             if isinstance(j, str):
                 # Parse the JSON string
-                j = json.loads(j)
+                json_string = json.loads(j)
+            elif isinstance(j, dict):
+                # make a copy
+                json_string=j.copy()
             elif not isinstance(j, dict):
                 raise TypeError("Input must be a JSON string or a dictionary.")
 
             # Validate presence of required keys
             if (
-                GeometryPropertyNames.MAX_X.value not in j
-                or GeometryPropertyNames.MAX_Y.value not in j
-                or GeometryPropertyNames.MIN_X.value not in j
-                or GeometryPropertyNames.MIN_Y.value not in j
+                GeometryPropertyNames.MAX_X not in json_string
+                or GeometryPropertyNames.MAX_Y not in json_string
+                or GeometryPropertyNames.MIN_X not in json_string
+                or GeometryPropertyNames.MIN_Y not in json_string
             ):
                 raise ValueError("JSON must contain 'max_x', 'max_y', 'min_x', 'min_y' keys.")
-            self._json_ini = j
+            self._json_ini = json_string
         else:
             self._json_ini = None
 
-        self._min_x = float("inf")
-        self._max_x = float("-inf")
-        self._min_y = float("inf")
-        self._max_y = float("-inf")
+        # set default values
+        self._min_x = 0.0
+        self._max_x = 0.0
+        self._min_y = 0.0
+        self._max_y = 0.0
 
     @property
     def json_ini(self):
@@ -111,3 +116,6 @@ class BoundingBoxBase(Base):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+    
+    def __hash__(self):
+        return hash((self.min_x, self.max_x, self.min_y, self.max_y))

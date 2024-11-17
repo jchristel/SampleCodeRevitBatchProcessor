@@ -17,18 +17,16 @@ namespace PythonTests.DataTests
             {
                 { "data_type", "sheet view port" },
                 { "view_id", 1001 },
-                { "vp_type", PythonEngineManager.DataViewPortTypeNames.THREE_D.value },
+                { "vp_type", PythonEngineManager.DataViewPortTypeNames.THREE_D},
                 { "bounding_box", new Dictionary<string, object>
                     {
                         { "DataType", "bounding box 2" },
-                        { "bounding_box", new Dictionary<string, object>
-                            {
+                        
                                 { "min_x", 0.0 },
                                 { "max_x", 10.0 },
                                 { "min_y", 0.0 },
-                                { "max_y", 10.0 }
-                            }
-                        },
+                                { "max_y", 10.0 },
+                          
                         { "rotation_coord", new Dictionary<string, object>
                             {
                                 { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
@@ -58,14 +56,12 @@ namespace PythonTests.DataTests
                         { "bounding_box", new Dictionary<string, object>
                             {
                                 { "DataType", "bounding box 2" },
-                                { "bounding_box", new Dictionary<string, object>
-                                    {
+                                
                                         { "min_x", 0.0 },
                                         { "max_x", 10.0 },
                                         { "min_y", 0.0 },
-                                        { "max_y", 10.0 }
-                                    }
-                                },
+                                        { "max_y", 10.0 },
+                                 
                                 { "rotation_coord", new Dictionary<string, object>
                                     {
                                         { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
@@ -106,20 +102,20 @@ namespace PythonTests.DataTests
             // Assert
             Assert.AreEqual("sheet view port", dataSheetViewPort.data_type);
             Assert.AreEqual(1001, dataSheetViewPort.view_id);
-            Assert.AreEqual(PythonEngineManager.DataViewPortTypeNames.THREE_D.value, dataSheetViewPort.vp_type);
+            Assert.AreEqual(PythonEngineManager.DataViewPortTypeNames.THREE_D, dataSheetViewPort.vp_type);
             Assert.IsNotNull(dataSheetViewPort.bounding_box);
-            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.bounding_box.min_x);
-            Assert.AreEqual(10.0, dataSheetViewPort.bounding_box.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.bounding_box.min_y);
-            Assert.AreEqual(10.0, dataSheetViewPort.bounding_box.bounding_box.max_y);
+            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.min_x);
+            Assert.AreEqual(10.0, dataSheetViewPort.bounding_box.max_x);
+            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.min_y);
+            Assert.AreEqual(10.0, dataSheetViewPort.bounding_box.max_y);
             Assert.AreEqual(5.0, dataSheetViewPort.centre_point.x);
             Assert.AreEqual(5.0, dataSheetViewPort.centre_point.y);
 
 
-            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.bounding_box.min_x);
-            Assert.AreEqual(10.0, dataSheetViewPort.view.bounding_box.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.bounding_box.min_y);
-            Assert.AreEqual(10.0, dataSheetViewPort.view.bounding_box.bounding_box.max_y);
+            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.min_x);
+            Assert.AreEqual(10.0, dataSheetViewPort.view.bounding_box.max_x);
+            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.min_y);
+            Assert.AreEqual(10.0, dataSheetViewPort.view.bounding_box.max_y);
         }
 
         [Test]
@@ -142,20 +138,20 @@ namespace PythonTests.DataTests
             // Assert
             Assert.AreEqual("sheet view port", dataSheetViewPort.data_type);
             Assert.AreEqual(-1, dataSheetViewPort.view_id);
-            Assert.AreEqual(PythonEngineManager.DataViewPortTypeNames.FLOOR_PLAN.value, dataSheetViewPort.vp_type);
+            Assert.AreEqual(PythonEngineManager.DataViewPortTypeNames.FLOOR_PLAN, dataSheetViewPort.vp_type);
             Assert.IsNotNull(dataSheetViewPort.bounding_box);
-            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.bounding_box.min_x);
-            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.bounding_box.min_y);
-            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.bounding_box.max_y);
+            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.min_x);
+            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.max_x);
+            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.min_y);
+            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.max_y);
             Assert.AreEqual(0.0, dataSheetViewPort.centre_point.x);
             Assert.AreEqual(0.0, dataSheetViewPort.centre_point.y);
 
             Assert.AreEqual(-1, dataSheetViewPort.view.id);
-            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.bounding_box.min_x);
-            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.bounding_box.min_y);
-            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.bounding_box.max_y);
+            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.min_x);
+            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.max_x);
+            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.min_y);
+            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.max_y);
             Assert.AreEqual(0, dataSheetViewPort.view.tags.Count);
         }
 

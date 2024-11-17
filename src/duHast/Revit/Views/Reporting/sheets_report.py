@@ -38,7 +38,6 @@ from duHast.Revit.Common import parameter_get_utils as rParaGet
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Views.Reporting.view_property_utils import convert_view_data_to_list
 from duHast.Utilities.files_csv import write_report_data_as_csv
-from duHast.Utilities.utility import encode_ascii
 
 
 def get_sheet_report_data(doc, host_name):
@@ -61,7 +60,7 @@ def get_sheet_report_data(doc, host_name):
         info = WorksharingUtils.GetWorksharingTooltipInfo(doc, v.Id)
         # check values and substitute any empty strings
         owner = info.Owner
-        last_changed_by = (info.LastChangedBy,)
+        last_changed_by = info.LastChangedBy
         if info.Owner == "":
             owner = "not applicable"
         if info.LastChangedBy == "":

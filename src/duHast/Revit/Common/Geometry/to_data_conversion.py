@@ -29,8 +29,7 @@ Revit Geometry to data geometry conversion helper functions.
 
 from duHast.Data.Objects.Properties.Geometry import geometry_polygon_2 as dGeometryPoly
 from duHast.Revit.Common.Geometry import geometry as rGeo, solids as rSolid
-from collections import namedtuple
-from duHast.Revit.Common.Geometry.points import get_point_as_doubles, flatten_xyz_point
+from duHast.Revit.Common.Geometry.points import get_point_as_doubles
 
 from Autodesk.Revit.DB import XYZ
 
@@ -68,81 +67,6 @@ def convert_xyz_in_data_geometry_polygons(doc, dgObject):
         data_geometry.translation_coord,
     ) = rGeo.get_coordinate_system_translation_and_rotation(doc)
     return data_geometry
-
-
-def convert_solid_to_flattened_2d_points(solid):
-    """
-    Converts a solid into a 2D polygon by projecting it onto a plane.( Removes Z values...)
-    First nested list is the outer loop, any other following lists describe holes within the area of the polygon defined be points in first list.
-    Arcs, circles will be tessellated to polygons.
-    :param solid: A solid.
-    :type solid: Autodesk.Revit.DB.Solid
-    :return: A list of data geometry instances.
-    :rtype: list of :class:`.DataGeometryPolygon`
-    """
-
-    """
-    sample for a sold with multiple sketches:
-    [
-        [
-            [external poly line],[hole],[hole]
-        ],
-        [
-            [external poly line] # without any holes
-        ]
-    ]
-    sort faces into groups by volume:
-    This may be required because a solid can be made up of multiple volumes (extrusion, sweeps etc)
-    Turns out a solid returns a single face for multiple sketches. In order to work out whether these are multiple non overlapping polygons I will need to check
-    whether a point from one polygon is within the other if so it may represents a hole or an island within a hole...to avoid misreading an island for a whole I will need to sort the faces by area
-    and check from largest down to smallest.
-    Also poly lines send back will always only represent: first list: exterior boundary as polygon any follow list is a hole within the polygon. Any islands in those holes will get their own top level representation
-    i.e. no further list nesting!
-    Within the faces groups: identify faces which are horizontal: its normal is facing up or down
-    select the face with the lower Z coordinates and
-    group all edges of the above face which form a closed loop (first loop of edges to describe the extend of that face, any secondary loops define holes in face)
-    - > sort all edges by their connections (need to be connected by a point) so they describe a loop <- seems to be ok as revit provides them
-    extract points of edges
-    """
-
-    ceilingGeos = []
-    # sort faces by size
-    sortedBySizeFaces = rGeo.get_faces_sorted_by_area_from_solid(solid)
-    # get all faces which are horizontal only
-    horizontalFaces = rGeo.get_unique_horizontal_faces(sortedBySizeFaces)
-    # loop of all horizontal faces and extract loops
-    for hf in horizontalFaces:
-        edgeLoops = rGeo.convert_edge_arrays_into_list_of_points(hf.EdgeLoops)
-        # convert in UV coordinates
-        edgeLoopsFlattened = rGeo.flatten_xyz_point_list_of_lists(edgeLoops)
-        # set up a named tuple to store data in it
-        uvLoops = []
-        uvLoop = namedtuple("uvLoop", "loop area id threeDPoly")
-        counter = 0
-        for edgeLoopFlat in edgeLoopsFlattened:
-            areaLoop = rGeo.get_signed_polygon_area(edgeLoopFlat)
-            uvTuple = uvLoop(edgeLoopFlat, abs(areaLoop), counter, edgeLoops[counter])
-            uvLoops.append(uvTuple)
-            counter += 1
-        uvLoops = sorted(uvLoops, key=lambda x: x.area, reverse=True)
-        # sort loops into exterior and hole loops
-        loopDic = rGeo.build_loops_dictionary(uvLoops)
-        for key in loopDic:
-            dataGeometry = dGeometryPoly.DataGeometryPolygon2()
-            keyList = []
-            # find matching loop by id
-            for x in uvLoops:
-                if x.id == key:
-                    keyList = x
-                    break
-            dataGeometry.outer_loop = keyList.threeDPoly
-            if len(loopDic[key]) > 0:
-                for hole in loopDic[key]:
-                    dataGeometry.inner_loops.append(hole.threeDPoly)
-            else:
-                dataGeometry.inner_loops = []
-            ceilingGeos.append(dataGeometry)
-    return ceilingGeos
 
 
 def convert_bounding_box_to_flattened_2d_points(bounding_box):

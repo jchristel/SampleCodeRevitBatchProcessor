@@ -233,21 +233,21 @@ def get_design_set_option_info(doc, element):
 
     # keys match properties in DataDesignSetOption class!!
     new_key = [
-        DesignSetPropertyNames.DESIGN_SET_NAME.value,
-        DesignSetPropertyNames.DESIGN_OPTION_NAME.value,
-        DesignSetPropertyNames.DESIGN_OPTION_IS_PRIMARY.value,
+        DesignSetPropertyNames.DESIGN_SET_NAME,
+        DesignSetPropertyNames.DESIGN_OPTION_NAME,
+        DesignSetPropertyNames.DESIGN_OPTION_IS_PRIMARY,
     ]
-    new_value = [DesignSetPropertyNames.DESIGN_SET_DEFAULT_NAME.value, DesignSetPropertyNames.DESIGN_OPTION_DEFAULT_NAME.value, True]
+    new_value = [DesignSetPropertyNames.DESIGN_SET_DEFAULT_NAME, DesignSetPropertyNames.DESIGN_OPTION_DEFAULT_NAME, True]
     dic = dict(zip(new_key, new_value))
     try:
         # this only works for objects inheriting from Autodesk.Revit.DB.Element
         design_option = element.DesignOption
-        dic[DesignSetPropertyNames.DESIGN_OPTION_NAME.value] = design_option.Name
-        dic[DesignSetPropertyNames.DESIGN_OPTION_IS_PRIMARY.value] = design_option.IsPrimary
+        dic[DesignSetPropertyNames.DESIGN_OPTION_NAME] = design_option.Name
+        dic[DesignSetPropertyNames.DESIGN_OPTION_IS_PRIMARY] = design_option.IsPrimary
         e = doc.GetElement(
             design_option.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId()
         )
-        dic[DesignSetPropertyNames.DESIGN_SET_NAME.value] = Element.Name.GetValue(e)
+        dic[DesignSetPropertyNames.DESIGN_SET_NAME] = Element.Name.GetValue(e)
     except Exception as e:
         pass
     return dic

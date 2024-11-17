@@ -50,10 +50,10 @@ class Point3(PointBase):
         # check first if a json string / dictionary is provided
         if j:
             # Validate presence of required keys (stored in base class json)
-            if GeometryPropertyNames.Z.value not in self.json_ini:
+            if GeometryPropertyNames.Z not in self.json_ini:
                 raise ValueError("JSON must contain 'z' key.")
 
-            z = self.json_ini.get(GeometryPropertyNames.Z.value)
+            z = self.json_ini.get(GeometryPropertyNames.Z)
 
         # Type checking
         if not isinstance(z, float):
@@ -69,3 +69,6 @@ class Point3(PointBase):
     
     def __ne__(self, other):
         return not self.__eq__(other)
+    
+    def __hash__(self):
+        return hash((self.x, self.y, self.z))

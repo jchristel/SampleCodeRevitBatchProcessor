@@ -6,37 +6,27 @@ namespace PythonTests.DataTests
 {
     public class DataView3DTests
     {
-        [Test]
-        public void ClassesShouldBeLoaded()
-        {
-            Assert.IsNotNull(PythonEngineManager.DataViewThreeDClass, "DataTypeProperties should be loaded.");
-        }
+        private string validJsonString;
+        private Dictionary<string, object> validJsonDictionary;
 
-        // Helper method to create JSON strings
-        private string CreateJson(Dictionary<string, object> properties)
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(properties);
-        }
 
-        [Test]
-        public void InitializeWithValidJson_ShouldSetPropertiesCorrectly()
+        [SetUp]
+        public void SetUp()
         {
-            // Arrange: valid JSON with id, data_type, and bounding box fields
-            var jsonString = CreateJson(new Dictionary<string, object>
+            // Sample valid JSON for testing DataSheetViewPort
+            validJsonDictionary = new Dictionary<string, object>
             {
                 { "data_type", "view_3d" },
                 { "id", 101 },
                 { "bounding_box", new Dictionary<string, object>
                     {
                         { "DataType", "bounding box 2" },
-                        { "bounding_box", new Dictionary<string, object>
-                            {
-                                { "min_x", 0.0 },
-                                { "max_x", 10.0 },
-                                { "min_y", 0.0 },
-                                { "max_y", 10.0 }
-                            }
-                        },
+                        
+                        { "min_x", 0.0 },
+                        { "max_x", 10.0 },
+                        { "min_y", 0.0 },
+                        { "max_y", 10.0 },
+                           
                         { "rotation_coord", new Dictionary<string, object>
                             {
                                 { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
@@ -54,18 +44,38 @@ namespace PythonTests.DataTests
                         }
                     }
                 }
-            });
+            };
 
+
+            validJsonString = JsonConvert.SerializeObject(validJsonDictionary);
+        }
+
+        [Test]
+        public void ClassesShouldBeLoaded()
+        {
+            Assert.IsNotNull(PythonEngineManager.DataViewThreeDClass, "DataTypeProperties should be loaded.");
+        }
+
+        // Helper method to create JSON strings
+        private string CreateJson(Dictionary<string, object> properties)
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(properties);
+        }
+
+        [Test]
+        public void InitializeWithValidJson_ShouldSetPropertiesCorrectly()
+        {
+            
             // Act
-            var dataViewThreeD = PythonEngineManager.DataViewThreeDClass(jsonString);
+            var dataViewThreeD = PythonEngineManager.DataViewThreeDClass(validJsonString);
 
             // Assert
             Assert.AreEqual(101, dataViewThreeD.id, "Expected id to be initialized correctly.");
             Assert.IsNotNull(dataViewThreeD.bounding_box, "Expected bounding_box to be initialized.");
-            Assert.AreEqual(0.0, dataViewThreeD.bounding_box.bounding_box.min_x, "Expected bounding_box.min_x to match input.");
-            Assert.AreEqual(10.0, dataViewThreeD.bounding_box.bounding_box.max_x, "Expected bounding_box.max_x to match input.");
-            Assert.AreEqual(0.0, dataViewThreeD.bounding_box.bounding_box.min_y, "Expected bounding_box.min_y to match input.");
-            Assert.AreEqual(10.0, dataViewThreeD.bounding_box.bounding_box.max_y, "Expected bounding_box.max_y to match input.");
+            Assert.AreEqual(0.0, dataViewThreeD.bounding_box.min_x, "Expected bounding_box.min_x to match input.");
+            Assert.AreEqual(10.0, dataViewThreeD.bounding_box.max_x, "Expected bounding_box.max_x to match input.");
+            Assert.AreEqual(0.0, dataViewThreeD.bounding_box.min_y, "Expected bounding_box.min_y to match input.");
+            Assert.AreEqual(10.0, dataViewThreeD.bounding_box.max_y, "Expected bounding_box.max_y to match input.");
 
             // Assert rotation and translation coords if relevant
             Assert.IsNotNull(dataViewThreeD.bounding_box.rotation_coord, "Expected rotation_coord to be initialized.");
@@ -114,7 +124,7 @@ namespace PythonTests.DataTests
 
             // Act & Assert: initialization should throw a TypeError
             var ex = Assert.Throws<ValueErrorException>(() => PythonEngineManager.DataViewThreeDClass(jsonString));
-            StringAssert.Contains("Node view_3d failed to initialise with: Node bounding box 2 failed to initialise with: Expecting value", ex.Message, "Expected ValueError for incorrect bounding_box type.");
+            StringAssert.Contains("Node view_3d failed to initialise with: JSON must contain", ex.Message, "Expected ValueError for incorrect bounding_box type.");
         }
 
         [Test]
@@ -128,12 +138,10 @@ namespace PythonTests.DataTests
                 { "bounding_box", new Dictionary<string, object>
                     {
                         { "DataType", "bounding box 2" },
-                        { "bounding_box", new Dictionary<string, object>
-                            {
+                        
                                 { "min_x", 0.0 },
-                                { "max_x", 10.0 }
-                            }
-                        },
+                                { "max_x", 10.0 },
+                           
                         { "rotation_coord", new Dictionary<string, object>
                             {
                                 { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
@@ -155,48 +163,15 @@ namespace PythonTests.DataTests
 
             // Act & Assert: initialization should throw a TypeError due to missing fields
             var ex = Assert.Throws<ValueErrorException>(() => PythonEngineManager.DataViewThreeDClass(jsonString));
-            StringAssert.Contains("Node view_3d failed to initialise with: Node bounding box 2 failed to initialise with: JSON must contain 'max_x', 'max_y', 'min_x', 'min_y' keys.", ex.Message, "Expected ValueError for missing bounding box fields.");
+            StringAssert.Contains("Node view_3d failed to initialise with: JSON must contain", ex.Message, "Expected ValueError for missing bounding box fields.");
         }
 
         [Test]
         public void EqualityCheckWithSameBoundingBox_ShouldReturnTrue()
         {
-            // Arrange: valid JSON with id, data_type, and bounding box fields
-            var jsonString = CreateJson(new Dictionary<string, object>
-            {
-                { "data_type", "view_3d" },
-                { "id", 101 },
-                { "bounding_box", new Dictionary<string, object>
-                    {
-                        { "DataType", "bounding box 2" },
-                        { "bounding_box", new Dictionary<string, object>
-                            {
-                                { "min_x", 0.0 },
-                                { "max_x", 10.0 },
-                                { "min_y", 0.0 },
-                                { "max_y", 10.0 }
-                            }
-                        },
-                        { "rotation_coord", new Dictionary<string, object>
-                            {
-                                { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
-                                { "rows", 3 },
-                                { "columns", 3 }
-                            }
-                        },
-                        { "translation_coord", new Dictionary<string, object>
-                            {
-                                { "x", 0.0 },
-                                { "y", 0.0 },
-                                { "z", 0.0 },
-                                { "json_ini", null }
-                            }
-                        }
-                    }
-                }
-            });
-            var dataView1 = PythonEngineManager.DataViewThreeDClass(jsonString);
-            var dataView2 = PythonEngineManager.DataViewThreeDClass(jsonString);
+            
+            var dataView1 = PythonEngineManager.DataViewThreeDClass(validJsonString);
+            var dataView2 = PythonEngineManager.DataViewThreeDClass(validJsonString);
 
             // Act & Assert
             Assert.IsTrue(dataView1 == dataView2, "Operator == should return true for instances with the same bounding box.");
@@ -206,40 +181,7 @@ namespace PythonTests.DataTests
         [Test]
         public void EqualityCheckWithDifferentBoundingBox_ShouldReturnFalse()
         {
-            // Arrange: valid JSON with id, data_type, and bounding box fields
-            var jsonString1 = CreateJson(new Dictionary<string, object>
-            {
-                { "data_type", "view_3d" },
-                { "id", 101 },
-                { "bounding_box", new Dictionary<string, object>
-                    {
-                        { "DataType", "bounding box 2" },
-                        { "bounding_box", new Dictionary<string, object>
-                            {
-                                { "min_x", 0.0 },
-                                { "max_x", 10.0 },
-                                { "min_y", 0.0 },
-                                { "max_y", 10.0 }
-                            }
-                        },
-                        { "rotation_coord", new Dictionary<string, object>
-                            {
-                                { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
-                                { "rows", 3 },
-                                { "columns", 3 }
-                            }
-                        },
-                        { "translation_coord", new Dictionary<string, object>
-                            {
-                                { "x", 0.0 },
-                                { "y", 0.0 },
-                                { "z", 0.0 },
-                                { "json_ini", null }
-                            }
-                        }
-                    }
-                }
-            });
+            
             // Arrange: valid JSON with id, data_type, and bounding box fields
             var jsonString2 = CreateJson(new Dictionary<string, object>
             {
@@ -248,14 +190,12 @@ namespace PythonTests.DataTests
                 { "bounding_box", new Dictionary<string, object>
                     {
                         { "DataType", "bounding box 2" },
-                        { "bounding_box", new Dictionary<string, object>
-                            {
+                        
                                 { "min_x", 10.0 },
                                 { "max_x", 10.0 },
                                 { "min_y", 0.0 },
-                                { "max_y", 10.0 }
-                            }
-                        },
+                                { "max_y", 10.0 },
+                           
                         { "rotation_coord", new Dictionary<string, object>
                             {
                                 { "data", new List<List<double>> { new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 }, new List<double> { 0.0, 0.0, 0.0 } } },
@@ -274,7 +214,7 @@ namespace PythonTests.DataTests
                     }
                 }
             });
-            var dataView1 = PythonEngineManager.DataViewThreeDClass(jsonString1);
+            var dataView1 = PythonEngineManager.DataViewThreeDClass(validJsonString);
             var dataView2 = PythonEngineManager.DataViewThreeDClass(jsonString2);
 
             Console.WriteLine(dataView2.to_json());

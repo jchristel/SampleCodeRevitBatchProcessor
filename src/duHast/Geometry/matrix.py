@@ -104,11 +104,11 @@ class Matrix(Base):
             elif not isinstance(json_string, dict):
                 raise TypeError("Input must be a JSON string or a dictionary.")
 
-            self._rows = json_string.get(GeometryPropertyNames.ROWS.value, 0)
-            self._columns = json_string.get(GeometryPropertyNames.COLUMNS.value, 0)
+            self._rows = json_string.get(GeometryPropertyNames.ROWS, 0)
+            self._columns = json_string.get(GeometryPropertyNames.COLUMNS, 0)
 
             elements_from_json = json_string.get(
-                GeometryPropertyNames.DATA.value,
+                GeometryPropertyNames.DATA,
                 [[0.0 for _ in range(self._columns)] for _ in range(self._rows)],
             )
             self._validate_elements(
@@ -190,3 +190,8 @@ class Matrix(Base):
 
     def __ne__(self, other):
         return not (self == other)
+
+    def __hash__(self):
+        # Convert self._data to a tuple of tuples for hashing
+        data_as_tuple = tuple(tuple(row) for row in self._data)
+        return hash((self.rows, self.columns, data_as_tuple))

@@ -55,14 +55,14 @@ class BoundingBox3(BoundingBoxBase):
         # check first if a json string / dictionary is provided
         if j:
             point1 = Point3(
-                x=self.json_ini[GeometryPropertyNames.MIN_X.value],
-                y=self.json_ini[GeometryPropertyNames.MIN_Y.value],
-                z=self.json_ini[GeometryPropertyNames.MIN_Z.value],
+                x=self.json_ini[GeometryPropertyNames.MIN_X],
+                y=self.json_ini[GeometryPropertyNames.MIN_Y],
+                z=self.json_ini[GeometryPropertyNames.MIN_Z],
             )
             point2 = Point3(
-                x=self.json_ini[GeometryPropertyNames.MAX_X.value],
-                y=self.json_ini[GeometryPropertyNames.MAX_Y.value],
-                z=self.json_ini[GeometryPropertyNames.MAX_Z.value],
+                x=self.json_ini[GeometryPropertyNames.MAX_X],
+                y=self.json_ini[GeometryPropertyNames.MAX_Y],
+                z=self.json_ini[GeometryPropertyNames.MAX_Z],
             )
 
         # If both point1 and point2 are None after handling JSON, raise an error
@@ -158,3 +158,8 @@ class BoundingBox3(BoundingBoxBase):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash(
+            (self.min_x, self.max_x, self.min_y, self.max_y, self.min_z, self.max_z)
+        )

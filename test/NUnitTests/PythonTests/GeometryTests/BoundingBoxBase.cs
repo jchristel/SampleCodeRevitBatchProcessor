@@ -63,10 +63,10 @@ namespace PythonTests.GeometryTests
 
             // Assert
             Assert.IsNull(instance.json_ini);
-            Assert.AreEqual(double.PositiveInfinity, instance.min_x);
-            Assert.AreEqual(double.NegativeInfinity, instance.max_x);
-            Assert.AreEqual(double.PositiveInfinity, instance.min_y);
-            Assert.AreEqual(double.NegativeInfinity, instance.max_y);
+            Assert.AreEqual(0.0, instance.min_x);
+            Assert.AreEqual(0.0, instance.max_x);
+            Assert.AreEqual(0.0, instance.min_y);
+            Assert.AreEqual(0.0, instance.max_y);
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace PythonTests.GeometryTests
             string result = instance.__str__();
 
             // Assert
-            Assert.That(result, Is.EqualTo("BoundingBoxBase(inf, inf, -inf, -inf)"));
+            Assert.That(result, Is.EqualTo("BoundingBoxBase(0.0, 0.0, 0.0, 0.0)"));
         }
     }
 }

@@ -34,7 +34,7 @@ Outcomes
 Inputs
 ~~~~~~~~~~
 
-: Input_ChangeFamilySubCategroy.rst
+`Input_ChangeFamilySubCategory <Input_ChangeFamilySubCategory.rst>`_
 
 Setup
 ~~~~~~~~~~

@@ -12,7 +12,7 @@ Calling python script (PreTaskFileReloadListBuilder) with an argument:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - Argument needs to be the fully qualified file path to ChangedFilesTaskList.csv file.
-- current default path for this file passt in is:
+- current default path for this file past in is:
 
     - \_02_ModifyFamilyLibraryReloadAdvanced\_Users\YOURUSERNAME\_Input\ChangedFilesTaskList.csv
 

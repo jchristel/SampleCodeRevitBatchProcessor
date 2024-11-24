@@ -42,9 +42,9 @@ Script flow diagram
 Outcomes
 --------------------------------
 
-All families have been re-laoded into their hosts all the way up the nesting tree and therefore any change to a nested family along this tree has been propagated all the way to the root (top) family.
+All families have been re-loaded into their hosts all the way up the nesting tree and therefore any change to a nested family along this tree has been propagated all the way to the root (top) family.
 
 Inputs
 ~~~~~~~~~~
 
-: Input_ReloadFamilies.rst
+`Input_ReloadFamilies <Input_ReloadFamilies.rst>`_

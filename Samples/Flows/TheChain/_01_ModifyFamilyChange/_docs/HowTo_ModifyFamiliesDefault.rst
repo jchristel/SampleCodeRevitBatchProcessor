@@ -17,12 +17,12 @@ This flow purges family files from the following objects if not in use in the ro
 
 - Purge unused line patterns
 
-    - Removes any unsed line patterns, taking nested families into account.
+    - Removes any unused line patterns, taking nested families into account.
 
 - Purge unused shared parameter definitions
 
     - Removes any shared parameter definitions, taking nested families into account.
-    - Note: shared parameter defintions introduced to the family through a template can not be deleted.
+    - Note: shared parameter definitions introduced to the family through a template can not be deleted.
 
 Script flow diagram
 --------------------------------
@@ -49,7 +49,7 @@ Outcomes
 Inputs
 ~~~~~~~~~~
 
-: Input_SaveOutMissingFamilies.rst
+`Input_ModifyFamiliesDefault <Input_ModifyFamiliesDefault.rst>`_
 
 Setup
 ~~~~~~~~~~

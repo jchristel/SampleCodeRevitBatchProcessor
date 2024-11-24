@@ -5,7 +5,7 @@ Report Families - Save out missing families
 Summary
 =======
 
-This flow saves out any family processed which is not in a provided base data combined report file. Families are saved into separate folders per their Revit category.
+This flow saves out any nested family during processing, which does not have a matching root family entry in a provided base data combined report file. Families are saved into separate folders per their Revit category.
 
 
 Script flow diagram
@@ -30,7 +30,7 @@ Report file listing all saved out families:
 Inputs
 ~~~~~~~~~~
 
-: Input_SaveOutMissingFamilies.rst
+`Input_SaveOutMissingFamilies <Input_SaveOutMissingFamilies.rst>`_
 
 Setup
 ~~~~~~~~~~

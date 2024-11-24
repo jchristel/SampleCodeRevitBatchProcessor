@@ -17,9 +17,9 @@ After all families are processed, the flow will analyze some of the above report
 
 - FamilyBaseDataCombined:
 
-    - CircularReferences
-    - MissingFamilies
-    - HostsMissingFamilies
+    - `CircularReferences <CircularReferencesReport.rst>`_
+    - `MissingFamilies <MissingFamiliesReport.rst>`_
+    - `MissingFamiliesHostsReport <MissingFamiliesHostsReport.rst>`_
 
 - Batchprocessor log files:
 
@@ -30,7 +30,7 @@ All the above reports are located in:
 
 - _Users\username\_Output
 - _Users\username\_Analysis\currentDateFolder
-- _Users\jchristel\_Analysis\_Current
+- _Users\username\_Analysis\_Current
 
 
 This flow can be used in 'follow-up mode'. In this mode all reports created from a sub set of families analysed, will be used to update a current set of reports.

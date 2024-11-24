@@ -9,7 +9,7 @@ namespace PythonTests.DataTests.PropertyTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataPhasingClass, "DataPhasing should be loaded.");
+            Assert.That(PythonEngineManager.DataPhasingClass, Is.Not.Null, "DataPhasing should be loaded.");
         }
 
         [Test]
@@ -17,8 +17,8 @@ namespace PythonTests.DataTests.PropertyTests
         {
             dynamic dataPhasing = PythonEngineManager.DataPhasingClass();
             // Verify default values are set
-            Assert.AreEqual("-", dataPhasing.created, "Expected default created phase to be '-'.");
-            Assert.AreEqual("-", dataPhasing.demolished, "Expected default demolished phase to be '-'.");
+            Assert.That("-", Is.EqualTo(dataPhasing.created), "Expected default created phase to be '-'.");
+            Assert.That("-", Is.EqualTo(dataPhasing.demolished), "Expected default demolished phase to be '-'.");
         }
 
         [Test]
@@ -28,8 +28,8 @@ namespace PythonTests.DataTests.PropertyTests
             var jsonString = JsonConvert.SerializeObject(new { created = "2022-01-01", demolished = "2023-01-01" });
             var dataPhasingFromJson = PythonEngineManager.DataPhasingClass(jsonString);
 
-            Assert.AreEqual("2022-01-01", dataPhasingFromJson.created, "Expected created phase to be '2022-01-01'.");
-            Assert.AreEqual("2023-01-01", dataPhasingFromJson.demolished, "Expected demolished phase to be '2023-01-01'.");
+            Assert.That("2022-01-01", Is.EqualTo(dataPhasingFromJson.created), "Expected created phase to be '2022-01-01'.");
+            Assert.That("2023-01-01", Is.EqualTo(dataPhasingFromJson.demolished), "Expected demolished phase to be '2023-01-01'.");
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace PythonTests.DataTests.PropertyTests
             var invalidInput = 12345;
 
             var ex = Assert.Throws<TypeErrorException>(() => PythonEngineManager.DataPhasingClass(invalidInput));
-            StringAssert.Contains("Argument j supplied must be of type string or type dictionary", ex.Message, "Expected TypeError for non-string, non-dict input.");
+            Assert.That(ex.Message, Does.Contain("Argument j supplied must be of type string or type dictionary"), "Expected TypeError for non-string, non-dict input.");
         }
 
         [Test]
@@ -49,8 +49,8 @@ namespace PythonTests.DataTests.PropertyTests
             var jsonString = JsonConvert.SerializeObject(new { created = "2022-01-01" });
             var dataPhasingPartial = PythonEngineManager.DataPhasingClass(jsonString);
 
-            Assert.AreEqual("2022-01-01", dataPhasingPartial.created, "Expected created phase to be '2022-01-01'.");
-            Assert.AreEqual("-", dataPhasingPartial.demolished, "Expected demolished phase to remain the default value of '-'.");
+            Assert.That("2022-01-01", Is.EqualTo(dataPhasingPartial.created), "Expected created phase to be '2022-01-01'.");
+            Assert.That("-", Is.EqualTo(dataPhasingPartial.demolished), "Expected demolished phase to remain the default value of '-'.");
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace PythonTests.DataTests.PropertyTests
             var dataPhasingA = PythonEngineManager.DataPhasingClass(jsonString);
             var dataPhasingB = PythonEngineManager.DataPhasingClass(jsonString);
 
-            Assert.IsTrue(dataPhasingA == dataPhasingB, "Expected identical properties to result in equality.");
+            Assert.That(dataPhasingA == dataPhasingB, Is.True, "Expected identical properties to result in equality.");
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace PythonTests.DataTests.PropertyTests
             var dataPhasingA = PythonEngineManager.DataPhasingClass(jsonStringA);
             var dataPhasingB = PythonEngineManager.DataPhasingClass(jsonStringB);
 
-            Assert.IsTrue(dataPhasingA != dataPhasingB, "Expected different properties to result in inequality.");
+            Assert.That(dataPhasingA != dataPhasingB, Is.True, "Expected different properties to result in inequality.");
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace PythonTests.DataTests.PropertyTests
             var otherObject = "Some String";
 
             var ex = Assert.Throws<ValueErrorException>(() => { var comp = dataPhasingA == otherObject; });
-            StringAssert.Contains("other needs to be of type DataPhasing", ex.Message, "Expected ValueError for comparison with different type.");
+            Assert.That(ex.Message, Does.Contain("other needs to be of type DataPhasing"), "Expected ValueError for comparison with different type.");
         }
     }
 }

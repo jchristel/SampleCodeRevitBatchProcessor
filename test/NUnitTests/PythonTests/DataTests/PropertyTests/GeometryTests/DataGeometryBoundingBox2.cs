@@ -28,8 +28,8 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataGeometryBoundingBox2Class, "DataGeometryBoundingBox2 should be loaded.");
-            Assert.IsNotNull(PythonEngineManager.Point2Class, "Point2Class should be loaded.");
+            Assert.That(PythonEngineManager.DataGeometryBoundingBox2Class, Is.Not.Null, "DataGeometryBoundingBox2 should be loaded.");
+            Assert.That(PythonEngineManager.Point2Class, Is.Not.Null, "Point2Class should be loaded.");
         }
 
         [Test]
@@ -39,10 +39,10 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             dynamic instance = PythonEngineManager.DataGeometryBoundingBox2Class(validJsonString);
 
             // Assert
-            Assert.AreEqual(1.1, instance.min_x);
-            Assert.AreEqual(2.2, instance.min_y);
-            Assert.AreEqual(3.3, instance.max_x);
-            Assert.AreEqual(4.4, instance.max_y);
+            Assert.That(1.1, Is.EqualTo(instance.min_x));
+            Assert.That(2.2, Is.EqualTo(instance.min_y));
+            Assert.That(3.3, Is.EqualTo(instance.max_x));
+            Assert.That(4.4, Is.EqualTo(instance.max_y));
         }
 
         [Test]
@@ -85,10 +85,10 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             Console.WriteLine(instance.to_json());
 
             // Assert
-            Assert.AreEqual(5.5, instance.min_x);
-            Assert.AreEqual(6.6, instance.min_y);
-            Assert.AreEqual(7.7, instance.max_x);
-            Assert.AreEqual(8.8, instance.max_y);
+            Assert.That(5.5, Is.EqualTo(instance.min_x));
+            Assert.That(6.6, Is.EqualTo(instance.min_y));
+            Assert.That(7.7, Is.EqualTo(instance.max_x));
+            Assert.That(8.8, Is.EqualTo(instance.max_y));
         }
 
         [Test]
@@ -134,7 +134,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             var dataGeometryB = PythonEngineManager.DataGeometryBoundingBox2Class(jsonString);
 
             // Assert that the two instances are equal
-            Assert.IsTrue(dataGeometryA == dataGeometryB, "Expected equal instances to return true.");
+            Assert.That(dataGeometryA == dataGeometryB, Is.True, "Expected equal instances to return true.");
         }
 
         [Test]
@@ -158,7 +158,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             var dataGeometryB = PythonEngineManager.DataGeometryBoundingBox2Class(jsonStringB);
 
             // Assert that the two instances are not equal
-            Assert.IsTrue(dataGeometryA != dataGeometryB, "Expected instances with different data to return true for inequality.");
+            Assert.That(dataGeometryA != dataGeometryB, Is.True, "Expected instances with different data to return true for inequality.");
         }
 
         [Test]
@@ -169,7 +169,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             var dataGeometryB = PythonEngineManager.DataGeometryBoundingBox2Class(validJsonString);
 
             // Assert that the '==' operator returns true for equal instances
-            Assert.IsTrue(dataGeometryA == dataGeometryB, "Expected '==' to return true for identical bounding boxes.");
+            Assert.That(dataGeometryA == dataGeometryB, Is.True, "Expected '==' to return true for identical bounding boxes.");
         }
 
         [Test]
@@ -193,7 +193,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             var dataGeometryB = PythonEngineManager.DataGeometryBoundingBox2Class(jsonStringB);
 
             // Assert that the '!=' operator returns true for non-equal instances
-            Assert.IsFalse(dataGeometryA == dataGeometryB, "Expected '!=' to return true for different bounding boxes.");
+            Assert.That(dataGeometryA == dataGeometryB, Is.False, "Expected '!=' to return true for different bounding boxes.");
         }
     }
 }

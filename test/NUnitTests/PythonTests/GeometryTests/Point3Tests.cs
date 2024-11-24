@@ -8,7 +8,7 @@ namespace PythonTests.GeometryTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.Point3Class, "Point3Class should be loaded.");
+            Assert.That(PythonEngineManager.Point3Class, Is.Not.Null, "Point3Class should be loaded.");
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace PythonTests.GeometryTests
             // The expected JSON string
             string jsonString = "{\"x\": 0.0, \"y\": 0.0, \"z\": 0.0, \"json_ini\": null}";
 
-            Assert.AreEqual(jsonString, result);
+            Assert.That(jsonString, Is.EqualTo(result));
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace PythonTests.GeometryTests
             // The expected JSON string
             string jsonString = "{\"x\": 0.0, \"y\": 0.0, \"z\": 0.0, \"json_ini\": null}";
 
-            Assert.AreEqual(jsonString, result);
+            Assert.That(jsonString, Is.EqualTo(result));
         }
 
         [Test]
@@ -52,9 +52,9 @@ namespace PythonTests.GeometryTests
 
             dynamic point3Instance = PythonEngineManager.Point3Class(j: json);
 
-            Assert.AreEqual(5.0, point3Instance.x);
-            Assert.AreEqual(10.0, point3Instance.y);
-            Assert.AreEqual(20.0, point3Instance.z);
+            Assert.That(5.0, Is.EqualTo(point3Instance.x));
+            Assert.That(10.0, Is.EqualTo(point3Instance.y));
+            Assert.That(20.0, Is.EqualTo(point3Instance.z));
         }
 
         [Test]
@@ -106,9 +106,9 @@ namespace PythonTests.GeometryTests
         public void Point3_WithNegativeCoordinates_ThrowsValueError()
         {
             var point = PythonEngineManager.Point3Class(x: -1.0, y: 0.0, z:-0.1);
-            Assert.AreEqual(-1.0, point.x);
-            Assert.AreEqual(0.0, point.y);
-            Assert.AreEqual(-0.1, point.z);
+            Assert.That(-1.0, Is.EqualTo(point.x));
+            Assert.That(0.0, Is.EqualTo(point.y));
+            Assert.That(-0.1, Is.EqualTo(point.z));
         }
 
         [Test]
@@ -116,9 +116,9 @@ namespace PythonTests.GeometryTests
         {
             var point = PythonEngineManager.Point3Class(x: 3.0, y: 4.0, z:1.0);
 
-            Assert.AreEqual(3.0, point.x);
-            Assert.AreEqual(4.0, point.y);
-            Assert.AreEqual(1.0, point.z);
+            Assert.That(3.0, Is.EqualTo(point.x));
+            Assert.That(4.0, Is.EqualTo(point.y));
+            Assert.That(1.0, Is.EqualTo(point.z));
         }
     }
 }

@@ -105,6 +105,39 @@ class BoundingBox2(BoundingBoxBase):
             self.min_x <= point.x <= self.max_x and self.min_y <= point.y <= self.max_y
         )
 
+    def width(self):
+        """
+        The length of the bounding box in X direction.
+
+        Returns:
+            float: Length in X
+        """
+        return self.max_x - self.min_x
+
+    def depth(self):
+        """
+        The length of the bounding box in Y direction.
+
+        Returns:
+            float: Length in Y
+        """
+        return self.max_y - self.min_y
+    
+    def ratio(self):
+        """
+        The length ration of the bounding box edges by dividing length in X by length in Y direction
+
+        Raises:
+            ValueError: Division by 0 if length of Y is 0
+
+        Returns:
+            float: Edge ration
+        """
+        if self.depth() != 0.0:
+            return self.width()/self.depth()
+        else:
+            raise ValueError("Can not calculate ratio since depth is 0.0 and division by 0.0 is not allowed.")
+
     def __str__(self):
         return "BoundingBox2D({}, {}, {}, {})".format(
             self.min_x, self.min_y, self.max_x, self.max_y
@@ -113,13 +146,15 @@ class BoundingBox2(BoundingBoxBase):
     def __eq__(self, other):
         if not isinstance(other, BoundingBox2):
             return NotImplemented
-        return (is_close(self.min_x, other.min_x) and
-                is_close(self.max_x, other.max_x) and
-                is_close(self.min_y, other.min_y) and
-                is_close(self.max_y, other.max_y))
+        return (
+            is_close(self.min_x, other.min_x)
+            and is_close(self.max_x, other.max_x)
+            and is_close(self.min_y, other.min_y)
+            and is_close(self.max_y, other.max_y)
+        )
 
     def __ne__(self, other):
         return not self.__eq__(other)
-    
+
     def __hash__(self):
         return hash((self.min_x, self.max_x, self.min_y, self.max_y))

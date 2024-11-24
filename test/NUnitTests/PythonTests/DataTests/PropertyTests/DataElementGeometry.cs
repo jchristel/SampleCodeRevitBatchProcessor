@@ -9,7 +9,7 @@ namespace PythonTests.DataTests.PropertyTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataElementGeometryBaseClass, "DataElementGeometryBase should be loaded.");
+            Assert.That(PythonEngineManager.DataElementGeometryBaseClass, Is.Not.Null, "DataElementGeometryBase should be loaded.");
         }
 
         [Test]
@@ -22,12 +22,12 @@ namespace PythonTests.DataTests.PropertyTests
             dynamic instance = PythonEngineManager.DataElementGeometryBaseClass(jsonString);
 
             // Assert
-            Assert.IsNotNull(instance.polygon);
-            Assert.AreEqual(0.0, instance.polygon.outer_loop[0].x);
-            Assert.AreEqual(0.0, instance.polygon.outer_loop[0].y);
-            Assert.AreEqual(0.1, instance.polygon.outer_loop[1].x);
-            Assert.AreEqual(1.0, instance.polygon.outer_loop[1].y);
-            Assert.AreEqual(0, instance.polygon.inner_loops.Count);
+            Assert.That(instance.polygon, Is.Not.Null);
+            Assert.That(0.0,Is.EqualTo( instance.polygon.outer_loop[0].x));
+            Assert.That(0.0, Is.EqualTo(instance.polygon.outer_loop[0].y));
+            Assert.That(0.1, Is.EqualTo(instance.polygon.outer_loop[1].x));
+            Assert.That(1.0, Is.EqualTo(instance.polygon.outer_loop[1].y));
+            Assert.That(0, Is.EqualTo(instance.polygon.inner_loops.Count));
         }
 
         [Test]
@@ -51,9 +51,9 @@ namespace PythonTests.DataTests.PropertyTests
             dynamic instance = PythonEngineManager.DataElementGeometryBaseClass(jsonString);
 
             // Assert
-            Assert.IsNotNull(instance.polygon);
-            Assert.AreEqual(0, instance.polygon.outer_loop.Count);
-            Assert.AreEqual(0, instance.polygon.inner_loops.Count);
+            Assert.That(instance.polygon, Is.Not.Null);
+            Assert.That(0, Is.EqualTo(instance.polygon.outer_loop.Count));
+            Assert.That(0, Is.EqualTo(instance.polygon.inner_loops.Count));
         }
 
         [Test]
@@ -70,9 +70,9 @@ namespace PythonTests.DataTests.PropertyTests
             dynamic instance = PythonEngineManager.DataElementGeometryBaseClass(jsonString);
 
             // Assert
-            Assert.IsNotNull(instance.polygon);
-            Assert.AreEqual(0, instance.polygon.outer_loop.Count);
-            Assert.AreEqual(0, instance.polygon.inner_loops.Count);
+            Assert.That(instance.polygon, Is.Not.Null);
+            Assert.That(0, Is.EqualTo(instance.polygon.outer_loop.Count));
+            Assert.That(0, Is.EqualTo(instance.polygon.inner_loops.Count));
         }
 
         [Test]
@@ -98,9 +98,9 @@ namespace PythonTests.DataTests.PropertyTests
             dynamic instance = PythonEngineManager.DataElementGeometryBaseClass(null);
 
             // Assert
-            Assert.IsNotNull(instance.polygon);
-            Assert.AreEqual(0, instance.polygon.outer_loop.Count);
-            Assert.AreEqual(0, instance.polygon.inner_loops.Count);
+            Assert.That(instance.polygon, Is.Not.Null);
+            Assert.That(0, Is.EqualTo(instance.polygon.outer_loop.Count));
+            Assert.That(0, Is.EqualTo(instance.polygon.inner_loops.Count));
             Console.WriteLine(instance.to_json());
         }
 
@@ -119,7 +119,7 @@ namespace PythonTests.DataTests.PropertyTests
 
             // The expected JSON string
            
-            Assert.AreEqual(jsonString, result);
+            Assert.That(jsonString, Is.EqualTo(result));
         }
     }
 }

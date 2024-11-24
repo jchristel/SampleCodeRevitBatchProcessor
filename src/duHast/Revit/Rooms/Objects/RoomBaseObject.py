@@ -40,6 +40,7 @@ from duHast.Revit.Rooms.room_common_parameters import (
     get_room_name,
     get_room_number,
     get_room_phase,
+    get_room_phase_object,
 )
 from duHast.Utilities.Objects.base import Base
 
@@ -53,3 +54,5 @@ class RoomBaseObj(Base):
         self.number_name_comb = get_room_num_name_comb(room)
         self.level = room.Level
         self.phase = get_room_phase(rvt_doc, room)
+        self.phase_object = get_room_phase_object(rvt_doc, room)
+

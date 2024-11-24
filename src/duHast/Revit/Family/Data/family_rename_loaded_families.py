@@ -44,7 +44,7 @@ from duHast.Utilities.Objects import result as res
 from Autodesk.Revit.DB import Transaction
 
 
-def _rename_loaded_families(doc, rename_directives, family_ids):
+def _rename_loaded_families(doc, rename_directives, family_ids, progress_callback=None):
     """
     Loops over nested families and if a match in rename directives is found will rename the family accordingly.
 
@@ -74,8 +74,16 @@ def _rename_loaded_families(doc, rename_directives, family_ids):
     return_value = res.Result()
     return_value.status = False
     rename_match_counter = 0
+
+    # progress call back
+    callback_counter = 0
+    
     # loop over families and check for match in rename directives
     for fam_id in family_ids:
+
+        if progress_callback != None:
+            progress_callback.update(callback_counter, len(family_ids))
+
         family = doc.GetElement(fam_id)
         family_name = family.Name
         if family.IsEditable and family.IsValidObject:
@@ -127,6 +135,14 @@ def _rename_loaded_families(doc, rename_directives, family_ids):
                     # update messages
                     return_value.append_message(rename_result.message)
                     break
+        # check for user cancel
+        if progress_callback != None:
+            if progress_callback.is_cancelled():
+                return_value.append_message("User cancelled!")
+                break
+        # progress call back
+        callback_counter += 1
+
     # check if anything got renamed at all
     if rename_match_counter == 0:
         return_value.append_message(

@@ -8,7 +8,7 @@ namespace PythonTests.GeometryTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.VectorBaseClass, "VectorBaseClass should be loaded.");
+            Assert.That(PythonEngineManager.VectorBaseClass, Is.Not.Null, "VectorBaseClass should be loaded.");
         }
 
         [Test]
@@ -21,10 +21,10 @@ namespace PythonTests.GeometryTests
             dynamic vector = PythonEngineManager.VectorBaseClass(components);
 
             // Assert
-            Assert.IsNotNull(vector);
-            Assert.AreEqual(2, vector.components.Count);
-            Assert.AreEqual(3.0, vector.components[0]);
-            Assert.AreEqual(4.0, vector.components[1]);
+            Assert.That(vector, Is.Not.Null);
+            Assert.That(2, Is.EqualTo(vector.components.Count));
+            Assert.That(3.0,Is.EqualTo( vector.components[0]));
+            Assert.That(4.0, Is.EqualTo(vector.components[1]));
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace PythonTests.GeometryTests
 
             // Act & Assert
             var ex = Assert.Throws<TypeErrorException>(() => PythonEngineManager.VectorBaseClass(invalidComponent));
-            StringAssert.Contains("All components must be of type float or int,", ex.Message);
+            Assert.That(ex.Message, Does.Contain("All components must be of type float or int,"));
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace PythonTests.GeometryTests
 
             // Act & Assert
             var ex = Assert.Throws<Exception>(() => vector1._check_dimension_compatibility(vector2));
-            StringAssert.Contains("Dimension mismatch: 3 vs 2", ex.Message);
+            Assert.That(ex.Message, Does.Contain("Dimension mismatch: 3 vs 2"));
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace PythonTests.GeometryTests
             dynamic vector2 = PythonEngineManager.VectorBaseClass(1.0, 2.0, 3.0);
 
             // Act & Assert
-            Assert.IsTrue(vector1 == vector2, "Vectors with the same components should be equal.");
+            Assert.That(vector1 == vector2, Is.True, "Vectors with the same components should be equal.");
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace PythonTests.GeometryTests
             dynamic vector2 = PythonEngineManager.VectorBaseClass(4.0, 5.0, 6.0);
 
             // Act & Assert
-            Assert.IsFalse(vector1 == vector2, "Vectors with different components should not be equal.");
+            Assert.That(vector1 == vector2, Is.False, "Vectors with different components should not be equal.");
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace PythonTests.GeometryTests
             dynamic vector2 = PythonEngineManager.VectorBaseClass(1.000000002, 2.000000001);
 
             // Act & Assert
-            Assert.IsTrue(vector1 == vector2, "VectorBase instances with components close to each other should be considered equal.");
+            Assert.That(vector1 == vector2, Is.True, "VectorBase instances with components close to each other should be considered equal.");
         }
 
     }

@@ -1,7 +1,7 @@
 import logging
 from logging.handlers import RotatingFileHandler
 import sys
-from logger_filtering import FilterConsole, FilterFile
+from duHast.Utilities.logger_filtering import FilterConsole, FilterFile
 
 
 class CustomStreamHandler(logging.StreamHandler):

@@ -46,7 +46,7 @@ from duHast.Utilities.Objects import result as res
 from duHast.Utilities import files_io as fileIO
 
 
-def _rename_files(rename_directives):
+def _rename_files(rename_directives, progress_callback=None):
     """
     Renames family files and any associated catalogue files based on rename directives.
 
@@ -72,7 +72,14 @@ def _rename_files(rename_directives):
     return_value = res.Result()
     return_value.update_sep(True, "Renaming families:")
 
+    # progress call back
+    callback_counter = 0
+
     for rename_directive in rename_directives:
+
+        if progress_callback != None:
+            progress_callback.update(callback_counter, len(rename_directives))
+
         try:
             return_value.append_message("rename directive: {}".format(rename_directive))
             # check if rename directive includes a file path ( might be empty if nested families only are to be renamed)
@@ -134,10 +141,19 @@ def _rename_files(rename_directives):
             return_value.update_sep(
                 False, "Failed to rename files with exception: ".format(e)
             )
+        
+        # check for user cancel
+        if progress_callback != None:
+            if progress_callback.is_cancelled():
+                return_value.append_message("User cancelled!")
+                break
+        # progress call back
+        callback_counter += 1
+        
     return return_value
 
 
-def rename_family_files(directory_path):
+def rename_family_files(directory_path, progress_callback=None):
     """
     Entry point for this module. Will read rename directives files in given directory and attempt to rename
     family files and any associated catalogue files accordingly.
@@ -170,7 +186,7 @@ def rename_family_files(directory_path):
     if rename_directives_result.status:
         rename_directives = rename_directives_result.result
         # rename files as per directives
-        return_value = _rename_files(rename_directives)
+        return_value = _rename_files(rename_directives, progress_callback)
     else:
         return_value = rename_directives_result
 

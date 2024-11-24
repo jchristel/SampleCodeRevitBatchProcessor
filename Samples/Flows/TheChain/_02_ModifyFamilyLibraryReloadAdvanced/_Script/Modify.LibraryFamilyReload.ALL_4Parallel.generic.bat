@@ -22,7 +22,7 @@ set "_lock=%temp%\wait%random%.lock"
 :: file path of Revit batch processor
 set _targetPath=%LocalAppData%\RevitBatchProcessor\BatchRvt.exe
 :: default path for python installation
-set _pythonPath="C:\Program Files (x86)%\IronPython 2.7\ipy64.exe"
+set _pythonPath="C:\Program Files\IronPython 3.4\ipy.exe"
 :: directory where settings files are saved
 set "_settingsDiretoryPath=%_rootFolderPath%_Users\%USERNAME%\_Settings\"
 :: settings file name for step one. Note %%j variable in name which will be used to cycle through A, B, C...

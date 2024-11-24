@@ -10,8 +10,8 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataGeometryPolygon2Class, "DataPolygonClass should be loaded.");
-            Assert.IsNotNull(PythonEngineManager.Point2Class, "Point2Class should be loaded.");
+            Assert.That(PythonEngineManager.DataGeometryPolygon2Class, Is.Not.Null, "DataPolygonClass should be loaded.");
+            Assert.That(PythonEngineManager.Point2Class, Is.Not.Null, "Point2Class should be loaded.");
         }
 
         [Test]
@@ -27,15 +27,15 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             dynamic instance = PythonEngineManager.DataGeometryPolygon2Class(json);
 
             // Act & Assert for outer loop
-            Assert.AreEqual(3, instance.outer_loop.Count);
-            Assert.AreEqual(0.0, instance.outer_loop[0].x);
-            Assert.AreEqual(2.0, instance.outer_loop[2].y);
+            Assert.That(3, Is.EqualTo(instance.outer_loop.Count));
+            Assert.That(0.0, Is.EqualTo(instance.outer_loop[0].x));
+            Assert.That(2.0, Is.EqualTo(instance.outer_loop[2].y));
 
             // Act & Assert for inner loops
-            Assert.AreEqual(1, instance.inner_loops.Count);
-            Assert.AreEqual(3, instance.inner_loops[0].Count);
-            Assert.AreEqual(1.5, instance.inner_loops[0][1].x);
-            Assert.AreEqual(1.5, instance.inner_loops[0][1].y);
+            Assert.That(1, Is.EqualTo(instance.inner_loops.Count));
+            Assert.That(3, Is.EqualTo(instance.inner_loops[0].Count));
+            Assert.That(1.5, Is.EqualTo(instance.inner_loops[0][1].x));
+            Assert.That(1.5, Is.EqualTo(instance.inner_loops[0][1].y));
         }
 
         [Test]
@@ -83,12 +83,12 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             dynamic instance = PythonEngineManager.DataGeometryPolygon2Class(json);
 
             // Act & Assert for outer loop
-            Assert.AreEqual(3, instance.outer_loop.Count);
-            Assert.AreEqual(3.0, instance.outer_loop[2].x);
-            Assert.AreEqual(3.0, instance.outer_loop[2].y);
+            Assert.That(3, Is.EqualTo(instance.outer_loop.Count));
+            Assert.That(3.0, Is.EqualTo(instance.outer_loop[2].x));
+            Assert.That(3.0, Is.EqualTo(instance.outer_loop[2].y));
 
             // Act & Assert for inner loops
-            Assert.AreEqual(0, instance.inner_loops.Count); // Should be empty as no inner loops were provided
+            Assert.That(0, Is.EqualTo(instance.inner_loops.Count)); // Should be empty as no inner loops were provided
         }
 
         [Test]
@@ -105,15 +105,15 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             dynamic instance = PythonEngineManager.DataGeometryPolygon2Class(json);
 
             // Act & Assert for outer loop
-            Assert.AreEqual(3, instance.outer_loop.Count);
-            Assert.AreEqual(4.0, instance.outer_loop[2].x);
-            Assert.AreEqual(4.0, instance.outer_loop[2].y);
+            Assert.That(3, Is.EqualTo(instance.outer_loop.Count));
+            Assert.That(4.0, Is.EqualTo(instance.outer_loop[2].x));
+            Assert.That(4.0, Is.EqualTo(instance.outer_loop[2].y));
 
             // Act & Assert for inner loops
-            Assert.AreEqual(2, instance.inner_loops.Count);
-            Assert.AreEqual(3, instance.inner_loops[0].Count);
-            Assert.AreEqual(3.0, instance.inner_loops[0][2].x);
-            Assert.AreEqual(7.0, instance.inner_loops[1][2].y);
+            Assert.That(2, Is.EqualTo(instance.inner_loops.Count));
+            Assert.That(3, Is.EqualTo(instance.inner_loops[0].Count));
+            Assert.That(3.0, Is.EqualTo(instance.inner_loops[0][2].x));
+            Assert.That(7.0, Is.EqualTo(instance.inner_loops[1][2].y));
         }
 
 
@@ -128,9 +128,9 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             polygon.add_point_to_outer_loop(point);
 
             // Assert
-            Assert.AreEqual(1, polygon.outer_loop.Count);
-            Assert.AreEqual(1.0, polygon.outer_loop[0].x);
-            Assert.AreEqual(1.0, polygon.outer_loop[0].y);
+            Assert.That(1, Is.EqualTo(polygon.outer_loop.Count));
+            Assert.That(1.0, Is.EqualTo(polygon.outer_loop[0].x));
+            Assert.That(1.0, Is.EqualTo(polygon.outer_loop[0].y));
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
 
             // Act & Assert
             var ex = Assert.Throws<TypeErrorException>(() => polygon.add_point_to_outer_loop("NotAPoint"));
-            StringAssert.Contains("Point must be an instance of Point2", ex.Message);
+            Assert.That(ex.Message, Does.Contain("Point must be an instance of Point2"));
         }
 
         [Test]
@@ -161,11 +161,11 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
 
             Console.WriteLine(polygon.to_json());
             // Assert
-            Assert.AreEqual(1, polygon.inner_loops.Count);
-            Assert.AreEqual(3, polygon.inner_loops[0].Count);
-            Assert.AreEqual(0.0, polygon.inner_loops[0][0].x);
-            Assert.AreEqual(1.0, polygon.inner_loops[0][1].x);
-            Assert.AreEqual(2.0, polygon.inner_loops[0][2].x);
+            Assert.That(1, Is.EqualTo(polygon.inner_loops.Count));
+            Assert.That(3, Is.EqualTo(polygon.inner_loops[0].Count));
+            Assert.That(0.0, Is.EqualTo(polygon.inner_loops[0][0].x));
+            Assert.That(1.0, Is.EqualTo(polygon.inner_loops[0][1].x));
+            Assert.That(2.0, Is.EqualTo(polygon.inner_loops[0][2].x));
         }
 
         [Test]
@@ -179,7 +179,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
 
             // Act & Assert
             var ex = Assert.Throws<ValueErrorException>(() => polygon.add_inner_loop(innerLoop));
-            StringAssert.Contains("An inner loop must contain at least 3 points", ex.Message);
+            Assert.That(ex.Message, Does.Contain("An inner loop must contain at least 3 points"));
         }
 
         [Test]
@@ -192,7 +192,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
 
             // Act & Assert
             var ex = Assert.Throws<TypeErrorException>(() => polygon.add_inner_loop(innerLoop));
-            StringAssert.Contains("All points in the loop must be instances of Point2", ex.Message);
+            Assert.That(ex.Message, Does.Contain("All points in the loop must be instances of Point2"));
         }
 
         [Test]
@@ -224,7 +224,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
 
             Console.WriteLine(polygonA.to_json());
 
-            Assert.IsTrue(polygonA == polygonB, "Expected equal instances to return true.");
+            Assert.That(polygonA == polygonB, Is.True, "Expected equal instances to return true.");
         }
 
         [Test]
@@ -274,7 +274,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             var polygonA = PythonEngineManager.DataGeometryPolygon2Class(jsonStringA);
             var polygonB = PythonEngineManager.DataGeometryPolygon2Class(jsonStringB);
 
-            Assert.IsTrue(polygonA != polygonB, "Expected unequal instances to return true.");
+            Assert.That(polygonA != polygonB, Is.True, "Expected unequal instances to return true.");
         }
 
         [Test]
@@ -302,7 +302,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             var polygonA = PythonEngineManager.DataGeometryPolygon2Class(jsonString);
             var polygonB = PythonEngineManager.DataGeometryPolygon2Class(jsonString);
 
-            Assert.IsTrue(polygonA == polygonB, "Expected '==' to return true for identical polygon data.");
+            Assert.That(polygonA == polygonB, Is.True, "Expected '==' to return true for identical polygon data.");
         }
 
         [Test]
@@ -349,7 +349,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             var polygonA = PythonEngineManager.DataGeometryPolygon2Class(jsonStringA);
             var polygonB = PythonEngineManager.DataGeometryPolygon2Class(jsonStringB);
 
-            Assert.IsTrue(polygonA != polygonB, "Expected '!=' to return true for different polygon data.");
+            Assert.That(polygonA != polygonB, Is.True, "Expected '!=' to return true for different polygon data.");
         }
     }
 }

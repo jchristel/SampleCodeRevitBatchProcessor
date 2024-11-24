@@ -3,6 +3,7 @@
 This module contains a number of helper functions relating to Revit view sheets. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -28,7 +29,12 @@ This module contains a number of helper functions relating to Revit view sheets.
 
 import clr
 
-from Autodesk.Revit.DB import BuiltInParameter, FilteredElementCollector, ViewSheet
+from Autodesk.Revit.DB import (
+    BuiltInCategory,
+    BuiltInParameter,
+    FilteredElementCollector,
+    ViewSheet,
+)
 
 
 from duHast.Utilities import utility as util
@@ -49,7 +55,7 @@ def get_sheets_by_filters(doc, view_rules=None):
     :type doc: Autodesk.Revit.DB.Document
     :param view_rules: A set of rules. If sheet matches rule it will be returned. Defaults to None which will return all sheets.
     :type view_rules: array in format [parameter name, condition test method, value to test against], optional
-    
+
     :return: Views matching filter
     :rtype: list of Autodesk.Revit.DB.View
     """
@@ -162,3 +168,27 @@ def get_sheet_num_to_elem_dict(rvt_doc):
         num_elem_dict[sht_num] = sheet
 
     return num_elem_dict
+
+
+def get_title_block_from_sheet(doc, sheet):
+    """
+    Returns the first title block located on a sheet or None if there is none placed.
+
+    Args:
+        doc (Autodesk.Revit.DB.Document): Current Revit model document.
+        sheet (Autodesk.Revit.DB.ViewSheet):The sheet of which to return the title block from
+
+    Returns:
+        Autodesk.Revit.DB.FamilyInstance: The first title block instance on a sheet or None.
+    """
+    
+    collector = (
+        FilteredElementCollector(doc, sheet.Id)
+        .OfCategory(BuiltInCategory.OST_TitleBlocks)
+        .WhereElementIsNotElementType()
+    )
+    for element in collector:
+        return element
+    
+    # no title block?
+    return None

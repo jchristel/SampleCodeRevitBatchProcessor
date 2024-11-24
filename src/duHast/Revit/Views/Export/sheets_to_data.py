@@ -34,10 +34,34 @@ from duHast.Revit.Views.Export.view_ports_to_data import (
     convert_revit_schedule_sheet_instances_to_data_instance,
 )
 from duHast.Data.Objects.Collectors.data_sheet import DataSheet
-from duHast.Revit.Views.sheets import get_sheets_by_filters
+from duHast.Revit.Views.sheets import get_sheets_by_filters, get_title_block_from_sheet
 from duHast.Revit.Views.schedules import get_schedule_instance_on_sheet
+from duHast.Revit.Common.Geometry.to_data_conversion import convert_revit_bounding_box_to_geometry2_bounding_box
+from duHast.Data.Objects.Collectors.Properties.data_sheet_size_names import DataSheetSizeNames
 
 
+def get_title_block_size(doc, sheet):
+    
+    title_block_instance = get_title_block_from_sheet(doc=doc, sheet=sheet)
+    if title_block_instance is None:
+        return None
+    
+    # get a 2D bounding box from the title block instance
+    bbox = convert_revit_bounding_box_to_geometry2_bounding_box(bounding_box=title_block_instance.BoundingBox())
+    
+    # get supported sheet sizes
+    sheet_sizes_names= DataSheetSizeNames()
+    sizes = sheet_sizes_names.get_all_supported_sizes()
+    
+    # find a match
+    for supported_size in sizes:
+        if(supported_size.is_matching_size(width=bbox.width, height=bbox.depth)):
+            return supported_size.name
+    
+    # uh no match found...
+    return None
+    
+    
 def convert_revit_sheet(doc, sheet):
     """
     Convertes a revit sheet to a data instance sheet.
@@ -53,6 +77,9 @@ def convert_revit_sheet(doc, sheet):
 
     # instantiate new data sheet object
     data_sheet = DataSheet()
+    
+    # get the sheet size
+    
 
     # get any instance parameters properties
     instance_properties = get_instance_properties(sheet)

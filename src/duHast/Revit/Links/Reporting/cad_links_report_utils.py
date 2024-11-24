@@ -62,7 +62,6 @@ def get_cad_link_type_data_by_name(cad_link_name, doc, revit_file_path):
                 # check if file reference
                 if ex_file_ref is not None:
                     if (ex_file_ref.IsValidExternalFileReference(ex_file_ref)):
-                        print("hereh")
                         model_path = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(
                             ex_file_ref.GetPath()
                         )

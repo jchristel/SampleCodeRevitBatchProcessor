@@ -139,6 +139,33 @@ class BoundingBox3(BoundingBoxBase):
             and self.min_z <= point.z <= self.max_z
         )
 
+    def width(self):
+        """
+        The length of the bounding box in X direction.
+
+        Returns:
+            float: Length in X
+        """
+        return self.max_x - self.min_x
+
+    def depth(self):
+        """
+        The length of the bounding box in Y direction.
+
+        Returns:
+            float: Length in Y
+        """
+        return self.max_y - self.min_y
+
+    def height(self):
+        """
+        The length of the bounding box in Z direction.
+
+        Returns:
+            float: Length in Z
+        """
+        return self.max_z - self.min_z
+
     def __str__(self):
         return "BoundingBox3D({}, {}, {}, {}, {}, {})".format(
             self.min_x, self.min_y, self.min_z, self.max_x, self.max_y, self.max_z

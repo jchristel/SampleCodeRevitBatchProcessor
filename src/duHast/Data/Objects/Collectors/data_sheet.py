@@ -68,6 +68,7 @@ class DataSheet(data_base.DataBase):
         self.type_properties = data_type_properties.DataTypeProperties()
         self.view_ports = []
         self.bounding_box = DataGeometryBoundingBox2()
+        self.sheet_size = None
 
         json_var = None
         # check if any data was past in with constructor!
@@ -111,6 +112,15 @@ class DataSheet(data_base.DataBase):
                     for vp in view_port_data:
                         self.view_ports.append(DataSheetViewPort(j=vp))
 
+                # get sheet size data
+                self.sheet_size = json_var.get(DataPropertyNames.SHEET_SIZE, None)
+                if self.sheet_size is not None and not isinstance(self.sheet_size, str):
+                    raise ValueError(
+                        "sheet size needs to be of type str or None, got {} instead.".format(
+                            type(self.name)
+                        )
+                    )
+
             except Exception as e:
                 raise type(e)(
                     "Node {} failed to initialise with: {}".format(self.data_type, e)
@@ -133,6 +143,7 @@ class DataSheet(data_base.DataBase):
             and self.type_properties == other.type_properties
             and self.view_ports == other.view_ports
             and self.bounding_box == other.bounding_box
+            and self.sheet_size == other.sheet_size
         )
 
     def __ne__(self, other):
@@ -145,5 +156,6 @@ class DataSheet(data_base.DataBase):
                 self.type_properties,
                 self.view_ports,
                 self.bounding_box,
+                self.sheet_size,
             )
         )

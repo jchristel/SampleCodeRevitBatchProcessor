@@ -19,7 +19,7 @@
   "singleRevitTaskRevitVersion": "Revit2018",
   "revitFileProcessingOption": "UseSpecificRevitVersion",
   "ifNotAvailableUseMinimumAvailableRevitVersion": false,
-  "batchRevitTaskRevitVersion": "Revit2022",
+  "batchRevitTaskRevitVersion": "Revit2024",
   "openInUI": false,
   "auditOnOpening": false,
   "showAdvancedSettings": true

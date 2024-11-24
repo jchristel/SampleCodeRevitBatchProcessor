@@ -31,7 +31,7 @@ from collections import namedtuple
 from Autodesk.Revit.DB import BoundingBoxXYZ, ElementId, Options, Solid
 
 from duHast.Revit.Common.Geometry.geometry import merge_bounding_box_xyz, get_faces_sorted_by_area_from_solid, get_unique_horizontal_faces, convert_edge_arrays_into_list_of_points,flatten_xyz_point_list_of_lists,get_signed_polygon_area,build_loops_dictionary
-from duHast.Data.Objects.Properties.Geometry import geometry_polygon_2 as dGeometryPoly
+from duHast.Data.Objects.Collectors.Properties.Geometry import geometry_polygon_2 as dGeometryPoly
 
 
 def get_2d_points_from_solid(element):

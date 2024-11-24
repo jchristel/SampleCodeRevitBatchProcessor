@@ -30,6 +30,7 @@ Revit API utility functions for the spatial properties of room elements.
 from Autodesk.Revit.DB import (
     SpatialElementBoundaryOptions,
     SpatialElementBoundaryLocation,
+    XYZ,
 )
 from duHast.Revit.Rooms.Objects.RoomBaseObject import RoomBaseObj
 from duHast.Revit.Rooms.Geometry.room_spatial_elements import (
@@ -50,3 +51,20 @@ class RoomSpatialObj(RoomBaseObj):
         self.segments = get_room_segments(room, spat_opts)
         self.room_walls = get_only_wall_segments_as_walls(rvt_doc, self.segments)
         self.wall_segs = get_only_wall_segments_as_curves(rvt_doc, self.segments)
+
+        self.bbox = None
+        # get the room bounding box
+        if room.Location is not None:
+            self.bbox = room.get_BoundingBox(None)
+        
+        # get the room bounding box centre
+        self.bbox_centre = None
+        if self.bbox:
+            centre_x = self.bbox.Min.X + ((self.bbox.Max.X - self.bbox.Min.X) / 2)
+            centre_y = self.bbox.Min.Y + ((self.bbox.Max.Y - self.bbox.Min.Y) / 2)
+            centre_z = self.bbox.Min.Z
+
+            self.bbox_centre = XYZ(centre_x, centre_y, centre_z)
+
+
+

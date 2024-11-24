@@ -12,7 +12,7 @@ The 'File Out' flow is aimed at model issue processes requiring:
     - Certain views / sheets are removed from the model prior issue.
     - A purge unused elements is under taken.
     - Worksets of levels / grids / scope boxes / reference planes are checked and if required changed to the default value
-    - Revision information is appended to the revit file name.
+    - Revision information is appended to the Revit file name.
 
 - NavisWorks:
     - Cache files are generated either from a number of 3D views or the entire model
@@ -37,8 +37,8 @@ This flow is run through a powershell script which executes:
     #. Delete views as specified per model.
     #. Delete any links from the model ( That is so that the second step can open this model with all worksets open for exports to NWC and IFC)
     #. Workset checking and, if required adjusting, of of worksets of levels / grids / scope boxes / reference planes
-    #. Create a text file for each new revit file containing meta data for document exchange platform
-#. A STEP 2 pre-processing script creating task files based on revit files created in STEP 1.
+    #. Create a text file for each new Revit file containing meta data for document exchange platform
+#. A STEP 2 pre-processing script creating task files based on Revit files created in STEP 1.
 #. STEP 2: No 3 off parallel running sessions of Revit Batch Processor which:
     #. Create detached copies of Revit files created in STEP 1
     #. Delete all views but the ones required to export.
@@ -51,7 +51,7 @@ This flow is run through a powershell script which executes:
 #. A post process which:
     #. Combines meta data text files of all exports into single meta data file.
     #. Updates file list with latest revision information.
-    #. Checks revit batch processor log files for any exceptions
+    #. Checks Revit batch processor log files for any exceptions
 
 
 Setup
@@ -100,7 +100,7 @@ _Output
 
 This folder contains a number of temp files:
 
-- Step 2 creates temp revit files which are saved in this directory and deleted at the end of the flow.
+- Step 2 creates temp Revit files which are saved in this directory and deleted at the end of the flow.
 - Pre processing script for STEP 2 writes task files for STEP 2 into this directory as well.
 
 _sampleFiles
@@ -156,7 +156,7 @@ ModifyFilesOut_StepTwo
 - FileNames.csv
 
     - Revit project meta data file:
-        - This is a comma separated text files which contains meta data of the revit files to be processed in the following format:
+        - This is a comma separated text files which contains meta data of the Revit files to be processed in the following format:
         - header row: none
         - column 1: current file name (Revit) or view name for IFC / NWC exports
         - column 2: Export file name (including revision separator prefix)

@@ -53,7 +53,7 @@ namespace PythonTests.DataTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataViewThreeDClass, "DataTypeProperties should be loaded.");
+            Assert.That(PythonEngineManager.DataViewThreeDClass, Is.Not.Null, "DataTypeProperties should be loaded.");
         }
 
         // Helper method to create JSON strings
@@ -70,22 +70,22 @@ namespace PythonTests.DataTests
             var dataViewThreeD = PythonEngineManager.DataViewThreeDClass(validJsonString);
 
             // Assert
-            Assert.AreEqual(101, dataViewThreeD.id, "Expected id to be initialized correctly.");
-            Assert.IsNotNull(dataViewThreeD.bounding_box, "Expected bounding_box to be initialized.");
-            Assert.AreEqual(0.0, dataViewThreeD.bounding_box.min_x, "Expected bounding_box.min_x to match input.");
-            Assert.AreEqual(10.0, dataViewThreeD.bounding_box.max_x, "Expected bounding_box.max_x to match input.");
-            Assert.AreEqual(0.0, dataViewThreeD.bounding_box.min_y, "Expected bounding_box.min_y to match input.");
-            Assert.AreEqual(10.0, dataViewThreeD.bounding_box.max_y, "Expected bounding_box.max_y to match input.");
+            Assert.That(101, Is.EqualTo(dataViewThreeD.id), "Expected id to be initialized correctly.");
+            Assert.That(dataViewThreeD.bounding_box, Is.Not.Null, "Expected bounding_box to be initialized.");
+            Assert.That(0.0, Is.EqualTo(dataViewThreeD.bounding_box.min_x), "Expected bounding_box.min_x to match input.");
+            Assert.That(10.0, Is.EqualTo(dataViewThreeD.bounding_box.max_x), "Expected bounding_box.max_x to match input.");
+            Assert.That(0.0, Is.EqualTo(dataViewThreeD.bounding_box.min_y), "Expected bounding_box.min_y to match input.");
+            Assert.That(10.0, Is.EqualTo(dataViewThreeD.bounding_box.max_y), "Expected bounding_box.max_y to match input.");
 
             // Assert rotation and translation coords if relevant
-            Assert.IsNotNull(dataViewThreeD.bounding_box.rotation_coord, "Expected rotation_coord to be initialized.");
-            Assert.AreEqual(3, dataViewThreeD.bounding_box.rotation_coord.rows, "Expected rotation_coord rows to be 3.");
-            Assert.AreEqual(3, dataViewThreeD.bounding_box.rotation_coord.columns, "Expected rotation_coord columns to be 3.");
+            Assert.That(dataViewThreeD.bounding_box.rotation_coord, Is.Not.Null, "Expected rotation_coord to be initialized.");
+            Assert.That(3, Is.EqualTo(dataViewThreeD.bounding_box.rotation_coord.rows), "Expected rotation_coord rows to be 3.");
+            Assert.That(3, Is.EqualTo(dataViewThreeD.bounding_box.rotation_coord.columns), "Expected rotation_coord columns to be 3.");
 
-            Assert.IsNotNull(dataViewThreeD.bounding_box.translation_coord, "Expected translation_coord to be initialized.");
-            Assert.AreEqual(0.0, dataViewThreeD.bounding_box.translation_coord.x, "Expected translation_coord.x to be 0.0.");
-            Assert.AreEqual(0.0, dataViewThreeD.bounding_box.translation_coord.y, "Expected translation_coord.y to be 0.0.");
-            Assert.AreEqual(0.0, dataViewThreeD.bounding_box.translation_coord.z, "Expected translation_coord.z to be 0.0.");
+            Assert.That(dataViewThreeD.bounding_box.translation_coord, Is.Not.Null, "Expected translation_coord to be initialized.");
+            Assert.That(0.0, Is.EqualTo(dataViewThreeD.bounding_box.translation_coord.x), "Expected translation_coord.x to be 0.0.");
+            Assert.That(0.0, Is.EqualTo(dataViewThreeD.bounding_box.translation_coord.y), "Expected translation_coord.y to be 0.0.");
+            Assert.That(0.0, Is.EqualTo(dataViewThreeD.bounding_box.translation_coord.z), "Expected translation_coord.z to be 0.0.");
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace PythonTests.DataTests
 
             // Act & Assert: initialization should throw a TypeError
             var ex = Assert.Throws<ValueErrorException>(() => PythonEngineManager.DataViewThreeDClass(jsonString));
-            StringAssert.Contains("Node view_3d failed to initialise with: JSON must contain", ex.Message, "Expected ValueError for incorrect bounding_box type.");
+            Assert.That(ex.Message, Does.Contain("Node view_3d failed to initialise with: JSON must contain"), "Expected ValueError for incorrect bounding_box type.");
         }
 
         [Test]
@@ -163,7 +163,7 @@ namespace PythonTests.DataTests
 
             // Act & Assert: initialization should throw a TypeError due to missing fields
             var ex = Assert.Throws<ValueErrorException>(() => PythonEngineManager.DataViewThreeDClass(jsonString));
-            StringAssert.Contains("Node view_3d failed to initialise with: JSON must contain", ex.Message, "Expected ValueError for missing bounding box fields.");
+            Assert.That(ex.Message, Does.Contain("Node view_3d failed to initialise with: JSON must contain"), "Expected ValueError for missing bounding box fields.");
         }
 
         [Test]
@@ -174,7 +174,7 @@ namespace PythonTests.DataTests
             var dataView2 = PythonEngineManager.DataViewThreeDClass(validJsonString);
 
             // Act & Assert
-            Assert.IsTrue(dataView1 == dataView2, "Operator == should return true for instances with the same bounding box.");
+            Assert.That(dataView1 == dataView2, Is.True, "Operator == should return true for instances with the same bounding box.");
             //Assert.IsTrue(dataView1.Equals(dataView2), "Equals method should return true for instances with the same bounding box.");
         }
 
@@ -221,7 +221,7 @@ namespace PythonTests.DataTests
             Console.WriteLine(dataView1.to_json());
 
             // Act & Assert
-            Assert.IsFalse(dataView1 == dataView2, "Operator == should return false for instances with different bounding boxes.");
+            Assert.That(dataView1 == dataView2, Is.False, "Operator == should return false for instances with different bounding boxes.");
             //Assert.IsFalse(dataView1.Equals(dataView2), "Equals method should return false for instances with different bounding boxes.");
         }
     }

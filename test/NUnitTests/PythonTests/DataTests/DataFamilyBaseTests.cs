@@ -9,7 +9,7 @@ namespace PythonTests.DataTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataFamilyBaseClass, "DataTypeProperties should be loaded.");
+            Assert.That(PythonEngineManager.DataFamilyBaseClass, Is.Not.Null, "DataTypeProperties should be loaded.");
         }
 
         // Helper method to create a JSON string for DataFamilyBase initialization
@@ -49,14 +49,14 @@ namespace PythonTests.DataTests
             var model = PythonEngineManager.DataFamilyBaseClass(jsonString);
 
             // Assert: verify that each sub-object and property is correctly set
-            Assert.AreEqual(123, model.instance_properties.id, "Expected instance properties id to be '123'.");
-            Assert.AreEqual("TypeA", model.type_properties.name, "Expected type properties name to be 'TypeA'.");
-            Assert.AreEqual("Level1", model.level.name, "Expected level name to be 'Level1'.");
-            Assert.AreEqual("ModelX", model.revit_model.name, "Expected revit model name to be 'ModelX'.");
-            Assert.AreEqual("Phase1", model.phasing.created, "Expected phasing phase to be 'Phase1'.");
-            Assert.AreEqual("OptionA", model.design_set_and_option.option_name, "Expected design set and option name to be 'OptionA'.");
+            Assert.That(123, Is.EqualTo(model.instance_properties.id), "Expected instance properties id to be '123'.");
+            Assert.That("TypeA", Is.EqualTo(model.type_properties.name), "Expected type properties name to be 'TypeA'.");
+            Assert.That("Level1", Is.EqualTo(model.level.name), "Expected level name to be 'Level1'.");
+            Assert.That("ModelX", Is.EqualTo(model.revit_model.name), "Expected revit model name to be 'ModelX'.");
+            Assert.That("Phase1", Is.EqualTo(model.phasing.created), "Expected phasing phase to be 'Phase1'.");
+            Assert.That("OptionA", Is.EqualTo(model.design_set_and_option.option_name), "Expected design set and option name to be 'OptionA'.");
             // assume count is 0 for now since not properly implemented
-            Assert.AreEqual(0, model.associated_elements.Count, "Expected 0 associated elements.");
+            Assert.That(0, Is.EqualTo(model.associated_elements.Count), "Expected 0 associated elements.");
         }
 
         [Test]
@@ -69,13 +69,13 @@ namespace PythonTests.DataTests
             var model = PythonEngineManager.DataFamilyBaseClass(jsonString);
 
             // Assert: verify default values are set
-            Assert.AreEqual(-1, model.instance_properties.id, "Expected default instance properties id to be -1.");
-            Assert.AreEqual("-", model.type_properties.name, "Expected default type properties name to be '-'.");
-            Assert.AreEqual("-", model.level.name, "Expected default level name to be '-'.");
-            Assert.AreEqual("-", model.revit_model.name, "Expected default revit model name to be '-'.");
-            Assert.AreEqual("-", model.phasing.created, "Expected default phasing phase to be '-'.");
-            Assert.AreEqual("-", model.design_set_and_option.option_name, "Expected default design set and option name to be '-'.");
-            Assert.AreEqual(0, model.associated_elements.Count, "Expected default associated elements list to be empty.");
+            Assert.That(-1, Is.EqualTo(model.instance_properties.id), "Expected default instance properties id to be -1.");
+            Assert.That("-", Is.EqualTo(model.type_properties.name), "Expected default type properties name to be '-'.");
+            Assert.That("-", Is.EqualTo(model.level.name), "Expected default level name to be '-'.");
+            Assert.That("-", Is.EqualTo(model.revit_model.name), "Expected default revit model name to be '-'.");
+            Assert.That("-", Is.EqualTo(model.phasing.created), "Expected default phasing phase to be '-'.");
+            Assert.That("-", Is.EqualTo(model.design_set_and_option.option_name), "Expected default design set and option name to be '-'.");
+            Assert.That(0, Is.EqualTo(model.associated_elements.Count), "Expected default associated elements list to be empty.");
         }
 
         [Test]
@@ -94,8 +94,8 @@ namespace PythonTests.DataTests
             var modelB = PythonEngineManager.DataFamilyBaseClass(jsonString);
 
             // Act & Assert: verify equality comparison
-            Assert.IsTrue(modelA == modelB, "Expected two instances with identical data to be equal.");
-            Assert.IsFalse(modelA != modelB, "Expected two instances with identical data not to be unequal.");
+            Assert.That(modelA == modelB, Is.True,"Expected two instances with identical data to be equal.");
+            Assert.That(modelA != modelB, Is.False, "Expected two instances with identical data not to be unequal.");
         }
 
         [Test]
@@ -108,8 +108,8 @@ namespace PythonTests.DataTests
             var modelB = PythonEngineManager.DataFamilyBaseClass(jsonStringB);
 
             // Act & Assert: verify inequality due to different instance properties
-            Assert.IsFalse(modelA == modelB, "Expected instances with different instance properties to not be equal.");
-            Assert.IsTrue(modelA != modelB, "Expected instances with different instance properties to be unequal.");
+            Assert.That(modelA == modelB, Is.False,"Expected instances with different instance properties to not be equal.");
+            Assert.That(modelA != modelB,Is.True, "Expected instances with different instance properties to be unequal.");
         }
 
         [Test]
@@ -132,8 +132,8 @@ namespace PythonTests.DataTests
             modelB.AssociatedElements = new List<object> { "DifferentElement" };
 
             // Act & Assert: verify equality despite different associated elements
-            Assert.IsTrue(modelA == modelB, "Expected instances with different associated elements to be equal.");
-            Assert.IsFalse(modelA != modelB, "Expected instances with different associated elements not to be unequal.");
+            Assert.That(modelA == modelB, Is.True, "Expected instances with different associated elements to be equal.");
+            Assert.That(modelA != modelB, Is.False, "Expected instances with different associated elements not to be unequal.");
         }
 
         [Test]
@@ -144,8 +144,8 @@ namespace PythonTests.DataTests
             var modelB = PythonEngineManager.DataFamilyBaseClass();
 
             // Act & Assert: verify equality for instances with default values
-            Assert.IsTrue(modelA == modelB, "Expected two instances with default values to be equal.");
-            Assert.IsFalse(modelA != modelB, "Expected two instances with default values not to be unequal.");
+            Assert.That(modelA == modelB, Is.True, "Expected two instances with default values to be equal.");
+            Assert.That(modelA != modelB, Is.False, "Expected two instances with default values not to be unequal.");
         }
 
     }

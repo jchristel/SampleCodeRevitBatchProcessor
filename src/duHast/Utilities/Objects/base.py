@@ -98,8 +98,7 @@ class Base(object):
         Class constructor
         """
 
-        # forwards all unused arguments
-        # ini super class to allow multi inheritance in children!
+        # this class inherits from object directly
 
         super(Base, self).__init__()
 

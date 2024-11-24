@@ -9,7 +9,7 @@ namespace PythonTests.DataTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataCeilingClass, "DataTypeProperties should be loaded.");
+            Assert.That(PythonEngineManager.DataCeilingClass, Is.Not.Null, "DataTypeProperties should be loaded.");
         }
     }
 }

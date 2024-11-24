@@ -10,7 +10,7 @@ namespace PythonTests.DataTests.PropertyTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataScheduleSegmentClass, "DataScheduleSegment should be loaded.");
+            Assert.That(PythonEngineManager.DataScheduleSegmentClass, Is.Not.Null, "DataScheduleSegment should be loaded.");
         }
 
         // Helper method to create a JSON string for DataScheduleSegment initialization
@@ -29,8 +29,8 @@ namespace PythonTests.DataTests.PropertyTests
             var segment = PythonEngineManager.DataScheduleSegmentClass(jsonString);
 
             // Assert: verify the values are correctly set
-            Assert.AreEqual(3, segment.index, "Expected index to be 3.");
-            Assert.AreEqual(12.5, segment.height, "Expected height to be 12.5.");
+            Assert.That(3, Is.EqualTo(segment.index), "Expected index to be 3.");
+            Assert.That(12.5, Is.EqualTo(segment.height), "Expected height to be 12.5.");
         }
 
         [Test]
@@ -43,8 +43,8 @@ namespace PythonTests.DataTests.PropertyTests
             var segment = PythonEngineManager.DataScheduleSegmentClass(jsonString);
 
             // Assert: height should be set from JSON, index should use default
-            Assert.AreEqual(0, segment.index, "Expected default index of 0.");
-            Assert.AreEqual(9.8, segment.height, "Expected height to be 9.8.");
+            Assert.That(0, Is.EqualTo(segment.index), "Expected default index of 0.");
+            Assert.That(9.8, Is.EqualTo(segment.height), "Expected height to be 9.8.");
         }
 
         [Test]
@@ -57,8 +57,8 @@ namespace PythonTests.DataTests.PropertyTests
             var segment = PythonEngineManager.DataScheduleSegmentClass(jsonString);
 
             // Assert: index and height should use default values
-            Assert.AreEqual(0, segment.index, "Expected default index of 0.");
-            Assert.AreEqual(0.0, segment.height, "Expected default height of 0.0.");
+            Assert.That(0, Is.EqualTo(segment.index), "Expected default index of 0.");
+            Assert.That(0.0, Is.EqualTo(segment.height), "Expected default height of 0.0.");
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace PythonTests.DataTests.PropertyTests
             Console.WriteLine(jsonString);
             // Act & Assert: expect initialization to throw an error
             var ex = Assert.Throws<ValueErrorException>(() => PythonEngineManager.DataScheduleSegmentClass(jsonString));
-            StringAssert.Contains("Node schedule segment failed to initialise with: index needs to be of type int", ex.Message);
+            Assert.That(ex.Message, Does.Contain("Node schedule segment failed to initialise with: index needs to be of type int"));
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace PythonTests.DataTests.PropertyTests
 
             // Act & Assert: expect initialization to throw an error
             var ex = Assert.Throws<ValueErrorException>(() => PythonEngineManager.DataScheduleSegmentClass(jsonString));
-            StringAssert.Contains("Expecting value:", ex.Message);
+            Assert.That(ex.Message, Does.Contain("Expecting value:"));
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace PythonTests.DataTests.PropertyTests
             var segmentB = PythonEngineManager.DataScheduleSegmentClass(jsonString);
 
             // Assert: the two instances are equal
-            Assert.IsTrue(segmentA == segmentB, "Expected equal instances to return true.");
+            Assert.That(segmentA == segmentB, Is.True, "Expected equal instances to return true.");
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace PythonTests.DataTests.PropertyTests
             var segmentB = PythonEngineManager.DataScheduleSegmentClass(jsonB);
 
             // Assert: the two instances are not equal
-            Assert.IsTrue(segmentA != segmentB, "Expected non-equal instances to return true.");
+            Assert.That(segmentA != segmentB, Is.True, "Expected non-equal instances to return true.");
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace PythonTests.DataTests.PropertyTests
             var segmentB = PythonEngineManager.DataScheduleSegmentClass(jsonB);
 
             // Assert: the two instances should not be equal
-            Assert.IsTrue(segmentA != segmentB, "Expected instances with different heights to be unequal.");
+            Assert.That(segmentA != segmentB, Is.True, "Expected instances with different heights to be unequal.");
         }
 
         [Test]
@@ -142,7 +142,7 @@ namespace PythonTests.DataTests.PropertyTests
             Console.WriteLine(segmentB.to_json());
 
             // Assert: the two instances should not be equal
-            Assert.IsTrue(segmentA != segmentB, "Expected instances with different indexes to be unequal.");
+            Assert.That(segmentA != segmentB, Is.True, "Expected instances with different indexes to be unequal.");
         }
 
         [Test]
@@ -153,7 +153,7 @@ namespace PythonTests.DataTests.PropertyTests
             var segmentB = PythonEngineManager.DataScheduleSegmentClass();
 
             // Assert: the two instances should be equal (default values)
-            Assert.IsTrue(segmentA == segmentB, "Expected default instances to be equal.");
+            Assert.That(segmentA == segmentB, Is.True, "Expected default instances to be equal.");
         }
 
     }

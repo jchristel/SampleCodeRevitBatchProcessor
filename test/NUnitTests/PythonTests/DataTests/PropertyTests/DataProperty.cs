@@ -8,8 +8,8 @@ namespace PythonTests.DataTests.PropertyTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataInstancePropertiesClass, "DataInstanceProperties should be loaded.");
-            Assert.IsNotNull(PythonEngineManager.DataPropertyClass, "DataProperty should be loaded.");
+            Assert.That(PythonEngineManager.DataInstancePropertiesClass, Is.Not.Null, "DataInstanceProperties should be loaded.");
+            Assert.That(PythonEngineManager.DataPropertyClass, Is.Not.Null, "DataProperty should be loaded.");
         }
 
         [Test]
@@ -22,8 +22,8 @@ namespace PythonTests.DataTests.PropertyTests
             dynamic dataProperty = PythonEngineManager.DataPropertyClass(json);
 
             // Assert
-            Assert.AreEqual("TestProperty", dataProperty.name);
-            Assert.AreEqual(123, dataProperty.value);
+            Assert.That("TestProperty", Is.EqualTo( dataProperty.name));
+            Assert.That(123, Is.EqualTo(dataProperty.value));
         }
 
         [Test]
@@ -36,8 +36,8 @@ namespace PythonTests.DataTests.PropertyTests
             dynamic dataProperty = PythonEngineManager.DataPropertyClass(pythonDict);
 
             // Assert
-            Assert.AreEqual("TestProperty", dataProperty.name);
-            Assert.AreEqual(123, dataProperty.value);
+            Assert.That("TestProperty", Is.EqualTo(dataProperty.name));
+            Assert.That(123, Is.EqualTo(dataProperty.value));
         }
 
         [Test]
@@ -72,8 +72,8 @@ namespace PythonTests.DataTests.PropertyTests
             dynamic dataProperty = PythonEngineManager.DataPropertyClass(json);
 
             // Assert
-            Assert.AreEqual("-", dataProperty.name);
-            Assert.AreEqual(123, dataProperty.value);
+            Assert.That("-", Is.EqualTo(dataProperty.name));
+            Assert.That(123, Is.EqualTo(dataProperty.value));
         }
 
         [Test]
@@ -86,8 +86,8 @@ namespace PythonTests.DataTests.PropertyTests
             dynamic dataProperty = PythonEngineManager.DataPropertyClass(json);
            
             // Assert
-            Assert.AreEqual("TestProperty", dataProperty.name);
-            Assert.AreEqual(null, dataProperty.value);
+            Assert.That("TestProperty", Is.EqualTo(dataProperty.name));
+            Assert.That(null, Is.EqualTo(dataProperty.value));
         }
 
         [Test]
@@ -111,8 +111,8 @@ namespace PythonTests.DataTests.PropertyTests
             dynamic dataProperty = PythonEngineManager.DataPropertyClass(pythonDict);
 
             // Assert
-            Assert.AreEqual("PropertyName", dataProperty.name);
-            Assert.AreEqual(789, dataProperty.value);
+            Assert.That("PropertyName",Is.EqualTo( dataProperty.name));
+            Assert.That(789, Is.EqualTo(dataProperty.value));
         }
 
         [Test]
@@ -122,8 +122,8 @@ namespace PythonTests.DataTests.PropertyTests
             dynamic dataProperty = PythonEngineManager.DataPropertyClass();
 
             // Assert
-            Assert.AreEqual("-", dataProperty.name); // default name
-            Assert.IsNull(dataProperty.value);       // default value
+            Assert.That("-", Is.EqualTo(dataProperty.name)); // default name
+            Assert.That(dataProperty.value, Is.Null);       // default value
         }
 
     }

@@ -9,7 +9,7 @@ namespace PythonTests.DataTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataLevelBuildingClass, "DataTypeProperties should be loaded.");
+            Assert.That(PythonEngineManager.DataLevelBuildingClass, Is.Not.Null, "DataTypeProperties should be loaded.");
         }
 
         // Helper method to create a JSON string for DataLevelBuilding initialization
@@ -35,8 +35,8 @@ namespace PythonTests.DataTests
             var levelBuilding = PythonEngineManager.DataLevelBuildingClass(jsonString);
 
             // Assert: verify each property is correctly set
-            Assert.AreEqual(12.5, levelBuilding.elevation, "Expected elevation to be '12.5'.");
-            Assert.AreEqual("ModelA", levelBuilding.revit_model.name, "Expected revit model name to be 'ModelA'.");
+            Assert.That(12.5, Is.EqualTo(levelBuilding.elevation), "Expected elevation to be '12.5'.");
+            Assert.That("ModelA", Is.EqualTo(levelBuilding.revit_model.name), "Expected revit model name to be 'ModelA'.");
         }
 
         [Test]
@@ -49,8 +49,8 @@ namespace PythonTests.DataTests
             var levelBuilding = PythonEngineManager.DataLevelBuildingClass(jsonString);
 
             // Assert: verify default values are applied
-            Assert.AreEqual(0.0, levelBuilding.elevation, "Expected default elevation to be '0.0'.");
-            Assert.AreEqual("-", levelBuilding.revit_model.name, "Expected default revit model name to be '-'.");
+            Assert.That(0.0,Is.EqualTo(levelBuilding.elevation), "Expected default elevation to be '0.0'.");
+            Assert.That("-", Is.EqualTo(levelBuilding.revit_model.name), "Expected default revit model name to be '-'.");
         }
 
         [Test]
@@ -65,8 +65,8 @@ namespace PythonTests.DataTests
             var levelBuildingB = PythonEngineManager.DataLevelBuildingClass(jsonString);
 
             // Act & Assert: verify equality between identical instances
-            Assert.IsTrue(levelBuildingA == levelBuildingB, "Expected two instances with identical data to be equal.");
-            Assert.IsFalse(levelBuildingA != levelBuildingB, "Expected two instances with identical data not to be unequal.");
+            Assert.That(levelBuildingA == levelBuildingB, Is.True, "Expected two instances with identical data to be equal.");
+            Assert.That(levelBuildingA != levelBuildingB, Is.False, "Expected two instances with identical data not to be unequal.");
         }
 
         [Test]
@@ -79,8 +79,8 @@ namespace PythonTests.DataTests
             var levelBuildingB = PythonEngineManager.DataLevelBuildingClass(jsonStringB);
 
             // Act & Assert: verify inequality due to different elevations
-            Assert.IsFalse(levelBuildingA == levelBuildingB, "Expected instances with different elevations to not be equal.");
-            Assert.IsTrue(levelBuildingA != levelBuildingB, "Expected instances with different elevations to be unequal.");
+            Assert.That(levelBuildingA == levelBuildingB, Is.False, "Expected instances with different elevations to not be equal.");
+            Assert.That(levelBuildingA != levelBuildingB, Is.True, "Expected instances with different elevations to be unequal.");
         }
 
         [Test]
@@ -93,8 +93,8 @@ namespace PythonTests.DataTests
             var levelBuildingB = PythonEngineManager.DataLevelBuildingClass(jsonStringB);
 
             // Act & Assert: verify inequality due to different RevitModel data
-            Assert.IsFalse(levelBuildingA == levelBuildingB, "Expected instances with different revit model properties to not be equal.");
-            Assert.IsTrue(levelBuildingA != levelBuildingB, "Expected instances with different revit model properties to be unequal.");
+            Assert.That(levelBuildingA == levelBuildingB, Is.False, "Expected instances with different revit model properties to not be equal.");
+            Assert.That(levelBuildingA != levelBuildingB, Is.True, "Expected instances with different revit model properties to be unequal.");
         }
 
         [Test]
@@ -105,8 +105,8 @@ namespace PythonTests.DataTests
             var levelBuildingB = PythonEngineManager.DataLevelBuildingClass();
 
             // Act & Assert: verify equality with default values
-            Assert.IsTrue(levelBuildingA == levelBuildingB, "Expected two instances with default values to be equal.");
-            Assert.IsFalse(levelBuildingA != levelBuildingB, "Expected two instances with default values not to be unequal.");
+            Assert.That(levelBuildingA == levelBuildingB, Is.True, "Expected two instances with default values to be equal.");
+            Assert.That(levelBuildingA != levelBuildingB, Is.False, "Expected two instances with default values not to be unequal.");
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace PythonTests.DataTests
 
             // Act & Assert: initialization should throw a TypeError
             var ex = Assert.Throws<TypeErrorException>(() => PythonEngineManager.DataLevelBuildingClass(jsonString));
-            StringAssert.Contains("Node level failed to initialise with: Expected 'elevation' to be a float", ex.Message, "Expected TypeError for non float input.");
+            Assert.That(ex.Message,Does.Contain( "Node level failed to initialise with: Expected 'elevation' to be a float"), "Expected TypeError for non float input.");
         }
     }
 }

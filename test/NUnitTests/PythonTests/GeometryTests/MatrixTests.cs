@@ -8,7 +8,7 @@ namespace PythonTests.GeometryTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.MatrixClass, "Matrix should be loaded.");
+            Assert.That(PythonEngineManager.MatrixClass, Is.Not.Null, "Matrix should be loaded.");
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace PythonTests.GeometryTests
             // The expected JSON string
             string jsonString = "{\"columns\": 3, \"data\": [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]], \"rows\": 3}";
 
-            Assert.AreEqual(jsonString, result);
+            Assert.That(jsonString, Is.EqualTo(result));
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace PythonTests.GeometryTests
             // The expected JSON string
             string jsonString = "{\"columns\": 3, \"data\": [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]], \"rows\": 3}";
 
-            Assert.AreEqual(jsonString, result);
+            Assert.That(jsonString, Is.EqualTo(result));
         }
 
         [Test]
@@ -51,10 +51,10 @@ namespace PythonTests.GeometryTests
             string json = "{\"rows\": 2, \"columns\": 2, \"data\": [[1.0, 2.0], [3.0, 4.0]]}";
             dynamic matrixInstance = PythonEngineManager.MatrixClass(null, null, null, json);
 
-            Assert.AreEqual(2, matrixInstance.rows);
-            Assert.AreEqual(2, matrixInstance.columns);
-            Assert.AreEqual(1.0, matrixInstance.data[0][0]);
-            Assert.AreEqual(4.0, matrixInstance.data[1][1]);
+            Assert.That(2, Is.EqualTo(matrixInstance.rows));
+            Assert.That(2, Is.EqualTo(matrixInstance.columns));
+            Assert.That(1.0, Is.EqualTo(matrixInstance.data[0][0]));
+            Assert.That(4.0, Is.EqualTo(matrixInstance.data[1][1]));
         }
 
         [Test]
@@ -71,8 +71,8 @@ namespace PythonTests.GeometryTests
         {
             dynamic matrixInstance = PythonEngineManager.MatrixClass(2, 3);
 
-            Assert.AreEqual(2, matrixInstance.rows);
-            Assert.AreEqual(3, matrixInstance.columns);
+            Assert.That(2, Is.EqualTo(matrixInstance.rows));
+            Assert.That(3, Is.EqualTo(matrixInstance.columns));
         }
 
         [Test]
@@ -113,10 +113,10 @@ namespace PythonTests.GeometryTests
             dynamic matrixB = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 5.0, 6.0 }, new[] { 7.0, 8.0 } });
             dynamic result = matrixA + matrixB;
 
-            Assert.AreEqual(2, result.rows);
-            Assert.AreEqual(2, result.columns);
-            Assert.AreEqual(6.0, result[0][0]);
-            Assert.AreEqual(12.0, result[1][1]);
+            Assert.That(2, Is.EqualTo(result.rows));
+            Assert.That(2, Is.EqualTo(result.columns));
+            Assert.That(6.0, Is.EqualTo(result[0][0]));
+            Assert.That(12.0, Is.EqualTo(result[1][1]));
         }
 
         // Helper method to perform the addition
@@ -147,7 +147,7 @@ namespace PythonTests.GeometryTests
             // Modify the retrieved data to check if it's a copy
             data[0][0] = 99.0;
 
-            Assert.AreEqual(1.0, matrix[0][0]);
+            Assert.That(1.0, Is.EqualTo(matrix[0][0]));
         }
 
         [Test]
@@ -169,7 +169,7 @@ namespace PythonTests.GeometryTests
             var matrixA = PythonEngineManager.MatrixClass(2, 2, elementsA);
             var matrixB = PythonEngineManager.MatrixClass(2, 2, elementsB);
 
-            Assert.IsTrue(matrixA == matrixB, "Expected equal matrices to return true.");
+            Assert.That(matrixA == matrixB, Is.True, "Expected equal matrices to return true.");
         }
 
         [Test]
@@ -178,7 +178,7 @@ namespace PythonTests.GeometryTests
             var matrixA = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
             var matrixB = PythonEngineManager.MatrixClass(3, 3, new[] { new[] { 1.0, 2.0, 3.0 }, new[] { 4.0, 5.0, 6.0 }, new[] { 7.0, 8.0, 9.0 } });
 
-            Assert.IsFalse(matrixA == matrixB, "Expected unequal matrices to return false.");
+            Assert.That(matrixA == matrixB, Is.False, "Expected unequal matrices to return false.");
         }
 
         [Test]
@@ -187,7 +187,7 @@ namespace PythonTests.GeometryTests
             var matrixA = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
             var matrixB = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.1 }, new[] { 3.0, 4.0 } }); // 2.1 instead of 2.0
 
-            Assert.IsFalse(matrixA == matrixB, "Expected matrices with different elements to return false.");
+            Assert.That(matrixA == matrixB, Is.False, "Expected matrices with different elements to return false.");
         }
 
         [Test]
@@ -196,7 +196,7 @@ namespace PythonTests.GeometryTests
             var matrixA = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
             var matrixB = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
 
-            Assert.IsFalse(matrixA != matrixB, "Expected equal matrices to return false for not equal.");
+            Assert.That(matrixA != matrixB, Is.False, "Expected equal matrices to return false for not equal.");
         }
 
         [Test]
@@ -205,7 +205,7 @@ namespace PythonTests.GeometryTests
             var matrixA = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
             var matrixB = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.1 }, new[] { 3.0, 4.0 } });
 
-            Assert.IsTrue(matrixA != matrixB, "Expected different matrices to return true for not equal.");
+            Assert.That(matrixA != matrixB, Is.True, "Expected different matrices to return true for not equal.");
         }
 
         [Test]
@@ -213,7 +213,7 @@ namespace PythonTests.GeometryTests
         {
             var matrixA = PythonEngineManager.MatrixClass(2, 2, new[] { new[] { 1.0, 2.0 }, new[] { 3.0, 4.0 } });
 
-            Assert.IsFalse(matrixA == null, "Expected a matrix to not equal null.");
+            Assert.That(matrixA == null, Is.False, "Expected a matrix to not equal null.");
         }
     }
 }

@@ -127,11 +127,11 @@ def read_csv_file_with_encoding(file_path_csv, increase_max_field_size_limit=Fal
             return_value.status=True
             return_value.result=row_list
             return return_value
-        except (UnicodeDecodeError, csv.Error) as e:
+        except (Exception) as e:
             return_value.update_sep(False, "Failed with encoding {}: {}".format(encoding, e))
 
     # statsu should be false 
-    return_value.update_sep("Failed to decode using known encodings.")
+    return_value.update_sep(False, "Failed to decode using known encodings.")
     return return_value
 
 
@@ -146,9 +146,9 @@ def read_csv_file(filepathCSV, increaseMaxFieldSizeLimit=False):
     """
 
     row_list = []
-
     # read with encoding enabled
     read_result = read_csv_file_with_encoding(filepathCSV, increaseMaxFieldSizeLimit)
+
     if read_result.status:
         return read_result.result
     
@@ -166,13 +166,10 @@ def read_csv_file(filepathCSV, increaseMaxFieldSizeLimit=False):
     except csv.Error as e:
         # maybe a nullbyte exception?
         if "line contains NULL byte" in str(e):
-            print("Null byte encountered, processing CSV.")
             row_list = process_csv(filepathCSV)
         else:
-            print(str(e))
             row_list = []
     except Exception as e:
-        print(str(e))
         row_list = []
     return row_list
 

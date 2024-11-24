@@ -8,7 +8,7 @@ namespace PythonTests.GeometryTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.Point2Class, "Point2Class should be loaded.");
+            Assert.That(PythonEngineManager.Point2Class, Is.Not.Null, "Point2Class should be loaded.");
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace PythonTests.GeometryTests
             // The expected JSON string
             string jsonString = "{\"x\": 0.0, \"y\": 0.0, \"json_ini\": null}";
 
-            Assert.AreEqual(jsonString, result);
+            Assert.That(jsonString, Is.EqualTo(result));
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace PythonTests.GeometryTests
             // The expected JSON string
             string jsonString = "{\"x\": 0.0, \"y\": 0.0, \"json_ini\": null}";
 
-            Assert.AreEqual(jsonString, result);
+            Assert.That(jsonString, Is.EqualTo(result));
         }
 
         [Test]
@@ -52,8 +52,8 @@ namespace PythonTests.GeometryTests
 
             dynamic point2Instance = PythonEngineManager.Point2Class(j: json);
 
-            Assert.AreEqual(5.0, point2Instance.x);
-            Assert.AreEqual(10.0, point2Instance.y);
+            Assert.That(5.0, Is.EqualTo(point2Instance.x));
+            Assert.That(10.0, Is.EqualTo(point2Instance.y));
         }
 
         [Test]
@@ -96,8 +96,8 @@ namespace PythonTests.GeometryTests
         public void Point2_WithNegativeCoordinates_ThrowsValueError()
         {
             var point = PythonEngineManager.Point2Class(x: -1.0, y: 0.0);
-            Assert.AreEqual(-1.0, point.x);
-            Assert.AreEqual(0.0, point.y);
+            Assert.That(-1.0, Is.EqualTo(point.x));
+            Assert.That(0.0, Is.EqualTo(point.y));
         }
 
         [Test]
@@ -105,8 +105,8 @@ namespace PythonTests.GeometryTests
         {
             var point = PythonEngineManager.Point2Class(x: 3.0, y: 4.0);
 
-            Assert.AreEqual(3.0, point.x);
-            Assert.AreEqual(4.0, point.y);
+            Assert.That(3.0, Is.EqualTo(point.x));
+            Assert.That(4.0, Is.EqualTo(point.y));
         }
     }
 }

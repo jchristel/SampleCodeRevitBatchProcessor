@@ -9,7 +9,7 @@ namespace PythonTests.DataTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataViewBaseClass, "DataTypeProperties should be loaded.");
+            Assert.That(PythonEngineManager.DataViewBaseClass, Is.Not.Null, "DataTypeProperties should be loaded.");
         }
 
         private dynamic CreateJson(object id)
@@ -25,8 +25,8 @@ namespace PythonTests.DataTests
             var dataView = PythonEngineManager.DataViewBaseClass("view_type");
 
             // Assert: Check if default values are set correctly
-            Assert.AreEqual("view_type", dataView.data_type, "Data type should be set to the given value.");
-            Assert.AreEqual(-1, dataView.id, "ID should default to -1.");
+            Assert.That("view_type", Is.EqualTo(dataView.data_type), "Data type should be set to the given value.");
+            Assert.That(-1, Is.EqualTo(dataView.id), "ID should default to -1.");
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace PythonTests.DataTests
             var dataView = PythonEngineManager.DataViewBaseClass("view_type", jsonString);
 
             // Assert: ID should be set from JSON
-            Assert.AreEqual(123, dataView.id, "ID should match the one provided in JSON.");
+            Assert.That(123, Is.EqualTo(dataView.id), "ID should match the one provided in JSON.");
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace PythonTests.DataTests
 
             // Act & Assert: Initialization should throw a TypeError
             var ex = Assert.Throws<TypeErrorException>(() => PythonEngineManager.DataViewBaseClass("view_type", jsonString));
-            StringAssert.Contains("Expected 'id' to be an int", ex.Message, "Expected TypeError for non-integer ID.");
+            Assert.That(ex.Message, Does.Contain("Expected 'id' to be an int"), "Expected TypeError for non-integer ID.");
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace PythonTests.DataTests
 
             // Act & Assert: Initialization should throw a TypeError
             var ex = Assert.Throws<TypeErrorException>(() => PythonEngineManager.DataViewBaseClass("view_type", invalidJson));
-            StringAssert.Contains("Argument j supplied must be of type string or type dictionary", ex.Message, "Expected TypeError for non-dictionary JSON.");
+            Assert.That(ex.Message, Does.Contain("Argument j supplied must be of type string or type dictionary"), "Expected TypeError for non-dictionary JSON.");
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace PythonTests.DataTests
             var dataView2 = PythonEngineManager.DataViewBaseClass("view_type", jsonString);
 
             // Assert: They should be equal
-            Assert.IsTrue(dataView1 == dataView2, "Operator == should return true for instances with the same ID.");
+            Assert.That(dataView1 == dataView2, Is.True, "Operator == should return true for instances with the same ID.");
         }
 
         [Test]
@@ -84,8 +84,8 @@ namespace PythonTests.DataTests
             var dataView2 = PythonEngineManager.DataViewBaseClass("view_type", CreateJson(456));
 
             // Assert: They should not be equal
-            Assert.IsFalse(dataView1.Equals(dataView2), "Instances with different IDs should not be equal.");
-            Assert.IsTrue(dataView1 != dataView2, "Operator != should return true for instances with different IDs.");
+            Assert.That(dataView1.Equals(dataView2), Is.False, "Instances with different IDs should not be equal.");
+            Assert.That(dataView1 != dataView2, Is.True, "Operator != should return true for instances with different IDs.");
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace PythonTests.DataTests
             var dataView = PythonEngineManager.DataViewBaseClass("view_type");
 
             // Act & Assert: Comparison should return false for different types
-            Assert.IsFalse(dataView.Equals(123), "Equality check should return false for different types.");
+            Assert.That(dataView.Equals(123), Is.False, "Equality check should return false for different types.");
         }
     }
 }

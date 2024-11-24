@@ -40,7 +40,7 @@ Script
 
 utilDataBVN.py
 
-- REVIT_FILES_DIRECTORY : root directory of revit family library to be processed
+- REVIT_FILES_DIRECTORY : root directory of Revit family library to be processed
 
 User
 ^^^^^^

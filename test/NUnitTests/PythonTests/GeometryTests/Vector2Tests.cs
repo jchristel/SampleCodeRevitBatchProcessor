@@ -9,7 +9,7 @@ namespace PythonTests.GeometryTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.Vector2Class, "Vector2Class should be loaded.");
+            Assert.That(PythonEngineManager.Vector2Class, Is.Not.Null, "Vector2Class should be loaded.");
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace PythonTests.GeometryTests
             // The expected JSON string
             string jsonString = "{\"components\": [0.0, 0.0], \"x\": 0.0, \"y\": 0.0}";
 
-            Assert.AreEqual(jsonString, result);
+            Assert.That(jsonString, Is.EqualTo(result));
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace PythonTests.GeometryTests
             // The expected JSON string
             string jsonString = "{\"components\": [0.0, 0.0], \"x\": 0.0, \"y\": 0.0}";
 
-            Assert.AreEqual(jsonString, result);
+            Assert.That(jsonString, Is.EqualTo(result));
         }
 
         [Test]
@@ -51,8 +51,8 @@ namespace PythonTests.GeometryTests
         {
             dynamic vector = PythonEngineManager.Vector2Class(3.0, 4.0);
            
-            Assert.AreEqual(3.0, vector.x);
-            Assert.AreEqual(4.0, vector.y);
+            Assert.That(3.0, Is.EqualTo(vector.x));
+            Assert.That(4.0, Is.EqualTo(vector.y));
         }
 
         [Test]
@@ -73,8 +73,8 @@ namespace PythonTests.GeometryTests
 
             var result = vector1 + vector2;
 
-            Assert.AreEqual(4.0, result.x);
-            Assert.AreEqual(6.0, result.y);
+            Assert.That(4.0, Is.EqualTo(result.x));
+            Assert.That(6.0, Is.EqualTo(result.y));
         }
 
         // Helper method to perform the addition
@@ -101,8 +101,8 @@ namespace PythonTests.GeometryTests
             var pythonList = new PythonList { 4.0, 5.0};
 
             var result = vector.__radd__(pythonList);
-            Assert.AreEqual(5.0, result.x);
-            Assert.AreEqual(7.0, result.y);
+            Assert.That(5.0, Is.EqualTo(result.x));
+            Assert.That(7.0, Is.EqualTo(result.y));
         }
 
         [Test]
@@ -113,8 +113,8 @@ namespace PythonTests.GeometryTests
             
             var result = vector1 - vector2;
 
-            Assert.AreEqual(3.0, result.x);
-            Assert.AreEqual(2.0, result.y);
+            Assert.That(3.0, Is.EqualTo(result.x));
+            Assert.That(2.0, Is.EqualTo(result.y));
         }
 
         // Helper method to perform the addition
@@ -139,8 +139,8 @@ namespace PythonTests.GeometryTests
             var pythonList = new PythonList { 4.0, 5.0};
             var result = vector.__rsub__(pythonList);
 
-            Assert.AreEqual(3.0, result.x);
-            Assert.AreEqual(3.0, result.y);
+            Assert.That(3.0, Is.EqualTo(result.x));
+            Assert.That(3.0, Is.EqualTo(result.y));
         }
 
         [Test]
@@ -149,8 +149,8 @@ namespace PythonTests.GeometryTests
             dynamic vector = PythonEngineManager.Vector2Class(2.0, 3.0);
             var result = vector * 2.0;
 
-            Assert.AreEqual(4.0, result.x);
-            Assert.AreEqual(6.0, result.y);
+            Assert.That(4.0, Is.EqualTo(result.x));
+            Assert.That(6.0, Is.EqualTo(result.y));
         }
 
         [Test]
@@ -159,8 +159,8 @@ namespace PythonTests.GeometryTests
             dynamic vector = PythonEngineManager.Vector2Class(6.0, 3.0);
             var result = vector / 3.0;
 
-            Assert.AreEqual(2.0, result.x);
-            Assert.AreEqual(1.0, result.y);
+            Assert.That(2.0, Is.EqualTo(result.x));
+            Assert.That(1.0, Is.EqualTo(result.y));
         }
 
         [Test]
@@ -170,7 +170,7 @@ namespace PythonTests.GeometryTests
             // Call the __str__ method directly
             var str = vector.__str__();
 
-            Assert.AreEqual("Vector2D(1.0, 2.0)", str);
+            Assert.That("Vector2D(1.0, 2.0)", Is.EqualTo(str));
         }
 
         [Test]
@@ -179,7 +179,7 @@ namespace PythonTests.GeometryTests
             dynamic vector = PythonEngineManager.Vector2Class(3.0, 4.0);
             var magnitude = vector.magnitude();
 
-            Assert.AreEqual(5.0, magnitude, 1e-9); // Using a tolerance for floating point comparison
+            Assert.That(5.0,Is.EqualTo( magnitude), "1e-9"); // Using a tolerance for floating point comparison
         }
 
         [Test]
@@ -188,8 +188,8 @@ namespace PythonTests.GeometryTests
             dynamic vector = PythonEngineManager.Vector2Class(2.0, 3.0);
             var result = vector * 2.0; // Testing __mul__
 
-            Assert.AreEqual(4.0, result.x);
-            Assert.AreEqual(6.0, result.y);
+            Assert.That(4.0, Is.EqualTo(result.x));
+            Assert.That(6.0, Is.EqualTo(result.y));
         }
 
         [Test]
@@ -198,8 +198,8 @@ namespace PythonTests.GeometryTests
             dynamic vector = PythonEngineManager.Vector2Class(2.0, 3.0);
             var result = vector.__rmul__(2.0);//2.0 * vector; // Testing __rmul__
 
-            Assert.AreEqual(4.0, result.x);
-            Assert.AreEqual(6.0, result.y);
+            Assert.That(4.0, Is.EqualTo(result.x));
+            Assert.That(6.0, Is.EqualTo(result.y));
         }
 
         [Test]
@@ -208,8 +208,8 @@ namespace PythonTests.GeometryTests
             dynamic vector = PythonEngineManager.Vector2Class(2.0, 3.0);
             var result = -vector; // Testing __neg__
 
-            Assert.AreEqual(-2.0, result.x);
-            Assert.AreEqual(-3.0, result.y);
+            Assert.That(-2.0, Is.EqualTo(result.x));
+            Assert.That(-3.0, Is.EqualTo(result.y));
         }
 
         [Test]
@@ -218,8 +218,8 @@ namespace PythonTests.GeometryTests
             dynamic vector = PythonEngineManager.Vector2Class(2.0, 3.0);
             var result = +vector; // Testing __pos__
 
-            Assert.AreEqual(2.0, result.x);
-            Assert.AreEqual(3.0, result.y);
+            Assert.That(2.0, Is.EqualTo(result.x));
+            Assert.That(3.0, Is.EqualTo(result.y));
         }
 
         [Test]
@@ -228,7 +228,7 @@ namespace PythonTests.GeometryTests
             dynamic vector = PythonEngineManager.Vector2Class(3.0, 4.0);
             var magnitude = vector.__abs__();// Math.Abs(vector); // Testing __abs__
 
-            Assert.AreEqual(5.0, magnitude, 1e-9); // Using a tolerance for floating point comparison
+            Assert.That(5.0, Is.EqualTo(magnitude), "1e-9"); // Using a tolerance for floating point comparison
         }
 
         [Test]
@@ -239,7 +239,7 @@ namespace PythonTests.GeometryTests
             dynamic vector2 = PythonEngineManager.Vector2Class(1.0, 2.0);
 
             // Act & Assert
-            Assert.IsTrue(vector1 == vector2, "Vector2 instances with the same components should be equal.");
+            Assert.That(vector1 == vector2, Is.True, "Vector2 instances with the same components should be equal.");
         }
 
         [Test]
@@ -250,7 +250,7 @@ namespace PythonTests.GeometryTests
             dynamic vector2 = PythonEngineManager.Vector2Class(3.0, 4.0);
 
             // Act & Assert
-            Assert.IsFalse(vector1 == vector2, "Vector2 instances with different components should not be equal.");
+            Assert.That(vector1 == vector2, Is.False, "Vector2 instances with different components should not be equal.");
         }
 
         [Test]
@@ -273,7 +273,7 @@ namespace PythonTests.GeometryTests
             dynamic vector2 = PythonEngineManager.Vector2Class(1.000000002, 2.000000001);
 
             // Act & Assert
-            Assert.IsTrue(vector1 == vector2, "Vector2 instances with components close to each other should be considered equal.");
+            Assert.That(vector1 == vector2, Is.True, "Vector2 instances with components close to each other should be considered equal.");
         }
     }
 }

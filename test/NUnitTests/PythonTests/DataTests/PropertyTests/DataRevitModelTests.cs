@@ -10,7 +10,7 @@ namespace PythonTests.DataTests.PropertyTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataRevitModelClass, "DataRevitModel should be loaded.");
+            Assert.That(PythonEngineManager.DataRevitModelClass, Is.Not.Null, "DataRevitModel should be loaded.");
         }
 
         // Helper method to create a JSON string for DataRevitModel initialization
@@ -29,7 +29,7 @@ namespace PythonTests.DataTests.PropertyTests
             var model = PythonEngineManager.DataRevitModelClass(jsonString);
 
             // Assert: verify the name is correctly set
-            Assert.AreEqual("TestModel", model.name, "Expected name to be 'TestModel'.");
+            Assert.That("TestModel", Is.EqualTo(model.name), "Expected name to be 'TestModel'.");
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace PythonTests.DataTests.PropertyTests
             var model = PythonEngineManager.DataRevitModelClass(jsonString);
 
             // Assert: name should use default value
-            Assert.AreEqual("-", model.name, "Expected default name of '-'.");
+            Assert.That("-", Is.EqualTo(model.name), "Expected default name of '-'.");
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace PythonTests.DataTests.PropertyTests
 
             // Act & Assert: expect initialization to throw an error
             var ex = Assert.Throws<ValueErrorException>(() => PythonEngineManager.DataRevitModelClass(jsonString));
-            StringAssert.Contains("name needs to be of type str", ex.Message);
+            Assert.That(ex.Message, Does.Contain("name needs to be of type str"));
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace PythonTests.DataTests.PropertyTests
 
             // Act & Assert: expect initialization to throw an error
             var ex = Assert.Throws<ValueErrorException>(() => PythonEngineManager.DataRevitModelClass(jsonString));
-            StringAssert.Contains("Expecting value:", ex.Message);
+            Assert.That(ex.Message, Does.Contain("Expecting value:"));
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace PythonTests.DataTests.PropertyTests
             var model = PythonEngineManager.DataRevitModelClass(jsonString);
 
             // Assert: verify the name is set as an empty string
-            Assert.AreEqual("", model.name, "Expected name to be an empty string.");
+            Assert.That("",Is.EqualTo( model.name), "Expected name to be an empty string.");
         }
 
         [Test]
@@ -89,8 +89,8 @@ namespace PythonTests.DataTests.PropertyTests
             var modelB = PythonEngineManager.DataRevitModelClass(jsonString);
 
             // Act & Assert: verify equality comparison
-            Assert.IsTrue(modelA == modelB, "Expected two instances with identical data to be equal.");
-            Assert.IsFalse(modelA != modelB, "Expected two instances with identical data not to be unequal.");
+            Assert.That(modelA == modelB, Is.True, "Expected two instances with identical data to be equal.");
+            Assert.That(modelA != modelB, Is.False, "Expected two instances with identical data not to be unequal.");
         }
 
         [Test]
@@ -103,8 +103,8 @@ namespace PythonTests.DataTests.PropertyTests
             var modelB = PythonEngineManager.DataRevitModelClass(jsonStringB);
 
             // Act & Assert: verify inequality
-            Assert.IsFalse(modelA == modelB, "Expected two instances with different names to not be equal.");
-            Assert.IsTrue(modelA != modelB, "Expected two instances with different names to be unequal.");
+            Assert.That(modelA == modelB, Is.False, "Expected two instances with different names to not be equal.");
+            Assert.That(modelA != modelB, Is.True, "Expected two instances with different names to be unequal.");
         }
 
         [Test]
@@ -115,8 +115,8 @@ namespace PythonTests.DataTests.PropertyTests
             var modelB = PythonEngineManager.DataRevitModelClass("{}");
 
             // Act & Assert: verify equality for instances with default names
-            Assert.IsTrue(modelA == modelB, "Expected two instances with default names to be equal.");
-            Assert.IsFalse(modelA != modelB, "Expected two instances with default names not to be unequal.");
+            Assert.That(modelA == modelB, Is.True, "Expected two instances with default names to be equal.");
+            Assert.That(modelA != modelB, Is.False, "Expected two instances with default names not to be unequal.");
         }
     }
 }

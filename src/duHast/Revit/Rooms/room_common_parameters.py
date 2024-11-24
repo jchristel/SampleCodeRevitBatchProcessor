@@ -111,6 +111,25 @@ def get_room_phase(rvt_doc, room):
     phase = encode_utf8(rPhase.get_phase_name_by_id(rvt_doc, phase_param))
     return phase
 
+def get_room_phase_object(rvt_doc, room):
+    """
+    Get the revit phase object of the room
+    :param rvt_doc: The document to get the room from
+    :type rvt_doc: Document
+    :param room: The room to get the phase of
+    :type room: Room
+    :return: The phase of the room
+    :rtype: str
+    """
+    phase_param = get_built_in_parameter_value(
+        room,
+        BuiltInParameter.ROOM_PHASE,
+        rParaGet.get_parameter_value_as_element_id,
+    )
+
+    phase_object = rvt_doc.GetElement(phase_param)
+    return phase_object
+
 
 def get_room_level(rvt_doc, room):
     """

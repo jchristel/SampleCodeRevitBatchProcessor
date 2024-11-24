@@ -30,11 +30,11 @@ This flow is run through a powershell script which executes:
         #. Saves file under a new file name
     #. Delete any links from the model ( Optional )
     #. Workset checking and, if required adjusting, of of worksets of levels / grids / scope boxes / reference planes
-    #. Create a text file for each new revit file containing meta data for received models tracker in post process
+    #. Create a text file for each new Revit file containing meta data for received models tracker in post process
 
 #. A post process which:
     #. Updates file recievd list with latest files received information.
-    #. Checks revit batch processor log files for any exceptions
+    #. Checks Revit batch processor log files for any exceptions
 
 
 Setup
@@ -117,7 +117,7 @@ The python and powershell scripts of the flow:
 - file_data.csv
 
     - Revit project meta data file:
-        - This is a comma separated text files which contains meta data of the revit files to be processed in the following format:
+        - This is a comma separated text files which contains meta data of the Revit files to be processed in the following format:
         - header row: yes
         - column 1: The beginning of the file name as received 
         - column 2: The new file name to be used for the file

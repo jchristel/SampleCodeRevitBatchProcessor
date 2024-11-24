@@ -15,6 +15,17 @@ namespace PythonTests
 
             try
             {
+                //Utilities classes
+                PythonEngineManager.BaseClass = scope.GetVariable("Base");
+                PythonEngineManager.BOMValueClass = scope.GetVariable("BOMValue");
+                PythonEngineManager.LoggerObjectClass = scope.GetVariable("LoggerObject");
+                PythonEngineManager.ResultClass = scope.GetVariable("Result");
+                PythonEngineManager.TimerClass = scope.GetVariable("Timer");
+
+                //Utility modules
+                engine.Execute("import duHast.Utilities.files_combine as files_combine", scope);
+                PythonEngineManager.FileCombineModule = scope.GetVariable("files_combine");
+
                 // geometry classes
                 PythonEngineManager.BoundingBoxBaseClass = scope.GetVariable("BoundingBoxBase");
                 PythonEngineManager.BoundingBox2Class = scope.GetVariable("BoundingBox2");
@@ -52,6 +63,8 @@ namespace PythonTests
                 PythonEngineManager.DataPropertyNamesClass = scope.GetVariable("DataPropertyNames");
                 PythonEngineManager.DataRevitModelClass = scope.GetVariable("DataRevitModel");
                 PythonEngineManager.DataScheduleSegmentClass = scope.GetVariable("DataScheduleSegment");
+                PythonEngineManager.DataSheetSizeClass = scope.GetVariable("DataSheetSize");
+                PythonEngineManager.DataSheetSizeNamesClass = scope.GetVariable("DataSheetSizeNames");
                 PythonEngineManager.DataTypePropertiesClass = scope.GetVariable("DataTypeProperties");
                 PythonEngineManager.DataPropertyClass = scope.GetVariable("DataProperty");
                 PythonEngineManager.DataViewPortTypeNames = scope.GetVariable("DataViewPortTypeNames");
@@ -67,8 +80,8 @@ namespace PythonTests
                 Console.WriteLine("Error: Python class not found in scope - " + ex.Message);
                 throw;
             }
-        
-    }
+
+        }
 
         [OneTimeTearDown]
         public void GlobalTeardown()

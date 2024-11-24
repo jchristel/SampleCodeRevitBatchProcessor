@@ -61,14 +61,14 @@ class DataReadFamiliesWarningsReport(test.Test):
                 "FamilyWarningsCombinedReport_empty_file.csv":(False,0,[]),
                 "FamilyWarningsCombinedReport_empty.csv":(False,0,[]),
                 "FamilyWarningsCombinedReport_multiple.csv":(True,5,[
-                    ["Warnings","Sample_Family_Eight","Furniture Systems","Sample_Family_Eight",r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa","No warnings present in family.","","None","None"],
+                    ["Warnings","Sample_Family_Eight","Furniture Systems","Sample_Family_Eight",r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files\combined\Furniture Systems\Sample_Family_Eight.rfa","No warnings present in family.","","None","None"],
                     ["Warnings","Sample_Family_Eight :: Sample_Family_Thirteen","Furniture Systems :: Section Marks","Sample_Family_Thirteen","-","No warnings present in family.","","None","None"],
-                    ["Warnings","Sample_Family_Ten","Generic Annotations","Sample_Family_Ten",r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Generic Annotations\Sample_Family_Ten.rfa","No warnings present in family.","","None","None"],
-                    ["Warnings","Sample_Family_Six","Specialty Equipment","Sample_Family_Six",r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\Sample_Family_Six.rfa","No warnings present in family.","","None","None"],
+                    ["Warnings","Sample_Family_Ten","Generic Annotations","Sample_Family_Ten",r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files\combined\Generic Annotations\Sample_Family_Ten.rfa","No warnings present in family.","","None","None"],
+                    ["Warnings","Sample_Family_Six","Specialty Equipment","Sample_Family_Six",r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files\Sample_Family_Six.rfa","No warnings present in family.","","None","None"],
                     ["Warnings","Sample_Family_Six :: Sample_Family_Thirteen","Specialty Equipment :: Section Marks","Sample_Family_Thirteen","-","No warnings present in family.","","None","None"],
                 ]),
                 "FamilyWarningsCombinedReport_single.csv":(True,1,[
-                    ["Warnings","Sample_Family_Eight","Furniture Systems","Sample_Family_Eight",r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa","No warnings present in family.","","None","None"],
+                    ["Warnings","Sample_Family_Eight","Furniture Systems","Sample_Family_Eight",r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files\combined\Furniture Systems\Sample_Family_Eight.rfa","No warnings present in family.","","None","None"],
                 ]),
             }
 

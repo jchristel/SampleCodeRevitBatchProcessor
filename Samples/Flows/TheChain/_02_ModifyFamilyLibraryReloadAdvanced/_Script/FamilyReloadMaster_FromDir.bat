@@ -36,7 +36,7 @@ set "_taskSplitter=%_rootFolderPath%_Script\Pre_TaskFileListBuilder.py"
 :: batch file which processes single overall task list once it is split into work chunks 
 set _batchReloadScript="%_rootFolderPath%_Script\Modify.LibraryFamilyReload.ALL_4Parallel.generic.bat"
 :: default path for python installation
-set _pythonPath="C:\Program Files (x86)%\IronPython 2.7\ipy64.exe"
+set _pythonPath="C:\Program Files\IronPython 3.4\ipy.exe"
 
 : debug toggle
 set toggleDebug=0

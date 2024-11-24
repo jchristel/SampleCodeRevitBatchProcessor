@@ -101,6 +101,15 @@ class BoundingBoxBase(Base):
     def contains(self, point):
         raise NotImplementedError("Subclasses should implement this method")
 
+    def width(self):
+        raise NotImplementedError("Subclasses should implement this method")
+
+    def depth(self):
+        raise NotImplementedError("Subclasses should implement this method")
+    
+    def ratio(self):
+        raise NotImplementedError("Subclasses should implement this method")
+        
     def __str__(self):
         return "BoundingBoxBase({}, {}, {}, {})".format(
             self.min_x, self.min_y, self.max_x, self.max_y

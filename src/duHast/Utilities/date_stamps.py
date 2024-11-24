@@ -58,6 +58,9 @@ FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC = "%Y_%m_%d_%H_%M_%S"
 #: time stamp using colons: 18:59:59
 TIME_STAMP_HHMMSEC_COLON = "%H:%M:%S"
 
+#: time stamp using colons: 18_59_59
+TIME_STAMP_HHMMSEC_UNDERSCORE = "%H_%M_%S"
+
 
 def get_file_date_stamp(format=FILE_DATE_STAMP_YY_MM_DD):
     """

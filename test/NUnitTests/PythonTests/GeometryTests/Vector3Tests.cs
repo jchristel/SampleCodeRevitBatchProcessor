@@ -17,7 +17,7 @@ namespace PythonTests.GeometryTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.Vector3Class, "Vector3Class should be loaded.");
+            Assert.That(PythonEngineManager.Vector3Class, Is.Not.Null, "Vector3Class should be loaded.");
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace PythonTests.GeometryTests
             // The expected JSON string
             string jsonString = "{\"components\": [0.0, 0.0, 0.0], \"x\": 0.0, \"y\": 0.0, \"z\": 0.0}";
 
-            Assert.AreEqual(jsonString, result);
+            Assert.That(jsonString, Is.EqualTo(result));
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace PythonTests.GeometryTests
             // The expected JSON string
             string jsonString = "{\"components\": [0.0, 0.0, 0.0], \"x\": 0.0, \"y\": 0.0, \"z\": 0.0}";
 
-            Assert.AreEqual(jsonString, result);
+            Assert.That(jsonString, Is.EqualTo(result));
         }
 
         [Test]
@@ -59,9 +59,9 @@ namespace PythonTests.GeometryTests
         {
             dynamic vector = PythonEngineManager.Vector3Class(3.0, 4.0, 5.0);
            
-            Assert.AreEqual(3.0, vector.x);
-            Assert.AreEqual(4.0, vector.y);
-            Assert.AreEqual(5.0, vector.z);
+            Assert.That(3.0, Is.EqualTo(vector.x));
+            Assert.That(4.0, Is.EqualTo(vector.y));
+            Assert.That(5.0, Is.EqualTo(vector.z));
         }
 
         [Test]
@@ -81,9 +81,9 @@ namespace PythonTests.GeometryTests
             dynamic vectorB = PythonEngineManager.Vector3Class(4.0, 5.0, 6.0);
             dynamic result = vectorA + vectorB;
 
-            Assert.AreEqual(5.0, result.x);
-            Assert.AreEqual(7.0, result.y);
-            Assert.AreEqual(9.0, result.z);
+            Assert.That(5.0, Is.EqualTo(result.x));
+            Assert.That(7.0, Is.EqualTo(result.y));
+            Assert.That(9.0, Is.EqualTo(result.z));
         }
 
 
@@ -112,9 +112,9 @@ namespace PythonTests.GeometryTests
 
             // var result = new double[] { 4.0, 5.0, 6.0 } + vector;
             var result = vector.__radd__(pythonList);
-            Assert.AreEqual(5.0, result.x);
-            Assert.AreEqual(7.0, result.y);
-            Assert.AreEqual(9.0, result.z);
+            Assert.That(5.0, Is.EqualTo(result.x));
+            Assert.That(7.0, Is.EqualTo(result.y));
+            Assert.That(9.0, Is.EqualTo(result.z));
         }
 
         [Test]
@@ -124,9 +124,9 @@ namespace PythonTests.GeometryTests
             dynamic vectorB = PythonEngineManager.Vector3Class(1.0, 2.0, 3.0);
             dynamic result = vectorA - vectorB;
 
-            Assert.AreEqual(3.0, result.x);
-            Assert.AreEqual(3.0, result.y);
-            Assert.AreEqual(3.0, result.z);
+            Assert.That(3.0, Is.EqualTo(result.x));
+            Assert.That(3.0, Is.EqualTo(result.y));
+            Assert.That(3.0, Is.EqualTo(result.z));
         }
 
         [Test]
@@ -136,9 +136,9 @@ namespace PythonTests.GeometryTests
             var pythonList = new PythonList { 4.0, 5.0, 6.0 };
             var result = vector.__rsub__(pythonList);
 
-            Assert.AreEqual(3.0, result.x);
-            Assert.AreEqual(3.0, result.y);
-            Assert.AreEqual(3.0, result.z);
+            Assert.That(3.0, Is.EqualTo(result.x));
+            Assert.That(3.0, Is.EqualTo(result.y));
+            Assert.That(3.0, Is.EqualTo(result.z));
         }
 
         [Test]
@@ -151,9 +151,9 @@ namespace PythonTests.GeometryTests
             dynamic negatedVector = -vector;
 
             // Assert
-            Assert.AreEqual(-1.0, negatedVector.x);
-            Assert.AreEqual(2.0, negatedVector.y);
-            Assert.AreEqual(-3.0, negatedVector.z);
+            Assert.That(-1.0, Is.EqualTo(negatedVector.x));
+            Assert.That(2.0, Is.EqualTo(negatedVector.y));
+            Assert.That(-3.0, Is.EqualTo(negatedVector.z));
         }
 
         [Test]
@@ -162,9 +162,9 @@ namespace PythonTests.GeometryTests
             dynamic vector = PythonEngineManager.Vector3Class(1.0, 2.0, 3.0);
             dynamic result = vector * 2.0;
 
-            Assert.AreEqual(2.0, result.x);
-            Assert.AreEqual(4.0, result.y);
-            Assert.AreEqual(6.0, result.z);
+            Assert.That(2.0, Is.EqualTo(result.x));
+            Assert.That(4.0, Is.EqualTo(result.y));
+            Assert.That(6.0, Is.EqualTo(result.z));
         }
 
         [Test]
@@ -173,9 +173,9 @@ namespace PythonTests.GeometryTests
             dynamic vector = PythonEngineManager.Vector3Class(2.0, 4.0, 6.0);
             dynamic result = vector / 2.0;
 
-            Assert.AreEqual(1.0, result.x);
-            Assert.AreEqual(2.0, result.y);
-            Assert.AreEqual(3.0, result.z);
+            Assert.That(1.0, Is.EqualTo(result.x));
+            Assert.That(2.0, Is.EqualTo(result.y));
+            Assert.That(3.0, Is.EqualTo(result.z));
         }
 
         [Test]
@@ -194,7 +194,7 @@ namespace PythonTests.GeometryTests
             dynamic vector2 = PythonEngineManager.Vector3Class(1.0, 2.0, 3.0);
 
             // Act & Assert
-            Assert.IsTrue(vector1 == vector2, "Vector3 instances with the same components should be equal.");
+            Assert.That(vector1 == vector2, Is.True, "Vector3 instances with the same components should be equal.");
         }
 
         [Test]
@@ -205,7 +205,7 @@ namespace PythonTests.GeometryTests
             dynamic vector2 = PythonEngineManager.Vector3Class(4.0, 5.0, 6.0);
 
             // Act & Assert
-            Assert.IsFalse(vector1 == vector2, "Vector3 instances with different components should not be equal.");
+            Assert.That(vector1 == vector2, Is.False, "Vector3 instances with different components should not be equal.");
         }
 
         [Test]
@@ -228,7 +228,7 @@ namespace PythonTests.GeometryTests
             dynamic vector2 = PythonEngineManager.Vector3Class(1.000000002, 2.000000001, 3.000000002);
 
             // Act & Assert
-            Assert.IsTrue(vector1 == vector2, "Vector3 instances with components close to each other should be considered equal.");
+            Assert.That(vector1 == vector2, Is.True, "Vector3 instances with components close to each other should be considered equal.");
         }
 
     }

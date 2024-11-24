@@ -11,9 +11,9 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataGeometryBaseClass, "DataGeometryBase should be loaded.");
-            Assert.IsNotNull(PythonEngineManager.Point3Class, "Point3Class should be loaded.");
-            Assert.IsNotNull(PythonEngineManager.MatrixClass, "MatrixClass should be loaded.");
+            Assert.That(PythonEngineManager.DataGeometryBaseClass, Is.Not.Null, "DataGeometryBase should be loaded.");
+            Assert.That(PythonEngineManager.Point3Class, Is.Not.Null, "Point3Class should be loaded.");
+            Assert.That(PythonEngineManager.MatrixClass, Is.Not.Null, "MatrixClass should be loaded.");
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             dynamic instance = PythonEngineManager.DataGeometryBaseClass(dataType);
 
             // Assert
-            Assert.AreEqual(dataType, instance.DataType);
+            Assert.That(dataType,Is.EqualTo( instance.DataType));
         }
 
         [Test]
@@ -39,14 +39,14 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             dynamic instance = PythonEngineManager.DataGeometryBaseClass(dataType);
 
             // Assert
-            Assert.IsInstanceOf(PythonEngineManager.Point3Class, instance.translation_coord);
-            Assert.AreEqual(0.0, instance.translation_coord.x);
-            Assert.AreEqual(0.0, instance.translation_coord.y);
-            Assert.AreEqual(0.0, instance.translation_coord.z);
+            Assert.That(instance.translation_coord, Is.InstanceOf(PythonEngineManager.Point3Class));
+            Assert.That(0.0, Is.EqualTo(instance.translation_coord.x));
+            Assert.That(0.0, Is.EqualTo(instance.translation_coord.y));
+            Assert.That(0.0, Is.EqualTo(instance.translation_coord.z));
 
-            Assert.IsInstanceOf(PythonEngineManager.MatrixClass, instance.rotation_coord);
-            Assert.AreEqual(3, instance.rotation_coord.rows);
-            Assert.AreEqual(3, instance.rotation_coord.columns);
+            Assert.That(instance.rotation_coord, Is.InstanceOf(PythonEngineManager.MatrixClass));
+            Assert.That(3, Is.EqualTo(instance.rotation_coord.rows));
+            Assert.That(3, Is.EqualTo(instance.rotation_coord.columns));
         }
 
         [Test]
@@ -68,11 +68,11 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             Console.WriteLine(instance.to_json());
 
             // Act & Assert
-            Assert.AreEqual(1.1, instance.translation_coord.x);
-            Assert.AreEqual(2.2, instance.translation_coord.y);
-            Assert.AreEqual(3.3, instance.translation_coord.z);
-            Assert.AreEqual(3, instance.rotation_coord.rows);
-            Assert.AreEqual(3, instance.rotation_coord.columns);
+            Assert.That(1.1, Is.EqualTo(instance.translation_coord.x));
+            Assert.That(2.2, Is.EqualTo(instance.translation_coord.y));
+            Assert.That(3.3, Is.EqualTo(instance.translation_coord.z));
+            Assert.That(3, Is.EqualTo(instance.rotation_coord.rows));
+            Assert.That(3, Is.EqualTo(instance.rotation_coord.columns));
         }
 
         [Test]
@@ -95,8 +95,8 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             dynamic instance = PythonEngineManager.DataGeometryBaseClass(dataType, null);
 
             // Assert
-            Assert.IsInstanceOf(PythonEngineManager.Point3Class, instance.translation_coord);
-            Assert.IsInstanceOf(PythonEngineManager.MatrixClass, instance.rotation_coord);
+            Assert.That(instance.translation_coord, Is.InstanceOf(PythonEngineManager.Point3Class));
+            Assert.That(instance.rotation_coord, Is.InstanceOf(PythonEngineManager.MatrixClass));
         }
 
         [Test]
@@ -121,7 +121,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             var dataGeometryB = PythonEngineManager.DataGeometryBaseClass("geometry_type", jsonString);
 
             // Assert that the two instances are equal
-            Assert.IsTrue(dataGeometryA == dataGeometryB, "Expected equal instances to return true.");
+            Assert.That(dataGeometryA == dataGeometryB, Is.True, "Expected equal instances to return true.");
         }
 
         [Test]
@@ -160,7 +160,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             var dataGeometryB = PythonEngineManager.DataGeometryBaseClass("geometry_type", jsonStringB);
 
             // Assert that the two instances are not equal
-            Assert.IsFalse(dataGeometryA == dataGeometryB, "Expected unequal instances to return false.");
+            Assert.That(dataGeometryA == dataGeometryB, Is.False, "Expected unequal instances to return false.");
         }
 
         [Test]
@@ -195,7 +195,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             var dataGeometryB = PythonEngineManager.DataGeometryBaseClass("geometry_type", jsonStringB);
 
             // Assert that the two instances are not equal due to different rotation coordinates
-            Assert.IsFalse(dataGeometryA == dataGeometryB, "Expected instances with different rotations to be unequal.");
+            Assert.That(dataGeometryA == dataGeometryB, Is.False, "Expected instances with different rotations to be unequal.");
         }
 
         [Test]
@@ -217,7 +217,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             var dataGeometry = PythonEngineManager.DataGeometryBaseClass("geometry_type", jsonString);
 
             // Assert that the instance is not equal to null
-            Assert.IsFalse(dataGeometry == null, "Expected instance comparison with null to be false.");
+            Assert.That(dataGeometry == null, Is.False, "Expected instance comparison with null to be false.");
         }
     }
 }

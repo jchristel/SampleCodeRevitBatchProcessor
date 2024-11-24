@@ -9,8 +9,66 @@ namespace PythonTests.GeometryTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.BoundingBox2Class, "BoundingBox2 should be loaded.");
-            Assert.IsNotNull(PythonEngineManager.Point2Class, "Point2Class should be loaded.");
+            Assert.That(PythonEngineManager.BoundingBox2Class, Is.Not.Null, "BoundingBox2 should be loaded.");
+            Assert.That(PythonEngineManager.Point2Class, Is.Not.Null, "Point2Class should be loaded.");
+        }
+
+        [Test]
+        public void Bbox2_Width_ShouldReturnCorrectValue()
+        {
+            // Arrange
+            dynamic point1 = PythonEngineManager.Point2Class(1.0, 2.0);
+            dynamic point2 = PythonEngineManager.Point2Class(4.0, 6.0);
+            dynamic bbox = PythonEngineManager.BoundingBox2Class(point1, point2);
+
+            // Act
+            double width = bbox.width();
+
+            // Assert
+            Assert.That(width, Is.EqualTo(3.0), "Expected width to be 3.0.");
+        }
+
+        [Test]
+        public void Bbox2_Depth_ShouldReturnCorrectValue()
+        {
+            // Arrange
+            dynamic point1 = PythonEngineManager.Point2Class(1.0, 2.0);
+            dynamic point2 = PythonEngineManager.Point2Class(4.0, 6.0);
+            dynamic bbox = PythonEngineManager.BoundingBox2Class(point1, point2);
+
+            // Act
+            double depth = bbox.depth();
+
+            // Assert
+            Assert.That(depth, Is.EqualTo(4.0), "Expected depth to be 4.0.");
+        }
+
+        [Test]
+        public void Bbox2_Ratio_ShouldReturnCorrectValue()
+        {
+            // Arrange
+            dynamic point1 = PythonEngineManager.Point2Class(1.0, 2.0);
+            dynamic point2 = PythonEngineManager.Point2Class(5.0, 4.0);
+            dynamic bbox = PythonEngineManager.BoundingBox2Class(point1, point2);
+
+            // Act
+            double ratio = bbox.ratio();
+
+            // Assert
+            Assert.That(ratio, Is.EqualTo(2.0), "Expected ratio to be 2.0.");
+        }
+
+        [Test]
+        public void Bbox2_Ratio_WithZeroDepth_ShouldThrowValueError()
+        {
+            // Arrange
+            dynamic point1 = PythonEngineManager.Point2Class(1.0, 2.0);
+            dynamic point2 = PythonEngineManager.Point2Class(5.0, 2.0); // Zero depth
+            dynamic bbox = PythonEngineManager.BoundingBox2Class(point1, point2);
+
+            // Act & Assert
+            var ex = Assert.Throws<ValueErrorException>(() => bbox.ratio());
+            Assert.That(ex.Message, Does.Contain("division by 0.0 is not allowed"));
         }
 
         [Test]
@@ -31,7 +89,7 @@ namespace PythonTests.GeometryTests
             // The expected JSON string
             string jsonString = "{\"json_ini\": null, \"max_x\": 3.0, \"max_y\": 4.0, \"min_x\": 1.0, \"min_y\": 2.0}";
 
-            Assert.AreEqual(jsonString, result);
+            Assert.That(jsonString, Is.EqualTo(result));
         }
 
         [Test]
@@ -52,7 +110,7 @@ namespace PythonTests.GeometryTests
             // The expected JSON string
             string jsonString = "{\"json_ini\": null, \"max_x\": 3.0, \"max_y\": 4.0, \"min_x\": 1.0, \"min_y\": 2.0}";
 
-            Assert.AreEqual(jsonString, result);
+            Assert.That(jsonString, Is.EqualTo(result));
         }
 
         [Test]
@@ -65,10 +123,10 @@ namespace PythonTests.GeometryTests
             // Initialize bounding box with points
             dynamic bbox = PythonEngineManager.BoundingBox2Class(point1, point2);
 
-            Assert.AreEqual(1.0, bbox.min_x);
-            Assert.AreEqual(2.0, bbox.min_y);
-            Assert.AreEqual(3.0, bbox.max_x);
-            Assert.AreEqual(4.0, bbox.max_y);
+            Assert.That(1.0, Is.EqualTo(bbox.min_x));
+            Assert.That(2.0, Is.EqualTo(bbox.min_y));
+            Assert.That(3.0, Is.EqualTo(bbox.max_x));
+            Assert.That(4.0, Is.EqualTo(bbox.max_y));
         }
 
         [Test]
@@ -80,10 +138,10 @@ namespace PythonTests.GeometryTests
             // Initialize bounding box with JSON
             dynamic bbox = PythonEngineManager.BoundingBox2Class(j: json);
 
-            Assert.AreEqual(1.1, bbox.min_x);
-            Assert.AreEqual(2.2, bbox.min_y);
-            Assert.AreEqual(3.3, bbox.max_x);
-            Assert.AreEqual(4.4, bbox.max_y);
+            Assert.That(1.1, Is.EqualTo(bbox.min_x));
+            Assert.That(2.2, Is.EqualTo(bbox.min_y));
+            Assert.That(3.3, Is.EqualTo(bbox.max_x));
+            Assert.That(4.4, Is.EqualTo(bbox.max_y));
         }
 
         [Test]
@@ -97,10 +155,10 @@ namespace PythonTests.GeometryTests
             dynamic newPoint2 = PythonEngineManager.Point2Class(3.0, 3.0);
             bbox.update(newPoint1, newPoint2);
 
-            Assert.AreEqual(0.0, bbox.min_x);
-            Assert.AreEqual(0.0, bbox.min_y);
-            Assert.AreEqual(3.0, bbox.max_x);
-            Assert.AreEqual(3.0, bbox.max_y);
+            Assert.That(0.0, Is.EqualTo(bbox.min_x));
+            Assert.That(0.0, Is.EqualTo(bbox.min_y));
+            Assert.That(3.0, Is.EqualTo(bbox.max_x));
+            Assert.That(3.0, Is.EqualTo(bbox.max_y));
         }
 
         [Test]
@@ -111,7 +169,7 @@ namespace PythonTests.GeometryTests
             dynamic bbox = PythonEngineManager.BoundingBox2Class(point1, point2);
 
             dynamic insidePoint = PythonEngineManager.Point2Class(2.0, 2.0);
-            Assert.IsTrue(bbox.contains(insidePoint));
+            Assert.That(bbox.contains(insidePoint), Is.True);
         }
 
         [Test]
@@ -122,7 +180,7 @@ namespace PythonTests.GeometryTests
             dynamic bbox = PythonEngineManager.BoundingBox2Class(point1, point2);
 
             dynamic outsidePoint = PythonEngineManager.Point2Class(4.0, 4.0);
-            Assert.IsFalse(bbox.contains(outsidePoint));
+            Assert.That(bbox.contains(outsidePoint), Is.False);
         }
 
         [Test]
@@ -138,10 +196,10 @@ namespace PythonTests.GeometryTests
         public void Bbox2_Initialize_WithMissingPoints_ShouldInitialiseDefault()
         {
             dynamic bbox = PythonEngineManager.BoundingBox2Class(null, null);
-            Assert.AreEqual(0.0, bbox.min_x);
-            Assert.AreEqual(0.0, bbox.min_y);
-            Assert.AreEqual(0.0, bbox.max_x);
-            Assert.AreEqual(0.0, bbox.max_y);
+            Assert.That(0.0, Is.EqualTo(bbox.min_x));
+            Assert.That(0.0, Is.EqualTo(bbox.min_y));
+            Assert.That(0.0, Is.EqualTo(bbox.max_x));
+            Assert.That(0.0, Is.EqualTo(bbox.max_y));
 
         }
 
@@ -166,7 +224,7 @@ namespace PythonTests.GeometryTests
             // Call the __str__ method directly
             var str = bbox.__str__();
 
-            Assert.AreEqual("BoundingBox2D(1.0, 1.0, 2.0, 2.0)", str);
+            Assert.That("BoundingBox2D(1.0, 1.0, 2.0, 2.0)", Is.EqualTo(str));
         }
 
         [Test]
@@ -179,7 +237,7 @@ namespace PythonTests.GeometryTests
             dynamic _boundingBox2 = PythonEngineManager.BoundingBox2Class(point1, point2);
             
 
-            Assert.IsTrue(_boundingBox1 == _boundingBox2, "Expected equal bounding boxes to return true.");
+            Assert.That(_boundingBox1 == _boundingBox2, Is.True, "Expected equal bounding boxes to return true.");
         }
 
         [Test]
@@ -194,7 +252,7 @@ namespace PythonTests.GeometryTests
             dynamic _boundingBox3 = PythonEngineManager.BoundingBox2Class(point3, point4);
            
 
-            Assert.IsTrue(_boundingBox1 != _boundingBox3, "Expected different bounding boxes to return true.");
+            Assert.That(_boundingBox1 != _boundingBox3, Is.True, "Expected different bounding boxes to return true.");
         }
 
         [Test]
@@ -207,7 +265,7 @@ namespace PythonTests.GeometryTests
             // Initialize bounding box
             dynamic _boundingBox1 = PythonEngineManager.BoundingBox2Class(point1, point2);
 
-            Assert.IsFalse(_boundingBox1 == differentType, "Expected different bounding boxes to return false.");
+            Assert.That(_boundingBox1 == differentType, Is.False, "Expected different bounding boxes to return false.");
         }
     }
 }

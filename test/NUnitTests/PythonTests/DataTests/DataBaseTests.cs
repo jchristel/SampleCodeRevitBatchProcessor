@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using IronPython.Runtime.Exceptions;
+﻿using IronPython.Runtime.Exceptions;
 using PythonTests.Setup;
-using Newtonsoft.Json;
 
 namespace PythonTests.DataTests
 {
@@ -13,7 +9,7 @@ namespace PythonTests.DataTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataBaseClass, "DataTypeProperties should be loaded.");
+            Assert.That(PythonEngineManager.DataBaseClass, Is.Not.Null, "DataTypeProperties should be loaded."); // Change IsNotNull to NotNull
         }
 
 
@@ -25,9 +21,9 @@ namespace PythonTests.DataTests
 
             // Act
             dynamic instance = PythonEngineManager.DataBaseClass(dataType);
-            
+
             // Assert
-            Assert.AreEqual(dataType, instance.DataType);
+            Assert.That(dataType,Is.EqualTo( instance.DataType));
         }
 
         [Test]
@@ -54,14 +50,14 @@ namespace PythonTests.DataTests
             dynamic instance = PythonEngineManager.DataBaseClass(dataType);
 
             // Assert
-            Assert.AreEqual(dataType, instance.DataType);
+            Assert.That(dataType, Is.EqualTo(instance.DataType));
         }
 
         [Test]
         public void Constructor_WithNullDataType_ShouldThrowTypeError()
         {
             // Act & Assert
-            var ex=Assert.Throws<TypeErrorException>(() => PythonEngineManager.DataBaseClass(null));
+            var ex = Assert.Throws<TypeErrorException>(() => PythonEngineManager.DataBaseClass(null));
             Assert.That(ex.Message, Does.Contain("data_type must be a string, got"));
         }
     }

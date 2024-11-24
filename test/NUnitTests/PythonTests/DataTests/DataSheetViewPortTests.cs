@@ -90,7 +90,7 @@ namespace PythonTests.DataTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataSheetViewPortClass, "DataTypeProperties should be loaded.");
+            Assert.That(PythonEngineManager.DataSheetViewPortClass, Is.Not.Null,"DataTypeProperties should be loaded.");
         }
 
         [Test]
@@ -100,22 +100,22 @@ namespace PythonTests.DataTests
             var dataSheetViewPort = PythonEngineManager.DataSheetViewPortClass(validJsonString);
 
             // Assert
-            Assert.AreEqual("sheet view port", dataSheetViewPort.data_type);
-            Assert.AreEqual(1001, dataSheetViewPort.view_id);
-            Assert.AreEqual(PythonEngineManager.DataViewPortTypeNames.THREE_D, dataSheetViewPort.vp_type);
-            Assert.IsNotNull(dataSheetViewPort.bounding_box);
-            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.min_x);
-            Assert.AreEqual(10.0, dataSheetViewPort.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.min_y);
-            Assert.AreEqual(10.0, dataSheetViewPort.bounding_box.max_y);
-            Assert.AreEqual(5.0, dataSheetViewPort.centre_point.x);
-            Assert.AreEqual(5.0, dataSheetViewPort.centre_point.y);
+            Assert.That("sheet view port", Is.EqualTo(dataSheetViewPort.data_type));
+            Assert.That(1001, Is.EqualTo(dataSheetViewPort.view_id));
+            Assert.That(PythonEngineManager.DataViewPortTypeNames.THREE_D, Is.EqualTo(dataSheetViewPort.vp_type));
+            Assert.That(dataSheetViewPort.bounding_box, Is.Not.Null);
+            Assert.That(0.0, Is.EqualTo(dataSheetViewPort.bounding_box.min_x));
+            Assert.That(10.0, Is.EqualTo(dataSheetViewPort.bounding_box.max_x));
+            Assert.That(0.0, Is.EqualTo(dataSheetViewPort.bounding_box.min_y));
+            Assert.That(10.0, Is.EqualTo(dataSheetViewPort.bounding_box.max_y));
+            Assert.That(5.0, Is.EqualTo(dataSheetViewPort.centre_point.x));
+            Assert.That(5.0, Is.EqualTo(dataSheetViewPort.centre_point.y));
 
 
-            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.min_x);
-            Assert.AreEqual(10.0, dataSheetViewPort.view.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.min_y);
-            Assert.AreEqual(10.0, dataSheetViewPort.view.bounding_box.max_y);
+            Assert.That(0.0, Is.EqualTo(dataSheetViewPort.view.bounding_box.min_x));
+            Assert.That(10.0, Is.EqualTo(dataSheetViewPort.view.bounding_box.max_x));
+            Assert.That(0.0, Is.EqualTo(dataSheetViewPort.view.bounding_box.min_y));
+            Assert.That(10.0, Is.EqualTo(dataSheetViewPort.view.bounding_box.max_y));
         }
 
         [Test]
@@ -136,23 +136,23 @@ namespace PythonTests.DataTests
             var dataSheetViewPort = PythonEngineManager.DataSheetViewPortClass();
 
             // Assert
-            Assert.AreEqual("sheet view port", dataSheetViewPort.data_type);
-            Assert.AreEqual(-1, dataSheetViewPort.view_id);
-            Assert.AreEqual(PythonEngineManager.DataViewPortTypeNames.FLOOR_PLAN, dataSheetViewPort.vp_type);
-            Assert.IsNotNull(dataSheetViewPort.bounding_box);
-            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.min_x);
-            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.min_y);
-            Assert.AreEqual(0.0, dataSheetViewPort.bounding_box.max_y);
-            Assert.AreEqual(0.0, dataSheetViewPort.centre_point.x);
-            Assert.AreEqual(0.0, dataSheetViewPort.centre_point.y);
+            Assert.That("sheet view port", Is.EqualTo(dataSheetViewPort.data_type));
+            Assert.That(-1, Is.EqualTo(dataSheetViewPort.view_id));
+            Assert.That(PythonEngineManager.DataViewPortTypeNames.FLOOR_PLAN, Is.EqualTo(dataSheetViewPort.vp_type));
+            Assert.That(dataSheetViewPort.bounding_box, Is.Not.Null);
+            Assert.That(0.0, Is.EqualTo(dataSheetViewPort.bounding_box.min_x));
+            Assert.That(0.0, Is.EqualTo(dataSheetViewPort.bounding_box.max_x));
+            Assert.That(0.0, Is.EqualTo(dataSheetViewPort.bounding_box.min_y));
+            Assert.That(0.0, Is.EqualTo(dataSheetViewPort.bounding_box.max_y));
+            Assert.That(0.0, Is.EqualTo(dataSheetViewPort.centre_point.x));
+            Assert.That(0.0, Is.EqualTo(dataSheetViewPort.centre_point.y));
 
-            Assert.AreEqual(-1, dataSheetViewPort.view.id);
-            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.min_x);
-            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.min_y);
-            Assert.AreEqual(0.0, dataSheetViewPort.view.bounding_box.max_y);
-            Assert.AreEqual(0, dataSheetViewPort.view.tags.Count);
+            Assert.That(-1, Is.EqualTo(dataSheetViewPort.view.id));
+            Assert.That(0.0, Is.EqualTo(dataSheetViewPort.view.bounding_box.min_x));
+            Assert.That(0.0, Is.EqualTo(dataSheetViewPort.view.bounding_box.max_x));
+            Assert.That(0.0, Is.EqualTo(dataSheetViewPort.view.bounding_box.min_y));
+            Assert.That(0.0, Is.EqualTo(dataSheetViewPort.view.bounding_box.max_y));
+            Assert.That(0, Is.EqualTo(dataSheetViewPort.view.tags.Count));
         }
 
         [Test]
@@ -180,7 +180,7 @@ namespace PythonTests.DataTests
             var areEqual = dataSheetViewPort1==dataSheetViewPort2;
 
             // Assert
-            Assert.IsTrue(areEqual);
+            Assert.That(areEqual, Is.True);
         }
 
         [Test]
@@ -194,7 +194,7 @@ namespace PythonTests.DataTests
             var areEqual = dataSheetViewPort1.Equals(dataSheetViewPort2);
 
             // Assert
-            Assert.IsFalse(areEqual);
+            Assert.That(areEqual, Is.False);
         }
 
         [Test]
@@ -208,7 +208,7 @@ namespace PythonTests.DataTests
             var areEqual = dataSheetViewPort==nonDataSheetViewPort;
 
             // Assert
-            Assert.AreEqual(areEqual, false);
+            Assert.That(areEqual, Is.False);
         }
 
         [Test]
@@ -222,7 +222,7 @@ namespace PythonTests.DataTests
             var areNotEqual = dataSheetViewPort1 != dataSheetViewPort2;
 
             // Assert
-            Assert.IsTrue(areNotEqual);
+            Assert.That(areNotEqual, Is.True);
         }
 
     }

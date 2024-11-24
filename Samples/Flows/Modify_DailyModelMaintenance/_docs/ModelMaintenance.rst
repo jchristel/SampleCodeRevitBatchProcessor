@@ -10,7 +10,7 @@ The 'Model Maintenance' flow ia aimed at a QA process where one has the requirem
 
 #. report on given categories:
 
-    #. links (revit and cad)
+    #. links (Revit and cad)
     #. wall properties
     #. grids and levels
     #. worksets
@@ -97,7 +97,7 @@ _Output
 
 Directory containing any flow output.
 
-#. A report file per revit file processed and category reported on.
+#. A report file per Revit file processed and category reported on.
 #. A combined report file which contains all the reports per a single categories for all files.
 #. Rooms and associated ceilings .json file
 #. View template parquet files
@@ -221,7 +221,7 @@ A number of utility scripts executed in the main script.
 
     Created the following reports:
 
-    - links (revit and cad)
+    - links (Revit and cad)
     - wall properties
     - grids and levels
     - worksets

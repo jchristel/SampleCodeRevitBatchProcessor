@@ -9,8 +9,8 @@ namespace PythonTests.DataTests.PropertyTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataInstancePropertiesClass, "DataInstanceProperties should be loaded.");
-            Assert.IsNotNull(PythonEngineManager.DataPropertyClass, "DataProperty should be loaded.");
+            Assert.That(PythonEngineManager.DataInstancePropertiesClass, Is.Not.Null, "DataInstanceProperties should be loaded.");
+            Assert.That(PythonEngineManager.DataPropertyClass, Is.Not.Null, "DataProperty should be loaded.");
         }
 
 
@@ -24,19 +24,19 @@ namespace PythonTests.DataTests.PropertyTests
             dynamic dataInstanceProperties = PythonEngineManager.DataInstancePropertiesClass(jsonDict);
 
             // Assert: Check if 'id' and 'properties' were set correctly
-            Assert.AreEqual(123, dataInstanceProperties.id);
+            Assert.That(123, Is.EqualTo(dataInstanceProperties.id));
 
             // Check properties list contents
             var properties = dataInstanceProperties.properties;
-            Assert.AreEqual(2, properties.Count);
+            Assert.That(2, Is.EqualTo(properties.Count));
 
             // First property checks
-            Assert.AreEqual("Property1", properties[0].name);
-            Assert.AreEqual(456, properties[0].value);
+            Assert.That("Property1", Is.EqualTo(properties[0].name));
+            Assert.That(456, Is.EqualTo(properties[0].value));
 
             // Second property checks
-            Assert.AreEqual("Property2", properties[1].name);
-            Assert.AreEqual("TestValue", properties[1].value);
+            Assert.That("Property2", Is.EqualTo(properties[1].name));
+            Assert.That("TestValue", Is.EqualTo(properties[1].value));
         }
 
         [Test]

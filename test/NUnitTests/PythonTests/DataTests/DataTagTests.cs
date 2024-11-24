@@ -54,7 +54,7 @@ namespace PythonTests.DataTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataTagClass, "DataTypeProperties should be loaded.");
+            Assert.That(PythonEngineManager.DataTagClass, Is.Not.Null, "DataTypeProperties should be loaded.");
         }
 
         // Helper method to create JSON strings
@@ -72,15 +72,15 @@ namespace PythonTests.DataTests
             var dataTag = PythonEngineManager.DataTagClass(validJsonString);
 
             // Assert
-            Assert.AreEqual(0.0, dataTag.bounding_box.min_x, "Expected bounding_box.min_x to match input.");
-            Assert.AreEqual(10.0, dataTag.bounding_box.max_x, "Expected bounding_box.max_x to match input.");
-            Assert.AreEqual(5.0, dataTag.point.x, "Expected point.x to be 5.0.");
-            Assert.AreEqual(5.0, dataTag.point.y, "Expected point.y to be 5.0.");
-            Assert.AreEqual(5.0, dataTag.point.z, "Expected point.z to be 5.0.");
-            Assert.AreEqual(1.0, dataTag.elbow_location.x, "Expected elbow_location.x to be 1.0.");
-            Assert.AreEqual("end_point", dataTag.leader_end, "Expected leader_end to match input.");
-            Assert.AreEqual("reference_point", dataTag.leader_reference, "Expected leader_reference to match input.");
-            Assert.AreEqual(123, dataTag.leader_element_reference_id, "Expected leader_element_reference_id to be 123.");
+            Assert.That(0.0, Is.EqualTo(dataTag.bounding_box.min_x), "Expected bounding_box.min_x to match input.");
+            Assert.That(10.0, Is.EqualTo(dataTag.bounding_box.max_x), "Expected bounding_box.max_x to match input.");
+            Assert.That(5.0, Is.EqualTo(dataTag.point.x), "Expected point.x to be 5.0.");
+            Assert.That(5.0, Is.EqualTo(dataTag.point.y), "Expected point.y to be 5.0.");
+            Assert.That(5.0, Is.EqualTo(dataTag.point.z), "Expected point.z to be 5.0.");
+            Assert.That(1.0, Is.EqualTo(dataTag.elbow_location.x), "Expected elbow_location.x to be 1.0.");
+            Assert.That("end_point", Is.EqualTo(dataTag.leader_end), "Expected leader_end to match input.");
+            Assert.That("reference_point", Is.EqualTo(dataTag.leader_reference), "Expected leader_reference to match input.");
+            Assert.That(123, Is.EqualTo(dataTag.leader_element_reference_id), "Expected leader_element_reference_id to be 123.");
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace PythonTests.DataTests
 
             // Act & Assert: initialization should throw a TypeError due to invalid leader_element_reference_id
             var ex = Assert.Throws<TypeErrorException>(() => PythonEngineManager.DataTagClass(jsonString));
-            StringAssert.Contains("Expected 'leader_element_reference_id' to be an int", ex.Message, "Expected TypeError for incorrect leader_element_reference_id type.");
+            Assert.That(ex.Message, Does.Contain("Expected 'leader_element_reference_id' to be an int"), "Expected TypeError for incorrect leader_element_reference_id type.");
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace PythonTests.DataTests
             var dataTag2 = PythonEngineManager.DataTagClass(validJsonString);
 
             // Act & Assert: The two instances should be equal
-            Assert.IsTrue(dataTag1 == dataTag2, "Operator == should return true for instances with the same properties.");
+            Assert.That(dataTag1 == dataTag2, Is.True, "Operator == should return true for instances with the same properties.");
         }
 
         [Test]
@@ -142,7 +142,7 @@ namespace PythonTests.DataTests
             var dataTag2 = PythonEngineManager.DataTagClass(jsonString2);
 
             // Act & Assert: The two instances should not be equal due to different bounding boxes
-            Assert.IsFalse(dataTag1 == dataTag2, "Operator == should return false for instances with different bounding boxes.");
+            Assert.That(dataTag1 == dataTag2, Is.False,"Operator == should return false for instances with different bounding boxes.");
         }
 
         [Test]
@@ -151,7 +151,7 @@ namespace PythonTests.DataTests
             var dataTag = PythonEngineManager.DataTagClass(validJsonString);
 
             // Act & Assert: Equality with null object should return false
-            Assert.IsFalse(dataTag == null, "Operator == should return false when comparing with null.");
+            Assert.That(dataTag == null,Is.False, "Operator == should return false when comparing with null.");
         }
     }
 }

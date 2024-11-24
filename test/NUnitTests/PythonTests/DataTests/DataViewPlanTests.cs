@@ -74,7 +74,7 @@ namespace PythonTests.DataTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataViewPlanClass, "DataTypeProperties should be loaded.");
+            Assert.That(PythonEngineManager.DataViewPlanClass, Is.Not.Null, "DataTypeProperties should be loaded.");
         }
 
         // Helper method to create JSON strings
@@ -91,16 +91,16 @@ namespace PythonTests.DataTests
             var dataViewPlan = PythonEngineManager.DataViewPlanClass(validJsonString);
 
             // Assert
-            Assert.AreEqual("view_plan", dataViewPlan.data_type);
-            Assert.AreEqual(101, dataViewPlan.id);
-            Assert.IsNotNull(dataViewPlan.bounding_box);
-            Assert.AreEqual(0.0, dataViewPlan.bounding_box.min_x);
-            Assert.AreEqual(10.0, dataViewPlan.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataViewPlan.bounding_box.min_y);
-            Assert.AreEqual(10.0, dataViewPlan.bounding_box.max_y);
-            Assert.IsNotNull(dataViewPlan.tags);
-            Assert.AreEqual(1, dataViewPlan.tags.Count);
-            Assert.AreEqual("tag", dataViewPlan.tags[0].data_type);
+            Assert.That("view_plan", Is.EqualTo(dataViewPlan.data_type));
+            Assert.That(101, Is.EqualTo(dataViewPlan.id));
+            Assert.That(dataViewPlan.bounding_box, Is.Not.Null);
+            Assert.That(0.0, Is.EqualTo(dataViewPlan.bounding_box.min_x));
+            Assert.That(10.0, Is.EqualTo(dataViewPlan.bounding_box.max_x));
+            Assert.That(0.0, Is.EqualTo(dataViewPlan.bounding_box.min_y));
+            Assert.That(10.0, Is.EqualTo(dataViewPlan.bounding_box.max_y));
+            Assert.That(dataViewPlan.tags, Is.Not.Null);
+            Assert.That(1, Is.EqualTo(dataViewPlan.tags.Count));
+            Assert.That("tag", Is.EqualTo(dataViewPlan.tags[0].data_type));
         }
 
         [Test]
@@ -110,15 +110,15 @@ namespace PythonTests.DataTests
             var dataViewPlan = PythonEngineManager.DataViewPlanClass();
 
             // Assert
-            Assert.AreEqual("view_plan", dataViewPlan.data_type);
-            Assert.AreEqual(-1, dataViewPlan.id);
-            Assert.IsNotNull(dataViewPlan.bounding_box);
-            Assert.AreEqual(0.0, dataViewPlan.bounding_box.min_x);
-            Assert.AreEqual(0.0, dataViewPlan.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataViewPlan.bounding_box.min_y);
-            Assert.AreEqual(0.0, dataViewPlan.bounding_box.max_y);
-            Assert.IsNotNull(dataViewPlan.tags);
-            Assert.AreEqual(0, dataViewPlan.tags.Count);
+            Assert.That("view_plan", Is.EqualTo(dataViewPlan.data_type));
+            Assert.That(-1, Is.EqualTo(dataViewPlan.id));
+            Assert.That(dataViewPlan.bounding_box, Is.Not.Null);
+            Assert.That(0.0, Is.EqualTo(dataViewPlan.bounding_box.min_x));
+            Assert.That(0.0, Is.EqualTo(dataViewPlan.bounding_box.max_x));
+            Assert.That(0.0, Is.EqualTo(dataViewPlan.bounding_box.min_y));
+            Assert.That(0.0, Is.EqualTo(dataViewPlan.bounding_box.max_y));
+            Assert.That(dataViewPlan.tags, Is.Not.Null);
+            Assert.That(0, Is.EqualTo(dataViewPlan.tags.Count));
         }
 
         [Test]
@@ -147,7 +147,7 @@ namespace PythonTests.DataTests
             var areEqual = dataViewPlan1==dataViewPlan2;
 
             // Assert
-            Assert.IsTrue(areEqual);
+            Assert.That(areEqual, Is.True);
         }
 
         [Test]
@@ -162,7 +162,7 @@ namespace PythonTests.DataTests
             var areEqual = dataViewPlan1==dataViewPlan2;
 
             // Assert
-            Assert.IsFalse(areEqual);
+            Assert.That(areEqual, Is.False);
         }
 
         [Test]
@@ -176,7 +176,7 @@ namespace PythonTests.DataTests
             var areEqual = dataViewPlan == nonDataViewPlan;
 
             // Assert
-            Assert.IsFalse(areEqual);
+            Assert.That(areEqual, Is.False);
         }
 
         [Test]
@@ -192,7 +192,7 @@ namespace PythonTests.DataTests
             var areNotEqual = dataViewPlan1 != dataViewPlan2;
 
             // Assert
-            Assert.IsTrue(areNotEqual);
+            Assert.That(areNotEqual, Is.True);
         }
 
         [Test]

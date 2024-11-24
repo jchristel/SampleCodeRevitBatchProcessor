@@ -27,9 +27,12 @@ Revit Geometry to data geometry conversion helper functions.
 #
 #
 
-from duHast.Data.Objects.Properties.Geometry import geometry_polygon_2 as dGeometryPoly
+from duHast.Data.Objects.Collectors.Properties.Geometry import geometry_polygon_2 as dGeometryPoly
+from duHast.Geometry.bounding_box_2 import BoundingBox2
+from duHast.Geometry.point_2 import Point2
 from duHast.Revit.Common.Geometry import geometry as rGeo, solids as rSolid
 from duHast.Revit.Common.Geometry.points import get_point_as_doubles
+from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
 from Autodesk.Revit.DB import XYZ
 
@@ -112,3 +115,17 @@ def get_2d_points_from_revit_element_type_in_model(doc, element_instance_getter)
         if len(element_points) > 0:
             all_element_points.append(element_points)
     return all_element_points
+
+
+def convert_revit_bounding_box_to_geometry2_bounding_box(bounding_box):
+    
+    point1 = Point2(
+        x=convert_imperial_feet_to_metric_mm(bounding_box.Min.X),
+        y=convert_imperial_feet_to_metric_mm(bounding_box.Min.Y),
+    )
+    point2 = Point2(
+        x=convert_imperial_feet_to_metric_mm(bounding_box.Max.X),
+        y=convert_imperial_feet_to_metric_mm(bounding_box.Max.Y),
+    )
+    bbox = BoundingBox2(point1=point1, point2=point2)
+    return bbox

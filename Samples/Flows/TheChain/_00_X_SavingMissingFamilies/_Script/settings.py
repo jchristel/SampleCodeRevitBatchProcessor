@@ -33,8 +33,8 @@ run this script.
 #
 
 # path to Common library modules
-DU_HAST_PATH = r"C:\Program Files\Python311\Lib\site-packages"
-DU_HAST_DEBUG = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\src"
+DU_HAST_PATH = r"C:\Users\chrjx\AppData\Roaming\Python\Python312\site-packages"
+DU_HAST_DEBUG = r"C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\src"
 
 # set path to common library
 import sys
@@ -68,7 +68,7 @@ FILE_EXTENSION_OF_FILES_TO_PROCESS = ".rfa"
 
 # Root directory path of files to be processed
 REVIT_FILES_DIRECTORY = (
-    r'C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData'
+    r'C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files'
 )
 
 # log marker file location

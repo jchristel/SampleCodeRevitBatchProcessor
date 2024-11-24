@@ -58,6 +58,7 @@ class DataPropertyNames():
     PROPERTIES = "properties"
     SEGMENTS = "segments"
     SET_NAME = "set_name"
+    SHEET_SIZE = "sheet_size"
     ROTATION_COORDINATES = "rotation_coord"
     TAGS = "tags"
     TAG_ELBOW_LOCATION = "elbow_location"
@@ -71,3 +72,4 @@ class DataPropertyNames():
     VIEW_PORT_TYPE = "vp_type"
     VIEW_PORTS = "view_ports"
     VIEW_ID = "view_id"
+    WIDTH= "width"

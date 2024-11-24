@@ -8,7 +8,7 @@ namespace PythonTests.DataTests.PropertyTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataDesingSetOptionClass, "DataDesignSetOption should be loaded.");
+            Assert.That(PythonEngineManager.DataDesingSetOptionClass, Is.Not.Null, "DataDesignSetOption should be loaded.");
         }
 
         [Test]
@@ -17,9 +17,9 @@ namespace PythonTests.DataTests.PropertyTests
             // Initialize without JSON data
             dynamic dataOption = PythonEngineManager.DataDesingSetOptionClass();
 
-            Assert.AreEqual("-", dataOption.set_name);
-            Assert.AreEqual("-", dataOption.option_name);
-            Assert.IsTrue(dataOption.is_primary);
+            Assert.That("-", Is.EqualTo(dataOption.set_name));
+            Assert.That("-", Is.EqualTo(dataOption.option_name));
+            Assert.That(dataOption.is_primary, Is.True);
         }
 
         [Test]
@@ -31,9 +31,9 @@ namespace PythonTests.DataTests.PropertyTests
             // Initialize with JSON data
             dynamic dataOption = PythonEngineManager.DataDesingSetOptionClass(json);
 
-            Assert.AreEqual("Set1", dataOption.set_name);
-            Assert.AreEqual("OptionA", dataOption.option_name);
-            Assert.IsFalse(dataOption.is_primary);
+            Assert.That("Set1", Is.EqualTo(dataOption.set_name));
+            Assert.That("OptionA", Is.EqualTo(dataOption.option_name));
+            Assert.That(dataOption.is_primary, Is.False);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace PythonTests.DataTests.PropertyTests
             // Initialize without JSON data
             dynamic dataOption = PythonEngineManager.DataDesingSetOptionClass();
 
-            Assert.AreEqual("design_set_and_option", dataOption.DataType);
+            Assert.That("design_set_and_option", Is.EqualTo(dataOption.DataType));
         }
 
         [Test]

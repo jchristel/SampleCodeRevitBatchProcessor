@@ -121,7 +121,7 @@ namespace PythonTests.DataTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataSheetClass, "DataTypeProperties should be loaded.");
+            Assert.That(PythonEngineManager.DataSheetClass, Is.Not.Null,"DataTypeProperties should be loaded.");
         }
 
 
@@ -132,15 +132,15 @@ namespace PythonTests.DataTests
             var dataSheet = PythonEngineManager.DataSheetClass(validJsonString);
 
             // Assert
-            Assert.AreEqual("sheet", dataSheet.data_type);
-            Assert.IsNotNull(dataSheet.instance_properties);
-            Assert.IsNotNull(dataSheet.type_properties);
-            Assert.AreEqual(1, dataSheet.view_ports.Count);
-            Assert.IsNotNull(dataSheet.view_ports[0]);
-            Assert.AreEqual(1001, dataSheet.view_ports[0].view_id);
-            Assert.AreEqual(PythonEngineManager.DataViewPortTypeNames.THREE_D, dataSheet.view_ports[0].vp_type);
-            Assert.AreEqual(0.0, dataSheet.bounding_box.min_x);
-            Assert.AreEqual(10.0, dataSheet.bounding_box.max_x);
+            Assert.That("sheet", Is.EqualTo( dataSheet.data_type));
+            Assert.That(dataSheet.instance_properties, Is.Not.Null);
+            Assert.That(dataSheet.type_properties, Is.Not.Null);
+            Assert.That(1, Is.EqualTo( dataSheet.view_ports.Count));
+            Assert.That(dataSheet.view_ports[0], Is.Not.Null);
+            Assert.That(1001, Is.EqualTo( dataSheet.view_ports[0].view_id));
+            Assert.That(PythonEngineManager.DataViewPortTypeNames.THREE_D, Is.EqualTo( dataSheet.view_ports[0].vp_type));
+            Assert.That(0.0, Is.EqualTo( dataSheet.bounding_box.min_x));
+            Assert.That(10.0, Is.EqualTo( dataSheet.bounding_box.max_x));
         }
 
         [Test]
@@ -161,12 +161,12 @@ namespace PythonTests.DataTests
             var dataSheet = PythonEngineManager.DataSheetClass();
 
             // Assert
-            Assert.AreEqual("sheet", dataSheet.data_type);
-            Assert.IsNotNull(dataSheet.instance_properties);
-            Assert.IsNotNull(dataSheet.type_properties);
-            Assert.AreEqual(0, dataSheet.view_ports.Count);
-            Assert.AreEqual(0.0, dataSheet.bounding_box.min_x);
-            Assert.AreEqual(0.0, dataSheet.bounding_box.max_x);
+            Assert.That("sheet", Is.EqualTo(dataSheet.data_type));
+            Assert.That(dataSheet.instance_properties, Is.Not.Null);
+            Assert.That(dataSheet.type_properties, Is.Not.Null);
+            Assert.That(0, Is.EqualTo(dataSheet.view_ports.Count));
+            Assert.That(0.0, Is.EqualTo(dataSheet.bounding_box.min_x));
+            Assert.That(0.0, Is.EqualTo(dataSheet.bounding_box.max_x));
         }
 
         [Test]
@@ -194,7 +194,7 @@ namespace PythonTests.DataTests
             var areEqual = dataSheet1==dataSheet2;
 
             // Assert
-            Assert.IsTrue(areEqual);
+            Assert.That(areEqual, Is.True);
         }
 
         [Test]
@@ -208,7 +208,7 @@ namespace PythonTests.DataTests
             var areEqual = dataSheet1.Equals(dataSheet2);
 
             // Assert
-            Assert.IsFalse(areEqual);
+            Assert.That(areEqual, Is.False);
         }
 
         [Test]
@@ -222,7 +222,7 @@ namespace PythonTests.DataTests
             var areEqual = dataSheet==nonDataSheetObject;
 
             // Assert
-            Assert.AreEqual(areEqual,false);
+            Assert.That(areEqual, Is.False);
         }
 
         [Test]
@@ -236,7 +236,7 @@ namespace PythonTests.DataTests
             var areNotEqual = dataSheet1 != dataSheet2;
 
             // Assert
-            Assert.IsTrue(areNotEqual);
+            Assert.That(areNotEqual, Is.True);
         }
 
         [Test]
@@ -260,9 +260,9 @@ namespace PythonTests.DataTests
             var dataSheet = PythonEngineManager.DataSheetClass(JsonConvert.SerializeObject(jsonWithViewPort));
 
             // Assert
-            Assert.AreEqual(1, dataSheet.view_ports.Count);
-            Assert.AreEqual(2002, dataSheet.view_ports[0].view_id);
-            Assert.AreEqual(PythonEngineManager.DataViewPortTypeNames.SCHEDULE, dataSheet.view_ports[0].vp_type);
+            Assert.That(1, Is.EqualTo(dataSheet.view_ports.Count));
+            Assert.That(2002, Is.EqualTo(dataSheet.view_ports[0].view_id));
+            Assert.That(PythonEngineManager.DataViewPortTypeNames.SCHEDULE, Is.EqualTo(dataSheet.view_ports[0].vp_type));
         }
     }
 }

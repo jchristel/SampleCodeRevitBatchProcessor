@@ -9,7 +9,7 @@ namespace PythonTests.DataTests.PropertyTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataLevelBaseClass, "DataLevelBase should be loaded.");
+            Assert.That(PythonEngineManager.DataLevelBaseClass, Is.Not.Null, "DataLevelBase should be loaded.");
         }
 
         [Test]
@@ -18,8 +18,8 @@ namespace PythonTests.DataTests.PropertyTests
             dynamic dataLevel = PythonEngineManager.DataLevelBaseClass();
 
             // Check if default values are set correctly
-            Assert.AreEqual("-", dataLevel.name, "Expected default name to be '-'.");
-            Assert.AreEqual(-1, dataLevel.id, "Expected default id to be -1.");
+            Assert.That("-", Is.EqualTo(dataLevel.name), "Expected default name to be '-'.");
+            Assert.That(-1, Is.EqualTo(dataLevel.id), "Expected default id to be -1.");
         }
 
         [Test]
@@ -29,8 +29,8 @@ namespace PythonTests.DataTests.PropertyTests
             var jsonString = JsonConvert.SerializeObject(new { name = "Level 1", id = 123 });
             var dataLevelFromJson = PythonEngineManager.DataLevelBaseClass(jsonString);
 
-            Assert.AreEqual("Level 1", dataLevelFromJson.name, "Expected name to be 'Level 1'.");
-            Assert.AreEqual(123, dataLevelFromJson.id, "Expected id to be 123.");
+            Assert.That("Level 1", Is.EqualTo(dataLevelFromJson.name), "Expected name to be 'Level 1'.");
+            Assert.That(123, Is.EqualTo(dataLevelFromJson.id), "Expected id to be 123.");
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace PythonTests.DataTests.PropertyTests
             var invalidJsonString = JsonConvert.SerializeObject(new { name = 12345, id = "Level A" });
 
             var ex = Assert.Throws<TypeErrorException>(() => PythonEngineManager.DataLevelBaseClass(invalidJsonString));
-            StringAssert.Contains("Expected 'name' to be a string", ex.Message, "Expected TypeError for invalid name type.");
+            Assert.That(ex.Message, Does.Contain("Expected 'name' to be a string"), "Expected TypeError for invalid name type.");
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace PythonTests.DataTests.PropertyTests
             var invalidInput = 12345;
 
             var ex = Assert.Throws<TypeErrorException>(() => PythonEngineManager.DataLevelBaseClass(invalidInput));
-            StringAssert.Contains("Argument j supplied must be of type string or type dictionary", ex.Message, "Expected TypeError for non-string, non-dict input.");
+            Assert.That(ex.Message, Does.Contain("Argument j supplied must be of type string or type dictionary"), "Expected TypeError for non-string, non-dict input.");
         }
 
         [Test]
@@ -59,8 +59,8 @@ namespace PythonTests.DataTests.PropertyTests
             var jsonString = JsonConvert.SerializeObject(new { name = "Partial Level" });
             var dataLevelPartial = PythonEngineManager.DataLevelBaseClass(jsonString);
 
-            Assert.AreEqual("Partial Level", dataLevelPartial.name, "Expected name to be 'Partial Level'.");
-            Assert.AreEqual(-1, dataLevelPartial.id, "Expected id to remain the default value of -1.");
+            Assert.That("Partial Level", Is.EqualTo(dataLevelPartial.name), "Expected name to be 'Partial Level'.");
+            Assert.That(-1, Is.EqualTo(dataLevelPartial.id), "Expected id to remain the default value of -1.");
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace PythonTests.DataTests.PropertyTests
             var dataLevelA = PythonEngineManager.DataLevelBaseClass(jsonString);
             var dataLevelB = PythonEngineManager.DataLevelBaseClass(jsonString);
 
-            Assert.IsTrue(dataLevelA == dataLevelB, "Expected identical properties to result in equality.");
+            Assert.That(dataLevelA == dataLevelB, Is.True, "Expected identical properties to result in equality.");
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace PythonTests.DataTests.PropertyTests
             var dataLevelA = PythonEngineManager.DataLevelBaseClass(jsonStringA);
             var dataLevelB = PythonEngineManager.DataLevelBaseClass(jsonStringB);
 
-            Assert.IsTrue(dataLevelA != dataLevelB, "Expected different properties to result in inequality.");
+            Assert.That(dataLevelA != dataLevelB, Is.True, "Expected different properties to result in inequality.");
         }
     }
 }

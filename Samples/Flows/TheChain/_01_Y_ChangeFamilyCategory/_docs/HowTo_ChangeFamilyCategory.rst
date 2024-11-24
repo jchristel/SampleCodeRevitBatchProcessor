@@ -1,11 +1,11 @@
 #############################################
-Modify Families - Change Famnily Category
+Modify Families - Change Family Category
 #############################################
 
 Summary
 =======
 
-This flow changes the family existing category to a new category. Any existing custom sub-categories will be recreated under the new catgeory and items reassigned to them.
+This flow changes the family existing category to a new category. Any existing custom sub-categories will be recreated under the new category and items reassigned to them.
 
 Script flow diagram
 --------------------------------
@@ -26,7 +26,7 @@ Outcomes
 
         - file Name:    the family name
         - file Path:    the fully qualified file path
-        - revit category:   the revit family category
+        - Revit category:   the Revit family category
 
 
 Inputs
@@ -42,7 +42,7 @@ Script
 
 utilModifyBVN.py
 
-- REVIT_LIBRARY_PATH : root directory of revit family library to be processed
+- REVIT_LIBRARY_PATH : root directory of Revit family library to be processed
 
 User
 ^^^^^^

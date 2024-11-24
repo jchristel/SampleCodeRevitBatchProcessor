@@ -75,7 +75,7 @@ class DataReadFamiliesCategoriesReport(test.Test):
                             "Sample_Family_Eight",
                             "Furniture Systems",
                             "Sample_Family_Eight",
-                            r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                            r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files\combined\Furniture Systems\Sample_Family_Eight.rfa",
                             "1",
                             [
                                 {
@@ -103,7 +103,7 @@ class DataReadFamiliesCategoriesReport(test.Test):
                             "Sample_Family_Eight",
                             "Furniture Systems",
                             "Sample_Family_Eight",
-                            r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                            r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files\combined\Furniture Systems\Sample_Family_Eight.rfa",
                             "0",
                             "None",
                             "Furniture Systems",
@@ -212,7 +212,7 @@ class DataReadFamiliesCategoriesReport(test.Test):
                             "Sample_Family_Ten",
                             "Generic Annotations",
                             "Sample_Family_Ten",
-                            r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Generic Annotations\Sample_Family_Ten.rfa",
+                            r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files\combined\Generic Annotations\Sample_Family_Ten.rfa",
                             "14",
                             [
                                 {
@@ -311,7 +311,7 @@ class DataReadFamiliesCategoriesReport(test.Test):
                             "Sample_Family_Eight",
                             "Furniture Systems",
                             "Sample_Family_Eight",
-                            r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                            r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files\combined\Furniture Systems\Sample_Family_Eight.rfa",
                             "1",
                             [
                                 {
@@ -339,7 +339,7 @@ class DataReadFamiliesCategoriesReport(test.Test):
                             "Sample_Family_Eight",
                             "Furniture Systems",
                             "Sample_Family_Eight",
-                            r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa",
+                            r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files\combined\Furniture Systems\Sample_Family_Eight.rfa",
                             "0",
                             "None",
                             "Furniture Systems",

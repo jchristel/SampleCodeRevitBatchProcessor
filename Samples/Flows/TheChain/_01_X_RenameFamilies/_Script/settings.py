@@ -36,8 +36,8 @@ It contains
 
 
 # path to Common library modules
-DU_HAST_PATH = r"C:\Program Files\Python311\Lib\site-packages"
-DU_HAST_DEBUG = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\src"
+DU_HAST_PATH = r"C:\Users\chrjx\AppData\Roaming\Python\Python312\site-packages"
+DU_HAST_DEBUG = r"C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\src"
 
 # set path to common library
 import sys
@@ -67,7 +67,7 @@ DEBUG_REVIT_FILE_NAME = r"C:\temp\Test_Files.rvt"
 DEFAULT_NO_GO_DIRECTORY = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_01_X_RenameFamilies\_Users\jchristel\_FamilyOut"
 
 # revit files library location
-REVIT_LIBRARY_PATH = r"C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData"
+REVIT_LIBRARY_PATH = r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files"
 REVIT_LIBRARY_INCLUDE_SUB_DIRS_IN_SEARCH = True
 FILE_EXTENSION_OF_FILES_TO_PROCESS = ".rfa"
 

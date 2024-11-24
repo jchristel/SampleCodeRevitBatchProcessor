@@ -64,7 +64,7 @@ namespace PythonTests.DataTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataViewScheduleClass, "DataTypeProperties should be loaded.");
+            Assert.That(PythonEngineManager.DataViewScheduleClass, Is.Not.Null, "DataTypeProperties should be loaded.");
         }
 
         // Helper method to create JSON strings
@@ -81,20 +81,20 @@ namespace PythonTests.DataTests
             var dataViewSchedule = PythonEngineManager.DataViewScheduleClass(validJsonString);
 
             // Assert
-            Assert.AreEqual("view_schedule", dataViewSchedule.data_type);
-            Assert.AreEqual(101, dataViewSchedule.id);
-            Assert.IsNotNull(dataViewSchedule.bounding_box);
-            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.min_x);
-            Assert.AreEqual(10.0, dataViewSchedule.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.min_y);
-            Assert.AreEqual(10.0, dataViewSchedule.bounding_box.max_y);
-            Assert.AreEqual(10, dataViewSchedule.total_number_of_rows);
-            Assert.IsNotNull(dataViewSchedule.segments);
-            Assert.AreEqual(2, dataViewSchedule.segments.Count);
-            Assert.AreEqual(0, dataViewSchedule.segments[0].index);
-            Assert.AreEqual(12, dataViewSchedule.segments[0].height);
-            Assert.AreEqual(1, dataViewSchedule.segments[1].index);
-            Assert.AreEqual(13, dataViewSchedule.segments[1].height);
+            Assert.That("view_schedule", Is.EqualTo(dataViewSchedule.data_type));
+            Assert.That(101, Is.EqualTo(dataViewSchedule.id));
+            Assert.That(dataViewSchedule.bounding_box, Is.Not.Null);
+            Assert.That(0.0, Is.EqualTo(dataViewSchedule.bounding_box.min_x));
+            Assert.That(10.0, Is.EqualTo(dataViewSchedule.bounding_box.max_x));
+            Assert.That(0.0, Is.EqualTo(dataViewSchedule.bounding_box.min_y));
+            Assert.That(10.0, Is.EqualTo(dataViewSchedule.bounding_box.max_y)   );
+            Assert.That(10, Is.EqualTo(dataViewSchedule.total_number_of_rows));
+            Assert.That(dataViewSchedule.segments, Is.Not.Null);
+            Assert.That(2, Is.EqualTo(dataViewSchedule.segments.Count));
+            Assert.That(0, Is.EqualTo(dataViewSchedule.segments[0].index));
+            Assert.That(12, Is.EqualTo(dataViewSchedule.segments[0].height));
+            Assert.That(1, Is.EqualTo(dataViewSchedule.segments[1].index));
+            Assert.That(13, Is.EqualTo(dataViewSchedule.segments[1].height));
         }
 
         [Test]
@@ -104,15 +104,15 @@ namespace PythonTests.DataTests
             var dataViewSchedule = PythonEngineManager.DataViewScheduleClass();
 
             // Assert
-            Assert.AreEqual("view_schedule", dataViewSchedule.data_type);
-            Assert.AreEqual(0, dataViewSchedule.total_number_of_rows);
-            Assert.IsNotNull(dataViewSchedule.bounding_box);
-            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.min_x);
-            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.max_x);
-            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.min_y);
-            Assert.AreEqual(0.0, dataViewSchedule.bounding_box.max_y);
-            Assert.IsNotNull(dataViewSchedule.segments);
-            Assert.AreEqual(0, dataViewSchedule.segments.Count);
+            Assert.That("view_schedule", Is.EqualTo(dataViewSchedule.data_type));
+            Assert.That(0, Is.EqualTo(dataViewSchedule.total_number_of_rows));
+            Assert.That(dataViewSchedule.bounding_box, Is.Not.Null);
+            Assert.That(0.0, Is.EqualTo(dataViewSchedule.bounding_box.min_x));
+            Assert.That(0.0, Is.EqualTo(dataViewSchedule.bounding_box.max_x));
+            Assert.That(0.0, Is.EqualTo(dataViewSchedule.bounding_box.min_y));
+            Assert.That(0.0, Is.EqualTo(dataViewSchedule.bounding_box.max_y));
+            Assert.That(dataViewSchedule.segments, Is.Not.Null);
+            Assert.That(0, Is.EqualTo(dataViewSchedule.segments.Count));
         }
 
         [Test]
@@ -152,7 +152,7 @@ namespace PythonTests.DataTests
             var areEqual = dataViewSchedule1==dataViewSchedule2;
 
             // Assert
-            Assert.IsTrue(areEqual);
+            Assert.That(areEqual, Is.True);
         }
 
         [Test]
@@ -166,7 +166,7 @@ namespace PythonTests.DataTests
             var areEqual = dataViewSchedule1.Equals(dataViewSchedule2);
 
             // Assert
-            Assert.IsFalse(areEqual);
+            Assert.That(areEqual, Is.False);
         }
 
         [Test]
@@ -180,7 +180,7 @@ namespace PythonTests.DataTests
             var areEqual = dataViewSchedule == nonDataViewSchedule;
 
             // Assert
-            Assert.AreEqual(areEqual,false);
+            Assert.That(areEqual,Is.False);
         }
 
         [Test]
@@ -194,7 +194,7 @@ namespace PythonTests.DataTests
             var areNotEqual = dataViewSchedule1 != dataViewSchedule2;
 
             // Assert
-            Assert.IsTrue(areNotEqual);
+            Assert.That(areNotEqual, Is.True);
         }
 
         [Test]

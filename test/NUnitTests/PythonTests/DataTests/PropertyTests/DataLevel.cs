@@ -10,7 +10,7 @@ namespace PythonTests.DataTests.PropertyTests
         [Test]
         public void ClassesShouldBeLoaded()
         {
-            Assert.IsNotNull(PythonEngineManager.DataLevelClass, "DataLevel should be loaded.");
+            Assert.That(PythonEngineManager.DataLevelClass, Is.Not.Null, "DataLevel should be loaded.");
         }
 
         [Test]
@@ -18,9 +18,9 @@ namespace PythonTests.DataTests.PropertyTests
         {
             dynamic dataLevel = PythonEngineManager.DataLevelClass();
             // Verify default values are set
-            Assert.AreEqual("-", dataLevel.name, "Expected default name to be '-'.");
-            Assert.AreEqual(-1, dataLevel.id, "Expected default id to be -1.");
-            Assert.AreEqual(0.0, dataLevel.offset_from_level, "Expected default offset_from_level to be 0.0.");
+            Assert.That("-",Is.EqualTo( dataLevel.name), "Expected default name to be '-'.");
+            Assert.That(-1, Is.EqualTo(dataLevel.id), "Expected default id to be -1.");
+            Assert.That(0.0, Is.EqualTo(dataLevel.offset_from_level), "Expected default offset_from_level to be 0.0.");
         }
 
         [Test]
@@ -30,9 +30,9 @@ namespace PythonTests.DataTests.PropertyTests
             var jsonString = JsonConvert.SerializeObject(new { name = "Level 1", id = 123, offset_from_level = 10.5 });
             var dataLevelFromJson = PythonEngineManager.DataLevelClass(jsonString);
 
-            Assert.AreEqual("Level 1", dataLevelFromJson.name, "Expected name to be 'Level 1'.");
-            Assert.AreEqual(123, dataLevelFromJson.id, "Expected id to be 123.");
-            Assert.AreEqual(10.5, dataLevelFromJson.offset_from_level, "Expected offset_from_level to be 10.5.");
+            Assert.That("Level 1", Is.EqualTo(dataLevelFromJson.name), "Expected name to be 'Level 1'.");
+            Assert.That(123, Is.EqualTo(dataLevelFromJson.id), "Expected id to be 123.");
+            Assert.That(10.5, Is.EqualTo(dataLevelFromJson.offset_from_level), "Expected offset_from_level to be 10.5.");
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace PythonTests.DataTests.PropertyTests
             var invalidJsonString = JsonConvert.SerializeObject(new { name = 12345, id = "Level A", offset_from_level = "Offset" });
 
             var ex = Assert.Throws<TypeErrorException>(() => PythonEngineManager.DataLevelClass(invalidJsonString));
-            StringAssert.Contains("Node level failed to initialise with: Expected 'name' to be a string,", ex.Message, "Expected TypeError for invalid offset_from_level type.");
+            Assert.That(ex.Message, Does.Contain("Node level failed to initialise with: Expected 'name' to be a string,"), "Expected TypeError for invalid offset_from_level type.");
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace PythonTests.DataTests.PropertyTests
             var invalidInput = 12345;
 
             var ex = Assert.Throws<TypeErrorException>(() => PythonEngineManager.DataLevelClass(invalidInput));
-            StringAssert.Contains("Argument j supplied must be of type string or type dictionary", ex.Message, "Expected TypeError for non-string, non-dict input.");
+            Assert.That(ex.Message, Does.Contain("Argument j supplied must be of type string or type dictionary"), "Expected TypeError for non-string, non-dict input.");
         }
 
         [Test]
@@ -61,9 +61,9 @@ namespace PythonTests.DataTests.PropertyTests
             var jsonString = JsonConvert.SerializeObject(new { name = "Partial Level", id = 50 });
             var dataLevelPartial = PythonEngineManager.DataLevelClass(jsonString);
 
-            Assert.AreEqual("Partial Level", dataLevelPartial.name, "Expected name to be 'Partial Level'.");
-            Assert.AreEqual(50, dataLevelPartial.id, "Expected id to be 50.");
-            Assert.AreEqual(0.0, dataLevelPartial.offset_from_level, "Expected offset_from_level to remain the default value of 0.0.");
+            Assert.That("Partial Level", Is.EqualTo(dataLevelPartial.name), "Expected name to be 'Partial Level'.");
+            Assert.That(50, Is.EqualTo(dataLevelPartial.id), "Expected id to be 50.");
+            Assert.That(0.0, Is.EqualTo(dataLevelPartial.offset_from_level), "Expected offset_from_level to remain the default value of 0.0.");
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace PythonTests.DataTests.PropertyTests
             var dataLevelA = PythonEngineManager.DataLevelClass(jsonString);
             var dataLevelB = PythonEngineManager.DataLevelClass(jsonString);
 
-            Assert.IsTrue(dataLevelA == dataLevelB, "Expected identical properties to result in equality.");
+            Assert.That(dataLevelA == dataLevelB, Is.True, "Expected identical properties to result in equality.");
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace PythonTests.DataTests.PropertyTests
             var dataLevelA = PythonEngineManager.DataLevelClass(jsonStringA);
             var dataLevelB = PythonEngineManager.DataLevelClass(jsonStringB);
 
-            Assert.IsTrue(dataLevelA != dataLevelB, "Expected different properties to result in inequality.");
+            Assert.That(dataLevelA != dataLevelB, Is.True, "Expected different properties to result in inequality.");
         }
     }
 }

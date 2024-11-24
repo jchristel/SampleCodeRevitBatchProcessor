@@ -63,6 +63,52 @@ def get_view_crop(view):
     return loops
 
 
+def apply_view_crop_without_transaction_wrapper(view, crop_loop):
+    """
+    Apply a crop region to a view.
+
+    This method sets the crop region of the view to the specified crop loops.
+
+    :param view: The view to apply the crop region to.
+    :type view: Autodesk.Revit.DB.View
+    :param crop_loops: The crop loop to apply to the view.
+    :type crop_loops: Autodesk.Revit.DB.CurveLoop
+
+    :return: The result of the operation.
+    :rtype: duHast.Utilities.Objects.result.Result
+    """
+
+    return_value = Result()
+
+    try:
+        # attempt to get the views shape manager
+        shape_manager = view.GetCropRegionShapeManager()
+
+        # check if the shape manager is None
+        if shape_manager is None:
+            return_value.update_sep(
+                False,
+                "Could not get the crop region shape manager for the view: {}.".format(
+                    view
+                ),
+            )
+            return return_value
+       
+        # set the crop shape
+        shape_manager.SetCropShape(crop_loop)
+        return_value .update_sep(
+            True, "Successfully updated view crop: {}".format(view)
+        )
+       
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to update view crop: {} with error: {}".format(view, e),
+        )
+
+    return return_value
+
+
 def apply_view_crop(doc, view, crop_loop):
     """
     Apply a crop region to a view.
@@ -99,17 +145,8 @@ def apply_view_crop(doc, view, crop_loop):
         # set up an action to be executed in a transaction
         def action():
             action_return_value = Result()
-            try:
-                # set the crop shape
-                shape_manager.SetCropShape(crop_loop)
-                action_return_value.update_sep(
-                    True, "Successfully updated view crop: {}".format(view)
-                )
-            except Exception as e:
-                action_return_value.update_sep(
-                    False,
-                    "Failed to update view crop: {} with error: {}".format(view, e),
-                )
+            action_return_value =apply_view_crop_without_transaction_wrapper(view=view, crop_loop=crop_loop)
+            return action_return_value
 
         transaction = Transaction(doc, "changing view crop")
         return_value = in_transaction(transaction, action)
@@ -121,3 +158,77 @@ def apply_view_crop(doc, view, crop_loop):
         )
 
     return return_value
+
+
+def apply_view_bounding_box_crop_without_transaction_wrapper(view, bbox):
+    """
+    Apply a crop region to a view.
+
+    This method sets the crop region of the view to the specified crop loops.
+
+    :param view: The view to apply the crop region to.
+    :type view: Autodesk.Revit.DB.View
+    :param bbox: The bounding box to apply as crop to the view.
+    :type cbbox: Autodesk.Revit.DB.BoundingBoxXYZ
+
+    :return: The result of the operation.
+    :rtype: duHast.Utilities.Objects.result.Result
+    """
+
+    return_value = Result()
+
+    try:
+        # set the crop shape
+        view.CropBox = bbox
+        return_value .update_sep(
+            True, "Successfully updated view crop: {}".format(view)
+        )
+           
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to update view crop: {} with error: {}".format(view, e),
+        )
+
+    return return_value
+
+
+def apply_view_bounding_box_crop(doc, view, bbox):
+    """
+    Apply a crop region to a view.
+
+    This method sets the crop region of the view to the specified crop loops.
+
+    :param doc: The document containing the view.
+    :type doc: Autodesk.Revit.DB.Document
+    :param view: The view to apply the crop region to.
+    :type view: Autodesk.Revit.DB.View
+    :param bbox: The bounding box to apply as crop to the view.
+    :type cbbox: Autodesk.Revit.DB.BoundingBoxXYZ
+
+    :return: The result of the operation.
+    :rtype: duHast.Utilities.Objects.result.Result
+    """
+
+    return_value = Result()
+
+    try:
+
+        # set up an action to be executed in a transaction
+        def action():
+            action_return_value = Result()
+            action_return_value= apply_view_bounding_box_crop_without_transaction_wrapper(view, bbox)
+            return action_return_value
+
+        transaction = Transaction(doc, "changing view crop")
+        return_value = in_transaction(transaction, action)
+
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to update view crop: {} with error: {}".format(view, e),
+        )
+
+    return return_value
+
+

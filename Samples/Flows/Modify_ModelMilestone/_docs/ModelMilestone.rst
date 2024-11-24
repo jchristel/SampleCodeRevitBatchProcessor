@@ -20,7 +20,7 @@ This flow is run through a powershell script which executes:
         #. Saves file under a new file name which includes a date stamp
 
 #. A post process which:
-    #. Checks revit batch processor log files for any exceptions
+    #. Checks Revit batch processor log files for any exceptions
 
 
 Setup

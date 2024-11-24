@@ -30,9 +30,11 @@ and or data can be exported to text files which can be used to visualize key met
 #
 #
 
+
 import clr
 import os
 import System
+from csv import QUOTE_MINIMAL
 
 clr.AddReference("System.Core")
 from System import Linq
@@ -472,10 +474,11 @@ def write_model_health_report(doc, revit_file_path, output_directory):
         )
         res_export = res.Result()
         try:
+            # write data to file
             write_report_data_as_csv(
-                os.path.join(output_directory, file_name),
-                rFns.LOG_FILE_HEADER,
-                [
+                file_name= os.path.join(output_directory, file_name),
+                header = rFns.LOG_FILE_HEADER,
+                data = [
                     [
                         revit_file_name,
                         key,
@@ -484,6 +487,10 @@ def write_model_health_report(doc, revit_file_path, output_directory):
                         _cast_parameter_value(parameter_value),
                     ]
                 ],
+                enforce_ascii=True,
+                encoding="utf-8",
+                bom=None,
+                quoting=QUOTE_MINIMAL,
             )
 
             res_export.update_sep(True, "Exported: {}".format(key))

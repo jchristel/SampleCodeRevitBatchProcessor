@@ -26,6 +26,7 @@ This module contains the Revit sheet report functionality.
 #
 #
 
+from csv import QUOTE_MINIMAL
 
 from Autodesk.Revit.DB import FilteredElementCollector, ViewSheet, WorksharingUtils
 
@@ -132,7 +133,13 @@ def write_sheet_data(doc, file_name, current_file_name):
         headers = get_sheets_report_headers(doc)
         data_converted = convert_view_data_to_list(data, headers)
         write_report_data_as_csv(
-            file_name=file_name, header=headers, data=data_converted, enforce_ascii=True
+            file_name=file_name, 
+            header=headers, 
+            data=data_converted, 
+            enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
         )
         return_value.update_sep(True, "Successfully wrote data file")
     except Exception as e:
@@ -171,7 +178,13 @@ def write_sheet_data_by_property_names(
         data_converted = convert_view_data_to_list(data, headers)
         # write data out to file
         write_report_data_as_csv(
-            file_name=file_name, header=headers, data=data_converted, enforce_ascii=True
+            file_name=file_name, 
+            header=headers, 
+            data=data_converted, 
+            enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
         )
         return_value.update_sep(True, "Successfully wrote data file")
     except Exception as e:

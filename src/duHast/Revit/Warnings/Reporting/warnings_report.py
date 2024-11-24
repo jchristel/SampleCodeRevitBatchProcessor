@@ -25,6 +25,7 @@ This module contains a Revit warnings properties report function.
 #
 #
 #
+from csv import QUOTE_MINIMAL
 
 from duHast.Revit.Warnings.warnings import get_warnings
 from duHast.Revit.Warnings.Objects.warnings_storage import RevitWarning
@@ -146,6 +147,9 @@ def write_warnings_data(file_name, data):
             header=REPORT_WARNINGS_HEADER,
             data=data_converted,
             enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
         )
         return_value.update_sep(
             True, "Successfully wrote data file at {}".format(file_name)

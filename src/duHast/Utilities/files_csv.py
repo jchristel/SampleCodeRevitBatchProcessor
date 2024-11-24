@@ -197,7 +197,7 @@ def get_first_row_in_csv_file(filePath):
 
 
 def write_report_data_as_csv(
-    file_name, header, data, write_type="w", enforce_ascii=False,  encoding="utf-8", bom=None
+    file_name, header, data, write_type="w", enforce_ascii=False,  encoding="utf-8", bom=None, quoting=csv.QUOTE_NONE
 ):
     """
     Function writing out report information as CSV file.
@@ -215,6 +215,8 @@ def write_report_data_as_csv(
     :type encoding: str, optional
     :param bom: the byte order mark, Default is None (none will be written). BOM: "utf-16" = , "utf-16-le" = ,  utf-8 =
     :type bom: str, default is NoneType
+    :param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_NONE. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
+    :type quoting: int, optional
     """
 
     # Open the file with the codecs.open method to specify encoding
@@ -224,7 +226,7 @@ def write_report_data_as_csv(
             f.write(bom.decode(encoding))
 
         # Create the CSV writer
-        writer = csv.writer(f)
+        writer = csv.writer(f, escapechar='\\', quoting=quoting)
 
         def encoded_row(row):
             if enforce_ascii:

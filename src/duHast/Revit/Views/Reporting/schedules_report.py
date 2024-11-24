@@ -26,6 +26,7 @@ This module contains the Revit view schedule report functionality.
 #
 #
 
+from csv import QUOTE_MINIMAL
 from Autodesk.Revit.DB import ViewType, WorksharingUtils
 
 from duHast.Revit.Views.Reporting.views_report_header import (
@@ -142,7 +143,17 @@ def write_schedule_data(doc, file_name, current_file_name):
         data = get_schedules_report_data(doc, current_file_name)
         headers = get_schedules_report_headers(doc)
         data_converted = convert_view_data_to_list(data, headers)
-        filesCSV.write_report_data_as_csv(file_name, headers, data_converted)
+        
+        filesCSV.write_report_data_as_csv(
+            file_name=file_name, 
+            header=headers, 
+            data=data_converted,
+            enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
+        )
+
         return_value.update_sep(
             True, "Successfully wrote data file at {}".format(file_name)
         )
@@ -182,8 +193,18 @@ def write_schedule_data_by_property_names(
         # change headers to filtered + default
         headers = REPORT_SCHEDULES_HEADER[:] + view_properties
         data_converted = convert_view_data_to_list(data, headers)
+        
         # write data out to file
-        filesCSV.write_report_data_as_csv(file_name, headers, data_converted)
+        filesCSV.write_report_data_as_csv(
+            file_name=file_name, 
+            header=headers, 
+            data=data_converted,
+            enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
+        )
+        
         return_value.update_sep(
             True, "Successfully wrote data file at {}".format(file_name)
         )

@@ -28,6 +28,7 @@ Module containing functions to write report files from data previously read from
 #
 
 import os
+from csv import QUOTE_MINIMAL
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_csv import write_report_data_as_csv
@@ -199,7 +200,13 @@ def write_data_from_families_to_files(family_data, directory_path):
                         header_data = storage_headers_dic[key]
 
                     write_report_data_as_csv(
-                        file_name=full_file_name, header=header_data, data=item
+                        file_name=full_file_name, 
+                        header=header_data, 
+                        data=item,
+                        enforce_ascii=True,
+                        encoding="utf-8",
+                        bom=None,
+                        quoting=QUOTE_MINIMAL,
                     )
                     return_value.append_message(
                         "Successfully wrote data type: {} report to: {}".format(

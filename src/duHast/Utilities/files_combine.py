@@ -30,6 +30,8 @@ Helper functions relating to combining text files.
 import codecs
 import glob
 import os
+from csv import QUOTE_MINIMAL
+
 from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Utilities.files_get import get_files_single_directory
 from duHast.Utilities.files_tab import get_unique_headers as get_unique_headers_tab
@@ -350,7 +352,14 @@ def combine_files_csv_header_independent(
             line_counter += 1
         # write file data to combined file
         write_report_data_as_csv(
-            combined_file_name, header=[], data=lines_to_be_transferred, write_type="a"
+            file_name=combined_file_name, 
+            header=[], 
+            data=lines_to_be_transferred, 
+            write_type="a",
+            enforce_ascii=False, 
+            encoding="utf-8", 
+            bom=None, 
+            quoting=QUOTE_MINIMAL
         )
         file_counter += 1
 

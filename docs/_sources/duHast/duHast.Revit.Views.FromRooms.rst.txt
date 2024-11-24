@@ -1,0 +1,21 @@
+duHast.Revit.Views.FromRooms package
+====================================
+
+Submodules
+----------
+
+duHast.Revit.Views.FromRooms.create module
+------------------------------------------
+
+.. automodule:: duHast.Revit.Views.FromRooms.create
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.Views.FromRooms
+   :members:
+   :undoc-members:
+   :show-inheritance:

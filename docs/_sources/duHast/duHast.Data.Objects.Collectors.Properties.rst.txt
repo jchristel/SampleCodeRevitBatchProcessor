@@ -92,6 +92,22 @@ duHast.Data.Objects.Collectors.Properties.data\_schedule\_segement module
    :undoc-members:
    :show-inheritance:
 
+duHast.Data.Objects.Collectors.Properties.data\_sheet\_size module
+------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_sheet_size
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Data.Objects.Collectors.Properties.data\_sheet\_size\_names module
+-------------------------------------------------------------------------
+
+.. automodule:: duHast.Data.Objects.Collectors.Properties.data_sheet_size_names
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Data.Objects.Collectors.Properties.data\_type\_properties module
 -----------------------------------------------------------------------
 

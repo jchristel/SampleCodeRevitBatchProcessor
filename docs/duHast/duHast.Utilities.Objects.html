@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Utilities.Objects package &#8212; Sample Code Revit Batch Processor 1.1.7 documentation</title>
+    <title>duHast.Utilities.Objects package &#8212; Sample Code Revit Batch Processor 1.1.8 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.7 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.8 documentation" href="../index.html" />
     <link rel="up" title="duHast.Utilities package" href="duHast.Utilities.html" />
     <link rel="next" title="duHast.pyRevit package" href="duHast.pyRevit.html" />
     <link rel="prev" title="duHast.Utilities package" href="duHast.Utilities.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.7 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.8 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Utilities.Objects package</h1></div>
@@ -253,8 +253,113 @@
 </dd></dl>
 
 </section>
-<section id="duhast-utilities-objects-logger-object-module">
-<h2>duHast.Utilities.Objects.logger_object module<a class="headerlink" href="#duhast-utilities-objects-logger-object-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Utilities.Objects.logger_object">
+<span id="duhast-utilities-objects-logger-object-module"></span><h2>duHast.Utilities.Objects.logger_object module<a class="headerlink" href="#module-duHast.Utilities.Objects.logger_object" title="Permalink to this heading">¶</a></h2>
+<section id="a-logger-class">
+<h3>A logger class<a class="headerlink" href="#a-logger-class" title="Permalink to this heading">¶</a></h3>
+<p>The LoggerObject class is a custom logger class that extends both logging.Logger and Base.
+It is designed to handle logging with both file and console handlers, providing a structured
+and formatted logging mechanism.</p>
+<p>Key Features:
+1. Initialization:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The constructor initializes the logger with a specified name, output path, log levels,
+file format, and handlers for both file and console logging.</p></li>
+<li><p>It creates the necessary directories and sets up the log file path.</p></li>
+<li><p>Handlers are set up with specified formatters and added to the logger.</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p>Methods:
+- clear_handlers(): Clears all existing handlers from the logger.
+- init_handlers(): Initializes and adds the file and console handlers to the logger.
+- get_logger_obj(): Returns the logger object.
+- update_log_level(log_level): Updates the log levels for both file and console handlers.</p></li>
+</ol>
+<p>Usage:
+- The class can be used to create a logger that writes logs to a file and outputs them to the console</p>
+<blockquote>
+<div><p>with specified formats.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>It allows dynamic updating of log levels and ensures that handlers are properly managed.</p></li>
+</ul>
+<p>Example Usage:</p>
+<p># Create a logger object
+logger = LoggerObject(log_name=”myLogger”, output_path=”/path/to/logs”)</p>
+<p># Get the logger object
+logger_obj = logger.get_logger_obj()</p>
+<p># Update log levels
+logger.update_log_level((logging.INFO, logging.ERROR))</p>
+<p># Log messages
+logger_obj.info(“This is an info message”)
+logger_obj.error(“This is an error message”)</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Utilities.Objects.logger_object.</span></span><span class="sig-name descname"><span class="pre">LoggerObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_name='duHast'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path='C:\\Users\\runneradmin\\AppData\\Roaming'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level=(10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">30)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_format='.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fil_stream_hndlr=&lt;class</span> <span class="pre">'logging.handlers.RotatingFileHandler'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fil_stream_frmt=&lt;function</span> <span class="pre">level_time_local_msg_formatter&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cons_stream_hndlr=&lt;class</span> <span class="pre">'logging.StreamHandler'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cons_stream_frmt=&lt;function</span> <span class="pre">msg_only&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Logger</span></code>, <a class="reference internal" href="#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Constructor for the LoggerObject class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log_name</strong> (<em>str</em>) – The name of the log.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – The path to the output directory.</p></li>
+<li><p><strong>log_level</strong> (<em>tuple</em>) – The log levels for the file and console handlers.</p></li>
+<li><p><strong>file_format</strong> (<em>str</em>) – The file format for the log file.</p></li>
+<li><p><strong>fil_stream_hndlr</strong> (<em>class</em>) – The file stream handler class.</p></li>
+<li><p><strong>fil_stream_frmt</strong> (<em>logging.Formatter</em>) – The file stream formatter.</p></li>
+<li><p><strong>cons_stream_hndlr</strong> (<em>class</em>) – The console stream handler class.</p></li>
+<li><p><strong>cons_stream_frmt</strong> (<em>logging.Formatter</em>) – The console stream formatter.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject.clear_handlers">
+<span class="sig-name descname"><span class="pre">clear_handlers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject.clear_handlers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears all handlers from the logger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject.init_handlers">
+<span class="sig-name descname"><span class="pre">init_handlers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject.init_handlers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the file and console handlers for the logger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject.get_logger_obj">
+<span class="sig-name descname"><span class="pre">get_logger_obj</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject.get_logger_obj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the logger object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The logger object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.logger_object.LoggerObject.update_log_level">
+<span class="sig-name descname"><span class="pre">update_log_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.logger_object.LoggerObject.update_log_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the log levels for the file and console handlers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>log_level</strong> (<em>tuple</em>) – A tuple containing the log levels for the file and console handlers.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated logger object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-duHast.Utilities.Objects.result">
 <span id="duhast-utilities-objects-result-module"></span><h2>duHast.Utilities.Objects.result module<a class="headerlink" href="#module-duHast.Utilities.Objects.result" title="Permalink to this heading">¶</a></h2>

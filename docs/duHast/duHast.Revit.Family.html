@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Family package &#8212; Sample Code Revit Batch Processor 1.1.7 documentation</title>
+    <title>duHast.Revit.Family package &#8212; Sample Code Revit Batch Processor 1.1.8 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.7 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.8 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Family.Data package" href="duHast.Revit.Family.Data.html" />
     <link rel="prev" title="duHast.Revit.ExtensibleSchemas package" href="duHast.Revit.ExtensibleSchemas.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.7 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.8 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Family package</h1></div>
@@ -443,8 +443,31 @@
 </dd></dl>
 
 </section>
-<section id="duhast-revit-family-family-geometry-module">
-<h2>duHast.Revit.Family.family_geometry module<a class="headerlink" href="#duhast-revit-family-family-geometry-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Revit.Family.family_geometry">
+<span id="duhast-revit-family-family-geometry-module"></span><h2>duHast.Revit.Family.family_geometry module<a class="headerlink" href="#module-duHast.Revit.Family.family_geometry" title="Permalink to this heading">¶</a></h2>
+<section id="revit-families-geometry-helper-functions">
+<h3>Revit families geometry helper functions.<a class="headerlink" href="#revit-families-geometry-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_geometry.get_solids_based_bounding_box_from_family_instance">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_geometry.</span></span><span class="sig-name descname"><span class="pre">get_solids_based_bounding_box_from_family_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_geometry.get_solids_based_bounding_box_from_family_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a bounding box of the family instance based on solids in the family instance geometry only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The revit document.</p></li>
+<li><p><strong>family_instance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – The family instance to get the bounding box from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The bounding box of the family instance or None if no solids within the family instance are found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.BoundingBoxXYZ or None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Family.family_instance_create">
 <span id="duhast-revit-family-family-instance-create-module"></span><h2>duHast.Revit.Family.family_instance_create module<a class="headerlink" href="#module-duHast.Revit.Family.family_instance_create" title="Permalink to this heading">¶</a></h2>

@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    duHast.Revit.Views.Export
+   duHast.Revit.Views.FromRooms
    duHast.Revit.Views.Geometry
    duHast.Revit.Views.Objects
    duHast.Revit.Views.Reporting
@@ -32,6 +33,14 @@ duHast.Revit.Views.element\_overrides module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Views.elevation\_view\_create module
+-------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.elevation_view_create
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Views.filters module
 ---------------------------------
 
@@ -44,6 +53,14 @@ duHast.Revit.Views.legends module
 ---------------------------------
 
 .. automodule:: duHast.Revit.Views.legends
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Views.plan\_view\_create module
+--------------------------------------------
+
+.. automodule:: duHast.Revit.Views.plan_view_create
    :members:
    :undoc-members:
    :show-inheritance:

@@ -12,6 +12,14 @@ duHast.UI.Objects.WPF.Commands.CommandBase module
    :undoc-members:
    :show-inheritance:
 
+duHast.UI.Objects.WPF.Commands.RelayCommand module
+--------------------------------------------------
+
+.. automodule:: duHast.UI.Objects.WPF.Commands.RelayCommand
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

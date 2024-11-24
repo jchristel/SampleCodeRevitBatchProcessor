@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Utilities package &#8212; Sample Code Revit Batch Processor 1.1.7 documentation</title>
+    <title>duHast.Utilities package &#8212; Sample Code Revit Batch Processor 1.1.8 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.7 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.8 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
     <link rel="next" title="duHast.Utilities.Objects package" href="duHast.Utilities.Objects.html" />
     <link rel="prev" title="duHast.UI.files_select package" href="duHast.UI.files_select.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.7 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.8 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Utilities package</h1></div>
@@ -124,7 +124,17 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Utilities.Objects.html#duhast-utilities-objects-logger-object-module">duHast.Utilities.Objects.logger_object module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Utilities.Objects.html#module-duHast.Utilities.Objects.logger_object">duHast.Utilities.Objects.logger_object module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#a-logger-class">A logger class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject"><code class="docutils literal notranslate"><span class="pre">LoggerObject</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.clear_handlers"><code class="docutils literal notranslate"><span class="pre">LoggerObject.clear_handlers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.init_handlers"><code class="docutils literal notranslate"><span class="pre">LoggerObject.init_handlers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.get_logger_obj"><code class="docutils literal notranslate"><span class="pre">LoggerObject.get_logger_obj()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject.update_log_level"><code class="docutils literal notranslate"><span class="pre">LoggerObject.update_log_level()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Utilities.Objects.html#module-duHast.Utilities.Objects.result">duHast.Utilities.Objects.result module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#a-class-used-to-return-status-messages-and-objects-back-to-a-caller">A class used to return status, messages and objects back to a caller.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result"><code class="docutils literal notranslate"><span class="pre">Result</span></code></a><ul>
@@ -784,6 +794,12 @@ def function_to_measure():</p>
 <dt class="sig sig-object py" id="duHast.Utilities.date_stamps.TIME_STAMP_HHMMSEC_COLON">
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.date_stamps.</span></span><span class="sig-name descname"><span class="pre">TIME_STAMP_HHMMSEC_COLON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%H:%M:%S'</span></em><a class="headerlink" href="#duHast.Utilities.date_stamps.TIME_STAMP_HHMMSEC_COLON" title="Permalink to this definition">¶</a></dt>
 <dd><p>time stamp using colons: 18:59:59</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.TIME_STAMP_HHMMSEC_UNDERSCORE">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.date_stamps.</span></span><span class="sig-name descname"><span class="pre">TIME_STAMP_HHMMSEC_UNDERSCORE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%H_%M_%S'</span></em><a class="headerlink" href="#duHast.Utilities.date_stamps.TIME_STAMP_HHMMSEC_UNDERSCORE" title="Permalink to this definition">¶</a></dt>
+<dd><p>time stamp using colons: 18_59_59</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1797,7 +1813,7 @@ the logger object application wide. Assign the return value to a variable called
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>log_obj_inst</strong> (<em>duHast.Utilities.Objects.logger_object.LoggerObject</em>) – An instance of the LoggerObject class from duHast.Utilities.Objects.logger_object.py</p></li>
+<li><p><strong>log_obj_inst</strong> (<a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.logger_object.LoggerObject" title="duHast.Utilities.Objects.logger_object.LoggerObject"><em>duHast.Utilities.Objects.logger_object.LoggerObject</em></a>) – An instance of the LoggerObject class from duHast.Utilities.Objects.logger_object.py</p></li>
 <li><p><strong>errors_in_console</strong> (<em>bool</em>) – Whether to output errors to the console. Defaults to True. Turn off to handle in the application code</p></li>
 </ul>
 </dd>
@@ -1876,8 +1892,34 @@ If deemed appropriate, the record may be modified in-place.</p>
 </dd></dl>
 
 </section>
-<section id="duhast-utilities-logging-handlers-module">
-<h2>duHast.Utilities.logging_handlers module<a class="headerlink" href="#duhast-utilities-logging-handlers-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Utilities.logging_handlers">
+<span id="duhast-utilities-logging-handlers-module"></span><h2>duHast.Utilities.logging_handlers module<a class="headerlink" href="#module-duHast.Utilities.logging_handlers" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Utilities.logging_handlers.CustomStreamHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Utilities.logging_handlers.</span></span><span class="sig-name descname"><span class="pre">CustomStreamHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.logging_handlers.CustomStreamHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">StreamHandler</span></code></p>
+<p>Initialize the handler.</p>
+<p>If stream is not specified, sys.stderr is used.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.logging_handlers.CustomStreamHandler.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.logging_handlers.CustomStreamHandler.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.logging_handlers.std_file_handler">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.logging_handlers.</span></span><span class="sig-name descname"><span class="pre">std_file_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_hndlr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_formatter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.logging_handlers.std_file_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create file handler to obj.log_file_path location</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.logging_handlers.std_console_handler">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.logging_handlers.</span></span><span class="sig-name descname"><span class="pre">std_console_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cons_hndlr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cons_formatter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.logging_handlers.std_console_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a console handler to output to stdout (console)
+displaying only the message as default</p>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Utilities.padding">
 <span id="duhast-utilities-padding-module"></span><h2>duHast.Utilities.padding module<a class="headerlink" href="#module-duHast.Utilities.padding" title="Permalink to this heading">¶</a></h2>

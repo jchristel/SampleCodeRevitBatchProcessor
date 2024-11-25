@@ -71,10 +71,9 @@ def get_element_mark(e):
 
     mark = ""
     try:
-        para_mark = e.get_Parameter(BuiltInParameter.ALL_MODEL_MARK)
-        mark = "" if para_mark == None else para_mark.AsString()
+        mark = rParaGet.get_built_in_parameter_value(e,BuiltInParameter.ALL_MODEL_MARK)
     except Exception as e:
-        mark = "Failed with exception: " + str(e)
+        mark = "Failed with exception: {}".format(e)
     return mark
 
 

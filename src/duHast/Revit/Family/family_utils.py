@@ -52,6 +52,11 @@ from duHast.Revit.Family import family_load_option as famLoadOpt
 # load everything required from family load call back
 from duHast.Revit.Family.family_load_option import *
 from duHast.Revit.Common import transaction as rTran
+from duHast.Revit.Common.transaction import in_transaction_with_failure_handling
+from duHast.Revit.Common.failure_handling import process_failures
+from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
+    FailureHandlingConfig,
+)
 
 from duHast.Revit.Common.parameter_get_utils import (
     get_built_in_parameter_value,
@@ -83,7 +88,7 @@ from duHast.Revit.Family.Utility.loadable_family_categories import (
 
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
-def load_family(doc, family_file_path):
+def load_family(doc, family_file_path, transaction_manager=in_transaction_with_failure_handling, failure_config = FailureHandlingConfig(), failure_processing_func=process_failures):
     """
     Loads or reloads a single family into a Revit document.
 
@@ -94,6 +99,13 @@ def load_family(doc, family_file_path):
     :type doc: Autodesk.Revit.DB.Document
     :param family_file_path: The fully qualified file path of the family to be loaded.
     :type family_file_path: str
+    :param  transaction_manager: A function wrapping the load family action in a transaction. Default is in_transaction_with_failure_handling. None assumes a transaction is already in progress.
+    :type transaction_manager: function
+    :param failure_config: The failure handling configuration object. Default is FailureHandlingConfig()
+    :type failure_config: FailureHandlingConfig
+    :param failure_processing_func: The function to process failures. Default is process_failures
+    :type failure_processing_func: function
+    
     :raise: None
 
     :return:
@@ -111,7 +123,7 @@ def load_family(doc, family_file_path):
     :rtype: :class:`.Result`
     """
 
-    result = res.Result()
+    return_value = res.Result()
     try:
         # set up load / reload action to be run within a transaction
         def action():
@@ -145,17 +157,22 @@ def load_family(doc, family_file_path):
                 )
             return action_return_value
 
-        transaction = Transaction(
-            doc,
-            "Loading Family: {}".format(
-                fileIO.get_file_name_without_ext(family_file_path)
-            ),
-        )
-        dummy = rTran.in_transaction(transaction, action)
-        result.update(dummy)
+        # if no transaction manager is passed in, assume a transaction is already in progress
+        if transaction_manager is None:
+            # load family without starting a new transaction
+            return_value.update(action())
+        else:
+            transaction = Transaction(
+                doc,
+                "Loading Family: {}".format(
+                    fileIO.get_file_name_without_ext(family_file_path)
+                ),
+            )
+            dummy = transaction_manager(transaction, action, failure_config, failure_processing_func)
+            return_value.update(dummy)
     except Exception as e:
-        result.update_sep(False, "Failed to load family with exception: {}".format(e))
-    return result
+        return_value.update_sep(False, "Failed to load family with exception: {}".format(e))
+    return return_value
 
 
 

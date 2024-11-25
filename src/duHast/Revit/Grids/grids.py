@@ -39,6 +39,7 @@ import System
 # import common library modules
 from duHast.Revit.Common import common as com
 from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Common.Geometry.points import get_point_as_string
 
 # import Autodesk
 from Autodesk.Revit.DB import (
@@ -338,11 +339,7 @@ def get_max_extent_as_string(g):
     """
 
     ex = g.GetExtents()
-    max = "[{}]".format(
-        ",".join(
-            [str(ex.MaximumPoint.X), str(ex.MaximumPoint.Y), str(ex.MaximumPoint.Z)]
-        )
-    )
+    max = get_point_as_string (ex.MaximumPoint)
     return max
 
 
@@ -357,11 +354,7 @@ def get_min_extent_as_string(g):
     """
 
     ex = g.GetExtents()
-    min = "[{}]".format(
-        ",".join(
-            [str(ex.MinimumPoint.X), str(ex.MinimumPoint.Y), str(ex.MinimumPoint.Z)]
-        )
-    )
+    min =  get_point_as_string (ex.MinimumPoint)
     return min
 
 

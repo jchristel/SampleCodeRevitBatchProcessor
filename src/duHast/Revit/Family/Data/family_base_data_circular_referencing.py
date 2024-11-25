@@ -42,7 +42,6 @@ from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Family.Data.family_data_family_processor_utils import process_data
 
-
 def find_circular_reference(family_data, result_list):
     """
     Function to find circular references in families.
@@ -50,13 +49,7 @@ def find_circular_reference(family_data, result_list):
     :param family_data: list of family data objects
     :type family_data: list
     :param result_list: list to store families with circular references
-    :type result_list: list of tuples with two entries (
-        0 index the family_data_family object,
-        1 index list of tuples with two entries in format
-            0 index the nesting level as integer at which the circular nesting occurs
-            1 index a string in format  family name :: family category
-            )
-
+    :type result_list: list of tuples with two entries (0 index the family_data_family object, 1 index list of tuples with two entries in format, 0 index the nesting level as integer at which the circular nesting occurs, 1 index a string in format  family name :: family category )
     :return: list of tuples containing family with circular references at 0 and circular family data at 1
     """
 
@@ -73,22 +66,12 @@ def check_families_have_circular_references(family_base_data_report_file_path):
     """
     Function to check if families have circular references.
 
-    :param family_base_data_report_file_path: path to family base data report file
+    :param family_base_data_report_file_path: path to the family base data report file
     :type family_base_data_report_file_path: str
-
-    :return: A result object with the success status and the circular reference check result
-
-        . result is a list of tuples with two entries (
-            0 index the family_data_family object,
-            1 index list of tuples with two entries in format
-                0 index the nesting level as integer at which the circular nesting occurs
-                1 index a string in format  family name :: family category
-                )
-
-    :rtype: :class:`.Result`
-
+    :return: result object
+    :rtype: Result
     """
-
+    
     # read families into data family objects
     # check for duplicate family names in nesting tree
 
@@ -99,10 +82,9 @@ def check_families_have_circular_references(family_base_data_report_file_path):
     t_process.start()
 
     try:
-
         # load and process families
         families_processed_result = process_data(
-            family_base_data_report_file_path=family_base_data_report_file_path,
+        family_base_data_report_file_path=family_base_data_report_file_path,
             do_this=find_circular_reference,
         )
 
@@ -117,14 +99,14 @@ def check_families_have_circular_references(family_base_data_report_file_path):
             families.append(nested_tuple[0])
             families_with_circular_nesting.extend(nested_tuple[1])
 
-        # append messages debug
-        return_value.append_message(families_processed_result.message)
+            # append messages debug
+            return_value.append_message(families_processed_result.message)
 
-        return_value.append_message(
-            "{} Found: {} circular references in families.".format(
-                t_process.stop(), len(families_with_circular_nesting)
+            return_value.append_message(
+                "{} Found: {} circular references in families.".format(
+                    t_process.stop(), len(families_with_circular_nesting)
+                )
             )
-        )
 
         # return families which have circular references
         if len(families_with_circular_nesting) > 0:
@@ -133,9 +115,7 @@ def check_families_have_circular_references(family_base_data_report_file_path):
     except Exception as e:
         return_value.update_sep(
             False,
-            "An error occurred while reading the families into data objects.{}".format(
-                e
-            ),
-        )
+            "An error occurred while reading the families into data objects.{}".format(e),
+            )
 
     return return_value

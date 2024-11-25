@@ -45,7 +45,7 @@ This module:
 # --------------------------
 
 import sys, os
-
+from csv import QUOTE_MINIMAL
 import settings as settings  # sets up all commonly used variables and path locations!
 
 from duHast.Utilities.console_out import output
@@ -153,7 +153,13 @@ def _write_overall_task_file(result_get_host_families):
 
         result.append_message("Writing data to: {}".format(full_task_file_name))
         try:
-            write_report_data_as_csv(full_task_file_name, [], data)
+            write_report_data_as_csv(
+                file_name=full_task_file_name,
+                header=[],
+                data=data,
+                enforce_ascii=True,
+                quoting=QUOTE_MINIMAL,
+            )
             result.update_sep(True, "Created task files.")
         except Exception as e:
             result.update_sep(
@@ -163,7 +169,13 @@ def _write_overall_task_file(result_get_host_families):
     else:
         # write out empty task list since no host files where found
         try:
-            write_report_data_as_csv(full_task_file_name, [], data)
+            write_report_data_as_csv(
+                file_name=full_task_file_name,
+                header=[],
+                data=data,
+                enforce_ascii=True,
+                quoting=QUOTE_MINIMAL,
+            )
             result.update_sep(True, "Created empty task files.")
         except Exception as e:
             result.update_sep(

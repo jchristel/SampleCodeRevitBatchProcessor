@@ -46,6 +46,7 @@ This module is a post - processing module combining temp files, cleaning up temp
 
 import os
 import sys
+from csv import QUOTE_MINIMAL
 
 import settings as settings  # sets up all commonly used variables and path locations!
 from duHast.Utilities.console_out import output
@@ -195,11 +196,13 @@ def create_follow_up_report_data_file():
     # write data to file
     try:
         write_report_data_as_csv(
-            os.path.join(
+            file_name=os.path.join(
                 settings.WORKING_DIRECTORY, settings.FOLLOW_UP_REPORT_FILE_NAME
             ),
-            header,
-            data_file,
+            header=header,
+            data=data_file,
+            enforce_ascii=True,
+            quoting=QUOTE_MINIMAL,
         )
         return True
     except Exception:

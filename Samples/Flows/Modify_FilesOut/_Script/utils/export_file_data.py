@@ -38,6 +38,7 @@ For information stored refer to class docFile.get_data method
 #
 
 import os
+from csv import QUOTE_MINIMAL
 from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.Objects import result as res
 
@@ -107,7 +108,14 @@ def write_out_export_file_data(
                     )
                     try:
                         write_report_data_as_csv(
-                            file_name=file_name, header=[], data=[data]
+                            file_name=file_name, 
+                            header=[], 
+                            data=[data],
+                            write_type="w",
+                            enforce_ascii=True,
+                            encoding="utf-8",
+                            bom=None,
+                            quoting=QUOTE_MINIMAL,
                         )
                         return_value.append_message(
                             "Successfully wrote export file data to: {}".format(

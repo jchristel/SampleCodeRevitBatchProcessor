@@ -34,6 +34,7 @@ This module contains a custom helper functions for marker files.
 #
 #
 
+from csv import QUOTE_MINIMAL
 # import settings
 import settings as settings  # sets up all commonly used variables and path locations!
 
@@ -100,7 +101,16 @@ def write_new_data(path, data):
 
     return_value = res.Result()
     try:
-        write_report_data_as_csv(path, [], data)
+        write_report_data_as_csv(
+            file_name=path, 
+            header=[], 
+            data=data,
+            write_type="w",
+            enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
+        )
         return_value.append_message("Wrote new meta data file to: {}".format(path))
     except Exception as e:
         return_value.update_sep(False,"Failed to write data file: {} with exception: {}".format(path, e))

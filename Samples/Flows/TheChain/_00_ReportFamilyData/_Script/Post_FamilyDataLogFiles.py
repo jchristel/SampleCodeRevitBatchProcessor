@@ -50,6 +50,7 @@ This module contains post reporting functions:
 # Imports
 # --------------------------
 import os
+from csv import QUOTE_MINIMAL
 
 import settings as settings  # sets up all commonly used variables and path locations!
 from duHast.Utilities.console_out import output
@@ -114,6 +115,8 @@ def write_out_re_process_data(data, file_name, header=[]):
             ),  # report full file name
             header=header,  # empty header by default
             data=data,
+            enforce_ascii=True,
+            quoting=QUOTE_MINIMAL,
         )
     else:
         output(
@@ -126,6 +129,8 @@ def write_out_re_process_data(data, file_name, header=[]):
             file_name=settings.OUTPUT_FOLDER + "\\" + file_name,
             header=header,
             data=[],
+            enforce_ascii=True,
+            quoting=QUOTE_MINIMAL,
         )
         output("{}: Empty file written.".format(file_name))
 

@@ -45,7 +45,7 @@ This module builds the list of families to be processed for sub category name ch
 # --------------------------
 
 import sys, os
-
+from csv import QUOTE_MINIMAL
 import settings as settings  # sets up all commonly used variables and path locations!
 
 from duHast.Utilities.console_out import output
@@ -96,7 +96,13 @@ try:
                     + settings.PREDEFINED_TASK_FILE_EXTENSION,
                 )
                 # write out task file list into task folder
-                write_report_data_as_csv(task_file_name, [], root_families_to_file)
+                write_report_data_as_csv(
+                    file_name=task_file_name, 
+                    header=[], 
+                    data=root_families_to_file,
+                    enforce_ascii=True,
+                    quoting=QUOTE_MINIMAL,
+                )
                 # user feed back
                 output("Successfully wrote task file: {}".format(task_file_name))
                 sys.exit(0)

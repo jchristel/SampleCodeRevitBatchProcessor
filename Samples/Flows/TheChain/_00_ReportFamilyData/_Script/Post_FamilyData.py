@@ -54,7 +54,7 @@ import clr
 import System
 import os
 import sys
-
+from csv import QUOTE_MINIMAL
 
 import settings as settings  # sets up all commonly used variables and path locations!
 from duHast.Utilities.console_out import output  # output to console function
@@ -121,6 +121,8 @@ def user_out_and_log_file(processing_results, file_name, header=[]):
             ),  # report full file name
             header=header,  # empty header
             data=processing_results.result,
+            enforce_ascii=True,
+            quoting=QUOTE_MINIMAL,
         )
     else:
         output(

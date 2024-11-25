@@ -42,6 +42,7 @@ Families are not saved.
 import clr
 import System
 from os import path
+from csv import QUOTE_MINIMAL
 
 import settings as settings  # sets up all commonly used variables and path locations!
 
@@ -186,9 +187,11 @@ def report_data(processor, file_name_prefix):
         file_name = check_file_path_length(file_name_prefix)
         try:
             write_report_data_as_csv(
-                file_name,
-                processor.get_data_headers(),
-                processor.get_data_string_list(),
+                file_name=file_name,
+                header=processor.get_data_headers(),
+                data=processor.get_data_string_list(),
+                enforce_ascii=True,
+                quoting=QUOTE_MINIMAL,
             )
             result.update_sep(
                 True, "Successfully wrote  data to file {}".format(file_name)

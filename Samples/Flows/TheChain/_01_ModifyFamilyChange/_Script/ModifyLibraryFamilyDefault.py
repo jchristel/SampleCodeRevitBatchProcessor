@@ -46,7 +46,7 @@ The changes made to families do not require any further input (from another scri
 
 import clr
 import os
-
+from csv import QUOTE_MINIMAL
 import settings as settings  # sets up all commonly used variables and path locations!
 
 # import common library
@@ -114,9 +114,11 @@ def write_copy_marker_file(file_name):
     )
     try:
         write_report_data_as_csv(
-            file_name_marker,
-            ["Copy From", "Copy To"],
-            [[REVIT_FILE_PATH_NEW, REVIT_FILE_PATH]],
+            file_name=file_name_marker,
+            header=["Copy From", "Copy To"],
+            data=[[REVIT_FILE_PATH_NEW, REVIT_FILE_PATH]],
+            enforce_ascii=True,
+            quoting=QUOTE_MINIMAL,
         )
         output(
             "Wrote marker file: {} :: [{}]".format(file_name_marker, True),
@@ -146,9 +148,11 @@ def write_changed_family_marker_file(file_name, revit_category_name):
     )
     try:
         write_report_data_as_csv(
-            file_name_marker,
-            ["file Name", "file Path", "revit category"],
-            [[file_name, REVIT_FILE_PATH, revit_category_name]],
+            file_name=file_name_marker,
+            header=["file Name", "file Path", "revit category"],
+            data=[[file_name, REVIT_FILE_PATH, revit_category_name]],
+            enforce_ascii=True,
+            quoting=QUOTE_MINIMAL,
         )
         output(
             "Wrote changed family file: {} :: [{}]".format(file_name_marker, True),

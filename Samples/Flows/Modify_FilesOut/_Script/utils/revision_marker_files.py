@@ -31,6 +31,7 @@ These files are used to rename exports (ifc , nwc) with the right revision infor
 #
 
 import os
+from csv import QUOTE_MINIMAL
 import docFile as df
 
 from duHast.Utilities.files_get import get_files
@@ -114,7 +115,13 @@ def write_rev_marker_file_writer(fully_qualified_path, file_data):
     return_value = res.Result()
     if len(file_data) > 0:
         try:
-            write_report_data_as_csv(fully_qualified_path, [], [file_data])
+            write_report_data_as_csv(
+                file_name=fully_qualified_path, 
+                header=[], 
+                data=[file_data],
+                enforce_ascii=True,
+                quoting=QUOTE_MINIMAL,
+            )
             return_value.append_message = "Successfully wrote marker file: {}".format(
                 fully_qualified_path
             )

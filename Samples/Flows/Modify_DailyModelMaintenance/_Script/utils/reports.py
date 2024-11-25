@@ -43,6 +43,8 @@ from System import Linq
 
 clr.ImportExtensions(Linq)
 
+from csv import QUOTE_MINIMAL
+
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
@@ -241,7 +243,18 @@ def report_shared_paras(doc, revit_file_path, output):
     )
     data = get_shared_parameter_report_data(doc, revit_file_path)
     try:
-        write_report_data_as_csv(file_name, REPORT_SHARED_PARAMETERS_HEADER, data, "w")
+        # write data to csv file
+        write_report_data_as_csv(
+            file_name=file_name, 
+            header = REPORT_SHARED_PARAMETERS_HEADER, 
+            data=data, 
+            write_type="w",
+            enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
+        )
+
         return_value.update_sep(
             True, "Successfully wrote shared parameter data to file."
         )
@@ -290,7 +303,17 @@ def report_levels(doc, revit_file_path, output):
     )
     data = get_level_report_data(doc, revit_file_path)
     try:
-        write_report_data_as_csv(file_name, REPORT_LEVELS_HEADER, data, "w")
+        # write data to csv file
+        write_report_data_as_csv(
+            file_name=file_name, 
+            header=REPORT_LEVELS_HEADER, 
+            data=data, 
+            write_type="w",
+            enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
+        )
         return_value.update_sep(True, "Successfully wrote level data to file.")
     except Exception as e:
         return_value.update_sep(
@@ -337,7 +360,17 @@ def report_grids(doc, revit_file_path, output):
     )
     data = get_grid_report_data(doc, revit_file_path)
     try:
-        write_report_data_as_csv(file_name, REPORT_GRIDS_HEADER, data, "w")
+        # write data to csv file
+        write_report_data_as_csv(
+            file_name=file_name, 
+            header=REPORT_GRIDS_HEADER, 
+            data=data, 
+            write_type="w",
+            enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
+        )
         return_value.update_sep(True, "Successfully wrote grid data to file.")
     except Exception as e:
         return_value.update_sep(
@@ -408,6 +441,9 @@ def report_families(doc, revit_file_path, output):
             data=data,
             write_type="w",
             enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
         )
         return_value.update_sep(True, "Successfully wrote family data to file.")
     except Exception as e:
@@ -456,7 +492,17 @@ def report_worksets(doc, revit_file_path, output):
     )
     data = get_workset_report_data(doc, revit_file_path)
     try:
-        write_report_data_as_csv(file_name, REPORT_WORKSETS_HEADER, data, "w")
+        # write data to file
+        write_report_data_as_csv(
+            file_name=file_name, 
+            header=REPORT_WORKSETS_HEADER, 
+            data=data, 
+            write_type="w",
+            enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
+        )
         return_value.update_sep(True, "Successfully wrote workset data to file.")
     except Exception as e:
         return_value.update_sep(
@@ -540,7 +586,16 @@ def report_wall_types(doc, revit_file_path, output):
     # get wall report headers
     data = get_wall_report_data(doc, get_file_name_without_ext(revit_file_path))
     try:
-        write_report_data_as_csv(file_name, REPORT_WALLS_HEADER, data, "w")
+        write_report_data_as_csv(
+            file_name=file_name, 
+            header=REPORT_WALLS_HEADER, 
+            data=data, 
+            write_type="w",
+            enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
+        )
         return_value.update_sep(True, "Successfully wrote wall type data to file.")
     except Exception as e:
         return_value.update_sep(
@@ -585,10 +640,16 @@ def report_revit_link_data(doc, revit_file_path, output):
             + settings.REPORT_EXTENSION_REVIT_LINKS,
             +settings.REPORT_FILE_NAME_EXTENSION,
         )
+        # write data to file
         write_report_data_as_csv(
-            file_name,
-            rLinkHeader.REPORT_REVIT_LINKS_HEADER,
-            rLinkRep.get_revit_link_report_data(doc, revit_file_path),
+            file_name=file_name,
+            header=rLinkHeader.REPORT_REVIT_LINKS_HEADER,
+            data=rLinkRep.get_revit_link_report_data(doc, revit_file_path),
+            write_type="w",
+            enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
         )
         return_value.update_sep(True, "Successfully wrote Revit link data to file.")
     except Exception as e:
@@ -636,9 +697,14 @@ def report_cad_link_data(doc, revit_file_path, output):
             +settings.REPORT_FILE_NAME_EXTENSION,
         )
         write_report_data_as_csv(
-            file_name,
-            rLinkCadHeader.REPORT_CAD_LINKS_HEADER,
-            rLinkCadRep.get_cad_report_data(doc, revit_file_path),
+            file_name=file_name,
+            header=rLinkCadHeader.REPORT_CAD_LINKS_HEADER,
+            data=rLinkCadRep.get_cad_report_data(doc, revit_file_path),
+            write_type="w",
+            enforce_ascii=True,
+            encoding="utf-8",
+            bom=None,
+            quoting=QUOTE_MINIMAL,
         )
     except Exception as e:
         return_value.update_sep(

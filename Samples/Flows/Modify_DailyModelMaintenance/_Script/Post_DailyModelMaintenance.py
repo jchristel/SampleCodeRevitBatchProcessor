@@ -116,7 +116,9 @@ def merge_files():
     if file_exist(data_file_name) == False:
         output("Need to create data file: {}".format(data_file_name))
         try:
-            write_report_data_as_csv(data_file_name, rFns.LOG_FILE_HEADER, [])
+            write_report_data_as_csv(
+                file_name=data_file_name, header=rFns.LOG_FILE_HEADER, data=[]
+            )
         except Exception as e:
             output(
                 "Failed to create data log file {} with exception: {}".format(

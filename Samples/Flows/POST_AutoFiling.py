@@ -510,7 +510,12 @@ def _write_new_file_received_data(data):
 
     status = True
     try:
-        fileCSV.write_report_data_as_csv(CURRENT_ISSUE_DATA_FILE_NAME, [], data)
+        fileCSV.write_report_data_as_csv(
+            file_name=CURRENT_ISSUE_DATA_FILE_NAME, 
+            header=[], 
+            data=data,
+            enforce_ascii=True,
+            quoting=csv.QUOTE_MINIMAL,)
     except Exception as e:
         status = False
         output(

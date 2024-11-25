@@ -34,6 +34,7 @@ This module contains post reporting analysis utility functions:
 # Imports
 # --------------------------
 import os
+from csv import QUOTE_MINIMAL
 
 import settings as settings  # sets up all commonly used variables and path locations!
 from duHast.Utilities.console_out import output
@@ -222,9 +223,13 @@ def write_empty_report_file(file_name, header=[]):
     output("{}: Writing empty report file.".format(file_name))
     data_to_file = []
     write_report_data_as_csv(
-        os.path.join(settings.OUTPUT_FOLDER, file_name),  # report full file name
-        header,  # empty header by default
-        data_to_file,
+        file_name=os.path.join(
+            settings.OUTPUT_FOLDER, file_name
+        ),  # report full file name
+        header=header,  # empty header by default
+        data=data_to_file,
+        enforce_ascii=True,
+        quoting=QUOTE_MINIMAL,
     )
 
 
@@ -313,7 +318,14 @@ def combine_current_with_previous_report_files(previous_report_root_directory):
                 output(updated_report_rows_status.message)
                 updated_report_rows = updated_report_rows_status.result
                 # write out new report on top of old one
-                write_report_data_as_csv(current_report_file, "", updated_report_rows)
+                write_report_data_as_csv(
+                    file_name=current_report_file,
+                    header=[],
+                    data=updated_report_rows,
+                    enforce_ascii=True,
+                    quoting=QUOTE_MINIMAL,
+                )
+
                 output("Wrote updated report to: {}".format(current_report_file))
             except Exception as e:
                 output(

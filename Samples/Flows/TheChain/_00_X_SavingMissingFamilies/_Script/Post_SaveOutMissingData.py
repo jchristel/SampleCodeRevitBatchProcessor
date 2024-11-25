@@ -42,7 +42,7 @@ This module contains post saving out missing families functions:
 import clr
 import System
 import os
-import sys
+from csv import QUOTE_MINIMAL
 
 
 import settings as settings  # sets up all commonly used variables and path locations!
@@ -83,9 +83,11 @@ def _UserOutAndLogFile(processing_results, file_name, header=[]):
             output("::".join(m))
         # write data out to file
         write_report_data_as_csv(
-            os.path.join(settings.OUTPUT_FOLDER, file_name),  # report full file name
-            header,  # empty header
-            processing_results.result,
+            file_name=os.path.join(settings.OUTPUT_FOLDER, file_name),  # report full file name
+            header=header,  # empty header
+            data=processing_results.result,
+            enforce_ascii=True,
+            quoting=QUOTE_MINIMAL,
         )
     else:
         output("Result did not contain any data to be written to file.")
@@ -167,12 +169,14 @@ if save_out_missing_families:
 
         # write data to file
         write_report_data_as_csv(
-            os.path.join(
+            file_name=os.path.join(
                 settings.OUTPUT_FOLDER,
                 settings.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT,
             ),  # report full file name
-            [],  # empty header by default
-            data,
+            header=[],  # empty header by default
+            data=data,
+            enforce_ascii=True,
+            quoting=QUOTE_MINIMAL,
         )
     else:
         output("No families located in output folder!")

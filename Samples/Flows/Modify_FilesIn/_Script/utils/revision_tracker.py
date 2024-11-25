@@ -32,6 +32,7 @@ This module contains a revision tracker related helper functions.
 #
 
 import os
+from csv import QUOTE_MINIMAL
 import settings as settings
 from utils.file_data import get_file_data_by_name_and_extension
 from duHast.Utilities.files_get import get_files, get_file_name_without_ext
@@ -77,6 +78,10 @@ def save_files_received_list(current_document_data, output):
                 header=[],
                 data=received_file_data,
                 write_type="a",
+                enforce_ascii=True,
+                encoding="utf-8",
+                bom=None,
+                quoting=QUOTE_MINIMAL,
             )
         except Exception as e:
             status = False

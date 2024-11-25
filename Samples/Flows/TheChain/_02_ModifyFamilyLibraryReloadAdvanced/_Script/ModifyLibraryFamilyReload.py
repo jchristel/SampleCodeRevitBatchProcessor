@@ -37,7 +37,7 @@
 
 import clr
 import os
-
+from csv import QUOTE_MINIMAL
 import settings as settings  # sets up all commonly used variables and path locations!
 
 # import common library
@@ -142,9 +142,11 @@ if True:
         )
         try:
             write_report_data_as_csv(
-                _file_name_marker,
-                "",
-                [["Copy From", "Copy To"], [REVIT_FILE_PATH_NEW, REVIT_FILE_PATH]],
+                file_name=_file_name_marker,
+                header=[],
+                data=[["Copy From", "Copy To"], [REVIT_FILE_PATH_NEW, REVIT_FILE_PATH]],
+                enforce_ascii=True,
+                quoting=QUOTE_MINIMAL,
             )
             output("Wrote marker file: {} :: {}".format(_file_name_marker, True))
         except Exception as e:

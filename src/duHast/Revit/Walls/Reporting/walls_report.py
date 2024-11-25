@@ -52,15 +52,23 @@ def get_wall_report_data(doc, revit_file_path):
         try:
             wall_type_name = str(Element.Name.GetValue(wt))
             cs = wt.GetCompoundStructure()
-            if cs != None:
+            if cs:
                 cs_layers = cs.GetLayers()
                 # print(len(cs_layers))
                 for cs_layer in cs_layers:
                     layer_mat = doc.GetElement(cs_layer.MaterialId)
-                    material_mark = material_name = "N/A"
+                    material_mark  = "N/A"
+                    material_name = "N/A"
                     # not all layers may have assigned a material (could be Default)
                     if layer_mat is not None:
+                        # get the material mark
                         material_mark = get_element_mark(layer_mat)
+
+                        # convert the default none to n/a
+                        if material_mark == "None":
+                            material_mark = "N/A"
+                        
+                        # get the material name
                         material_name = get_material_name_by_id(
                             doc, cs_layer.MaterialId
                         )
@@ -87,10 +95,10 @@ def get_wall_report_data(doc, revit_file_path):
                         encode_ascii(wall_type_name),
                         "no layers - in place family or curtain wall",
                         str(0.0),
-                        "NA",
-                        "NA",
+                        "N/A",
+                        "N/A",
                     ]
                 )
         except:
-            data.append([revit_file_path, str(wt.Id)])
+            data.append([revit_file_path, str(wt.Id), "N/A", "N/A", "N/A", "N/A", "N/A"])
     return data

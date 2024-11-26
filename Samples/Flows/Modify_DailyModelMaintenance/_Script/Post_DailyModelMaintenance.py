@@ -177,6 +177,30 @@ def append_files(
             )
         )
 
+def combine_csv_files(folder_path, file_prefix, file_suffix, file_extension, out_put_file_name):
+    """
+    Combines csv files into a single csv file with header independent of the files being combined.
+
+    :param folder_path: Directory path where the files are located
+    :type folder_path: str
+    :param file_prefix: The file prefix common between files to be combined
+    :type file_prefix: str
+    :param file_suffix:The file suffix common between files to be combined
+    :type file_suffix: str
+    :param file_extension: The file extension of the files to be combined
+    :type file_extension: str
+    :param out_put_file_name: The name of the file to be created
+    :type out_put_file_name: str
+    """
+
+    combine_files_csv_header_independent(
+        folder_path=folder_path,
+        file_prefix=file_prefix,
+        file_suffix=file_suffix,
+        file_extension=file_extension,
+        out_put_file_name=out_put_file_name,
+        overwrite_existing=True,
+    )
 
 def combine_data_files():
     """
@@ -190,6 +214,7 @@ def combine_data_files():
             file_suffix=file_to_combine[0],
             file_extension=settings.REPORT_FILE_NAME_EXTENSION,
             out_put_file_name=file_to_combine[1],
+            overwrite_existing=True, # make sure previous files are overwritten
         )
 
 
@@ -203,7 +228,7 @@ FILE_DATA_TO_COMBINE = [
     [
         settings.REPORT_EXTENSION_SHEETS,
         settings.COMBINED_REPORT_NAME_SHEETS,
-        combine_files_csv_header_independent,
+        combine_csv_files,
     ],
     [
         settings.REPORT_EXTENSION_SHARED_PARAMETERS,

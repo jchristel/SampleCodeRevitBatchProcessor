@@ -35,11 +35,49 @@ from duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults import
     NESTING_SEPARATOR,
 )
 
+import clr
+clr.AddReference("System.Xml")
+from System.Xml import XmlDocument, XmlNamespaceManager
+
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
 
 # data dictionary key values specific to this class
 CATEGORY_NAME = "categoryName"
+
+
+# TODO: replace the below classes with data classes
+class Parameter(Base):
+    def __init__(self, name, type, typeOfParameter, units, value):
+
+        super(Parameter, self).__init__()
+        self.name = name
+        self.type = type
+        self.typeOfParameter = typeOfParameter
+        self.units = units
+        self.value = value
+
+class FamilyType(Base):
+    def __init__(self, title):
+        super(FamilyType, self).__init__()
+        self.title = title
+        self.parameters = []
+
+    def add_parameter(self, parameter):
+        self.parameters.append(parameter)
+
+class Family(Base):
+    def __init__(self, name, number_of_types):
+        super(Family, self).__init__()
+        self.name = name
+        self.family_type_count = number_of_types
+        self.family_types = []
+
+    def add_family_type(self, part):
+        self.family_types.append(part)
+
+
+
 
 
 class FamilyTypeData(IFamData.IFamilyData):
@@ -67,6 +105,69 @@ class FamilyTypeData(IFamData.IFamilyData):
             self.category = category_chunks[-1]
         else:
             self.category = "unknown"
+
+    def _get_type_data_via_XML(self, doc):
+        path = doc.PathName
+
+        # check for valid path
+        if( len(path) == 0 ):
+            path = r"C:\Users\chrjx\Documents\github\debug_modules\reload\CSW_Benchtop_Linear_SquareEdge"
+        else:
+            path_directory = get_directory_path_from_file_path(path)
+            file_name = get_file_name_without_ext(doc.PathName)
+            path_xml = path_directory + "\\" + file_name + ".xml"
+        
+        # save xml file
+        doc.Application.ExtractPartAtomFromFamilyFile( path, path_xml )
+
+        # load xml file back in
+        with open(path_xml, 'r') as file:
+            xml_content = file.read()
+            # print(xml_content)  # Print the content to verify it was written correctly
+
+        # load the xml content
+        doc_xml = XmlDocument()
+        doc_xml.LoadXml(xml_content)
+
+        # add an xml name space amanger
+        nsmgr = XmlNamespaceManager(doc_xml.NameTable)
+        nsmgr.AddNamespace("atom", "http://www.w3.org/2005/Atom")
+        nsmgr.AddNamespace("A", "urn:schemas-autodesk-com:partatom")
+
+        # select the family node
+        family_node = doc_xml.SelectSingleNode("//A:family", nsmgr)
+
+        # set up a family object
+        family = Family(family_node.Attributes['type'].Value, int(family_node.SelectSingleNode('A:variationCount', nsmgr).InnerText))
+        
+        # get the family parameters
+        for part_node in family_node.SelectNodes('A:part', nsmgr):
+            
+            # get the family type name
+            family_type = None
+            for child_node in part_node.ChildNodes:
+                if child_node.Name == 'title':
+                    family_type = FamilyType(child_node.InnerText)
+                    break
+            
+            # if we got a type name, add the parameters, their values and units, parameter type and type of parameter
+            if(family_type):
+                for child_node in part_node.ChildNodes:
+                    if child_node.Name != 'title':
+                        print("not title: ...child node: {} name:{} has child nodes: {} value:{}".format(child_node, child_node.Name, child_node.HasChildNodes, child_node.InnerText))
+                        parameter = Parameter(
+                            name=child_node.Name,
+                            type=child_node.Attributes['type'].Value,
+                            typeOfParameter=child_node.Attributes['typeOfParameter'].Value,
+                            units=child_node.Attributes['units'].Value,
+                            value=child_node.InnerText,
+                        )
+
+                        # add type to family
+                        family_type.add_parameter(parameter)
+                
+                # add type to family
+                family.add_family_type(family_type)
 
     
     def process(self, doc, session_id):

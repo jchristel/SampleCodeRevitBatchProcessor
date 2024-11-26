@@ -28,15 +28,10 @@ Family type data class.
 #
 
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
-from duHast.Utilities import directory_io as dirIO, files_io as fileIO
-from duHast.Revit.Common import file_io as rFile
-from duHast.Revit.Family.Data import (
-    family_base_data_utils_deprecated as rFamBaseDataUtils,
+from duHast.Revit.Family.Data.Objects.family_type_data_storage import (
+    FamilyTypeDataStorage,
 )
-from duHast.Revit.Family.Data.Objects.family_base_data_storage import (
-    FamilyBaseDataStorage,
-)
-from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+from duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults import (
     NESTING_SEPARATOR,
 )
 
@@ -47,7 +42,7 @@ from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import
 CATEGORY_NAME = "categoryName"
 
 
-class FamilyBaseData(IFamData.IFamilyData):
+class FamilyTypeData(IFamData.IFamilyData):
     def __init__(self, root_path=None, root_category_path=None):
         """
         Class constructor
@@ -61,7 +56,7 @@ class FamilyBaseData(IFamData.IFamilyData):
         """
 
         # store data type  in base class
-        super(FamilyBaseData, self).__init__(
+        super(FamilyTypeData, self).__init__(
             root_path=root_path,
             root_category_path=root_category_path,
         )
@@ -73,70 +68,8 @@ class FamilyBaseData(IFamData.IFamilyData):
         else:
             self.category = "unknown"
 
-    def _save_out(
-        self,
-        doc,
-        reference_file_path,
-        doc_name,
-        doc_category,
-        family_out_folder_path,
-        session_id,
-    ):
-        """
-        Saves a family to file if there is no match for it in the provided reference file. 
-        The reference file is a FamilyBaseDataCombinedReport and is read into tuples using RevitFamilyBaseDataUtils.
-
-        :param doc: Current family document
-        :type doc: Autodesk.Revit.DB.Document
-        :param referenceFilePath: Fully qualified file path to FamilyBaseDataCombinedReport file.
-        :type referenceFilePath: str
-        :param docName: The current family name.
-        :type docName: str_
-        :param docCategory: The family Revit category.
-        :type docCategory: str
-        :param familyOutFolderPath: The root directory path to which a family is saved. The script will create a sub directory\
-            based on the revit batch processor session id and within that folder another sub directory based on the family Revit category:\
-                familyOutFolderPath\\SessionId\\RevitCategory\\Myfamily.rfa
-        :type familyOutFolderPath: str
-        :param sessionId: The batchprocessor session Id (formatted so it can be used as a folder name)
-        :type sessionId: str
-        """
-
-        # process reference file list and look for a match:
-        # based on file name and category
-        if fileIO.file_exist(reference_file_path):
-            # read overall family base data from file
-            (
-                overall_family_base_root_data,
-                overall_family_base_nested_data,
-            ) = rFamBaseDataUtils.read_overall_family_data_list(reference_file_path)
-            found_match = False
-            for root_fam in overall_family_base_root_data:
-                # check whether name and category are a match
-                if root_fam.name == doc_name and root_fam.category == doc_category:
-                    found_match = True
-                    break
-            # check if family needs saving out
-            if found_match == False:
-                # check session id folder exists
-                if dirIO.create_target_directory(family_out_folder_path, session_id):
-                    # check category folder exists
-                    if dirIO.create_target_directory(
-                        family_out_folder_path + "\\" + session_id, doc_category
-                    ):
-                        # save family out
-                        rFile.save_as_family(
-                            doc,
-                            family_out_folder_path
-                            + "\\"
-                            + session_id
-                            + "\\"
-                            + doc_category,
-                            doc_name,
-                            [[doc_name, doc_name]],
-                        )
-
-    def process(self, doc, reference_file_path, family_out_directory_path, session_id):
+    
+    def process(self, doc, session_id):
         """
         Collects all base data from the document and stores it in the class property .data
 
@@ -144,31 +77,17 @@ class FamilyBaseData(IFamData.IFamilyData):
         :type doc: Autodesk.Revit.DB.Document
         """
 
-        # get the family category name
-        # famCatName = doc.OwnerFamily.FamilyCategory.Name
-
-        # check if a reference file list was provided and if so if family needs to be saved out
-        if (
-            reference_file_path != None
-            and family_out_directory_path != None
-            and session_id != None
-        ):
-            self._save_out(
-                doc,
-                reference_file_path,
-                self._strip_file_extension(doc.Title),
-                self.category,
-                family_out_directory_path,
-                session_id,
-            )
-
         # make sure to get a value for the file path which is not empty if the document has not been saved
         saved_file_name = "-"
         if doc.PathName != "":
             saved_file_name = doc.PathName
 
+
+        # save out xml and read family type data back in
+
+
         # build data
-        storage = FamilyBaseDataStorage(
+        storage = FamilyTypeDataStorage(
             root_name_path=self.root_path,
             root_category_path=self.root_category_path,
             family_name=self._strip_file_extension(doc.Title),
@@ -181,9 +100,9 @@ class FamilyBaseData(IFamData.IFamilyData):
         return self.data
 
     def add_data(self, storage_instance):
-        if isinstance(storage_instance, FamilyBaseDataStorage):
+        if isinstance(storage_instance, FamilyTypeDataStorage):
             self.data.append(storage_instance)
         else:
             raise ValueError(
-                "storage instance must be an instance of FamilyBaseDataStorage"
+                "storage instance must be an instance of FamilyTypeDataStorage"
             )

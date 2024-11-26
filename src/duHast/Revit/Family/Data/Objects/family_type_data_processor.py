@@ -28,21 +28,19 @@ Family type data processor class.
 #
 
 from duHast.Revit.Family.Data.Objects.ifamily_processor import IFamilyProcessor
-from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+from duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults import (
     DATA_TYPE_PROCESSOR as data_type_family_base_processor,
 )
-from duHast.Revit.Family.Data.Objects import family_base_data as rFamData
+from duHast.Revit.Family.Data.Objects import family_type_data as rFamData
 from duHast.Utilities import util_batch_p as uBP
 
 
-class FamilyBaseProcessor(IFamilyProcessor):
+class FamilyTypeProcessor(IFamilyProcessor):
 
     data_type = data_type_family_base_processor
 
     def __init__(
         self,
-        reference_file_path=None,
-        family_out_directory_path=None,
         session_id=None,
         pre_actions=None,
         post_actions=None,
@@ -52,14 +50,12 @@ class FamilyBaseProcessor(IFamilyProcessor):
         """
 
         # store data type  in base class
-        super(FamilyBaseProcessor, self).__init__(
-            data_type=FamilyBaseProcessor.data_type,
+        super(FamilyTypeProcessor, self).__init__(
+            data_type=FamilyTypeProcessor.data_type,
             pre_actions=pre_actions,
             post_actions=post_actions,
         )
 
-        self.reference_file_path = reference_file_path
-        self.family_out_directory_path = family_out_directory_path
         if session_id != None:
             self.session_id = uBP.adjust_session_id_for_directory_name(session_id)
         else:
@@ -82,7 +78,7 @@ class FamilyBaseProcessor(IFamilyProcessor):
         :type rootCategoryPath: str
         """
 
-        dummy = rFamData.FamilyBaseData(root_path, root_category_path)
+        dummy = rFamData.FamilyTypeData(root_path, root_category_path)
         dummy.process(
             doc,
             self.reference_file_path,

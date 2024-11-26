@@ -215,6 +215,7 @@ def combine_files_header_independent(
     file_suffix="",
     file_extension=".txt",
     out_put_file_name="result.txt",
+    overwrite_existing=False,
 ):
     """
     Used to combine report files into one file, files may have different number / named columns.
@@ -232,6 +233,8 @@ def combine_files_header_independent(
     :type file_extension: str, format '.extension'
     :param out_put_file_name: The file name of the combined file, defaults to 'result.txt'
     :type out_put_file_name: str, optional
+    :param overwrite_existing: Will overwrite an existing output file if set to True, defaults to False ( append to existing output file)
+    :type overwrite_existing: bool, optional
     """
 
     file_list = glob.glob(
@@ -275,9 +278,15 @@ def combine_files_header_independent(
                         padded_row.append(line[cm])
                 lines_to_be_transferred.append(padded_row)
             line_counter += 1
+        
+        # determine write type, default is append
+        write_type = "a"
+        # if overwrite existing is set, write type is write for the first file only!
+        if(file_counter == 0 and overwrite_existing):
+           write_type = "w"
         # write file data to combined file
         write_report_data(
-            combined_file_name, header=[], data=lines_to_be_transferred, write_type="a"
+            combined_file_name, header=[], data=lines_to_be_transferred, write_type=write_type
         )
         file_counter += 1
 
@@ -288,6 +297,7 @@ def combine_files_csv_header_independent(
     file_suffix="",
     file_extension=".txt",
     out_put_file_name="result.csv",
+    overwrite_existing=False,
 ):
     """
     Used to combine report files into one file, files may have different number / named columns.
@@ -305,6 +315,8 @@ def combine_files_csv_header_independent(
     :type file_extension: str, format '.extension'
     :param out_put_file_name: The file name of the combined file, defaults to 'result.csv'
     :type out_put_file_name: str, optional
+    :param overwrite_existing: Will overwrite an existing output file if set to True, defaults to False ( append to existing output file)
+    :type overwrite_existing: bool, optional
     """
 
     file_list = glob.glob(
@@ -350,12 +362,19 @@ def combine_files_csv_header_independent(
                         padded_row.append(line[cm])
                 lines_to_be_transferred.append(padded_row)
             line_counter += 1
+        
+        # determine write type, default is append
+        write_type = "a"
+        # if overwrite existing is set, write type is write for the first file only!
+        if(file_counter == 0 and overwrite_existing):
+           write_type = "w"
+        
         # write file data to combined file
         write_report_data_as_csv(
             file_name=combined_file_name, 
             header=[], 
             data=lines_to_be_transferred, 
-            write_type="a",
+            write_type=write_type,
             enforce_ascii=False, 
             encoding="utf-8", 
             bom=None, 

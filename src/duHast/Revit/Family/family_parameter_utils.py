@@ -374,3 +374,23 @@ def associate_parameter_with_other_parameter(
         )
 
     return return_value
+
+def filter_parameters_by_formula_driven(parameters, keep_if_formulae_driven):
+    """
+    Filter the parameters by whether they are determined by a formula or not.
+
+    :param parameters: The list of parameters
+    :type parameters: list
+    :param keep_if_formulae_driven: True to keep the parameters that are determined by a formula, False otherwise
+    :type keep_if_formulae_driven: bool
+    :return: The filtered list of parameters
+    :rtype: list
+    """
+    
+    return_list = []
+    for parameter in parameters:
+        if parameter.IsDeterminedByFormula and keep_if_formulae_driven:
+            return_list.append(parameter)
+        elif not parameter.IsDeterminedByFormula and not keep_if_formulae_driven:
+            return_list.append(parameter)
+    return return_list

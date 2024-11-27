@@ -44,6 +44,8 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
         root_category_path,
         family_name,
         family_file_path,
+        family_type_name,
+        parameters,
         **kwargs
     ):
 
@@ -57,3 +59,6 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
             family_name=family_name,
             family_file_path=family_file_path,
         )
+
+        self.family_type_name = family_type_name
+        self.parameters = parameters

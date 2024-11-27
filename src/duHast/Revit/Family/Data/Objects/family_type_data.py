@@ -27,6 +27,10 @@ Family type data class.
 #
 #
 
+
+import tempfile
+import os
+
 from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Revit.Family.Data.Objects.family_type_data_storage import (
     FamilyTypeDataStorage,
@@ -34,6 +38,11 @@ from duHast.Revit.Family.Data.Objects.family_type_data_storage import (
 from duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults import (
     NESTING_SEPARATOR,
 )
+
+from duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage import FamilyTypeParameterDataStorage
+from duHast.Revit.Family.Data.Objects.family_type_data_storage import FamilyTypeDataStorage
+
+from duHast.Utilities.files_io import get_directory_path_from_file_path, get_file_name_without_ext
 
 import clr
 clr.AddReference("System.Xml")
@@ -44,41 +53,6 @@ from System.Xml import XmlDocument, XmlNamespaceManager
 
 # data dictionary key values specific to this class
 CATEGORY_NAME = "categoryName"
-
-
-# TODO: replace the below classes with data classes
-class Parameter(Base):
-    def __init__(self, name, type, typeOfParameter, units, value):
-
-        super(Parameter, self).__init__()
-        self.name = name
-        self.type = type
-        self.typeOfParameter = typeOfParameter
-        self.units = units
-        self.value = value
-
-class FamilyType(Base):
-    def __init__(self, title):
-        super(FamilyType, self).__init__()
-        self.title = title
-        self.parameters = []
-
-    def add_parameter(self, parameter):
-        self.parameters.append(parameter)
-
-class Family(Base):
-    def __init__(self, name, number_of_types):
-        super(Family, self).__init__()
-        self.name = name
-        self.family_type_count = number_of_types
-        self.family_types = []
-
-    def add_family_type(self, part):
-        self.family_types.append(part)
-
-
-
-
 
 class FamilyTypeData(IFamData.IFamilyData):
     def __init__(self, root_path=None, root_category_path=None):
@@ -106,68 +80,84 @@ class FamilyTypeData(IFamData.IFamilyData):
         else:
             self.category = "unknown"
 
-    def _get_type_data_via_XML(self, doc):
-        path = doc.PathName
+        self.saved_file_name = ""
 
-        # check for valid path
-        if( len(path) == 0 ):
-            path = r"C:\Users\chrjx\Documents\github\debug_modules\reload\CSW_Benchtop_Linear_SquareEdge"
-        else:
-            path_directory = get_directory_path_from_file_path(path)
-            file_name = get_file_name_without_ext(doc.PathName)
-            path_xml = path_directory + "\\" + file_name + ".xml"
+    def update_function(self, doc):
+
+        # Set up list of type information to be returned
+        type_data = []
+
+        # this path is potentially empty if the document has not been saved...
+        # not sure how revit wil react to that just yet
+        path = self.saved_file_name
         
-        # save xml file
-        doc.Application.ExtractPartAtomFromFamilyFile( path, path_xml )
+        # Create a temporary file
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".xml") as temp_file:
+            temp_path_xml = temp_file.name
 
-        # load xml file back in
-        with open(path_xml, 'r') as file:
-            xml_content = file.read()
-            # print(xml_content)  # Print the content to verify it was written correctly
+        try:
+            # Save XML file to temporary location
+            doc.Application.ExtractPartAtomFromFamilyFile(path, temp_path_xml)
 
-        # load the xml content
-        doc_xml = XmlDocument()
-        doc_xml.LoadXml(xml_content)
+            # Load XML file back in
+            with open(temp_path_xml, 'r') as file:
+                xml_content = file.read()
 
-        # add an xml name space amanger
-        nsmgr = XmlNamespaceManager(doc_xml.NameTable)
-        nsmgr.AddNamespace("atom", "http://www.w3.org/2005/Atom")
-        nsmgr.AddNamespace("A", "urn:schemas-autodesk-com:partatom")
+            # Load the XML content
+            doc_xml = XmlDocument()
+            doc_xml.LoadXml(xml_content)
 
-        # select the family node
-        family_node = doc_xml.SelectSingleNode("//A:family", nsmgr)
+            # Add an XML namespace manager
+            nsmgr = XmlNamespaceManager(doc_xml.NameTable)
+            nsmgr.AddNamespace("atom", "http://www.w3.org/2005/Atom")
+            nsmgr.AddNamespace("A", "urn:schemas-autodesk-com:partatom")
 
-        # set up a family object
-        family = Family(family_node.Attributes['type'].Value, int(family_node.SelectSingleNode('A:variationCount', nsmgr).InnerText))
-        
-        # get the family parameters
-        for part_node in family_node.SelectNodes('A:part', nsmgr):
-            
-            # get the family type name
-            family_type = None
-            for child_node in part_node.ChildNodes:
-                if child_node.Name == 'title':
-                    family_type = FamilyType(child_node.InnerText)
-                    break
-            
-            # if we got a type name, add the parameters, their values and units, parameter type and type of parameter
-            if(family_type):
+            # Select the family node
+            family_node = doc_xml.SelectSingleNode("//A:family", nsmgr)
+
+            # Get the family parameters
+            for part_node in family_node.SelectNodes('A:part', nsmgr):
+                # Get the family type name
+                family_type_name = None
                 for child_node in part_node.ChildNodes:
-                    if child_node.Name != 'title':
-                        print("not title: ...child node: {} name:{} has child nodes: {} value:{}".format(child_node, child_node.Name, child_node.HasChildNodes, child_node.InnerText))
-                        parameter = Parameter(
-                            name=child_node.Name,
-                            type=child_node.Attributes['type'].Value,
-                            typeOfParameter=child_node.Attributes['typeOfParameter'].Value,
-                            units=child_node.Attributes['units'].Value,
-                            value=child_node.InnerText,
-                        )
+                    if child_node.Name == 'title':
+                        family_type_name = child_node.InnerText
+                        break
 
-                        # add type to family
-                        family_type.add_parameter(parameter)
-                
-                # add type to family
-                family.add_family_type(family_type)
+                # If we got a type name, add the parameters, their values and units, parameter type and type of parameter
+                if family_type_name:
+                    parameters = []
+                    for child_node in part_node.ChildNodes:
+                        if child_node.Name != 'title':
+                            parameter = FamilyTypeParameterDataStorage(
+                                name=child_node.Name,
+                                type=child_node.Attributes['type'].Value,
+                                type_of_Parameter=child_node.Attributes['typeOfParameter'].Value,
+                                units=child_node.Attributes['units'].Value,
+                                value=child_node.InnerText,
+                            )
+                            # Add type to family
+                            parameters.append(parameter)
+
+                    # Set up a family type data storage object
+                    fam_type = FamilyTypeDataStorage(
+                        root_name_path=self.root_path,
+                        root_category_path=self.root_category_path,
+                        family_name=self._strip_file_extension(doc.Title),
+                        family_file_path=self.saved_file_name,
+                        family_type_name=family_type_name,
+                        parameters=parameters,
+                    )
+
+                    # Add the family type to the list of types
+                    type_data.append(fam_type)
+
+        finally:
+            # Delete the temporary file
+            if os.path.exists(temp_path_xml):
+                os.remove(temp_path_xml)
+        
+        return type_data
 
     
     def process(self, doc, session_id):
@@ -179,23 +169,16 @@ class FamilyTypeData(IFamData.IFamilyData):
         """
 
         # make sure to get a value for the file path which is not empty if the document has not been saved
-        saved_file_name = "-"
         if doc.PathName != "":
-            saved_file_name = doc.PathName
+            self.saved_file_name = doc.PathName
 
 
         # save out xml and read family type data back in
+        types_data = self._get_type_data_via_XML(self, doc)
 
-
-        # build data
-        storage = FamilyTypeDataStorage(
-            root_name_path=self.root_path,
-            root_category_path=self.root_category_path,
-            family_name=self._strip_file_extension(doc.Title),
-            family_file_path=saved_file_name,
-        )
-
-        self.add_data(storage_instance=storage)
+        # add type data to data
+        for type_data in types_data:
+            self.add_data(type_data)
 
     def get_data(self):
         return self.data

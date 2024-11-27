@@ -42,6 +42,12 @@ class FamilyTypeParameterDataStorage(Base):
     number_of_properties = 5
 
     def __init__(
-        self
+        self, name, type, type_of_parameter, units, value
     ):
         super(FamilyTypeParameterDataStorage, self).__init__()
+
+        self.name = name
+        self.type = type
+        self.type_of_parameter = type_of_parameter
+        self.units = units
+        self.value = value

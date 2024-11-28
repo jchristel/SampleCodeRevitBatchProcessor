@@ -81,8 +81,6 @@ class FamilyTypeProcessor(IFamilyProcessor):
         dummy = rFamData.FamilyTypeData(root_path, root_category_path)
         dummy.process(
             doc,
-            self.reference_file_path,
-            self.family_out_directory_path,
             self.session_id,
         )
         self.data.append(dummy)

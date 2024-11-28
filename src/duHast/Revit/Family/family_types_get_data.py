@@ -76,7 +76,8 @@ def get_type_data_via_XML(doc, family_name, family_path, root_path, root_categor
         temp_path_xml = temp_file.name
 
     try:
-        # Save XML file to temporary location
+        # Save XML file to temporary location 
+        # this is a method of the application object and does not require the family to be open...
         doc.Application.ExtractPartAtomFromFamilyFile(path, temp_path_xml)
 
         # Load XML file back in
@@ -112,7 +113,7 @@ def get_type_data_via_XML(doc, family_name, family_path, root_path, root_categor
                         parameter = FamilyTypeParameterDataStorage(
                             name=child_node.Name,
                             type=child_node.Attributes["type"].Value,
-                            type_of_Parameter=child_node.Attributes[
+                            type_of_parameter=child_node.Attributes[
                                 "typeOfParameter"
                             ].Value,
                             units=child_node.Attributes["units"].Value,

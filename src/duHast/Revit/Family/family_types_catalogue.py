@@ -27,7 +27,7 @@ A module with helper function around family types catalogue files.
 #
 #
 
-from duHast.Revit.Family.family_types_get_data import get_type_data_via_XML
+from duHast.Revit.Family.family_types_get_data import get_type_data_via_XML_from_family_file
 
 def export_catalogue_file(doc, file_path = None):
     """
@@ -59,7 +59,7 @@ def export_catalogue_file(doc, file_path = None):
     root_category_path = doc.FamilyCategory.Name
 
     # get the family type data
-    family_type_data = get_type_data_via_XML(doc, family_name, family_path, root_path, root_category_path)
+    family_type_data = get_type_data_via_XML_from_family_file(doc, family_name, family_path, root_path, root_category_path)
 
     # convert type data into catalogue file
 

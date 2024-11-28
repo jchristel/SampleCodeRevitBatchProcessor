@@ -40,7 +40,7 @@ from duHast.Revit.Family.Data.Objects.family_type_data_storage import (
     FamilyTypeDataStorage,
 )
 
-from duHast.Revit.Family.family_types_get_data import get_type_data_via_XML
+from duHast.Revit.Family.family_types_get_data import get_type_data_via_XML_from_family_file
 
 
 # import Autodesk
@@ -91,7 +91,7 @@ class FamilyTypeData(IFamData.IFamilyData):
             self.saved_file_name = doc.PathName
 
         # save out xml and read family type data back in
-        types_data = get_type_data_via_XML(
+        types_data = get_type_data_via_XML_from_family_file(
             doc=doc,
             family_name=doc.Title,
             family_path=self.saved_file_name,

@@ -40,9 +40,6 @@ from duHast.Revit.Family.Data.Objects.family_type_data_storage import (
     FamilyTypeDataStorage,
 )
 
-from duHast.Revit.Family.family_types_get_data import get_type_data_via_XML_from_family_file
-
-
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
 
@@ -90,18 +87,24 @@ class FamilyTypeData(IFamData.IFamilyData):
         if doc.PathName != "":
             self.saved_file_name = doc.PathName
 
-        # save out xml and read family type data back in
-        types_data = get_type_data_via_XML_from_family_file(
-            doc=doc,
-            family_name=doc.Title,
-            family_path=self.saved_file_name,
-            root_path=self.root_path,
-            root_category_path=self.root_category_path,
-        )
+        # TODO: xml out may be tricky to implement, there only exist 2 functions:
+        #   1. gxml from family file ( gets data from a family file on disc)
+        #   2. xml from family class instance
+        # Need to implement a version whicj just works with the open family document
+            
 
-        # add type data to data
-        for type_data in types_data:
-            self.add_data(type_data)
+        # save out xml and read family type data back in
+        # types_data = get_type_data_via_XML_from_family_file(
+        #     doc=doc,
+        #     family_name=doc.Title,
+        #     family_path=self.saved_file_name,
+        #     root_path=self.root_path,
+        #     root_category_path=self.root_category_path,
+        # )
+
+        # # add type data to data
+        # for type_data in types_data:
+        #     self.add_data(type_data)
 
     def get_data(self):
         return self.data

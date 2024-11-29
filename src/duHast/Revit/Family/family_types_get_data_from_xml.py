@@ -1,7 +1,13 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A module with helper function around family types.
+A module with helper function around family types data extraction using Revit xml export functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Supports 2 methods of data extraction:
+
+- from family file on disk
+- from family element instance in document
+
 """
 
 #
@@ -107,7 +113,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
     name_space_manager.AddNamespace("A", "urn:schemas-autodesk-com:partatom")
 
     # get some family information i.e. the root category path
-    root_category_path = None
+    root_category_path = "None"
 
     # Select the family node
     family_node = doc_xml.SelectSingleNode("//A:family", name_space_manager)
@@ -126,15 +132,41 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
             parameters = []
             for child_node in part_node.ChildNodes:
                 if child_node.Name != "title":
+                    
+                    # attempt to read out values
+                    name = "unknown type"
+                    try:
+                        name = child_node.Name
+                    except Exception as e:
+                        name ="{}: {}".format(name, e)
+                    
+                    type = "unknown type"
+                    try:
+                        type = child_node.Attributes["type"].Value
+                    except Exception as e:
+                        type ="{}: {}".format(type, e)
+                    
+                    type_of_parameter = "unknown type"
+                    try:
+                        type_of_parameter = child_node.Attributes["typeOfParameter"].Value
+                    except Exception as e:
+                        type_of_parameter ="{}: {}".format(type_of_parameter, e)
+                    
+                    units = "unknown type"
+                    try:
+                        units = child_node.Attributes["units"].Value
+                    except Exception as e:
+                        units ="{}: {}".format(units, e)
+
+                    # Create a parameter object
                     parameter = FamilyTypeParameterDataStorage(
-                        name=child_node.Name,
-                        type=child_node.Attributes["type"].Value,
-                        type_of_parameter=child_node.Attributes[
-                            "typeOfParameter"
-                        ].Value,
-                        units=child_node.Attributes["units"].Value,
+                        name=name,
+                        type=type,
+                        type_of_parameter=type_of_parameter,
+                        units=units,
                         value=child_node.InnerText,
                     )
+                    
                     # Add type to family
                     parameters.append(parameter)
 

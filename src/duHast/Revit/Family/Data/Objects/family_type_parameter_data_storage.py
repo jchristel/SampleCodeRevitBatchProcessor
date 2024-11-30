@@ -30,7 +30,7 @@ Used to store values of family parameters by family type.
 #
 #
 
-from duHast.Revit.Family.Data.Objects import ifamily_data_storage as IFamDataStorage
+
 from duHast.Utilities.Objects.base import Base
 
 class FamilyTypeParameterDataStorage(Base):

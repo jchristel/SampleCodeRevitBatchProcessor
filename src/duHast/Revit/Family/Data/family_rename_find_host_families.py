@@ -161,7 +161,8 @@ def find_host_families_with_nested_families_requiring_rename(input_directory_pat
                 t_process.start()
                 # get a list of simplified root data families extracted from nested family path data
                 root_fam_simple = rFamBaseDataUtils.find_all_direct_host_families(
-                    file_rename_list_status.result, overall_family_base_nested_data
+                    families=file_rename_list_status.result,
+                    overall_family_base_nested_data=overall_family_base_nested_data,
                 )
                 return_value.append_message(
                     "{} Found simplified root families: {}".format(

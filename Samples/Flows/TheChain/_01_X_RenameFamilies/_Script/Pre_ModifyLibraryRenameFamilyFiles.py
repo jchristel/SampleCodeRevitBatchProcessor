@@ -137,18 +137,18 @@ def _write_overall_task_file(result_get_host_families):
 
         for host_family in result_get_host_families.result:
             # check whether fam got renamed
-            filePath = _get_new_path(
-                rename_directives_result.result, host_family.filePath
+            file_path_new = _get_new_path(
+                rename_directives_result.result, host_family.file_path
             )
-            if filePath != host_family.filePath:
+            if file_path_new != host_family.file_path:
                 result.append_message(
                     "Changed path from: {} to: {}".format(
-                        host_family.filePath, filePath
+                        host_family.file_path, file_path_new
                     )
                 )
             else:
-                result.append_message("Path unchanged: {}".format(host_family.filePath))
-            row = [filePath]
+                result.append_message("Path unchanged: {}".format(host_family.file_path))
+            row = [file_path_new]
             data.append(row)
 
         result.append_message("Writing data to: {}".format(full_task_file_name))

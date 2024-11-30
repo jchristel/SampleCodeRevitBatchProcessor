@@ -3,7 +3,7 @@
 Helper functions to rename family loaded families in a project file or family file.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This helper function expect a folder containing rename directive files. For format of those files refer to module RevitFamilyRenameFilesUtils
+This helper function expect a folder containing rename directive files. For format of those files refer to module family_rename_files_utils.
 
 
 """
@@ -99,7 +99,7 @@ def _rename_loaded_families(doc, rename_directives, family_ids, progress_callbac
                     def action():
                         action_return_value = res.Result()
                         try:
-                            family.Name = rename_directive.newName
+                            family.Name = rename_directive.new_name
                             action_return_value.update_sep(
                                 True,
                                 "Renamed family of category ["
@@ -109,7 +109,7 @@ def _rename_loaded_families(doc, rename_directives, family_ids, progress_callbac
                                 + "] from: "
                                 + rename_directive.name
                                 + " to: "
-                                + rename_directive.newName,
+                                + rename_directive.new_name,
                             )
                         except Exception as e:
                             action_return_value.update_sep(
@@ -121,7 +121,7 @@ def _rename_loaded_families(doc, rename_directives, family_ids, progress_callbac
                                 + "] from: "
                                 + rename_directive.name
                                 + " to: "
-                                + rename_directive.newName,
+                                + rename_directive.new_name,
                             )
                         return action_return_value
 
@@ -155,6 +155,8 @@ def rename_loaded_families(doc, directory_path):
     """
     Entry point for this module. Will read rename directives files in given directory and attempt to rename
     loaded families accordingly.
+
+    Note: for rename directive file structure refer to module family_rename_files_utils
 
     :param directory_path: Fully qualified directory path to where rename directive files are located.
     :type directory_path: str

@@ -83,19 +83,19 @@ def _rename_files(rename_directives, progress_callback=None):
         try:
             return_value.append_message("rename directive: {}".format(rename_directive))
             # check if rename directive includes a file path ( might be empty if nested families only are to be renamed)
-            if rename_directive.filePath != "":
+            if rename_directive.file_path != "":
                 # attempt to rename family file
                 try:
                     # build the new file name
                     new_full_name = os.path.join(
-                        os.path.dirname(rename_directive.filePath),
-                        rename_directive.newName + ".rfa",
+                        os.path.dirname(rename_directive.file_path),
+                        rename_directive.new_name + ".rfa",
                     )
-                    if fileIO.file_exist(rename_directive.filePath):
-                        os.rename(rename_directive.filePath, new_full_name)
+                    if fileIO.file_exist(rename_directive.file_path):
+                        os.rename(rename_directive.file_path, new_full_name)
                         return_value.append_message(
                             "{} -> {}".format(
-                                rename_directive.name, rename_directive.newName
+                                rename_directive.name, rename_directive.new_name
                             )
                         )
                     else:
@@ -111,20 +111,20 @@ def _rename_files(rename_directives, progress_callback=None):
                     )
 
                 # take care of catalogue files as well
-                old_full_name = rename_directive.filePath[:-4] + ".txt"
+                old_full_name = rename_directive.file_path[:-4] + ".txt"
                 new_full_name = os.path.join(
-                    os.path.dirname(rename_directive.filePath),
-                    rename_directive.newName + ".txt",
+                    os.path.dirname(rename_directive.file_path),
+                    rename_directive.new_name + ".txt",
                 )
-                oldname = rename_directive.name + ".txt"
-                newname = rename_directive.newName + ".txt"
+                old_txt_name = rename_directive.name + ".txt"
+                new_txt_name = rename_directive.new_name + ".txt"
                 try:
                     if fileIO.file_exist(old_full_name):
                         os.rename(old_full_name, new_full_name)
-                        return_value.append_message("{} -> {}".format(oldname, newname))
+                        return_value.append_message("{} -> {}".format(old_txt_name, new_txt_name))
                     else:
                         return_value.update_sep(
-                            True, "No catalogue file found: {}".format(oldname)
+                            True, "No catalogue file found: {}".format(old_txt_name)
                         )  # nothing gone wrong here...just no catalogue file present
                 except Exception as e:
                     return_value.update_sep(
@@ -158,9 +158,8 @@ def rename_family_files(directory_path, progress_callback=None):
     Entry point for this module. Will read rename directives files in given directory and attempt to rename
     family files and any associated catalogue files accordingly.
 
-    Note: Rename directive may not include a file path in situations where a loaded family only is to be renamed. This \
-        will still return True in such a case.
-
+    Note: for rename directive file structure refer to module family_rename_files_utils
+    
     :param directory_path: Fully qualified directory path to where rename directive files are located.
     :type directory_path: str
     :return: 

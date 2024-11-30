@@ -16,7 +16,6 @@ Note:
 
 """
 
-
 #
 # License:
 #
@@ -40,33 +39,11 @@ Note:
 #
 #
 
-import clr
-import System
-from collections import namedtuple
-from duHast.Utilities.Objects.timer import Timer
-
 from duHast.Utilities import files_csv as fileCSV, files_get as fileGet
 from duHast.Utilities.Objects import result as res
-from duHast.Revit.Family.Data import family_base_data_utils_deprecated as rFamBaseDUtils
-
-
-# tuples containing rename directive read from file
-rename_directive = namedtuple("rename_directive", "name filePath category newName")
-
-# row structure of rename directive file
-
-RENAME_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME = 0
-RENAME_DIRECTIVE_INDEX_FAMILY_FILE_PATH = 1
-RENAME_DIRECTIVE_INDEX_CATEGORY = 2
-RENAME_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME = 3
-
-# file name identifiers for rename directives
-RENAME_DIRECTIVE_FILE_NAME_PREFIX = "RenameDirective"
-RENAME_DIRECTIVE_FILE_EXTENSION = ".csv"
-
-# exceptions
-EXCEPTION_NO_RENAME_DIRECTIVE_FILES = "Rename directive file does not exist."
-EXCEPTION_EMPTY_RENAME_DIRECTIVE_FILES = "Empty rename directive file!"
+from duHast.Revit.Family.Data.Objects.family_directive_rename import (
+    FamilyDirectiveRename,
+)
 
 
 def _read_rename_directives(files):
@@ -85,12 +62,22 @@ def _read_rename_directives(files):
         # read rows in tuples ignoring the header row
         for i in range(1, len(rows)):
             if len(rows[i]) >= 4:
-                data = rename_directive(
-                    rows[i][RENAME_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME],
-                    rows[i][RENAME_DIRECTIVE_INDEX_FAMILY_FILE_PATH],
-                    rows[i][RENAME_DIRECTIVE_INDEX_CATEGORY],
-                    rows[i][RENAME_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME],
+
+                data = FamilyDirectiveRename(
+                    name=rows[i][
+                        FamilyDirectiveRename.RENAME_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME
+                    ],
+                    category=rows[i][
+                        FamilyDirectiveRename.RENAME_DIRECTIVE_INDEX_CATEGORY
+                    ],
+                    file_path=rows[i][
+                        FamilyDirectiveRename.RENAME_DIRECTIVE_INDEX_FAMILY_FILE_PATH
+                    ],
+                    new_name=rows[i][
+                        FamilyDirectiveRename.RENAME_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME
+                    ],
                 )
+
             rename_directives.append(data)
     return rename_directives
 
@@ -122,9 +109,9 @@ def get_rename_directives(directory_path):
     # check whether csv files matching file name filter exist in directory path
     rename_directive_files = fileGet.get_files_from_directory_walker_with_filters(
         directory_path,
-        RENAME_DIRECTIVE_FILE_NAME_PREFIX,
+        FamilyDirectiveRename.RENAME_DIRECTIVE_FILE_NAME_PREFIX,
         "",
-        RENAME_DIRECTIVE_FILE_EXTENSION,
+        FamilyDirectiveRename.RENAME_DIRECTIVE_FILE_EXTENSION,
     )
 
     # check whether any files where found?
@@ -134,13 +121,17 @@ def get_rename_directives(directory_path):
         # check whether any rename directives where found in files
         if len(rename_directives) > 0:
             return_value.update_sep(
-                True, "Found rename directives: " + str(len(rename_directives))
+                True, "Found rename directives: {}".format(len(rename_directives))
             )
-            # attempt to rename files
+            # store rename directives in result object
             return_value.result = rename_directives
         else:
-            return_value.update_sep(False, EXCEPTION_EMPTY_RENAME_DIRECTIVE_FILES)
+            return_value.update_sep(
+                False, FamilyDirectiveRename.EXCEPTION_EMPTY_RENAME_DIRECTIVE_FILES
+            )
     else:
-        return_value.update_sep(False, EXCEPTION_NO_RENAME_DIRECTIVE_FILES)
+        return_value.update_sep(
+            False, FamilyDirectiveRename.EXCEPTION_NO_RENAME_DIRECTIVE_FILES
+        )
 
     return return_value

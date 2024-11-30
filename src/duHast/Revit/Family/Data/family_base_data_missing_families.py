@@ -100,7 +100,7 @@ def process_families(family_data, result_list):
     :type family_data: list
     :param result_list: list to store longest unique path
     :type result_list: list[(family_name_nesting, family_category_nesting)]
-    :return: list of tuples containing family name nesting at 0 and family category nesting at 1
+    :return: list of tuples containing family data object at 0 and longest path at 1 ( multiple entries per family possible )
     """
 
     # loop over all family data

@@ -38,9 +38,30 @@ from duHast.Revit.Family.Data.family_report_reader import read_data_into_familie
 
 
 def process_data(family_base_data_report_file_path, do_this):
+    """
+    Process family data using multi threading
+
+    :param family_base_data_report_file_path: str: path to directory containing family report files
+    :param do_this: function: function taking two args: list of family_data_family and result list
+
+    :return:
+        Result class instance.
+
+        - result.status. True if processing completed without an exception occurring.
+        - result.message will contain the summary messages of the process including time stamps.
+        - result.result [:class:`.FamilyDataFamily`]
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain generic exception message.
+        - result.result will be empty
+
+    :rtype: :class:`.Result`
+    """
 
     # do_this: function taking two args: list of family_data_family and result list
-    # returns two lists: 0: family read result, 1: a list of processed family_data_family
+    
 
     return_value = res.Result()
     # results will be stored in here:

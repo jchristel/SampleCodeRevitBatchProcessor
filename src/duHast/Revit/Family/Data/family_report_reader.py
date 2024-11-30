@@ -343,7 +343,7 @@ def read_data_into_family_containers(path_to_data):
     :type directory_path: str
 
     :return: A Result object containing the list of Family Containers objects if successful.
-    :rtype: Result
+    :rtype: Result (list of FamilyDataContainer)
     """
 
     files = []
@@ -534,7 +534,7 @@ def read_data_into_families(path_to_data):
     :param path_to_data: The path to the directory containing the csv files or fully qualified file path to single report csv file.
     :type path_to_data: str
     :return: A Result object containing the list of FamilyDataFamily objects if successful.
-    :rtype: Result
+    :rtype: Result (list of FamilyDataFamily)
 
     """
 
@@ -625,7 +625,6 @@ def read_data_into_families(path_to_data):
                     )
                 )
 
-        # need to add nested families to root families
         # filter out root families
         root_families = _get_root_families(families=families)
         # assign nested families to root families

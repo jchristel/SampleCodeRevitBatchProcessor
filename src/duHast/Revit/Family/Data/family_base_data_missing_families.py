@@ -148,9 +148,9 @@ def _find_missing_families(families, families_longest_path):
     Returns a list of tuples representing nested family name and category which does not have a matching root family.
 
     :param families: List of family instances
-    :type families: []
+    :type families: [:class:`.FamilyDataFamily`]
     :param families_longest_path: list of tuples representing longest unique name nesting path and matching longest unique category nesting path
-    :type families_longest_path: []
+    :type families_longest_path: [(family name, family category)]
     :return: List of tuples representing the name and category of a family missing (from the library and therefore not presented as root family)
     :rtype: [(family name, family category)]
     """
@@ -260,7 +260,17 @@ def check_families_missing_from_library(family_base_data_report_file_path):
 
 
 def get_direct_root_families(families, missing_families):
-
+    """
+    Returns a list of FamilyDataFamily instances which represent the direct parents (host families) of the missing families.
+    
+    :param families: List of family instances
+    :type families: [:class:`.FamilyDataFamily`]
+    :param missing_families: List of tuples representing the name and category of a family missing (from the library and therefore not presented as root family)
+    :type missing_families: [(family name, family category)]
+    :return: List of family instances which represent the direct parents (host families) of the missing families
+    :rtype: [:class:`.FamilyDataFamily`]
+    """
+    
     # return value
     direct_host_families = []
 
@@ -314,9 +324,6 @@ def find_missing_families_direct_host_families(family_base_data_report_file_path
     t_process.start()
 
     try:
-
-        # start timer again
-        t_process.start()
 
         # load and process families
         families_processed_result = process_data(

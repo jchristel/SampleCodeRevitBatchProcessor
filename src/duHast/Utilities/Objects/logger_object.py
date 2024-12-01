@@ -132,7 +132,6 @@ class LoggerObject(logging.Logger, Base):
         # Create logger object
         self.new_logger = logging.getLogger(self.log_name)
         self.init_handlers()
-        self.logger_object = self.new_logger
 
     def clear_handlers(self):
         """
@@ -167,7 +166,7 @@ class LoggerObject(logging.Logger, Base):
         :rtype: logging.Logger
         """
         
-        return self.logger_object
+        return self.new_logger
 
     def update_log_level(self, log_level):
         """

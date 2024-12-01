@@ -74,6 +74,10 @@ namespace PythonTests
                 PythonEngineManager.DataGeometryBoundingBox2Class = scope.GetVariable("DataGeometryBoundingBox2");
                 PythonEngineManager.DataGeometryPolygon2Class = scope.GetVariable("DataGeometryPolygon2");
 
+                //duHast.Revit.Family.Data.family_report_reader
+                engine.Execute("import duHast.Revit.Family.Data.family_report_reader as data_family_report_reader", scope);
+                PythonEngineManager.FamilyReportReaderModule = scope.GetVariable("data_family_report_reader");
+
             }
             catch (MissingMemberException ex)
             {

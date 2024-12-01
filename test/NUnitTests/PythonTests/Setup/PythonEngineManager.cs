@@ -61,6 +61,12 @@ namespace PythonTests.Setup
         public static dynamic? DataSheetSizeClass { get; set; }
         public static dynamic? DataSheetSizeNamesClass { get; set; }
         public static dynamic? DataTypePropertiesClass { get; set; }
+
+        //duHast.Revit.Family.Data
+        public static dynamic? FamilyReportReaderModule { get; set; }
+
+
+
         public static ScriptEngine? PythonEngine => _pythonEngine ??= InitializePythonEngine();
         public static ScriptScope? Scope => _scope ??= PythonEngine.CreateScope();
 
@@ -127,7 +133,9 @@ namespace PythonTests.Setup
                     Path.Combine(repoPath, @"duHast\Data\Objects\Collectors\Properties\data_type_properties.py"),
                     Path.Combine(repoPath, @"duHast\Data\Objects\Collectors\Properties\Geometry\geometry_base.py"),
                     Path.Combine(repoPath, @"duHast\Data\Objects\Collectors\Properties\Geometry\geometry_bounding_box_2.py"),
-                    Path.Combine(repoPath, @"duHast\Data\Objects\Collectors\Properties\Geometry\geometry_polygon_2.py")
+                    Path.Combine(repoPath, @"duHast\Data\Objects\Collectors\Properties\Geometry\geometry_polygon_2.py"),
+
+                    Path.Combine(repoPath, @"duHast\Revit\Family\Data\family_report_reader.py"),
                 };
 
                 foreach (var filePath in pythonFilePaths)

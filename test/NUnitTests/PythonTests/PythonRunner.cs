@@ -1,5 +1,7 @@
 ﻿using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
+using NUnit.Framework.Internal;
+using static IronPython.Runtime.Profiler;
 
 namespace PythonTests
 {
@@ -43,6 +45,20 @@ namespace PythonTests
             // add referece to duHast
             var duHastDir = Path.Combine(oneUp, @"..\..\src");
             return duHastDir;
+        }
+
+        static public string GetTestDataPath()
+        {
+            // Get the directory of the current assembly (where test project is located)
+            var currentAssemblyLocation = Path.GetDirectoryName(typeof(PythonRunner).Assembly.Location);
+
+            // Move up two directories to reach the solution folder
+            string? solutionDirectory = Directory.GetParent(currentAssemblyLocation).Parent.FullName;
+            string? oneUp = Directory.GetParent(solutionDirectory).Parent.FullName;
+
+            // add referece to duHast
+            var duHastTestDataDir = Path.Combine(oneUp, @"..\..\test\Data"); 
+            return duHastTestDataDir;
         }
     }
 }

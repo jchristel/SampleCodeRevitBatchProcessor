@@ -178,6 +178,25 @@ class FamilyDataFamily(base.Base):
     def __ne__(self, other):
         return not self.__eq__(other=other)
 
+
+    def __hash__(self):
+        """
+        Hash the family data.
+        
+        Hash only considers the family_name, family_category, family_nesting_path and family_category_nesting_path properties.
+        
+        :return: Hash of the family data
+        :rtype: int
+        """
+        
+        return hash(
+            (self.family_name,
+            self.family_category,
+            self.family_nesting_path,
+            self.family_category_nesting_path,
+            )
+        )
+    
     def _build_nesting_by_name(self):
         """
         Build the nesting name for the family data.

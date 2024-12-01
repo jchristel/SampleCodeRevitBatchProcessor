@@ -273,7 +273,7 @@ def get_direct_root_families(families, missing_families):
     
     # return value
     direct_host_families = []
-
+    direct_host_families_short = []
     # loop over families and check for match at nesting level 01
     for family in families:
         # families at nesting level 1
@@ -284,9 +284,10 @@ def get_direct_root_families(families, missing_families):
                     family_at_level_one.family_name,
                     family_at_level_one.family_category,
                 )
-                if test_value in missing_families:
+                if test_value in missing_families and "{} {}".format(family_at_level_one.family_name, family_at_level_one.family_category) not in direct_host_families_short:
                     # match found...
                     direct_host_families.append(family_at_level_one)
+                    direct_host_families_short.append("{} {}".format(family_at_level_one.family_name, family_at_level_one.family_category))
 
     return direct_host_families
 

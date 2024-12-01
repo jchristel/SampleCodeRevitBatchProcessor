@@ -78,6 +78,9 @@ namespace PythonTests
                 engine.Execute("import duHast.Revit.Family.Data.family_report_reader as data_family_report_reader", scope);
                 PythonEngineManager.FamilyReportReaderModule = scope.GetVariable("data_family_report_reader");
 
+                engine.Execute("import duHast.Revit.Family.Data.family_base_data_missing_families as data_family_base_data_missing_families", scope);
+                PythonEngineManager.FamilyMissingFamiliesModule = scope.GetVariable("data_family_base_data_missing_families");
+
             }
             catch (MissingMemberException ex)
             {

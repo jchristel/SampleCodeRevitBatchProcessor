@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
-using NUnit.Framework;
 using PythonTests.Setup;
-using System;
-using System.Collections.Generic;
-using System.IO;
+using PythonTests.Revit.Family.Data.util;
 
 namespace PythonTests.Revit.Family.Data
 {
@@ -367,22 +364,6 @@ namespace PythonTests.Revit.Family.Data
                         }
                     }
                 }
-            }
-        }
-
-        private class TestFileData
-        {
-            public string FileName { get; }
-            public bool ExpectedStatus { get; }
-            public int ExpectedCount { get; }
-            public List<List<string>> ExpectedData { get; }
-
-            public TestFileData(string fileName, bool expectedStatus, int expectedCount, List<List<string>> expectedData)
-            {
-                FileName = fileName;
-                ExpectedStatus = expectedStatus;
-                ExpectedCount = expectedCount;
-                ExpectedData = expectedData;
             }
         }
     }

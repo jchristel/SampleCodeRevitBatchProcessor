@@ -37,9 +37,17 @@ Algorithm description:
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Family.Data.family_data_family_processor_utils import process_data
-
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
 
 def get_unique_nested_families_from_path_data(path_data):
+    """
+    Function to retrieve unique nested families from a list of tuples representing longest unique name nesting path and matching longest unique category nesting path.
+
+    :param path_data: list of tuples representing longest unique name nesting path and matching longest unique category nesting path
+    :type path_data: list[(family_name_nesting, family_category_nesting)]
+    :return: list of tuples containing unique family name and category
+    :rtype: list[(family_name, family_category)]
+    """
     # path data is a list of tuples list[(family_name_nesting, family_category_nesting)] or None
 
     # will be a list of tuples 0: family name, 1 family category
@@ -49,15 +57,20 @@ def get_unique_nested_families_from_path_data(path_data):
     for entry in path_data:
         family_name_nesting = entry[0]
         category_name_nesting = entry[1]
-        if len(family_name_nesting) != len(category_name_nesting):
+        
+        # split into chunks at separator
+        families = family_name_nesting.split(NESTING_SEPARATOR)
+        categories = category_name_nesting.split(NESTING_SEPARATOR)
+        
+        if len(families) != len(categories):
             raise ValueError(
                 "Name path length: {} is different to category path length: {}".format(
-                    len(family_name_nesting), len(category_name_nesting)
+                    len(families), len(categories)
                 )
             )
         # loop over each entry in path ignoring the first entry (root family)
-        for i in range(1, len(entry[0])):
-            test_value = (family_name_nesting[i], category_name_nesting[i])
+        for i in range(1, len(families)):
+            test_value = (families[i], categories[i])
             if test_value not in unique_nested_families:
                 unique_nested_families.append(test_value)
 
@@ -65,6 +78,15 @@ def get_unique_nested_families_from_path_data(path_data):
 
 
 def get_unique_root_families_from_family_data(family_data):
+    """
+    Function to retrieve unique root families from a list of family data objects.
+    
+    :param family_data: list of family data objects
+    :type family_data: list[:class:`.FamilyDataFamily`]
+    :return: list of tuples containing family name and category
+    :rtype: list[(family_name, family_category)]
+    """
+    
     # family data is a list of family_data_family instances
 
     # will be a list of tuples 0: family name, 1 family category
@@ -74,14 +96,21 @@ def get_unique_root_families_from_family_data(family_data):
         test_data = (family.family_name, family.family_category)
         if test_data not in unique_root_families:
             unique_root_families.append(test_data)
-        else:
-            raise ValueError("Duplicated root family found: {}".format(test_data))
 
     return unique_root_families
 
 
 def get_missing_families(root_families, nested_families):
-    # root_families and nested_families is a list of tuples in format 0: family name, 1: family category
+    """
+    Function to find missing families from a list of root families and nested families.
+    
+    :param root_families: list of tuples representing root family name and category
+    :type root_families: list[(family_name, family_category)]
+    :param nested_families: list of tuples representing nested family name and category
+    :type nested_families: list[(family_name, family_category)]
+    :return: list of tuples representing nested family name and category which does not have a matching root family
+    :rtype: list[(family_name, family_category)]
+    """
 
     missing_families = []
 
@@ -99,16 +128,16 @@ def process_families(family_data, result_list):
     :param family_data: list of family data objects
     :type family_data: list
     :param result_list: list to store longest unique path
-    :type result_list: list[(family_name_nesting, family_category_nesting)]
-    :return: list of tuples containing family data object at 0 and longest path at 1 ( multiple entries per family possible )
+    :type result_list: list[(family, (family_name_nesting, family_category_nesting))]
+    :return: list of tuples containing family data object at 0 and longest path at 1 (multiple entries per family possible). Longest path itself is a tuple of family name and category.
     """
 
     # loop over all family data
     for family in family_data:
         # process each family
         family.process()
-        longest_path = family.get_longest_unique_nesting_path()
-        if longest_path != None:
+        longest_path = family.get_longest_unique_nesting_path() # returns a list of tuples (family root name path, family root category path)
+        if longest_path is not None:
             for lp in longest_path:
                 result_list.append((family, lp))
     return result_list
@@ -178,29 +207,31 @@ def check_families_missing_from_library(family_base_data_report_file_path):
 
     try:
 
-        # start timer again
-        t_process.start()
-
+        return_value.append_message("Checking for missing families...")
         # load and process families
         families_processed = process_data(
             family_base_data_report_file_path=family_base_data_report_file_path,
             do_this=process_families,
         )
-
+        
         # check if processing was successful, otherwise get out
         if families_processed.status == False:
             raise ValueError(families_processed.message)
-
+        
         # get results
-        families = families_processed.result[0]
-        families_longest_path = families_processed.result[1]
-
+        families = [] # list of family instances
+        families_longest_path = [] # list of tuples representing longest unique name nesting path and matching longest unique category nesting path
+        for nested_tuple in families_processed.result:
+            # per nested path there might be multiple entries of the same family
+            families.append(nested_tuple[0])
+            families_longest_path.append(nested_tuple[1])
+            
         return_value.append_message(
             "{} Found: {} unique longest path in families.".format(
                 t_process.stop(), len(families_longest_path)
             )
         )
-
+        
         # start timer again
         t_process.start()
 
@@ -211,8 +242,7 @@ def check_families_missing_from_library(family_base_data_report_file_path):
 
         return_value.append_message(
             "Found {} missing families. {}".format(
-                len(missing_families), t_process.stop()
-            )
+                len(missing_families), t_process.stop())
         )
         if len(missing_families) > 0:
             return_value.result = missing_families

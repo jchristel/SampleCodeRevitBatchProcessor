@@ -133,9 +133,9 @@ def convert_data_rows_to_data_storage(data_rows, target_type):
     return return_value
 
 
-def read_base_data(file_path, data_type):
+def read_data_from_file_into_storage(file_path, data_type):
     """
-    Read the base data from the file and return a list of IFamilyDataStorage objects.
+    Read the data from the file and return a list of IFamilyDataStorage objects.
 
     :param file_path: The path to the file to read the data from.
     :type file_path: str
@@ -217,7 +217,7 @@ def read_family_base_data(file_path):
     return_value = Result()
     try:
 
-        return_value = read_base_data(
+        return_value = read_data_from_file_into_storage(
             file_path=file_path, data_type=FamilyBaseDataStorage
         )
     except Exception as e:
@@ -241,7 +241,7 @@ def read_family_category_base_data(file_path):
     return_value = Result()
     try:
 
-        return_value = read_base_data(
+        return_value = read_data_from_file_into_storage(
             file_path=file_path, data_type=FamilyCategoryDataStorage
         )
     except Exception as e:
@@ -265,7 +265,7 @@ def read_family_line_pattern_base_data(file_path):
     return_value = Result()
     try:
 
-        return_value = read_base_data(
+        return_value = read_data_from_file_into_storage(
             file_path=file_path, data_type=FamilyLinePatternDataStorage
         )
     except Exception as e:
@@ -289,7 +289,7 @@ def read_family_shared_parameter_data(file_path):
     return_value = Result()
     try:
 
-        return_value = read_base_data(
+        return_value = read_data_from_file_into_storage(
             file_path=file_path, data_type=FamilySharedParameterDataStorage
         )
     except Exception as e:
@@ -313,7 +313,7 @@ def read_family_warnings_data(file_path):
     return_value = Result()
     try:
 
-        return_value = read_base_data(
+        return_value = read_data_from_file_into_storage(
             file_path=file_path, data_type=FamilyWarningsDataStorage
         )
     except Exception as e:

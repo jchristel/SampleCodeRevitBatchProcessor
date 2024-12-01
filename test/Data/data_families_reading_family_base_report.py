@@ -61,14 +61,14 @@ class DataReadFamiliesBaseReport(test.Test):
                 "FamilyBaseDataCombinedReport_empty_file.csv":(False,0,[]),
                 "FamilyBaseDataCombinedReport_empty.csv":(False,0,[]),
                 "FamilyBaseDataCombinedReport_multiple.csv":(True,5,[
-                    ["FamilyBase","Sample_Family_Eight","Furniture Systems","Sample_Family_Eight",r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files\combined\Furniture Systems\Sample_Family_Eight.rfa"],
+                    ["FamilyBase","Sample_Family_Eight","Furniture Systems","Sample_Family_Eight",r"C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa"],
                     ["FamilyBase","Sample_Family_Eight :: Sample_Family_Thirteen","Furniture Systems :: Section Marks","Sample_Family_Thirteen","-"],
-                    ["FamilyBase","Sample_Family_Ten","Generic Annotations","Sample_Family_Ten",r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files\combined\Generic Annotations\Sample_Family_Ten.rfa"],
+                    ["FamilyBase","Sample_Family_Ten","Generic Annotations","Sample_Family_Ten",r"C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Generic Annotations\Sample_Family_Ten.rfa"],
                     ["FamilyBase","Sample_Family_Six","Specialty Equipment","Sample_Family_Six",r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files\Sample_Family_Six.rfa"],
                     ["FamilyBase","Sample_Family_Six :: Sample_Family_Thirteen","Specialty Equipment :: Section Marks","Sample_Family_Thirteen","-"]
                 ]),
                 "FamilyBaseDataCombinedReport_single.csv":(True,1,[
-                    ["FamilyBase","Sample_Family_Eight","Furniture Systems","Sample_Family_Eight",r"C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files\combined\Furniture Systems\Sample_Family_Eight.rfa"]
+                    ["FamilyBase","Sample_Family_Eight","Furniture Systems","Sample_Family_Eight",r"C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyData\combined\Furniture Systems\Sample_Family_Eight.rfa"]
                 ]),
             }
 

@@ -235,7 +235,7 @@ class FamilyDataFamily(base.Base):
             return
 
         # loop over nesting by level property and get the longest unique family name nesting path (multiple)
-        # anf category nesting path as a tuple where 0 index is the name path, and 1 index the category nesting path
+        # and category nesting path as a tuple where 0 index is the name path, and 1 index the category nesting path
         # nesting by level has the nesting depth as key and the data containers as value
         # start from the highest nesting level and check whether the next level down overlaps with the current level
         # all path in the highest (deepest) level of nesting are unique
@@ -245,7 +245,7 @@ class FamilyDataFamily(base.Base):
 
         # get the highest nesting level
         if len(self.nesting_by_level) == 0:
-            # if no nesting levels found return the root family only (?)
+            # if no nesting levels found return the root family only
             unique_nesting_paths.append(
                 (self.family_nesting_path, self.family_category_nesting_path)
             )

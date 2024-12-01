@@ -1,0 +1,21 @@
+duHast.pyRevit.UI package
+=========================
+
+Submodules
+----------
+
+duHast.pyRevit.UI.multiselectors module
+---------------------------------------
+
+.. automodule:: duHast.pyRevit.UI.multiselectors
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.pyRevit.UI
+   :members:
+   :undoc-members:
+   :show-inheritance:

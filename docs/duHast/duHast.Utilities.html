@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Utilities package &#8212; Sample Code Revit Batch Processor 1.1.8 documentation</title>
+    <title>duHast.Utilities package &#8212; Sample Code Revit Batch Processor 1.1.9 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.8 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.9 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
     <link rel="next" title="duHast.Utilities.Objects package" href="duHast.Utilities.Objects.html" />
     <link rel="prev" title="duHast.UI.files_select package" href="duHast.UI.files_select.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.8 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.9 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Utilities package</h1></div>
@@ -1040,7 +1040,7 @@ Assumes:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_combine.combine_files_header_independent">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files_header_independent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_put_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.txt'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files_header_independent" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files_header_independent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_put_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite_existing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files_header_independent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to combine report files into one file, files may have different number / named columns.</p>
 <p>Columns which are unique to some files will have as a value ‘N/A’ in files where those columns do not exist.
 File need to use &lt;tab&gt; character as column separator</p>
@@ -1052,6 +1052,7 @@ File need to use &lt;tab&gt; character as column separator</p>
 <li><p><strong>file_suffix</strong> (<em>str</em>) – Filter: File name ends with this value.</p></li>
 <li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>format '.extension'</em>) – Filter: File needs to have this file extension</p></li>
 <li><p><strong>out_put_file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The file name of the combined file, defaults to ‘result.txt’</p></li>
+<li><p><strong>overwrite_existing</strong> (<em>bool</em><em>, </em><em>optional</em>) – Will overwrite an existing output file if set to True, defaults to False ( append to existing output file)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1059,7 +1060,7 @@ File need to use &lt;tab&gt; character as column separator</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_combine.combine_files_csv_header_independent">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files_csv_header_independent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_put_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.csv'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files_csv_header_independent" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files_csv_header_independent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_put_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite_existing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files_csv_header_independent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to combine report files into one file, files may have different number / named columns.</p>
 <p>Columns which are unique to some files will have as a value ‘N/A’ in files where those columns do not exist.
 File need to use &lt;,&gt; character as column separator. (.CSV)</p>
@@ -1071,6 +1072,7 @@ File need to use &lt;,&gt; character as column separator. (.CSV)</p>
 <li><p><strong>file_suffix</strong> (<em>str</em>) – Filter: File name ends with this value.</p></li>
 <li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>format '.extension'</em>) – Filter: File needs to have this file extension</p></li>
 <li><p><strong>out_put_file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The file name of the combined file, defaults to ‘result.csv’</p></li>
+<li><p><strong>overwrite_existing</strong> (<em>bool</em><em>, </em><em>optional</em>) – Will overwrite an existing output file if set to True, defaults to False ( append to existing output file)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1184,7 +1186,7 @@ Assumes:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_csv.write_report_data_as_csv">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_csv.</span></span><span class="sig-name descname"><span class="pre">write_report_data_as_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforce_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_csv.write_report_data_as_csv" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_csv.</span></span><span class="sig-name descname"><span class="pre">write_report_data_as_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforce_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quoting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_csv.write_report_data_as_csv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function writing out report information as CSV file.
 :param file_name: The reports fully qualified file path.
 :type file_name: str
@@ -1199,7 +1201,9 @@ Assumes:</p>
 :param encoding: Encoding used to write the file. Defaults to ‘utf-8’.
 :type encoding: str, optional
 :param bom: the byte order mark, Default is None (none will be written). BOM: “utf-16” = , “utf-16-le” = ,  utf-8 =
-:type bom: str, default is NoneType</p>
+:type bom: str, default is NoneType
+:param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_NONE. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
+:type quoting: int, optional</p>
 </dd></dl>
 
 </section>

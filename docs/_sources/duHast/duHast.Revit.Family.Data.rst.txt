@@ -20,26 +20,10 @@ duHast.Revit.Family.Data.family\_base\_data\_circular\_referencing module
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Family.Data.family\_base\_data\_circular\_referencing\_deprecated module
--------------------------------------------------------------------------------------
-
-.. automodule:: duHast.Revit.Family.Data.family_base_data_circular_referencing_deprecated
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 duHast.Revit.Family.Data.family\_base\_data\_missing\_families module
 ---------------------------------------------------------------------
 
 .. automodule:: duHast.Revit.Family.Data.family_base_data_missing_families
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.Family.Data.family\_base\_data\_missing\_families\_deprecated module
----------------------------------------------------------------------------------
-
-.. automodule:: duHast.Revit.Family.Data.family_base_data_missing_families_deprecated
    :members:
    :undoc-members:
    :show-inheritance:

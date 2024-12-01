@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    duHast.pyRevit.Objects
+   duHast.pyRevit.UI
 
 Submodules
 ----------
@@ -16,6 +17,14 @@ duHast.pyRevit.console\_output module
 -------------------------------------
 
 .. automodule:: duHast.pyRevit.console_output
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.pyRevit.ui\_element\_selection module
+--------------------------------------------
+
+.. automodule:: duHast.pyRevit.ui_element_selection
    :members:
    :undoc-members:
    :show-inheritance:

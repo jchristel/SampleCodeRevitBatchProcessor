@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.pyRevit package &#8212; Sample Code Revit Batch Processor 1.1.8 documentation</title>
+    <title>duHast.pyRevit package &#8212; Sample Code Revit Batch Processor 1.1.9 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.8 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.9 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
     <link rel="next" title="duHast.pyRevit.Objects package" href="duHast.pyRevit.Objects.html" />
     <link rel="prev" title="duHast.Utilities.Objects package" href="duHast.Utilities.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.8 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.9 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.pyRevit package</h1></div>
@@ -109,6 +109,21 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.pyRevit.Objects.html#module-duHast.pyRevit.Objects">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="duHast.pyRevit.UI.html">duHast.pyRevit.UI package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.pyRevit.UI.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.pyRevit.UI.html#module-duHast.pyRevit.UI.multiselectors">duHast.pyRevit.UI.multiselectors module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.pyRevit.UI.html#a-module-to-provide-pyrevit-multiselectors-for-some-standard-revit-elements">A module to provide pyRevit multiselectors for some standard Revit elements.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.pyRevit.UI.html#duHast.pyRevit.UI.multiselectors.room_selector"><code class="docutils literal notranslate"><span class="pre">room_selector()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.pyRevit.UI.html#duHast.pyRevit.UI.multiselectors.pick_room"><code class="docutils literal notranslate"><span class="pre">pick_room()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.pyRevit.UI.html#duHast.pyRevit.UI.multiselectors.pick_rooms"><code class="docutils literal notranslate"><span class="pre">pick_rooms()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.pyRevit.UI.html#duHast.pyRevit.UI.multiselectors.level_selector"><code class="docutils literal notranslate"><span class="pre">level_selector()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.pyRevit.UI.html#duHast.pyRevit.UI.multiselectors.pick_level"><code class="docutils literal notranslate"><span class="pre">pick_level()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.pyRevit.UI.html#duHast.pyRevit.UI.multiselectors.pick_levels"><code class="docutils literal notranslate"><span class="pre">pick_levels()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.pyRevit.UI.html#module-duHast.pyRevit.UI">Module contents</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -141,6 +156,51 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>header</strong> (<em>str</em>) – The header to be printed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.pyRevit.ui_element_selection">
+<span id="duhast-pyrevit-ui-element-selection-module"></span><h2>duHast.pyRevit.ui_element_selection module<a class="headerlink" href="#module-duHast.pyRevit.ui_element_selection" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-py-revit-element-selection-from-list">
+<h3>This module contains a number of helper functions relating to py Revit element selection from list.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-py-revit-element-selection-from-list" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.ui_element_selection.default_name_builder">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.ui_element_selection.</span></span><span class="sig-name descname"><span class="pre">default_name_builder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.ui_element_selection.default_name_builder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deafult element name builder is used to build the element name shown in the UI by combining the element name and element  Id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – An element</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A name of the element.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.ui_element_selection.get_element_selection_from_user">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.ui_element_selection.</span></span><span class="sig-name descname"><span class="pre">get_element_selection_from_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_getter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_selection_description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiselect=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ui_element_name_builder=&lt;function</span> <span class="pre">default_name_builder&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.ui_element_selection.get_element_selection_from_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>lists Elements provided by element getter function in UI and returns the users selection</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Ther current Revit model.</p></li>
+<li><p><strong>forms</strong> (<em>_type_</em>) – pyRevit forms</p></li>
+<li><p><strong>element_getter</strong> (<em>_type_</em>) – Function accpeting the document as the only argument returning a list of elements or empty list.</p></li>
+<li><p><strong>element_selection_description</strong> (<em>str</em>) – Text to be displayes on button to prompt user</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None if nothing was selected. Otherwise a list of element ids</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None or [Autodesk.Revit.ElementId]</p>
 </dd>
 </dl>
 </dd></dl>

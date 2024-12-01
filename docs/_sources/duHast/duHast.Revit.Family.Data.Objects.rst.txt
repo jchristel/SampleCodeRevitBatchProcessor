@@ -68,6 +68,70 @@ duHast.Revit.Family.Data.Objects.family\_data\_family module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.Data.Objects.family\_directive\_base module
+---------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_directive_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.Objects.family\_directive\_copy module
+---------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_directive_copy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.Objects.family\_directive\_rename module
+-----------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_directive_rename
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.Objects.family\_type\_data module
+----------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_type_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.Objects.family\_type\_data\_processor module
+---------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_type_data_processor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.Objects.family\_type\_data\_processor\_defaults module
+-------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.Objects.family\_type\_data\_storage module
+-------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_type_data_storage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.Objects.family\_type\_parameter\_data\_storage module
+------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.Data.Objects.ifamily\_action module
 -------------------------------------------------------
 

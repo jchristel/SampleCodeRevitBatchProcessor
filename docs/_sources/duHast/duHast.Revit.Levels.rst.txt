@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    duHast.Revit.Levels.Export
+   duHast.Revit.Levels.Objects
    duHast.Revit.Levels.Reporting
 
 Submodules

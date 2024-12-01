@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Family.Data.Objects package &#8212; Sample Code Revit Batch Processor 1.1.8 documentation</title>
+    <title>duHast.Revit.Family.Data.Objects package &#8212; Sample Code Revit Batch Processor 1.1.9 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.8 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.9 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Family.Data package" href="duHast.Revit.Family.Data.html" />
     <link rel="next" title="duHast.Revit.Family.Reporting package" href="duHast.Revit.Family.Reporting.html" />
     <link rel="prev" title="duHast.Revit.Family.Data package" href="duHast.Revit.Family.Data.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.8 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.9 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Family.Data.Objects package</h1></div>
@@ -691,6 +691,258 @@ all other storage properties will be wiped to avoid mismatches!</p>
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Family.Data.Objects.family_directive_base">
+<span id="duhast-revit-family-data-objects-family-directive-base-module"></span><h2>duHast.Revit.Family.Data.Objects.family_directive_base module<a class="headerlink" href="#module-duHast.Revit.Family.Data.Objects.family_directive_base" title="Permalink to this heading">¶</a></h2>
+<section id="base-class-for-family-directive-classes">
+<h3>Base Class for family directive classes.<a class="headerlink" href="#base-class-for-family-directive-classes" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_base.FamilyDirectiveBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.Objects.family_directive_base.</span></span><span class="sig-name descname"><span class="pre">FamilyDirectiveBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_base.FamilyDirectiveBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Class constructor</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Data.Objects.family_directive_copy">
+<span id="duhast-revit-family-data-objects-family-directive-copy-module"></span><h2>duHast.Revit.Family.Data.Objects.family_directive_copy module<a class="headerlink" href="#module-duHast.Revit.Family.Data.Objects.family_directive_copy" title="Permalink to this heading">¶</a></h2>
+<section id="class-for-family-rename-directives">
+<h3>Class for family rename directives.<a class="headerlink" href="#class-for-family-rename-directives" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.Objects.family_directive_copy.</span></span><span class="sig-name descname"><span class="pre">FamilyDirectiveCopy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Revit.Family.Data.Objects.family_directive_base.FamilyDirectiveBase" title="duHast.Revit.Family.Data.Objects.family_directive_base.FamilyDirectiveBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDirectiveBase</span></code></a></p>
+<p>Class constructor</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">COPY_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_INDEX_FAMILY_FILE_PATH">
+<span class="sig-name descname"><span class="pre">COPY_DIRECTIVE_INDEX_FAMILY_FILE_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_INDEX_FAMILY_FILE_PATH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_INDEX_CATEGORY">
+<span class="sig-name descname"><span class="pre">COPY_DIRECTIVE_INDEX_CATEGORY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_INDEX_CATEGORY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">COPY_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_LIST_INDEX_NEW_DIRECTORY">
+<span class="sig-name descname"><span class="pre">COPY_DIRECTIVE_LIST_INDEX_NEW_DIRECTORY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_LIST_INDEX_NEW_DIRECTORY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_FILE_NAME_PREFIX">
+<span class="sig-name descname"><span class="pre">COPY_DIRECTIVE_FILE_NAME_PREFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CopyDirective'</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_FILE_NAME_PREFIX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_FILE_EXTENSION">
+<span class="sig-name descname"><span class="pre">COPY_DIRECTIVE_FILE_EXTENSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'.csv'</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.COPY_DIRECTIVE_FILE_EXTENSION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.EXCEPTION_NO_COPY_DIRECTIVE_FILES">
+<span class="sig-name descname"><span class="pre">EXCEPTION_NO_COPY_DIRECTIVE_FILES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Copy</span> <span class="pre">directive</span> <span class="pre">file</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">exist.'</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.EXCEPTION_NO_COPY_DIRECTIVE_FILES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.EXCEPTION_EMPTY_COPY_DIRECTIVE_FILES">
+<span class="sig-name descname"><span class="pre">EXCEPTION_EMPTY_COPY_DIRECTIVE_FILES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Empty</span> <span class="pre">copy</span> <span class="pre">directive</span> <span class="pre">file!'</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_copy.FamilyDirectiveCopy.EXCEPTION_EMPTY_COPY_DIRECTIVE_FILES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Data.Objects.family_directive_rename">
+<span id="duhast-revit-family-data-objects-family-directive-rename-module"></span><h2>duHast.Revit.Family.Data.Objects.family_directive_rename module<a class="headerlink" href="#module-duHast.Revit.Family.Data.Objects.family_directive_rename" title="Permalink to this heading">¶</a></h2>
+<section id="id1">
+<h3>Class for family rename directives.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.Objects.family_directive_rename.</span></span><span class="sig-name descname"><span class="pre">FamilyDirectiveRename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Revit.Family.Data.Objects.family_directive_base.FamilyDirectiveBase" title="duHast.Revit.Family.Data.Objects.family_directive_base.FamilyDirectiveBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyDirectiveBase</span></code></a></p>
+<p>Class constructor</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.RENAME_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">RENAME_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.RENAME_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.RENAME_DIRECTIVE_INDEX_FAMILY_FILE_PATH">
+<span class="sig-name descname"><span class="pre">RENAME_DIRECTIVE_INDEX_FAMILY_FILE_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.RENAME_DIRECTIVE_INDEX_FAMILY_FILE_PATH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.RENAME_DIRECTIVE_INDEX_CATEGORY">
+<span class="sig-name descname"><span class="pre">RENAME_DIRECTIVE_INDEX_CATEGORY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.RENAME_DIRECTIVE_INDEX_CATEGORY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.RENAME_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">RENAME_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.RENAME_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.RENAME_DIRECTIVE_FILE_NAME_PREFIX">
+<span class="sig-name descname"><span class="pre">RENAME_DIRECTIVE_FILE_NAME_PREFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'RenameDirective'</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.RENAME_DIRECTIVE_FILE_NAME_PREFIX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.RENAME_DIRECTIVE_FILE_EXTENSION">
+<span class="sig-name descname"><span class="pre">RENAME_DIRECTIVE_FILE_EXTENSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'.csv'</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.RENAME_DIRECTIVE_FILE_EXTENSION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.EXCEPTION_NO_RENAME_DIRECTIVE_FILES">
+<span class="sig-name descname"><span class="pre">EXCEPTION_NO_RENAME_DIRECTIVE_FILES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Rename</span> <span class="pre">directive</span> <span class="pre">file</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">exist.'</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.EXCEPTION_NO_RENAME_DIRECTIVE_FILES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.EXCEPTION_EMPTY_RENAME_DIRECTIVE_FILES">
+<span class="sig-name descname"><span class="pre">EXCEPTION_EMPTY_RENAME_DIRECTIVE_FILES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Empty</span> <span class="pre">rename</span> <span class="pre">directive</span> <span class="pre">file!'</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_directive_rename.FamilyDirectiveRename.EXCEPTION_EMPTY_RENAME_DIRECTIVE_FILES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Data.Objects.family_type_data">
+<span id="duhast-revit-family-data-objects-family-type-data-module"></span><h2>duHast.Revit.Family.Data.Objects.family_type_data module<a class="headerlink" href="#module-duHast.Revit.Family.Data.Objects.family_type_data" title="Permalink to this heading">¶</a></h2>
+<section id="family-type-data-class">
+<h3>Family type data class.<a class="headerlink" href="#family-type-data-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data.FamilyTypeData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.Objects.family_type_data.</span></span><span class="sig-name descname"><span class="pre">FamilyTypeData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data.FamilyTypeData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Revit.Family.Data.Objects.ifamily_data.IFamilyData" title="duHast.Revit.Family.Data.Objects.ifamily_data.IFamilyData"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyData</span></code></a></p>
+<p>Class constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rootPath</strong> (<em>str</em>) – The path of the nested family in a tree: rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo            This includes the actual family name as the last node.</p></li>
+<li><p><strong>rootCategoryPath</strong> (<em>str</em>) – The path of the family category in a tree: rootCategoryName :: nestedCategoryNameOne :: nestedCategoryTwo            This includes the actual category name as the last node.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data.FamilyTypeData.process">
+<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data.FamilyTypeData.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collects all base data from the document and stores it in the class property .data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current family document</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data.FamilyTypeData.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data.FamilyTypeData.get_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data.FamilyTypeData.add_data">
+<span class="sig-name descname"><span class="pre">add_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data.FamilyTypeData.add_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Data.Objects.family_type_data_processor">
+<span id="duhast-revit-family-data-objects-family-type-data-processor-module"></span><h2>duHast.Revit.Family.Data.Objects.family_type_data_processor module<a class="headerlink" href="#module-duHast.Revit.Family.Data.Objects.family_type_data_processor" title="Permalink to this heading">¶</a></h2>
+<section id="family-type-data-processor-class">
+<h3>Family type data processor class.<a class="headerlink" href="#family-type-data-processor-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data_processor.FamilyTypeProcessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.Objects.family_type_data_processor.</span></span><span class="sig-name descname"><span class="pre">FamilyTypeProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data_processor.FamilyTypeProcessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Revit.Family.Data.Objects.ifamily_processor.IFamilyProcessor" title="duHast.Revit.Family.Data.Objects.ifamily_processor.IFamilyProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyProcessor</span></code></a></p>
+<p>Class constructor.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data_processor.FamilyTypeProcessor.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'FamilyTypeProcessor'</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data_processor.FamilyTypeProcessor.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data_processor.FamilyTypeProcessor.process">
+<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data_processor.FamilyTypeProcessor.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls processor instance with the document and root path provided and adds processor instance to class property .data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current family document.</p></li>
+<li><p><strong>rootPath</strong> (<em>str</em>) – The path of the nested family in a tree: rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo            This includes the actual family name as the last node.</p></li>
+<li><p><strong>rootCategoryPath</strong> (<em>str</em>) – The path of the nested family in in terms of category in a tree: rootFamilyCategory :: nestedFamilyOneCategory :: nestedFamilyTwoCategory            This includes the actual family category as the last node.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults">
+<span id="duhast-revit-family-data-objects-family-type-data-processor-defaults-module"></span><h2>duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults module<a class="headerlink" href="#module-duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults" title="Permalink to this heading">¶</a></h2>
+<section id="family-type-data-default-names">
+<h3>Family type data default names.<a class="headerlink" href="#family-type-data-default-names" title="Permalink to this heading">¶</a></h3>
+</section>
+</section>
+<section id="module-duHast.Revit.Family.Data.Objects.family_type_data_storage">
+<span id="duhast-revit-family-data-objects-family-type-data-storage-module"></span><h2>duHast.Revit.Family.Data.Objects.family_type_data_storage module<a class="headerlink" href="#module-duHast.Revit.Family.Data.Objects.family_type_data_storage" title="Permalink to this heading">¶</a></h2>
+<section id="class-for-family-type-data-storage-class">
+<h3>Class for family type data storage class.<a class="headerlink" href="#class-for-family-type-data-storage-class" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.Objects.family_type_data_storage.</span></span><span class="sig-name descname"><span class="pre">FamilyTypeDataStorage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_name_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_type_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Revit.Family.Data.Objects.ifamily_data_storage.IFamilyDataStorage" title="duHast.Revit.Family.Data.Objects.ifamily_data_storage.IFamilyDataStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyDataStorage</span></code></a></p>
+<p>Class constructor</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'FamilyType'</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage.number_of_properties">
+<span class="sig-name descname"><span class="pre">number_of_properties</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage.number_of_properties" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage">
+<span id="duhast-revit-family-data-objects-family-type-parameter-data-storage-module"></span><h2>duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage module<a class="headerlink" href="#module-duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage" title="Permalink to this heading">¶</a></h2>
+<section id="class-for-family-parameter-data-storage-class">
+<h3>Class for family parameter data storage class.<a class="headerlink" href="#class-for-family-parameter-data-storage-class" title="Permalink to this heading">¶</a></h3>
+<p>Used to store values of family parameters by family type.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.</span></span><span class="sig-name descname"><span class="pre">FamilyTypeParameterDataStorage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_of_parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Class constructor</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'FamilyTypeParameter'</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.number_of_properties">
+<span class="sig-name descname"><span class="pre">number_of_properties</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.number_of_properties" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Family.Data.Objects.ifamily_action">
 <span id="duhast-revit-family-data-objects-ifamily-action-module"></span><h2>duHast.Revit.Family.Data.Objects.ifamily_action module<a class="headerlink" href="#module-duHast.Revit.Family.Data.Objects.ifamily_action" title="Permalink to this heading">¶</a></h2>
 <section id="interface-for-family-data-storage-processing-class">
@@ -716,8 +968,8 @@ all other storage properties will be wiped to avoid mismatches!</p>
 </section>
 <section id="module-duHast.Revit.Family.Data.Objects.ifamily_data">
 <span id="duhast-revit-family-data-objects-ifamily-data-module"></span><h2>duHast.Revit.Family.Data.Objects.ifamily_data module<a class="headerlink" href="#module-duHast.Revit.Family.Data.Objects.ifamily_data" title="Permalink to this heading">¶</a></h2>
-<section id="id1">
-<h3>Interface for family data storage / processing class.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<section id="id2">
+<h3>Interface for family data storage / processing class.<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.ifamily_data.IFamilyData">

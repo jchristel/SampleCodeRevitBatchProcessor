@@ -509,3 +509,34 @@ def get_curve_level(doc, curve):
         return None
     level = doc.GetElement(level_id)
     return level
+
+
+def are_lines_parallel(line_one, line_two):
+    """
+    Check if two lines are parallel.
+
+    Args:
+        line_one (object): The first line to compare.
+        line_two (object): The second line to compare.
+
+    Returns:
+        bool: True if the lines are parallel, False otherwise.
+    """
+
+    # check if the lines are parallel
+    return line_one.Direction.Normalize().IsAlmostEqualTo(line_two.Direction.Normalize())
+
+def are_lines_perpendicular(line_one, line_two):
+    """
+    Check if two lines are perpendicular.
+
+    Args:
+        line_one (object): The first line to compare.
+        line_two (object): The second line to compare.
+
+    Returns:
+        bool: True if the lines are perpendicular, False otherwise.
+    """
+
+    # check if the lines are perpendicular
+    return line_one.Direction.Normalize().DotProduct(line_two.Direction.Normalize()) == 0

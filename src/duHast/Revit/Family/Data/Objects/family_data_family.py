@@ -174,6 +174,24 @@ class FamilyDataFamily(base.Base):
             other.family_category_nesting_path,
         )
 
+    def compare_name_and_category(self, other):
+        """
+        Compares family_name and family_category properties only
+
+        :param other: Another FamilyDataFamily instance
+        :type other: :class:`.FamilyDataFamily`
+        :return: True if family_name and family_category are equal otherwise false
+        :rtype: bool
+        """
+        return isinstance(other, FamilyDataFamily) and (
+            self.family_name,
+            self.family_category,
+        ) == (
+            other.family_name,
+            other.family_category,
+        )
+
+
     # python 2.7 needs custom implementation of not equal
     def __ne__(self, other):
         return not self.__eq__(other=other)

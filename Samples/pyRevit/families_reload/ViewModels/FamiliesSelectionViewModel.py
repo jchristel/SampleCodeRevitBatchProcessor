@@ -11,6 +11,7 @@ from System.Windows.Data import CollectionViewSource, PropertyGroupDescription
 from System.ComponentModel import ListSortDirection, SortDescription
 
 from ViewModels.FamilyViewModel import FamilyViewModel
+from ViewModels.FilterItem import FilterItem
 from Commands.ReloadfamiliesCommand import ReloadFamiliesCommand
 from Objects.match_status_names import MatchStatusNames
 
@@ -38,20 +39,51 @@ class FamiliesSelectionViewModel(ViewModelBase):
             execute=self.close_window
         )
 
-        # add room reservations to view model
+         # set filter lists for column filters
+        self._unique_match_statuses = ObservableCollection[FilterItem]()  
+        self._unique_categories = ObservableCollection[FilterItem]()  
+        self._unique_names = ObservableCollection[FilterItem]()  
+        self._unique_shared_statuses = ObservableCollection[FilterItem]() 
+        
+        # add families to view model
         self.update_families()
-
+        
+        # set unique values for the column context menu filters
+        self.set_unique_values()
+        
         # Set initial sort state
         self._current_sort_column = "FamilyName"
         self._current_sort_direction = ListSortDirection.Ascending
         self._families_view.SortDescriptions.Add(SortDescription(self._current_sort_column, self._current_sort_direction))
         
-        # set filter lists for column filters
-        self.unique_match_statuses = []
-        self.unique_categories = []
-        self.unique_names = []
-        self.unique_shared_statuses = []
     
+    @property
+    def UniqueFamilyNames(self):
+        """
+        The collection of unique family names to be displayed in the column header context filter menu.
+        """
+        return self._unique_names 
+    
+    @property
+    def UniqueMatchStatuses(self):
+        """
+        The collection of unique match statuses to be displayed in the column header context filter menu.
+        """
+        return self._unique_match_statuses
+    
+    @property
+    def UniqueCategories(self):
+        """
+        The collection of unique categories to be displayed in the column header context filter menu.
+        """
+        return self._unique_categories
+    
+    @property
+    def UniqueSharedStatuses(self):
+        """
+        The collection of unique shared statuses to be displayed in the column header context filter menu.
+        """
+        return self._unique_shared_statuses
     
     @property
     def FamiliesView(self):
@@ -151,12 +183,6 @@ class FamiliesSelectionViewModel(ViewModelBase):
         # MatchStatus is a property of the FamilyViewModel
         self._families_view.GroupDescriptions.Add(PropertyGroupDescription("MatchStatus"))
         
-        # Use sets to collect unique values for column filters
-        unique_match_statuses_set = set()
-        unique_categories_set = set()
-        unique_names_set = set()
-        unique_shared_statuses_set = set()
-        
         # get all families in the library path ( required to set the match status of the families)
         families_in_directory = []
         if(self._revit_model.settings.library_path):
@@ -191,24 +217,43 @@ class FamiliesSelectionViewModel(ViewModelBase):
             # add the family to the observable collection
             self._families.Add(family_view_model)
             
-            # extract unique values for column filters
-            unique_match_statuses_set.add(family_view_model.MatchStatus)
-            unique_categories_set.add(family_view_model.FamilyCategory)
-            unique_names_set.add(family_view_model.FamilyName)
-            unique_shared_statuses_set.add(family_view_model.FamilyIsShared)
+    def set_unique_values(self):
+        """
+        Sets the unique values for the column filters context menu depending on the values in the families collection.
+        """
+        # Use sets to collect unique values for column filters
+        unique_match_statuses_set = set()
+        unique_categories_set = set()
+        unique_names_set = set()
+        unique_shared_statuses_set = set()
         
-        # Convert sets to lists and store them
-        self.unique_match_statuses = list(unique_match_statuses_set)
-        self.unique_categories = list(unique_categories_set)
-        self.unique_names = list(unique_names_set)
-        self.unique_shared_statuses = list(unique_shared_statuses_set)
+        # extract unique values for column filters ( name and category only)
+        for family in self._families:
+            unique_categories_set.add(family.FamilyCategory)
+            unique_names_set.add(family.FamilyName)
+            unique_shared_statuses_set.add(family.FamilyIsShared)
         
-        # sort the filter lists
-        self.unique_match_statuses.sort()
-        self.unique_categories.sort()
-        self.unique_names.sort()
-        self.unique_shared_statuses.sort()
-
+        # set unique values for match status
+        unique_match_statuses_set.add(MatchStatusNames.NO_MATCH.value)
+        unique_match_statuses_set.add(MatchStatusNames.MULTIPLE_MATCHES.value)
+        unique_match_statuses_set.add(MatchStatusNames.MATCH_OK.value)
+        
+        # clear collection first before adding new values
+        self._unique_match_statuses.Clear()
+        self._unique_categories.Clear()
+        self._unique_names.Clear() 
+        self._unique_shared_statuses.Clear()
+        
+        # add unique values to the filter lists
+        for match_status in unique_match_statuses_set:
+            self._unique_match_statuses.Add(FilterItem(value=match_status, view_model=self))
+        for category in unique_categories_set:
+            self._unique_categories.Add(FilterItem(value=category, view_model=self))
+        for name in unique_names_set:
+            self._unique_names.Add(FilterItem(value=name, view_model=self))
+        for shared_status in unique_shared_statuses_set:
+            self._unique_shared_statuses.Add(FilterItem(value=shared_status, view_model=self))
+           
 
     def sort_families(self, sort_by):
         """

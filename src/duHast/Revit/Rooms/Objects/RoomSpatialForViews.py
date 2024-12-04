@@ -27,23 +27,67 @@ Revit API utility functions for the spatial properties of room elements.
 #
 #
 
-from duHast.Revit.Rooms.Objects import RoomSpatialObject
+from duHast.Revit.Rooms.Objects.RoomBaseObject import RoomBaseObj
 
 from Autodesk.Revit.DB import (
     Line,
     SpatialElementBoundaryLocation,
+    SpatialElementBoundaryOptions,
     XYZ,
+)
+
+from duHast.Revit.Rooms.Geometry.room_spatial_elements import (
+    get_room_segments,
+    get_only_wall_segments_as_walls,
+    get_only_wall_segments_as_curves,
 )
 
 from duHast.Revit.Common.Geometry.curve import are_lines_parallel, are_lines_perpendicular
 
-class RoomSpatialForView(RoomSpatialObject):
+class RoomSpatialForView(RoomBaseObj):
     def __init__(
         self, rvt_doc, room, boundary_location=SpatialElementBoundaryLocation.Finish
     ):
         # initialize the base class
         super(RoomSpatialForView, self).__init__(rvt_doc, room, boundary_location=boundary_location)
 
+        # Use the helper method to calculate spatial data
+        (self.segments, self.room_walls, self.wall_segs, 
+         self.bbox, self.bbox_centre) = self._calculate_spatial_data(rvt_doc, room, boundary_location)
+
+
+    @staticmethod
+    def _calculate_spatial_data(rvt_doc, room, boundary_location):
+        """
+        Helper method to compute spatial data for a room.
+
+        This is done because I cant directly inherit from RoomSpatialObj due to exception:
+        IronPython.Runtime.Exceptions.TypeErrorException: metaclass conflict: the metaclass of a derived class must be a (non-strict) subclass of the metaclasses of all its bases
+        which is caused by .net metaclass conflict.
+
+        """
+        # Boundary options for spatial elements
+        spat_opts = SpatialElementBoundaryOptions()
+        spat_opts.SpatialElementBoundaryLocation = boundary_location
+
+        # Extract spatial data
+        segments = get_room_segments(room, spat_opts)
+        room_walls = get_only_wall_segments_as_walls(rvt_doc, segments)
+        wall_segs = get_only_wall_segments_as_curves(rvt_doc, segments)
+
+        # Compute bounding box
+        bbox = room.get_BoundingBox(None) if room.Location else None
+
+        # Compute bounding box center
+        bbox_centre = None
+        if bbox:
+            centre_x = bbox.Min.X + ((bbox.Max.X - bbox.Min.X) / 2)
+            centre_y = bbox.Min.Y + ((bbox.Max.Y - bbox.Min.Y) / 2)
+            centre_z = bbox.Min.Z
+            bbox_centre = XYZ(centre_x, centre_y, centre_z)
+
+        return segments, room_walls, wall_segs, bbox, bbox_centre
+    
 
     def is_room_rectalinear(self):
         """
@@ -61,6 +105,7 @@ class RoomSpatialForView(RoomSpatialObject):
         if room_bounding_segemnts is None:
             return False
         
+        
         # check if all room bounding segments are either parallel or perpendicular to each other
         # if so, return True else return False
 
@@ -75,7 +120,7 @@ class RoomSpatialForView(RoomSpatialObject):
             # make sure both curves are lines ( no arcs or other curves )
             if (isinstance(current_segment_curve, Line) and isinstance(previous_segment_curve, Line)):
                 # check if the current segment is parallel or perpendicular to the previous segment
-                if(not(are_lines_parallel(current_segment_curve, previous_segment_curve) and are_lines_perpendicular(current_segment_curve, previous_segment_curve))):
+                if(not(are_lines_parallel(current_segment_curve, previous_segment_curve) or are_lines_perpendicular(current_segment_curve, previous_segment_curve))):
                     # if not, the room is not rectalinear
                     return False
             else:
@@ -109,11 +154,10 @@ class RoomSpatialForView(RoomSpatialObject):
             # get the first room bounding segment
             room_bounding_segemnts_outer_loop = self.segments[0]
             first_segment_curve = room_bounding_segemnts_outer_loop[0].GetCurve()
-
             # check if the first segment is parallel or perpendicular to any bounding box edge
             # get a bounding box edge from min XYZ and max XYZ
-            bbox_edge = Line(self.bbox.Min, XYZ(self.bbox.Max.X, self.bbox.Min.Y, self.bbox.Min.Z))
-
+            # by using Line.CreateBound
+            bbox_edge = Line.CreateBound(self.bbox.Min, XYZ(self.bbox.Max.X, self.bbox.Min.Y, self.bbox.Min.Z))
             # check if the first segment is parallel or perpendicular to the bounding box edge
             if(are_lines_parallel(first_segment_curve, bbox_edge) or are_lines_perpendicular(first_segment_curve, bbox_edge)):
                 return True

@@ -522,9 +522,12 @@ def are_lines_parallel(line_one, line_two):
     Returns:
         bool: True if the lines are parallel, False otherwise.
     """
+    # Get normalized directions for both lines
+    dir_one = line_one.Direction.Normalize()
+    dir_two = line_two.Direction.Normalize()
 
-    # check if the lines are parallel
-    return line_one.Direction.Normalize().IsAlmostEqualTo(line_two.Direction.Normalize())
+    # Check if the directions are the same or opposite
+    return dir_one.IsAlmostEqualTo(dir_two) or dir_one.IsAlmostEqualTo(dir_two.Negate())
 
 def are_lines_perpendicular(line_one, line_two):
     """

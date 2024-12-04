@@ -7,7 +7,7 @@ from duHast.UI.Objects.WPF.Commands.RelayCommand import RelayCommand
 from duHast.Utilities.files_get import get_files_from_directory_walker_with_filters_simple
 
 from System.Collections.ObjectModel import ObservableCollection
-from System.Windows.Data import CollectionViewSource
+from System.Windows.Data import CollectionViewSource, PropertyGroupDescription
 from System.ComponentModel import ListSortDirection, SortDescription
 
 from ViewModels.FamilyViewModel import FamilyViewModel
@@ -21,12 +21,13 @@ class FamiliesSelectionViewModel(ViewModelBase):
         super(FamiliesSelectionViewModel, self).__init__()
 
         # properties
+        # the collection of families to be displayed in the view
         self._families = ObservableCollection[FamilyViewModel]()
-        self._families_view = CollectionViewSource.GetDefaultView(self._families)
+        
+        # the command used to sort when the user clicks on the column headers
         self._sort_command = RelayCommand(self.sort_families)
         
-        # properties
-        self._families_filtered = ObservableCollection[FamilyViewModel]()
+        # the revit wpf model object containing the settings and families to be displayed
         self._revit_model = revit_model
 
         # commands
@@ -44,16 +45,180 @@ class FamiliesSelectionViewModel(ViewModelBase):
         self._current_sort_column = "FamilyName"
         self._current_sort_direction = ListSortDirection.Ascending
         self._families_view.SortDescriptions.Add(SortDescription(self._current_sort_column, self._current_sort_direction))
+        
+        # set filter lists for column filters
+        self.unique_match_statuses = []
+        self.unique_categories = []
+        self.unique_names = []
+        self.unique_shared_statuses = []
+    
     
     @property
     def FamiliesView(self):
+        """
+        The collection view of the families collection.
+        """
         return self._families_view
 
     @property
     def SortCommand(self):
+        """
+        The command used to sort the collection view of the families collection.
+        """
         return self._sort_command
 
+    @property
+    def LibraryPath(self):
+        """
+        The library path property of the revit model object.
+        Describes the location of the revit families library on a file server. This location is used to determine the match status of the families.
+        """
+        print("accessing library path getter")
+        return self._revit_model.settings.library_path
+    
+    @LibraryPath.setter
+    def LibraryPath(self, value):
+        """
+        The setter for the library path property of the revit model object.
+        
+        This setter is used to update the library path property of the revit model object through a two binding to the view and to update the match status of the families based on the new library path when it changes.
+        """
+        print("accessing library path setter: [{}]".format(value))
+        
+        # type checking
+        if not(isinstance (value,str)):
+            raise ValueError("Value must be of type str, got {} instead.".format(type(value)))
+        
+        # set the new library path value
+        self._revit_model.settings.library_path = value
+        print("settings: {}".format(self._revit_model.settings.to_json()))
+        
+        # update the match status of all families
+        self.update_families()
+
+        # raise the change event in order for the reload buttons availability check to be triggered
+        self.RaisePropertyChanged("LibraryPath")
+
+    @property
+    def Families(self):
+        """
+        The collection of families to be displayed in the view. ( Not used in the view, the collection view is used instead)
+        """
+        print("accessing families directly")
+        return self._families
+    
+    @property
+    def ReloadFamiliesCommand(self):
+        """
+        The command used to when the reload button in the view is clicked.
+        
+        Stores the selected family objects in the revit model object and triggers the close of the window.
+        """
+        print("in  Reload command")
+        return self._reload_families_command 
+
+    def find_files(self, file_paths, file_name):
+        """
+        Finds all files in the list of file paths that have the same file name as the file name passed in as an argument.
+        Used to determine the match status of the families. ( is there no match, a single match or multiple matches)
+        
+        Args:
+            file_paths (list): A list of file paths to search in.
+            file_name (str): The file name to search for.
+            
+        Returns:
+            list: A list of file paths that have the same file name as the file name passed in as an argument.
+        """
+        return [path for path in file_paths if os.path.basename(path) == file_name]
+
+    def update_families(self):
+        """
+        Updates the families collection with the families from the revit model object and sets the match status of the families based on the library path.
+        
+        Also sets up the collection view for the families collection.
+        Set up includes grouping the families by match status.
+        
+        """
+        # clear the collection
+        self._families.Clear()
+        
+        # set up collection view based on the observable collection of families
+        # this is what the xaml view is binding to
+        # this is required to be able to sort, group and filter the collection view without affecting the observable collection
+        self._families_view = CollectionViewSource.GetDefaultView(self._families)
+        
+        # group the families by match status (this will mean that the families will be sorted by match status first and than by any other sort criteria)
+        # MatchStatus is a property of the FamilyViewModel
+        self._families_view.GroupDescriptions.Add(PropertyGroupDescription("MatchStatus"))
+        
+        # Use sets to collect unique values for column filters
+        unique_match_statuses_set = set()
+        unique_categories_set = set()
+        unique_names_set = set()
+        unique_shared_statuses_set = set()
+        
+        # get all families in the library path ( required to set the match status of the families)
+        families_in_directory = []
+        if(self._revit_model.settings.library_path):
+            families_in_directory = get_files_from_directory_walker_with_filters_simple(
+                folder_path=self._revit_model.settings.library_path,
+                file_extension=".rfa"
+            )
+        
+        if(families_in_directory):
+            print("found {} revit families".format(len(families_in_directory)))
+        else:
+            print("Found no families in directory")
+            families_in_directory = []
+
+        # update the collection with families from the revit model object
+        for family in self._revit_model.get_all_families():
+            family_view_model = FamilyViewModel(family=family)
+            # check the match status!!
+            files_matching = self.find_files(families_in_directory, family_view_model.FamilyName+".rfa")
+            
+            # set the match status based on the number of files found
+            if len(files_matching) == 1:
+                family_view_model.MatchStatus = MatchStatusNames.MATCH_OK.value
+                family_view_model.FamilyFilePath = files_matching[0]
+            elif len(files_matching) == 0:
+                family_view_model.MatchStatus = MatchStatusNames.NO_MATCH.value
+                family_view_model.FamilyFilePath = None
+            else:
+                family_view_model.MatchStatus = MatchStatusNames.MULTIPLE_MATCHES.value
+                family_view_model.FamilyFilePath = None
+
+            # add the family to the observable collection
+            self._families.Add(family_view_model)
+            
+            # extract unique values for column filters
+            unique_match_statuses_set.add(family_view_model.MatchStatus)
+            unique_categories_set.add(family_view_model.FamilyCategory)
+            unique_names_set.add(family_view_model.FamilyName)
+            unique_shared_statuses_set.add(family_view_model.FamilyIsShared)
+        
+        # Convert sets to lists and store them
+        self.unique_match_statuses = list(unique_match_statuses_set)
+        self.unique_categories = list(unique_categories_set)
+        self.unique_names = list(unique_names_set)
+        self.unique_shared_statuses = list(unique_shared_statuses_set)
+        
+        # sort the filter lists
+        self.unique_match_statuses.sort()
+        self.unique_categories.sort()
+        self.unique_names.sort()
+        self.unique_shared_statuses.sort()
+
+
     def sort_families(self, sort_by):
+        """
+        Sorts the families collection view based on the column header that was clicked.
+        
+        Args:
+            sort_by (str): The property name of the FamilyViewModel to sort by.
+        """
+        
+        # Check if the column is already sorted and if so, reverse the sort direction
         current_sort = None
         if self._families_view.SortDescriptions.Count > 0:
             current_sort = self._families_view.SortDescriptions[0]
@@ -72,74 +237,12 @@ class FamiliesSelectionViewModel(ViewModelBase):
         # Update current sort column and direction
         self._current_sort_column = sort_by
         self._current_sort_direction = direction
-
-    @property
-    def LibraryPath(self):
-        print("accessing library path getter")
-        return self._revit_model.settings.library_path
-    
-    @LibraryPath.setter
-    def LibraryPath(self, value):
-        print("accessing library path setter: [{}]".format(value))
-        if not(isinstance (value,str)):
-            raise ValueError("Value must be of type str, got {} instead.".format(type(value)))
-        self._revit_model.settings.library_path = value
-        print("settings: {}".format(self._revit_model.settings.to_json()))
         
-        # update the match status of all families
-        self.update_families()
-
-        # raise the change event in order for the reload buttons availbiltiy check to be triggerd
-        self.RaisePropertyChanged("LibraryPath")
-
-    @property
-    def Families(self):
-        print("accessing families")
-        return self._families
-    
-    @property
-    def ReloadFamiliesCommand(self):
-        print("in  Reload command")
-        return self._reload_families_command 
-
-    def find_files(self, file_paths, file_name):
-        return [path for path in file_paths if os.path.basename(path) == file_name]
-
-    def update_families(self):
-        # clear the collection
-        self._families.Clear()
         
-        families_in_directory = []
-        if(self._revit_model.settings.library_path):
-            families_in_directory = get_files_from_directory_walker_with_filters_simple(
-                folder_path=self._revit_model.settings.library_path,
-                file_extension=".rfa"
-            )
-        
-        if(families_in_directory):
-            print("found {} revit families".format(len(families_in_directory)))
-        else:
-            print("Found no families in directory")
-            families_in_directory = []
-
-        # update the collection with values from the revit model
-        for family in self._revit_model.get_all_families():
-            family_view_model = FamilyViewModel(family=family)
-            # check the match status!!
-            files_matching = self.find_files(families_in_directory, family_view_model.FamilyName+".rfa")
-            
-            if len(files_matching) == 1:
-                family_view_model.MatchStatus = MatchStatusNames.MATCH_OK.value
-                family_view_model.FamilyFilePath = files_matching[0]
-            elif len(files_matching) == 0:
-                family_view_model.MatchStatus = MatchStatusNames.NO_MATCH.value
-                family_view_model.FamilyFilePath = None
-            else:
-                family_view_model.MatchStatus = MatchStatusNames.MULTIPLE_MATCHES.value
-                family_view_model.FamilyFilePath = None
-
-            self._families.Add(family_view_model)
-
     def close_window(self, window):
+        """
+        Closes the window that is passed in as an argument. 
+        """
+        
         if window:
             window.Close()

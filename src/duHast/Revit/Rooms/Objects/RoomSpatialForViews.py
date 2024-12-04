@@ -66,6 +66,8 @@ class RoomSpatialForView(RoomBaseObj):
         which is caused by .net metaclass conflict.
 
         """
+
+        # TODO: c an I use an instance of RoomSpatialForView to do the calcs??
         # Boundary options for spatial elements
         spat_opts = SpatialElementBoundaryOptions()
         spat_opts.SpatialElementBoundaryLocation = boundary_location

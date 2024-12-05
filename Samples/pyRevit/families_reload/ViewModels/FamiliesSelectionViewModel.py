@@ -4,6 +4,7 @@ clr.AddReference('WindowsBase')
 
 from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
 from duHast.UI.Objects.WPF.Commands.RelayCommand import RelayCommand
+from duHast.UI.Objects.WPF.ViewModels.FilterItem import FilterItem
 from duHast.Utilities.files_get import get_files_from_directory_walker_with_filters_simple
 
 from System.Collections.ObjectModel import ObservableCollection
@@ -11,7 +12,7 @@ from System.Windows.Data import CollectionViewSource, PropertyGroupDescription
 from System.ComponentModel import ListSortDirection, SortDescription
 
 from ViewModels.FamilyViewModel import FamilyViewModel
-from ViewModels.FilterItem import FilterItem
+#from ViewModels.FilterItem import FilterItem
 from Commands.ReloadfamiliesCommand import ReloadFamiliesCommand
 from Objects.match_status_names import MatchStatusNames
 
@@ -115,7 +116,6 @@ class FamiliesSelectionViewModel(ViewModelBase):
         
         This setter is used to update the library path property of the revit model object through a two binding to the view and to update the match status of the families based on the new library path when it changes.
         """
-        print("accessing library path setter: [{}]".format(value))
         
         # type checking
         if not(isinstance (value,str)):
@@ -123,7 +123,7 @@ class FamiliesSelectionViewModel(ViewModelBase):
         
         # set the new library path value
         self._revit_model.settings.library_path = value
-        print("settings: {}".format(self._revit_model.settings.to_json()))
+        #print("settings: {}".format(self._revit_model.settings.to_json()))
         
         # update the match status of all families
         self.update_families()
@@ -136,7 +136,6 @@ class FamiliesSelectionViewModel(ViewModelBase):
         """
         The collection of families to be displayed in the view. ( Not used in the view, the collection view is used instead)
         """
-        print("accessing families directly")
         return self._families
     
     @property
@@ -146,7 +145,6 @@ class FamiliesSelectionViewModel(ViewModelBase):
         
         Stores the selected family objects in the revit model object and triggers the close of the window.
         """
-        print("in  Reload command")
         return self._reload_families_command 
 
     def find_files(self, file_paths, file_name):
@@ -183,6 +181,9 @@ class FamiliesSelectionViewModel(ViewModelBase):
         # MatchStatus is a property of the FamilyViewModel
         self._families_view.GroupDescriptions.Add(PropertyGroupDescription("MatchStatus"))
         
+        # set up a filter for the collection view
+        self._families_view.Filter = self.filter_families
+        
         # get all families in the library path ( required to set the match status of the families)
         families_in_directory = []
         if(self._revit_model.settings.library_path):
@@ -192,7 +193,7 @@ class FamiliesSelectionViewModel(ViewModelBase):
             )
         
         if(families_in_directory):
-            print("found {} revit families".format(len(families_in_directory)))
+            print("found {} Revit families".format(len(families_in_directory)))
         else:
             print("Found no families in directory")
             families_in_directory = []
@@ -246,13 +247,13 @@ class FamiliesSelectionViewModel(ViewModelBase):
         
         # add unique values to the filter lists
         for match_status in unique_match_statuses_set:
-            self._unique_match_statuses.Add(FilterItem(value=match_status, view_model=self))
+            self._unique_match_statuses.Add(FilterItem(value=match_status, refresh_view_method=self.refresh_view))
         for category in unique_categories_set:
-            self._unique_categories.Add(FilterItem(value=category, view_model=self))
+            self._unique_categories.Add(FilterItem(value=category, refresh_view_method=self.refresh_view))
         for name in unique_names_set:
-            self._unique_names.Add(FilterItem(value=name, view_model=self))
+            self._unique_names.Add(FilterItem(value=name, refresh_view_method=self.refresh_view))
         for shared_status in unique_shared_statuses_set:
-            self._unique_shared_statuses.Add(FilterItem(value=shared_status, view_model=self))
+            self._unique_shared_statuses.Add(FilterItem(value=shared_status, refresh_view_method=self.refresh_view))
            
 
     def sort_families(self, sort_by):
@@ -277,13 +278,55 @@ class FamiliesSelectionViewModel(ViewModelBase):
 
         self._families_view.SortDescriptions.Clear()
         self._families_view.SortDescriptions.Add(SortDescription(sort_by, direction))
+        
+        # refreshes the view in the UI
         self._families_view.Refresh()
 
         # Update current sort column and direction
         self._current_sort_column = sort_by
         self._current_sort_direction = direction
         
-        
+    def filter_families(self, obj):
+        if(isinstance(obj, FamilyViewModel)):
+            is_match = True
+            # check if the family matches the filter criteria for each column!
+            # check match status
+            if self._unique_match_statuses:
+                is_match = is_match and any(filter_item.IsChecked for filter_item in self._unique_match_statuses if filter_item.Value == obj.MatchStatus)
+            # stop checking if the family does not match the filter criteria
+            if not is_match:
+                return False
+            # check category
+            if self._unique_categories:
+                is_match = is_match and any(filter_item.IsChecked for filter_item in self._unique_categories if filter_item.Value == obj.FamilyCategory)
+            # stop checking if the family does not match the filter criteria
+            if not is_match:
+                return False
+            # check name
+            if self._unique_names:
+                is_match = is_match and any(filter_item.IsChecked for filter_item in self._unique_names if filter_item.Value == obj.FamilyName)
+            # stop checking if the family does not match the filter criteria
+            if not is_match:
+                return False
+            # check shared status
+            if self._unique_shared_statuses:
+                is_match = is_match and any(filter_item.IsChecked for filter_item in self._unique_shared_statuses if filter_item.Value == obj.FamilyIsShared)
+            # stop checking if the family does not match the filter criteria
+            if not is_match:
+                return False
+            
+            # if the family matches all filter criteria, return True
+            return True
+        else:
+            return False
+    
+    def refresh_view(self):
+        """
+        Refreshes the view by updating the families collection and the unique values for the column filters.
+        """
+        # refreshes the view in the UI
+        self._families_view.Refresh()
+    
     def close_window(self, window):
         """
         Closes the window that is passed in as an argument. 

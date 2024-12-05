@@ -28,7 +28,7 @@ Revit API utility functions for the spatial properties of room elements.
 #
 
 from duHast.Revit.Rooms.Objects.RoomBaseObject import RoomBaseObj
-
+from duHast.Revit.Rooms.Objects.RoomSpatialObject import RoomSpatialObj
 from Autodesk.Revit.DB import (
     Line,
     SpatialElementBoundaryLocation,
@@ -69,26 +69,30 @@ class RoomSpatialForView(RoomBaseObj):
 
         # TODO: c an I use an instance of RoomSpatialForView to do the calcs??
         # Boundary options for spatial elements
-        spat_opts = SpatialElementBoundaryOptions()
-        spat_opts.SpatialElementBoundaryLocation = boundary_location
 
-        # Extract spatial data
-        segments = get_room_segments(room, spat_opts)
-        room_walls = get_only_wall_segments_as_walls(rvt_doc, segments)
-        wall_segs = get_only_wall_segments_as_curves(rvt_doc, segments)
+        dummy_room = RoomSpatialObj(rvt_doc, room, boundary_location=boundary_location)
 
-        # Compute bounding box
-        bbox = room.get_BoundingBox(None) if room.Location else None
+        # spat_opts = SpatialElementBoundaryOptions()
+        # spat_opts.SpatialElementBoundaryLocation = boundary_location
 
-        # Compute bounding box center
-        bbox_centre = None
-        if bbox:
-            centre_x = bbox.Min.X + ((bbox.Max.X - bbox.Min.X) / 2)
-            centre_y = bbox.Min.Y + ((bbox.Max.Y - bbox.Min.Y) / 2)
-            centre_z = bbox.Min.Z
-            bbox_centre = XYZ(centre_x, centre_y, centre_z)
+        # # Extract spatial data
+        # segments = get_room_segments(room, spat_opts)
+        # room_walls = get_only_wall_segments_as_walls(rvt_doc, segments)
+        # wall_segs = get_only_wall_segments_as_curves(rvt_doc, segments)
 
-        return segments, room_walls, wall_segs, bbox, bbox_centre
+        # # Compute bounding box
+        # bbox = room.get_BoundingBox(None) if room.Location else None
+
+        # # Compute bounding box center
+        # bbox_centre = None
+        # if bbox:
+        #     centre_x = bbox.Min.X + ((bbox.Max.X - bbox.Min.X) / 2)
+        #     centre_y = bbox.Min.Y + ((bbox.Max.Y - bbox.Min.Y) / 2)
+        #     centre_z = bbox.Min.Z
+        #     bbox_centre = XYZ(centre_x, centre_y, centre_z)
+
+        return dummy_room.segments, dummy_room.room_walls, dummy_room.wall_segs, dummy_room.bbox, dummy_room.bbox_centre
+        #return segments, room_walls, wall_segs, bbox, bbox_centre
     
 
     def is_room_rectalinear(self):

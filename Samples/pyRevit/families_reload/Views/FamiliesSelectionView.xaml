@@ -27,16 +27,21 @@
                                 <Setter Property="ContextMenu">
                                     <Setter.Value>
                                         <ContextMenu>
-                                            <ItemsControl ItemsSource="{Binding UniqueFamilyNames}">
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <CheckBox 
-                                                            Content="{Binding Value}" 
-                                                            IsChecked="{Binding IsChecked, Mode=TwoWay}"
-                                                            Command="{Binding CheckCommand}"/>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
+                                            <Border BorderThickness="0" Padding="0">
+                                                <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch">
+                                                    <ItemsControl ItemsSource="{Binding UniqueFamilyNames}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox 
+                                                                    HorizontalAlignment="Stretch" 
+                                                                    HorizontalContentAlignment="Right"
+                                                                    Content="{Binding Value}" 
+                                                                    IsChecked="{Binding IsChecked, Mode=TwoWay}"/>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </ScrollViewer>
+                                            </Border>
                                         </ContextMenu>
                                     </Setter.Value>
                                 </Setter>
@@ -57,16 +62,22 @@
                                 <Setter Property="ContextMenu">
                                     <Setter.Value>
                                         <ContextMenu>
-                                            <ItemsControl ItemsSource="{Binding  UniqueCategories}">
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <CheckBox 
-                                                            Content="{Binding Value}" 
-                                                            IsChecked="{Binding IsChecked, Mode=TwoWay}"
-                                                            Command="{Binding CheckCommand}"/>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
+                                            <Border BorderThickness="0" Padding="0">
+                                                <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch">
+                                                    <ItemsControl ItemsSource="{Binding  UniqueCategories}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox 
+                                                                    HorizontalAlignment="Stretch"
+                                                                    HorizontalContentAlignment="Right"
+                                                                    Content="{Binding Value}" 
+                                                                    IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                                                    Command="{Binding CheckCommand}"/>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </ScrollViewer>
+                                            </Border>
                                         </ContextMenu>
                                     </Setter.Value>
                                 </Setter>

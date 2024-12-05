@@ -542,4 +542,24 @@ def are_lines_perpendicular(line_one, line_two):
     """
 
     # check if the lines are perpendicular
-    return line_one.Direction.Normalize().DotProduct(line_two.Direction.Normalize()) == 0
+    # calculate a perpendicular vector to the first line
+    # and check if it is parallel to the second line
+    perpendicular_vector_to_one = XYZ(-line_one.Direction.Y, line_one.Direction.X, 0)
+    #perp_2 = line_one.Direction.Normalize().DotProduct(line_two.Direction.Normalize())
+
+
+    dir_one = line_one.Direction.Normalize()
+    #print("Dir one: ", dir_one)
+
+    dir_two = line_two.Direction.Normalize()
+    #print("Dir two: ", dir_two)
+
+    #perp_of_one = dir_one.DotProduct(dir_two)
+    #print("Perpendicular of one: ", perp_of_one)
+
+    # check if the perpendicular vector is parallel to the second line
+    return perpendicular_vector_to_one.IsAlmostEqualTo(dir_two) or perpendicular_vector_to_one.IsAlmostEqualTo(dir_two.Negate())
+
+
+
+    #return is_close(line_one.Direction.Normalize().DotProduct(line_two.Direction.Normalize()),0.0, abs_tol=1e-15)

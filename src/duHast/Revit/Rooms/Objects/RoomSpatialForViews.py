@@ -67,32 +67,10 @@ class RoomSpatialForView(RoomBaseObj):
 
         """
 
-        # TODO: c an I use an instance of RoomSpatialForView to do the calcs??
-        # Boundary options for spatial elements
-
+        # Create a dummy room spatial object to get some spatial data
         dummy_room = RoomSpatialObj(rvt_doc, room, boundary_location=boundary_location)
 
-        # spat_opts = SpatialElementBoundaryOptions()
-        # spat_opts.SpatialElementBoundaryLocation = boundary_location
-
-        # # Extract spatial data
-        # segments = get_room_segments(room, spat_opts)
-        # room_walls = get_only_wall_segments_as_walls(rvt_doc, segments)
-        # wall_segs = get_only_wall_segments_as_curves(rvt_doc, segments)
-
-        # # Compute bounding box
-        # bbox = room.get_BoundingBox(None) if room.Location else None
-
-        # # Compute bounding box center
-        # bbox_centre = None
-        # if bbox:
-        #     centre_x = bbox.Min.X + ((bbox.Max.X - bbox.Min.X) / 2)
-        #     centre_y = bbox.Min.Y + ((bbox.Max.Y - bbox.Min.Y) / 2)
-        #     centre_z = bbox.Min.Z
-        #     bbox_centre = XYZ(centre_x, centre_y, centre_z)
-
         return dummy_room.segments, dummy_room.room_walls, dummy_room.wall_segs, dummy_room.bbox, dummy_room.bbox_centre
-        #return segments, room_walls, wall_segs, bbox, bbox_centre
     
 
     def is_room_rectalinear(self):
@@ -117,20 +95,29 @@ class RoomSpatialForView(RoomBaseObj):
 
         # loop over outer loop segments only ( representing the outer room boundary and not any inner islands ) and check if parallel or perpendicular to the previous segment
         room_bounding_segemnts_outer_loop = room_bounding_segemnts[0]
+        #print ("Room bounding segments loops: ", len(room_bounding_segemnts))
+        #print("Room bounding segments outer loop: ", len(room_bounding_segemnts_outer_loop))
         for i in range(1, len(room_bounding_segemnts_outer_loop)):
             # get the current segment
             current_segment_curve = room_bounding_segemnts_outer_loop[i].GetCurve()
+            #print("...Current segment curve: ", current_segment_curve)
+            #print("...Current segment type: ", type(room_bounding_segemnts_outer_loop[i]))
             # get the previous segment
             previous_segment_curve = room_bounding_segemnts_outer_loop[i-1].GetCurve()
+            #print("...Previous segment curve: ",previous_segment_curve)
+            #print("...Previous segment type: ", type(room_bounding_segemnts_outer_loop[i-1]))
 
             # make sure both curves are lines ( no arcs or other curves )
             if (isinstance(current_segment_curve, Line) and isinstance(previous_segment_curve, Line)):
                 # check if the current segment is parallel or perpendicular to the previous segment
                 if(not(are_lines_parallel(current_segment_curve, previous_segment_curve) or are_lines_perpendicular(current_segment_curve, previous_segment_curve))):
                     # if not, the room is not rectalinear
+                    #print("......Current segment is parallel {} \n{}{}" .format(are_lines_parallel(current_segment_curve, previous_segment_curve), current_segment_curve.Direction.Normalize(), previous_segment_curve.Direction.Normalize()))
+                    #print("......Current segment is perpendicular {} \n{}" .format(are_lines_perpendicular(current_segment_curve, previous_segment_curve), current_segment_curve.Direction.Normalize().DotProduct(previous_segment_curve.Direction.Normalize())))
                     return False
             else:
                 # only lines are supported
+                #print("Only lines are supported for checking if room is rectalinear")
                 return False
             
         # if all segments are either parallel or perpendicular to each other, the room is rectalinear

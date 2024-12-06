@@ -32,16 +32,10 @@ from duHast.Revit.Rooms.Objects.RoomSpatialObject import RoomSpatialObj
 from Autodesk.Revit.DB import (
     Line,
     SpatialElementBoundaryLocation,
-    SpatialElementBoundaryOptions,
     XYZ,
 )
 
-from duHast.Revit.Rooms.Geometry.room_spatial_elements import (
-    get_room_segments,
-    get_only_wall_segments_as_walls,
-    get_only_wall_segments_as_curves,
-)
-
+from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 from duHast.Revit.Common.Geometry.curve import are_lines_parallel, are_lines_perpendicular
 
 class RoomSpatialForView(RoomBaseObj):
@@ -114,6 +108,9 @@ class RoomSpatialForView(RoomBaseObj):
                     # if not, the room is not rectalinear
                     #print("......Current segment is parallel {} \n{}{}" .format(are_lines_parallel(current_segment_curve, previous_segment_curve), current_segment_curve.Direction.Normalize(), previous_segment_curve.Direction.Normalize()))
                     #print("......Current segment is perpendicular {} \n{}" .format(are_lines_perpendicular(current_segment_curve, previous_segment_curve), current_segment_curve.Direction.Normalize().DotProduct(previous_segment_curve.Direction.Normalize())))
+                    
+                    print("...length of current segment: ", convert_imperial_feet_to_metric_mm(current_segment_curve.Length))
+                    
                     return False
             else:
                 # only lines are supported

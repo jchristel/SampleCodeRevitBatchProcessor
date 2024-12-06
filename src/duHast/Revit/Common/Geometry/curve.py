@@ -541,25 +541,15 @@ def are_lines_perpendicular(line_one, line_two):
         bool: True if the lines are perpendicular, False otherwise.
     """
 
-    # check if the lines are perpendicular
+    # check if the lines are perpendicular:
     # calculate a perpendicular vector to the first line
     # and check if it is parallel to the second line
+    # thats done rather than using the dot product of the two lines
+    # to stay within the means of Revit API calculation precision and avoid floating point errors
     perpendicular_vector_to_one = XYZ(-line_one.Direction.Y, line_one.Direction.X, 0)
-    #perp_2 = line_one.Direction.Normalize().DotProduct(line_two.Direction.Normalize())
-
-
-    dir_one = line_one.Direction.Normalize()
-    #print("Dir one: ", dir_one)
-
+    
+    # normalize the direction of the second line
     dir_two = line_two.Direction.Normalize()
-    #print("Dir two: ", dir_two)
-
-    #perp_of_one = dir_one.DotProduct(dir_two)
-    #print("Perpendicular of one: ", perp_of_one)
 
     # check if the perpendicular vector is parallel to the second line
     return perpendicular_vector_to_one.IsAlmostEqualTo(dir_two) or perpendicular_vector_to_one.IsAlmostEqualTo(dir_two.Negate())
-
-
-
-    #return is_close(line_one.Direction.Normalize().DotProduct(line_two.Direction.Normalize()),0.0, abs_tol=1e-15)

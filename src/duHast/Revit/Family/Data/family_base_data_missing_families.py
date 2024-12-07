@@ -284,10 +284,10 @@ def get_direct_root_families(families, missing_families):
                     family_at_level_one.family_name,
                     family_at_level_one.family_category,
                 )
-                if test_value in missing_families and "{} {}".format(family_at_level_one.family_name, family_at_level_one.family_category) not in direct_host_families_short:
-                    # match found...
-                    direct_host_families.append(family_at_level_one)
-                    direct_host_families_short.append("{} {}".format(family_at_level_one.family_name, family_at_level_one.family_category))
+                if test_value in missing_families and "{} {}".format(family.family_name, family.family_category) not in direct_host_families_short:
+                    # match found...store the direct host family
+                    direct_host_families.append(family)
+                    direct_host_families_short.append("{} {}".format(family.family_name, family.family_category))
 
     return direct_host_families
 
@@ -295,6 +295,7 @@ def get_direct_root_families(families, missing_families):
 def find_missing_families_direct_host_families(family_base_data_report_file_path):
     """
     Returns a list of FamilyDataFamily instances which represent the direct parents (host families) of the missing families.
+    Only processed root families which have a missing family as a direct nested family are returned. (any root families which contains a missing family nested further down the nesting tree are not returned)
 
     :param family_base_data_report_file_path: Fully qualified file path to family base data report file.
     :type family_base_data_report_file_path: str
@@ -359,23 +360,45 @@ def find_missing_families_direct_host_families(family_base_data_report_file_path
             families=families, families_longest_path=families_longest_path
         )
 
+        # check if there are any missing families
+        if len(missing_families) == 0:
+            return_value.append_message("No missing families found in data set. {}".format(t_process.stop()))
+            return return_value
+        
         # get the direct root families of nested families identified as missing
-        direct_root_families = []
-        if len(missing_families) > 0:
-            # loop over longest path and find the ones where the second entry in the nesting path is a missing family
-            direct_root_families = get_direct_root_families(
-                families=families,
-                missing_families=missing_families,
-            )
-
+        # logging
+        return_value.append_message(
+            "Found {} missing families. {}".format(
+                len(missing_families), t_process.stop())
+        )
+        for mf in missing_families:
             return_value.append_message(
-                "Found {} direct hosts to missing families. {}".format(
-                    len(direct_root_families), t_process.stop()
-                )
+                "Missing family: {} {}".format(mf[0], mf[1])
             )
-        else:
-            return_value.append_message("No missing root families found in data set.")
+        
+        # start timer again
+        t_process.start()
+        
+        # set up a list for direct root families
+        direct_root_families = []
+       
+        # loop over longest path and find the ones where the second entry in the nesting path is a missing family
+        direct_root_families = get_direct_root_families(
+            families=families,
+            missing_families=missing_families,
+        )
 
+        # logging
+        return_value.append_message(
+            "Found {} direct hosts to missing families. {}".format(
+                len(direct_root_families), t_process.stop()
+            )
+        )
+        for drf in direct_root_families:
+            return_value.append_message(
+                "Direct host family: {} {}".format(drf.family_name, drf.family_category)
+            )
+        
         # update result property as required
         if len(direct_root_families) > 0:
             return_value.result = direct_root_families

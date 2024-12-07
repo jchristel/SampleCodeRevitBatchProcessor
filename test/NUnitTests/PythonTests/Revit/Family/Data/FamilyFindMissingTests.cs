@@ -53,7 +53,12 @@ namespace PythonTests.Revit.Family.Data
             Console.WriteLine(testResultMissing.message);
             Assert.That(testResultMissing.status, Is.True, "Expecting successfully reading of all files");
             Assert.That(testResultMissing.result.Count, Is.EqualTo(testFilesMultiple.Count), "Expecting number of missing root families to match");
-            
+
+            foreach (var missingFam in testResultMissing.result)
+            {
+                Console.WriteLine(missingFam);
+            }
+
 
             // Check if all expected data is present
             foreach (var testFile in testFilesMultiple)

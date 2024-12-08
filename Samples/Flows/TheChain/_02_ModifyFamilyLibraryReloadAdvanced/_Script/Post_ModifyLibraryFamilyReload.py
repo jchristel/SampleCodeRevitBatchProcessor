@@ -141,9 +141,13 @@ def combine_data_files():
     for to_combine in FILE_DATA_TO_COMBINE:
         output("Combining {}  report files.".format(to_combine[0]))
         # combine files
-        combine_files(
+        combine_result = combine_files(
             settings.WORKING_DIRECTORY, "", to_combine[0], ".temp", to_combine[1]
         )
+        output("Combined report files. [{}]".format(combine_result.status))
+        if not combine_result.status:
+            output("Combined report file: {}".format(combine_result.message))
+
 
 
 def move_files():

@@ -125,7 +125,7 @@ def delete_temp_files(keep_files):
 
 def combine_data_files():
     """
-    Combines varies report files into single text file.
+    Combines varies report files into single csv text file.
 
     Files are filter based on FILE_DATA_TO_COMBINE list.
     """
@@ -133,13 +133,16 @@ def combine_data_files():
     for to_combine in settings.FILE_DATA_TO_COMBINE:
         output("Combining {}  report files.".format(to_combine[0]))
         # combine files
-        combine_files(
+        combine_result = combine_files(
             settings.WORKING_DIRECTORY,
             "",
             to_combine[0],
             settings.TEMP_FILE_EXTENSION,
             to_combine[1],
         )
+        output("Combined report files. [{}]".format(combine_result.status))
+        if not combine_result.status:
+            output("Combined report file: {}".format(combine_result.message))
 
 
 def move_files():

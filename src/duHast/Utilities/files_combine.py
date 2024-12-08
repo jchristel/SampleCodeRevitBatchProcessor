@@ -78,6 +78,9 @@ def combine_files(
     :type delimiter: str, optional
     :param quoting: The quoting option for the CSV writer, defaults to csv.QUOTE_MINIMAL
     :type quoting: int, optional
+    
+    :return: A result object with status and message.
+    :rtype: :class:`.Result`
     """
 
     return_value = Result()
@@ -90,25 +93,34 @@ def combine_files(
         file_list = file_getter(folder_path, file_prefix, file_suffix, file_extension)
         
         # loop over file and combine...
-        with open(os.path.join(folder_path, output_file_name), "w", newline='', encoding="utf-8") as result:
-            writer = csv.writer(result, delimiter=delimiter, quoting=quoting)
+        # newlines is set to '' to avoid double newlines on Windows
+        result = open(os.path.join(folder_path, output_file_name), "w", newline='', encoding="utf-8")
+        try:
+            # lineterminator='\n' is set to avoid double newlines on Windows
+            writer = csv.writer(result, delimiter=delimiter, quoting=quoting, lineterminator='\n')
 
-            file_counter = 0
-            for file_ in file_list:
+            for file_index, file_ in enumerate(file_list):
                 try:
                     line_counter = 0
                     with codecs.open(file_, "r", encoding="utf-8") as fp:
                         reader = csv.reader(fp, delimiter=delimiter)
-                        for line in reader:
+                        lines = list(reader)
+                        for i, line in enumerate(lines):
                             # ensure header from first file is copied over
-                            if file_counter == 0 and line_counter == 0 or line_counter != 0:
-                                writer.writerow(line)
+                            if file_index == 0 and line_counter == 0 or line_counter != 0:
+                                if file_index == len(file_list) - 1 and i == len(lines) - 1:
+                                    # Write the last row of the last file without a newline character
+                                    result.write(delimiter.join(line))
+                                else:
+                                    writer.writerow(line)
                             line_counter += 1
 
-                    file_counter += 1
                     return_value.append_message("File: {} combined.".format(file_))
                 except Exception as e:
                     return_value.update_sep(False, "File: {} failed to combine with exception: {}".format(file_, e))
+        finally:
+            # make sure to close the file
+            result.close()
                     
     except Exception as e:
         return_value.update_sep(False, "Failed to combine files with exception: {}".format(e))
@@ -133,8 +145,8 @@ def append_to_file(source_file, append_file, ignore_first_row=False, delimiter="
     :type delimiter: str, optional
     :param quoting: The quoting option for the CSV writer, defaults to csv.QUOTE_MINIMAL
     :type quoting: int, optional
-    :return: If True file was appended without an exception, otherwise False.
-    :rtype: bool
+    :return: A result object with status and message.
+    :rtype: :class:`.Result`
     """
 
     return_value = Result()
@@ -144,16 +156,34 @@ def append_to_file(source_file, append_file, ignore_first_row=False, delimiter="
             reader = csv.reader(fp, delimiter=delimiter)
             lines = list(reader)
 
+        # newlines is set to '' to avoid double newlines on Windows
         with open(source_file, "a", encoding="utf-8", newline='') as f:
-            writer = csv.writer(f, delimiter=delimiter, quoting=quoting)
+            # lineterminator='\n' is set to avoid double newlines on Windows
+            writer = csv.writer(f, delimiter=delimiter, quoting=quoting, lineterminator='\n')
             if not ignore_first_row:
+                # no need to add a newline character to the first row of the file
+                # since this is writing entire rows to the file
                 for line in lines:
+                     # write entire new row to file
                     writer.writerow(line)
             else:
                 # check if only a header row in file?
                 if len(lines) > 1:
-                    for line in lines[1:]:
-                        writer.writerow(line)
+                    # check if we need to write a newline character into the file before writing any data
+                    # if there is more than one row to be appended to the file and ignore_first_row is set
+                    # this is to ensure that the first row is not appended to the last row of the file
+                    if ignore_first_row and len(lines) == 2:
+                        f.write('\n')
+                    
+                    # write the rest of the rows to the file
+                    for i, line in enumerate(lines[1:]):
+                        # check if we are at the last row to be appended to the file ( could also be the first and last row !)
+                        if i == len(lines[1:]) - 1:
+                            # Write the last row without a newline character at the end ( This requires a new line to be added to beginning of write!, see code above)
+                            f.write(delimiter.join(line))
+                        else:
+                            # write entire new row to file
+                            writer.writerow(line)
 
         return_value.append_message("File: {} appended to file: {}".format(append_file, source_file))
     except Exception as e:
@@ -212,59 +242,71 @@ def combine_files_header_independent(
     :type overwrite_existing: bool, optional
     """
 
-    file_list = glob.glob(
-        folder_path + "\\" + file_prefix + "*" + file_suffix + file_extension
-    )
-    # build list of unique headers
-    headers = get_unique_headers_tab(file_list)
-    combined_file_name = os.path.join(folder_path, output_file_name)
-    # loop over files to be combined
-    file_counter = 0
-    for file in file_list:
-        line_counter = 0
-        column_mapper = []
-        lines = read_tab_separated_file(file)
-        lines_to_be_transferred = []
-        for line in lines:
-            # read the headers in file
-            if line_counter == 0:
-                # replace any empty strings in header
-                headers_in_file = _format_headers(line, file)
-                # match up unique headers with headers from this file
-                # build header mapping
-                for unique_header in headers:
-                    if unique_header in headers_in_file:
-                        column_mapper.append(headers_in_file.index(unique_header))
-                    else:
-                        column_mapper.append(-1)
-            # ensure unique header is written to file
-            if file_counter == 0 and line_counter == 0:
-                lines_to_be_transferred.append(headers)
-            elif line_counter != 0:
-                padded_row = []
-                for cm in column_mapper:
-                    if cm == -1:
-                        # this column does not exist in this file
-                        padded_row.append("N/A")
-                    elif cm > len(line):
-                        # less columns in file than mapper index (should'nt happen??)
-                        padded_row.append("index out of bounds")
-                    else:
-                        padded_row.append(line[cm])
-                lines_to_be_transferred.append(padded_row)
-            line_counter += 1
-        
-        # determine write type, default is append
-        write_type = "a"
-        # if overwrite existing is set, write type is write for the first file only!
-        if(file_counter == 0 and overwrite_existing):
-           write_type = "w"
-        # write file data to combined file
-        write_report_data(
-            combined_file_name, header=[], data=lines_to_be_transferred, write_type=write_type
+    return_value = Result()
+    try:
+        file_list = glob.glob(
+            folder_path + "\\" + file_prefix + "*" + file_suffix + file_extension
         )
-        file_counter += 1
-
+        # build list of unique headers
+        headers = get_unique_headers_tab(file_list)
+        combined_file_name = os.path.join(folder_path, output_file_name)
+        # loop over files to be combined
+        file_counter = 0
+        for file in file_list:
+            line_counter = 0
+            column_mapper = []
+            lines = read_tab_separated_file(file)
+            lines_to_be_transferred = []
+            for line in lines:
+                # read the headers in file
+                if line_counter == 0:
+                    # replace any empty strings in header
+                    headers_in_file = _format_headers(line, file)
+                    # match up unique headers with headers from this file
+                    # build header mapping
+                    for unique_header in headers:
+                        if unique_header in headers_in_file:
+                            column_mapper.append(headers_in_file.index(unique_header))
+                        else:
+                            column_mapper.append(-1)
+                # ensure unique header is written to file
+                if file_counter == 0 and line_counter == 0:
+                    lines_to_be_transferred.append(headers)
+                elif line_counter != 0:
+                    padded_row = []
+                    for cm in column_mapper:
+                        if cm == -1:
+                            # this column does not exist in this file
+                            padded_row.append("N/A")
+                        elif cm > len(line):
+                            # less columns in file than mapper index (should'nt happen??)
+                            padded_row.append("index out of bounds")
+                        else:
+                            padded_row.append(line[cm])
+                    lines_to_be_transferred.append(padded_row)
+                    # debug
+                    return_value.result.append(padded_row)
+                line_counter += 1
+            
+            # determine write type, default is append
+            write_type = "a"
+            # if overwrite existing is set, write type is write for the first file only!
+            if(file_counter == 0 and overwrite_existing):
+                write_type = "w"
+            # write file data to combined file
+            result_write = write_report_data(
+                combined_file_name, 
+                header=[], 
+                data=lines_to_be_transferred, 
+                write_type=write_type
+            )
+            # keep track of what happened
+            return_value.update(result_write)
+            file_counter += 1
+        return_value.append_message("{} Files combined successfully.".format(file_counter))
+    except Exception as e:
+        return_value.update_sep(False, "Failed to combine files with exception: {}".format(e))
+    return return_value
 
 def combine_files_csv_header_independent(
     folder_path,
@@ -279,6 +321,7 @@ def combine_files_csv_header_independent(
 
     Columns which are unique to some files will have as a value 'N/A' in files where those columns do not exist.
     File need to use <,> character as column separator. (.CSV)
+    Assumes all files have a header row!
 
     :param folder_path: Folder path from which to get files to be combined and to which the combined file will be saved.
     :type folder_path: str
@@ -292,70 +335,86 @@ def combine_files_csv_header_independent(
     :type output_file_name: str, optional
     :param overwrite_existing: Will overwrite an existing output file if set to True, defaults to False ( append to existing output file)
     :type overwrite_existing: bool, optional
+    
+    :return: A result object with status and message.
+    :rtype: :class:`.Result`
     """
 
-    file_list = glob.glob(
-        folder_path + "\\" + file_prefix + "*" + file_suffix + file_extension
-    )
-    # build list of unique headers
-    headers = get_unique_headers_csv(file_list)
-    combined_file_name = os.path.join(folder_path, output_file_name)
-
-    # loop over files and combine...
-    file_counter = 0
-    for file in file_list:
-        line_counter = 0
-        column_mapper = []
-        lines = read_csv_file(file, increaseMaxFieldSizeLimit=False)
-        lines_to_be_transferred = []
-        for line in lines:
-            # read the headers in file
-            if line_counter == 0:
-                # replace any empty strings in header
-                headers_in_file = _format_headers(line, file)
-                # match up unique headers with headers from this file
-                # build header mapping
-                for unique_header in headers:
-                    if unique_header in headers_in_file:
-                        column_mapper.append(headers_in_file.index(unique_header))
-                    else:
-                        column_mapper.append(-1)
-            # ensure unique header is written to file
-            if file_counter == 0 and line_counter == 0:
-                lines_to_be_transferred.append(headers)
-            elif line_counter != 0:
-                # map data columns to headers
-                padded_row = []
-                for cm in column_mapper:
-                    if cm == -1:
-                        # this column does not exist in this file
-                        padded_row.append("N/A")
-                    elif cm > len(line):
-                        # less columns in file than mapper index (should'nt happen??)
-                        padded_row.append("index out of bounds")
-                    else:
-                        padded_row.append(line[cm])
-                lines_to_be_transferred.append(padded_row)
-            line_counter += 1
-        
-        # determine write type, default is append
-        write_type = "a"
-        # if overwrite existing is set, write type is write for the first file only!
-        if(file_counter == 0 and overwrite_existing):
-           write_type = "w"
-        
-        # write file data to combined file
-        write_report_data_as_csv(
-            file_name=combined_file_name, 
-            header=[], 
-            data=lines_to_be_transferred, 
-            write_type=write_type,
-            enforce_ascii=False, 
-            encoding="utf-8", 
-            bom=None, 
-            quoting=csv.QUOTE_MINIMAL
+    return_value = Result()
+    
+    try:
+        file_list = glob.glob(
+            folder_path + "\\" + file_prefix + "*" + file_suffix + file_extension
         )
-        file_counter += 1
+        # build list of unique headers
+        headers = get_unique_headers_csv(file_list)
+        combined_file_name = os.path.join(folder_path, output_file_name)
+
+        # loop over files and combine...
+        file_counter = 0
+        for file in file_list:
+            line_counter = 0
+            column_mapper = []
+            lines = read_csv_file(file, increaseMaxFieldSizeLimit=False)
+            lines_to_be_transferred = []
+            for line in lines:
+                # read the headers in file
+                if line_counter == 0:
+                    # replace any empty strings in header
+                    headers_in_file = _format_headers(line, file)
+                    # match up unique headers with headers from this file
+                    # build header mapping
+                    for unique_header in headers:
+                        if unique_header in headers_in_file:
+                            column_mapper.append(headers_in_file.index(unique_header))
+                        else:
+                            column_mapper.append(-1)
+                # ensure unique header is written to file
+                if file_counter == 0 and line_counter == 0:
+                    # header row in first file...
+                    lines_to_be_transferred.append(headers)
+                elif line_counter != 0:
+                    # map data columns to headers
+                    padded_row = []
+                    for cm in column_mapper:
+                        if cm == -1:
+                            # this column does not exist in this file
+                            padded_row.append("N/A")
+                        elif cm > len(line):
+                            # less columns in file than mapper index (should'nt happen??)
+                            padded_row.append("index out of bounds")
+                        else:
+                            padded_row.append(line[cm])
+                    lines_to_be_transferred.append(padded_row)
+                    # debug
+                    return_value.result.append(padded_row)
+                line_counter += 1
+            
+            # determine write type, default is append
+            write_type = "a"
+            # if overwrite existing is set, write type is write for the first file only!
+            if(file_counter == 0 and overwrite_existing):
+                write_type = "w"
+            
+            # write file data to combined file for each file read!
+            result_write = write_report_data_as_csv(
+                file_name=combined_file_name, 
+                header=[], 
+                data=lines_to_be_transferred, 
+                write_type=write_type,
+                enforce_ascii=False, 
+                encoding="utf-8", 
+                bom=None, 
+                quoting=csv.QUOTE_MINIMAL
+            )
+            # keep track of what happened
+            return_value.update(result_write)
+            
+            file_counter += 1
+        return_value.append_message("{} Files combined successfully.".format(file_counter))
+    except Exception as e:
+        return_value.update_sep(False, "Failed to combine csv file with exception: {}".format(e))
+    return return_value
 
 
 def combine_files_json(

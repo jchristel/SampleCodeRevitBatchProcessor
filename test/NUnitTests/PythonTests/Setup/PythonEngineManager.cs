@@ -13,7 +13,8 @@ namespace PythonTests.Setup
         public static dynamic? ResultClass { get; set; }
         public static dynamic? TimerClass { get; set; }
 
-        public static dynamic? FileCombineModule { get; set; }
+        public static dynamic? FilesCombineModule { get; set; }
+        public static dynamic? FilesCSVModule { get; set; }
 
         public static dynamic? BoundingBox2Class { get; set; }
         public static dynamic? BoundingBox3Class { get; set; }
@@ -92,6 +93,7 @@ namespace PythonTests.Setup
                     Path.Combine(repoPath, @"duHast\Utilities\Objects\result.py"),
                     Path.Combine(repoPath, @"duHast\Utilities\Objects\timer.py"),
                     Path.Combine(repoPath, @"duHast\Utilities\files_combine.py"),
+                    Path.Combine(repoPath, @"duHast\Utilities\files_csv.py"),
 
                     Path.Combine(repoPath, @"duHast\Geometry\bounding_box_2.py"),
                     Path.Combine(repoPath, @"duHast\Geometry\bounding_box_3.py"),

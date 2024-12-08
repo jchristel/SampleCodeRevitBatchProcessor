@@ -30,6 +30,7 @@ import codecs
 import csv
 from duHast.Utilities.files_io import get_first_row_in_file_no_strip
 from duHast.Utilities.files_io import get_file_name_without_ext
+from duHast.Utilities.files_csv import write_report_data_as_csv
 
 
 def get_unique_headers(files):
@@ -80,19 +81,19 @@ def write_report_data(file_name, header, data, write_type="w"):
     :type write_type: str, optional
     """
 
-    with codecs.open(file_name, write_type, encoding="utf-8") as f:
-        # check if header is required
-        if len(header) > 0:
-            f.write("\t".join(header + ["\n"]))
-        # check if data is required
-        if len(data) > 0:
-            for d in data:
-                if len(d) > 1:
-                    f.write("\t".join(d) + "\n")
-                elif len(d) == 1:
-                    f.write(d[0] + "\n")
-        f.close()
-
+    write_result = write_report_data_as_csv(
+        file_name=file_name,
+        header=header,
+        data=data,
+        write_type=write_type,
+        enforce_ascii=True,
+        encoding="utf-8",
+        quoting=csv.QUOTE_MINIMAL,
+        bom=None,
+        delimiter='\t',
+    )
+    return write_result
+    
 
 def read_tab_separated_file(file_path, increase_max_field_size_limit=False):
     """

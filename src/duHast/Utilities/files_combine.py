@@ -90,6 +90,7 @@ def combine_files(
         file_list = file_getter(folder_path, file_prefix, file_suffix, file_extension)
         
         # loop over file and combine...
+        # newlines is set to '' to avoid double newlines on Windows
         with open(os.path.join(folder_path, output_file_name), "w", newline='', encoding="utf-8") as result:
             writer = csv.writer(result, delimiter=delimiter, quoting=quoting)
 

@@ -3,7 +3,7 @@
 
 namespace PythonTests.UtilitiesTests
 {
-    public class FileCombineTests
+    public class FilesCombineTests
     {
         private string tempDirectory;
 
@@ -26,13 +26,13 @@ namespace PythonTests.UtilitiesTests
         [Test]
         public void ModuleShouldBeLoaded()
         {
-            Assert.That(PythonEngineManager.FileCombineModule, Is.Not.Null, "file_combine should be loaded.");
+            Assert.That(PythonEngineManager.FilesCombineModule, Is.Not.Null, "file_combine should be loaded.");
         }
 
         [Test]
         public void CombineFiles_CreatesCombinedFile()
         {
-            dynamic fileCombiner = PythonEngineManager.FileCombineModule;
+            dynamic fileCombiner = PythonEngineManager.FilesCombineModule;
 
             // Arrange
             string file1 = Path.Combine(tempDirectory, "file1.txt");
@@ -63,7 +63,7 @@ namespace PythonTests.UtilitiesTests
         [Test]
         public void CombineFiles_CreatesCombinedCsvFile()
         {
-            dynamic fileCombiner = PythonEngineManager.FileCombineModule;
+            dynamic fileCombiner = PythonEngineManager.FilesCombineModule;
 
             // Arrange
             string file1 = Path.Combine(tempDirectory, "file1.csv");
@@ -94,7 +94,7 @@ namespace PythonTests.UtilitiesTests
         [Test]
         public void CombineFiles_CreatesCombinedTabSeparatedFile()
         {
-            dynamic fileCombiner = PythonEngineManager.FileCombineModule;
+            dynamic fileCombiner = PythonEngineManager.FilesCombineModule;
 
             // Arrange
             string file1 = Path.Combine(tempDirectory, "file1.txt");
@@ -125,7 +125,7 @@ namespace PythonTests.UtilitiesTests
         [Test]
         public void AppendToFile_AppendsContent()
         {
-            dynamic fileCombiner = PythonEngineManager.FileCombineModule;
+            dynamic fileCombiner = PythonEngineManager.FilesCombineModule;
 
             // Arrange
             string sourceFile = Path.Combine(tempDirectory, "source.txt");
@@ -153,7 +153,7 @@ namespace PythonTests.UtilitiesTests
         [Test]
         public void AppendToFile_AppendsCsvContent()
         {
-            dynamic fileCombiner = PythonEngineManager.FileCombineModule;
+            dynamic fileCombiner = PythonEngineManager.FilesCombineModule;
 
             // Arrange
             string sourceFile = Path.Combine(tempDirectory, "source.csv");
@@ -181,7 +181,7 @@ namespace PythonTests.UtilitiesTests
         [Test]
         public void AppendToFile_AppendsTabSeparatedContent()
         {
-            dynamic fileCombiner = PythonEngineManager.FileCombineModule;
+            dynamic fileCombiner = PythonEngineManager.FilesCombineModule;
 
             // Arrange
             string sourceFile = Path.Combine(tempDirectory, "source.txt");
@@ -209,7 +209,7 @@ namespace PythonTests.UtilitiesTests
         [Test]
         public void CombineFilesHeaderIndependent_CreatesCombinedFile()
         {
-            dynamic fileCombiner = PythonEngineManager.FileCombineModule;
+            dynamic fileCombiner = PythonEngineManager.FilesCombineModule;
 
             // Arrange
             string file1 = Path.Combine(tempDirectory, "file1.txt");
@@ -243,7 +243,7 @@ namespace PythonTests.UtilitiesTests
         [Test]
         public void CombineFilesCsvHeaderIndependent_CreatesCombinedFile()
         {
-            dynamic fileCombiner = PythonEngineManager.FileCombineModule;
+            dynamic fileCombiner = PythonEngineManager.FilesCombineModule;
 
             // Arrange
             string file1 = Path.Combine(tempDirectory, "file1.csv");
@@ -280,7 +280,7 @@ namespace PythonTests.UtilitiesTests
         [Test]
         public void CombineFilesJson_CreatesCombinedFile()
         {
-            dynamic fileCombiner = PythonEngineManager.FileCombineModule;
+            dynamic fileCombiner = PythonEngineManager.FilesCombineModule;
 
             // Arrange
             string file1 = Path.Combine(tempDirectory, "file1.json");

@@ -24,7 +24,9 @@ namespace PythonTests
 
                 //Utility modules
                 engine.Execute("import duHast.Utilities.files_combine as files_combine", scope);
-                PythonEngineManager.FileCombineModule = scope.GetVariable("files_combine");
+                PythonEngineManager.FilesCombineModule = scope.GetVariable("files_combine");
+                engine.Execute("import duHast.Utilities.files_csv as files_csv", scope);
+                PythonEngineManager.FilesCSVModule = scope.GetVariable("files_csv");
 
                 // geometry classes
                 PythonEngineManager.BoundingBoxBaseClass = scope.GetVariable("BoundingBoxBase");

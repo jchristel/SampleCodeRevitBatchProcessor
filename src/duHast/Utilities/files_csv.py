@@ -123,7 +123,7 @@ def read_csv_file_with_encoding(file_path_csv, increase_max_field_size_limit=Fal
                 row_list = [row for row in reader]
             
             # Successful read
-            return_value.append_message("read file succesfully")
+            return_value.append_message("read file successfully")
             return_value.status=True
             return_value.result=row_list
             return return_value
@@ -226,7 +226,8 @@ def write_report_data_as_csv(
             f.write(bom.decode(encoding))
 
         # Create the CSV writer
-        writer = csv.writer(f, escapechar='\\', quoting=quoting)
+        # line terminator is set to '\n' to avoid double newlines on Windows
+        writer = csv.writer(f, escapechar='\\', quoting=quoting, lineterminator='\n')
 
         def encoded_row(row):
             if enforce_ascii:
@@ -238,9 +239,13 @@ def write_report_data_as_csv(
         if header:
             writer.writerow(encoded_row(header))
 
-        # Write data rows
-        for row in data:
-            writer.writerow(encoded_row(row))
+        # Write data rows, looping over rows to prevent new line character on the last row
+        for i, row in enumerate(data):
+            if i == len(data) - 1:
+                # Write the last row without a newline character
+                f.write(','.join(encoded_row(row)))
+            else:
+                writer.writerow(encoded_row(row))
                     
         f.close()
 

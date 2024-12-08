@@ -1,4 +1,5 @@
 ﻿using PythonTests.Setup;
+using System.Collections.Generic;
 
 
 namespace PythonTests.UtilitiesTests
@@ -49,7 +50,12 @@ namespace PythonTests.UtilitiesTests
             string combinedFilePath = Path.Combine(tempDirectory, "result.txt"); // Default output file name
             Assert.That(File.Exists(combinedFilePath), Is.True);
             string combinedContent = File.ReadAllText(combinedFilePath);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
+
+            foreach (var line in lines)
+            {
+                Console.WriteLine("{" + line + "}");
+            }
 
             // Check for the number of rows
             Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
@@ -78,7 +84,12 @@ namespace PythonTests.UtilitiesTests
             string combinedFilePath = Path.Combine(tempDirectory, "combined.csv");
             Assert.That(File.Exists(combinedFilePath), Is.True);
             string combinedContent = File.ReadAllText(combinedFilePath);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
+
+            foreach (var line in lines)
+            {
+                Console.WriteLine("{" + line + "}");
+            }
 
             // Check for the number of rows
             Assert.That(lines.Length, Is.EqualTo(5)); // 1 header row + 4 data rows
@@ -111,7 +122,12 @@ namespace PythonTests.UtilitiesTests
             string combinedFilePath = Path.Combine(tempDirectory, "result.txt"); // Default output file name
             Assert.That(File.Exists(combinedFilePath), Is.True);
             string combinedContent = File.ReadAllText(combinedFilePath);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
+
+            foreach (var line in lines)
+            {
+                Console.WriteLine("{" + line + "}");
+            }
 
             // Check for the number of rows
             Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
@@ -131,7 +147,7 @@ namespace PythonTests.UtilitiesTests
             string sourceFile = Path.Combine(tempDirectory, "source.txt");
             string appendFile = Path.Combine(tempDirectory, "append.txt");
             File.WriteAllText(sourceFile, "Header1,Header2\nValue1,Value2\n");
-            File.WriteAllText(appendFile, "Header1,Header2\nValue3,Value4\n");
+            File.WriteAllText(appendFile, "Header1,Header2\nValue3,Value4\nValue5,Value6\n");
 
             // Act
             var result = fileCombiner.append_to_file(sourceFile, appendFile, true);
@@ -140,14 +156,20 @@ namespace PythonTests.UtilitiesTests
             Console.WriteLine(result.message);
             Assert.That(result.status, Is.True);
             string combinedContent = File.ReadAllText(sourceFile);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
+
+            foreach (var line in lines)
+            {
+                Console.WriteLine("{" + line + "}");
+            }
 
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
+            Assert.That(lines.Length, Is.EqualTo(4)); // 1 header row + 3 data rows
 
             // Check for the content
             Assert.That(combinedContent, Does.Contain("Value1,Value2"));
             Assert.That(combinedContent, Does.Contain("Value3,Value4"));
+            Assert.That(combinedContent, Does.Contain("Value5,Value6"));
         }
 
         [Test]
@@ -158,7 +180,7 @@ namespace PythonTests.UtilitiesTests
             // Arrange
             string sourceFile = Path.Combine(tempDirectory, "source.csv");
             string appendFile = Path.Combine(tempDirectory, "append.csv");
-            File.WriteAllText(sourceFile, "Header1,Header2\nValue1,Value2\n");
+            File.WriteAllText(sourceFile, "Header1,Header2\nValue1,Value2");
             File.WriteAllText(appendFile, "Header1,Header2\nValue3,Value4\n");
 
             // Act
@@ -168,12 +190,18 @@ namespace PythonTests.UtilitiesTests
             Console.WriteLine(result.message);
             Assert.That(result.status, Is.True);
             string combinedContent = File.ReadAllText(sourceFile);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
+
+            foreach (var line in lines)
+            {
+                Console.WriteLine("{" + line + "}");
+            }
 
             // Check for the number of rows
             Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
 
             // Check for the content
+            Assert.That(combinedContent, Does.Contain("Header1,Header2"));
             Assert.That(combinedContent, Does.Contain("Value1,Value2"));
             Assert.That(combinedContent, Does.Contain("Value3,Value4"));
         }
@@ -186,7 +214,7 @@ namespace PythonTests.UtilitiesTests
             // Arrange
             string sourceFile = Path.Combine(tempDirectory, "source.txt");
             string appendFile = Path.Combine(tempDirectory, "append.txt");
-            File.WriteAllText(sourceFile, "Header1\tHeader2\nValue1\tValue2\n");
+            File.WriteAllText(sourceFile, "Header1\tHeader2\nValue1\tValue2");
             File.WriteAllText(appendFile, "Header1\tHeader2\nValue3\tValue4\n");
 
             // Act
@@ -196,12 +224,18 @@ namespace PythonTests.UtilitiesTests
             Console.WriteLine(result.message);
             Assert.That(result.status, Is.True);
             string combinedContent = File.ReadAllText(sourceFile);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
+
+            foreach (var line in lines)
+            {
+                Console.WriteLine("{" + line + "}");
+            }
 
             // Check for the number of rows
             Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
 
             // Check for the content
+            Assert.That(combinedContent, Does.Contain("Header1\tHeader2"));
             Assert.That(combinedContent, Does.Contain("Value1\tValue2"));
             Assert.That(combinedContent, Does.Contain("Value3\tValue4"));
         }
@@ -218,26 +252,38 @@ namespace PythonTests.UtilitiesTests
             File.WriteAllText(file2, "Header3\tHeader4\nValue3\tValue4\n");
 
             // Act
-            fileCombiner.combine_files_header_independent(tempDirectory, "", "", ".txt", "combined.txt");
+            var result_combine = fileCombiner.combine_files_header_independent(tempDirectory, "", "", ".txt", "combined.txt", overwrite_existing: true);
+            Console.WriteLine(result_combine.message);
+            Console.WriteLine("---START---");
+            foreach (var line in result_combine.result)
+            {
+                string output = ">>";
+                foreach (var item in line)
+                {
+                    output += item + ",";
+                }
+                Console.WriteLine(output);
+            }
+            Console.WriteLine("---END---");
 
             // Assert
             string combinedFilePath = Path.Combine(tempDirectory, "combined.txt");
             Assert.That(File.Exists(combinedFilePath), Is.True);
             string combinedContent = File.ReadAllText(combinedFilePath);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
+
+            foreach (var line in lines)
+            {
+                Console.WriteLine("{" + line + "}");
+            }
 
             // Check for the number of rows
             Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(combinedContent, Does.Contain("Header1"));
-            Assert.That(combinedContent, Does.Contain("Header2"));
-            Assert.That(combinedContent, Does.Contain("Header3"));
-            Assert.That(combinedContent, Does.Contain("Header4"));
-            Assert.That(combinedContent, Does.Contain("Value1"));
-            Assert.That(combinedContent, Does.Contain("Value2"));
-            Assert.That(combinedContent, Does.Contain("Value3"));
-            Assert.That(combinedContent, Does.Contain("Value4"));
+            Assert.That(combinedContent, Does.Contain("Header1\tHeader2\tHeader3\tHeader4"));
+            Assert.That(combinedContent, Does.Contain("Value1\tValue2\tN/A\tN/A"));
+            Assert.That(combinedContent, Does.Contain("N/A\tN/A\tValue3\tValue4"));
         }
 
         [Test]
@@ -248,33 +294,46 @@ namespace PythonTests.UtilitiesTests
             // Arrange
             string file1 = Path.Combine(tempDirectory, "file1.csv");
             string file2 = Path.Combine(tempDirectory, "file2.csv");
-            File.WriteAllText(file1, "Header1,Header2\nValue1,Value2\n");
+            File.WriteAllText(file1, "Header1,Header2\nValue1,Value2,\nValue10,Value20\n");
             File.WriteAllText(file2, "Header3,Header4\nValue3,Value4\n");
 
             // Act
-            fileCombiner.combine_files_csv_header_independent(tempDirectory, "", "", ".csv", "combined.csv");
-
+            var result_combine = fileCombiner.combine_files_csv_header_independent(tempDirectory, "", "", ".csv", "combined.csv", overwrite_existing:true);
+            
+            Console.WriteLine(result_combine.message);
+            Console.WriteLine("---START---");
+            foreach (var line in result_combine.result)
+            {
+                string output= ">>";
+                foreach (var item in line)
+                {
+                    output += item + ",";
+                }
+                Console.WriteLine(output);
+            }
+            Console.WriteLine("---END---");
             // Assert
             string combinedFilePath = Path.Combine(tempDirectory, "combined.csv");
             Assert.That(File.Exists(combinedFilePath), Is.True);
             string combinedContent = File.ReadAllText(combinedFilePath);
 
+            Console.WriteLine("---START content read---");
             Console.WriteLine(combinedContent);
-
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            Console.WriteLine("---END contend read---");
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
+            foreach (var line in lines)
+            {
+                Console.WriteLine("{"+line+"}");
+            }
 
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
+            Assert.That(lines.Length, Is.EqualTo(4)); // 1 header row + 3 data rows
 
             // Check for the content
-            Assert.That(combinedContent, Does.Contain("Header1"));
-            Assert.That(combinedContent, Does.Contain("Header2"));
-            Assert.That(combinedContent, Does.Contain("Header3"));
-            Assert.That(combinedContent, Does.Contain("Header4"));
-            Assert.That(combinedContent, Does.Contain("Value1"));
-            Assert.That(combinedContent, Does.Contain("Value2"));
-            Assert.That(combinedContent, Does.Contain("Value3"));
-            Assert.That(combinedContent, Does.Contain("Value4"));
+            Assert.That(combinedContent, Does.Contain("Header1,Header2,Header3,Header4"));
+            Assert.That(combinedContent, Does.Contain("Value1,Value2,N/A,N/A"));
+            Assert.That(combinedContent, Does.Contain("Value10,Value20,N/A,N/A"));
+            Assert.That(combinedContent, Does.Contain("N/A,N/A,Value3,Value4"));
         }
 
         [Test]
@@ -296,7 +355,7 @@ namespace PythonTests.UtilitiesTests
             string combinedFilePath = Path.Combine(tempDirectory, "combined.json");
             Assert.That(File.Exists(combinedFilePath), Is.True);
             string combinedContent = File.ReadAllText(combinedFilePath);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
 
             // Check for the number of rows
             Assert.That(lines.Length, Is.EqualTo(1)); // 1 data row (one long json string

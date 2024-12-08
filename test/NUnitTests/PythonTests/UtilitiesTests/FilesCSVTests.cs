@@ -29,6 +29,63 @@ namespace PythonTests.UtilitiesTests
         }
 
         [Test]
+        public void WriteReportDataAsCsv_CreatesCsvFileWithHeaderOnly()
+        {
+            dynamic filesCSV = PythonEngineManager.FilesCSVModule;
+
+            // Arrange
+            string fileName = Path.Combine(tempDirectory, "report_header_only.csv");
+            List<string> header = new List<string> { "Header1", "Header2" };
+            List<List<string>> data = new List<List<string>>(); // No data rows
+
+            // Act
+            var result = filesCSV.write_report_data_as_csv(file_name: fileName, header: header, data: data);
+
+            // Assert
+            Assert.That(File.Exists(fileName), Is.True);
+            string combinedContent = File.ReadAllText(fileName);
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
+
+            // Check for the number of rows
+            Assert.That(lines.Length, Is.EqualTo(1)); // Only 1 header row
+
+            // Check for the content
+            Assert.That(combinedContent, Does.Contain("Header1,Header2"));
+        }
+
+        [Test]
+        public void WriteReportDataAsCsv_CreatesCsvFileWithOutHeader()
+        {
+            dynamic filesCSV = PythonEngineManager.FilesCSVModule;
+
+            // Arrange
+            string fileName = Path.Combine(tempDirectory, "report.csv");
+            List<string> header = new List<string>(); // No header row
+            List<List<string>> data = new List<List<string>>
+                {
+                    new List<string> { "Value1", "Value2" },
+                    new List<string> { "Value3", "Value4" },
+                    new List<string> { "Value5", "Value6" }
+                };
+
+            // Act
+            var result = filesCSV.write_report_data_as_csv(file_name: fileName, header: header, data: data);
+
+            // Assert
+            Assert.That(File.Exists(fileName), Is.True);
+            string combinedContent = File.ReadAllText(fileName);
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
+
+            // Check for the number of rows
+            Assert.That(lines.Length, Is.EqualTo(3)); // 0 header row + 3 data rows
+
+            // Check for the content
+            Assert.That(combinedContent, Does.Contain("Value1,Value2"));
+            Assert.That(combinedContent, Does.Contain("Value3,Value4"));
+            Assert.That(combinedContent, Does.Contain("Value5,Value6"));
+        }
+
+        [Test]
         public void WriteReportDataAsCsv_CreatesCsvFile()
         {
             dynamic filesCSV = PythonEngineManager.FilesCSVModule;
@@ -48,7 +105,7 @@ namespace PythonTests.UtilitiesTests
             // Assert
             Assert.That(File.Exists(fileName), Is.True);
             string combinedContent = File.ReadAllText(fileName);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
 
             // Check for the number of rows
             Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows

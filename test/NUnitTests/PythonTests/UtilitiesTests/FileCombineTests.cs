@@ -41,10 +41,12 @@ namespace PythonTests.UtilitiesTests
             File.WriteAllText(file2, "Header1,Header2\nValue3,Value4\n");
 
             // Act
-            fileCombiner.combine_files(tempDirectory, "", "", ".txt", "combined.txt");
+            var result = fileCombiner.combine_files(folder_path: tempDirectory);
+            Console.WriteLine(result.message);
 
             // Assert
-            string combinedFilePath = Path.Combine(tempDirectory, "combined.txt");
+            Assert.That(result.status, Is.True);
+            string combinedFilePath = Path.Combine(tempDirectory, "result.txt"); // Default output file name
             Assert.That(File.Exists(combinedFilePath), Is.True);
             string combinedContent = File.ReadAllText(combinedFilePath);
             string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
@@ -59,31 +61,65 @@ namespace PythonTests.UtilitiesTests
         }
 
         [Test]
-        public void CombineFilesBasic_CreatesCombinedFile()
+        public void CombineFiles_CreatesCombinedCsvFile()
+        {
+            dynamic fileCombiner = PythonEngineManager.FileCombineModule;
+
+            // Arrange
+            string file1 = Path.Combine(tempDirectory, "file1.csv");
+            string file2 = Path.Combine(tempDirectory, "file2.csv");
+            File.WriteAllText(file1, "Header1,Header2\nValue1,Value2\nValue5,Value6\n");
+            File.WriteAllText(file2, "Header1,Header2\nValue3,Value4\nValue7,Value8\n");
+
+            // Act
+            var result = fileCombiner.combine_files(folder_path: tempDirectory, file_extension:".csv",output_file_name: "combined.csv");
+
+            // Assert
+            string combinedFilePath = Path.Combine(tempDirectory, "combined.csv");
+            Assert.That(File.Exists(combinedFilePath), Is.True);
+            string combinedContent = File.ReadAllText(combinedFilePath);
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Check for the number of rows
+            Assert.That(lines.Length, Is.EqualTo(5)); // 1 header row + 4 data rows
+
+            // Check for the content
+            Assert.That(combinedContent, Does.Contain("Header1,Header2"));
+            Assert.That(combinedContent, Does.Contain("Value1,Value2"));
+            Assert.That(combinedContent, Does.Contain("Value3,Value4"));
+            Assert.That(combinedContent, Does.Contain("Value5,Value6"));
+            Assert.That(combinedContent, Does.Contain("Value7,Value8"));
+        }
+
+        [Test]
+        public void CombineFiles_CreatesCombinedTabSeparatedFile()
         {
             dynamic fileCombiner = PythonEngineManager.FileCombineModule;
 
             // Arrange
             string file1 = Path.Combine(tempDirectory, "file1.txt");
             string file2 = Path.Combine(tempDirectory, "file2.txt");
-            File.WriteAllText(file1, "Value1\n");
-            File.WriteAllText(file2, "Value2\n");
+            File.WriteAllText(file1, "Header1\tHeader2\nValue1\tValue2\n");
+            File.WriteAllText(file2, "Header1\tHeader2\nValue3\tValue4\n");
 
             // Act
-            fileCombiner.combine_files_basic(tempDirectory, "", "", ".txt", "combined.txt");
+            var result = fileCombiner.combine_files(folder_path: tempDirectory, delimiter: "\t");
+            Console.WriteLine(result.message);
 
             // Assert
-            string combinedFilePath = Path.Combine(tempDirectory, "combined.txt");
+            Assert.That(result.status, Is.True);
+            string combinedFilePath = Path.Combine(tempDirectory, "result.txt"); // Default output file name
             Assert.That(File.Exists(combinedFilePath), Is.True);
             string combinedContent = File.ReadAllText(combinedFilePath);
             string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(2)); // 2 data rows
+            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(combinedContent, Does.Contain("Value1"));
-            Assert.That(combinedContent, Does.Contain("Value2"));
+            Assert.That(combinedContent, Does.Contain("Header1\tHeader2"));
+            Assert.That(combinedContent, Does.Contain("Value1\tValue2"));
+            Assert.That(combinedContent, Does.Contain("Value3\tValue4"));
         }
 
         [Test]
@@ -98,10 +134,11 @@ namespace PythonTests.UtilitiesTests
             File.WriteAllText(appendFile, "Header1,Header2\nValue3,Value4\n");
 
             // Act
-            bool result = fileCombiner.append_to_file(sourceFile, appendFile, true);
+            var result = fileCombiner.append_to_file(sourceFile, appendFile, true);
 
             // Assert
-            Assert.That(result, Is.True);
+            Console.WriteLine(result.message);
+            Assert.That(result.status, Is.True);
             string combinedContent = File.ReadAllText(sourceFile);
             string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -111,6 +148,62 @@ namespace PythonTests.UtilitiesTests
             // Check for the content
             Assert.That(combinedContent, Does.Contain("Value1,Value2"));
             Assert.That(combinedContent, Does.Contain("Value3,Value4"));
+        }
+
+        [Test]
+        public void AppendToFile_AppendsCsvContent()
+        {
+            dynamic fileCombiner = PythonEngineManager.FileCombineModule;
+
+            // Arrange
+            string sourceFile = Path.Combine(tempDirectory, "source.csv");
+            string appendFile = Path.Combine(tempDirectory, "append.csv");
+            File.WriteAllText(sourceFile, "Header1,Header2\nValue1,Value2\n");
+            File.WriteAllText(appendFile, "Header1,Header2\nValue3,Value4\n");
+
+            // Act
+            var result = fileCombiner.append_to_file(sourceFile, appendFile, true);
+
+            // Assert
+            Console.WriteLine(result.message);
+            Assert.That(result.status, Is.True);
+            string combinedContent = File.ReadAllText(sourceFile);
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Check for the number of rows
+            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
+
+            // Check for the content
+            Assert.That(combinedContent, Does.Contain("Value1,Value2"));
+            Assert.That(combinedContent, Does.Contain("Value3,Value4"));
+        }
+
+        [Test]
+        public void AppendToFile_AppendsTabSeparatedContent()
+        {
+            dynamic fileCombiner = PythonEngineManager.FileCombineModule;
+
+            // Arrange
+            string sourceFile = Path.Combine(tempDirectory, "source.txt");
+            string appendFile = Path.Combine(tempDirectory, "append.txt");
+            File.WriteAllText(sourceFile, "Header1\tHeader2\nValue1\tValue2\n");
+            File.WriteAllText(appendFile, "Header1\tHeader2\nValue3\tValue4\n");
+
+            // Act
+            var result = fileCombiner.append_to_file(sourceFile, appendFile, true);
+
+            // Assert
+            Console.WriteLine(result.message);
+            Assert.That(result.status, Is.True);
+            string combinedContent = File.ReadAllText(sourceFile);
+            string[] lines = combinedContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Check for the number of rows
+            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
+
+            // Check for the content
+            Assert.That(combinedContent, Does.Contain("Value1\tValue2"));
+            Assert.That(combinedContent, Does.Contain("Value3\tValue4"));
         }
 
         [Test]

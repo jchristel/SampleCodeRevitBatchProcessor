@@ -26,12 +26,12 @@ Helper functions relating to combining text files.
 #
 #
 
-
 import codecs
 import glob
 import os
-from csv import QUOTE_MINIMAL
+import csv
 
+from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Utilities.files_get import get_files_single_directory
 from duHast.Utilities.files_tab import get_unique_headers as get_unique_headers_tab
@@ -46,8 +46,10 @@ def combine_files(
     file_prefix="",
     file_suffix="",
     file_extension=".txt",
-    out_put_file_name="result.txt",
+    output_file_name="result.txt",
     file_getter=get_files_single_directory,
+    delimiter=",",
+    quoting=csv.QUOTE_MINIMAL
 ):
     """
     Combines multiple text files into a single new file.
@@ -56,6 +58,7 @@ def combine_files(
     - files have a header row followed by data rows
     - same number of headers (columns) in each files.
     - files have the same header names per column
+    - files are encoded in UTF-8!
 
     The new file will be saved into the same folder as the original files.
 
@@ -67,123 +70,95 @@ def combine_files(
     :type file_suffix: str
     :param file_extension: Filter: File needs to have this file extension
     :type file_extension: str, format '.extension'
-    :param out_put_file_name: The file name of the combined file, defaults to 'result.txt'
-    :type out_put_file_name: str, optional
+    :param output_file_name: The file name of the combined file, defaults to 'result.txt'
+    :type output_file_name: str, optional
     :param file_getter: Function returning list of files to be combined, defaults to GetFilesSingleFolder
     :type file_getter: func(folder_path, file_prefix, file_suffix, file_extension), optional
+    :param delimiter: The delimiter used in the files (e.g., ',' for CSV, '\t' for tab-separated), defaults to ','
+    :type delimiter: str, optional
+    :param quoting: The quoting option for the CSV writer, defaults to csv.QUOTE_MINIMAL
+    :type quoting: int, optional
     """
 
-    file_list = file_getter(folder_path, file_prefix, file_suffix, file_extension)
+    return_value = Result()
+    try:
+        # check a file getter function was provided
+        if(file_getter is None):
+            return_value.update_sep(False, "No file getter function provided.")
+            return return_value
+        # get files to combine using file getter function
+        file_list = file_getter(folder_path, file_prefix, file_suffix, file_extension)
+        
+        # loop over file and combine...
+        with open(os.path.join(folder_path, output_file_name), "w", newline='', encoding="utf-8") as result:
+            writer = csv.writer(result, delimiter=delimiter, quoting=quoting)
 
-    errors = []
+            file_counter = 0
+            for file_ in file_list:
+                try:
+                    line_counter = 0
+                    with codecs.open(file_, "r", encoding="utf-8") as fp:
+                        reader = csv.reader(fp, delimiter=delimiter)
+                        for line in reader:
+                            # ensure header from first file is copied over
+                            if file_counter == 0 and line_counter == 0 or line_counter != 0:
+                                writer.writerow(line)
+                            line_counter += 1
 
-    with open(os.path.join(folder_path, out_put_file_name), "w") as result:
+                    file_counter += 1
+                    return_value.append_message("File: {} combined.".format(file_))
+                except Exception as e:
+                    return_value.update_sep(False, "File: {} failed to combine with exception: {}".format(file_, e))
+                    
+    except Exception as e:
+        return_value.update_sep(False, "Failed to combine files with exception: {}".format(e))
+    return return_value
 
-        file_counter = 0
-        for file_ in file_list:
-            try:
-                line_counter = 0
-                fp = codecs.open(file_, "r", encoding="utf-8")
-                # fp = open(file_, "r")
-                lines = fp.readlines()
-                fp.close()
-                for line in lines:
-                    # ensure header from first file is copied over
-                    if file_counter == 0 and line_counter == 0 or line_counter != 0:
-                        result.write(line)
-                    line_counter += 1
-
-                file_counter += 1
-            except Exception as e:
-                errors.append(
-                    "File: {} failed to combine with exception: {}".format(file_, e)
-                )
-
-    # raise any errors
-    if len(errors) > 0:
-        raise ValueError("\n".join(errors))
-
-
-def combine_files_basic(
-    folder_path,
-    file_prefix="",
-    file_suffix="",
-    file_extension=".txt",
-    out_put_file_name="result.txt",
-    file_getter=get_files_single_directory,
-):
+def append_to_file(source_file, append_file, ignore_first_row=False, delimiter=",", quoting=csv.QUOTE_MINIMAL):
     """
-    Combines multiple text files into a single new file.
-    Assumes:
-
-    - files are text files
-
-    The new file will be saved into the same folder as the original files.
-
-    :param folder_path: Folder path from which to get files to be combined and to which the combined file will be saved.
-    :type folder_path: str
-    :param file_prefix: Filter: File name starts with this value
-    :type file_prefix: str
-    :param file_suffix: Filter: File name ends with this value.
-    :type file_suffix: str
-    :param file_extension: Filter: File needs to have this file extension
-    :type file_extension: str, format '.extension'
-    :param out_put_file_name: The file name of the combined file, defaults to 'result.txt'
-    :type out_put_file_name: str, optional
-    :param file_getter: Function returning list of files to be combined, defaults to GetFilesSingleFolder
-    :type file_getter: func(folder_path, file_prefix, file_suffix, file_extension), optional
-    """
-
-    file_list = file_getter(folder_path, file_prefix, file_suffix, file_extension)
-    with open(os.path.join(folder_path, out_put_file_name), "w") as f:
-        for file_ in file_list:
-            fp = open(file_, "r")
-            lines = fp.readlines()
-            fp.close()
-            for line in lines:
-                f.write(line)
-        f.close()
-
-
-def append_to_file(source_file, append_file, ignore_first_row=False):
-    """
-    Appends one text file to another. Assumes same number of headers (columns) in both files.
+    Appends one text file to another.
+    
+    Assumes: 
+    
+        - same number of headers (columns) in both files.
+        - files are encoded in UTF-8!
 
     :param source_file: The fully qualified file path of the file to which the other file will be appended.
     :type source_file: str
     :param append_file: The fully qualified file path of the file to be appended.
     :type append_file: str
-    :param ignore_first_row: If True, first row of append file will not be appended to source file.
+    :param ignore_first_row: If True, first row of append file will not be appended to source file.( Assumed its a header row )
     :type ignore_first_row: bool
+    :param delimiter: The delimiter used in the files (e.g., ',' for CSV, '\t' for tab-separated), defaults to ','
+    :type delimiter: str, optional
+    :param quoting: The quoting option for the CSV writer, defaults to csv.QUOTE_MINIMAL
+    :type quoting: int, optional
     :return: If True file was appended without an exception, otherwise False.
     :rtype: bool
     """
 
-    flag = True
+    return_value = Result()
     try:
         # read file to append into memory...hopefully will never get in GB range in terms of file size
-        fp = codecs.open(append_file, "r", encoding="utf-8")
-        lines = fp.readlines()
-        fp.close()
-        with codecs.open(source_file, "a", encoding="utf-8") as f:
-            if ignore_first_row == False:
+        with open(append_file, "r", encoding="utf-8") as fp:
+            reader = csv.reader(fp, delimiter=delimiter)
+            lines = list(reader)
+
+        with open(source_file, "a", encoding="utf-8", newline='') as f:
+            writer = csv.writer(f, delimiter=delimiter, quoting=quoting)
+            if not ignore_first_row:
                 for line in lines:
-                    f.write(line)
+                    writer.writerow(line)
             else:
                 # check if only a header row in file?
                 if len(lines) > 1:
-                    for x in range(1, len(lines)):
-                        f.write(lines[x])
-                        # get out to avoid out of index exception
-                        # if I change the for loop to be
-                        # for x in range(1, len(lines)-1):
-                        # it will not process files with two rows only ( a header and a single data row! )
-                        if x == len(lines) - 1:
-                            break
+                    for line in lines[1:]:
+                        writer.writerow(line)
 
-    except Exception:
-        flag = False
-    return flag
+        return_value.append_message("File: {} appended to file: {}".format(append_file, source_file))
+    except Exception as e:
+        return_value.update_sep(False, "Failed to append file with exception: {}".format(e))
+    return return_value
 
 
 def _format_headers(headers_in_file, file):
@@ -214,7 +189,7 @@ def combine_files_header_independent(
     file_prefix="",
     file_suffix="",
     file_extension=".txt",
-    out_put_file_name="result.txt",
+    output_file_name="result.txt",
     overwrite_existing=False,
 ):
     """
@@ -242,7 +217,7 @@ def combine_files_header_independent(
     )
     # build list of unique headers
     headers = get_unique_headers_tab(file_list)
-    combined_file_name = os.path.join(folder_path, out_put_file_name)
+    combined_file_name = os.path.join(folder_path, output_file_name)
     # loop over files to be combined
     file_counter = 0
     for file in file_list:
@@ -296,7 +271,7 @@ def combine_files_csv_header_independent(
     file_prefix="",
     file_suffix="",
     file_extension=".txt",
-    out_put_file_name="result.csv",
+    output_file_name="result.csv",
     overwrite_existing=False,
 ):
     """
@@ -313,8 +288,8 @@ def combine_files_csv_header_independent(
     :type file_suffix: str
     :param file_extension: Filter: File needs to have this file extension
     :type file_extension: str, format '.extension'
-    :param out_put_file_name: The file name of the combined file, defaults to 'result.csv'
-    :type out_put_file_name: str, optional
+    :param output_file_name: The file name of the combined file, defaults to 'result.csv'
+    :type output_file_name: str, optional
     :param overwrite_existing: Will overwrite an existing output file if set to True, defaults to False ( append to existing output file)
     :type overwrite_existing: bool, optional
     """
@@ -324,7 +299,7 @@ def combine_files_csv_header_independent(
     )
     # build list of unique headers
     headers = get_unique_headers_csv(file_list)
-    combined_file_name = os.path.join(folder_path, out_put_file_name)
+    combined_file_name = os.path.join(folder_path, output_file_name)
 
     # loop over files and combine...
     file_counter = 0
@@ -378,7 +353,7 @@ def combine_files_csv_header_independent(
             enforce_ascii=False, 
             encoding="utf-8", 
             bom=None, 
-            quoting=QUOTE_MINIMAL
+            quoting=csv.QUOTE_MINIMAL
         )
         file_counter += 1
 
@@ -388,7 +363,7 @@ def combine_files_json(
     file_prefix="",
     file_suffix="",
     file_extension=".txt",
-    out_put_file_name="result.txt",
+    output_file_name="result.txt",
     file_getter=get_files_single_directory,
 ):
     """
@@ -425,7 +400,7 @@ def combine_files_json(
     # write json data out
     result_write = write_json_to_file(
         json_data=json_objects,
-        data_output_file_path=os.path.join(folder_path, out_put_file_name),
+        data_output_file_path=os.path.join(folder_path, output_file_name),
     )
 
     # return flag only

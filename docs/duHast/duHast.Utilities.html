@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Utilities package &#8212; Sample Code Revit Batch Processor 1.1.9 documentation</title>
+    <title>duHast.Utilities package &#8212; Sample Code Revit Batch Processor 1.1.10 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.9 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.10 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
     <link rel="next" title="duHast.Utilities.Objects package" href="duHast.Utilities.Objects.html" />
     <link rel="prev" title="duHast.UI.files_select package" href="duHast.UI.files_select.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.9 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.10 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Utilities package</h1></div>
@@ -971,13 +971,14 @@ Checks whether folder exists and if not attempts to create it.</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_combine.combine_files">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension='.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_put_file_name='result.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_getter=&lt;function</span> <span class="pre">get_files_single_directory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension='.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_name='result.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_getter=&lt;function</span> <span class="pre">get_files_single_directory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter='</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quoting=0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combines multiple text files into a single new file.
 Assumes:</p>
 <ul class="simple">
 <li><p>files have a header row followed by data rows</p></li>
 <li><p>same number of headers (columns) in each files.</p></li>
 <li><p>files have the same header names per column</p></li>
+<li><p>files are encoded in UTF-8!</p></li>
 </ul>
 <p>The new file will be saved into the same folder as the original files.</p>
 <dl class="field-list simple">
@@ -987,31 +988,10 @@ Assumes:</p>
 <li><p><strong>file_prefix</strong> (<em>str</em>) – Filter: File name starts with this value</p></li>
 <li><p><strong>file_suffix</strong> (<em>str</em>) – Filter: File name ends with this value.</p></li>
 <li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>format '.extension'</em>) – Filter: File needs to have this file extension</p></li>
-<li><p><strong>out_put_file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The file name of the combined file, defaults to ‘result.txt’</p></li>
+<li><p><strong>output_file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The file name of the combined file, defaults to ‘result.txt’</p></li>
 <li><p><strong>file_getter</strong> (<em>func</em><em>(</em><em>folder_path</em><em>, </em><em>file_prefix</em><em>, </em><em>file_suffix</em><em>, </em><em>file_extension</em><em>)</em><em>, </em><em>optional</em>) – Function returning list of files to be combined, defaults to GetFilesSingleFolder</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Utilities.files_combine.combine_files_basic">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files_basic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension='.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_put_file_name='result.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_getter=&lt;function</span> <span class="pre">get_files_single_directory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files_basic" title="Permalink to this definition">¶</a></dt>
-<dd><p>Combines multiple text files into a single new file.
-Assumes:</p>
-<ul class="simple">
-<li><p>files are text files</p></li>
-</ul>
-<p>The new file will be saved into the same folder as the original files.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>folder_path</strong> (<em>str</em>) – Folder path from which to get files to be combined and to which the combined file will be saved.</p></li>
-<li><p><strong>file_prefix</strong> (<em>str</em>) – Filter: File name starts with this value</p></li>
-<li><p><strong>file_suffix</strong> (<em>str</em>) – Filter: File name ends with this value.</p></li>
-<li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>format '.extension'</em>) – Filter: File needs to have this file extension</p></li>
-<li><p><strong>out_put_file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The file name of the combined file, defaults to ‘result.txt’</p></li>
-<li><p><strong>file_getter</strong> (<em>func</em><em>(</em><em>folder_path</em><em>, </em><em>file_prefix</em><em>, </em><em>file_suffix</em><em>, </em><em>file_extension</em><em>)</em><em>, </em><em>optional</em>) – Function returning list of files to be combined, defaults to GetFilesSingleFolder</p></li>
+<li><p><strong>delimiter</strong> (<em>str</em><em>, </em><em>optional</em>) – The delimiter used in the files (e.g., ‘,’ for CSV, ‘     ‘ for tab-separated), defaults to ‘,’</p></li>
+<li><p><strong>quoting</strong> (<em>int</em><em>, </em><em>optional</em>) – The quoting option for the CSV writer, defaults to csv.QUOTE_MINIMAL</p></li>
 </ul>
 </dd>
 </dl>
@@ -1019,14 +999,23 @@ Assumes:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_combine.append_to_file">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">append_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_first_row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.append_to_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Appends one text file to another. Assumes same number of headers (columns) in both files.</p>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">append_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_first_row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quoting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.append_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends one text file to another.</p>
+<p>Assumes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>same number of headers (columns) in both files.</p></li>
+<li><p>files are encoded in UTF-8!</p></li>
+</ul>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>source_file</strong> (<em>str</em>) – The fully qualified file path of the file to which the other file will be appended.</p></li>
 <li><p><strong>append_file</strong> (<em>str</em>) – The fully qualified file path of the file to be appended.</p></li>
-<li><p><strong>ignore_first_row</strong> (<em>bool</em>) – If True, first row of append file will not be appended to source file.</p></li>
+<li><p><strong>ignore_first_row</strong> (<em>bool</em>) – If True, first row of append file will not be appended to source file.( Assumed its a header row )</p></li>
+<li><p><strong>delimiter</strong> (<em>str</em><em>, </em><em>optional</em>) – The delimiter used in the files (e.g., ‘,’ for CSV, ‘     ‘ for tab-separated), defaults to ‘,’</p></li>
+<li><p><strong>quoting</strong> (<em>int</em><em>, </em><em>optional</em>) – The quoting option for the CSV writer, defaults to csv.QUOTE_MINIMAL</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1040,7 +1029,7 @@ Assumes:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_combine.combine_files_header_independent">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files_header_independent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_put_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite_existing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files_header_independent" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files_header_independent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite_existing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files_header_independent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to combine report files into one file, files may have different number / named columns.</p>
 <p>Columns which are unique to some files will have as a value ‘N/A’ in files where those columns do not exist.
 File need to use &lt;tab&gt; character as column separator</p>
@@ -1060,7 +1049,7 @@ File need to use &lt;tab&gt; character as column separator</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_combine.combine_files_csv_header_independent">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files_csv_header_independent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_put_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite_existing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files_csv_header_independent" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files_csv_header_independent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite_existing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files_csv_header_independent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to combine report files into one file, files may have different number / named columns.</p>
 <p>Columns which are unique to some files will have as a value ‘N/A’ in files where those columns do not exist.
 File need to use &lt;,&gt; character as column separator. (.CSV)</p>
@@ -1071,7 +1060,7 @@ File need to use &lt;,&gt; character as column separator. (.CSV)</p>
 <li><p><strong>file_prefix</strong> (<em>str</em>) – Filter: File name starts with this value</p></li>
 <li><p><strong>file_suffix</strong> (<em>str</em>) – Filter: File name ends with this value.</p></li>
 <li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>format '.extension'</em>) – Filter: File needs to have this file extension</p></li>
-<li><p><strong>out_put_file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The file name of the combined file, defaults to ‘result.csv’</p></li>
+<li><p><strong>output_file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The file name of the combined file, defaults to ‘result.csv’</p></li>
 <li><p><strong>overwrite_existing</strong> (<em>bool</em><em>, </em><em>optional</em>) – Will overwrite an existing output file if set to True, defaults to False ( append to existing output file)</p></li>
 </ul>
 </dd>
@@ -1080,7 +1069,7 @@ File need to use &lt;,&gt; character as column separator. (.CSV)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_combine.combine_files_json">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension='.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_put_file_name='result.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_getter=&lt;function</span> <span class="pre">get_files_single_directory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files_json" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_combine.</span></span><span class="sig-name descname"><span class="pre">combine_files_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension='.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_name='result.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_getter=&lt;function</span> <span class="pre">get_files_single_directory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combines multiple json formatted text files into a single json list formatted file, where each file is a list entry.
 Assumes:</p>
 <ul class="simple">

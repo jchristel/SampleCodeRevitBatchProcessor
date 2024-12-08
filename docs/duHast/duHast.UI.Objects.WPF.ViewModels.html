@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.UI.Objects.WPF.ViewModels package &#8212; Sample Code Revit Batch Processor 1.1.9 documentation</title>
+    <title>duHast.UI.Objects.WPF.ViewModels package &#8212; Sample Code Revit Batch Processor 1.1.10 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.9 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.10 documentation" href="../index.html" />
     <link rel="up" title="duHast.UI.Objects.WPF package" href="duHast.UI.Objects.WPF.html" />
     <link rel="next" title="duHast.UI.Objects.WPF.Views package" href="duHast.UI.Objects.WPF.Views.html" />
     <link rel="prev" title="duHast.UI.Objects.WPF.Stores package" href="duHast.UI.Objects.WPF.Stores.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.9 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.10 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.UI.Objects.WPF.ViewModels package</h1></div>
@@ -93,6 +93,79 @@
 <h1>duHast.UI.Objects.WPF.ViewModels package<a class="headerlink" href="#duhast-ui-objects-wpf-viewmodels-package" title="Permalink to this heading">¶</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.UI.Objects.WPF.ViewModels.FilterItem">
+<span id="duhast-ui-objects-wpf-viewmodels-filteritem-module"></span><h2>duHast.UI.Objects.WPF.ViewModels.FilterItem module<a class="headerlink" href="#module-duHast.UI.Objects.WPF.ViewModels.FilterItem" title="Permalink to this heading">¶</a></h2>
+<section id="a-class-to-provide-filtering-of-views-of-observable-collections">
+<h3>A class to provide filtering of views of observable collections..<a class="headerlink" href="#a-class-to-provide-filtering-of-views-of-observable-collections" title="Permalink to this heading">¶</a></h3>
+<p>IsChecked property should be bound similar to this sample code:
+&lt;GridViewColumn.HeaderContainerStyle&gt;</p>
+<blockquote>
+<div><dl>
+<dt>&lt;Style TargetType=”GridViewColumnHeader”&gt;</dt><dd><dl>
+<dt>&lt;Setter Property=”ContextMenu”&gt;</dt><dd><dl>
+<dt>&lt;Setter.Value&gt;</dt><dd><dl>
+<dt>&lt;ContextMenu&gt;</dt><dd><dl>
+<dt>&lt;ItemsControl ItemsSource=”{Binding UniqueFamilyNames}”&gt;</dt><dd><dl>
+<dt>&lt;ItemsControl.ItemTemplate&gt;</dt><dd><dl class="simple">
+<dt>&lt;DataTemplate&gt;</dt><dd><dl class="simple">
+<dt>&lt;CheckBox </dt><dd><p>Content=”{Binding Value}” 
+IsChecked=”{Binding IsChecked, Mode=TwoWay}”   &lt;&lt;&lt;— here
+Command=”{Binding CheckCommand}”/&gt;</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>&lt;/DataTemplate&gt;</p>
+</dd>
+</dl>
+<p>&lt;/ItemsControl.ItemTemplate&gt;</p>
+</dd>
+</dl>
+<p>&lt;/ItemsControl&gt;</p>
+</dd>
+</dl>
+<p>&lt;/ContextMenu&gt;</p>
+</dd>
+</dl>
+<p>&lt;/Setter.Value&gt;</p>
+</dd>
+</dl>
+<p>&lt;/Setter&gt;</p>
+</dd>
+</dl>
+<p>&lt;/Style&gt;
+&lt;/GridViewColumn.HeaderContainerStyle&gt;</p>
+</div></blockquote>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.UI.Objects.WPF.ViewModels.FilterItem.FilterItem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.UI.Objects.WPF.ViewModels.FilterItem.</span></span><span class="sig-name descname"><span class="pre">FilterItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.WPF.ViewModels.FilterItem.FilterItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.UI.Objects.WPF.ViewModels.ViewModelBase.ViewModelBase" title="duHast.UI.Objects.WPF.ViewModels.ViewModelBase.ViewModelBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ViewModelBase</span></code></a></p>
+<p>A filter item for a view model view.</p>
+<p>Is used in column context menu filters to filter the view based on the value of the item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – the value of the item</p></li>
+<li><p><strong>refresh_view_method</strong> – the method to call to refresh the view</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.UI.Objects.WPF.ViewModels.FilterItem.FilterItem.Value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Value</span></span><a class="headerlink" href="#duHast.UI.Objects.WPF.ViewModels.FilterItem.FilterItem.Value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the value of the item displayed in the context menu.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.UI.Objects.WPF.ViewModels.FilterItem.FilterItem.IsChecked">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IsChecked</span></span><a class="headerlink" href="#duHast.UI.Objects.WPF.ViewModels.FilterItem.FilterItem.IsChecked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the is checked value of the item.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-duHast.UI.Objects.WPF.ViewModels.MainViewModel">
 <span id="duhast-ui-objects-wpf-viewmodels-mainviewmodel-module"></span><h2>duHast.UI.Objects.WPF.ViewModels.MainViewModel module<a class="headerlink" href="#module-duHast.UI.Objects.WPF.ViewModels.MainViewModel" title="Permalink to this heading">¶</a></h2>

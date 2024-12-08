@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Rooms.Objects package &#8212; Sample Code Revit Batch Processor 1.1.9 documentation</title>
+    <title>duHast.Revit.Rooms.Objects package &#8212; Sample Code Revit Batch Processor 1.1.10 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.9 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.10 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Rooms package" href="duHast.Revit.Rooms.html" />
     <link rel="next" title="duHast.Revit.Rooms.Reporting package" href="duHast.Revit.Rooms.Reporting.html" />
     <link rel="prev" title="duHast.Revit.Rooms.Geometry package" href="duHast.Revit.Rooms.Geometry.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.9 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.10 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Rooms.Objects package</h1></div>
@@ -114,10 +114,51 @@
 </dd></dl>
 
 </section>
-<section id="module-duHast.Revit.Rooms.Objects.RoomSpatialObject">
-<span id="duhast-revit-rooms-objects-roomspatialobject-module"></span><h2>duHast.Revit.Rooms.Objects.RoomSpatialObject module<a class="headerlink" href="#module-duHast.Revit.Rooms.Objects.RoomSpatialObject" title="Permalink to this heading">¶</a></h2>
+<section id="module-duHast.Revit.Rooms.Objects.RoomSpatialForViews">
+<span id="duhast-revit-rooms-objects-roomspatialforviews-module"></span><h2>duHast.Revit.Rooms.Objects.RoomSpatialForViews module<a class="headerlink" href="#module-duHast.Revit.Rooms.Objects.RoomSpatialForViews" title="Permalink to this heading">¶</a></h2>
 <section id="revit-api-utility-functions-for-the-spatial-properties-of-room-elements">
 <h3>Revit API utility functions for the spatial properties of room elements.<a class="headerlink" href="#revit-api-utility-functions-for-the-spatial-properties-of-room-elements" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Objects.RoomSpatialForViews.RoomSpatialForView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Objects.RoomSpatialForViews.</span></span><span class="sig-name descname"><span class="pre">RoomSpatialForView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.SpatialElementBoundaryLocation.Finish</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Objects.RoomSpatialForViews.RoomSpatialForView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#duHast.Revit.Rooms.Objects.RoomBaseObject.RoomBaseObj" title="duHast.Revit.Rooms.Objects.RoomBaseObject.RoomBaseObj"><code class="xref py py-class docutils literal notranslate"><span class="pre">RoomBaseObj</span></code></a></p>
+<p>Class constructor</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Objects.RoomSpatialForViews.RoomSpatialForView.is_room_rectalinear">
+<span class="sig-name descname"><span class="pre">is_room_rectalinear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Objects.RoomSpatialForViews.RoomSpatialForView.is_room_rectalinear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the room is rectalinear. ( all room bounding segements are either parallel or perpendicular to each other )</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the room is rectalinear, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Objects.RoomSpatialForViews.RoomSpatialForView.is_room_aligned_to_its_bounding_box">
+<span class="sig-name descname"><span class="pre">is_room_aligned_to_its_bounding_box</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Objects.RoomSpatialForViews.RoomSpatialForView.is_room_aligned_to_its_bounding_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the room is aligned to the bounding box. ( all room bounding segements are either parallel or perpendicular to the bounding box )</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the room is aligned to the bounding box, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Rooms.Objects.RoomSpatialObject">
+<span id="duhast-revit-rooms-objects-roomspatialobject-module"></span><h2>duHast.Revit.Rooms.Objects.RoomSpatialObject module<a class="headerlink" href="#module-duHast.Revit.Rooms.Objects.RoomSpatialObject" title="Permalink to this heading">¶</a></h2>
+<section id="id1">
+<h3>Revit API utility functions for the spatial properties of room elements.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.Objects.RoomSpatialObject.RoomSpatialObj">

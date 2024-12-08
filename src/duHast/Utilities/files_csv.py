@@ -33,7 +33,6 @@ import csv
 import System.IO
 
 from duHast.Utilities.files_io import get_file_name_without_ext, remove_null_bytes, file_delete
-from duHast.Utilities.utility import encode_ascii
 from duHast.Utilities.Objects.result import Result
 
 
@@ -197,7 +196,7 @@ def get_first_row_in_csv_file(filePath):
 
 
 def write_report_data_as_csv(
-    file_name, header, data, write_type="w", enforce_ascii=False,  encoding="utf-8", bom=None, quoting=csv.QUOTE_NONE
+    file_name, header, data, write_type="w", enforce_ascii=False,  encoding="utf-8", bom=None, quoting=csv.QUOTE_NONE, delimiter=','
 ):
     """
     Function writing out report information as CSV file.
@@ -219,33 +218,59 @@ def write_report_data_as_csv(
     :type quoting: int, optional
     """
 
+    return_value = Result()
+    
     # Open the file with the codecs.open method to specify encoding
     with codecs.open(file_name, write_type, encoding=encoding) as f:
-        # Write BOM manually if specified
-        if bom and 'w' in write_type:
-            f.write(bom.decode(encoding))
+        try:
+            # Write a newline character if appending to the file to make sure we are starting on a new line
+            if write_type == 'a':
+                f.write('\n')
+            
+            # Write BOM manually if specified
+            if bom and 'w' in write_type:
+                f.write(bom.decode(encoding))
 
-        # Create the CSV writer
-        # line terminator is set to '\n' to avoid double newlines on Windows
-        writer = csv.writer(f, escapechar='\\', quoting=quoting, lineterminator='\n')
+            # Create the CSV writer
+            # line terminator is set to '\n' to avoid double newlines on Windows
+            writer = csv.writer(f, delimiter=delimiter, escapechar='\\', quoting=quoting, lineterminator='\n')
 
-        def encoded_row(row):
-            if enforce_ascii:
-                return [s.encode('ascii', 'ignore').decode('ascii') for s in row]
+            def encoded_row(row):
+                if enforce_ascii:
+                    return [s.encode('ascii', 'ignore').decode('ascii') for s in row]
+                else:
+                    return row  # Keep the strings in their current state for writing
+
+            # Write header
+            if header:
+                # check if header only or if there is data to write as well
+                if data:
+                    # Write the header row with the CSV writer including a new line character
+                    writer.writerow(encoded_row(header))
+                    return_value.append_message("Header written to file. (including newline)")
+                else:
+                    # Write the header row without a newline character
+                    f.write(delimiter.join(encoded_row(header)))
+                    return_value.append_message("Header written to file. (including newline)")
             else:
-                return row  # Keep the strings in their current state for writing
+                return_value.append_message("No header provided to write to file.")
 
-        # Write header
-        if header:
-            writer.writerow(encoded_row(header))
+            # Write data rows, looping over rows to prevent new line character on the last row
+            for i in range(len(data)):
+                row = data[i]
+                if i == len(data) - 1:
+                    # Write the last row without a newline character
+                    f.write(delimiter.join(encoded_row(row)))
+                    return_value.append_message("Last row {} written to file. (without newline)>>{}".format(','.join(encoded_row(row)), i))
+                else:
+                    writer.writerow(encoded_row(row))
+                    return_value.append_message("Row {} written to file. (including newline)>>{}".format(','.join(encoded_row(row)), i))
+        
+        
+        except Exception as e:
+                return_value.update_sep(False, "File: {} failed to write data with exception: {}".format(file_name, e))    
+        finally:
+            # make sure to close the file
+            f.close()
 
-        # Write data rows, looping over rows to prevent new line character on the last row
-        for i, row in enumerate(data):
-            if i == len(data) - 1:
-                # Write the last row without a newline character
-                f.write(','.join(encoded_row(row)))
-            else:
-                writer.writerow(encoded_row(row))
-                    
-        f.close()
-
+    return return_value

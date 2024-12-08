@@ -21,6 +21,32 @@
                     <!-- family name column -->
                     <GridViewColumn>
                         <GridViewColumnHeader Content="Family Name" Command="{Binding SortCommand}" CommandParameter="FamilyName"/>
+                        <!-- context menu on right click -->
+                        <GridViewColumn.HeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="ContextMenu">
+                                    <Setter.Value>
+                                        <ContextMenu>
+                                            <Border BorderThickness="0" Padding="0">
+                                                <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch">
+                                                    <ItemsControl ItemsSource="{Binding UniqueFamilyNames}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox 
+                                                                    HorizontalAlignment="Stretch" 
+                                                                    HorizontalContentAlignment="Right"
+                                                                    Content="{Binding Value}" 
+                                                                    IsChecked="{Binding IsChecked, Mode=TwoWay}"/>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </ScrollViewer>
+                                            </Border>
+                                        </ContextMenu>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GridViewColumn.HeaderContainerStyle>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Padding="0 0 20 0" Text="{Binding FamilyName}"/>
@@ -29,7 +55,34 @@
                     </GridViewColumn>
                     <!-- family category column -->
                     <GridViewColumn>
-                        <GridViewColumnHeader Content="FamilyCategory" Command="{Binding SortCommand}" CommandParameter="FamilyCategory"/>
+                    <GridViewColumnHeader Content="Family Category" Command="{Binding SortCommand}" CommandParameter="FamilyCategory"/>
+                        <!-- context menu on right click -->
+                        <GridViewColumn.HeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="ContextMenu">
+                                    <Setter.Value>
+                                        <ContextMenu>
+                                            <Border BorderThickness="0" Padding="0">
+                                                <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch">
+                                                    <ItemsControl ItemsSource="{Binding  UniqueCategories}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox 
+                                                                    HorizontalAlignment="Stretch"
+                                                                    HorizontalContentAlignment="Right"
+                                                                    Content="{Binding Value}" 
+                                                                    IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                                                    Command="{Binding CheckCommand}"/>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </ScrollViewer>
+                                            </Border>
+                                        </ContextMenu>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GridViewColumn.HeaderContainerStyle>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Padding="0 0 20 0" Text="{Binding FamilyCategory}"/>
@@ -39,6 +92,27 @@
                     <!-- family is shared column -->
                     <GridViewColumn>
                         <GridViewColumnHeader Content="Is Shared?" Command="{Binding SortCommand}" CommandParameter="FamilyIsShared"/>
+                        <!-- context menu on right click -->
+                        <GridViewColumn.HeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="ContextMenu">
+                                    <Setter.Value>
+                                        <ContextMenu>
+                                            <ItemsControl ItemsSource="{Binding UniqueSharedStatuses}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox 
+                                                            Content="{Binding Value}" 
+                                                            IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                                            Command="{Binding CheckCommand}"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ContextMenu>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GridViewColumn.HeaderContainerStyle>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <CheckBox Padding="0 0 20 0" IsChecked="{Binding FamilyIsShared}" IsEnabled="False"/>
@@ -48,6 +122,27 @@
                     <!-- family matches in library -->
                     <GridViewColumn>
                         <GridViewColumnHeader Content="Match Status" Command="{Binding SortCommand}" CommandParameter="MatchStatus"/>
+                        <!-- context menu on right click -->
+                        <GridViewColumn.HeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="ContextMenu">
+                                    <Setter.Value>
+                                        <ContextMenu>
+                                            <ItemsControl ItemsSource="{Binding UniqueMatchStatuses}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox 
+                                                            Content="{Binding Value}" 
+                                                            IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                                            Command="{Binding CheckCommand}"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ContextMenu>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GridViewColumn.HeaderContainerStyle>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock HorizontalAlignment="Center" Padding="0 0 20 0" Text="{Binding MatchStatus}"/>

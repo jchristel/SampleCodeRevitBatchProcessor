@@ -160,7 +160,9 @@ def reloaded_families_entry(doc, output, forms, families = None):
 
 if __name__ == "__main__":
     dummy_families = [
+        RevitFamily(id=FamilyID(1231), family_name="abc_1", family_category="Casework",is_shared=False,match_status="None"),
         RevitFamily(id=FamilyID(1234), family_name="test_1", family_category="Furniture",is_shared=False,match_status="None"),
-        RevitFamily(id=FamilyID(5678), family_name="test_2", family_category="Casework",is_shared=True,match_status="None")
+        RevitFamily(id=FamilyID(5678), family_name="test_2", family_category="Casework",is_shared=True,match_status="OK"),
+        RevitFamily(id=FamilyID(5679), family_name="test_3", family_category="Casework",is_shared=True,match_status="OK")
     ]
     test_result = reloaded_families_entry(doc=None, output=None, forms=None, families = dummy_families)

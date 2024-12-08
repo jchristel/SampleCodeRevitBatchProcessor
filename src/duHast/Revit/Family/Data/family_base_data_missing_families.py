@@ -37,7 +37,10 @@ Algorithm description:
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Family.Data.family_data_family_processor_utils import process_data
-from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import NESTING_SEPARATOR
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    NESTING_SEPARATOR,
+)
+
 
 def get_unique_nested_families_from_path_data(path_data):
     """
@@ -57,11 +60,11 @@ def get_unique_nested_families_from_path_data(path_data):
     for entry in path_data:
         family_name_nesting = entry[0]
         category_name_nesting = entry[1]
-        
+
         # split into chunks at separator
         families = family_name_nesting.split(NESTING_SEPARATOR)
         categories = category_name_nesting.split(NESTING_SEPARATOR)
-        
+
         if len(families) != len(categories):
             raise ValueError(
                 "Name path length: {} is different to category path length: {}".format(
@@ -80,13 +83,13 @@ def get_unique_nested_families_from_path_data(path_data):
 def get_unique_root_families_from_family_data(family_data):
     """
     Function to retrieve unique root families from a list of family data objects.
-    
+
     :param family_data: list of family data objects
     :type family_data: list[:class:`.FamilyDataFamily`]
     :return: list of tuples containing family name and category
     :rtype: list[(family_name, family_category)]
     """
-    
+
     # family data is a list of family_data_family instances
 
     # will be a list of tuples 0: family name, 1 family category
@@ -103,7 +106,7 @@ def get_unique_root_families_from_family_data(family_data):
 def get_missing_families(root_families, nested_families):
     """
     Function to find missing families from a list of root families and nested families.
-    
+
     :param root_families: list of tuples representing root family name and category
     :type root_families: list[(family_name, family_category)]
     :param nested_families: list of tuples representing nested family name and category
@@ -136,7 +139,9 @@ def process_families(family_data, result_list):
     for family in family_data:
         # process each family
         family.process()
-        longest_path = family.get_longest_unique_nesting_path() # returns a list of tuples (family root name path, family root category path)
+        longest_path = (
+            family.get_longest_unique_nesting_path()
+        )  # returns a list of tuples (family root name path, family root category path)
         if longest_path is not None:
             for lp in longest_path:
                 result_list.append((family, lp))
@@ -148,9 +153,9 @@ def _find_missing_families(families, families_longest_path):
     Returns a list of tuples representing nested family name and category which does not have a matching root family.
 
     :param families: List of family instances
-    :type families: []
+    :type families: [:class:`.FamilyDataFamily`]
     :param families_longest_path: list of tuples representing longest unique name nesting path and matching longest unique category nesting path
-    :type families_longest_path: []
+    :type families_longest_path: [(family name, family category)]
     :return: List of tuples representing the name and category of a family missing (from the library and therefore not presented as root family)
     :rtype: [(family name, family category)]
     """
@@ -213,25 +218,27 @@ def check_families_missing_from_library(family_base_data_report_file_path):
             family_base_data_report_file_path=family_base_data_report_file_path,
             do_this=process_families,
         )
-        
+
         # check if processing was successful, otherwise get out
         if families_processed.status == False:
             raise ValueError(families_processed.message)
-        
+
         # get results
-        families = [] # list of family instances
-        families_longest_path = [] # list of tuples representing longest unique name nesting path and matching longest unique category nesting path
+        families = []  # list of family instances
+        families_longest_path = (
+            []
+        )  # list of tuples representing longest unique name nesting path and matching longest unique category nesting path
         for nested_tuple in families_processed.result:
             # per nested path there might be multiple entries of the same family
             families.append(nested_tuple[0])
             families_longest_path.append(nested_tuple[1])
-            
+
         return_value.append_message(
             "{} Found: {} unique longest path in families.".format(
                 t_process.stop(), len(families_longest_path)
             )
         )
-        
+
         # start timer again
         t_process.start()
 
@@ -242,7 +249,8 @@ def check_families_missing_from_library(family_base_data_report_file_path):
 
         return_value.append_message(
             "Found {} missing families. {}".format(
-                len(missing_families), t_process.stop())
+                len(missing_families), t_process.stop()
+            )
         )
         if len(missing_families) > 0:
             return_value.result = missing_families
@@ -260,10 +268,20 @@ def check_families_missing_from_library(family_base_data_report_file_path):
 
 
 def get_direct_root_families(families, missing_families):
+    """
+    Returns a list of FamilyDataFamily instances which represent the direct parents (host families) of the missing families.
+
+    :param families: List of family instances
+    :type families: [:class:`.FamilyDataFamily`]
+    :param missing_families: List of tuples representing the name and category of a family missing (from the library and therefore not presented as root family)
+    :type missing_families: [(family name, family category)]
+    :return: List of family instances which represent the direct parents (host families) of the missing families
+    :rtype: [:class:`.FamilyDataFamily`]
+    """
 
     # return value
     direct_host_families = []
-
+    direct_host_families_short = []
     # loop over families and check for match at nesting level 01
     for family in families:
         # families at nesting level 1
@@ -274,9 +292,16 @@ def get_direct_root_families(families, missing_families):
                     family_at_level_one.family_name,
                     family_at_level_one.family_category,
                 )
-                if test_value in missing_families:
-                    # match found...
-                    direct_host_families.append(family_at_level_one)
+                if (
+                    test_value in missing_families
+                    and "{} {}".format(family.family_name, family.family_category)
+                    not in direct_host_families_short
+                ):
+                    # match found...store the direct host family
+                    direct_host_families.append(family)
+                    direct_host_families_short.append(
+                        "{} {}".format(family.family_name, family.family_category)
+                    )
 
     return direct_host_families
 
@@ -284,6 +309,7 @@ def get_direct_root_families(families, missing_families):
 def find_missing_families_direct_host_families(family_base_data_report_file_path):
     """
     Returns a list of FamilyDataFamily instances which represent the direct parents (host families) of the missing families.
+    Only processed root families which have a missing family as a direct nested family are returned. (any root families which contains a missing family nested further down the nesting tree are not returned)
 
     :param family_base_data_report_file_path: Fully qualified file path to family base data report file.
     :type family_base_data_report_file_path: str
@@ -314,9 +340,6 @@ def find_missing_families_direct_host_families(family_base_data_report_file_path
     t_process.start()
 
     try:
-
-        # start timer again
-        t_process.start()
 
         # load and process families
         families_processed_result = process_data(
@@ -351,22 +374,45 @@ def find_missing_families_direct_host_families(family_base_data_report_file_path
             families=families, families_longest_path=families_longest_path
         )
 
-        # get the direct root families of nested families identified as missing
-        direct_root_families = []
-        if len(missing_families) > 0:
-            # loop over longest path and find the ones where the second entry in the nesting path is a missing family
-            direct_root_families = get_direct_root_families(
-                families=families,
-                missing_families=missing_families,
-            )
-
+        # check if there are any missing families
+        if len(missing_families) == 0:
             return_value.append_message(
-                "Found {} direct hosts to missing families. {}".format(
-                    len(direct_root_families), t_process.stop()
-                )
+                "No missing families found in data set. {}".format(t_process.stop())
             )
-        else:
-            return_value.append_message("No missing root families found in data set.")
+            return return_value
+
+        # get the direct root families of nested families identified as missing
+        # logging
+        return_value.append_message(
+            "Found {} missing families. {}".format(
+                len(missing_families), t_process.stop()
+            )
+        )
+        for mf in missing_families:
+            return_value.append_message("Missing family: {} {}".format(mf[0], mf[1]))
+
+        # start timer again
+        t_process.start()
+
+        # set up a list for direct root families
+        direct_root_families = []
+
+        # loop over longest path and find the ones where the second entry in the nesting path is a missing family
+        direct_root_families = get_direct_root_families(
+            families=families,
+            missing_families=missing_families,
+        )
+
+        # logging
+        return_value.append_message(
+            "Found {} direct hosts to missing families. {}".format(
+                len(direct_root_families), t_process.stop()
+            )
+        )
+        for drf in direct_root_families:
+            return_value.append_message(
+                "Direct host family: {} {}".format(drf.family_name, drf.family_category)
+            )
 
         # update result property as required
         if len(direct_root_families) > 0:

@@ -45,7 +45,8 @@ class RoomSpatialObj(RoomBaseObj):
         self, rvt_doc, room, boundary_location=SpatialElementBoundaryLocation.Finish
     ):
         super(RoomSpatialObj, self).__init__(rvt_doc, room)
-        RoomBaseObj.__init__(self, rvt_doc, room)
+        #RoomBaseObj.__init__(self, rvt_doc, room) # this is the same as above super call
+        
         spat_opts = SpatialElementBoundaryOptions()
         spat_opts.SpatialElementBoundaryLocation = boundary_location
         self.segments = get_room_segments(room, spat_opts)

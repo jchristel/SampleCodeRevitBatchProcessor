@@ -8,6 +8,7 @@ namespace PythonTests.Revit.Family.Data
     {
         private string dataTestDirectory;
         private List<TestFileData> testFilesMultiple;
+        private List<TestFileData> testFilesHostMultiple;
 
         [SetUp]
         public void SetUp()
@@ -22,6 +23,13 @@ namespace PythonTests.Revit.Family.Data
                 new TestFileData("Label_Text_1_5mm_ANN", true, 1, new List<List<string>> { new List<string> { "Generic Annotations" } }),
                 new TestFileData("Section Tail - Upgrade", true, 1, new List<List<string>> { new List<string> { "Section Marks" } }),
                 new TestFileData("Symbol_Outlet_GPO_Single_Emergency_ANN", true, 1, new List<List<string>> { new List<string> { "Generic Annotations" } }),
+            };
+
+            testFilesHostMultiple = new List<TestFileData>
+            {
+                new TestFileData("Sample_Family_Six", true, 1, new List<List<string>> { new List<string> { "Specialty Equipment" } }),
+                new TestFileData("Sample_Family_Nine", true, 1, new List<List<string>> { new List<string> { "Furniture Systems" } }),
+                new TestFileData("Sample_Family_Two", true, 1, new List<List<string>> { new List<string> { "Furniture Systems" } }),
             };
         }
 
@@ -45,7 +53,12 @@ namespace PythonTests.Revit.Family.Data
             Console.WriteLine(testResultMissing.message);
             Assert.That(testResultMissing.status, Is.True, "Expecting successfully reading of all files");
             Assert.That(testResultMissing.result.Count, Is.EqualTo(testFilesMultiple.Count), "Expecting number of missing root families to match");
-            
+
+            foreach (var missingFam in testResultMissing.result)
+            {
+                Console.WriteLine(missingFam);
+            }
+
 
             // Check if all expected data is present
             foreach (var testFile in testFilesMultiple)
@@ -65,5 +78,38 @@ namespace PythonTests.Revit.Family.Data
                 }
             }
         }
+        [Test]
+        public void TestFindMissingFamiliesDirectHostFamilies()
+        {
+            dynamic familyReportReader = PythonEngineManager.FamilyMissingFamiliesModule;
+            string dataTestDirectoryReader01 = Path.Combine(dataTestDirectory, @"ReadMissingFamilies_01\FamilyBaseDataCombinedReport_original.csv");
+            Console.WriteLine(dataTestDirectoryReader01);
+
+            var testResultDirectHostFamilies = familyReportReader.find_missing_families_direct_host_families(dataTestDirectoryReader01);
+            Console.WriteLine(testResultDirectHostFamilies.result);
+            Console.WriteLine(testResultDirectHostFamilies.message);
+            Assert.That(testResultDirectHostFamilies.status, Is.True, "Expecting successfully reading of all files");
+            Assert.That(testResultDirectHostFamilies.result.Count, Is.EqualTo(testFilesHostMultiple.Count), "Expecting number of direct host families to match");
+
+            // Check if all expected data is present
+            foreach (var testFile in testFilesHostMultiple)
+            {
+                bool foundMatch = false;
+                foreach (var familyData in testResultDirectHostFamilies.result)
+                {
+                    Console.WriteLine(familyData.family_name + " " + familyData.family_category + " >> " + testFile.FileName);
+                    if (familyData.family_name == testFile.FileName && familyData.family_category == testFile.ExpectedData[0][0])
+                    {
+                        foundMatch = true;
+                        break;
+                    }
+                }
+                if (!foundMatch)
+                {
+                    Assert.Fail($"No match found for family: {testFile.FileName} with category: {testFile.ExpectedData[0][0]}");
+                }
+            }
+        }
+
     }
 }

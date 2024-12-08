@@ -509,3 +509,47 @@ def get_curve_level(doc, curve):
         return None
     level = doc.GetElement(level_id)
     return level
+
+
+def are_lines_parallel(line_one, line_two):
+    """
+    Check if two lines are parallel.
+
+    Args:
+        line_one (object): The first line to compare.
+        line_two (object): The second line to compare.
+
+    Returns:
+        bool: True if the lines are parallel, False otherwise.
+    """
+    # Get normalized directions for both lines
+    dir_one = line_one.Direction.Normalize()
+    dir_two = line_two.Direction.Normalize()
+
+    # Check if the directions are the same or opposite
+    return dir_one.IsAlmostEqualTo(dir_two) or dir_one.IsAlmostEqualTo(dir_two.Negate())
+
+def are_lines_perpendicular(line_one, line_two):
+    """
+    Check if two lines are perpendicular.
+
+    Args:
+        line_one (object): The first line to compare.
+        line_two (object): The second line to compare.
+
+    Returns:
+        bool: True if the lines are perpendicular, False otherwise.
+    """
+
+    # check if the lines are perpendicular:
+    # calculate a perpendicular vector to the first line
+    # and check if it is parallel to the second line
+    # thats done rather than using the dot product of the two lines
+    # to stay within the means of Revit API calculation precision and avoid floating point errors
+    perpendicular_vector_to_one = XYZ(-line_one.Direction.Y, line_one.Direction.X, 0)
+    
+    # normalize the direction of the second line
+    dir_two = line_two.Direction.Normalize()
+
+    # check if the perpendicular vector is parallel to the second line
+    return perpendicular_vector_to_one.IsAlmostEqualTo(dir_two) or perpendicular_vector_to_one.IsAlmostEqualTo(dir_two.Negate())

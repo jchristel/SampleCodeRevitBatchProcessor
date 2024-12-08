@@ -43,7 +43,7 @@ Module containing post processing script which runs outside the revit batch proc
 # import System
 import sys  # required to return an exit code
 import os
-
+from csv import QUOTE_MINIMAL
 # import common library
 import settings as settings  # sets up all commonly used variables and path locations!
 
@@ -102,7 +102,12 @@ def merge_files():
     """
     Appends temp report files to log files. Returns a list of files where that log file did not exist or which failed to append to data log file
 
-    :return: List of files
+    :param file_name: file name without path and extension
+    :type file_name: str
+    :param filter: file name ends on: filter
+    :type filter: str
+    
+    :return: List of files as fully qualified file names which failed to append to data log file
     :rtype: [str]
     """
 
@@ -117,7 +122,11 @@ def merge_files():
         output("Need to create data file: {}".format(data_file_name))
         try:
             write_report_data_as_csv(
-                file_name=data_file_name, header=rFns.LOG_FILE_HEADER, data=[]
+                file_name=data_file_name, 
+                header=rFns.LOG_FILE_HEADER, 
+                data=[], 
+                enforce_ascii=True, 
+                quoting=QUOTE_MINIMAL,
             )
         except Exception as e:
             output(
@@ -139,45 +148,67 @@ def merge_files():
             file_without_ext = get_file_name_without_ext(file_match)
 
             # append single temp file to data log file
-            flag_append = append_to_file(data_file_name, file_match, True)
-            if flag_append:
+            result_append = append_to_file(data_file_name, file_match, True)
+            if result_append.status:
                 output("Appended: {}  to: {}".format(file_without_ext, log_file_name))
             else:
                 output(
-                    "Failed to append: {} to: {}".format(
-                        file_without_ext, log_file_name
+                    "Failed to append: {} to: {} with message: {}".format(
+                        file_without_ext, log_file_name, result_append.message
                     )
                 )
                 failed_files.append(file_match)
     return failed_files
 
 
-def append_files(
-    folder_path, file_prefix, file_suffix, file_extension, out_put_file_name
+def append_files_wrapper(
+    folder_path, file_prefix, file_suffix, file_extension, output_file_name,  **kwargs
 ):
     """
     DuHast append file wrapper...
 
     Used to append warnings to warnings report
+    
+    :param folder_path: Directory path where the files are located
+    :type folder_path: str
+    :param file_prefix: The file prefix common between files to be combined
+    :type file_prefix: str
+    :param file_suffix:The file suffix common between files to be combined
+    :type file_suffix: str
+    :param file_extension: The file extension of the files to be combined
+    :type file_extension: str
+    :param output_file_name: The name of the file to be created
+    :type output_file_name: str
+    
     """
+    
     file_list = get_files_single_directory(
         folder_path, file_prefix, file_suffix, file_extension
     )
 
+    # check if any files were found in the directory
+    if len(file_list) == 0:
+        output(
+            "No files found with prefix: {} suffix: {} extension: {}".format(
+                file_prefix, file_suffix, file_extension
+            )
+        )
+        return
+    
     # build fully qualified out put file name
-    full_out_file_name = os.path.join(settings.OUTPUT_FOLDER, out_put_file_name)
+    full_out_file_name = os.path.join(settings.OUTPUT_FOLDER, output_file_name)
 
     for file in file_list:
-        append_flag = append_to_file(
+        append_result = append_to_file(
             source_file=full_out_file_name, append_file=file, ignore_first_row=True
         )
         output(
             "...appended {}  to {} with status [{}]".format(
-                file, full_out_file_name, append_flag
+                file, full_out_file_name, append_result.status
             )
         )
 
-def combine_csv_files(folder_path, file_prefix, file_suffix, file_extension, out_put_file_name):
+def combine_csv_files_wrapper(folder_path, file_prefix, file_suffix, file_extension, output_file_name,  overwrite_existing, **kwargs):
     """
     Combines csv files into a single csv file with header independent of the files being combined.
 
@@ -189,22 +220,57 @@ def combine_csv_files(folder_path, file_prefix, file_suffix, file_extension, out
     :type file_suffix: str
     :param file_extension: The file extension of the files to be combined
     :type file_extension: str
-    :param out_put_file_name: The name of the file to be created
-    :type out_put_file_name: str
+    :param output_file_name: The name of the file to be created
+    :type output_file_name: str
     """
 
-    combine_files_csv_header_independent(
+    try:
+        combine_files_csv_header_independent(
+            folder_path=folder_path,
+            file_prefix=file_prefix,
+            file_suffix=file_suffix,
+            file_extension=file_extension,
+            output_file_name=output_file_name,
+            overwrite_existing=overwrite_existing,
+        )
+    except Exception as e:
+        output(
+            "Failed to combine files {} with exception: [{}]".format(file_suffix, e)
+        )
+
+def combine_files_wrapper(folder_path,file_prefix,file_suffix,file_extension,output_file_name, **kwargs):
+    """
+    Combines files into a single file with a common header.
+    
+    :param folder_path: Directory path where the files are located
+    :type folder_path: str
+    :param file_prefix: The file prefix common between files to be combined
+    :type file_prefix: str
+    :param file_suffix:The file suffix common between files to be combined
+    :type file_suffix: str
+    :param file_extension: The file extension of the files to be combined
+    :type file_extension: str
+    :param output_file_name: The name of the file to be created
+    :type output_file_name: str
+    """
+    
+    result_combine = combine_files(
         folder_path=folder_path,
         file_prefix=file_prefix,
         file_suffix=file_suffix,
         file_extension=file_extension,
-        out_put_file_name=out_put_file_name,
-        overwrite_existing=True,
+        output_file_name=output_file_name,
     )
-
+    output(
+            "...combined {}  to {} with status [{}]".format(
+                file_suffix, output_file_name, result_combine.status
+            )
+        )
+    
+    
 def combine_data_files():
     """
-    Combines varies report files which are created per Revit project file into a single text file
+    Combines varies report files which are created per Revit project file into a single text file.
     """
     for file_to_combine in FILE_DATA_TO_COMBINE:
         output("Combining {} report files.".format(file_to_combine[0]))
@@ -213,7 +279,7 @@ def combine_data_files():
             file_prefix="",
             file_suffix=file_to_combine[0],
             file_extension=settings.REPORT_FILE_NAME_EXTENSION,
-            out_put_file_name=file_to_combine[1],
+            output_file_name=file_to_combine[1],
             overwrite_existing=True, # make sure previous files are overwritten
         )
 
@@ -223,32 +289,32 @@ FILE_DATA_TO_COMBINE = [
     [
         settings.REPORT_EXTENSION_SHEETS_SHORT,
         settings.COMBINED_REPORT_NAME_SHEETS_SHORT,
-        combine_files,
+        combine_files_wrapper,
     ],
     [
         settings.REPORT_EXTENSION_SHEETS,
         settings.COMBINED_REPORT_NAME_SHEETS,
-        combine_csv_files,
+        combine_csv_files_wrapper,
     ],
     [
         settings.REPORT_EXTENSION_SHARED_PARAMETERS,
         settings.COMBINED_REPORT_NAME_SHARED_PARAMETERS,
-        combine_files,
+        combine_files_wrapper,
     ],
     [
         settings.REPORT_EXTENSION_GRIDS,
         settings.COMBINED_REPORT_NAME_GRIDS,
-        combine_files,
+        combine_files_wrapper,
     ],
     [
         settings.REPORT_EXTENSION_LEVELS,
         settings.COMBINED_REPORT_NAME_LEVELS,
-        combine_files,
+        combine_files_wrapper,
     ],
     [
         settings.REPORT_EXTENSION_WORKSETS,
         settings.COMBINED_REPORT_NAME_WORKSETS,
-        combine_files,
+        combine_files_wrapper,
     ],
     [
         settings.REPORT_EXTENSION_GEO_DATA,
@@ -258,37 +324,37 @@ FILE_DATA_TO_COMBINE = [
     [
         settings.REPORT_EXTENSION_FAMILIES,
         settings.COMBINED_REPORT_NAME_FAMILIES,
-        combine_files,
+        combine_files_wrapper,
     ],
     [
         settings.REPORT_EXTENSION_MARKED_VIEWS,
         settings.COMBINED_REPORT_NAME_MARKED_VIEWS,
-        combine_files,
+        combine_files_wrapper,
     ],
     [
         settings.REPORT_EXTENSION_WALL_TYPES,
         settings.COMBINED_REPORT_NAME_WALL_TYPES,
-        combine_files,
+        combine_files_wrapper,
     ],
     [
         settings.REPORT_EXTENSION_VIEWS,
         settings.COMBINED_REPORT_NAME_VIEWS,
-        combine_files,
+        combine_files_wrapper,
     ],
     [
         settings.REPORT_EXTENSION_CAD_LINKS,
         settings.COMBINED_REPORT_NAME_CAD_LINKS,
-        combine_files,
+        combine_files_wrapper,
     ],
     [
         settings.REPORT_EXTENSION_REVIT_LINKS,
         settings.COMBINED_REPORT_NAME_REVIT_LINKS,
-        combine_files,
+        combine_files_wrapper,
     ],
     [
         settings.REPORT_EXTENSION_WARNING_TYPES,
         settings.COMBINED_REPORT_NAME_WARNING_TYPES,
-        append_files,
+        append_files_wrapper,
     ],
 ]
 
@@ -298,12 +364,14 @@ FILE_DATA_TO_COMBINE = [
 
 exit_code = 0
 try:
+    # merge revit model health data files into overall .log file
     failed_files_ = merge_files()
 except Exception as e:
     output("Failed to merge files: [{}]".format(e))
     exit_code = 1
 
 try:
+    # combine data files per project file and data point into single data files per data point
     output("Combining report files:")
     combine_data_files()
 except Exception as e:
@@ -311,6 +379,7 @@ except Exception as e:
     exit_code = 1
 
 try:
+    # create view template hash table files
     output("Creating view template hash table:")
     combine_vt_data_result = combine_vt_reports(settings.OUTPUT_FOLDER)
     output(
@@ -324,6 +393,9 @@ except Exception as e:
 
 
 try:
+    # convert files into parquet file format
+    # this required python 3.10or higher and cant be run in the same post process script as the other tasks
+    # TODO: move into separate script
     output("Converting view template hash table files to parquet file format:")
     convert_to_parquet_result = convert_vt_reports_to_parquet(settings.OUTPUT_FOLDER)
     output(

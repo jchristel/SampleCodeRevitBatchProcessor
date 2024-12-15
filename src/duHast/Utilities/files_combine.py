@@ -32,7 +32,7 @@ import os
 import csv
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Utilities.files_io import get_file_name_without_ext
+from duHast.Utilities.files_io import get_file_name_without_ext, is_last_char_newline
 from duHast.Utilities.files_get import get_files_single_directory
 from duHast.Utilities.files_tab import get_unique_headers as get_unique_headers_tab
 from duHast.Utilities.files_tab import read_tab_separated_file, write_report_data
@@ -150,6 +150,19 @@ def append_to_file(source_file, append_file, ignore_first_row=False, delimiter="
     """
 
     return_value = Result()
+    
+    # set a flag to check if we need to add a newline before writing
+    need_newline = False
+    # if in append mode, check if the last character is a newline
+    if not is_last_char_newline(source_file):
+        # if not, we need to add a newline before writing
+        need_newline = True
+        return_value.append_message(
+            "File: {} is in append mode, but last character is not a newline.".format(
+                source_file
+            )
+        )
+        
     try:
         # read file to append into memory...hopefully will never get in GB range in terms of file size
         with open(append_file, "r", encoding="utf-8") as fp:
@@ -160,31 +173,28 @@ def append_to_file(source_file, append_file, ignore_first_row=False, delimiter="
         with open(source_file, "a", encoding="utf-8", newline='') as f:
             # lineterminator='\n' is set to avoid double newlines on Windows
             writer = csv.writer(f, delimiter=delimiter, quoting=quoting, lineterminator='\n')
+            
+            # check if a new line is required at the beginning of the write
+            if need_newline:
+                f.write('\n')
+
             if not ignore_first_row:
                 # no need to add a newline character to the first row of the file
                 # since this is writing entire rows to the file
                 for line in lines:
-                     # write entire new row to file
+                    # write entire new row to file
                     writer.writerow(line)
             else:
-                # check if only a header row in file?
-                if len(lines) > 1:
-                    # check if we need to write a newline character into the file before writing any data
-                    # if there is more than one row to be appended to the file and ignore_first_row is set
-                    # this is to ensure that the first row is not appended to the last row of the file
-                    if ignore_first_row and len(lines) == 2:
-                        f.write('\n')
-                    
-                    # write the rest of the rows to the file
-                    for i, line in enumerate(lines[1:]):
-                        # check if we are at the last row to be appended to the file ( could also be the first and last row !)
-                        if i == len(lines[1:]) - 1:
-                            # Write the last row without a newline character at the end ( This requires a new line to be added to beginning of write!, see code above)
-                            f.write(delimiter.join(line))
-                        else:
-                            # write entire new row to file
-                            writer.writerow(line)
-
+                # write the rest of the rows to the file
+                for i, line in enumerate(lines[1:]):
+                    # check if we are at the last row to be appended to the file ( could also be the first and last row !)
+                    if i == len(lines[1:]) - 1:
+                        # Write the last row without a newline character at the end ( This requires a new line to be added to beginning of write!, see code above)
+                        f.write(delimiter.join(line))
+                    else:
+                        # write entire new row to file
+                        writer.writerow(line)
+               
         return_value.append_message("File: {} appended to file: {}".format(append_file, source_file))
     except Exception as e:
         return_value.update_sep(False, "Failed to append file with exception: {}".format(e))

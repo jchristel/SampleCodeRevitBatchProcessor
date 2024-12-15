@@ -1,10 +1,28 @@
 <UserControl
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    mc:Ignorable="d">
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" >
     <Grid>
+        <!-- Add your UI elements here -->
+        <Grid.RowDefinitions>
+            <!-- header row -->
+            <RowDefinition Height="auto"/>
+            <!-- families -->
+            <RowDefinition Height="*"/>
+            <!-- library papth -->
+            <RowDefinition Height="auto"/>
+            <!-- buttons -->
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <!-- header row content -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Reload Families" FontSize="24"/>
+        </Grid>
         <!-- Other UI elements -->
         <ListView Grid.Row="1" Margin="0 25 0 0" ItemsSource="{Binding FamiliesView}">
             <ListView.View>
@@ -34,7 +52,7 @@
                                                             <DataTemplate>
                                                                 <CheckBox 
                                                                     HorizontalAlignment="Stretch" 
-                                                                    HorizontalContentAlignment="Right"
+                                                                    HorizontalContentAlignment="Left"
                                                                     Content="{Binding Value}" 
                                                                     IsChecked="{Binding IsChecked, Mode=TwoWay}"/>
                                                             </DataTemplate>
@@ -69,7 +87,7 @@
                                                             <DataTemplate>
                                                                 <CheckBox 
                                                                     HorizontalAlignment="Stretch"
-                                                                    HorizontalContentAlignment="Right"
+                                                                    HorizontalContentAlignment="Left"
                                                                     Content="{Binding Value}" 
                                                                     IsChecked="{Binding IsChecked, Mode=TwoWay}"
                                                                     Command="{Binding CheckCommand}"/>
@@ -102,6 +120,8 @@
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
                                                         <CheckBox 
+                                                            HorizontalAlignment="Stretch"
+                                                            HorizontalContentAlignment="Left"
                                                             Content="{Binding Value}" 
                                                             IsChecked="{Binding IsChecked, Mode=TwoWay}"
                                                             Command="{Binding CheckCommand}"/>
@@ -131,7 +151,9 @@
                                             <ItemsControl ItemsSource="{Binding UniqueMatchStatuses}">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <CheckBox 
+                                                        <CheckBox
+                                                            HorizontalAlignment="Stretch"
+                                                            HorizontalContentAlignment="Left"
                                                             Content="{Binding Value}" 
                                                             IsChecked="{Binding IsChecked, Mode=TwoWay}"
                                                             Command="{Binding CheckCommand}"/>
@@ -152,5 +174,21 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <!-- family path -->
+        <Grid Grid.Row="2" Margin="0 25 0 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Library Location"/>
+                <TextBox
+                    Grid.Row="1"
+                    Margin="0 5 0 0"
+                    Text="{Binding LibraryPath, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+        <!-- reload button row content -->
+        <Grid Grid.Row="3">
+            <Button Command="{Binding ReloadFamiliesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="0 10 0 10" Content="Reload"/>
+        </Grid>
     </Grid>
 </UserControl>

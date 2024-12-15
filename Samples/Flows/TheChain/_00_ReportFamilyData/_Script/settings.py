@@ -68,7 +68,7 @@ FILE_EXTENSION_OF_FILES_TO_PROCESS = ".rfa"
 # Root directory path of files to be processed
 # (note: this is the root directory of the files to be processed and not the root directory of the entire project)
 # ideally this can be moved into a config file by user... TODO:
-REVIT_LIBRARY_PATH = r'C:\Users\chrjx\Documents\github\debug_modules\the_chain\sample_files'
+REVIT_LIBRARY_PATH = r'C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\test\_rbp_flow\_sampleFiles\FamilyDataOriginal'
 
 # log marker file location
 LOG_MARKER_DIRECTORY = os.path.join(ROOT_SCRIPT_DIRECTORY_USER, "_LogMarker")

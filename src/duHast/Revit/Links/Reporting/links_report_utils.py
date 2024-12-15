@@ -131,16 +131,19 @@ def get_revit_link_report_data(doc, revit_file_path):
         except Exception:
             pass
         link_type = get_revit_link_type_from_instance(doc, c)
+        # get link type data ( this is another list)
         link_type_data = get_revit_link_type_data(doc, link_type)
         # add other data
-        link_type_data = (
-            [revit_file_path]
-            + [str(c.Id)]
-            + link_type_data
-            + [str(l_s)]
-            + [link_location_name]
-            + [rParaGet.get_parameter_value(ws_parameter)]
-            + [rParaGet.get_parameter_value(do_parameter)]
-        )
-        data.append(link_type_data)
+        link_type_data_combined = [
+            revit_file_path,
+            str(c.Id),
+            str(l_s),
+            link_location_name,
+            rParaGet.get_parameter_value(ws_parameter),
+            rParaGet.get_parameter_value(do_parameter),
+        ]
+        # splice the two lists together
+        link_type_data_combined[2:] = link_type_data
+        # add link to value to be returned
+        data.append(link_type_data_combined)
     return data

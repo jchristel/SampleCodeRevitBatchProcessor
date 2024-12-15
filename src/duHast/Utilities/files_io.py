@@ -372,9 +372,9 @@ def is_back_up_file(file_path):
 
 def remove_null_bytes(file_path, temp_file_path):
     """
-    Remove null bytes from a source CSV file and write to a temporary file.
+    Remove null bytes from a source txt file and write to a temporary file.
 
-    :param file_path: The path to the original CSV file.
+    :param file_path: The path to the original txt file.
     :type file_path: str
     :param temp_file_path: The path to the temporary file where cleaned data is written.
     :type temp_file_path: str
@@ -386,3 +386,29 @@ def remove_null_bytes(file_path, temp_file_path):
     # Write content to a temporary file
     with open(temp_file_path, 'wb') as temp_file:
         temp_file.write(content)
+
+
+
+def is_last_char_newline(file_path):
+    """
+    Check if the last character in a file is a newline character.
+
+    :param file_path: The fully qualified file path.
+    :type file_path: str
+    :return: True if the last character is a newline, otherwise False.
+    :rtype: bool
+    """
+
+    # Function to check if the last character in the file is a newline
+    # Check if the file exists
+    if not os.path.exists(file_path):
+        return False
+
+    with open(file_path, 'rb') as file:
+        # Seek to the last byte of the file
+        file.seek(-1, os.SEEK_END)
+        
+        # Read the last byte and check if it's a newline character
+        last_char = file.read(1)
+        
+        return last_char == b'\n'

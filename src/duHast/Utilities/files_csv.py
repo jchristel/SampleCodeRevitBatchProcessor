@@ -34,7 +34,7 @@ import System.IO
 
 from duHast.Utilities.files_io import get_file_name_without_ext, remove_null_bytes, file_delete
 from duHast.Utilities.Objects.result import Result
-
+from duHast.Utilities.files_base import write_report_data, get_first_row_in_column_based_text_file
 
 def get_unique_headers(files):
     """
@@ -54,7 +54,14 @@ def get_unique_headers(files):
     for f in files:
         # get unmodified row data and remove the next line character at the end
         data = get_first_row_in_csv_file(f)
-        headers_in_all_files[get_file_name_without_ext(f)] = data
+        header_row = []
+        if data.status:
+            header_row = data.result
+        else:
+            raise Exception("Failed to read header row from file: {}".format(f))
+        
+        headers_in_all_files[get_file_name_without_ext(f)] = header_row
+        
     headers_unique = []
     for header_by_file in headers_in_all_files:
         empty_header_counter = 0
@@ -178,21 +185,14 @@ def get_first_row_in_csv_file(filePath):
     Reads the first line of a csv text file and returns it as a list of strings
     :param filePath: The fully qualified file path.
     :type filePath: str
-    :return: The first row of a text file.
-    :rtype: str
+    :return: A Result object, with the result attribute set to True if the first row was retrieved successfully, False otherwise.
+    :rtype: :class:`.Result`
     """
-
-    return_value = []
-    try:
-        with open(filePath) as csv_file:
-            reader = csv.reader(csv_file)
-            for row in reader:  # each row is a list
-                return_value = row
-                break
-            csv_file.close()
-    except Exception as e:
-        print(str(e))
+    
+    return_value = Result()
+    return_value = get_first_row_in_column_based_text_file(file_path=filePath, delimiter=',')
     return return_value
+    
 
 
 def write_report_data_as_csv(
@@ -216,61 +216,16 @@ def write_report_data_as_csv(
     :type bom: str, default is NoneType
     :param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_NONE. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
     :type quoting: int, optional
+    
+    :return: A Result object, with the result attribute set to True if the file was written successfully, False otherwise.
+    :rtype: :class:`.Result`
     """
 
     return_value = Result()
     
-    # Open the file with the codecs.open method to specify encoding
-    with codecs.open(file_name, write_type, encoding=encoding) as f:
-        try:
-            # Write a newline character if appending to the file to make sure we are starting on a new line
-            if write_type == 'a':
-                f.write('\n')
-            
-            # Write BOM manually if specified
-            if bom and 'w' in write_type:
-                f.write(bom.decode(encoding))
-
-            # Create the CSV writer
-            # line terminator is set to '\n' to avoid double newlines on Windows
-            writer = csv.writer(f, delimiter=delimiter, escapechar='\\', quoting=quoting, lineterminator='\n')
-
-            def encoded_row(row):
-                if enforce_ascii:
-                    return [s.encode('ascii', 'ignore').decode('ascii') for s in row]
-                else:
-                    return row  # Keep the strings in their current state for writing
-
-            # Write header
-            if header:
-                # check if header only or if there is data to write as well
-                if data:
-                    # Write the header row with the CSV writer including a new line character
-                    writer.writerow(encoded_row(header))
-                    return_value.append_message("Header written to file. (including newline)")
-                else:
-                    # Write the header row without a newline character
-                    f.write(delimiter.join(encoded_row(header)))
-                    return_value.append_message("Header written to file. (including newline)")
-            else:
-                return_value.append_message("No header provided to write to file.")
-
-            # Write data rows, looping over rows to prevent new line character on the last row
-            for i in range(len(data)):
-                row = data[i]
-                if i == len(data) - 1:
-                    # Write the last row without a newline character
-                    f.write(delimiter.join(encoded_row(row)))
-                    return_value.append_message("Last row {} written to file. (without newline)>>{}".format(','.join(encoded_row(row)), i))
-                else:
-                    writer.writerow(encoded_row(row))
-                    return_value.append_message("Row {} written to file. (including newline)>>{}".format(','.join(encoded_row(row)), i))
-        
-        
-        except Exception as e:
-                return_value.update_sep(False, "File: {} failed to write data with exception: {}".format(file_name, e))    
-        finally:
-            # make sure to close the file
-            f.close()
-
+    # use base function to write the data
+    return_value = write_report_data (
+        file_name=file_name, header=header, data=data, write_type=write_type, enforce_ascii=enforce_ascii,  encoding=encoding, bom=bom, quoting=quoting, delimiter=delimiter
+    )
+    
     return return_value

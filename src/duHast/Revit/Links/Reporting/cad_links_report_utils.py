@@ -112,9 +112,11 @@ def get_cad_report_data(doc, revit_file_path):
         # lSharedParam = cadLink.get_Parameter(BuiltInParameter.GEO_LOCATION)
         is_view_specific = c.ViewSpecific
         owner_view_id = c.OwnerViewId
+        # this returns a single string containing the cad path
         link_type_data = get_cad_link_type_data_by_name(
             l_name_param.AsString(), doc, revit_file_path
         )
+        # append cad information as a list
         data.append(
             [
                 revit_file_path,

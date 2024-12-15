@@ -46,8 +46,8 @@ class FamilyTypeParameterDataStorage(Base):
     ):
         super(FamilyTypeParameterDataStorage, self).__init__()
 
-        self.name = name
-        self.type = type
-        self.type_of_parameter = type_of_parameter
-        self.units = units
-        self.value = value
+        self.name = name # name of the family type
+        self.type = type # type of the parameter ( i.e. shared, system, custom)
+        self.type_of_parameter = type_of_parameter # unit type of the parameter ( i.e. length, area, volume, string, etc.)
+        self.units = units # units of the parameter ( there are parameter type which do not have units i.e. string)
+        self.value = value # value of the parameter

@@ -266,7 +266,33 @@ def combine_files_wrapper(folder_path,file_prefix,file_suffix,file_extension,out
                 file_suffix, output_file_name, result_combine.status
             )
         )
-    
+
+def combine_files_json_wrapper(folder_path,file_prefix,file_suffix,file_extension,output_file_name, **kwargs):
+    """
+    Combines json files into a single json file.
+
+    :param folder_path: Directory path where the files are located
+    :type folder_path: str
+    :param file_prefix: The file prefix common between files to be combined
+    :type file_prefix: str
+    :param file_suffix:The file suffix common between files to be combined
+    :type file_suffix: str
+    :param file_extension: The file extension of the files to be combined
+    :type file_extension: str
+    :param output_file_name: The name of the file to be created
+    :type output_file_name: str
+
+    :return: None
+    :rtype: None
+    """
+    combined_flag = combine_files_json(folder_path=folder_path, file_prefix=file_prefix, file_suffix=file_suffix, file_extension=file_extension, output_file_name=output_file_name)
+
+    output(
+            "...combined {}  to {} with status [{}]".format(
+                file_suffix, output_file_name, combined_flag
+            )
+        )
+
     
 def combine_data_files():
     """
@@ -319,7 +345,7 @@ FILE_DATA_TO_COMBINE = [
     [
         settings.REPORT_EXTENSION_GEO_DATA,
         settings.COMBINED_REPORT_NAME_GEO_DATA,
-        combine_files_json,
+        combine_files_json_wrapper,
     ],
     [
         settings.REPORT_EXTENSION_FAMILIES,

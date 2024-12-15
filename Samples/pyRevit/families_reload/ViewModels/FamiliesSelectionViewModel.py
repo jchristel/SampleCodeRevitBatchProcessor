@@ -239,6 +239,12 @@ class FamiliesSelectionViewModel(ViewModelBase):
         unique_match_statuses_set.add(MatchStatusNames.MULTIPLE_MATCHES.value)
         unique_match_statuses_set.add(MatchStatusNames.MATCH_OK.value)
         
+        # sort unique values by alphabetical order
+        unique_match_statuses_set = sorted(unique_match_statuses_set)
+        unique_categories_set = sorted(unique_categories_set)
+        unique_names_set = sorted(unique_names_set)
+        unique_shared_statuses_set = sorted(unique_shared_statuses_set)
+        
         # clear collection first before adding new values
         self._unique_match_statuses.Clear()
         self._unique_categories.Clear()

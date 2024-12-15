@@ -37,21 +37,19 @@ Supports 2 methods of data extraction:
 import clr
 
 clr.AddReference("System.Xml")
-from System.Xml import XmlDocument, XmlNamespaceManager
+from System.Xml import XmlDocument
 
 import tempfile
 import os
 
 from Autodesk.Revit.DB import Element
 
-from duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage import (
-    FamilyTypeParameterDataStorage,
-)
-from duHast.Revit.Family.Data.Objects.family_type_data_storage import (
-    FamilyTypeDataStorage,
-)
 from duHast.Utilities.Objects.result import Result
-from duHast.Utilities.files_io import get_file_name_without_ext, get_directory_path_from_file_path
+from duHast.Utilities.files_io import (
+    get_file_name_without_ext,
+    get_directory_path_from_file_path,
+)
+from duHast.Revit.Family.Utility.xml_family_type_reader import read_xml_into_storage
 
 
 def write_data_to_temp_xml_file_and_read_it_back(an_action_to_write_xml_data):
@@ -91,6 +89,7 @@ def write_data_to_temp_xml_file_and_read_it_back(an_action_to_write_xml_data):
 
     return doc_xml
 
+
 def write_data_to_xml_file_and_read_it_back(an_action_to_write_xml_data, xml_file_path):
     """
     Write the data to an XML file and read it back.
@@ -123,101 +122,9 @@ def write_data_to_xml_file_and_read_it_back(an_action_to_write_xml_data, xml_fil
     return doc_xml
 
 
-def read_xml_into_storage(doc_xml, family_name, family_path):
-    """
-    Read the XML data into the storage object.
-
-    :param doc_xml: The XML document.
-    :type doc_xml: XmlDocument
-    :param family_name: The name of the family.
-    :type family_name: str
-    :param family_path: The path of the family file.
-    :type family_path: str
-
-    :return: A list of family type data objects.
-    :rtype: list[FamilyTypeDataStorage]
-    """
-
-    type_data = []
-    # Add an XML namespace manager
-    name_space_manager = XmlNamespaceManager(doc_xml.NameTable)
-    name_space_manager.AddNamespace("atom", "http://www.w3.org/2005/Atom")
-    name_space_manager.AddNamespace("A", "urn:schemas-autodesk-com:partatom")
-
-    # get some family information i.e. the root category path
-    root_category_path = "None"
-
-    # Select the family node
-    family_node = doc_xml.SelectSingleNode("//A:family", name_space_manager)
-
-    # Get the family parameters
-    for part_node in family_node.SelectNodes("A:part", name_space_manager):
-        # Get the family type name
-        family_type_name = None
-        for child_node in part_node.ChildNodes:
-            if child_node.Name == "title":
-                family_type_name = child_node.InnerText
-                break
-
-        # If we got a type name, add the parameters, their values and units, parameter type and type of parameter
-        if family_type_name:
-            parameters = []
-            for child_node in part_node.ChildNodes:
-                if child_node.Name != "title":
-                    
-                    # attempt to read out values
-                    name = "unknown type"
-                    try:
-                        name = child_node.Name
-                    except Exception as e:
-                        name ="{}: {}".format(name, e)
-                    
-                    type = "unknown type"
-                    try:
-                        type = child_node.Attributes["type"].Value
-                    except Exception as e:
-                        type ="{}: {}".format(type, e)
-                    
-                    type_of_parameter = "unknown type"
-                    try:
-                        type_of_parameter = child_node.Attributes["typeOfParameter"].Value
-                    except Exception as e:
-                        type_of_parameter ="{}: {}".format(type_of_parameter, e)
-                    
-                    units = "unknown type"
-                    try:
-                        units = child_node.Attributes["units"].Value
-                    except Exception as e:
-                        units ="{}: {}".format(units, e)
-
-                    # Create a parameter object
-                    parameter = FamilyTypeParameterDataStorage(
-                        name=name,
-                        type=type,
-                        type_of_parameter=type_of_parameter,
-                        units=units,
-                        value=child_node.InnerText,
-                    )
-                    
-                    # Add type to family
-                    parameters.append(parameter)
-
-            # Set up a family type data storage object
-            fam_type = FamilyTypeDataStorage(
-                root_name_path=family_name,
-                root_category_path=root_category_path,
-                family_name=family_name,
-                family_file_path=family_path,
-                family_type_name=family_type_name,
-                parameters=parameters,
-            )
-
-            # Add the family type to the list of types
-            type_data.append(fam_type)
-    return type_data
-
-
-def get_type_data_via_XML_from_family_file(application, family_name, family_path, use_temporary_file=True):
+def get_type_data_via_XML_from_family_file(
+    application, family_name, family_path, use_temporary_file=True
+):
     """
     Get the family type data from the family document using the XML extraction method.
     This can be used to extract the type data from a family document within a Revit session but without opening the family in Revit.
@@ -252,12 +159,19 @@ def get_type_data_via_XML_from_family_file(application, family_name, family_path
         if use_temporary_file:
             # Write the data to an XML file and read it back
             doc_xml = write_data_to_temp_xml_file_and_read_it_back(action)
+            return_value.append_message("Writing XML data to temp file.")
         else:
             dir_out = get_directory_path_from_file_path(family_path)
             family_name = get_file_name_without_ext(family_path)
-
+            return_value.append_message(
+                "Writing XML data to file: {}".format(
+                    os.path.join(dir_out, family_name + ".xml")
+                )
+            )
             # Write the data to an XML file and read it back
-            doc_xml = write_data_to_xml_file_and_read_it_back(action, os.path.join(dir_out,family_name + ".xml"))
+            doc_xml = write_data_to_xml_file_and_read_it_back(
+                action, os.path.join(dir_out, family_name + ".xml")
+            )
 
         # check if an xml document was created
         if doc_xml is None:
@@ -278,7 +192,7 @@ def get_type_data_via_XML_from_family_file(application, family_name, family_path
 def get_type_data_via_XML_from_family_object(revit_family):
     """
     Get the family type data from the family element in a REvit document using the XML extraction method.
-   
+
     :param revit_family: The Revit family object.
     :type revit_family: Autodesk.Revit.DB.Family
 
@@ -313,5 +227,5 @@ def get_type_data_via_XML_from_family_object(revit_family):
         return_value.result.append(type_data)
     except Exception as e:
         return_value.update_sep(False, "{}".format(e))
-    
+
     return return_value

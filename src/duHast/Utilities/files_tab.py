@@ -30,7 +30,7 @@ import codecs
 import csv
 from duHast.Utilities.files_io import get_first_row_in_file_no_strip
 from duHast.Utilities.files_io import get_file_name_without_ext
-from duHast.Utilities.files_csv import write_report_data_as_csv
+from duHast.Utilities.files_base import write_report_data as write_report_data_base
 
 
 def get_unique_headers(files):
@@ -67,7 +67,7 @@ def get_unique_headers(files):
     return sorted(headers_unique)
 
 
-def write_report_data(file_name, header, data, write_type="w"):
+def write_report_data(file_name, header, data, write_type="w",enforce_ascii=False,  encoding="utf-8", bom=None, quoting=csv.QUOTE_NONE,):
     """
     Function writing out report information.
 
@@ -79,17 +79,28 @@ def write_report_data(file_name, header, data, write_type="w"):
     :type data: [[str,str,..]]
     :param write_type: Flag indicating whether existing report file is to be overwritten 'w' or appended to 'a', defaults to 'w'
     :type write_type: str, optional
+    :param enforce_ascci: Flag to enforce ASCII encoding on data. If True, data will be encoded to ASCII. Defaults to False.
+    :type enforce_ascci: bool, optional
+    :param encoding: Encoding used to write the file. Defaults to 'utf-8'.
+    :type encoding: str, optional
+    :param bom: the byte order mark, Default is None (none will be written). BOM: "utf-16" = , "utf-16-le" = ,  utf-8 =
+    :type bom: str, default is NoneType
+    :param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_NONE. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
+    :type quoting: int, optional
+    
+    :return: A Result object, with the result attribute set to True if the file was written successfully, False otherwise.
+    :rtype: :class:`.Result`
     """
 
-    write_result = write_report_data_as_csv(
+    write_result = write_report_data_base(
         file_name=file_name,
         header=header,
         data=data,
         write_type=write_type,
-        enforce_ascii=True,
-        encoding="utf-8",
-        quoting=csv.QUOTE_MINIMAL,
-        bom=None,
+        enforce_ascii=enforce_ascii,
+        encoding=encoding,
+        quoting=quoting,
+        bom=bom,
         delimiter='\t',
     )
     return write_result

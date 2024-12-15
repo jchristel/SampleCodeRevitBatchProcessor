@@ -178,7 +178,9 @@ def _get_file_data_from_text_file(file_path):
     # also need to check whether this is a csv file...
     if file_path.lower().endswith(".csv"):
         # list of entries in first row
-        row = get_first_row_in_csv_file(file_path)
+        row_result = get_first_row_in_csv_file(file_path)
+        if row_result.status:
+            row = row_result.result
     else:
         row = get_first_row_in_file_no_strip(file_path)
         # make sure we get a list of entries

@@ -57,6 +57,8 @@ from duHast.Revit.Common.Utility.revit_to_data_conversion import (
     VIEW_DETAIL_LEVEL_NAME_MAPPING,
 )
 
+from duHast.UI.Objects.ProgressBase import ProgressBase
+
 
 # ----------------------  utility ----------------------
 
@@ -424,7 +426,7 @@ def get_view_settings(doc, view):
     return view_data
 
 
-def get_views_graphic_settings_data(doc, views):
+def get_views_graphic_settings_data(doc, views, progress_callback=None):
     """
     Gets view data graphic settings from the model.
 
@@ -432,18 +434,41 @@ def get_views_graphic_settings_data(doc, views):
     :type doc: Autodesk.Revit.DB.Document
     :param views: Views of which to report graphical overrides on. (View must support graphical overrides, otherwise an exception will be thrown!)
     :type views: [Autodesk.Revit.DB.View]
+    :progress_callback: A progress call back object, default is None
+    :type progress_callback: :class:`.ProgressBase` or None
     :return: list of ViewGraphicsSettings instances
     :rtype: [:class:`.ViewGraphicsSettings`]
     """
 
+    # check callback class
+    if progress_callback and isinstance(progress_callback, ProgressBase) == False:
+        raise TypeError(
+            "progress_callback needs to be inherited from ProgressBase. Got : {} instead.".format(
+                type(progress_callback)
+            )
+        )
+    
     views_settings = []
+    # progress call back
+    callback_counter = 0
 
     # loop over past in views and retrieve settings
     for view in views:
+
+        if progress_callback != None:
+            progress_callback.update(callback_counter, len(views))
+
         view_setting = get_view_settings(
             doc=doc,
             view=view,
         )
         views_settings.append(view_setting)
+
+        # increment counter
+        callback_counter += 1
+        # check for user cancel
+        if progress_callback != None:
+            if progress_callback.is_cancelled():
+                break
 
     return views_settings

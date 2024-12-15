@@ -40,12 +40,14 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
 
     def __init__(
         self,
-        root_name_path,
-        root_category_path,
-        family_name,
-        family_file_path,
-        family_type_name,
-        parameters,
+        root_name_path, # root name path ( most often the same as the family name)
+        root_category_path, # family category
+        family_name, # family name
+        family_file_path, # family file path
+        family_type_name, # family type name
+        parameters, # parameters and there values for this type
+        last_updated_date = None, # last updated date (when was the data rtrieved from the family type)
+        last_updated_time = None, # last updated time (when was the data rtrieved from the family type)
         **kwargs
     ):
 
@@ -62,3 +64,5 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
 
         self.family_type_name = family_type_name
         self.parameters = parameters
+        self.last_updated_date = last_updated_date # last updated date (when was the data rtrieved from the family type)
+        self.last_updated_time = last_updated_time # last updated time (when was the data rtrieved from the family type)

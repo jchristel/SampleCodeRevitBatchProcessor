@@ -208,7 +208,7 @@ def reload_revit_links(
                     False, "{} :: Failed with exception: {}".format(link_type_name, e)
                 )
     except Exception as e:
-        return_value.update_sep(False, "Failed with exception: ".format(e))
+        return_value.update_sep(False, "Failed with exception: {}".format(e))
     return return_value
 
 

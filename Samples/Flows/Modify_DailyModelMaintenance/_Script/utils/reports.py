@@ -72,12 +72,7 @@ from duHast.Revit.Levels.Reporting.levels_report_utils import get_level_report_d
 from duHast.Revit.Levels.Reporting.levels_report_header import REPORT_LEVELS_HEADER
 from duHast.Revit.Grids.Reporting.grid_report_utils import get_grid_report_data
 from duHast.Revit.Grids.Reporting.grids_report_header import REPORT_GRIDS_HEADER
-from duHast.Revit.Family.Utility import loadable_family_categories as rFamUtilCats
-from duHast.Revit.Family.family_utils import (
-    get_family_symbols,
-    get_family_instances_by_symbol_type_id,
-)
-from duHast.Revit.Common.parameter_get_utils import get_parameter_value_by_name
+
 from duHast.Revit.Common.Reporting.worksets_report_utils import get_workset_report_data
 from duHast.Revit.Common.Reporting.worksets_report_header import REPORT_WORKSETS_HEADER
 
@@ -111,7 +106,6 @@ from duHast.Revit.Links.Reporting import links_report_header as rLinkHeader
 from duHast.Revit.Links.Reporting import cad_links_report_utils as rLinkCadRep
 from duHast.Revit.Links.Reporting import cad_links_report_header as rLinkCadHeader
 
-from duHast.Utilities.utility import encode_utf8
 
 def report_sheets(doc, revit_file_path, output):
     """
@@ -637,8 +631,8 @@ def report_revit_link_data(doc, revit_file_path, output):
         file_name = os.path.join(
             settings.OUTPUT_FOLDER,
             get_file_name_without_ext(revit_file_path)
-            + settings.REPORT_EXTENSION_REVIT_LINKS,
-            +settings.REPORT_FILE_NAME_EXTENSION,
+            + settings.REPORT_EXTENSION_REVIT_LINKS
+            + settings.REPORT_FILE_NAME_EXTENSION
         )
         # write data to file
         write_report_data_as_csv(
@@ -693,8 +687,8 @@ def report_cad_link_data(doc, revit_file_path, output):
         file_name = os.path.join(
             settings.OUTPUT_FOLDER,
             get_file_name_without_ext(revit_file_path)
-            + settings.REPORT_EXTENSION_CAD_LINKS,
-            +settings.REPORT_FILE_NAME_EXTENSION,
+            + settings.REPORT_EXTENSION_CAD_LINKS
+            + settings.REPORT_FILE_NAME_EXTENSION
         )
         write_report_data_as_csv(
             file_name=file_name,

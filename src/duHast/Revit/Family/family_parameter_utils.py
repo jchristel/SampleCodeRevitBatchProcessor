@@ -277,8 +277,7 @@ def create_family_parameter(
 
     return return_value
 
-
-def associate_parameter_with_other_parameter(
+def associate_parameter_with_other_parameter_on_nested_family_instance(
     doc, nested_family_instance, target_parameter_name, source_parameter_name
 ):
     """

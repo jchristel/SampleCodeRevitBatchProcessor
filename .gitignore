@@ -601,3 +601,4 @@ FodyWeavers.xsd
 *.msm
 *.msp
 /.idea
+.vscode/settings.json

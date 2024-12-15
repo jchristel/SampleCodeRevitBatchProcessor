@@ -66,7 +66,11 @@ namespace PythonTests.Setup
         //duHast.Revit.Family.Data
         public static dynamic? FamilyReportReaderModule { get; set; }
         public static dynamic? FamilyMissingFamiliesModule { get; set; }
-       
+
+        //duHast.Revit.Family.Utilities
+
+        public static dynamic? FamilyXMLTypeReaderModule { get; set; }
+
 
 
         public static ScriptEngine? PythonEngine => _pythonEngine ??= InitializePythonEngine();
@@ -140,6 +144,8 @@ namespace PythonTests.Setup
 
                     Path.Combine(repoPath, @"duHast\Revit\Family\Data\family_report_reader.py"),
                     Path.Combine(repoPath, @"duHast\Revit\Family\Data\family_base_data_missing_families.py"),
+
+                    Path.Combine(repoPath, @"duHast\Revit\Family\Utility\xml_family_type_reader.py"),
                 };
 
                 foreach (var filePath in pythonFilePaths)

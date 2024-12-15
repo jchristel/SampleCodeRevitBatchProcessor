@@ -33,6 +33,7 @@ Used to store values of family parameters by family type.
 
 from duHast.Utilities.Objects.base import Base
 
+
 class FamilyTypeParameterDataStorage(Base):
 
     # data type for this class ( used in reports as first entry per row )
@@ -41,13 +42,97 @@ class FamilyTypeParameterDataStorage(Base):
     # number of properties in this class ( used in report reader function )
     number_of_properties = 5
 
-    def __init__(
-        self, name, type, type_of_parameter, units, value
-    ):
+    def __init__(self, name, type, type_of_parameter, units, value):
+        """
+        constructor
+
+        :param name: name of the family parameter
+        :param type: type of the parameter ( i.e. shared, system, custom)
+        :param type_of_parameter: unit type of the parameter ( i.e. length, area, volume, string, etc.)
+        :param units: units of the parameter, i.e. mm ( there are parameter type which do not have units i.e. string)
+        :param value: value of the parameter
+        """
+
         super(FamilyTypeParameterDataStorage, self).__init__()
 
-        self.name = name # name of the family type
-        self.type = type # type of the parameter ( i.e. shared, system, custom)
-        self.type_of_parameter = type_of_parameter # unit type of the parameter ( i.e. length, area, volume, string, etc.)
-        self.units = units # units of the parameter ( there are parameter type which do not have units i.e. string)
-        self.value = value # value of the parameter
+        self.name = name  # name of the family type
+        self.type = type  # type of the parameter ( i.e. shared, system, custom)
+        self.type_of_parameter = type_of_parameter  # unit type of the parameter ( i.e. length, area, volume, string, etc.)
+        self.units = units  # units of the parameter ( there are parameter type which do not have units i.e. string)
+        self.value = value  # value of the parameter
+
+    def __eq__(self, other):
+        """
+        equal compare
+
+        :param other: object to compare with
+        :return: True if equal, False if not
+        """
+
+        if not isinstance(other, FamilyTypeParameterDataStorage):
+            return NotImplemented
+        return (
+            self.data_type == other.data_type,
+            self.name == other.name,
+            self.type == other.type,
+            self.type_of_parameter == other.type_of_parameter,
+            self.units == other.units,
+            self.value == other.value,
+        )
+
+    def __ne__(self, other):
+        """
+        not equal compare
+
+        :param other: object to compare with
+        :return: True if not equal, False if equal
+        """
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        """
+        hash function for this class
+
+        :return: hash value
+        """
+
+        return hash(
+            (
+                self.data_type,
+                self.name,
+                self.type,
+                self.type_of_parameter,
+                self.units,
+                self.value,
+            )
+        )
+
+    def get_difference(self, other):
+        """
+        get the difference between this object and another object
+
+        :param other: object to compare with
+        :return: a list of differences
+        """
+
+        if not isinstance(other, FamilyTypeParameterDataStorage):
+            return NotImplemented
+
+        differences = []
+
+        if self.name != other.name:
+            differences.append("name: {} != {}".format(self.name, other.name))
+        if self.type != other.type:
+            differences.append("type: {} != {}".format(self.type, other.type))
+        if self.type_of_parameter != other.type_of_parameter:
+            differences.append(
+                "type_of_parameter: {} != {}".format(
+                    self.type_of_parameter, other.type_of_parameter
+                )
+            )
+        if self.units != other.units:
+            differences.append("units: {} != {}".format(self.units, other.units))
+        if self.value != other.value:
+            differences.append("value: {} != {}".format(self.value, other.value))
+
+        return differences

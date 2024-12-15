@@ -2,6 +2,9 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Class for family type data storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used as storage class when retrieving family type data from a family file.
+
 """
 
 #
@@ -40,16 +43,28 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
 
     def __init__(
         self,
-        root_name_path, # root name path ( most often the same as the family name)
-        root_category_path, # family category
-        family_name, # family name
-        family_file_path, # family file path
-        family_type_name, # family type name
-        parameters, # parameters and there values for this type
-        last_updated_date = None, # last updated date (when was the data rtrieved from the family type)
-        last_updated_time = None, # last updated time (when was the data rtrieved from the family type)
+        root_name_path,  # root name path ( most often the same as the family name)
+        root_category_path,  # family category
+        family_name,  # family name
+        family_file_path,  # family file path
+        family_type_name,  # family type name
+        parameters,  # parameters and there values for this type
+        last_updated_date=None,  # last updated date (when was the data rtrieved from the family type)
+        last_updated_time=None,  # last updated time (when was the data rtrieved from the family type)
         **kwargs
     ):
+        """
+        constructor
+
+        :param root_name_path: root name path ( most often the same as the family name)
+        :param root_category_path: family category
+        :param family_name: family name
+        :param family_file_path: family file path
+        :param family_type_name: family type name
+        :param parameters: parameters and there values for this type
+        :param last_updated_date: last updated date (when was the data retrieved from the family type)
+        :param last_updated_time: last updated time (when was the data retrieved from the family type)
+        """
 
         # data type is an argument but not used...
 
@@ -62,7 +77,164 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
             family_file_path=family_file_path,
         )
 
-        self.family_type_name = family_type_name
-        self.parameters = parameters
-        self.last_updated_date = last_updated_date # last updated date (when was the data rtrieved from the family type)
-        self.last_updated_time = last_updated_time # last updated time (when was the data rtrieved from the family type)
+        self._family_type_name = family_type_name
+        self._parameters = parameters
+        self._last_updated_date = last_updated_date  # last updated date (when was the data retrieved from the family type)
+        self._last_updated_time = last_updated_time  # last updated time (when was the data retrieved from the family type)
+
+    @property
+    def data_type(self):
+        return self.data_type
+
+    @property
+    def root_name_path(self):
+        return self.root_name_path
+
+    @property
+    def root_category_path(self):
+        return self.root_category_path
+
+    @property
+    def family_name(self):
+        return self.family_name
+
+    @property
+    def family_file_path(self):
+        return self.family_file_path
+
+    @property
+    def family_type_name(self):
+        return self._family_type_name
+
+    @property
+    def parameters(self):
+        return self._parameters
+
+    @property
+    def last_updated_date(self):
+        return self._last_updated_date
+
+    @property
+    def last_updated_time(self):
+        return self._last_updated_time
+
+    def get_parameter_by_name(self, parameter_name):
+        """
+        Returns the parameter by its name.
+
+        :param parameter_name: The name of the parameter to retrieve.
+        :return: The parameter if found, otherwise None.
+        """
+        for parameter in self._parameters:
+            if parameter.name == parameter_name:
+                return parameter
+        return None
+
+    def __eq__(self, other):
+        """
+        equal compare (ignores last updated date and time)
+
+        :param other: object to compare with
+        :return: True if equal, False if not
+        """
+
+        if not isinstance(other, FamilyTypeDataStorage):
+            return NotImplemented
+        return (
+            self.data_type == other.data_type,
+            self.root_name_path == other.root_name_path,
+            self.root_category_path == other.root_category_path,
+            self.family_name == other.family_name,
+            self.family_file_path == other.family_file_path,
+            self.family_type_name == other.family_type_name,
+            self.parameters == other.parameters,
+        )
+
+    def __ne__(self, other):
+        """
+        not equal compare (ignores last updated date and time)
+
+        :param other: object to compare with
+        :return: True if not equal, False if equal
+        """
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        """
+        hash function for this class (ignores last updated date and time)
+
+        :return: hash value
+        """
+
+        return hash(
+            (
+                self.data_type,
+                self.root_name_path,
+                self.root_category_path,
+                self.family_name,
+                self.family_file_path,
+                self.family_type_name,
+                self.parameters,
+            )
+        )
+
+    def get_difference(self, other):
+        """
+        get the difference between this object and another family type data storage object
+
+        :param other: object to compare with
+        :return: list of properties that are different
+        """
+
+        if not isinstance(other, FamilyTypeDataStorage):
+            return NotImplemented
+
+        diff = []
+        if self.data_type != other.data_type:
+            diff.append("data_type: {} != {}".format(self.data_type, other.data_type))
+        if self.root_name_path != other.root_name_path:
+            diff.append(
+                "root_name_path: {} != {}".format(
+                    self.root_name_path, other.root_name_path
+                )
+            )
+        if self.root_category_path != other.root_category_path:
+            diff.append(
+                "root_category_path: {} != {}".format(
+                    self.root_category_path, other.root_category_path
+                )
+            )
+        if self.family_name != other.family_name:
+            diff.append(
+                "family_name: {} != {}".format(self.family_name, other.family_name)
+            )
+        if self.family_file_path != other.family_file_path:
+            diff.append(
+                "family_file_path: {} != {}".format(
+                    self.family_file_path, other.family_file_path
+                )
+            )
+        if self.family_type_name != other.family_type_name:
+            diff.append(
+                "family_type_name: {} != {}".format(
+                    self.family_type_name, other.family_type_name
+                )
+            )
+
+        # compare parameters by their names
+        # if a match is found compare the values
+
+        for param in self.parameters:
+            param_other = other.get_parameter_by_name(param.name)
+            if param_other is None:
+                diff.append("parameter {} not found in other object".format(param.name))
+            else:
+                if param != param_other:
+                    differences = param.get_difference(param_other)
+                    for difference in differences:
+                        diff.append(
+                            "parameter {} is different: {}".format(
+                                param.name, difference
+                            )
+                        )
+        return diff

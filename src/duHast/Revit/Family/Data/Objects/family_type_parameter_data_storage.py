@@ -113,6 +113,7 @@ class FamilyTypeParameterDataStorage(Base):
 
         :param other: object to compare with
         :return: a list of differences
+        :rtype: [str]
         """
 
         if not isinstance(other, FamilyTypeParameterDataStorage):

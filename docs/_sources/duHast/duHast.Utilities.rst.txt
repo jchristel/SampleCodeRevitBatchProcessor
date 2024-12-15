@@ -60,6 +60,14 @@ duHast.Utilities.directory\_io module
    :undoc-members:
    :show-inheritance:
 
+duHast.Utilities.files\_base module
+-----------------------------------
+
+.. automodule:: duHast.Utilities.files_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Utilities.files\_combine module
 --------------------------------------
 

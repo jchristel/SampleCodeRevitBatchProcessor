@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Utilities package &#8212; Sample Code Revit Batch Processor 1.1.10 documentation</title>
+    <title>duHast.Utilities package &#8212; Sample Code Revit Batch Processor 1.1.11 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.10 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.11 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
     <link rel="next" title="duHast.Utilities.Objects package" href="duHast.Utilities.Objects.html" />
     <link rel="prev" title="duHast.UI.files_select package" href="duHast.UI.files_select.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.10 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.11 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Utilities package</h1></div>
@@ -964,6 +964,127 @@ Checks whether folder exists and if not attempts to create it.</p>
 </dd></dl>
 
 </section>
+<section id="module-duHast.Utilities.files_base">
+<span id="duhast-utilities-files-base-module"></span><h2>duHast.Utilities.files_base module<a class="headerlink" href="#module-duHast.Utilities.files_base" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-relating-to-text-files">
+<h3>Helper functions relating to text files.<a class="headerlink" href="#helper-functions-relating-to-text-files" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_base.write_report_data">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_base.</span></span><span class="sig-name descname"><span class="pre">write_report_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforce_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quoting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_base.write_report_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function writing out report information as CSV file.
+:param file_name: The reports fully qualified file path.
+:type file_name: str
+:param header: list of column headers
+:type header: list of str
+:param data: list of list of strings representing row data
+:type data: [[str,str,..]]
+:param write_type: Flag indicating whether existing report file is to be overwritten ‘w’ or appended to ‘a’, defaults to ‘w’
+:type write_type: str, optional
+:param enforce_ascci: Flag to enforce ASCII encoding on data. If True, data will be encoded to ASCII. Defaults to False.
+:type enforce_ascci: bool, optional
+:param encoding: Encoding used to write the file. Defaults to ‘utf-8’.
+:type encoding: str, optional
+:param bom: the byte order mark, Default is None (none will be written). BOM: “utf-16” = , “utf-16-le” = ,  utf-8 =
+:type bom: str, default is NoneType
+:param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_NONE. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
+:type quoting: int, optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A Result object, with the result attribute set to True if the file was written successfully, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_base.read_column_based_text_file_with_encoding">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_base.</span></span><span class="sig-name descname"><span class="pre">read_column_based_text_file_with_encoding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increase_max_field_size_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_base.read_column_based_text_file_with_encoding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a column based text file, attempting to detect and handle encoding, including BOMs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) – The fully qualified file path to the csv file.</p></li>
+<li><p><strong>increase_max_field_size_limit</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to increase the max field size limit. Defaults to False.</p></li>
+<li><p><strong>delimiter</strong> (<em>str</em><em>, </em><em>optional</em>) – The delimiter used in the text file. Defaults to ‘,’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Result object, with the result attribute set to a list of list of strings representing the data in each row.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_base.process_txt_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_base.</span></span><span class="sig-name descname"><span class="pre">process_txt_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_base.process_txt_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a txt file by removing null bytes and then reading its content.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) – The path to the CSV file to be processed.</p></li>
+<li><p><strong>delimiter</strong> (<em>str</em><em>, </em><em>optional</em>) – The delimiter used in the text file. Defaults to ‘,’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Result object, with the result attribute set to a list of list of strings representing the data in each row.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>:class:<a href="#id1"><span class="problematic" id="id2">`</span></a>.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_base.read_column_based_text_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_base.</span></span><span class="sig-name descname"><span class="pre">read_column_based_text_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increase_max_field_size_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_base.read_column_based_text_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a csv file into a list of rows, where each row is another list.</p>
+<p>Attempts to read the file with encoding first, then without encoding if that fails. Encoding is attempted first because it is more likely to be successful.
+The following encodings are attempted: ‘utf-8-sig’, ‘utf-16’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) – The fully qualified file path to the csv file.</p></li>
+<li><p><strong>increase_max_field_size_limit</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to increase the max field size limit. Defaults to False.</p></li>
+<li><p><strong>delimiter</strong> (<em>str</em><em>, </em><em>optional</em>) – The delimiter used in the text file. Defaults to ‘,’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Result object, with the result attribute set to a list of list of strings representing the data in each row.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_base.get_first_row_in_column_based_text_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_base.</span></span><span class="sig-name descname"><span class="pre">get_first_row_in_column_based_text_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_base.get_first_row_in_column_based_text_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the first line of a column based text file and returns it as a list of strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) – The fully qualified file path.</p></li>
+<li><p><strong>delimiter</strong> (<em>str</em><em>, </em><em>optional</em>) – The delimiter used in the text file. Defaults to ‘,’.</p></li>
+<li><p><strong>encoding</strong> (<em>str</em><em>, </em><em>optional</em>) – Encoding used to read the file. Defaults to ‘utf-8’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Result object, with the first row of a text file in its result attribute.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Utilities.files_combine">
 <span id="duhast-utilities-files-combine-module"></span><h2>duHast.Utilities.files_combine module<a class="headerlink" href="#module-duHast.Utilities.files_combine" title="Permalink to this heading">¶</a></h2>
 <section id="helper-functions-relating-to-combining-text-files">
@@ -1182,8 +1303,8 @@ Assumes:</p>
 <dd><p>Reads the first line of a csv text file and returns it as a list of strings
 :param filePath: The fully qualified file path.
 :type filePath: str
-:return: The first row of a text file.
-:rtype: str</p>
+:return: A Result object, with the result attribute set to True if the first row was retrieved successfully, False otherwise.
+:rtype: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd></dl>
 
 <dl class="py function">
@@ -1206,6 +1327,14 @@ Assumes:</p>
 :type bom: str, default is NoneType
 :param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_NONE. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
 :type quoting: int, optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A Result object, with the result attribute set to True if the file was written successfully, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -1669,13 +1798,30 @@ value: lit of str</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_io.remove_null_bytes">
 <span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_io.</span></span><span class="sig-name descname"><span class="pre">remove_null_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.remove_null_bytes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove null bytes from a source CSV file and write to a temporary file.</p>
+<dd><p>Remove null bytes from a source txt file and write to a temporary file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>file_path</strong> (<em>str</em>) – The path to the original CSV file.</p></li>
+<li><p><strong>file_path</strong> (<em>str</em>) – The path to the original txt file.</p></li>
 <li><p><strong>temp_file_path</strong> (<em>str</em>) – The path to the temporary file where cleaned data is written.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.is_last_char_newline">
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_io.</span></span><span class="sig-name descname"><span class="pre">is_last_char_newline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.is_last_char_newline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the last character in a file is a newline character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The fully qualified file path.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the last character is a newline, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1779,7 +1925,7 @@ Assumes:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Utilities.files_tab.write_report_data">
-<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_tab.</span></span><span class="sig-name descname"><span class="pre">write_report_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_tab.write_report_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Utilities.files_tab.</span></span><span class="sig-name descname"><span class="pre">write_report_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforce_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quoting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_tab.write_report_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function writing out report information.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1788,7 +1934,17 @@ Assumes:</p>
 <li><p><strong>header</strong> (<em>list</em><em> of </em><em>str</em>) – list of column headers</p></li>
 <li><p><strong>data</strong> (<em>[</em><em>[</em><em>str</em><em>,</em><em>str</em><em>,</em><em>..</em><em>]</em><em>]</em>) – list of list of strings representing row data</p></li>
 <li><p><strong>write_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Flag indicating whether existing report file is to be overwritten ‘w’ or appended to ‘a’, defaults to ‘w’</p></li>
+<li><p><strong>enforce_ascci</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to enforce ASCII encoding on data. If True, data will be encoded to ASCII. Defaults to False.</p></li>
+<li><p><strong>encoding</strong> (<em>str</em><em>, </em><em>optional</em>) – Encoding used to write the file. Defaults to ‘utf-8’.</p></li>
+<li><p><strong>bom</strong> (<em>str</em><em>, </em><em>default is NoneType</em>) – the byte order mark, Default is None (none will be written). BOM: “utf-16” = , “utf-16-le” = ,  utf-8 =</p></li>
+<li><p><strong>quoting</strong> (<em>int</em><em>, </em><em>optional</em>) – Quoting style used by the csv writer. Defaults to csv.QUOTE_NONE. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Result object, with the result attribute set to True if the file was written successfully, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

@@ -1,0 +1,18 @@
+duHast.Revit.RBP package
+========================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   duHast.Revit.RBP.Objects
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.RBP
+   :members:
+   :undoc-members:
+   :show-inheritance:

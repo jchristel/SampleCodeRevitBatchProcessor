@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Family.Utility package &#8212; Sample Code Revit Batch Processor 1.1.10 documentation</title>
+    <title>duHast.Revit.Family.Utility package &#8212; Sample Code Revit Batch Processor 1.1.11 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.10 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.11 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Family package" href="duHast.Revit.Family.html" />
     <link rel="next" title="duHast.Revit.Floors package" href="duHast.Revit.Floors.html" />
     <link rel="prev" title="duHast.Revit.Family.Reporting.Objects package" href="duHast.Revit.Family.Reporting.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.10 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.11 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Family.Utility package</h1></div>
@@ -124,6 +124,51 @@ i.e. built in revit type settings</p>
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.loadable_family_categories.</span></span><span class="sig-name descname"><span class="pre">CATEGORIES_LOADABLE_TAGS_OTHER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_CalloutHeads,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_ElevationMarks,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_GenericAnnotation,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_GridHeads,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_LevelHeads,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_ReferenceViewerSymbol,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_SectionHeads,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_SpotElevSymbols,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_ViewportLabel]</span></em><a class="headerlink" href="#duHast.Revit.Family.Utility.loadable_family_categories.CATEGORIES_LOADABLE_TAGS_OTHER" title="Permalink to this definition">¶</a></dt>
 <dd><p>Contains 2D family categories which needed specific purge code, rather then checking for unplaced family instances
 i.e. built in revit type settings</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Utility.xml_family_type_reader">
+<span id="duhast-revit-family-utility-xml-family-type-reader-module"></span><h2>duHast.Revit.Family.Utility.xml_family_type_reader module<a class="headerlink" href="#module-duHast.Revit.Family.Utility.xml_family_type_reader" title="Permalink to this heading">¶</a></h2>
+<section id="a-module-with-helper-function-to-read-xml-family-type-data-into-storage-objects">
+<h3>A module with helper function to read xml family type data into storage objects.<a class="headerlink" href="#a-module-with-helper-function-to-read-xml-family-type-data-into-storage-objects" title="Permalink to this heading">¶</a></h3>
+<p>Separate module for ease of testing and maintainability.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_family_type_reader.read_xml_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_family_type_reader.</span></span><span class="sig-name descname"><span class="pre">read_xml_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_family_type_reader.read_xml_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read xml data from a file into a XmlDocument object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The path to the file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The data read back from the XML file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XmlDocument or None if an error occurred.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_family_type_reader.read_xml_into_storage">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_family_type_reader.</span></span><span class="sig-name descname"><span class="pre">read_xml_into_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_xml</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_family_type_reader.read_xml_into_storage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the XML data into the storage object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc_xml</strong> (<em>XmlDocument</em>) – The XML document.</p></li>
+<li><p><strong>family_name</strong> (<em>str</em>) – The name of the family.</p></li>
+<li><p><strong>family_path</strong> (<em>str</em>) – The path of the family file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of family type data objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage" title="duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage">FamilyTypeDataStorage</a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

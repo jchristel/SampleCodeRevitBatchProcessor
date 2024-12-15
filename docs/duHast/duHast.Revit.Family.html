@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Family package &#8212; Sample Code Revit Batch Processor 1.1.10 documentation</title>
+    <title>duHast.Revit.Family package &#8212; Sample Code Revit Batch Processor 1.1.11 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.10 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.11 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Family.Data package" href="duHast.Revit.Family.Data.html" />
     <link rel="prev" title="duHast.Revit.ExtensibleSchemas package" href="duHast.Revit.ExtensibleSchemas.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.10 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.11 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Family package</h1></div>
@@ -360,6 +360,12 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#duHast.Revit.Family.Utility.loadable_family_categories.CATEGORIES_LOADABLE_TAGS_OTHER"><code class="docutils literal notranslate"><span class="pre">CATEGORIES_LOADABLE_TAGS_OTHER</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.Utility.html#module-duHast.Revit.Family.Utility.xml_family_type_reader">duHast.Revit.Family.Utility.xml_family_type_reader module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#a-module-with-helper-function-to-read-xml-family-type-data-into-storage-objects">A module with helper function to read xml family type data into storage objects.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#duHast.Revit.Family.Utility.xml_family_type_reader.read_xml_file"><code class="docutils literal notranslate"><span class="pre">read_xml_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Family.Utility.html#duHast.Revit.Family.Utility.xml_family_type_reader.read_xml_into_storage"><code class="docutils literal notranslate"><span class="pre">read_xml_into_storage()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Family.Utility.html#module-duHast.Revit.Family.Utility">Module contents</a></li>
 </ul>
 </li>
@@ -686,8 +692,8 @@ Use the modify_action parameter to provide a function that modifies the family i
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Family.family_parameter_utils.associate_parameter_with_other_parameter">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_parameter_utils.</span></span><span class="sig-name descname"><span class="pre">associate_parameter_with_other_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nested_family_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_parameter_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_parameter_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_parameter_utils.associate_parameter_with_other_parameter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_parameter_utils.associate_parameter_with_other_parameter_on_nested_family_instance">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_parameter_utils.</span></span><span class="sig-name descname"><span class="pre">associate_parameter_with_other_parameter_on_nested_family_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nested_family_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_parameter_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_parameter_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_parameter_utils.associate_parameter_with_other_parameter_on_nested_family_instance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Associate a nested family instance parameter ( can be type or instance) with a host family parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1000,27 +1006,6 @@ with type parameter values in family.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>XmlDocument or None if an error occurred.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Family.family_types_get_data_from_xml.read_xml_into_storage">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_types_get_data_from_xml.</span></span><span class="sig-name descname"><span class="pre">read_xml_into_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_xml</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_types_get_data_from_xml.read_xml_into_storage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the XML data into the storage object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>doc_xml</strong> (<em>XmlDocument</em>) – The XML document.</p></li>
-<li><p><strong>family_name</strong> (<em>str</em>) – The name of the family.</p></li>
-<li><p><strong>family_path</strong> (<em>str</em>) – The path of the family file.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of family type data objects.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage" title="duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage">FamilyTypeDataStorage</a>]</p>
 </dd>
 </dl>
 </dd></dl>

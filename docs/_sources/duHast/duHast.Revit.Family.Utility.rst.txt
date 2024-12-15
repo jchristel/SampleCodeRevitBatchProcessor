@@ -12,6 +12,14 @@ duHast.Revit.Family.Utility.loadable\_family\_categories module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.Utility.xml\_family\_type\_reader module
+------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Utility.xml_family_type_reader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

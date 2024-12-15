@@ -1,0 +1,21 @@
+duHast.Revit.RBP.Objects package
+================================
+
+Submodules
+----------
+
+duHast.Revit.RBP.Objects.ProgressRBPConsole module
+--------------------------------------------------
+
+.. automodule:: duHast.Revit.RBP.Objects.ProgressRBPConsole
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: duHast.Revit.RBP.Objects
+   :members:
+   :undoc-members:
+   :show-inheritance:

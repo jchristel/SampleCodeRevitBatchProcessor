@@ -29,6 +29,7 @@ Subpackages
    duHast.Revit.Materials
    duHast.Revit.ModelHealth
    duHast.Revit.Purge
+   duHast.Revit.RBP
    duHast.Revit.Railings
    duHast.Revit.Ramps
    duHast.Revit.Revisions

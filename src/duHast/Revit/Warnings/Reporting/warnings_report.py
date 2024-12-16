@@ -115,7 +115,7 @@ def convert_warnings_data_to_list(warnings_data):
                 dummy.time,
                 dummy.id.ToString(), # c# guid
                 str(len(warnings_data[key])),
-                dummy.description,
+                dummy.description.replace("\"", "'"), # remove double quotes
                 str(number_elements_affected),
             ]
         )

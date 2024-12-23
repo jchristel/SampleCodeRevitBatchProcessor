@@ -1,0 +1,25 @@
+# bundle title
+title: "Line Patterns"
+
+# bundle tooltip
+tooltip: | 
+    Purges unused line patterns from the model. 
+    Warning this process can take mutlitple hours to finish depending on the number of categories and subcategories in the model!
+    ( This process will attempt to delete every line pattern in the model. If Revit reports more than 1 change, i.e. a catgeory or sub category has changed when 
+    the pattern was deleted, the action will be undone. This is however a very time consuming process.)
+
+
+
+# bundle author
+author: 
+  - Jan Christel
+
+
+# bundle highlighting ('new' or 'updated')
+# Revit UI will show a orange marker on the button and a border around the tooltip
+highlight: new      # highlight as new
+#highlight: updated  # highlight as updated
+
+
+# bundle help url
+help_url: "https://www.youtube.com/watch?v=H7b8hjHbauE&t=8s&list=PLc_1PNcpnV57FWI6G8Cd09umHpSOzvamf"

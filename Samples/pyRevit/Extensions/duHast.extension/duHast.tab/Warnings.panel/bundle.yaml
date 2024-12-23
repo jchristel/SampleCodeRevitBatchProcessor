@@ -1,0 +1,10 @@
+layout:
+  - Solve Warnings
+  - Highlight Warnings
+
+# bundle tooltip
+tooltip: Warning related scripts
+
+# bundle author
+author: 
+  - Jan Christel

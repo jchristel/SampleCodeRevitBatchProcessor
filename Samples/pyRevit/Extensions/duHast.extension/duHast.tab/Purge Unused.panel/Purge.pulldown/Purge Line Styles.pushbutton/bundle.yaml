@@ -1,0 +1,25 @@
+# bundle title
+title: "Line Styles"
+
+# bundle tooltip
+tooltip: | 
+    Purges unused line styless from the model. 
+    Warning this process can take up to an hours to finish depending on the number of line styles in the model!
+    ( This process will attempt to delete every line style in the model. If Revit reports more than 1 change when 
+    the style was deleted, the action will be undone. This is however a very time consuming process.)
+
+
+
+# bundle author
+author: 
+  - Jan Christel
+
+
+# bundle highlighting ('new' or 'updated')
+# Revit UI will show a orange marker on the button and a border around the tooltip
+highlight: new      # highlight as new
+#highlight: updated  # highlight as updated
+
+
+# bundle help url
+help_url: "https://www.youtube.com/watch?v=H7b8hjHbauE&t=8s&list=PLc_1PNcpnV57FWI6G8Cd09umHpSOzvamf"

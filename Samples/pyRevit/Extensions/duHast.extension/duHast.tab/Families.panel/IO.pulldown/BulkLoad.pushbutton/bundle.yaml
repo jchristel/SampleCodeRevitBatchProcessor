@@ -1,0 +1,22 @@
+# bundle title
+title: "Load Them All"
+
+# bundle tooltip
+tooltip: | 
+  Loads all families from the a folder and its sub-folders into a project supressing any warnings along the way.
+  Note: Any duplicate famuilies in that folder structure will be skipped.
+
+
+# bundle author
+author: 
+  - Jan Christel
+
+
+# bundle highlighting ('new' or 'updated')
+# Revit UI will show a orange marker on the button and a border around the tooltip
+#highlight: new      # highlight as new
+highlight: updated  # highlight as updated
+
+
+# bundle help url
+help_url: "https://www.youtube.com/watch?v=H7b8hjHbauE&t=8s&list=PLc_1PNcpnV57FWI6G8Cd09umHpSOzvamf"

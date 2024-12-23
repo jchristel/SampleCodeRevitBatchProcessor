@@ -1,0 +1,13 @@
+layout:
+  - RenameLoadedFamilies
+  - ----------
+  - RenameFamiliesInFolder
+  
+
+# bundle tooltip
+tooltip: Some family renaming scripts.
+
+
+# bundle author
+author: 
+  - Jan Christel

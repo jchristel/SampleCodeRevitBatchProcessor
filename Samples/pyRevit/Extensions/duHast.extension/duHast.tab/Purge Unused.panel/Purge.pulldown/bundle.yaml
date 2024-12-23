@@ -1,0 +1,27 @@
+layout:
+  - Purge Shared Parameters
+  - Purge Shared Parameters By Selection
+  - --------
+  - Purge Line Patterns
+  - Purge Line Patterns By Selection
+  - Purge Line Styles
+  - Purge Line Styles By Selection
+  - --------
+  - Purge Fill Patterns
+  - Purge Fill Patterns By Selection
+  - --------
+  - Purge Unused Templates
+  - Purge Unused Filters
+  - ---------
+  - Purge Unused Schedules
+  - Purge Unused Legends
+  - Purge Unplaced Views
+
+# bundle tooltip
+tooltip: |
+    Purging unused Items in the model
+
+
+# bundle author
+author: 
+  - Jan Christel

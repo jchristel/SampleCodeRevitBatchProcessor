@@ -1,0 +1,26 @@
+# bundle title
+title: "Rename Families In Folder"
+
+# bundle tooltip
+tooltip:  | 
+  Renames families located in a folder based on a csv file. The csv file needs to have a header row and the following columns 
+  
+  - 0 the current family name
+  - 1 File path ( this column can stay empty )
+  - 2 The revit catgeory i.e. Furniture
+  - 3 the new family name
+
+
+# bundle author
+author: 
+  - Jan Christel
+
+
+# bundle highlighting ('new' or 'updated')
+# Revit UI will show a orange marker on the button and a border around the tooltip
+#highlight: new      # highlight as new
+#highlight: updated  # highlight as updated
+
+
+# bundle help url
+help_url: "https://www.youtube.com/watch?v=H7b8hjHbauE&t=8s&list=PLc_1PNcpnV57FWI6G8Cd09umHpSOzvamf"

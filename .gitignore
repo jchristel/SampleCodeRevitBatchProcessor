@@ -602,3 +602,10 @@ FodyWeavers.xsd
 *.msp
 /.idea
 .vscode/settings.json
+
+
+# inlcude pyRevit sample directory
+
+# Include the specific .lib folders
+!Samples/pyRevit/Extensions/duHast.lib
+!Samples/pyRevit/Extensions/duHast.extension/duHast.tab/lib

@@ -1,0 +1,18 @@
+layout:
+  - Room Separation Lines Long
+  - Room Separation Lines Short
+  - --------
+  - Area Separation Lines Long
+  - Area Separation Lines Short
+  - --------
+  - Room Tags Outside Room
+  - -------
+  - Duplicate Marks
+  
+# bundle tooltip
+tooltip: Anything relating to solving some specific warnings in Revit.
+
+
+# bundle author
+author: 
+  - Jan Christel

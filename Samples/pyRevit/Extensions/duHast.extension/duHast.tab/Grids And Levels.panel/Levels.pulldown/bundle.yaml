@@ -1,0 +1,17 @@
+layout:
+  - All 2D
+  - All Headers Off
+  - ----------
+  - All 0 Headers On
+  - All 1 Headers On
+  - ----------
+  - Toggle 0 Headers By Selection
+  - Toggle 1 Headers By Selection
+
+# bundle tooltip
+tooltip: Anything relating to levels visibility and looks
+
+
+# bundle author
+author: 
+  - Jan Christel

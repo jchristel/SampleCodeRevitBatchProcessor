@@ -1,0 +1,20 @@
+# bundle title
+title: "Apply Graphic Overrides"
+
+# bundle tooltip
+tooltip: Apply selected model category graphic overrides settings from one template to many.
+
+
+# bundle author
+author: 
+  - Jan Christel
+
+
+# bundle highlighting ('new' or 'updated')
+# Revit UI will show a orange marker on the button and a border around the tooltip
+#highlight: new      # highlight as new
+#highlight: updated  # highlight as updated
+
+
+# bundle help url
+help_url: "https://www.youtube.com/watch?v=H7b8hjHbauE&t=8s&list=PLc_1PNcpnV57FWI6G8Cd09umHpSOzvamf"

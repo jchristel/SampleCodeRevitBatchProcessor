@@ -1,0 +1,24 @@
+# bundle title
+title: "Report Area Lines with Warnings"
+
+# bundle tooltip
+tooltip: | 
+  Lists all area lines with warnings:
+  - area scheme they belong to
+  - the level they are placed on
+  To make it easier to find them in the model.
+
+
+# bundle author
+author: 
+  - Jan Christel
+
+
+# bundle highlighting ('new' or 'updated')
+# Revit UI will show a orange marker on the button and a border around the tooltip
+#highlight: new      # highlight as new
+highlight: updated  # highlight as updated
+
+
+# bundle help url
+help_url: "https://www.youtube.com/watch?v=H7b8hjHbauE&t=8s&list=PLc_1PNcpnV57FWI6G8Cd09umHpSOzvamf"

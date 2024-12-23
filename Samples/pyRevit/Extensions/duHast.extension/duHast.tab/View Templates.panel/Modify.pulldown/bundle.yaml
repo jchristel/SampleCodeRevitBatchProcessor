@@ -1,0 +1,14 @@
+layout:
+  - Apply Filter Overrides
+  - Add And Apply Filter Overrides
+  - Delete Filters
+  - ----------
+  - Apply Graphic Overrides
+
+# bundle tooltip
+tooltip: Anything relating to view template settings
+
+
+# bundle author
+author: 
+  - Jan Christel

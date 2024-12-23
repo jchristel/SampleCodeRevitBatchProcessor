@@ -1,0 +1,16 @@
+layout:
+  - Area Lines
+  - Highlight Area Lines
+  - Remove Highlight Area Lines
+  - -------
+  - Room Lines
+  - Highlight Room Lines
+  - Remove Highlight Room Lines
+  
+# bundle tooltip
+tooltip: Misc scripts helping to identify elements with warnings.
+
+
+# bundle author
+author: 
+  - Jan Christel

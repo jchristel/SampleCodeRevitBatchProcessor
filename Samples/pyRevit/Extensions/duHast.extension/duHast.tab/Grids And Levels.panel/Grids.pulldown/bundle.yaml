@@ -1,0 +1,20 @@
+layout:
+  - All 2D
+  - All Bubbles Off
+  - ----------
+  - All 0 Bubbles On
+  - All 1 Bubbles On
+  - ----------
+  - Toggle 0 Bubbles By Selection
+  - Toggle 1 Bubbles By Selection
+  - ----------
+  - Extend Grids
+  - Propagate Grids
+
+# bundle tooltip
+tooltip: Anything relating to grid visibility and looks
+
+
+# bundle author
+author: 
+  - Jan Christel

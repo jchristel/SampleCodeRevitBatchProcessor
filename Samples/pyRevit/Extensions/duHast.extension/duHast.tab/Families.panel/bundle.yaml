@@ -1,0 +1,15 @@
+layout:
+  - Reload
+  - Rename
+  - IO
+  - -------
+  - CatalogueFiles
+  - -------
+  - Report
+
+# bundle tooltip
+tooltip: It's all in the family.
+
+# bundle author
+author: 
+  - Jan Christel

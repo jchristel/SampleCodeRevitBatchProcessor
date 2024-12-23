@@ -1,0 +1,11 @@
+layout:
+  - Modify
+  - Import Export
+
+# bundle tooltip
+tooltip: View template related scripts
+
+
+# bundle author
+author: 
+  - Jan Christel

@@ -1,0 +1,12 @@
+layout:
+  - DeleteParametersFromCatalogueFile
+  - ----------
+  - ExportCatalogueFile
+
+# bundle tooltip
+tooltip: Some scripts relating to family catalogue files. Need to be run within a family!
+
+
+# bundle author
+author: 
+  - Jan Christel

@@ -1,0 +1,12 @@
+layout:
+  - Export View Templates
+  - --------
+  - Import View Templates
+  
+# bundle tooltip
+tooltip: Anything relating to exporting specific view templates from one file and importing same into other files.
+
+
+# bundle author
+author: 
+  - Jan Christel

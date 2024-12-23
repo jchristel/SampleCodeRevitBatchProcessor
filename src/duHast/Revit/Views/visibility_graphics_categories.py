@@ -45,7 +45,7 @@ def get_categories_and_subcategories_from_model(doc):
     :type doc: Autodesk.Revit.DB.Document
 
     :return: dictionary of categories
-    :rtype: {str:category_storage}
+    :rtype: {str: :class:`.RevitCategoryOverride`}
     """
 
     categories_dic = {}

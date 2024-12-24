@@ -39,6 +39,8 @@ from duHast.Utilities.files_tab import read_tab_separated_file, write_report_dat
 from duHast.Utilities.files_csv import get_unique_headers as get_unique_headers_csv
 from duHast.Utilities.files_csv import read_csv_file, write_report_data_as_csv
 from duHast.Utilities.files_json import read_json_data_from_file, write_json_to_file
+from duHast.Utilities.files_base_read import read_column_based_text_file
+from duHast.Utilities.files_base_write import write_report_data as write_report_data_base
 
 
 def combine_files(
@@ -55,7 +57,7 @@ def combine_files(
     Combines multiple text files into a single new file.
     Assumes:
 
-    - files have a header row followed by data rows
+    - all files have a header row followed by data rows
     - same number of headers (columns) in each files.
     - files have the same header names per column
     - files are encoded in UTF-8!
@@ -89,38 +91,58 @@ def combine_files(
         if(file_getter is None):
             return_value.update_sep(False, "No file getter function provided.")
             return return_value
+        
         # get files to combine using file getter function
         file_list = file_getter(folder_path, file_prefix, file_suffix, file_extension)
         
         # loop over file and combine...
         # newlines is set to '' to avoid double newlines on Windows
-        result = open(os.path.join(folder_path, output_file_name), "w", newline='', encoding="utf-8")
+        #result = open(os.path.join(folder_path, output_file_name), "w", newline='', encoding="utf-8")
+        
         try:
             # lineterminator='\n' is set to avoid double newlines on Windows
-            writer = csv.writer(result, delimiter=delimiter, quoting=quoting, lineterminator='\n')
+            #writer = csv.writer(result, delimiter=delimiter, quoting=quoting, lineterminator='\n')
 
             for file_index, file_ in enumerate(file_list):
                 try:
-                    line_counter = 0
-                    with codecs.open(file_, "r", encoding="utf-8") as fp:
-                        reader = csv.reader(fp, delimiter=delimiter)
-                        lines = list(reader)
-                        for i, line in enumerate(lines):
-                            # ensure header from first file is copied over
-                            if file_index == 0 and line_counter == 0 or line_counter != 0:
-                                if file_index == len(file_list) - 1 and i == len(lines) - 1:
-                                    # Write the last row of the last file without a newline character
-                                    result.write(delimiter.join(line))
-                                else:
-                                    writer.writerow(line)
-                            line_counter += 1
-
-                    return_value.append_message("File: {} combined.".format(file_))
+                    #line_counter = 0
+                    
+                    # attempt to read the file
+                    lines_result = read_column_based_text_file(file_, delimiter=delimiter)
+                    if lines_result.status is False:
+                        return_value.update_sep(False, "Failed to read file: {} with {}".format(file_, lines_result.message))
+                        # skip to next file
+                        continue
+                    
+                    # get the lines read from the file
+                    lines = lines_result.result
+                    
+                    # determine write mode, default is append
+                    write_mode = "a"
+                    if file_index == 0:
+                        write_mode = "w"
+                        
+                    # determine if first row is header row and should be skipped in the write for any file other than the first
+                    if file_index != 0:
+                        lines = lines[1:]
+                    
+                    write_result = write_report_data_base(
+                        file_name=os.path.join(folder_path, output_file_name),
+                        header=[],
+                        data=lines,
+                        write_type=write_mode,
+                        delimiter=delimiter,
+                        quoting=quoting
+                    )
+                    
+                    return_value.update(write_result)
                 except Exception as e:
                     return_value.update_sep(False, "File: {} failed to combine with exception: {}".format(file_, e))
-        finally:
-            # make sure to close the file
-            result.close()
+        except Exception as e:
+                    return_value.update_sep(False, "Failed to combine with exception: {}".format(e))
+        # finally:
+        #     # make sure to close the file
+        #     result.close()
                     
     except Exception as e:
         return_value.update_sep(False, "Failed to combine files with exception: {}".format(e))
@@ -151,51 +173,73 @@ def append_to_file(source_file, append_file, ignore_first_row=False, delimiter="
 
     return_value = Result()
     
-    # set a flag to check if we need to add a newline before writing
-    need_newline = False
-    # if in append mode, check if the last character is a newline
-    if not is_last_char_newline(source_file):
-        # if not, we need to add a newline before writing
-        need_newline = True
-        return_value.append_message(
-            "File: {} is in append mode, but last character is not a newline.".format(
-                source_file
-            )
-        )
+    # # set a flag to check if we need to add a newline before writing
+    # need_newline = False
+    # # if in append mode, check if the last character is a newline
+    # if not is_last_char_newline(source_file):
+    #     # if not, we need to add a newline before writing
+    #     need_newline = True
+    #     return_value.append_message(
+    #         "File: {} is in append mode, but last character is not a newline.".format(
+    #             source_file
+    #         )
+    #     )
         
     try:
         # read file to append into memory...hopefully will never get in GB range in terms of file size
-        with open(append_file, "r", encoding="utf-8") as fp:
-            reader = csv.reader(fp, delimiter=delimiter)
-            lines = list(reader)
-
-        # newlines is set to '' to avoid double newlines on Windows
-        with open(source_file, "a", encoding="utf-8", newline='') as f:
-            # lineterminator='\n' is set to avoid double newlines on Windows
-            writer = csv.writer(f, delimiter=delimiter, quoting=quoting, lineterminator='\n')
+        lines_result = read_column_based_text_file(append_file, delimiter=delimiter)
+        if lines_result.status is False:
+            return_value.update_sep(False, "Failed to read file: {} with {}".format(append_file, lines_result.message))
+            return return_value
+        
+        # get the lines read from the file depending on whether the first row is to be ignored
+        lines = []
+        if ignore_first_row:
+            # remove the first row from the lines to be appended
+            lines = lines_result.result[1:]
+        else:
+            # get the lines from the file
+            lines = lines_result.result
+        
+        # prepare data to be written to file
+        write_result = write_report_data_base(
+            file_name=source_file,
+            header=[],
+            data=lines,
+            write_type="a",
+            delimiter=delimiter,
+            quoting=quoting
+        )
+                    
+        return_value.update(write_result)
+        
+        # # newlines is set to '' to avoid double newlines on Windows
+        # with open(source_file, "a", encoding="utf-8", newline='') as f:
+        #     # lineterminator='\n' is set to avoid double newlines on Windows
+        #     writer = csv.writer(f, delimiter=delimiter, quoting=quoting, lineterminator='\n')
             
-            # check if a new line is required at the beginning of the write
-            if need_newline:
-                f.write('\n')
+        #     # check if a new line is required at the beginning of the write
+        #     if need_newline:
+        #         f.write('\n')
 
-            if not ignore_first_row:
-                # no need to add a newline character to the first row of the file
-                # since this is writing entire rows to the file
-                for line in lines:
-                    # write entire new row to file
-                    writer.writerow(line)
-            else:
-                # write the rest of the rows to the file
-                for i, line in enumerate(lines[1:]):
-                    # check if we are at the last row to be appended to the file ( could also be the first and last row !)
-                    if i == len(lines[1:]) - 1:
-                        # Write the last row without a newline character at the end ( This requires a new line to be added to beginning of write!, see code above)
-                        f.write(delimiter.join(line))
-                    else:
-                        # write entire new row to file
-                        writer.writerow(line)
+        #     if not ignore_first_row:
+        #         # no need to add a newline character to the first row of the file
+        #         # since this is writing entire rows to the file
+        #         for line in lines:
+        #             # write entire new row to file
+        #             writer.writerow(line)
+        #     else:
+        #         # write the rest of the rows to the file
+        #         for i, line in enumerate(lines[1:]):
+        #             # check if we are at the last row to be appended to the file ( could also be the first and last row !)
+        #             if i == len(lines[1:]) - 1:
+        #                 # Write the last row without a newline character at the end ( This requires a new line to be added to beginning of write!, see code above)
+        #                 f.write(delimiter.join(line))
+        #             else:
+        #                 # write entire new row to file
+        #                 writer.writerow(line)
                
-        return_value.append_message("File: {} appended to file: {}".format(append_file, source_file))
+        #return_value.append_message("File: {} appended to file: {}".format(append_file, source_file))
     except Exception as e:
         return_value.update_sep(False, "Failed to append file with exception: {}".format(e))
     return return_value
@@ -257,9 +301,11 @@ def combine_files_header_independent(
         file_list = glob.glob(
             folder_path + "\\" + file_prefix + "*" + file_suffix + file_extension
         )
+        
         # build list of unique headers
         headers = get_unique_headers_tab(file_list)
         combined_file_name = os.path.join(folder_path, output_file_name)
+        
         # loop over files to be combined
         file_counter = 0
         for file in file_list:

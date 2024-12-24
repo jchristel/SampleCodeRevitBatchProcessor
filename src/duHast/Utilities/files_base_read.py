@@ -36,6 +36,7 @@ from duHast.Utilities.files_io import (
     file_delete,
     file_exist,
     is_last_char_newline,
+    get_file_name_without_ext,
 )
 
 from duHast.Utilities.Objects.result import Result
@@ -358,3 +359,42 @@ def get_first_row_in_column_based_text_file(file_path, delimiter=","):
             )
 
     return return_value
+
+
+def get_unique_headers(files, delimiter=","):
+    """
+    Gets a list of alphabetically sorted headers retrieved from text files.
+    Assumes:
+
+    - first row in each file is the header row
+
+    :param files: List of file path from which the headers are to be returned.
+    :type files: list of str
+    :param delimiter: The delimiter used in the text file. Defaults to ','.
+    :type delimiter: str, optional
+    :return: List of headers.
+    :rtype: list of str
+    """
+
+    headers_in_all_files = {}
+    for f in files:
+        # get unmodified row data and remove the next line character at the end
+        data_result = get_first_row_in_column_based_text_file(f, delimiter=delimiter)
+        if data_result.status is False:
+            raise  Exception("Failed to get headers from file: {}".format(f))
+        
+        # store the headers by file name
+        headers_in_all_files[get_file_name_without_ext(f)] = data_result.result
+        
+    # create a list of unique headers
+    headers_unique = []
+    for header_by_file in headers_in_all_files:
+        empty_header_counter = 0
+        for header in headers_in_all_files[header_by_file]:
+            # reformat any empty headers to be unique
+            if header == "":
+                header = header_by_file + ".Empty." + str(empty_header_counter)
+                empty_header_counter = empty_header_counter + 1
+            if header not in headers_unique:
+                headers_unique.append(header)
+    return sorted(headers_unique)

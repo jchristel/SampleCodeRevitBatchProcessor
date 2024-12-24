@@ -413,7 +413,7 @@ def combine_files_csv_header_independent(
             column_mapper = []
             
             # attempt to read the file
-            lines_result = read_csv_file(file, increaseMaxFieldSizeLimit=False)
+            lines_result = read_csv_file(file, increase_max_field_size_limit=False)
             if lines_result.status is False:
                 return_value.update_sep(False, "Failed to read file: {} with {}".format(file, lines_result.message))
                 return return_value

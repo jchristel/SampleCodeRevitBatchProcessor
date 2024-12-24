@@ -56,10 +56,16 @@ def save_out_missing_families_check():
 
     # build marker file path
     marker_file_path = os.path.join(settings.INPUT_DIRECTORY ,settings.FILE_NAME_MARKER_SAVEOUT_MISSING_FAMILIES)
+    
     # check if file exists in input location
     if file_exist(marker_file_path):
-        # read file
-        rows =  read_csv_file(marker_file_path)
+        # attempt to read file 
+        rows_result =  read_csv_file(marker_file_path)
+        if not rows_result.status:
+            return save_out, family_base_data_file_path, family_out_directory
+        
+        rows = rows_result.result
+        
         # should be at least two rows...
         if len(rows) >= 2:
             got_base_data = False

@@ -69,7 +69,15 @@ if len(_files_to_combine) > 0:
     rows_overall = []
     # combine files
     for _file in _files_to_combine:
-        rows = read_csv_file(_file)
+        # attempt to read file
+        rows_result = read_csv_file(_file)
+        if rows_result.status == False:
+            output("Failed to read file: [{}] {} with: ".format(rows_result.status, _file, rows_result.message))
+            # skip to next file
+            continue
+        
+        rows = rows_result.result
+        
         output("read rows from file: [{}]  {}".format(len(rows) - 1, _file))
         # ignore header row
         for i in range(1, len(rows)):

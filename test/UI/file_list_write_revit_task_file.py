@@ -61,8 +61,14 @@ class WriteRevitTaskFile(test.Test):
         
         message = ""
         try:
-            # read task file as csv file
-            data = read_csv_file(os.path.join(temp_dir, task_file_name))
+            # attempt to read task file as csv file
+            data_result = read_csv_file(os.path.join(temp_dir, task_file_name))
+            # check if file was read ok
+            if data_result.status is False:
+                raise Exception(data_result.message)
+            # get data
+            data = data_result.result
+            
             # compare content with expected content
             expected_content = []
             for raw in task_file_content:

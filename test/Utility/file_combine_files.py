@@ -106,7 +106,11 @@ class FileCombineFiles(test.Test):
                         tmp_dir, "test", "", ".csv", combined_file_name
                     )
                     # reading the CSV file back in
-                    result = read_csv_file(os.path.join(tmp_dir, combined_file_name))
+                    result_read = read_csv_file(os.path.join(tmp_dir, combined_file_name))
+                    if result_read.status is False:
+                        raise Exception(result_read.message)
+                    result = result_read.result
+                    
                     # build expected result list
                     expected_result = [file[1] for file in test_files]
                     # insert header row
@@ -146,7 +150,11 @@ class FileCombineFiles(test.Test):
                         tmp_dir, "test", "", ".csv", combined_file_name
                     )
                     # reading the CSV file back in
-                    result = read_csv_file(os.path.join(tmp_dir, combined_file_name))
+                    result_read = read_csv_file(os.path.join(tmp_dir, combined_file_name))
+                    if result_read.status is False:
+                        raise Exception(result_read.message)
+                    result = result_read.result
+                    
                     # build expected result list
                     expected_result = [file[1] for file in test_files_two]
                     # insert first file header

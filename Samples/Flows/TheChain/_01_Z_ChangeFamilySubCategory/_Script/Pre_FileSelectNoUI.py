@@ -119,7 +119,14 @@ def combine_task_list_files(files):
 
     revit_files = []
     for task_file_path in files:
-        rows = read_csv_file(task_file_path)
+        # attempt to read the file
+        rows_result = read_csv_file(task_file_path)
+        if rows_result.status == False:
+            # skip file if it could not be read
+            continue
+        
+        rows = rows_result.data
+        
         for row in rows:
             # make sure row contains at least one column (hopefully containing a file path)
             if len(row) >= 1:

@@ -365,7 +365,15 @@ def combine_files_csv_header_independent(
         for file in file_list:
             line_counter = 0
             column_mapper = []
-            lines = read_csv_file(file, increaseMaxFieldSizeLimit=False)
+            
+            # attempt to read the file
+            lines_result = read_csv_file(file, increaseMaxFieldSizeLimit=False)
+            if lines_result.status is False:
+                return_value.update_sep(False, "Failed to read file: {} with {}".format(file, lines_result.message))
+                return return_value
+            
+            lines = lines_result.result
+            
             lines_to_be_transferred = []
             for line in lines:
                 # read the headers in file

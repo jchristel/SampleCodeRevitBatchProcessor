@@ -52,7 +52,13 @@ def get_file_data():
     """
     return_value = Result()
     try:
-        csv_data_rows = read_csv_file(os.path.join(settings.DATA_FILE_PATH))
+        # attempt to read the file data
+        csv_data_rows_result = read_csv_file(os.path.join(settings.DATA_FILE_PATH))
+        if(csv_data_rows_result.status == False):
+            return_value.update_sep(False, csv_data_rows_result.message)
+            return return_value
+        csv_data_rows = csv_data_rows_result.result
+        
         if(len(csv_data_rows) == 0):
             return_value.update_sep(False, "Error reading file data: No data found in file: {}".format(os.path.join(settings.FLOW_DIRECTORY, settings.DATA_FILE_NAME)))
             return return_value

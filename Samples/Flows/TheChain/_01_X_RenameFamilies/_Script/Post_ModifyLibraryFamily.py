@@ -151,13 +151,19 @@ def move_files():
     This is a work around to the fact that I'm unable to save family files after processing!
     """
 
-    file_copy_task_list = read_csv_file(
+    # attempt to read the file copy task list
+    file_copy_task_list_result = read_csv_file(
         os.path.join(
             settings.WORKING_DIRECTORY,
             settings.FILE_DATA_TO_COMBINE[settings.FILE_DATA_COPY_FILES_INDEX][1],
         )
     )
-
+    if file_copy_task_list_result.status==False:
+        output("Failed to read file copy task list: {}".format(file_copy_task_list_result.message))
+        return
+    
+    file_copy_task_list = file_copy_task_list_result.result
+    
     row_counter = 0
     for copy_row in file_copy_task_list:
         if row_counter != 0:
@@ -176,7 +182,7 @@ def create_follow_up_report_data_file():
     :return: true if successfully written list to file, otherwise False
     :rtype: bool
     """
-    rows = read_csv_file(
+    rows_result = read_csv_file(
         os.path.join(
             settings.WORKING_DIRECTORY,
             settings.FILE_DATA_TO_COMBINE[
@@ -184,6 +190,11 @@ def create_follow_up_report_data_file():
             ][1],
         )
     )
+    if rows_result.status == False:
+        return False
+    
+    rows = rows_result.result
+    
     data_file = []
     # read changed document list
     # for format refer to docs
@@ -198,7 +209,7 @@ def create_follow_up_report_data_file():
 
     # write data to file
     try:
-        write_report_data_as_csv(
+        write_result = write_report_data_as_csv(
             file_name=os.path.join(
                 settings.WORKING_DIRECTORY, settings.FOLLOW_UP_REPORT_FILE_NAME
             ),
@@ -207,7 +218,7 @@ def create_follow_up_report_data_file():
             enforce_ascii=True,
             quoting=QUOTE_MINIMAL,
         )
-        return True
+        return write_result.status
     except Exception:
         return False
 

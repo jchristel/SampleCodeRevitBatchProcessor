@@ -129,7 +129,10 @@ class FileCombineFilesIndependentHeadersCSV(test.Test):
                         tmp_dir, "test", "", test_file_extension, combined_file_name_one
                     )
                     # reading the tab separated file back in
-                    result = read_csv_file(os.path.join(tmp_dir, combined_file_name_one))
+                    result_read = read_csv_file(os.path.join(tmp_dir, combined_file_name_one))
+                    if result_read.status is False:
+                        raise Exception(result_read.message)
+                    result = result_read.result
                     # build expected result list
                     expected_result = [file[1] for file in test_files]
                     # insert header row
@@ -169,7 +172,11 @@ class FileCombineFilesIndependentHeadersCSV(test.Test):
                         tmp_dir, "test", "", test_file_extension, combined_file_name_two
                     )
                     # reading the tab separated file back in
-                    result = read_csv_file(os.path.join(tmp_dir, combined_file_name_two))
+                    result_read = read_csv_file(os.path.join(tmp_dir, combined_file_name_two))
+                    if result_read.status is False:
+                        raise Exception(result_read.message)
+                    result = result_read.result
+                    
                     # build expected result list
                     expected_result = [
                         ["header 1","header 2","header 3","header 4","header 5"],
@@ -214,7 +221,11 @@ class FileCombineFilesIndependentHeadersCSV(test.Test):
                         tmp_dir, "test", "", test_file_extension, combined_file_name_three
                     )
                     # reading the tab separated file back in
-                    result = read_csv_file(os.path.join(tmp_dir, combined_file_name_three))
+                    result_read = read_csv_file(os.path.join(tmp_dir, combined_file_name_three))
+                    if result_read.status is False:
+                        raise Exception(result_read.message)
+                    result = result_read.result
+                    
                     # build expected result list
                     expected_result = [
                         ["header 1","header 2","header 3","test_file_eight.Empty.0","test_file_nine.Empty.0","test_file_ten.Empty.0"],

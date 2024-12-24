@@ -76,7 +76,11 @@ class FileCSVRead(test.Test):
                     self.write_file_with_data(csv_file, tmp_dir, data)
 
                     # Test reading the CSV file
-                    result = read_csv_file(os.path.join(tmp_dir, csv_file))
+                    result_read = read_csv_file(os.path.join(tmp_dir, csv_file))
+                    if result_read.status is False:
+                        raise Exception(result_read.message)
+                    result = result_read.result
+                    
                     expected_result = [
                         ["1", "John", "Doe"],
                         ["2", "Jane", "Smith"],
@@ -106,7 +110,11 @@ class FileCSVRead(test.Test):
                     # write test file
                     self.write_file_with_data(csv_file, tmp_dir, data_long)
 
-                    result = read_csv_file(os.path.join(tmp_dir, csv_file))
+                    result_read = read_csv_file(os.path.join(tmp_dir, csv_file))
+                    if result_read.status is False:
+                        raise Exception(result_read.message)
+                    result = result_read.result
+                    
                     expected_result = [
                         ["1", "John", "Doe", "1234567890" * 1000],
                         ["2", "Jane", "Smith", "0987654321" * 1000],

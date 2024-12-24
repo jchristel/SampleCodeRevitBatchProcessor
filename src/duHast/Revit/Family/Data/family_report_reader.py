@@ -27,7 +27,6 @@ Family report data utility module containing functions to read the data from fil
 #
 
 import os
-from duHast.Utilities.files_csv import read_csv_file
 from duHast.Revit.Family.Data.Objects.ifamily_data_storage import IFamilyDataStorage
 from duHast.Revit.Family.Data.Objects.family_base_data_storage import (
     FamilyBaseDataStorage,
@@ -166,7 +165,11 @@ def read_data_from_file_into_storage(file_path, data_type):
             raise FileNotFoundError("File not found: {}".format(file_path))
 
         # Read the data from the file
-        data = read_csv_file(file_path)
+        data_result = read_csv_file(file_path)
+        if data_result.status is False:
+            raise Exception("Error reading data file: {}".format(data_result.message))
+        
+        data = data_result.result
 
         # Check if the data is empty
         if not data or len(data) <= 1:
@@ -378,8 +381,14 @@ def read_data_into_family_containers(path_to_data):
         data_read = []
         for data_file in files:
             try:
-                # read the data from the file
-                data = read_csv_file(data_file)
+                # attempt to read the data from the file
+                data_result = read_csv_file(data_file)
+                if data_result.status is False:
+                    raise Exception(
+                        "Error reading data file: {}".format(data_result.message)
+                    )
+                data = data_result.result
+                
                 if not data or len(data) <= 1:
                     raise ValueError("Empty data in the file: {}".format(data_file))
                 else:

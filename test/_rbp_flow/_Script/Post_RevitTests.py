@@ -87,7 +87,12 @@ def read_revit_test_log_files(log_files):
     """
     overall_results = True
     for log_file in log_files:
-        rows = read_csv_file(log_file)
+        rows_result = read_csv_file(log_file)
+        if rows_result.status == False:
+            output("Error reading log file: [{}]".format(log_file))
+            return False
+        rows = rows_result.result
+        
         log_result = check_failed_tests(rows=rows)
         output("{}: [{}]".format(log_file, log_result))
         overall_results = overall_results & log_result

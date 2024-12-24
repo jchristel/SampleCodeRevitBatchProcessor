@@ -30,7 +30,7 @@ import codecs
 import csv
 from duHast.Utilities.files_io import get_first_row_in_file_no_strip
 from duHast.Utilities.files_io import get_file_name_without_ext
-from duHast.Utilities.files_base import write_report_data as write_report_data_base
+from duHast.Utilities.files_base_write import write_report_data as write_report_data_base
 
 
 def get_unique_headers(files):

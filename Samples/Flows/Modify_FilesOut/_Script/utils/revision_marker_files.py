@@ -71,7 +71,15 @@ def read_marker_files_from_revit_processed(marker_dir_path, marker_file_extensio
     if len(marker_files) > 0:
         try:
             for mf in marker_files:
-                rows = read_csv_file(mf)
+                # read csv file
+                rows_result = read_csv_file(mf)
+                if rows_result.status == False:
+                    return_value.update_sep(False, rows_result.message)
+                    # skip to next file
+                    continue
+                
+                rows = rows_result.result
+                
                 for row in rows:  # each row is a list
                     # read information into class
                     marker_file_data.append(df.docFile(row))

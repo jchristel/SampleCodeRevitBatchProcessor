@@ -143,11 +143,18 @@ def change_parameter_to_family_parameter(doc):
             )
             return return_value
 
-        fileData = read_csv_file(
+        # attempt to read the file
+        rows_result = read_csv_file(
             settings.CHANGE_SHARED_PARAMETER_TO_FAMILY_PARAMETER_PATH
         )
-        if len(fileData) > 0:
-            for row in fileData:
+        if rows_result.status == False:
+            return_value.update_sep(False, rows_result.message)
+            return return_value
+        
+        rows = rows_result.result
+        
+        if len(rows) > 0:
+            for row in rows:
                 if len(row) > 1:
                     parameter_mapper[row[0]] = row[1]  # get the family manager
         else:
@@ -270,10 +277,16 @@ def delete_unwanted_shared_parameters(doc):
             )
             return return_value
 
-        # read data file
-        fileData = read_csv_file(settings.DELETE_SHARED_PARAMETER_LIST_FILE_PATH)
+        # attempt to read data file
+        rows_result = read_csv_file(settings.DELETE_SHARED_PARAMETER_LIST_FILE_PATH)
+        if rows_result.status == False:
+            return_value.update_sep(False, rows_result.message)
+            return return_value
+        
+        rows = rows_result.result
+        
         guid_s_to_delete = []
-        for row in fileData:
+        for row in rows:
             if len(row) > 1:
                 # check if entry is a guid
                 if len(row[1]) == 36:

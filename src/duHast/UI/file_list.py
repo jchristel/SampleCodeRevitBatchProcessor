@@ -127,8 +127,12 @@ def _get_files_from_list_file(file_path_csv):
 
     revit_files = []
     try:
-        # read the CSV into rows
-        rows = read_csv_file(file_path_csv)
+        # attempt to read the CSV into rows
+        rows_result = read_csv_file(file_path_csv)
+        if rows_result.status is False:
+            return []
+        rows = rows_result.result
+        
         # check whether anything came back
         if len(rows) > 0:
             # process rows

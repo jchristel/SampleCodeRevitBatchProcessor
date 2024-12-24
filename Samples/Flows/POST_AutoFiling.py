@@ -492,7 +492,11 @@ def _read_current_file_received():
 
     reference_list = []
     try:
-        reference_list = fileCSV.read_csv_file(CURRENT_ISSUE_DATA_FILE_NAME)
+        # attempt to read data
+        reference_list_result = fileCSV.read_csv_file(CURRENT_ISSUE_DATA_FILE_NAME)
+        if reference_list_result.status == False:
+            return reference_list
+        reference_list = reference_list_result.result
     except Exception as e:
         output("Failed to open current model issue list with exception: {}".format(e))
     return reference_list

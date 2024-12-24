@@ -109,10 +109,18 @@ def delete_unwanted_shared_parameters(doc, revit_file_path, output):
 
     return_value = res.Result()
     output("Deleting unwanted shared parameters...start")
+    
     # read data file
-    file_data = read_csv_file(
+    file_data_result = read_csv_file(
         settings.SCRIPT_DIRECTORY + "\\" + settings.UNWANTED_SHARED_PARAMETER_FILE
     )
+    # check if data file was read successfully
+    if file_data_result.status is False:
+        return_value.update_sep(False, file_data_result.message)
+        return return_value
+    # get the data from the file read
+    file_data = file_data_result.result
+    
     guids_to_delete = []
     for row in file_data:
         if len(row) > 1:

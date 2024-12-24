@@ -62,10 +62,14 @@ def get_bim_360_file_data(file_path_csv):
         Will return an empty list of an exception occurred.
     :rtype: list of SampleCodeBatchProcessor.FileItem
     """
-    revitFiles = []
+    revit_files = []
     try:
-        # read the CSV into rows
-        rows = read_csv_file(file_path_csv)
+        # attempt to read the CSV into rows
+        rows_result = read_csv_file(file_path_csv)
+        if(rows_result.status is False):
+            return []
+        rows = rows_result.result
+        
         # check whether anything came back
         if len(rows) > 0:
             # process rows
@@ -73,12 +77,12 @@ def get_bim_360_file_data(file_path_csv):
                 dummy = process_bim_360_file_data_row(row)
                 # check whether row got processed ok
                 if dummy is not None:
-                    revitFiles.append(dummy)
+                    revit_files.append(dummy)
     except Exception as e:
         print("An exception occurred during BIM360 row processing! {}".format(e))
         # return an empty list which will cause this script to abort
-        revitFiles = []
-    return revitFiles
+        revit_files = []
+    return revit_files
 
 
 def process_bim_360_file_data_row(row_data):

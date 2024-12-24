@@ -58,7 +58,13 @@ def _read_rename_directives(files):
 
     rename_directives = []
     for file in files:
-        rows = fileCSV.read_csv_file(file)
+        rows_result = fileCSV.read_csv_file(file)
+        # check whether file was read successfully
+        if rows_result.status is False:
+            return rename_directives
+        
+        rows = rows_result.result
+        
         # read rows in tuples ignoring the header row
         for i in range(1, len(rows)):
             if len(rows[i]) >= 4:

@@ -106,10 +106,14 @@ class FileAppendFile(test.Test):
                         os.path.join(tmp_dir, test_files[0][0]),
                         os.path.join(tmp_dir, test_files[1][0]),
                     )
-                    # reading the CSV file back in
-                    result_read = read_csv_file(
+                    # attempt reading the CSV file back in
+                    result_read_result = read_csv_file(
                         os.path.join(tmp_dir, test_files[0][0])
                     )
+                    if result_read_result.status is False:
+                        raise Exception(result_read_result.message)
+                    result_read = result_read_result.result
+                    
                     # build expected result list
                     expected_result = [
                         ["data 1", "data 2", "data 3"],
@@ -128,7 +132,11 @@ class FileAppendFile(test.Test):
                         os.path.join(tmp_dir, test_files[2][0]),
                     )
                     # reading the CSV file back in
-                    result_read = read_csv_file(os.path.join(tmp_dir, test_files[0][0]))
+                    result_read_result = read_csv_file(os.path.join(tmp_dir, test_files[0][0]))
+                    if result_read_result.status is False:
+                        raise Exception(result_read_result.message)
+                    result_read = result_read_result.result
+                    
                     expected_result.append(test_files[2][1])
                     expected_result.append(test_files[2][2])
                     # compare lists sorted in case files got read in a different order when combined
@@ -167,7 +175,10 @@ class FileAppendFile(test.Test):
                         os.path.join(tmp_dir, test_files[1][0]),
                     )
                     # reading the CSV file back in
-                    result_read = read_csv_file(os.path.join(tmp_dir, test_files[0][0]))
+                    result_read_result = read_csv_file(os.path.join(tmp_dir, test_files[0][0]))
+                    if result_read_result.status is False:
+                        raise Exception(result_read_result.message)
+                    result_read = result_read_result.result
                     # build expected result list
                     expected_result = [
                         ["data 1", "data 3"],
@@ -188,7 +199,11 @@ class FileAppendFile(test.Test):
                         os.path.join(tmp_dir, test_files_two[2][0]),
                     )
                     # reading the CSV file back in
-                    result_read = read_csv_file(os.path.join(tmp_dir, test_files[0][0]))
+                    result_read_result = read_csv_file(os.path.join(tmp_dir, test_files[0][0]))
+                    if result_read_result.status is False:
+                        raise Exception(result_read_result.message)
+                    result_read = result_read_result.result
+                    
                     expected_result.append(test_files_two[2][1])
                     expected_result.append(test_files_two[2][2])
                     # compare lists sorted in case files got read in a different order when combined

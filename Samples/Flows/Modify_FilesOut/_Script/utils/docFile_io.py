@@ -145,7 +145,13 @@ def read_current_file(revision_data_path):
 
     reference_list = []
     try:
-        rows = read_csv_file(revision_data_path)
+        # attempt to read data
+        rows_result = read_csv_file(revision_data_path)
+        if rows_result.status == False:
+            return reference_list
+        rows = rows_result.result
+        
+        # process data
         for row in rows:
             reference_list.append(df.docFile(row))
     except Exception as e:

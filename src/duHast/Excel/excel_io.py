@@ -264,8 +264,12 @@ def read_excel_file_fast(file_path, excel_tab_name=None):
             raise ValueError(conversion_result.message)
         return_value.update(conversion_result)
 
-        # read the csv file
-        data = read_csv_file(temp_csv_path)
+        # attempt read the csv file
+        data_result = read_csv_file(temp_csv_path)
+        if data_result.status is False:
+            raise ValueError(data_result.message)
+        data = data_result.result
+        
         return_value.append_message(
             "Successfully read temp csv file. Number of rows read: {}".format(len(data))
         )

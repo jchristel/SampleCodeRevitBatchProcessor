@@ -142,7 +142,12 @@ def read_wsm_data_from_file(directory_path):
     files = fileGet.get_files_with_filter(directory_path, PROCESS_MARKER_FILE_EXTENSION)
     if len(files) > 0:
         for file in files:
-            rows = filesCSV.read_csv_file(file)
+            # attempt to read the file
+            rows_result = filesCSV.read_csv_file(file)
+            if(rows_result.status is False):
+                raise Exception("Failed to read WSM marker file: {} with: {}".format(file, rows_result.message))
+            rows = rows_result.result
+            
             if len(rows) > 0:
                 process_data = process_data + rows
     return process_data

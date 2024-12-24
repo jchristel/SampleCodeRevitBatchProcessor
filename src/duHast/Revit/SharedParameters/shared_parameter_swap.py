@@ -75,7 +75,7 @@ PARAMETER_SETTINGS_DATA = namedtuple(
 
 def _load_shared_parameter_data_from_file(file_path):
     """
-    _summary_
+    Reads parameter data from file and convertes it into a dictionary of named tuples (PARAMETER_SETTINGS_DATA)
 
     :param file_path: Fully qualified file path to shared parameter change directive file.
     :type file_path: str
@@ -85,7 +85,14 @@ def _load_shared_parameter_data_from_file(file_path):
     """
 
     parameter_mapper = {}
-    file_data = fileCSV.read_csv_file(file_path)
+    
+    # attempt to read file
+    file_data_result = fileCSV.read_csv_file(file_path)
+    if file_data_result.status == False:
+        raise Exception(file_data_result.message)
+    
+    file_data = file_data_result.result
+    
     for i in range(1, len(file_data)):
         row = file_data[i]
         if len(row) == 5:

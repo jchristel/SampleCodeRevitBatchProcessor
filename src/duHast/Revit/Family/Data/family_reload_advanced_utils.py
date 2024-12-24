@@ -162,7 +162,11 @@ def read_change_list(file_path):
 
     rows = []
     if fileIO.file_exist(file_path):
-        rows = fileCSV.read_csv_file(file_path)
+        # attempt to read file
+        rows_result = fileCSV.read_csv_file(file_path)
+        if rows_result.status is False:
+            raise Exception("Error reading changed families list file.: {}".format(rows_result.message))
+        rows = rows_result.result
     else:
         raise Exception("Changed families list files does not exist.")
     if len(rows) > 0:

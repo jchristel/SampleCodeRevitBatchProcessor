@@ -473,7 +473,16 @@ def clean_up_catalogue_file(doc, output, forms):
 
         print("reading: {}".format(file_selected))
         # open catalogue file and read data into rows
-        row_data = read_csv_file(file_selected)
+        row_data_result = read_csv_file(file_selected)
+        if row_data_result.status is False:
+            return_value.append_message(
+                "Failed to read catalogue file: {}".format(row_data_result.message)
+            )
+            print(return_value.message)
+            return return_value
+        
+        row_data = row_data_result.result
+        
         print("Read {} rows.".format(len(row_data)))
 
         # build parameter names list:

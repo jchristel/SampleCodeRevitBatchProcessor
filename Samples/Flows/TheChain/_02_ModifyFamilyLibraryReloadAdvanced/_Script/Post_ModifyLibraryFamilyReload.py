@@ -156,10 +156,16 @@ def move_files():
     This is a work around to the fact that I'm unable to save family files after processing!
     """
 
-    file_copy_task_list = read_csv_file(
+    file_copy_task_list_result = read_csv_file(
         os.path.join(settings.WORKING_DIRECTORY, FILE_DATA_TO_COMBINE[0][1])
     )
 
+    if file_copy_task_list_result.status==False:
+        output("Failed to read file copy task list: {}".format(file_copy_task_list_result.message))
+        return
+    
+    file_copy_task_list = file_copy_task_list_result.result
+    
     row_counter = 0
     for copy_row in file_copy_task_list:
         if row_counter != 0:

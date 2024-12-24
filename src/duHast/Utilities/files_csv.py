@@ -29,62 +29,170 @@ Helper functions relating to comma separated text files.
 
 import csv
 
-from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_base_write import write_report_data
 from duHast.Utilities.files_base_read import get_first_row_in_column_based_text_file, read_column_based_text_file
+from duHast.Utilities.files_base_combine import combine_files, combine_files_header_independent, append_to_file
+from duHast.Utilities.files_get import get_files_single_directory
 
-def get_unique_headers(files):
+
+def append_csv_file(source_file, append_file, ignore_first_row=False, quoting=csv.QUOTE_MINIMAL):
     """
-    Gets a list of alphabetically sorted headers retrieved from text files.
+    Function to append the content of a csv file to another csv file.
     
-    Assumes:
-
-    - first row in each file is the header row
-    - headers are separated by <tab> character
-
-    :param files: List of file path from which the headers are to be returned.
-    :type files: list of str
+    :param source_file: The fully qualified file path of the source file.
+    :type source_file: str
+    :param append_file: The fully qualified file path of the file to append.
+    :type append_file: str
+    :param ignore_first_row: Flag to ignore the first row of the append file. Defaults to False.
+    :type ignore_first_row: bool, optional
+    :param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_MINIMAL. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
+    :type quoting: int, optional
     
-    :return: List of headers.
-    :rtype: list of str
+    :return:
+        Result class instance.
+
+        - result.status (bool) True if file was appended without an exception, otherwise False.
+        - result.message contains log messages.
+        - result.result will be an empty list.
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
+    :rtype: :class:`.Result`
     """
+    
+    # use base function to append the file
+    return_value = append_to_file(
+        source_file=source_file, 
+        append_file=append_file, 
+        ignore_first_row=ignore_first_row,
+        delimiter=",",
+        quoting=quoting,
+    )
+    
+    return return_value
+    
 
-    headers_in_all_files = {}
-    for f in files:
-        # get unmodified row data and remove the next line character at the end
-        data = get_first_row_in_column_based_text_file(
-            file_path=f,
-            delimiter=","
-        )
-        
-        header_row = []
-        if data.status:
-            header_row = data.result
-        else:
-            raise Exception("Failed to read header row from file: {}".format(f))
-        
-        headers_in_all_files[get_file_name_without_ext(f)] = header_row
-        
-    headers_unique = []
-    for header_by_file in headers_in_all_files:
-        empty_header_counter = 0
-        for header in headers_in_all_files[header_by_file]:
-            # reformat any empty headers to be unique
-            if header == "":
-                header = header_by_file + ".Empty." + str(empty_header_counter)
-                empty_header_counter = empty_header_counter + 1
-            if header not in headers_unique:
-                headers_unique.append(header)
-    return sorted(headers_unique)
+def combine_csv_files_header_independent(
+    folder_path,
+    file_prefix="",
+    file_suffix="",
+    file_extension=".csv",
+    output_file_name="csv.txt",
+    overwrite_existing=False,
+):
+    """
+    Function to combine multiple csv files into a single csv combining all headers.
+    
+    :param folder_path: The fully qualified folder path containing the csv files.
+    :type folder_path: str
+    :param file_prefix: The prefix of the csv files to be combined. Defaults to "".
+    :type file_prefix: str, optional
+    :param file_suffix: The suffix of the csv files to be combined. Defaults to "".
+    :type file_suffix: str, optional
+    :param file_extension: The extension of the csv files to be combined. Defaults to ".csv".
+    :type file_extension: str, optional
+    :param output_file_name: The name of the output file. Defaults to "csv.txt".
+    :type output_file_name: str, optional
+    :param overwrite_existing: Flag to overwrite the existing output file. Defaults to False.
+    :type overwrite_existing: bool, optional
+    
+    :return:
+        Result class instance.
+
+        - result.status (bool) True if files were combined without an exception, otherwise False.
+        - result.message contains log messages.
+        - result.result will be an complete list of all rows appended.
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
+    :rtype: :class:`.Result`
+    """
+    
+    # use base function to combine the files
+    return_value = combine_files_header_independent(
+        folder_path=folder_path,
+        file_prefix=file_prefix,
+        file_suffix=file_suffix,
+        file_extension=file_extension,
+        output_file_name=output_file_name,
+        overwrite_existing=overwrite_existing,
+        delimiter=","
+    )
+    
+    return return_value
 
 
-def read_csv_file(filepathCSV, increaseMaxFieldSizeLimit=False):
+
+def combine_csv_files(folder_path,
+    file_prefix="",
+    file_suffix="",
+    file_extension=".csv",
+    output_file_name="result.csv",
+    file_getter=get_files_single_directory,
+    quoting=csv.QUOTE_MINIMAL
+    ):
+    """
+    Function to combine multiple csv files into a single csv file.
+    
+    Assumes all files have the same header. (number of columns)
+    
+    :param folder_path: The fully qualified folder path containing the csv files.
+    :type folder_path: str
+    :param file_prefix: The prefix of the csv files to be combined. Defaults to "".
+    :type file_prefix: str, optional
+    :param file_suffix: The suffix of the csv files to be combined. Defaults to "".
+    :type file_suffix: str, optional
+    :param file_extension: The extension of the csv files to be combined. Defaults to ".csv".
+    :type file_extension: str, optional
+    :param output_file_name: The name of the output file. Defaults to "result.csv".
+    :type output_file_name: str, optional
+    :param file_getter: Function to get the files in the folder. Defaults to get_files_single_directory.
+    :type file_getter: function, optional
+    :param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_MINIMAL. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
+    :type quoting: int, optional
+    
+    :return:
+        Result class instance.
+
+        - result.status (bool) True if files were combined without an exception, otherwise False.
+        - result.message contains log messages.
+        - result.result will be an empty list.
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
+    :rtype: :class:`.Result`
+    """
+    
+    # use base function to combine the files
+    return_value = combine_files(
+        folder_path=folder_path,
+        file_prefix=file_prefix,
+        file_suffix=file_suffix,
+        file_extension=file_extension,
+        output_file_name=output_file_name,
+        file_getter=file_getter,
+        delimiter="," ,
+        quoting=quoting
+    )
+    
+    return return_value
+
+
+def read_csv_file(file_path, increase_max_field_size_limit=False):
     """
     Read a csv file into a list of rows, where each row is another list.
 
-    :param filepathCSV: The fully qualified file path to the csv file.
-    :type filepathCSV: str
+    :param file_path: The fully qualified file path to the csv file.
+    :type file_path: str
+    :param increase_max_field_size_limit: Flag to increase the max field size limit. Defaults to False.
+    :type increase_max_field_size_limit: bool, optional
     
     :return:
         Result class instance.
@@ -102,8 +210,8 @@ def read_csv_file(filepathCSV, increaseMaxFieldSizeLimit=False):
 
     # read with encoding enabled
     read_result = read_column_based_text_file(
-        file_path=filepathCSV, 
-        increase_max_field_size_limit=increaseMaxFieldSizeLimit,
+        file_path=file_path, 
+        increase_max_field_size_limit=increase_max_field_size_limit,
         delimiter=','
     )
     

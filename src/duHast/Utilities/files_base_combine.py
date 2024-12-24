@@ -76,7 +76,17 @@ def combine_files(
     :param quoting: The quoting option for the CSV writer, defaults to csv.QUOTE_MINIMAL
     :type quoting: int, optional
     
-    :return: A result object with status and message.
+    :return:
+        Result class instance.
+
+        - result.status (bool) True if file content was combined without an exception, otherwise False.
+        - result.message contains log messages.
+        - result.result will be an empty list.
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
     :rtype: :class:`.Result`
     """
 
@@ -146,7 +156,7 @@ def combine_files(
 
 def _format_headers(headers_in_file, file):
     """
-    Replace any empty strings in header row
+    Replace any empty strings in header row with unique values based on the file name and a counter.
 
     :param headers_in_file: list of header entries
     :type headers_in_file: [str]
@@ -196,7 +206,18 @@ def combine_files_header_independent(
     :param delimiter: The delimiter used in the files (e.g., ',' for CSV, '\t' for tab-separated), defaults to ','
     :type delimiter: str, optional
     
-    :return: A result object with status and message.
+    :return:
+        Result class instance.
+
+        - result.status (bool) True if file content was combined without an exception, otherwise False.
+        - result.message contains log messages.
+        - result.result will be complete list of rows appended.
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
+    :rtype: :class:`.Result`
     """
 
     return_value = Result()
@@ -296,7 +317,18 @@ def append_to_file(source_file, append_file, ignore_first_row=False, delimiter="
     :type delimiter: str, optional
     :param quoting: The quoting option for the CSV writer, defaults to csv.QUOTE_MINIMAL
     :type quoting: int, optional
-    :return: A result object with status and message.
+    
+    :return:
+        Result class instance.
+
+        - result.status (bool) True if file content was appended without an exception, otherwise False.
+        - result.message contains log messages.
+        - result.result will be an empty list.
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
     :rtype: :class:`.Result`
     """
 

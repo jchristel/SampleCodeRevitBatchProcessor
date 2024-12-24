@@ -190,17 +190,36 @@ namespace PythonTests.Revit.Family.Data
 
                 var result = familyReportReader.read_family_base_data(filePath);
 
+                Console.WriteLine(result.message);
+
                 Assert.That(testFile.ExpectedStatus, Is.EqualTo(result.status), $"Expecting status {testFile.ExpectedStatus} but got {result.status}");
                 Assert.That(testFile.ExpectedCount, Is.EqualTo(result.result.Count), $"Expecting number of entries {testFile.ExpectedCount} but got {result.result.Count}");
+
+                
 
                 if (result.result.Count > 0)
                 {
                     foreach (var data in result.result)
                     {
-                        Console.WriteLine(data.formatted_indented_str(0, "..."));
-                        var dataValues = data.get_data_values_as_list_of_strings();
-                        Assert.That(testFile.ExpectedData, Does.Contain(dataValues), $"Expecting data {dataValues} in list but no match");
+                        Console.WriteLine(data.__str__());
                     }
+                    Console.Write("...found:");
+                    Console.WriteLine(result.result.Count);
+                    foreach (var data in result.result)
+                    {
+                        Console.WriteLine(data.formatted_indented_str(2, "..."));
+                        var dataValues = data.get_data_values_as_list_of_strings();
+                        foreach (var value in dataValues)
+                        {
+                            Console.WriteLine(value);
+                        }
+                        Assert.That(testFile.ExpectedData, Does.Contain(dataValues), $"Expecting data {dataValues} in list but no match");
+                        Console.WriteLine("+++++++");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("...no data found");
                 }
             }
         }

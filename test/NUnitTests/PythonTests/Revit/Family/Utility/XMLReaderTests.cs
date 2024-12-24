@@ -128,7 +128,7 @@ namespace PythonTests.Revit.Family.Utility
                     // Print out the names of the child nodes within the part node for debugging
                     //foreach (XmlNode childNode in partNode.ChildNodes)
                     //{
-                    //   Console.WriteLine($"Child node name: [{childNode.Name}]");
+                    //    Console.WriteLine($"Child node name: [{childNode.Name}]");
                     //}
 
                     // Iterate over the parameters property of the type

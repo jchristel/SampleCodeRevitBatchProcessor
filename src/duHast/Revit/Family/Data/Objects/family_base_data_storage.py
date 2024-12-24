@@ -29,7 +29,6 @@ Class for family base data storage class.
 
 from duHast.Revit.Family.Data.Objects import ifamily_data_storage as IFamDataStorage
 
-
 class FamilyBaseDataStorage(IFamDataStorage.IFamilyDataStorage):
 
     # data type for this class ( used in reports as first entry per row )

@@ -58,7 +58,14 @@ class IFamilyDataStorage(base.Base):
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
         super(IFamilyDataStorage, self).__init__(**kwargs)
-
+        
+        # set defaults
+        self.data_type = None
+        self.root_name_path = None
+        self.root_category_path = None
+        self.family_name = None
+        self.family_file_path = None
+        
         if isinstance(data_type, str):
             self.data_type = data_type
         else:
@@ -168,13 +175,15 @@ class IFamilyDataStorage(base.Base):
 
         dict = {}
         for key, value in self.__dict__.items():
-            dict[key] = self._fix_data_types(value)
+            # only add non private properties
+            if not key.startswith("_"):
+                dict[key] = self._fix_data_types(value)
         return dict
 
     def get_data_values_as_list_of_strings(self):
         data_list = []
         for key, value in self.__dict__.items():
-
+            # set a default value
             value_updated = "None"
             if isinstance(value, list):
                 # check if a value is a list of IFamilyDataStorageUsedBy objects
@@ -202,12 +211,16 @@ class IFamilyDataStorage(base.Base):
                     and isinstance(value_updated, list) == False
                 ):
                     value_updated = str(value_updated)
-
+            # add to data list
             data_list.append(value_updated)
         return data_list
 
     def get_property_names(self):
-        return self.__dict__.keys()
+        names = []
+        for key in self.__dict__.keys():
+            if not key.startswith("_"):
+                names.append(key)
+        return names
 
     def to_json(self):
         """

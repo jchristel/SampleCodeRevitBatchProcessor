@@ -49,8 +49,8 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
         family_file_path,  # family file path
         family_type_name,  # family type name
         parameters,  # parameters and there values for this type
-        last_updated_date=None,  # last updated date (when was the data rtrieved from the family type)
-        last_updated_time=None,  # last updated time (when was the data rtrieved from the family type)
+        last_updated_date=None,  # last updated date (when was the data retrieved from the family type)
+        last_updated_time=None,  # last updated time (when was the data retrieved from the family type)
         **kwargs
     ):
         """
@@ -66,10 +66,9 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
         :param last_updated_time: last updated time (when was the data retrieved from the family type)
         """
 
-        # data type is an argument but not used...
-
         # store args in base class
         super(FamilyTypeDataStorage, self).__init__(
+            #data_type=FamilyTypeDataStorage.data_type,
             data_type=FamilyTypeDataStorage.data_type,
             root_name_path=root_name_path,
             root_category_path=root_category_path,
@@ -81,26 +80,6 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
         self._parameters = parameters
         self._last_updated_date = last_updated_date  # last updated date (when was the data retrieved from the family type)
         self._last_updated_time = last_updated_time  # last updated time (when was the data retrieved from the family type)
-
-    @property
-    def data_type(self):
-        return self.data_type
-
-    @property
-    def root_name_path(self):
-        return self.root_name_path
-
-    @property
-    def root_category_path(self):
-        return self.root_category_path
-
-    @property
-    def family_name(self):
-        return self.family_name
-
-    @property
-    def family_file_path(self):
-        return self.family_file_path
 
     @property
     def family_type_name(self):
@@ -192,28 +171,33 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
         diff = []
         if self.data_type != other.data_type:
             diff.append("data_type: {} != {}".format(self.data_type, other.data_type))
+        
         if self.root_name_path != other.root_name_path:
             diff.append(
                 "root_name_path: {} != {}".format(
                     self.root_name_path, other.root_name_path
                 )
             )
+        
         if self.root_category_path != other.root_category_path:
             diff.append(
                 "root_category_path: {} != {}".format(
                     self.root_category_path, other.root_category_path
                 )
             )
+        
         if self.family_name != other.family_name:
             diff.append(
                 "family_name: {} != {}".format(self.family_name, other.family_name)
             )
+        
         if self.family_file_path != other.family_file_path:
             diff.append(
                 "family_file_path: {} != {}".format(
                     self.family_file_path, other.family_file_path
                 )
             )
+        
         if self.family_type_name != other.family_type_name:
             diff.append(
                 "family_type_name: {} != {}".format(

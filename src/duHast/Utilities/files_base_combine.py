@@ -10,7 +10,7 @@ Helper functions relating to combining text files.
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2024, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -101,54 +101,42 @@ def combine_files(
         file_list = file_getter(folder_path, file_prefix, file_suffix, file_extension)
         
         # loop over file and combine...
-        # newlines is set to '' to avoid double newlines on Windows
-        #result = open(os.path.join(folder_path, output_file_name), "w", newline='', encoding="utf-8")
+        for file_index, file_ in enumerate(file_list):
+            try:
+                #line_counter = 0
+                
+                # attempt to read the file
+                lines_result = read_column_based_text_file_base(file_, delimiter=delimiter)
+                if lines_result.status is False:
+                    return_value.update_sep(False, "Failed to read file: {} with {}".format(file_, lines_result.message))
+                    # skip to next file
+                    continue
+                
+                # get the lines read from the file
+                lines = lines_result.result
+                
+                # determine write mode, default is append
+                write_mode = "a"
+                if file_index == 0:
+                    write_mode = "w"
+                    
+                # determine if first row is header row and should be skipped in the write for any file other than the first
+                if file_index != 0:
+                    lines = lines[1:]
+                
+                write_result = write_report_data_base(
+                    file_name=os.path.join(folder_path, output_file_name),
+                    header=[],
+                    data=lines,
+                    write_type=write_mode,
+                    delimiter=delimiter,
+                    quoting=quoting
+                )
+                
+                return_value.update(write_result)
+            except Exception as e:
+                return_value.update_sep(False, "File: {} failed to combine with exception: {}".format(file_, e))
         
-        try:
-            # lineterminator='\n' is set to avoid double newlines on Windows
-            #writer = csv.writer(result, delimiter=delimiter, quoting=quoting, lineterminator='\n')
-
-            for file_index, file_ in enumerate(file_list):
-                try:
-                    #line_counter = 0
-                    
-                    # attempt to read the file
-                    lines_result = read_column_based_text_file_base(file_, delimiter=delimiter)
-                    if lines_result.status is False:
-                        return_value.update_sep(False, "Failed to read file: {} with {}".format(file_, lines_result.message))
-                        # skip to next file
-                        continue
-                    
-                    # get the lines read from the file
-                    lines = lines_result.result
-                    
-                    # determine write mode, default is append
-                    write_mode = "a"
-                    if file_index == 0:
-                        write_mode = "w"
-                        
-                    # determine if first row is header row and should be skipped in the write for any file other than the first
-                    if file_index != 0:
-                        lines = lines[1:]
-                    
-                    write_result = write_report_data_base(
-                        file_name=os.path.join(folder_path, output_file_name),
-                        header=[],
-                        data=lines,
-                        write_type=write_mode,
-                        delimiter=delimiter,
-                        quoting=quoting
-                    )
-                    
-                    return_value.update(write_result)
-                except Exception as e:
-                    return_value.update_sep(False, "File: {} failed to combine with exception: {}".format(file_, e))
-        except Exception as e:
-                    return_value.update_sep(False, "Failed to combine with exception: {}".format(e))
-        # finally:
-        #     # make sure to close the file
-        #     result.close()
-                    
     except Exception as e:
         return_value.update_sep(False, "Failed to combine files with exception: {}".format(e))
     return return_value
@@ -333,18 +321,6 @@ def append_to_file(source_file, append_file, ignore_first_row=False, delimiter="
     """
 
     return_value = Result()
-    
-    # # set a flag to check if we need to add a newline before writing
-    # need_newline = False
-    # # if in append mode, check if the last character is a newline
-    # if not is_last_char_newline(source_file):
-    #     # if not, we need to add a newline before writing
-    #     need_newline = True
-    #     return_value.append_message(
-    #         "File: {} is in append mode, but last character is not a newline.".format(
-    #             source_file
-    #         )
-    #     )
         
     try:
         # read file to append into memory...hopefully will never get in GB range in terms of file size
@@ -362,7 +338,7 @@ def append_to_file(source_file, append_file, ignore_first_row=False, delimiter="
             # get the lines from the file
             lines = lines_result.result
         
-        # prepare data to be written to file
+        # write data to file
         write_result = write_report_data_base(
             file_name=source_file,
             header=[],
@@ -374,33 +350,6 @@ def append_to_file(source_file, append_file, ignore_first_row=False, delimiter="
                     
         return_value.update(write_result)
         
-        # # newlines is set to '' to avoid double newlines on Windows
-        # with open(source_file, "a", encoding="utf-8", newline='') as f:
-        #     # lineterminator='\n' is set to avoid double newlines on Windows
-        #     writer = csv.writer(f, delimiter=delimiter, quoting=quoting, lineterminator='\n')
-            
-        #     # check if a new line is required at the beginning of the write
-        #     if need_newline:
-        #         f.write('\n')
-
-        #     if not ignore_first_row:
-        #         # no need to add a newline character to the first row of the file
-        #         # since this is writing entire rows to the file
-        #         for line in lines:
-        #             # write entire new row to file
-        #             writer.writerow(line)
-        #     else:
-        #         # write the rest of the rows to the file
-        #         for i, line in enumerate(lines[1:]):
-        #             # check if we are at the last row to be appended to the file ( could also be the first and last row !)
-        #             if i == len(lines[1:]) - 1:
-        #                 # Write the last row without a newline character at the end ( This requires a new line to be added to beginning of write!, see code above)
-        #                 f.write(delimiter.join(line))
-        #             else:
-        #                 # write entire new row to file
-        #                 writer.writerow(line)
-               
-        #return_value.append_message("File: {} appended to file: {}".format(append_file, source_file))
     except Exception as e:
         return_value.update_sep(False, "Failed to append file with exception: {}".format(e))
     return return_value

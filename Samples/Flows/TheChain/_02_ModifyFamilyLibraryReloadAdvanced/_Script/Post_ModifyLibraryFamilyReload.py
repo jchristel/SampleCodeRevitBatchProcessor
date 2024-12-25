@@ -55,8 +55,7 @@ import settings as settings  # sets up all commonly used variables and path loca
 from duHast.Utilities.console_out import output
 from duHast.Utilities.files_io import file_delete, get_file_name_without_ext, copy_file
 from duHast.Utilities.files_get import get_files_with_filter
-from duHast.Utilities.files_combine import combine_files
-from duHast.Utilities.files_csv import read_csv_file
+from duHast.Utilities.files_csv import read_csv_file, combine_csv_files
 from duHast.Utilities.batch_processor_log_utils import process_log_files
 from duHast.Utilities.date_stamps import (
     get_file_date_stamp,
@@ -141,7 +140,7 @@ def combine_data_files():
     for to_combine in FILE_DATA_TO_COMBINE:
         output("Combining {}  report files.".format(to_combine[0]))
         # combine files
-        combine_result = combine_files(
+        combine_result = combine_csv_files(
             settings.WORKING_DIRECTORY, "", to_combine[0], ".temp", to_combine[1]
         )
         output("Combined report files. [{}]".format(combine_result.status))

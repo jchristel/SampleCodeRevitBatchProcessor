@@ -27,6 +27,7 @@ Utility functions writing / reading json objects to/ from file.
 #
 
 from duHast.Utilities.Objects import result as res
+from duHast.Utilities.files_get import get_files_single_directory
 
 import codecs
 import json
@@ -128,3 +129,51 @@ def read_json_data_from_file(file_path):
     except Exception as e:
         pass
     return data
+
+def combine_files_json(
+    folder_path,
+    file_prefix="",
+    file_suffix="",
+    file_extension=".txt",
+    output_file_name="result.txt",
+    file_getter=get_files_single_directory,
+):
+    """
+    Combines multiple json formatted text files into a single json list formatted file, where each file is a list entry.
+    Assumes:
+
+    - each file can contain a single line json formatted string
+
+    The new file will be saved into the same folder as the original files.
+
+    :param folder_path: Folder path from which to get files to be combined and to which the combined file will be saved.
+    :type folder_path: str
+    :param file_prefix: Filter: File name starts with this value
+    :type file_prefix: str
+    :param file_suffix: Filter: File name ends with this value.
+    :type file_suffix: str
+    :param file_extension: Filter: File needs to have this file extension
+    :type file_extension: str, format '.extension'
+    :param out_put_file_name: The file name of the combined file, defaults to 'result.txt'
+    :type out_put_file_name: str, optional
+    :param file_getter: Function returning list of files to be combined, defaults to GetFilesSingleFolder
+    :type file_getter: func(folder_path, file_prefix, file_suffix, file_extension), optional
+    """
+
+    # get all files to be combined
+    file_list = file_getter(folder_path, file_prefix, file_suffix, file_extension)
+
+    # read json data into a list of json objects
+    json_objects = []
+    for file in file_list:
+        json_object = read_json_data_from_file(file_path=file)
+        json_objects.append(json_object)
+
+    # write json data out
+    result_write = write_json_to_file(
+        json_data=json_objects,
+        data_output_file_path=os.path.join(folder_path, output_file_name),
+    )
+
+    # return flag only
+    return result_write.status

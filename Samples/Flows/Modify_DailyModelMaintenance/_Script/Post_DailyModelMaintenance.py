@@ -52,12 +52,9 @@ from duHast.Utilities.files_io import (
     file_exist,
     get_file_name_without_ext,
 )
-from duHast.Utilities.files_combine import (
-    combine_files,
-    combine_files_csv_header_independent,
-    append_to_file,
-    combine_files_json,
-)
+
+from duHast.Utilities.files_csv import combine_csv_files_header_independent, append_csv_file, combine_csv_files
+from duHast.Utilities.files_json import combine_files_json
 
 from duHast.Utilities.files_get import get_files_with_filter, get_files_single_directory
 from duHast.Utilities.files_csv import write_report_data_as_csv
@@ -88,7 +85,7 @@ def get_file_name_from_temp(file_name, filter):
     :param filter: file name ends on: filter ?
     :type filter: str
 
-    :return: file name without date stemp and filter value
+    :return: file name without date stamp and filter value
     :rtype: str
     """
 
@@ -148,7 +145,7 @@ def merge_files():
             file_without_ext = get_file_name_without_ext(file_match)
 
             # append single temp file to data log file
-            result_append = append_to_file(data_file_name, file_match, True)
+            result_append = append_csv_file(data_file_name, file_match, True)
             if result_append.status:
                 output("Appended: {}  to: {}".format(file_without_ext, log_file_name))
             else:
@@ -199,7 +196,7 @@ def append_files_wrapper(
     full_out_file_name = os.path.join(settings.OUTPUT_FOLDER, output_file_name)
 
     for file in file_list:
-        append_result = append_to_file(
+        append_result = append_csv_file(
             source_file=full_out_file_name, append_file=file, ignore_first_row=True
         )
         output(
@@ -225,7 +222,7 @@ def combine_csv_files_wrapper(folder_path, file_prefix, file_suffix, file_extens
     """
 
     try:
-        combine_files_csv_header_independent(
+        combine_csv_files_header_independent(
             folder_path=folder_path,
             file_prefix=file_prefix,
             file_suffix=file_suffix,
@@ -254,7 +251,7 @@ def combine_files_wrapper(folder_path,file_prefix,file_suffix,file_extension,out
     :type output_file_name: str
     """
     
-    result_combine = combine_files(
+    result_combine = combine_csv_files(
         folder_path=folder_path,
         file_prefix=file_prefix,
         file_suffix=file_suffix,

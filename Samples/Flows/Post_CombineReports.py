@@ -65,7 +65,7 @@ sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common library
 from duHast.Utilities import date_stamps as dateStamp
-from duHast.Utilities import files_combine as fileCombine
+from duHast.Utilities.files_csv import combine_csv_files
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -109,7 +109,7 @@ output('Writing summary Data.... start')
 DATE_STAMP = dateStamp.get_file_date_stamp()
 
 # combine report files based on:
-combine_status_cad = fileCombine.combine_files(
+combine_status_cad = combine_csv_files(
     ROOT_PATH,  # - part report location
     DATE_STAMP, # - part report prefix ( same date stamp as current)
     '_CAD',     # - part report file name suffix
@@ -120,7 +120,7 @@ combine_status_cad = fileCombine.combine_files(
 output('Writing summary Data.... finished:[{}] {}_CAD_Links_summary.txt'.format(combine_status_cad.status, DATE_STAMP))
 
 # combine report files based on:
-combine_status_revit = fileCombine.combine_files(
+combine_status_revit = combine_csv_files(
     ROOT_PATH,      # - part report location
     DATE_STAMP,     # - part report prefix ( same date stamp as current)
     '_RVT',         # - part report file name suffix

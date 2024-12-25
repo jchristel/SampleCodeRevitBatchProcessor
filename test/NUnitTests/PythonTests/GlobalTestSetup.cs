@@ -23,10 +23,15 @@ namespace PythonTests
                 PythonEngineManager.TimerClass = scope.GetVariable("Timer");
 
                 //Utility modules
-                engine.Execute("import duHast.Utilities.files_combine as files_combine", scope);
-                PythonEngineManager.FilesCombineModule = scope.GetVariable("files_combine");
+                //files modules
+                engine.Execute("import duHast.Utilities.files_base_combine as files_base_combine", scope);
+                PythonEngineManager.FilesBaseCombineModule = scope.GetVariable("files_base_combine");
                 engine.Execute("import duHast.Utilities.files_csv as files_csv", scope);
                 PythonEngineManager.FilesCSVModule = scope.GetVariable("files_csv");
+                engine.Execute("import duHast.Utilities.files_base_read as files_base_read", scope);
+                PythonEngineManager.FilesBaseReadModule = scope.GetVariable("files_base_read");
+                engine.Execute("import duHast.Utilities.files_base_write as files_base_write", scope);
+                PythonEngineManager.FilesBaseWriteModule = scope.GetVariable("files_base_write");
 
                 // geometry classes
                 PythonEngineManager.BoundingBoxBaseClass = scope.GetVariable("BoundingBoxBase");

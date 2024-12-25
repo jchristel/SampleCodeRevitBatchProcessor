@@ -38,7 +38,7 @@ from csv import QUOTE_MINIMAL
 
 import settings as settings  # sets up all commonly used variables and path locations!
 from duHast.Utilities.console_out import output
-from duHast.Utilities.files_csv import write_report_data_as_csv
+from duHast.Utilities.files_csv import write_report_data_as_csv, combine_csv_files
 from duHast.Utilities.files_get import (
     get_files_with_filter,
     get_files_from_directory_walker_with_filters,
@@ -51,7 +51,6 @@ from duHast.Utilities.files_io import (
 from duHast.Utilities.files_tab import read_tab_separated_file
 from duHast.Utilities.directory_io import create_directory, directory_exists
 from duHast.Utilities.date_stamps import get_folder_date_stamp
-from duHast.Utilities.files_combine import combine_files
 
 from duHast.Revit.Family.Data.family_report_utils import combine_reports
 
@@ -200,7 +199,7 @@ def combine_temp_reports():
     for to_Combine in FILE_DATA_TO_COMBINE:
         output("Combining {} report files.".format(to_Combine[0]))
         # combine files
-        combine_files(
+        combine_csv_files(
             settings.OUTPUT_FOLDER,
             "",
             to_Combine[0],

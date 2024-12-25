@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Helper functions relating to text files. 
+Helper functions relating to reading text files. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -41,10 +41,10 @@ from duHast.Utilities.files_io import (
 
 from duHast.Utilities.Objects.result import Result
 
+
 def read_column_based_text_file_without_encoding(
     file_path, increase_max_field_size_limit=False, delimiter=","
 ):
-
     """
     Read a column based text file, without any encoding.
 
@@ -68,7 +68,7 @@ def read_column_based_text_file_without_encoding(
         - result.message will contain exception message.
     :rtype: :class:`.Result`
     """
-    
+
     return_value = Result()
 
     # Initialize the row list
@@ -77,7 +77,7 @@ def read_column_based_text_file_without_encoding(
     # check if the max field size limit should be increased
     if increase_max_field_size_limit:
         csv.field_size_limit(2147483647)
-        
+
     # attempt to read the file
     try:
         with open(file_path) as csv_file:
@@ -90,21 +90,19 @@ def read_column_based_text_file_without_encoding(
             except Exception as e:
                 return_value.update_sep(
                     False,
-                    "Failed to read file: {} with exception: {}".format(
-                        file_path, e
-                    ),
+                    "Failed to read file: {} with exception: {}".format(file_path, e),
                 )
             finally:
                 csv_file.close()
     except Exception as e:
         return_value.update_sep(
-            False, "Failed to read file: {} with exception: {}".format(file_path,e)
+            False, "Failed to read file: {} with exception: {}".format(file_path, e)
         )
 
     return_value.result = row_list
     return return_value
-    
-        
+
+
 def read_column_based_text_file_with_encoding(
     file_path, increase_max_field_size_limit=False, delimiter=","
 ):
@@ -151,19 +149,30 @@ def read_column_based_text_file_with_encoding(
                     reader = csv.reader(txt_file, delimiter=delimiter)
                     row_list = list(reader)
                     # Successful read
-                    return_value.update_sep(True, "Read file: {} successfully with encoding: {} and delimiter: [{}]".format(file_path, encoding, delimiter))
+                    return_value.update_sep(
+                        True,
+                        "Read file: {} successfully with encoding: {} and delimiter: [{}]".format(
+                            file_path, encoding, delimiter
+                        ),
+                    )
                     return_value.result = row_list
                     # back to caller
                     return return_value
                 except Exception as e:
                     return_value.update_sep(
-                        False, "Failed to read file: {} with exception: {}".format(file_path,e)
+                        False,
+                        "Failed to read file: {} with exception: {}".format(
+                            file_path, e
+                        ),
                     )
                 finally:
                     txt_file.close()
         except Exception as e:
             return_value.update_sep(
-                False, "Failed to read file: {} with encoding {}: {}".format(file_path, encoding, e)
+                False,
+                "Failed to read file: {} with encoding {}: {}".format(
+                    file_path, encoding, e
+                ),
             )
 
     # status should be false
@@ -199,26 +208,30 @@ def process_txt_file(file_path, delimiter=","):
     temp_file_path = System.IO.Path.GetTempFileName()
 
     try:
-        return_value.append_message("Attempting to remove any null bytes from txt file: {}".format(file_path))
-        
+        return_value.append_message(
+            "Attempting to remove any null bytes from txt file: {}".format(file_path)
+        )
+
         # Remove null bytes and save to a temporary file
         remove_null_bytes(file_path, temp_file_path)
 
-        return_value.append_message("Removed any existing null bytes from txt file: {}".format(file_path))
-        
+        return_value.append_message(
+            "Removed any existing null bytes from txt file: {}".format(file_path)
+        )
+
         # Read the cleaned file with the CSV reader without encoding
         file_reader_status = read_column_based_text_file_without_encoding(
             file_path=temp_file_path,
             increase_max_field_size_limit=False,
             delimiter=delimiter,
         )
-        
+
         # get log messages
         return_value.update_sep(file_reader_status.status, file_reader_status.message)
-        
+
         # get the row list
         return_value.result = file_reader_status.result
-        
+
     except Exception as e:
         return_value.update_sep(
             False, "Failed to clean txt file with exception: {}".format(e)
@@ -282,26 +295,28 @@ def read_column_based_text_file(
             increase_max_field_size_limit=increase_max_field_size_limit,
             delimiter=delimiter,
         )
-        
+
         # if reading without encoding worked return the result
         if file_reader_status.status:
             return file_reader_status
-        
+
         # get log messages
         return_value.update_sep(file_reader_status.status, file_reader_status.message)
-        
+
         # check for null byte exception
         if "line contains NULL byte" in file_reader_status.message:
             # attempt to remove null byte exception
             cleaned_rows_result = process_txt_file(file_path, delimiter)
-            
+
             # if reading after cleaning and without encoding worked return the result
             if cleaned_rows_result.status:
                 return cleaned_rows_result
-            
+
             # get log messages
-            return_value.update_sep(cleaned_rows_result.status, cleaned_rows_result.message)
-        
+            return_value.update_sep(
+                cleaned_rows_result.status, cleaned_rows_result.message
+            )
+
     except Exception as e:
         return_value.update_sep(
             False, "Failed to read txt file with exception: {}".format(e)
@@ -381,11 +396,11 @@ def get_unique_headers(files, delimiter=","):
         # get unmodified row data and remove the next line character at the end
         data_result = get_first_row_in_column_based_text_file(f, delimiter=delimiter)
         if data_result.status is False:
-            raise  Exception("Failed to get headers from file: {}".format(f))
-        
+            raise Exception("Failed to get headers from file: {}".format(f))
+
         # store the headers by file name
         headers_in_all_files[get_file_name_without_ext(f)] = data_result.result
-        
+
     # create a list of unique headers
     headers_unique = []
     for header_by_file in headers_in_all_files:

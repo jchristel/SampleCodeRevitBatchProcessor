@@ -35,13 +35,7 @@ namespace PythonTests.UtilitiesTests
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
 
             // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
-            List<List<string>> data = new List<List<string>>
-                {
-                    new List<string> { "Value1", "Value2" },
-                    new List<string> { "Value3", "Value4" }
-                };
+            var (fileName, header, data) = FileBaseTestsData.StandardTestData_HeaderAndData(tempDirectory);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -68,13 +62,16 @@ namespace PythonTests.UtilitiesTests
                 Console.WriteLine("{" + line + "}");
             }
 
+            // Determine header count
+            int headerCount = header.Count > 0 ? 1 : 0;
+
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
+            Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain("Header1;Header2"));
-            Assert.That(reportContent, Does.Contain("Value1;Value2"));
-            Assert.That(reportContent, Does.Contain("Value3;Value4"));
+            Assert.That(reportContent, Does.Contain(string.Join(";", header)));
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[0])));
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[1])));
         }
 
         [Test]
@@ -83,9 +80,7 @@ namespace PythonTests.UtilitiesTests
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
 
             // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
-            List<List<string>> data = new List<List<string>>(); // No data rows
+            var (fileName, header, data) = FileBaseTestsData.StandardTestData_HeaderOnly(tempDirectory);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -112,11 +107,14 @@ namespace PythonTests.UtilitiesTests
                 Console.WriteLine("{" + line + "}");
             }
 
+            // Determine header count
+            int headerCount = header.Count > 0 ? 1 : 0;
+
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(1)); // 1 header row
+            Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain("Header1;Header2"));
+            Assert.That(reportContent, Does.Contain(string.Join(";", header)));
         }
 
         [Test]
@@ -125,13 +123,7 @@ namespace PythonTests.UtilitiesTests
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
 
             // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string>(); // No header
-            List<List<string>> data = new List<List<string>>
-            {
-                new List<string> { "Value1", "Value2" },
-                new List<string> { "Value3", "Value4" }
-            };
+            var (fileName, header, data) = FileBaseTestsData.StandardTestData_DataOnly(tempDirectory);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -158,12 +150,15 @@ namespace PythonTests.UtilitiesTests
                 Console.WriteLine("{" + line + "}");
             }
 
+            // Determine header count
+            int headerCount = header.Count > 0 ? 1 : 0;
+
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(2)); // 2 data rows
+            Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain("Value1;Value2"));
-            Assert.That(reportContent, Does.Contain("Value3;Value4"));
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[0])));
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[1])));
         }
 
         [Test]
@@ -172,13 +167,7 @@ namespace PythonTests.UtilitiesTests
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
 
             // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
-            List<List<string>> data = new List<List<string>>
-            {
-                new List<string> { "Value1 ; delim", "Value2" },
-                new List<string> { "Value3", "delim ; Value4" }
-            };
+            var (fileName, header, data) = FileBaseTestsData.DelimitedTestData_DataOnly(tempDirectory);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -205,13 +194,16 @@ namespace PythonTests.UtilitiesTests
                 Console.WriteLine("{" + line + "}");
             }
 
+            // Determine header count
+            int headerCount = header.Count > 0 ? 1 : 0;
+
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
+            Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain("Header1;Header2"));
-            Assert.That(reportContent, Does.Contain("\"Value1 ; delim\";Value2"));
-            Assert.That(reportContent, Does.Contain("Value3;\"delim ; Value4\""));
+            Assert.That(reportContent, Does.Contain(string.Join(";", header)));
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[0].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a ;
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[1].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a ;
         }
 
         [Test]
@@ -220,10 +212,8 @@ namespace PythonTests.UtilitiesTests
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
 
             // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1;Part1", "Header2;Part2" };
-            List<List<string>> data = new List<List<string>>(); // No data rows
-
+            var (fileName, header, data) = FileBaseTestsData.DelimitedTestData_HeaderOnly(tempDirectory);
+            
             // Act
             var result = fileWriter.write_report_data(
                 file_name: fileName,
@@ -249,11 +239,14 @@ namespace PythonTests.UtilitiesTests
                 Console.WriteLine("{" + line + "}");
             }
 
+            // Determine header count
+            int headerCount = header.Count > 0 ? 1 : 0;
+
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(1)); // 1 header row
+            Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain("\"Header1;Part1\";\"Header2;Part2\""));
+            Assert.That(reportContent, Does.Contain(string.Join(";", header.Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a ;
         }
 
         [Test]
@@ -262,13 +255,7 @@ namespace PythonTests.UtilitiesTests
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
 
             // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
-            List<List<string>> data = new List<List<string>>
-            {
-                new List<string> { "Välue1", "Välue2" },
-                new List<string> { "Välue3", "Välue4" }
-            };
+            var (fileName, header, data) = FileBaseTestsData.NonASCIITestData(tempDirectory);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -295,13 +282,16 @@ namespace PythonTests.UtilitiesTests
                 Console.WriteLine("{" + line + "}");
             }
 
+            // Determine header count
+            int headerCount = header.Count > 0 ? 1 : 0;
+
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
+            Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain("Header1;Header2"));
-            Assert.That(reportContent, Does.Contain("Vlue1;Vlue2")); // Non-ASCII characters should be removed
-            Assert.That(reportContent, Does.Contain("Vlue3;Vlue4")); // Non-ASCII characters should be removed
+            Assert.That(reportContent, Does.Contain(string.Join(";", header)));
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[0].Select(d => FileBaseTestsData.StripNonAscii(d)))));
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[1].Select(d => FileBaseTestsData.StripNonAscii(d)))));
         }
 
         [Test]
@@ -310,13 +300,7 @@ namespace PythonTests.UtilitiesTests
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
 
             // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
-            List<List<string>> data = new List<List<string>>
-            {
-                new List<string> { "Value1", "Value2" },
-                new List<string> { "Value3", "Välue4" } // Non-UTF-8 character
-            };
+            var (fileName, header, data) = FileBaseTestsData.NonUTF8TestData_DataOnly(tempDirectory);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -343,13 +327,16 @@ namespace PythonTests.UtilitiesTests
                 Console.WriteLine("{" + line + "}");
             }
 
+            // Determine header count
+            int headerCount = header.Count > 0 ? 1 : 0;
+
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
+            Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain("Header1;Header2"));
-            Assert.That(reportContent, Does.Contain("Value1;Value2"));
-            Assert.That(reportContent, Does.Contain("Value3;Välue4")); // Non-UTF-8 character should be preserved
+            Assert.That(reportContent, Does.Contain(string.Join(";", header)));
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[0].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a ;
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[1].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a and Non-UTF-8 character should be preserved
         }
 
         [Test]
@@ -358,13 +345,8 @@ namespace PythonTests.UtilitiesTests
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
 
             // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
-            List<List<string>> data = new List<List<string>>
-    {
-        new List<string> { "Value1", "Value2" },
-        new List<string> { "Value3", "Välue4;Part" } // Non-UTF-8 character and delimiter in data
-    };
+            var (fileName, header, data) = FileBaseTestsData.NonUTF8AndDelimitedTestData_DataOnly(tempDirectory);
+            
 
             // Act
             var result = fileWriter.write_report_data(
@@ -391,13 +373,16 @@ namespace PythonTests.UtilitiesTests
                 Console.WriteLine("{" + line + "}");
             }
 
+            // Determine header count
+            int headerCount = header.Count > 0 ? 1 : 0;
+
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
+            Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain("Header1;Header2"));
-            Assert.That(reportContent, Does.Contain("Value1;Value2"));
-            Assert.That(reportContent, Does.Contain("Value3;\"Välue4;Part\"")); // Non-UTF-8 character and delimiter in data should be preserved and quoted
+            Assert.That(reportContent, Does.Contain(string.Join(";", header)));
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[0])));
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[1].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a and Non-UTF-8 character should be preserved
         }
 
         [Test]
@@ -406,13 +391,7 @@ namespace PythonTests.UtilitiesTests
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
 
             // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Hëader1", "Hëader2" }; // Non-UTF-8 characters in header
-            List<List<string>> data = new List<List<string>>
-            {
-                new List<string> { "Value1", "Value2" },
-                new List<string> { "Value3", "Välue4" } // Non-UTF-8 character in data
-            };
+            var (fileName, header, data) = FileBaseTestsData.NonUTF8TestData_HeaderAndData(tempDirectory);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -439,14 +418,17 @@ namespace PythonTests.UtilitiesTests
                 Console.WriteLine("{" + line + "}");
             }
 
+            // Determine header count
+            int headerCount = header.Count > 0 ? 1 : 0;
+
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
+            Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain("Hëader1;Hëader2")); // Non-UTF-8 characters in header should be preserved
-            Assert.That(reportContent, Does.Contain("Value1;Value2"));
-            Assert.That(reportContent, Does.Contain("Value3;Välue4")); // Non-UTF-8 character in data should be preserved
-        }
+            Assert.That(reportContent, Does.Contain(string.Join(";", header.Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a and Non-UTF-8 character should be preserved
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[0].Select(d => d.Contains(";") ? $"\"{d}\"" : d))));
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[1].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a and Non-UTF-8 character should be preserved
+         }
 
         [Test]
         public void WriteReportData_CreatesReportFileWithHeaderAndDataContainingDelimiter()
@@ -454,13 +436,7 @@ namespace PythonTests.UtilitiesTests
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
 
             // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1;Part1", "Header2;Part2" }; // Header containing delimiter
-            List<List<string>> data = new List<List<string>>
-    {
-        new List<string> { "Value1;Part1", "Value2;Part2" }, // Data containing delimiter
-        new List<string> { "Value3;Part3", "Value4;Part4" }  // Data containing delimiter
-    };
+            var (fileName, header, data) = FileBaseTestsData.DelimitedTestData_HeaderAndData(tempDirectory);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -487,13 +463,16 @@ namespace PythonTests.UtilitiesTests
                 Console.WriteLine("{" + line + "}");
             }
 
+            // Determine header count
+            int headerCount = header.Count > 0 ? 1 : 0;
+
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
+            Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain("\"Header1;Part1\";\"Header2;Part2\"")); // Header containing delimiter should be quoted
-            Assert.That(reportContent, Does.Contain("\"Value1;Part1\";\"Value2;Part2\"")); // Data containing delimiter should be quoted
-            Assert.That(reportContent, Does.Contain("\"Value3;Part3\";\"Value4;Part4\"")); // Data containing delimiter should be quoted
+            Assert.That(reportContent, Does.Contain(string.Join(";", header.Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a delimiter
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[0].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a delimiter
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[1].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a delimiter
         }
 
         [Test]
@@ -502,9 +481,7 @@ namespace PythonTests.UtilitiesTests
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
 
             // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Hëader1", "Hëader2" }; // Non-UTF-8 characters in header
-            List<List<string>> data = new List<List<string>>(); // No data rows
+            var (fileName, header, data) = FileBaseTestsData.NonUTF8TestData_HeaderOnly(tempDirectory);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -531,11 +508,14 @@ namespace PythonTests.UtilitiesTests
                 Console.WriteLine("{" + line + "}");
             }
 
+            // Determine header count
+            int headerCount = header.Count > 0 ? 1 : 0;
+
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(1)); // 1 header row
+            Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain("Hëader1;Hëader2")); // Non-UTF-8 characters in header should be preserved
+            Assert.That(reportContent, Does.Contain(string.Join(";", header))); // Non-UTF-8 characters in header should be preserved
         }
 
         [Test]
@@ -544,9 +524,7 @@ namespace PythonTests.UtilitiesTests
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
 
             // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Hëader1;Part1", "Hëader2;Part2" }; // Non-UTF-8 characters and delimiter in header
-            List<List<string>> data = new List<List<string>>(); // No data rows
+            var (fileName, header, data) = FileBaseTestsData.NonUTF8TestData_HeaderOnly(tempDirectory);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -573,11 +551,14 @@ namespace PythonTests.UtilitiesTests
                 Console.WriteLine("{" + line + "}");
             }
 
+            // Determine header count
+            int headerCount = header.Count > 0 ? 1 : 0;
+
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(1)); // 1 header row
+            Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain("\"Hëader1;Part1\";\"Hëader2;Part2\"")); // Non-UTF-8 characters and delimiter in header should be preserved and quoted
+            Assert.That(reportContent, Does.Contain(string.Join(";", header.Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a delimiter, Non-UTF-8 characters and delimiter in header should be preserved and quoted
         }
 
         [Test]
@@ -586,13 +567,7 @@ namespace PythonTests.UtilitiesTests
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
 
             // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
-            List<List<string>> data = new List<List<string>>
-            {
-                new List<string> { "Value1", "Value2" },
-                new List<string> { "Value3", "Value4" }
-            };
+            var (fileName, header, data) = FileBaseTestsData.StandardTestData_HeaderAndData(tempDirectory);
 
             dynamic bomValue = PythonEngineManager.BOMValueClass();
             var bom = bomValue.UTF_8;
@@ -628,13 +603,16 @@ namespace PythonTests.UtilitiesTests
                 Console.WriteLine("{" + line + "}");
             }
 
+            // Determine header count
+            int headerCount = header.Count > 0 ? 1 : 0;
+
             // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
+            Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain("Header1;Header2"));
-            Assert.That(reportContent, Does.Contain("Value1;Value2"));
-            Assert.That(reportContent, Does.Contain("Value3;Value4"));
+            Assert.That(reportContent, Does.Contain(string.Join(";", header)));
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[0])));
+            Assert.That(reportContent, Does.Contain(string.Join(";", data[1])));
         }
     }
 }

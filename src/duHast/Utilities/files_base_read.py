@@ -35,7 +35,6 @@ from duHast.Utilities.files_io import (
     remove_null_bytes,
     file_delete,
     file_exist,
-    is_last_char_newline,
     get_file_name_without_ext,
 )
 

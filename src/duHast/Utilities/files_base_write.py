@@ -121,49 +121,42 @@ def write_report_data(
                 lineterminator="\n",
             )
 
+            # internal function to encode the row using the specified encoding
             def encoded_row(row):
+                # Encode each string in the row using the specified encoding
+                encoded = [s.encode(encoding).decode(encoding) for s in row]
+                # check if also ascii encoding is enforced
                 if enforce_ascii:
-                    return [s.encode("ascii", "ignore").decode("ascii") for s in row]
+                    # enforce ascii encoding by removing non-ascii characters
+                    return [s.encode("ascii", "ignore").decode("ascii") for s in encoded]
                 else:
-                    return row  # Keep the strings in their current state for writing
+                    # return the encoded row
+                    return encoded # Keep the strings in their current state for writing
 
             # Write header
             if header:
-                # check if header only or if there is data to write as well
-                if data:
-                    # Write the header row with the CSV writer including a new line character
-                    writer.writerow(encoded_row(header))
-                    return_value.append_message(
-                        "Header written to file. (including newline)"
-                    )
-                else:
-                    # Write the header row without a newline character
-                    f.write(delimiter.join(encoded_row(header)))
-                    return_value.append_message(
-                        "Header written to file. (including newline)"
-                    )
-            else:
-                return_value.append_message("No header provided to write to file.")
+                writer.writerow(encoded_row(header))
+                return_value.append_message("Header written to file. (including newline)")
 
-            # Write data rows, looping over rows to prevent new line character on the last row
+            # Write data rows
             for i in range(len(data)):
-                row = data[i]
-                if i == len(data) - 1:
-                    # Write the last row without a newline character
-                    f.write(delimiter.join(encoded_row(row)))
-                    return_value.append_message(
-                        "Last row {} written to file. (without newline)>>{}".format(
-                            ",".join(encoded_row(row)), i
-                        )
-                    )
-                else:
-                    writer.writerow(encoded_row(row))
-                    return_value.append_message(
-                        "Row {} written to file. (including newline)>>{}".format(
-                            ",".join(encoded_row(row)), i
-                        )
-                    )
+                row = encoded_row(data[i])
+                writer.writerow(row)
+                return_value.append_message(
+                         "Row {} written to file. (including newline)>>{}".format(
+                             ",".join(encoded_row(row)), i
+                         )
+                     )
 
+            # Remove the newline character from the last row
+            f.flush()  # Ensure all data is written to the file
+            with open(file_name, 'rb+') as f:
+                f.seek(-1, 2)  # Move the cursor to the last character in the file
+                if f.read(1) == b'\n':
+                    f.seek(-1, 2)  # Move the cursor back by one character
+                    f.truncate()  # Truncate the file at the current cursor position
+                    return_value.append_message("Removed newline character from the last row.")
+                
         except Exception as e:
             return_value.update_sep(
                 False,

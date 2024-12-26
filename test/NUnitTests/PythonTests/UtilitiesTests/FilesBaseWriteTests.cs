@@ -579,5 +579,62 @@ namespace PythonTests.UtilitiesTests
             // Check for the content
             Assert.That(reportContent, Does.Contain("\"Hëader1;Part1\";\"Hëader2;Part2\"")); // Non-UTF-8 characters and delimiter in header should be preserved and quoted
         }
+
+        [Test]
+        public void WriteReportData_CreatesReportFileWithBOM()
+        {
+            dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
+
+            // Arrange
+            string fileName = Path.Combine(tempDirectory, "report.csv");
+            List<string> header = new List<string> { "Header1", "Header2" };
+            List<List<string>> data = new List<List<string>>
+            {
+                new List<string> { "Value1", "Value2" },
+                new List<string> { "Value3", "Value4" }
+            };
+
+            dynamic bomValue = PythonEngineManager.BOMValueClass();
+            var bom = bomValue.UTF_8;
+            
+            // Act
+            var result = fileWriter.write_report_data(
+                file_name: fileName,
+                header: header,
+                data: data,
+                write_type: "w",
+                enforce_ascii: false,
+                encoding: "utf-8",
+                bom: bom,
+                quoting: 3, // csv.QUOTE_NONE
+                delimiter: ";"
+            );
+            Console.WriteLine(result.message);
+
+            // Assert
+            Assert.That(result.status, Is.True);
+            Assert.That(File.Exists(fileName), Is.True);
+
+            // Check if BOM is present at the beginning of the file
+            byte[] fileBytes = File.ReadAllBytes(fileName);
+            byte[] expected = new byte[] { 0xef, 0xbb, 0xbf }; //utf-8 BOM
+            Assert.That(fileBytes.Take(expected.Length).SequenceEqual(expected), Is.True);
+
+            string reportContent = File.ReadAllText(fileName);
+            string[] lines = reportContent.Split(new[] { '\r', '\n' });
+
+            foreach (var line in lines)
+            {
+                Console.WriteLine("{" + line + "}");
+            }
+
+            // Check for the number of rows
+            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
+
+            // Check for the content
+            Assert.That(reportContent, Does.Contain("Header1;Header2"));
+            Assert.That(reportContent, Does.Contain("Value1;Value2"));
+            Assert.That(reportContent, Does.Contain("Value3;Value4"));
+        }
     }
 }

@@ -47,7 +47,7 @@
         {
             // Arrange
             string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
+            List<string> header = new List<string> (); // No header
             List<List<string>> data = new List<List<string>>
             {
                 new List<string> { "Value1;Part1", "Value2" },
@@ -94,7 +94,7 @@
         public static (string fileName, List<string> header, List<List<string>> data) NonUTF8TestData_DataOnly(string tempDirectory)
         {
             string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
+            List<string> header = new List<string> (); // No header
             List<List<string>> data = new List<List<string>>
             {
                 new List<string> { "Value1", "Value2" },
@@ -124,10 +124,23 @@
             return (fileName, header, data);
         }
 
+        public static (string fileName, List<string> header, List<List<string>> data) NonUTF8AndDelimitedTestData_HeaderAndData(string tempDirectory)
+        {
+            // Arrange
+            string fileName = Path.Combine(tempDirectory, "report.csv");
+            List<string> header = new List<string> { "Hëader1;Part1", "Hëader2;Part2" }; // Non-UTF-8 characters and delimiter in header
+            List<List<string>> data = new List<List<string>>
+            {
+                new List<string> { "Value1", "Value2" },
+                new List<string> { "Value3", "Välue4;Part" } // Non-UTF-8 character and delimiter in data
+            };
+            return (fileName, header, data);
+        }
+
         public static (string fileName, List<string> header, List<List<string>> data) NonUTF8AndDelimitedTestData_DataOnly(string tempDirectory)
         {
             string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
+            List<string> header = new List<string> (); // No header
             List<List<string>> data = new List<List<string>>
             {
                 new List<string> { "Value1", "Value2" },

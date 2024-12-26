@@ -29,12 +29,9 @@ Helper functions relating to writing text files.
 
 import codecs
 import csv
-import System.IO
+#import System.IO
 
 from duHast.Utilities.files_io import (
-    remove_null_bytes,
-    file_delete,
-    file_exist,
     is_last_char_newline,
 )
 
@@ -128,35 +125,43 @@ def write_report_data(
                 # check if also ascii encoding is enforced
                 if enforce_ascii:
                     # enforce ascii encoding by removing non-ascii characters
-                    return [s.encode("ascii", "ignore").decode("ascii") for s in encoded]
+                    return [
+                        s.encode("ascii", "ignore").decode("ascii") for s in encoded
+                    ]
                 else:
                     # return the encoded row
-                    return encoded # Keep the strings in their current state for writing
+                    return (
+                        encoded  # Keep the strings in their current state for writing
+                    )
 
             # Write header
             if header:
                 writer.writerow(encoded_row(header))
-                return_value.append_message("Header written to file. (including newline)")
+                return_value.append_message(
+                    "Header written to file. (including newline)"
+                )
 
             # Write data rows
             for i in range(len(data)):
                 row = encoded_row(data[i])
                 writer.writerow(row)
                 return_value.append_message(
-                         "Row {} written to file. (including newline)>>{}".format(
-                             ",".join(encoded_row(row)), i
-                         )
-                     )
+                    "Row {} written to file. (including newline)>>{}".format(
+                        ",".join(encoded_row(row)), i
+                    )
+                )
 
             # Remove the newline character from the last row
             f.flush()  # Ensure all data is written to the file
-            with open(file_name, 'rb+') as f:
+            with open(file_name, "rb+") as f:
                 f.seek(-1, 2)  # Move the cursor to the last character in the file
-                if f.read(1) == b'\n':
+                if f.read(1) == b"\n":
                     f.seek(-1, 2)  # Move the cursor back by one character
                     f.truncate()  # Truncate the file at the current cursor position
-                    return_value.append_message("Removed newline character from the last row.")
-                
+                    return_value.append_message(
+                        "Removed newline character from the last row."
+                    )
+
         except Exception as e:
             return_value.update_sep(
                 False,

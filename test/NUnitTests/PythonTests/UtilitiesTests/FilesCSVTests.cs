@@ -6,6 +6,28 @@ namespace PythonTests.UtilitiesTests
     {
         private string tempDirectory;
 
+        /// <summary>
+        /// Delegate for writing report data.
+        /// </summary>
+        /// <param name="parameters">A dictionary containing the parameters for the write_report_data function.</param>
+        /// <returns>A dynamic result object containing the status and message of the write operation.</returns>
+        private static readonly WriteReportDataDelegate writeReportDataDelegate = parameters =>
+        {
+            dynamic fileWriter = PythonEngineManager.FilesCSVModule;
+
+            return fileWriter.write_report_data(
+                file_name: (string)parameters["file_name"],
+                header: (List<string>)parameters["header"],
+                data: (List<List<string>>)parameters["data"],
+                write_type: (string)parameters["write_type"],
+                enforce_ascii: (bool)parameters["enforce_ascii"],
+                encoding: (string)parameters["encoding"],
+                bom: (object)parameters["bom"],
+                quoting: (int)parameters["quoting"]
+            );
+        };
+
+
         [SetUp]
         public void SetUp()
         {
@@ -29,200 +51,101 @@ namespace PythonTests.UtilitiesTests
         }
 
         [Test]
-        public void WriteReportDataAsCsv_CreatesCsvFileWithHeaderOnly()
+        public void WriteReportDataAsCsv_CreatesCsvFileWithLatinEncoding_HeaderAndData()
         {
-            dynamic filesCSV = PythonEngineManager.FilesCSVModule;
-
-            // Arrange
-            string fileName = Path.Combine(tempDirectory, "report_header_only.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
-            List<List<string>> data = new List<List<string>>(); // No data rows
-
-            // Act
-            var result = filesCSV.write_report_data_as_csv(file_name: fileName, header: header, data: data);
-
-            // Assert
-            Assert.That(File.Exists(fileName), Is.True);
-            string combinedContent = File.ReadAllText(fileName);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
-
-            // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(1)); // Only 1 header row
-
-            // Check for the content
-            Assert.That(combinedContent, Does.Contain("Header1,Header2"));
+            _CommonFilesBaseWriteTests.WriteReportDataAs_CreatesFileWithLatinEncoding_HeaderAndData(tempDirectory, ",", writeReportDataDelegate);
         }
 
         [Test]
-        public void WriteReportDataAsCsv_CreatesCsvFileWithOutHeader()
+        public void WriteReportData_CreatesReportFile_HeaderAndData()
         {
-            dynamic filesCSV = PythonEngineManager.FilesCSVModule;
-
-            // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string>(); // No header row
-            List<List<string>> data = new List<List<string>>
-                {
-                    new List<string> { "Value1", "Value2" },
-                    new List<string> { "Value3", "Value4" },
-                    new List<string> { "Value5", "Value6" }
-                };
-
-            // Act
-            var result = filesCSV.write_report_data_as_csv(file_name: fileName, header: header, data: data);
-
-            // Assert
-            Assert.That(File.Exists(fileName), Is.True);
-            string combinedContent = File.ReadAllText(fileName);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
-
-            // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 0 header row + 3 data rows
-
-            // Check for the content
-            Assert.That(combinedContent, Does.Contain("Value1,Value2"));
-            Assert.That(combinedContent, Does.Contain("Value3,Value4"));
-            Assert.That(combinedContent, Does.Contain("Value5,Value6"));
+            _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFile_HeaderAndData(tempDirectory, ",", writeReportDataDelegate);
         }
 
         [Test]
-        public void WriteReportDataAsCsv_CreatesCsvFile()
+        public void WriteReportData_CreatesReportFile_HeaderOnly()
         {
-            dynamic filesCSV = PythonEngineManager.FilesCSVModule;
-
-            // Arrange
-            string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
-            List<List<string>> data = new List<List<string>>
-                {
-                    new List<string> { "Value1", "Value2" },
-                    new List<string> { "Value3", "Value4" }
-                };
-
-            // Act
-            var result = filesCSV.write_report_data_as_csv(file_name: fileName, header: header, data: data);
-
-            // Assert
-            Assert.That(File.Exists(fileName), Is.True);
-            string combinedContent = File.ReadAllText(fileName);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
-
-            // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
-
-            // Check for the content
-            Assert.That(combinedContent, Does.Contain("Header1,Header2"));
-            Assert.That(combinedContent, Does.Contain("Value1,Value2"));
-            Assert.That(combinedContent, Does.Contain("Value3,Value4"));
+            _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFile_HeaderOnly(tempDirectory, ",", writeReportDataDelegate);
         }
 
         [Test]
-        public void WriteReportDataAsCsv_CreatesCsvFileWithNonAsciiData()
+        public void WriteReportData_CreatesReportFile_DataOnly()
         {
-            dynamic filesCSV = PythonEngineManager.FilesCSVModule;
-
-            // Arrange
-            string fileName = Path.Combine(tempDirectory, "report_non_ascii.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
-            List<List<string>> data = new List<List<string>>
-            {
-                new List<string> { "Välue1", "Välue2" },
-                new List<string> { "Välue3", "Välue4" }
-            };
-
-            // Act
-            var result = filesCSV.write_report_data_as_csv(file_name: fileName, header: header, data: data, enforce_ascii:true);
-
-            // Assert
-            Assert.That(File.Exists(fileName), Is.True);
-            string combinedContent = File.ReadAllText(fileName);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
-            foreach (var line in lines)
-            {
-                Console.WriteLine("{"+line);
-            }
-
-            // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
-
-            // Check for the content
-            Assert.That(combinedContent, Does.Contain("Header1,Header2"));
-            Assert.That(combinedContent, Does.Contain("Vlue1,Vlue2")); // Non-ASCII characters should be removed when converted to ASCII
-            Assert.That(combinedContent, Does.Contain("Vlue3,Vlue4")); // Non-ASCII characters should be removed when converted to ASCII
+            _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFile_DataOnly(tempDirectory, ",", writeReportDataDelegate);
         }
 
         [Test]
-        public void WriteReportDataAsCsv_CreatesCsvFileWithNonUtf8Data()
+        public void WriteReportData_CreatesReportFileWithDelimiter_HeaderAndData()
         {
-            dynamic filesCSV = PythonEngineManager.FilesCSVModule;
-
-            // Register the code page provider to support "latin-1" encoding
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-
-            // Arrange
-            string fileName = Path.Combine(tempDirectory, "report_non_utf8.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
-            List<List<string>> data = new List<List<string>>
-            {
-                new List<string> { "Välue1", "Välue2" },
-                new List<string> { "Välue3", "Välue4" }
-            };
-
-            // Act
-            var result = filesCSV.write_report_data_as_csv(file_name: fileName, header: header, data: data, encoding: "latin-1");
-
-            // Assert
-            Assert.That(File.Exists(fileName), Is.True);
-            string combinedContent = File.ReadAllText(fileName, System.Text.Encoding.Latin1);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
-            foreach (var line in lines)
-            {
-                Console.WriteLine("{" + line);
-            }
-
-            // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
-
-            // Check for the content
-            Assert.That(combinedContent, Does.Contain("Header1,Header2"));
-            Assert.That(combinedContent, Does.Contain("Välue1,Välue2")); // Non-UTF-8 characters should be preserved
-            Assert.That(combinedContent, Does.Contain("Välue3,Välue4")); // Non-UTF-8 characters should be preserved
+            _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFileWithDelimiter_HeaderAndData(tempDirectory, ",", writeReportDataDelegate);
         }
 
         [Test]
-        public void WriteReportDataAsCsv_CreatesCsvFileWithNonUtf8InputAndUtf8Encoding()
+        public void WriteReportData_CreatesReportFileWithDelimiter_HeaderOnly()
         {
-            dynamic filesCSV = PythonEngineManager.FilesCSVModule;
-
-            // Arrange
-            string fileName = Path.Combine(tempDirectory, "report_non_utf8_input_utf8_encoding.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
-            List<List<string>> data = new List<List<string>>
-            {
-                new List<string> { "Välue1", "Välue2" },
-                new List<string> { "Välue3", "Välue4" }
-            };
-
-            // Act
-            var result = filesCSV.write_report_data_as_csv(file_name: fileName, header: header, data: data, encoding: "utf-8");
-
-            // Assert
-            Assert.That(File.Exists(fileName), Is.True);
-            string combinedContent = File.ReadAllText(fileName, System.Text.Encoding.UTF8);
-            string[] lines = combinedContent.Split(new[] { '\r', '\n' });
-            foreach (var line in lines)
-            {
-                Console.WriteLine("{" + line);
-            }
-
-            // Check for the number of rows
-            Assert.That(lines.Length, Is.EqualTo(3)); // 1 header row + 2 data rows
-
-            // Check for the content
-            Assert.That(combinedContent, Does.Contain("Header1,Header2"));
-            Assert.That(combinedContent, Does.Contain("Välue1,Välue2")); // Non-UTF-8 characters should be preserved
-            Assert.That(combinedContent, Does.Contain("Välue3,Välue4")); // Non-UTF-8 characters should be preserved
+            _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFileWithDelimiter_HeaderOnly(tempDirectory, ",", writeReportDataDelegate);
         }
 
+        [Test]
+        public void WriteReportData_CreatesReportFileWithDelimiter_DataOnly()
+        {
+            _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFileWithDelimiter_DataOnly(tempDirectory, ",", writeReportDataDelegate);
+        }
+
+        [Test]
+        public void WriteReportData_CreatesReportFileWithNonUtf8_HeaderAndData()
+        {
+            _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFileWithNonUtf8_HeaderAndData(tempDirectory, ",", writeReportDataDelegate);
+        }
+
+        [Test]
+        public void WriteReportData_CreatesReportFileWithNonUtf8_HeaderOnly()
+        {
+            _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFileWithNonUtf8_HeaderOnly(tempDirectory, ",", writeReportDataDelegate);
+        }
+
+        [Test]
+        public void WriteReportData_CreatesReportFileWithNonUtf8_DataOnly()
+        {
+            _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFileWithNonUtf8_DataOnly(tempDirectory, ",", writeReportDataDelegate);
+        }
+
+        [Test]
+        public void WriteReportData_CreatesReportFileWithNonUtf8AndDelimiter_HeaderAndData()
+        {
+            _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFileWithNonUtf8AndDelimiter_HeaderAndData(tempDirectory, ",", writeReportDataDelegate);
+        }
+
+        [Test]
+        public void WriteReportData_CreatesReportFileWithNonUtf8AndDelimiter_HeaderOnly()
+        {
+            _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFileWithNonUtf8AndDelimiter_HeaderOnly(tempDirectory, ",", writeReportDataDelegate);
+        }
+
+        [Test]
+        public void WriteReportData_CreatesReportFileWithNonUtf8AndDelimiter_DataOnly()
+        {
+
+            _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFileWithNonUtf8AndDelimiter_DataOnly(
+                tempDirectory,
+                ",",
+                writeReportDataDelegate
+            );
+        }
+
+        [Test]
+        public void WriteReportData_CreatesReportFileWithNonAsciiDataAndEnforceAscii()
+        {
+            _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFileWithNonAsciiDataAndEnforceAscii(tempDirectory,
+                ",",
+                writeReportDataDelegate
+            );
+        }
+
+        [Test]
+        public void WriteReportData_CreatesReportFileWithBOM()
+        {
+            _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFileWithBOM(tempDirectory, ",", writeReportDataDelegate);
+        }
     }
 }

@@ -135,11 +135,13 @@ def write_report_data(
                     )
 
             # Write header
-            if header:
+            if header and len(header) > 0:
                 writer.writerow(encoded_row(header))
                 return_value.append_message(
                     "Header written to file. (including newline)"
                 )
+            else:
+                return_value.append_message("No header provided, skipping writing.")
 
             # Write data rows
             for i in range(len(data)):

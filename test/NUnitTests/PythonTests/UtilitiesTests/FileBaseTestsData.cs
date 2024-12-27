@@ -47,7 +47,7 @@
         {
             // Arrange
             string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
+            List<string> header = new List<string> (); // No header
             List<List<string>> data = new List<List<string>>
             {
                 new List<string> { $"Value1{delimiter}Part1", "Value2" },
@@ -94,7 +94,7 @@
         public static (string fileName, List<string> header, List<List<string>> data) NonUTF8TestData_DataOnly(string tempDirectory, char delimiter)
         {
             string fileName = Path.Combine(tempDirectory, "report.csv");
-            List<string> header = new List<string> { "Header1", "Header2" };
+            List<string> header = new List<string> (); // No header
             List<List<string>> data = new List<List<string>>
             {
                 new List<string> { "Value1", "Value2" },
@@ -126,6 +126,7 @@
 
         public static (string fileName, List<string> header, List<List<string>> data) NonUTF8AndDelimitedTestData_DataOnly(string tempDirectory, char delimiter)
         {
+            // Arrange
             string fileName = Path.Combine(tempDirectory, "report.csv");
             List<string> header = new List<string> { "Header1", "Header2" };
             List<List<string>> data = new List<List<string>>

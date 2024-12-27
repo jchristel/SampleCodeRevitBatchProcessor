@@ -33,9 +33,9 @@ namespace PythonTests.UtilitiesTests
         public void WriteReportData_CreatesReportFile()
         {
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
-
+            string delimiter = ";";
             // Arrange
-            var (fileName, header, data) = FileBaseTestsData.StandardTestData_HeaderAndData(tempDirectory);
+            var (fileName, header, data) = FileBaseTestsData.StandardTestData_HeaderAndData(tempDirectory, delimiter);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -47,7 +47,7 @@ namespace PythonTests.UtilitiesTests
                 encoding: "utf-8",
                 bom: null,
                 quoting: 3, // csv.QUOTE_NONE
-                delimiter: ";"
+                delimiter: delimiter
             );
             Console.WriteLine(result.message);
 
@@ -69,18 +69,18 @@ namespace PythonTests.UtilitiesTests
             Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain(string.Join(";", header)));
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[0])));
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[1])));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, header)));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[0])));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[1])));
         }
 
         [Test]
         public void WriteReportData_CreatesReportFileWithHeaderOnly()
         {
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
-
+            string delimiter = ";";
             // Arrange
-            var (fileName, header, data) = FileBaseTestsData.StandardTestData_HeaderOnly(tempDirectory);
+            var (fileName, header, data) = FileBaseTestsData.StandardTestData_HeaderOnly(tempDirectory,delimiter);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -92,7 +92,7 @@ namespace PythonTests.UtilitiesTests
                 encoding: "utf-8",
                 bom: null,
                 quoting: 3, // csv.QUOTE_NONE
-                delimiter: ";"
+                delimiter: delimiter
             );
             Console.WriteLine(result.message);
 
@@ -114,16 +114,16 @@ namespace PythonTests.UtilitiesTests
             Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain(string.Join(";", header)));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, header)));
         }
 
         [Test]
         public void WriteReportData_CreatesReportFileWithDataOnly()
         {
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
-
+            string delimiter = ";";
             // Arrange
-            var (fileName, header, data) = FileBaseTestsData.StandardTestData_DataOnly(tempDirectory);
+            var (fileName, header, data) = FileBaseTestsData.StandardTestData_DataOnly(tempDirectory, delimiter);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -135,7 +135,7 @@ namespace PythonTests.UtilitiesTests
                 encoding: "utf-8",
                 bom: null,
                 quoting: 3, // csv.QUOTE_NONE
-                delimiter: ";"
+                delimiter: delimiter
             );
             Console.WriteLine(result.message);
 
@@ -157,18 +157,18 @@ namespace PythonTests.UtilitiesTests
             Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[0])));
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[1])));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[0])));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[1])));
         }
 
         [Test]
         public void WriteReportData_CreatesReportFileWithQuotedData()
         {
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
-
+            string delimiter = ";";
             // Arrange
-            var (fileName, header, data) = FileBaseTestsData.DelimitedTestData_DataOnly(tempDirectory);
-
+            var (fileName, header, data) = FileBaseTestsData.DelimitedTestData_DataOnly(tempDirectory, delimiter);
+            
             // Act
             var result = fileWriter.write_report_data(
                 file_name: fileName,
@@ -179,7 +179,7 @@ namespace PythonTests.UtilitiesTests
                 encoding: "utf-8",
                 bom: null,
                 quoting: 0, // csv.QUOTE_MINIMAL
-                delimiter: ";"
+                delimiter: delimiter
             );
             Console.WriteLine(result.message);
 
@@ -201,18 +201,18 @@ namespace PythonTests.UtilitiesTests
             Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain(string.Join(";", header)));
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[0].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a ;
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[1].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a ;
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, header)));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[0].Select(d => d.Contains(delimiter) ? $"\"{d}\"" : d)))); //wrap string already containing a ;
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[1].Select(d => d.Contains(delimiter) ? $"\"{d}\"" : d)))); //wrap string already containing a ;
         }
 
         [Test]
         public void WriteReportData_CreatesReportFileWithHeaderContainingDelimiter()
         {
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
-
+            string delimiter = ";";
             // Arrange
-            var (fileName, header, data) = FileBaseTestsData.DelimitedTestData_HeaderOnly(tempDirectory);
+            var (fileName, header, data) = FileBaseTestsData.DelimitedTestData_HeaderOnly(tempDirectory,delimiter);
             
             // Act
             var result = fileWriter.write_report_data(
@@ -224,7 +224,7 @@ namespace PythonTests.UtilitiesTests
                 encoding: "utf-8",
                 bom: null,
                 quoting: 0, // csv.QUOTE_MINIMAL
-                delimiter: ";"
+                delimiter: delimiter
             );
             Console.WriteLine(result.message);
 
@@ -246,16 +246,16 @@ namespace PythonTests.UtilitiesTests
             Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain(string.Join(";", header.Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a ;
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, header.Select(d => d.Contains(delimiter) ? $"\"{d}\"" : d)))); //wrap string already containing a ;
         }
 
         [Test]
         public void WriteReportData_CreatesReportFileWithNonAsciiDataAndEnforceAscii()
         {
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
-
+            string delimiter = ";";
             // Arrange
-            var (fileName, header, data) = FileBaseTestsData.NonASCIITestData(tempDirectory);
+            var (fileName, header, data) = FileBaseTestsData.NonASCIITestData(tempDirectory, delimiter);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -267,7 +267,7 @@ namespace PythonTests.UtilitiesTests
                 encoding: "utf-8",
                 bom: null,
                 quoting: 3, // csv.QUOTE_NONE
-                delimiter: ";"
+                delimiter: delimiter
             );
             Console.WriteLine(result.message);
 
@@ -289,18 +289,18 @@ namespace PythonTests.UtilitiesTests
             Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain(string.Join(";", header)));
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[0].Select(d => FileBaseTestsData.StripNonAscii(d)))));
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[1].Select(d => FileBaseTestsData.StripNonAscii(d)))));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, header)));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[0].Select(d => FileBaseTestsData.StripNonAscii(d)))));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[1].Select(d => FileBaseTestsData.StripNonAscii(d)))));
         }
 
         [Test]
         public void WriteReportData_CreatesReportFileWithNonUtf8Data()
         {
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
-
+            string delimiter = ";";
             // Arrange
-            var (fileName, header, data) = FileBaseTestsData.NonUTF8TestData_DataOnly(tempDirectory);
+            var (fileName, header, data) = FileBaseTestsData.NonUTF8TestData_DataOnly(tempDirectory, delimiter);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -312,7 +312,7 @@ namespace PythonTests.UtilitiesTests
                 encoding: "utf-8", // Using a different encoding
                 bom: null,
                 quoting: 3, // csv.QUOTE_NONE
-                delimiter: ";"
+                delimiter: delimiter
             );
             Console.WriteLine(result.message);
 
@@ -334,18 +334,18 @@ namespace PythonTests.UtilitiesTests
             Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain(string.Join(";", header)));
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[0].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a ;
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[1].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a and Non-UTF-8 character should be preserved
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, header)));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[0].Select(d => d.Contains(delimiter) ? $"\"{d}\"" : d)))); //wrap string already containing a ;
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[1].Select(d => d.Contains(delimiter) ? $"\"{d}\"" : d)))); //wrap string already containing a and Non-UTF-8 character should be preserved
         }
 
         [Test]
         public void WriteReportData_CreatesReportFileWithNonUtf8DataAndDelimiterInData()
         {
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
-
+            string delimiter = ";";
             // Arrange
-            var (fileName, header, data) = FileBaseTestsData.NonUTF8AndDelimitedTestData_DataOnly(tempDirectory);
+            var (fileName, header, data) = FileBaseTestsData.NonUTF8AndDelimitedTestData_DataOnly(tempDirectory, delimiter);
             
 
             // Act
@@ -358,7 +358,7 @@ namespace PythonTests.UtilitiesTests
                 encoding: "utf-8", // Using a different encoding
                 bom: null,
                 quoting: 0, // csv.QUOTE_MINIMAL
-                delimiter: ";"
+                delimiter: delimiter
             );
             Console.WriteLine(result.message);
 
@@ -380,18 +380,18 @@ namespace PythonTests.UtilitiesTests
             Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain(string.Join(";", header)));
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[0])));
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[1].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a and Non-UTF-8 character should be preserved
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, header)));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[0])));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[1].Select(d => d.Contains(delimiter) ? $"\"{d}\"" : d)))); //wrap string already containing a and Non-UTF-8 character should be preserved
         }
 
         [Test]
         public void WriteReportData_CreatesReportFileWithNonUtf8HeaderAndData()
         {
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
-
+            string delimiter = ";";
             // Arrange
-            var (fileName, header, data) = FileBaseTestsData.NonUTF8TestData_HeaderAndData(tempDirectory);
+            var (fileName, header, data) = FileBaseTestsData.NonUTF8TestData_HeaderAndData(tempDirectory,delimiter);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -403,7 +403,7 @@ namespace PythonTests.UtilitiesTests
                 encoding: "utf-8", // Using a different encoding
                 bom: null,
                 quoting: 3, // csv.QUOTE_NONE
-                delimiter: ";"
+                delimiter: delimiter
             );
             Console.WriteLine(result.message);
 
@@ -425,18 +425,18 @@ namespace PythonTests.UtilitiesTests
             Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain(string.Join(";", header.Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a and Non-UTF-8 character should be preserved
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[0].Select(d => d.Contains(";") ? $"\"{d}\"" : d))));
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[1].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a and Non-UTF-8 character should be preserved
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, header.Select(d => d.Contains(delimiter) ? $"\"{d}\"" : d)))); //wrap string already containing a and Non-UTF-8 character should be preserved
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[0].Select(d => d.Contains(delimiter) ? $"\"{d}\"" : d))));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[1].Select(d => d.Contains(delimiter) ? $"\"{d}\"" : d)))); //wrap string already containing a and Non-UTF-8 character should be preserved
          }
 
         [Test]
         public void WriteReportData_CreatesReportFileWithHeaderAndDataContainingDelimiter()
         {
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
-
+            string delimiter = ";";
             // Arrange
-            var (fileName, header, data) = FileBaseTestsData.DelimitedTestData_HeaderAndData(tempDirectory);
+            var (fileName, header, data) = FileBaseTestsData.DelimitedTestData_HeaderAndData(tempDirectory,delimiter);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -448,7 +448,7 @@ namespace PythonTests.UtilitiesTests
                 encoding: "utf-8",
                 bom: null,
                 quoting: 0, // csv.QUOTE_MINIMAL
-                delimiter: ";"
+                delimiter: delimiter
             );
             Console.WriteLine(result.message);
 
@@ -470,18 +470,18 @@ namespace PythonTests.UtilitiesTests
             Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain(string.Join(";", header.Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a delimiter
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[0].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a delimiter
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[1].Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a delimiter
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, header.Select(d => d.Contains(delimiter) ? $"\"{d}\"" : d)))); //wrap string already containing a delimiter
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[0].Select(d => d.Contains(delimiter) ? $"\"{d}\"" : d)))); //wrap string already containing a delimiter
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[1].Select(d => d.Contains(delimiter) ? $"\"{d}\"" : d)))); //wrap string already containing a delimiter
         }
 
         [Test]
         public void WriteReportData_CreatesReportFileWithNonUtf8HeaderOnly()
         {
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
-
+            string delimiter = ";";
             // Arrange
-            var (fileName, header, data) = FileBaseTestsData.NonUTF8TestData_HeaderOnly(tempDirectory);
+            var (fileName, header, data) = FileBaseTestsData.NonUTF8TestData_HeaderOnly(tempDirectory,delimiter);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -493,7 +493,7 @@ namespace PythonTests.UtilitiesTests
                 encoding: "utf-8", // Using a different encoding
                 bom: null,
                 quoting: 3, // csv.QUOTE_NONE
-                delimiter: ";"
+                delimiter: delimiter
             );
             Console.WriteLine(result.message);
 
@@ -515,16 +515,16 @@ namespace PythonTests.UtilitiesTests
             Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain(string.Join(";", header))); // Non-UTF-8 characters in header should be preserved
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, header))); // Non-UTF-8 characters in header should be preserved
         }
 
         [Test]
         public void WriteReportData_CreatesReportFileWithNonUtf8HeaderContainingDelimiter()
         {
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
-
+            string delimiter = ";";
             // Arrange
-            var (fileName, header, data) = FileBaseTestsData.NonUTF8TestData_HeaderOnly(tempDirectory);
+            var (fileName, header, data) = FileBaseTestsData.NonUTF8TestData_HeaderOnly(tempDirectory,delimiter);
 
             // Act
             var result = fileWriter.write_report_data(
@@ -536,7 +536,7 @@ namespace PythonTests.UtilitiesTests
                 encoding: "utf-8", // Using a different encoding
                 bom: null,
                 quoting: 0, // csv.QUOTE_MINIMAL
-                delimiter: ";"
+                delimiter: delimiter
             );
             Console.WriteLine(result.message);
 
@@ -558,16 +558,16 @@ namespace PythonTests.UtilitiesTests
             Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain(string.Join(";", header.Select(d => d.Contains(";") ? $"\"{d}\"" : d)))); //wrap string already containing a delimiter, Non-UTF-8 characters and delimiter in header should be preserved and quoted
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, header.Select(d => d.Contains(delimiter) ? $"\"{d}\"" : d)))); //wrap string already containing a delimiter, Non-UTF-8 characters and delimiter in header should be preserved and quoted
         }
 
         [Test]
         public void WriteReportData_CreatesReportFileWithBOM()
         {
             dynamic fileWriter = PythonEngineManager.FilesBaseWriteModule;
-
+            string delimiter = ";";
             // Arrange
-            var (fileName, header, data) = FileBaseTestsData.StandardTestData_HeaderAndData(tempDirectory);
+            var (fileName, header, data) = FileBaseTestsData.StandardTestData_HeaderAndData(tempDirectory,delimiter);
 
             dynamic bomValue = PythonEngineManager.BOMValueClass();
             var bom = bomValue.UTF_8;
@@ -582,7 +582,7 @@ namespace PythonTests.UtilitiesTests
                 encoding: "utf-8",
                 bom: bom,
                 quoting: 3, // csv.QUOTE_NONE
-                delimiter: ";"
+                delimiter: delimiter
             );
             Console.WriteLine(result.message);
 
@@ -610,9 +610,9 @@ namespace PythonTests.UtilitiesTests
             Assert.That(lines.Length, Is.EqualTo(data.Count + headerCount)); // 1 header row + 2 data rows
 
             // Check for the content
-            Assert.That(reportContent, Does.Contain(string.Join(";", header)));
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[0])));
-            Assert.That(reportContent, Does.Contain(string.Join(";", data[1])));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, header)));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[0])));
+            Assert.That(reportContent, Does.Contain(string.Join(delimiter, data[1])));
         }
     }
 }

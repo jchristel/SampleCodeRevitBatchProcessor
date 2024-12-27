@@ -53,7 +53,7 @@ namespace PythonTests.UtilitiesTests
         public void WriteAndReadReportData_CreatesAndReadsReportFile()
         { 
             dynamic fileReader = PythonEngineManager.FilesBaseReadModule;
-
+            string delimiter = ";";
             // Arrange
             var (fileName, header, data) = FileBaseTestsData.StandardTestData_HeaderAndData(tempDirectory);
 
@@ -88,7 +88,7 @@ namespace PythonTests.UtilitiesTests
         public void WriteAndReadReportData_CreatesAndReadsReportFileWithDelimiterInData()
         {
             dynamic fileReader = PythonEngineManager.FilesBaseReadModule;
-
+            string delimiter = ";";
             // Arrange
             var (fileName, header, data) = FileBaseTestsData.DelimitedTestData_DataOnly(tempDirectory);
 
@@ -123,7 +123,7 @@ namespace PythonTests.UtilitiesTests
         public void WriteAndReadReportData_CreatesAndReadsReportFileWithDelimiterInHeader()
         {
             dynamic fileReader = PythonEngineManager.FilesBaseReadModule;
-
+            string delimiter = ";";
             // Arrange
             var (fileName, header, data) = FileBaseTestsData.DelimitedTestData_HeaderOnly(tempDirectory);
 
@@ -156,7 +156,7 @@ namespace PythonTests.UtilitiesTests
         public void WriteAndReadReportData_CreatesAndReadsReportFileWithDelimiterInHeaderAndData()
         {
             dynamic fileReader = PythonEngineManager.FilesBaseReadModule;
-
+            string delimiter = ";";
             // Arrange
             var (fileName, header, data) = FileBaseTestsData.DelimitedTestData_HeaderAndData(tempDirectory);
 
@@ -192,7 +192,7 @@ namespace PythonTests.UtilitiesTests
         public void WriteAndReadReportData_CreatesAndReadsReportFileWithMaxFieldSizeLimit()
         {
             dynamic fileReader = PythonEngineManager.FilesBaseReadModule;
-
+            string delimiter = ";";
             // Arrange
             var (fileName, header, data) = FileBaseTestsData.ArrangeMaxFieldSizeTestData(tempDirectory);
             // Act - Write data to file

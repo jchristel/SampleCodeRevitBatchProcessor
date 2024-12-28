@@ -60,7 +60,20 @@ namespace PythonTests.UtilitiesTests
             );
         };
 
+        /// <summary>
+        /// Delegate for reading first row data encoded.
+        /// </summary>
+        /// <param name="parameters">A dictionary containing the parameters for the write_report_data function.</param>
+        /// <returns>A dynamic result object containing the status and message of the write operation.</returns>
+        private static readonly ReadReportDataDelegate readFirstRowEncodedDelegate = parameters =>
+        {
+            dynamic fileReader = PythonEngineManager.FilesBaseReadModule;
 
+            return fileReader.get_first_row_in_column_based_text_file(
+                file_path: (string)parameters["file_path"],
+                delimiter: (string)parameters["delimiter"]
+            );
+        };
 
         [SetUp]
         public void SetUp()
@@ -311,6 +324,35 @@ namespace PythonTests.UtilitiesTests
             _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithMaxFieldSizeLimit_HeaderAndData(tempDirectory, ";", writeReportDataDelegate, readReportDataNoEncodingDelegate);
         }
         #endregion WriteAndReadWithEncodingReportData
+
+        #region WriteAndReadWithEncodingFirstRow
+
+        [Test]
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsFirstRow_HeaderAndData()
+        {
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsFirstRow_HeaderAndData(tempDirectory, ";", writeReportDataDelegate, readFirstRowEncodedDelegate);
+        }
+
+        [Test]
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsFirstRowDelimited_HeaderAndData()
+        {
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsFirstRowWithDelimiter_HeaderAndData(tempDirectory, ";", writeReportDataDelegate, readFirstRowEncodedDelegate);
+        }
+
+        [Test]
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsFirstRowNonUTF8AndDelimited_HeaderAndData()
+        {
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsFirstRowWithUTF8AndDelimiter_HeaderAndData(tempDirectory, ";", writeReportDataDelegate, readFirstRowEncodedDelegate);
+        }
+
+        [Test]
+
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsFirstRow_EmptyFile()
+        {
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsFirstRow_EmptyFile(tempDirectory, ";", writeReportDataDelegate, readFirstRowEncodedDelegate);
+        }
+
+        #endregion WriteAndReadWithEncodingFirstRow
     }
 
 

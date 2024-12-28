@@ -31,28 +31,28 @@ namespace PythonTests.UtilitiesTests
 
             // Act - Write data to file
             var parametersWrite = new Dictionary<string, object>
-        {
-            { "file_name", fileName },
-            { "header", header },
-            { "data", data },
-            { "write_type", "w" },
-            { "enforce_ascii", false },
-            { "encoding", "utf-8" },
-            { "bom", null },
-            { "quoting", 3 }, //  csv.QUOTE_NONE
-            { "delimiter", delimiter }
-        };
+            {
+                { "file_name", fileName },
+                { "header", header },
+                { "data", data },
+                { "write_type", "w" },
+                { "enforce_ascii", false },
+                { "encoding", "utf-8" },
+                { "bom", null },
+                { "quoting", 3 }, //  csv.QUOTE_NONE
+                { "delimiter", delimiter }
+            };
 
             // Act - Write data to file
             WriteTestFileBase(writeReportData, parametersWrite); // csv.QUOTE_NONE
 
             // set up parameters for read
             var parametersRead = new Dictionary<string, object>
-        {
-            { "file_path", fileName },
-            { "increase_max_field_size_limit", false },
-            { "delimiter", delimiter }
-        };
+            {
+                { "file_path", fileName },
+                { "increase_max_field_size_limit", false },
+                { "delimiter", delimiter }
+            };
 
             // Act - Read data from file
             var readResult = readReportData(parametersRead);
@@ -1444,5 +1444,213 @@ namespace PythonTests.UtilitiesTests
         }
 
         #endregion WriteAndReadWithEncodingReportData
+
+        #region WriteAndReadWithEncodingFirstRow
+
+        public static void WriteAndReadWithEncodingReportData_CreatesAndReadsFirstRow_HeaderAndData(
+                string tempDirectory,
+                string delimiter,
+                WriteReportDataDelegate writeReportData,
+                ReadReportDataDelegate readReportData)
+        {
+
+            // Arrange
+            var (fileName, header, data) = _CommonFileBaseTestsData.StandardTestData_HeaderAndData(tempDirectory, delimiter);
+
+            // Act - Write data to file
+            var parametersWrite = new Dictionary<string, object>
+            {
+                { "file_name", fileName },
+                { "header", header },
+                { "data", data },
+                { "write_type", "w" },
+                { "enforce_ascii", false },
+                { "encoding", "utf-8" },
+                { "bom", null },
+                { "quoting", 3 }, //  csv.QUOTE_NONE
+                { "delimiter", delimiter }
+            };
+
+            // Act - Write data to file
+            WriteTestFileBase(writeReportData, parametersWrite); // csv.QUOTE_NONE
+
+            // set up parameters for read
+            var parametersRead = new Dictionary<string, object>
+            {
+                { "file_path", fileName },
+                { "delimiter", delimiter }
+            };
+
+            // Act - Read data from file
+            var readResult = readReportData(parametersRead);
+            Console.WriteLine(readResult.message);
+
+            // Assert - Check read result
+            Assert.That(readResult.status, Is.True);
+            var readData = readResult.result;
+
+            foreach (var row in readData)
+            {
+                Console.WriteLine(row);
+            }
+
+            // Check for the number of rows
+            Assert.That(readData.Count, Is.EqualTo(header.Count)); // match header entries
+
+            // Check for the content
+            Assert.That(readData, Is.EqualTo(header));
+        }
+
+        public static void WriteAndReadWithEncodingReportData_CreatesAndReadsFirstRowWithDelimiter_HeaderAndData(
+                string tempDirectory,
+                string delimiter,
+                WriteReportDataDelegate writeReportData,
+                ReadReportDataDelegate readReportData)
+        {
+
+            // Arrange
+            var (fileName, header, data) = _CommonFileBaseTestsData.DelimitedTestData_HeaderAndData(tempDirectory, delimiter);
+
+            // Act - Write data to file
+            var parametersWrite = new Dictionary<string, object>
+            {
+                { "file_name", fileName },
+                { "header", header },
+                { "data", data },
+                { "write_type", "w" },
+                { "enforce_ascii", false },
+                { "encoding", "utf-8" },
+                { "bom", null },
+                { "quoting", 0 }, //  csv.QUOTE_MINIMAL
+                { "delimiter", delimiter }
+            };
+
+            // Act - Write data to file
+            WriteTestFileBase(writeReportData, parametersWrite); // csv.QUOTE_NONE
+
+            // set up parameters for read
+            var parametersRead = new Dictionary<string, object>
+            {
+                { "file_path", fileName },
+                { "delimiter", delimiter }
+            };
+
+            // Act - Read data from file
+            var readResult = readReportData(parametersRead);
+            Console.WriteLine(readResult.message);
+
+            // Assert - Check read result
+            Assert.That(readResult.status, Is.True);
+            var readData = readResult.result;
+
+            foreach (var row in readData)
+            {
+                Console.WriteLine(row);
+            }
+
+            // Check for the number of rows
+            Assert.That(readData.Count, Is.EqualTo(header.Count)); // match header entries
+
+            // Check for the content
+            Assert.That(readData, Is.EqualTo(header));
+        }
+
+        public static void WriteAndReadWithEncodingReportData_CreatesAndReadsFirstRowWithUTF8AndDelimiter_HeaderAndData(
+                string tempDirectory,
+                string delimiter,
+                WriteReportDataDelegate writeReportData,
+                ReadReportDataDelegate readReportData)
+        {
+
+            // Arrange
+            var (fileName, header, data) = _CommonFileBaseTestsData.NonUTF8AndDelimitedTestData_HeaderAndData(tempDirectory, delimiter);
+
+            // Act - Write data to file
+            var parametersWrite = new Dictionary<string, object>
+            {
+                { "file_name", fileName },
+                { "header", header },
+                { "data", data },
+                { "write_type", "w" },
+                { "enforce_ascii", false },
+                { "encoding", "utf-8" },
+                { "bom", null },
+                { "quoting", 0 }, //  csv.QUOTE_MINIMAL
+                { "delimiter", delimiter }
+            };
+
+            // Act - Write data to file
+            WriteTestFileBase(writeReportData, parametersWrite); // csv.QUOTE_NONE
+
+            // set up parameters for read
+            var parametersRead = new Dictionary<string, object>
+            {
+                { "file_path", fileName },
+                { "delimiter", delimiter }
+            };
+
+            // Act - Read data from file
+            var readResult = readReportData(parametersRead);
+            Console.WriteLine(readResult.message);
+
+            // Assert - Check read result
+            Assert.That(readResult.status, Is.True);
+            var readData = readResult.result;
+
+            foreach (var row in readData)
+            {
+                Console.WriteLine(row);
+            }
+
+            // Check for the number of rows
+            Assert.That(readData.Count, Is.EqualTo(header.Count)); // match header entries
+
+            // Check for the content
+            Assert.That(readData, Is.EqualTo(header));
+        }
+
+        public static void WriteAndReadWithEncodingReportData_CreatesAndReadsFirstRow_EmptyFile(
+                string tempDirectory,
+                string delimiter,
+                WriteReportDataDelegate writeReportData,
+                ReadReportDataDelegate readReportData)
+        {
+
+            // Arrange
+            var (fileName, header, data) = _CommonFileBaseTestsData.StandardTestData_EmptyFile(tempDirectory, delimiter);
+
+            // Act - Write data to file
+            var parametersWrite = new Dictionary<string, object>
+            {
+                { "file_name", fileName },
+                { "header", header },
+                { "data", data },
+                { "write_type", "w" },
+                { "enforce_ascii", false },
+                { "encoding", "utf-8" },
+                { "bom", null },
+                { "quoting", 3 }, //  csv.QUOTE_NONE
+                { "delimiter", delimiter }
+            };
+
+            // Act - Write data to file
+            WriteTestFileBase(writeReportData, parametersWrite); // csv.QUOTE_NONE
+
+            // set up parameters for read
+            var parametersRead = new Dictionary<string, object>
+            {
+                { "file_path", fileName },
+                { "delimiter", delimiter }
+            };
+
+            // Act - Read data from file
+            var readResult = readReportData(parametersRead);
+            Console.WriteLine(readResult.message);
+
+            // Assert - Check read result ( should be false since empty file )
+            Assert.That(readResult.status, Is.False, "reading file should be False");
+        }
+
+        #endregion WriteAndReadWithEncodingFirstRow
     }
 }

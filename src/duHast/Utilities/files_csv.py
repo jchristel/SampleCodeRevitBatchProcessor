@@ -218,11 +218,12 @@ def read_csv_file(file_path, increase_max_field_size_limit=False):
     return read_result
 
 
-def get_first_row_in_csv_file(filePath):
+def get_first_row_in_csv_file(file_path):
     """
     Reads the first line of a csv text file and returns it as a list of strings
-    :param filePath: The fully qualified file path.
-    :type filePath: str
+    
+    :param file_path: The fully qualified file path.
+    :type file_path: str
     :return:
         Result class instance.
 
@@ -238,7 +239,7 @@ def get_first_row_in_csv_file(filePath):
     """
     
     return_value = Result()
-    return_value = get_first_row_in_column_based_text_file(file_path=filePath, delimiter=',')
+    return_value = get_first_row_in_column_based_text_file(file_path=file_path, delimiter=',')
     return return_value
     
 

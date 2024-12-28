@@ -16,6 +16,11 @@ namespace PythonTests.UtilitiesTests
     /// <returns>A dynamic result object containing the status and message of the write operation.</returns>
     public delegate dynamic ReadReportDataDelegate(Dictionary<string, object> parameters);
 
-    
-    
+    /// <summary>
+    /// Delegate for combining report data.
+    /// </summary>
+    /// <param name="parameters">A dictionary containing the parameters for the combine_report_data function.</param>
+    /// <returns>A dynamic result object containing the status and message of the write operation.</returns>
+    public delegate dynamic CombineReportDataDelegate(Dictionary<string, object> parameters);
+
 }

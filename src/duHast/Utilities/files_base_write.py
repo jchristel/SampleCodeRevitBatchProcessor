@@ -133,36 +133,47 @@ def write_report_data(
                     return (
                         encoded  # Keep the strings in their current state for writing
                     )
-
+            
             # Write header
+            wrote_header = False
             if header and len(header) > 0:
                 writer.writerow(encoded_row(header))
                 return_value.append_message(
                     "Header written to file. (including newline)"
                 )
+                # set flag that header was written
+                wrote_header = True
             else:
                 return_value.append_message("No header provided, skipping writing.")
 
             # Write data rows
-            for i in range(len(data)):
-                row = encoded_row(data[i])
-                writer.writerow(row)
-                return_value.append_message(
-                    "Row {} written to file. (including newline)>>{}".format(
-                        ",".join(encoded_row(row)), i
-                    )
-                )
-
-            # Remove the newline character from the last row
-            f.flush()  # Ensure all data is written to the file
-            with open(file_name, "rb+") as f:
-                f.seek(-1, 2)  # Move the cursor to the last character in the file
-                if f.read(1) == b"\n":
-                    f.seek(-1, 2)  # Move the cursor back by one character
-                    f.truncate()  # Truncate the file at the current cursor position
+            wrote_date = False
+            if data and len(data) > 0:
+                for i in range(len(data)):
+                    row = encoded_row(data[i])
+                    writer.writerow(row)
                     return_value.append_message(
-                        "Removed newline character from the last row."
+                        "Row {} written to file. (including newline)>>{}".format(
+                            ",".join(encoded_row(row)), i
+                        )
                     )
+                # set flag that data was written
+                wrote_date = True
+            else:
+                return_value.append_message("No data provided, skipping writing.")
+
+
+            # Remove the newline character from the last row if any data was written
+            if wrote_date or wrote_header:
+                f.flush()  # Ensure all data is written to the file
+                with open(file_name, "rb+") as f:
+                    f.seek(-1, 2)  # Move the cursor to the last character in the file
+                    if f.read(1) == b"\n":
+                        f.seek(-1, 2)  # Move the cursor back by one character
+                        f.truncate()  # Truncate the file at the current cursor position
+                        return_value.append_message(
+                            "Removed newline character from the last row."
+                        )
 
         except Exception as e:
             return_value.update_sep(

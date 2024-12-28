@@ -147,7 +147,7 @@
             return (fileName, header, data);
         }
 
-        public static (string fileName, List<string> header, List<List<string>> data) ArrangeMaxFieldSizeTestData(string tempDirectory, string delimiter)
+        public static (string fileName, List<string> header, List<List<string>> data) ArrangeMaxFieldSizeTestData_HeaderAndData(string tempDirectory, string delimiter)
         {
             // Arrange
             string fileName = Path.Combine(tempDirectory, "report.csv");

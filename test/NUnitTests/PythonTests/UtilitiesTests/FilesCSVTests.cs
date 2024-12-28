@@ -34,12 +34,11 @@ namespace PythonTests.UtilitiesTests
         /// <returns>A dynamic result object containing the status and message of the write operation.</returns>
         private static readonly ReadReportDataDelegate readReportDataDelegate = parameters =>
         {
-            dynamic fileReader = PythonEngineManager.FilesBaseReadModule;
+            dynamic fileReader = PythonEngineManager.FilesCSVModule;
 
-            return fileReader.read_column_based_text_file_without_encoding(
+            return fileReader.read_csv_file(
                 file_path: (string)parameters["file_path"],
-                increase_max_field_size_limit: (bool)parameters["increase_max_field_size_limit"],
-                delimiter: (string)parameters["delimiter"]
+                increase_max_field_size_limit: (bool)parameters["increase_max_field_size_limit"]
             );
         };
 
@@ -163,10 +162,13 @@ namespace PythonTests.UtilitiesTests
             _CommonFilesBaseWriteTests.WriteReportData_CreatesReportFileWithBOM(tempDirectory, ",", writeReportDataDelegate);
         }
 
-        # region WriteAndReadWithoutEncodingReportData
+        # region WriteAndReadWithEncodingReportData
+
+        // the csv reader function attempts to read the file with the encoding utf-8 and utf-16 first if that fails it will try to read the file without any ewncoding
+        // tests below ensures that the file is written with utf-8 encoding and therefore the read function will be able to read the file with utf-8 encoding
 
         [Test]
-        public void WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFile_HeaderAndData()
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsReportFile_HeaderAndData()
         {
             _CommonFilesBaseReadTests.WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFile_HeaderAndData(
                 tempDirectory,
@@ -177,7 +179,7 @@ namespace PythonTests.UtilitiesTests
         }
 
         [Test]
-        public void WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFile_HeaderOnly()
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsReportFile_HeaderOnly()
         {
             _CommonFilesBaseReadTests.WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFile_HeaderOnly(
                 tempDirectory,
@@ -188,70 +190,72 @@ namespace PythonTests.UtilitiesTests
         }
 
         [Test]
-        public void WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFile_DataOnly()
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsReportFile_DataOnly()
         {
-            _CommonFilesBaseReadTests.WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFile_DataOnly(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsReportFile_DataOnly(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
         }
 
         [Test]
-        public void WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithDelimiter_HeaderAndData()
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithDelimiter_HeaderAndData()
         {
-            _CommonFilesBaseReadTests.WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithDelimiter_HeaderAndData(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithDelimiter_HeaderAndData(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
         }
 
         [Test]
-        public void WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithDelimiter_HeaderOnly()
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithDelimiter_HeaderOnly()
         {
-            _CommonFilesBaseReadTests.WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithDelimiter_HeaderOnly(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithDelimiter_HeaderOnly(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
         }
 
         [Test]
-        public void WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithDelimiter_DataOnly()
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithDelimiter_DataOnly()
         {
-            _CommonFilesBaseReadTests.WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithDelimiter_DataOnly(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithDelimiter_DataOnly(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
         }
 
         [Test]
-        public void WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithNonUtf8_HeaderAndData()
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithNonUtf8_HeaderAndData()
         {
-            _CommonFilesBaseReadTests.WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithNonUtf8_HeaderAndData(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithNonUtf8_HeaderAndData(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
         }
 
         [Test]
-        public void WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithNonUtf8_HeaderOnly()
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithNonUtf8_HeaderOnly()
         {
-            _CommonFilesBaseReadTests.WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithNonUtf8_HeaderOnly(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithNonUtf8_HeaderOnly(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
         }
 
         [Test]
-        public void WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithNonUtf8_DataOnly()
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithNonUtf8_DataOnly()
         {
-            _CommonFilesBaseReadTests.WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithNonUtf8_DataOnly(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithNonUtf8_DataOnly(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
         }
 
         [Test]
-        public void WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithDelimiterAndUtf8_HeaderAndData()
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithDelimiterAndUtf8_HeaderAndData()
         {
-            _CommonFilesBaseReadTests.WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithDelimiterAndUtf8_HeaderAndData(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithDelimiterAndUtf8_HeaderAndData(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
         }
 
         [Test]
-        public void WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithDelimiterAndUtf8_HeaderOnly()
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithDelimiterAndUtf8_HeaderOnly()
         {
-            _CommonFilesBaseReadTests.WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithDelimiterAndUtf8_HeaderOnly(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithDelimiterAndUtf8_HeaderOnly(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
         }
 
         [Test]
-        public void WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithDelimiterAndUtf8_DataOnly()
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithDelimiterAndUtf8_DataOnly()
         {
-            _CommonFilesBaseReadTests.WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithDelimiterAndUtf8_DataOnly(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithDelimiterAndUtf8_DataOnly(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
         }
 
         [Test]
-        public void WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithMaxFieldSizeLimit()
+        public void WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithMaxFieldSizeLimit()
         {
-            _CommonFilesBaseReadTests.WriteAndReadWithoutEncodingReportData_CreatesAndReadsReportFileWithMaxFieldSizeLimit_HeaderAndData(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
+            _CommonFilesBaseReadTests.WriteAndReadWithEncodingReportData_CreatesAndReadsReportFileWithMaxFieldSizeLimit_HeaderAndData(tempDirectory, ",", writeReportDataDelegate, readReportDataDelegate);
         }
+        
         #endregion WriteAndReadWithoutEncodingReportData
+
     }
 }

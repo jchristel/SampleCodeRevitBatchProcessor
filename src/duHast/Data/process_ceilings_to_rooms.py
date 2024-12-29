@@ -51,6 +51,17 @@ from duHast.Data.Objects import data_room as dr
 from duHast.Data.Utils import data_import as dReader
 from duHast.Data import data_to_shapely as dToS
 
+# TODO: check if this module works in python 3.x
+# if not, raise an exception
+try:
+    from duHast.Utilities.files_csv import write_report_data_as_csv
+except ImportError as e:
+    raise ImportError(
+        "This module requires the duHast.Utilities.files_csv module to be available. Error: {}".format(
+            e
+        )
+    )
+
 # --------------- writing out data ------------------
 
 
@@ -473,7 +484,8 @@ def write_data_to_file(
         )
         # write data to file
         return_value.update(
-            _write_report_data(output_file_path, data_header, converted_data)
+            write_report_data_as_csv(output_file_path, data_header, converted_data)
+            #_write_report_data(output_file_path, data_header, converted_data)
         )
 
     except Exception as e:

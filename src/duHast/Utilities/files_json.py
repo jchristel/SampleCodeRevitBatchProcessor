@@ -31,6 +31,7 @@ from duHast.Utilities.files_get import get_files_single_directory
 
 import codecs
 import json
+import os
 
 def _custom_default(o):
     """
@@ -61,7 +62,7 @@ def serialize(obj):
 
 def serialize_utf(obj):
     """
-    Serialize the object for JSON output inluding utf 8, using to_json_utf() if available.
+    Serialize the object for JSON output including utf 8, using to_json_utf() if available.
 
     :param obj: The object to serialize.
     :return: A dictionary representation of the object.

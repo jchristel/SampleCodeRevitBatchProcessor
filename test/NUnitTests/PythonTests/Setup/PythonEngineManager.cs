@@ -19,6 +19,7 @@ namespace PythonTests.Setup
 
         public static dynamic? FilesCSVModule { get; set; }
         public static dynamic? FilesTabModule { get; set; }
+        public static dynamic? FilesJSONModule { get; set; }
 
         public static dynamic? BoundingBox2Class { get; set; }
         public static dynamic? BoundingBox3Class { get; set; }

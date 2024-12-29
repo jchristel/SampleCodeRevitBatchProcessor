@@ -152,13 +152,13 @@ def merge_files():
             file_without_ext = get_file_name_without_ext(file_match)
 
             # append single temp file to data log file
-            result_append = append_csv_file(data_file_name, file_match, True)
-            if result_append.status:
+            append_result = append_csv_file(data_file_name, file_match, True)
+            if append_result.status:
                 output("Appended: {}  to: {}".format(file_without_ext, log_file_name))
             else:
                 output(
                     "Failed to append: {} to: {} with message: {}".format(
-                        file_without_ext, log_file_name, result_append.message
+                        file_without_ext, log_file_name, append_result.message
                     )
                 )
                 failed_files.append(file_match)
@@ -229,7 +229,7 @@ def combine_csv_files_header_independent_wrapper(folder_path, file_prefix, file_
     """
 
     try:
-        result_combine = combine_csv_files_header_independent(
+        combine_result = combine_csv_files_header_independent(
             folder_path=folder_path,
             file_prefix=file_prefix,
             file_suffix=file_suffix,
@@ -237,16 +237,16 @@ def combine_csv_files_header_independent_wrapper(folder_path, file_prefix, file_
             output_file_name=output_file_name,
             overwrite_existing=overwrite_existing,
         )
-        if result_combine.status is False:
+        if combine_result.status is False:
             output(
                 "...Failed to combine files in: {} with: {}".format(
-                    folder_path, result_combine.message
+                    folder_path, combine_result.message
                 )
             )
         else: 
             output(
                 "...combined files in: {}  to: {} with status [{}]".format(
-                    folder_path, output_file_name, result_combine.status
+                    folder_path, output_file_name, combine_result.status
                 )
             )
     except Exception as e:

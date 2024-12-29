@@ -28,6 +28,8 @@ namespace PythonTests
                 PythonEngineManager.FilesBaseCombineModule = scope.GetVariable("files_base_combine");
                 engine.Execute("import duHast.Utilities.files_csv as files_csv", scope);
                 PythonEngineManager.FilesCSVModule = scope.GetVariable("files_csv");
+                engine.Execute("import duHast.Utilities.files_tab as files_tab", scope);
+                PythonEngineManager.FilesTabModule = scope.GetVariable("files_tab");
                 engine.Execute("import duHast.Utilities.files_base_read as files_base_read", scope);
                 PythonEngineManager.FilesBaseReadModule = scope.GetVariable("files_base_read");
                 engine.Execute("import duHast.Utilities.files_base_write as files_base_write", scope);

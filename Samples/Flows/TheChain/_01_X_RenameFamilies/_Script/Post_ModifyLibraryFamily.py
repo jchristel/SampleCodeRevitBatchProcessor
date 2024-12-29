@@ -140,7 +140,7 @@ def combine_data_files():
             to_combine[1],
         )
         output("Combined report files. [{}]".format(combine_result.status))
-        if not combine_result.status:
+        if combine_result.status is False:
             output("Combined report file: {}".format(combine_result.message))
 
 

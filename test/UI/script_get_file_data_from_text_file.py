@@ -94,7 +94,7 @@ class GetFileDataFromTextFile(test.Test):
                 )
             data_file_name = os.path.join(tmp_dir, "test_file.csv")
             # write test file
-            write_report_data_as_csv(data_file_name, "", data)
+            write_result = write_report_data_as_csv(data_file_name, "", data)
             # set up settings object
             settings = FileSelectionSettings(
                 input_path=tmp_dir,
@@ -103,6 +103,9 @@ class GetFileDataFromTextFile(test.Test):
                 output_file_number=2,
                 revit_file_extension=".rvt",
             )
+            if write_result.status == False:
+                raise ValueError("{}".format(write_result.message))
+            
             # attempt to get file data
             file_items = get_file_data(settings=settings)
             # update message and test result
@@ -163,7 +166,10 @@ class GetFileDataFromTextFile(test.Test):
                 )
             data_file_name = os.path.join(tmp_dir, "test_file.csv")
             # write test file
-            write_report_data_as_csv(data_file_name, "", data)
+            write_result = write_report_data_as_csv(data_file_name, "", data)
+            if write_result.status == False:
+                raise ValueError("{}".format(write_result.message))
+            
             # set up settings object
             settings = FileSelectionSettings(
                 input_path=tmp_dir,

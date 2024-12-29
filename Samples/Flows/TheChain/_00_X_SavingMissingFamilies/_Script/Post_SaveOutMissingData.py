@@ -82,13 +82,15 @@ def _UserOutAndLogFile(processing_results, file_name, header=[]):
         for m in processing_results.result:
             output("::".join(m))
         # write data out to file
-        write_report_data_as_csv(
+        write_result = write_report_data_as_csv(
             file_name=os.path.join(settings.OUTPUT_FOLDER, file_name),  # report full file name
             header=header,  # empty header
             data=processing_results.result,
             enforce_ascii=True,
             quoting=QUOTE_MINIMAL,
         )
+        if write_result.status is False:
+            output("Failed to write data to file: {}".format(write_result.message))
     else:
         output("Result did not contain any data to be written to file.")
 
@@ -168,7 +170,7 @@ if save_out_missing_families:
             data.append([file_object.name])
 
         # write data to file
-        write_report_data_as_csv(
+        write_result = write_report_data_as_csv(
             file_name=os.path.join(
                 settings.OUTPUT_FOLDER,
                 settings.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT,
@@ -178,6 +180,18 @@ if save_out_missing_families:
             enforce_ascii=True,
             quoting=QUOTE_MINIMAL,
         )
+        if write_result.status is False:
+            output(
+                "Failed to write second process file: {} with exception: {}".format(
+                    settings.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT,
+                    write_result.message,
+                )
+            )
+        else:
+            output(
+                "Successfully wrote second process file: {}".format(
+                    settings.FILE_NAME_SECOND_PROCESS_FAMILIES_REPORT
+                ))
     else:
         output("No families located in output folder!")
 else:

@@ -376,7 +376,16 @@ def combine_reports(previous_report_path, new_report_path):
         unique_family_data = remove_none_existing_families.result[0]
 
     # get report header row (there should be a previous report file...otherwise this will write an empty header row)
-    header_row = fileCSV.get_first_row_in_csv_file(previous_report_path)
+    header_row_result = fileCSV.get_first_row_in_csv_file(previous_report_path)
+    if header_row_result.status == False:
+        return_value.update_sep(
+            False, "Failed to read header row from previous report file."
+        )
+        print("failed to read header row from previous report file.")
+        return return_value
+    
+    header_row = header_row_result.result
+    
     # header_row = header.split(",")
     print("building")
     # build list of data rows

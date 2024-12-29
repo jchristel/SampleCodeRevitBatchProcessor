@@ -101,7 +101,7 @@ def write_new_data(path, data):
 
     return_value = res.Result()
     try:
-        write_report_data_as_csv(
+        write_result = write_report_data_as_csv(
             file_name=path, 
             header=[], 
             data=data,
@@ -111,7 +111,11 @@ def write_new_data(path, data):
             bom=None,
             quoting=QUOTE_MINIMAL,
         )
-        return_value.append_message("Wrote new meta data file to: {}".format(path))
+        if write_result.status == False:
+            raise ValueError("{}".format(write_result.message))
+        
+        # drop not required log messages
+        return_value.update_sep(True, "Successfully wrote meta data to file. {}".format(path))
     except Exception as e:
         return_value.update_sep(False,"Failed to write data file: {} with exception: {}".format(path, e))
     return return_value

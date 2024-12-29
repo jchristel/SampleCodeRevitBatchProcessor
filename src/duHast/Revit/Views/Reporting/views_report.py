@@ -151,7 +151,7 @@ def write_views_data(doc, file_name, current_file_name):
         data = get_views_report_data(doc, current_file_name)
         headers = get_views_report_headers(doc)
         data_converted = convert_view_data_to_list(data, headers)
-        filesCSV.write_report_data_as_csv(
+        write_result = filesCSV.write_report_data_as_csv(
             file_name=file_name, 
             header=headers, 
             data=data_converted, 
@@ -160,6 +160,9 @@ def write_views_data(doc, file_name, current_file_name):
             bom=None,
             quoting=filesCSV.csv.QUOTE_MINIMAL
         )
+        if write_result.status == False:
+            raise ValueError(write_result.message)
+        
         return_value.update_sep(
             True, "Successfully wrote data file at {}".format(file_name)
         )
@@ -198,7 +201,7 @@ def write_view_data_by_property_names(
         headers = REPORT_VIEWS_HEADER[:] + view_properties
         data_converted = convert_view_data_to_list(data, headers)
         # write data out to file
-        filesCSV.write_report_data_as_csv(
+        write_result = filesCSV.write_report_data_as_csv(
             file_name=file_name, 
             header=headers, 
             data=data_converted, 
@@ -207,6 +210,9 @@ def write_view_data_by_property_names(
             bom=None,
             quoting=filesCSV.csv.QUOTE_MINIMAL,
         )
+        if write_result.status == False:
+            raise ValueError(write_result.message)
+        
         return_value.update_sep(
             True, "Successfully wrote data file at {}".format(file_name)
         )

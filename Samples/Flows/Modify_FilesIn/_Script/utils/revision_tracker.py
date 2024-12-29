@@ -71,7 +71,7 @@ def save_files_received_list(current_document_data, output):
     output("received Issue data: {}".format(len(received_file_data)))
     if len(received_file_data) > 0:
         try:
-            write_report_data_as_csv(
+            write_result = write_report_data_as_csv(
                 file_name=os.path.join(
                     settings.PATH_TO_FILES_TO_PROCESS, settings.REVISION_TRACKER_FILE_NAME
                 ),
@@ -83,6 +83,11 @@ def save_files_received_list(current_document_data, output):
                 bom=None,
                 quoting=QUOTE_MINIMAL,
             )
+            if write_result.status == False:
+                raise ValueError("{}".format(write_result.message))
+        
+            # user update
+            output( "Successfully wrote received files data to file.")
         except Exception as e:
             status = False
             output(

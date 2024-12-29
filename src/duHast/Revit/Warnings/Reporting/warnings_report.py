@@ -142,7 +142,7 @@ def write_warnings_data(file_name, data):
     return_value = res.Result()
     try:
         data_converted = convert_warnings_data_to_list(warnings_data=data)
-        write_report_data_as_csv(
+        write_result = write_report_data_as_csv(
             file_name=file_name,
             header=REPORT_WARNINGS_HEADER,
             data=data_converted,
@@ -151,6 +151,9 @@ def write_warnings_data(file_name, data):
             bom=None,
             quoting=QUOTE_MINIMAL,
         )
+        if write_result.status == False:
+            raise ValueError(write_result.message)
+        
         return_value.update_sep(
             True, "Successfully wrote data file at {}".format(file_name)
         )

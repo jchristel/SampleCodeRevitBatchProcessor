@@ -109,7 +109,7 @@ def write_out_re_process_data(data, file_name, header=[]):
         for d in data:
             output("::".join(d))
         # write data out to file
-        write_report_data_as_csv(
+        write_result = write_report_data_as_csv(
             file_name=os.path.join(
                 settings.OUTPUT_FOLDER, file_name
             ),  # report full file name
@@ -118,6 +118,12 @@ def write_out_re_process_data(data, file_name, header=[]):
             enforce_ascii=True,
             quoting=QUOTE_MINIMAL,
         )
+        if write_result.status is False:
+            output(
+                "Failed to write re-process file: {} with exception: {}".format(
+                    file_name, write_result.message
+                )
+            )
     else:
         output(
             "{}: Result did not contain any data to be written to file.".format(
@@ -125,14 +131,21 @@ def write_out_re_process_data(data, file_name, header=[]):
             )
         )
         # write out empty re-process file
-        write_report_data_as_csv(
+        write_result = write_report_data_as_csv(
             file_name=settings.OUTPUT_FOLDER + "\\" + file_name,
             header=header,
             data=[],
             enforce_ascii=True,
             quoting=QUOTE_MINIMAL,
         )
-        output("{}: Empty file written.".format(file_name))
+        if write_result.status is False:
+            output(
+                "Failed to write empty re-process file: {} with exception: {}".format(
+                    file_name, write_result.message
+                )
+            )
+        else:
+            output("{}: Empty file written.".format(file_name))
 
 
 # ------------------------------------------- copy log files -------------------------------------------

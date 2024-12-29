@@ -38,7 +38,7 @@ from csv import QUOTE_MINIMAL
 
 import settings as settings  # sets up all commonly used variables and path locations!
 from duHast.Utilities.console_out import output
-from duHast.Utilities.files_csv import write_report_data_as_csv, combine_csv_files
+from duHast.Utilities.files_csv import write_report_data_as_csv, combine_csv_files, read_csv_file
 from duHast.Utilities.files_get import (
     get_files_with_filter,
     get_files_from_directory_walker_with_filters,
@@ -48,7 +48,6 @@ from duHast.Utilities.files_io import (
     get_file_name_without_ext,
     file_exist,
 )
-from duHast.Utilities.files_tab import read_tab_separated_file
 from duHast.Utilities.directory_io import create_directory, directory_exists
 from duHast.Utilities.date_stamps import get_folder_date_stamp
 
@@ -199,7 +198,7 @@ def combine_temp_reports():
     for to_Combine in FILE_DATA_TO_COMBINE:
         output("Combining {} report files.".format(to_Combine[0]))
         # combine files
-        combine_csv_files(
+        combine_result = combine_csv_files(
             settings.OUTPUT_FOLDER,
             "",
             to_Combine[0],
@@ -207,6 +206,9 @@ def combine_temp_reports():
             to_Combine[1],
             get_files_from_directory_walker_with_filters,
         )
+        output("Combined report files. [{}]".format(combine_result.status))
+        if not combine_result.status:
+            output("{}".format(combine_result.message))
 
 
 def write_empty_report_file(file_name, header=[]):
@@ -221,7 +223,7 @@ def write_empty_report_file(file_name, header=[]):
 
     output("{}: Writing empty report file.".format(file_name))
     data_to_file = []
-    write_report_data_as_csv(
+    write_result = write_report_data_as_csv(
         file_name=os.path.join(
             settings.OUTPUT_FOLDER, file_name
         ),  # report full file name
@@ -230,6 +232,13 @@ def write_empty_report_file(file_name, header=[]):
         enforce_ascii=True,
         quoting=QUOTE_MINIMAL,
     )
+    
+    if write_result.status is False:
+        output(
+            "{}: Failed to write empty report file. [{}]".format(
+                file_name, write_result.message
+            )
+        )
 
 
 # -------------------------------------------combining report files -------------------------------------------
@@ -253,7 +262,10 @@ def combine_report_files_check():
     # check if file exists in input location
     if file_exist(marker_file_path):
         # read file
-        rows = read_tab_separated_file(marker_file_path)
+        read_result = read_csv_file(marker_file_path)
+        if read_result.status is False:
+            return combine_reports_flag, previous_reports_directory
+        rows = read_result.result
         # should be at least one row...
         if len(rows) >= 1:
             for row in rows:
@@ -317,7 +329,7 @@ def combine_current_with_previous_report_files(previous_report_root_directory):
                 output(updated_report_rows_status.message)
                 updated_report_rows = updated_report_rows_status.result
                 # write out new report on top of old one
-                write_report_data_as_csv(
+                write_result = write_report_data_as_csv(
                     file_name=current_report_file,
                     header=[],
                     data=updated_report_rows,
@@ -325,7 +337,13 @@ def combine_current_with_previous_report_files(previous_report_root_directory):
                     quoting=QUOTE_MINIMAL,
                 )
 
-                output("Wrote updated report to: {}".format(current_report_file))
+                output("Wrote updated report to: {} with status:[{}]".format(current_report_file. write_result.status))
+                if write_result.status is False:
+                    output(
+                        "{}".format(
+                            write_result.message
+                        )
+                    )
             except Exception as e:
                 output(
                     "Failed to combine reports: [{}]\t[{}] with exception: {}".format(

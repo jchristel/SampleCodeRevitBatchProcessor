@@ -108,12 +108,15 @@ for test in TESTS:
             for test_result in result.result:
                 try:
                     # write results to file
-                    write_report_data_as_csv(
+                    write_result = write_report_data_as_csv(
                         file_name,
                         "",
                         [[test_result[3], test_result[4], test_result[5]]],
                         write_mode,
                     )
+                    if write_result.status == False:
+                        raise ValueError(write_result.message)
+                    output("Successfully wrote test report at {}".format(file_name))
                 except Exception as e:
                     output("Failed to write test report with exception: {}".format(e))
                 # provide short summary only...more details in log file

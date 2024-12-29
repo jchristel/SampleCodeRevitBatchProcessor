@@ -475,7 +475,7 @@ def write_model_health_report(doc, revit_file_path, output_directory):
         res_export = res.Result()
         try:
             # write data to file
-            write_report_data_as_csv(
+            write_result = write_report_data_as_csv(
                 file_name= os.path.join(output_directory, file_name),
                 header = rFns.LOG_FILE_HEADER,
                 data = [
@@ -492,7 +492,9 @@ def write_model_health_report(doc, revit_file_path, output_directory):
                 bom=None,
                 quoting=QUOTE_MINIMAL,
             )
-
+            if write_result.status == False:
+                raise ValueError(write_result.message)
+            
             res_export.update_sep(True, "Exported: {}".format(key))
         except Exception as e:
             res_export.update_sep(

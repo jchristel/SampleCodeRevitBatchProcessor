@@ -154,7 +154,11 @@ class RevitTest(base.Base):
             assert file_exist_status == True
 
             # read file content
-            result_file_read = read_csv_file(test_file_path)
+            result_file_read_result = read_csv_file(test_file_path)
+            return_value.append_message(
+                " file read status: {}".format(result_file_read_result.status)
+            )
+            result_file_read = result_file_read_result.result
             return_value.append_message(
                 " file read results: \n {} \n vs \n {}".format(
                     sorted(result_file_read), sorted(expected_file_content)

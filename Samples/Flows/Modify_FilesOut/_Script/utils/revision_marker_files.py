@@ -123,13 +123,17 @@ def write_rev_marker_file_writer(fully_qualified_path, file_data):
     return_value = res.Result()
     if len(file_data) > 0:
         try:
-            write_report_data_as_csv(
+            write_result = write_report_data_as_csv(
                 file_name=fully_qualified_path, 
                 header=[], 
                 data=[file_data],
                 enforce_ascii=True,
                 quoting=QUOTE_MINIMAL,
             )
+            
+            if write_result.status == False:
+                raise ValueError("{}".format(write_result.message))
+        
             return_value.append_message = "Successfully wrote marker file: {}".format(
                 fully_qualified_path
             )

@@ -186,16 +186,17 @@ def report_data(processor, file_name_prefix):
         # build output file name
         file_name = check_file_path_length(file_name_prefix)
         try:
-            write_report_data_as_csv(
+            write_result = write_report_data_as_csv(
                 file_name=file_name,
                 header=processor.get_data_headers(),
                 data=processor.get_data_string_list(),
                 enforce_ascii=True,
                 quoting=QUOTE_MINIMAL,
             )
-            result.update_sep(
-                True, "Successfully wrote  data to file {}".format(file_name)
-            )
+            if write_result.status is False:
+                raise ValueError("{}".format(write_result.message))
+            else:
+                result.update(write_result)
         except Exception as e:
             result.update_sep(
                 False,

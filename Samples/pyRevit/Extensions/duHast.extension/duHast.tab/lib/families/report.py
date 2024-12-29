@@ -153,9 +153,12 @@ def _save_data(data_header, data):
         data_converted = _convert_data_to_list_string(data)
 
         # write data to file
-        write_report_data_as_csv(
+        write_result = write_report_data_as_csv(
             file_name=file_name, header=data_header, data=data_converted
         )
+        if write_result.status == False:
+            raise ValueError(write_result.message)
+        
         return_value.append_message("Wrote file to: {}".format(file_name))
     except Exception as e:
         return_value.update_sep(

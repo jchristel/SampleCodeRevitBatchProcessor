@@ -199,7 +199,7 @@ def write_data_from_families_to_files(family_data, directory_path):
                     if key in storage_headers_dic:
                         header_data = storage_headers_dic[key]
 
-                    write_report_data_as_csv(
+                    write_result = write_report_data_as_csv(
                         file_name=full_file_name, 
                         header=header_data, 
                         data=item,
@@ -208,6 +208,9 @@ def write_data_from_families_to_files(family_data, directory_path):
                         bom=None,
                         quoting=QUOTE_MINIMAL,
                     )
+                    if write_result.status is False:
+                        raise ValueError(write_result.message)
+                    
                     return_value.append_message(
                         "Successfully wrote data type: {} report to: {}".format(
                             key, full_file_name

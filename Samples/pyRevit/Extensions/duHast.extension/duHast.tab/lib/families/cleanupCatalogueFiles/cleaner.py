@@ -513,15 +513,18 @@ def clean_up_catalogue_file(doc, output, forms):
         new_file_name = get_file_name_without_ext(file_selected)
         target_dir = get_directory_path_from_file_path(file_selected)
         new_full_file_name = os.path.join(target_dir, new_file_name + "__.txt")
+        
         # write new data to file
-        write_report_data_as_csv(
+        write_result = write_report_data_as_csv(
             file_name=new_full_file_name,
             header=sorted_data[:1][0],
             data=sorted_data[1:],
             encoding="utf-16-le",
             bom=BOMValue.UTF_16_LITTLE_ENDIAN,
         )
-
+        if write_result.status is False:
+           raise ValueError(write_result.message)
+       
         print("BOM is present: {}".format(check_utf16le_bom(new_full_file_name)))
 
     except Exception as e:

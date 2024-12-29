@@ -153,13 +153,16 @@ def _write_overall_task_file(result_get_host_families):
 
         result.append_message("Writing data to: {}".format(full_task_file_name))
         try:
-            write_report_data_as_csv(
+            write_result = write_report_data_as_csv(
                 file_name=full_task_file_name,
                 header=[],
                 data=data,
                 enforce_ascii=True,
                 quoting=QUOTE_MINIMAL,
             )
+            if write_result.status is False:
+                raise ValueError(write_result.message)
+            
             result.update_sep(True, "Created task files.")
         except Exception as e:
             result.update_sep(
@@ -169,13 +172,16 @@ def _write_overall_task_file(result_get_host_families):
     else:
         # write out empty task list since no host files where found
         try:
-            write_report_data_as_csv(
+            write_result = write_report_data_as_csv(
                 file_name=full_task_file_name,
                 header=[],
                 data=data,
                 enforce_ascii=True,
                 quoting=QUOTE_MINIMAL,
             )
+            if write_result.status is False:
+                raise ValueError(write_result.message)
+            
             result.update_sep(True, "Created empty task files.")
         except Exception as e:
             result.update_sep(

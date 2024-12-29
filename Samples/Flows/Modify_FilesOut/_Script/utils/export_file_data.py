@@ -107,7 +107,7 @@ def write_out_export_file_data(
                         export_file_name + export_extension + marker_file_extension,
                     )
                     try:
-                        write_report_data_as_csv(
+                        write_result = write_report_data_as_csv(
                             file_name=file_name, 
                             header=[], 
                             data=[data],
@@ -117,6 +117,10 @@ def write_out_export_file_data(
                             bom=None,
                             quoting=QUOTE_MINIMAL,
                         )
+                        if write_result.status == False:
+                            raise ValueError("{}".format(write_result.message))
+                        
+                        # drop not required log messages
                         return_value.append_message(
                             "Successfully wrote export file data to: {}".format(
                                 file_name

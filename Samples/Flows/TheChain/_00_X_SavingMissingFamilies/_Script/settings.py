@@ -119,8 +119,8 @@ FILE_NAME_MARKER_SAVEOUT_MISSING_FAMILIES = "SaveOutMissingFams" + REPORT_FILE_E
 
 # marker file indicating that in a post process the combined report files are to be merged with (older) report files
 # in a given folder
-# contains single rows:
-# - first row: fully qualified root directory path to where other family data files are located.
+# contains single row:
+# - fully qualified root directory path to where other family data files are located.
 FILE_NAME_MARKER_MERGE_FAMILY_DATA = "MergeFamilyData" + REPORT_FILE_EXTENSION
 
 # flag indicating whether this is a cloud based project

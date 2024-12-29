@@ -89,13 +89,17 @@ def write_meta_data(meta_data_header, doc_files, root_path):
             meta_data_file_path = os.path.join(
                 root_path, settings.ACONEX_METADATA_FILE_NAME
             )
-            write_report_data_as_csv(
+            write_result = write_report_data_as_csv(
                 file_name=meta_data_file_path, 
                 header=[], 
                 data=result_meta_data_build.result[0],
                 enforce_ascii=True,
                 quoting=QUOTE_MINIMAL,
             )
+            
+            if write_result.status == False:
+                raise ValueError("{}".format(write_result.message))
+        
             return_value.append_message(
                 "Successfully wrote meta data file to: {}".format(meta_data_file_path)
             )

@@ -118,13 +118,20 @@ def merge_files():
     if file_exist(data_file_name) == False:
         output("Need to create data file: {}".format(data_file_name))
         try:
-            write_report_data_as_csv(
+            write_result = write_report_data_as_csv(
                 file_name=data_file_name, 
                 header=rFns.LOG_FILE_HEADER, 
                 data=[], 
                 enforce_ascii=True, 
                 quoting=QUOTE_MINIMAL,
             )
+            if write_result.status is False:
+                raise ValueError(
+                    "{}".format(write_result.message)
+                )
+            
+            # user update 
+            output("Successfully wrote data log to file.")
         except Exception as e:
             output(
                 "Failed to create data log file {} with exception: {}".format(
@@ -205,7 +212,7 @@ def append_files_wrapper(
             )
         )
 
-def combine_csv_files_wrapper(folder_path, file_prefix, file_suffix, file_extension, output_file_name,  overwrite_existing, **kwargs):
+def combine_csv_files_header_independent_wrapper(folder_path, file_prefix, file_suffix, file_extension, output_file_name,  overwrite_existing, **kwargs):
     """
     Combines csv files into a single csv file with header independent of the files being combined.
 
@@ -222,7 +229,7 @@ def combine_csv_files_wrapper(folder_path, file_prefix, file_suffix, file_extens
     """
 
     try:
-        combine_csv_files_header_independent(
+        result_combine = combine_csv_files_header_independent(
             folder_path=folder_path,
             file_prefix=file_prefix,
             file_suffix=file_suffix,
@@ -230,9 +237,21 @@ def combine_csv_files_wrapper(folder_path, file_prefix, file_suffix, file_extens
             output_file_name=output_file_name,
             overwrite_existing=overwrite_existing,
         )
+        if result_combine.status is False:
+            output(
+                "...Failed to combine files in: {} with: {}".format(
+                    folder_path, result_combine.message
+                )
+            )
+        else: 
+            output(
+                "...combined files in: {}  to: {} with status [{}]".format(
+                    folder_path, output_file_name, result_combine.status
+                )
+            )
     except Exception as e:
         output(
-            "Failed to combine files {} with exception: [{}]".format(file_suffix, e)
+            "Failed to combine files in: {} with exception: {}".format(folder_path, e)
         )
 
 def combine_files_wrapper(folder_path,file_prefix,file_suffix,file_extension,output_file_name, **kwargs):
@@ -251,18 +270,31 @@ def combine_files_wrapper(folder_path,file_prefix,file_suffix,file_extension,out
     :type output_file_name: str
     """
     
-    result_combine = combine_csv_files(
-        folder_path=folder_path,
-        file_prefix=file_prefix,
-        file_suffix=file_suffix,
-        file_extension=file_extension,
-        output_file_name=output_file_name,
-    )
-    output(
-            "...combined {}  to {} with status [{}]".format(
-                file_suffix, output_file_name, result_combine.status
-            )
+    try:
+        combine_result = combine_csv_files(
+            folder_path=folder_path,
+            file_prefix=file_prefix,
+            file_suffix=file_suffix,
+            file_extension=file_extension,
+            output_file_name=output_file_name,
         )
+        if combine_result.status is False:
+            output(
+                "...Failed to combine files in: {} with: {}".format(
+                    folder_path, combine_result.message
+                )
+            )
+        else: 
+            output(
+                "...combined files in: {}  to: {} with status [{}]".format(
+                    folder_path, output_file_name, combine_result.status
+                )
+            )
+    except Exception as e:
+        output(
+            "Failed to combine files in: {} with exception: {}".format(folder_path, e)
+        )
+        
 
 def combine_files_json_wrapper(folder_path,file_prefix,file_suffix,file_extension,output_file_name, **kwargs):
     """
@@ -317,7 +349,7 @@ FILE_DATA_TO_COMBINE = [
     [
         settings.REPORT_EXTENSION_SHEETS,
         settings.COMBINED_REPORT_NAME_SHEETS,
-        combine_csv_files_wrapper,
+        combine_csv_files_header_independent_wrapper,
     ],
     [
         settings.REPORT_EXTENSION_SHARED_PARAMETERS,

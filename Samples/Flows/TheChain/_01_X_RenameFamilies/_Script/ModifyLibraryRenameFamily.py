@@ -88,13 +88,16 @@ def write_copy_marker_file(file_name):
         + settings.TEMP_FILE_EXTENSION,
     )
     try:
-        write_report_data_as_csv(
+        write_result = write_report_data_as_csv(
             file_name=file_name_marker,
             header=["Copy From", "Copy To"],
             data=[[REVIT_FILE_PATH_NEW, REVIT_FILE_PATH]],
             enforce_ascii=True,
             quoting=QUOTE_MINIMAL,
         )
+        if write_result.status is False:
+            raise ValueError(write_result.message)
+        
         output(
             "Wrote marker file: {} :: [{}]".format(file_name_marker, True),
             revit_script_util.Output,
@@ -125,13 +128,16 @@ def write_changed_family_marker_file(file_name, revit_category_name):
         + settings.TEMP_FILE_EXTENSION,
     )
     try:
-        write_report_data_as_csv(
+        write_result = write_report_data_as_csv(
             file_name=file_name_marker,
             header=["file Name", "file Path", "revit category"],
             data=[[file_name, REVIT_FILE_PATH, revit_category_name]],
             enforce_ascii=True,
             quoting=QUOTE_MINIMAL,
         )
+        if write_result.status is False:
+            raise ValueError(write_result.message)
+        
         output(
             "Wrote changed family file: {} :: [{}]".format(file_name_marker, True),
             revit_script_util.Output,

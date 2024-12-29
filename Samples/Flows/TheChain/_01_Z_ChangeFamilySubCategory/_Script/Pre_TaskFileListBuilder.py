@@ -96,13 +96,16 @@ try:
                     + settings.PREDEFINED_TASK_FILE_EXTENSION,
                 )
                 # write out task file list into task folder
-                write_report_data_as_csv(
+                write_result = write_report_data_as_csv(
                     file_name=task_file_name, 
                     header=[], 
                     data=root_families_to_file,
                     enforce_ascii=True,
                     quoting=QUOTE_MINIMAL,
                 )
+                if write_result.status is False:
+                    raise ValueError(write_result.message)
+                
                 # user feed back
                 output("Successfully wrote task file: {}".format(task_file_name))
                 sys.exit(0)

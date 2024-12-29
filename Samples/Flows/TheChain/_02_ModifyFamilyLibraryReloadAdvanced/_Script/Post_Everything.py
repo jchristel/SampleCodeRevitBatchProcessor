@@ -91,13 +91,16 @@ if len(_files_to_combine) > 0:
             settings.WORKING_DIRECTORY,
             settings.CHANGED_FAMILY_REPORT_FILE_NAME + settings.REPORT_FILE_EXTENSION,
         )
-        write_report_data_as_csv(
+        write_result = write_report_data_as_csv(
             file_name=_combined_changed_family_report_path, 
             header = [], 
             data=rows_overall,
             enforce_ascii=True,
             quoting=QUOTE_MINIMAL,
         )
+        if write_result.status is False:
+            raise ValueError(write_result.message)
+        
         output(
             "Successfully wrote combined changed family report to: {}".format(
                 _combined_changed_family_report_path

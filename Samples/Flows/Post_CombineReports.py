@@ -109,7 +109,7 @@ output('Writing summary Data.... start')
 DATE_STAMP = dateStamp.get_file_date_stamp()
 
 # combine report files based on:
-combine_status_cad = combine_csv_files(
+combine_result_cad = combine_csv_files(
     ROOT_PATH,  # - part report location
     DATE_STAMP, # - part report prefix ( same date stamp as current)
     '_CAD',     # - part report file name suffix
@@ -117,10 +117,10 @@ combine_status_cad = combine_csv_files(
     DATE_STAMP + '_CAD_Links_summary.txt'   # - combined report file name in same location as part reports
 )
 # notify users
-output('Writing summary Data.... finished:[{}] {}_CAD_Links_summary.txt'.format(combine_status_cad.status, DATE_STAMP))
+output('Writing summary Data.... finished:[{}] {}_CAD_Links_summary.txt'.format(combine_result_cad.status, DATE_STAMP))
 
 # combine report files based on:
-combine_status_revit = combine_csv_files(
+combine_result_revit = combine_csv_files(
     ROOT_PATH,      # - part report location
     DATE_STAMP,     # - part report prefix ( same date stamp as current)
     '_RVT',         # - part report file name suffix
@@ -128,4 +128,4 @@ combine_status_revit = combine_csv_files(
     DATE_STAMP + '_RVT_Links_summary.txt'   # - combined report file name in same location as part reports
 )
 # notify user
-output('Writing summary Data.... finished:[{}] {}_RVT_Links_summary.txt'.format(combine_status_revit.status, DATE_STAMP))
+output('Writing summary Data.... finished:[{}] {}_RVT_Links_summary.txt'.format(combine_result_revit.status, DATE_STAMP))

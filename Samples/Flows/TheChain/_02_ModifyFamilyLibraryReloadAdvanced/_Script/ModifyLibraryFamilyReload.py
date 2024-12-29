@@ -141,13 +141,16 @@ if True:
             settings.WORKING_DIRECTORY, _file_name_without_ext + "_marker_.temp"
         )
         try:
-            write_report_data_as_csv(
+            write_result = write_report_data_as_csv(
                 file_name=_file_name_marker,
                 header=[],
                 data=[["Copy From", "Copy To"], [REVIT_FILE_PATH_NEW, REVIT_FILE_PATH]],
                 enforce_ascii=True,
                 quoting=QUOTE_MINIMAL,
             )
+            if write_result.status is False:
+                raise ValueError(write_result.message)
+            
             output("Wrote marker file: {} :: {}".format(_file_name_marker, True))
         except Exception as e:
             output(

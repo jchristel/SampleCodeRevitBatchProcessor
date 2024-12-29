@@ -33,11 +33,10 @@ import os
 from collections import namedtuple
 
 from duHast.Utilities import (
-    files_csv as fileCSV,
     files_get as fileGet,
     files_io as fileIO,
-    files_tab as fileTab,
 )
+from duHast.Utilities.files_csv import write_report_data_as_csv, read_csv_file
 
 # tuples containing base family data and changed family data read from files
 changed_family = namedtuple("changed_family", "name category filePath")
@@ -80,8 +79,8 @@ def write_reload_list_to_file(reload_families, directory_path, counter=0):
         overall_data.append(data)
     try:
         # write data
-        fileTab.write_report_data(file_name, header, overall_data, writeType="w")
-        return True
+        write_result = write_report_data_as_csv(file_name, header, overall_data, writeType="w")
+        return write_result.status
     except Exception:
         return False
 
@@ -127,8 +126,8 @@ def write_out_empty_task_list(directory_path, counter=0):
     overall_data = []
     try:
         # write data
-        fileTab.write_report_data(file_name, header, overall_data, writeType="w")
-        return True
+        write_result = write_report_data_as_csv(file_name, header, overall_data, writeType="w")
+        return write_result.status
     except Exception:
         return False
 
@@ -163,7 +162,7 @@ def read_change_list(file_path):
     rows = []
     if fileIO.file_exist(file_path):
         # attempt to read file
-        rows_result = fileCSV.read_csv_file(file_path)
+        rows_result = read_csv_file(file_path)
         if rows_result.status is False:
             raise Exception("Error reading changed families list file.: {}".format(rows_result.message))
         rows = rows_result.result

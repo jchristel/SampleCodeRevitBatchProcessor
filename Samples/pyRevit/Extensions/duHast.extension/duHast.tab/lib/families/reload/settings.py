@@ -53,7 +53,16 @@ def get_settings():
     ):
         if file_exist(APP_SETTINGS_FILE_NAME):
             # load settings file
-            data = read_json_data_from_file(APP_SETTINGS_FILE_NAME)
+            read_result = read_json_data_from_file(APP_SETTINGS_FILE_NAME)
+            if read_result.status is False:
+                print(
+                    "failed to read settings file: {} with: {}".format(
+                        APP_SETTINGS_FILE_NAME, read_result.message
+                    )
+                )
+                return None
+            data = read_result.result[0]
+            
             settings_instance = Settings(j=data)
             return settings_instance
         else:

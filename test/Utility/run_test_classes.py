@@ -47,8 +47,6 @@ from test.Utility import (
     util_pad_single_digit_string,
     util_remove_items,
     util_string_to_bool,
-    file_json_write_data,
-    file_json_read_data,
 )
 
 
@@ -84,8 +82,6 @@ def run_tests():
         ["File Size", file_size.FileSize],
         ["Directory Get Date Stamp", get_date_stamp_directory.GetDateStampDirectory],
         ["File Get Date Stamp", get_date_stamp_file.GetDateStampFile],
-        ["Write JSON data to file", file_json_write_data.FileJSONWriteData],
-        ["Read JSON data from file", file_json_read_data.FileJSONReadData],
     ]
 
     # run tests

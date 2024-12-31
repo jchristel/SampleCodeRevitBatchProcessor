@@ -65,7 +65,12 @@ def import_graphic_overrides(file_path, call_back):
     return_value = res.Result()
     # print("ini: {}".format(return_value))
     view_overrides_data = {}
-    json_data = read_json_data_from_file(file_path)
+    read_result = read_json_data_from_file(file_path)
+    if read_result.status is False:
+        return_value.update_sep(False, read_result.message)
+        return return_value
+    json_data = read_result.result[0]
+    
     counter = 1
     if PROP_VIEW_DATA in json_data:
         for json_override in json_data[PROP_VIEW_DATA]:

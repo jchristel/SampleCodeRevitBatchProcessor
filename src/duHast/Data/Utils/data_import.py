@@ -148,8 +148,14 @@ class ReadDataFromFile:
         """
 
         # load json from file
-        data_json = read_json_data_from_file(self.data_file_path)
-
+        read_result = read_json_data_from_file(self.data_file_path)
+        if read_result.status is False:
+            self.debug_messages.append(
+                "Failed to read data from file: {}".format(read_result.message)
+            )
+            raise ValueError(read_result.message)
+        data_json = read_result.result[0]
+        
         # this data can com in two different formats:
         # 1. a list of dictionaries as per item 2. below
         # 2. a dictionary with 4 keys: 'date processed', 'room', 'ceiling', 'file name'.'room'  and 'ceiling' are lists of dictionaries as  values

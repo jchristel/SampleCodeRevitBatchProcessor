@@ -136,7 +136,14 @@ def update_tag_locations_from_report(doc, report_file_path, distance_threshold=5
 
     return_value = res.Result()
     # read data from files
-    tag_data_list = read_json_data_from_file(report_file_path)
+    read_result = read_json_data_from_file(report_file_path)
+    if read_result.status is False:
+        return_value.update_sep(
+            False, "Failed to read report file: {}".format(read_result.message)
+        )
+        return return_value
+    tag_data_list = read_result.result[0]
+    
     tag_updates = []
     for tag_data in tag_data_list:
         # get the id of the tag

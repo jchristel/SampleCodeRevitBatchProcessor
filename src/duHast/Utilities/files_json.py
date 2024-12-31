@@ -80,7 +80,20 @@ def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
     :param json_data: A dictionary to be written to file.
     :param data_output_file_path: Fully qualified file path to JSON data file.
     :param enforce_utf8: Will encode any string value as UTF-8, Default is True (recommended!!).
-    :return: Result class instance with status and message.
+    
+    :return:
+        Result class instance.
+
+        - result.status (bool) True if file was written without an exception, otherwise False.
+        - result.message contains log messages.
+        - result.result will be a single entry list containing json data as string.
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
+         result.result be an empty list
+    :rtype: :class:`.Result`
     """
 
     result = res.Result()
@@ -102,6 +115,7 @@ def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
         result.update_sep(
             True, "Data written to file: {}".format(data_output_file_path)
         )
+        result.result.append(json_object)
     except Exception as e:
         result.update_sep(
             False, "Failed to write data to file with exception: {}".format(e)
@@ -111,25 +125,47 @@ def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
 
 def read_json_data_from_file(file_path):
     """
-    Reads json from file
+    Reads json from file in utf-8 encoded format.
 
-    :param revit_file_path: Fully qualified file path of report file.
+    :param file_path: Fully qualified file path of json file to read.
     :type file_path: str
-    :return: json object
-    :rtype: {}
+    
+    :return:
+        Result class instance.
+
+        - result.status (bool) True if file was read without an exception, otherwise False.
+        - result.message contains log messages.
+        - result.result will contain a dictionary with the data read from the file.
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
+         result.result be an empty list
+    :rtype: :class:`.Result`
     """
 
+    result = res.Result()
     data = {}
     try:
-        # Opening JSON file
-        with open(file_path) as f:
+        # Opening JSON file as utf-8
+        with codecs.open(file_path, 'r', encoding='utf-8') as f:
             # returns JSON object as
             # a dictionary
             data = json.load(f)
             f.close()
+            
+        # store the data in the result object
+        result.result.append(data)
+        result.update_sep(
+            True, "Data read from file: {}".format(file_path)
+        )
+        
     except Exception as e:
-        pass
-    return data
+        result.update_sep(
+            False, "Failed to read data to file with exception: {}".format(e)
+        )
+    return result
 
 def combine_files_json(
     folder_path,
@@ -159,22 +195,44 @@ def combine_files_json(
     :type out_put_file_name: str, optional
     :param file_getter: Function returning list of files to be combined, defaults to GetFilesSingleFolder
     :type file_getter: func(folder_path, file_prefix, file_suffix, file_extension), optional
+    
+    :return:
+        Result class instance.
+
+        - result.status (bool) True if file where combined without an exception, otherwise False.
+        - result.message contains log messages.
+        - result.result will contain a dictionaries with the data read from the file(s).
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
+         result.result be an empty list
+    :rtype: :class:`.Result`
+    
     """
 
-    # get all files to be combined
-    file_list = file_getter(folder_path, file_prefix, file_suffix, file_extension)
+    result = res.Result()
+    try:
+        # get all files to be combined
+        file_list = file_getter(folder_path, file_prefix, file_suffix, file_extension)
 
-    # read json data into a list of json objects
-    json_objects = []
-    for file in file_list:
-        json_object = read_json_data_from_file(file_path=file)
-        json_objects.append(json_object)
+        # read json data into a list of json objects
+        json_objects = []
+        for file in file_list:
+            read_result = read_json_data_from_file(file_path=file)
+            result.update(read_result)
+            if read_result.status == False:
+                return result
+            json_objects.append(read_result.result[0])
 
-    # write json data out
-    result_write = write_json_to_file(
-        json_data=json_objects,
-        data_output_file_path=os.path.join(folder_path, output_file_name),
-    )
-
-    # return flag only
-    return result_write.status
+        # write json data out
+        result_write = write_json_to_file(
+            json_data=json_objects,
+            data_output_file_path=os.path.join(folder_path, output_file_name),
+        )
+        result.update(result_write)
+    except Exception as e:
+        result.update_sep(False, "Failed to combine files with exception: {}".format(e))
+    
+    return result

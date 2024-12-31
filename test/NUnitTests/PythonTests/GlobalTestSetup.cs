@@ -15,6 +15,10 @@ namespace PythonTests
 
             try
             {
+                //python classes
+                engine.Execute("dummy={}", scope);
+                PythonEngineManager.PythonDictionary = scope.GetVariable("dummy");
+
                 //Utilities classes
                 PythonEngineManager.BaseClass = scope.GetVariable("Base");
                 PythonEngineManager.BOMValueClass = scope.GetVariable("BOMValue");

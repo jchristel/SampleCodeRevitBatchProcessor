@@ -1,4 +1,5 @@
-﻿using Microsoft.Scripting.Hosting;
+﻿using IronPython.Runtime;
+using Microsoft.Scripting.Hosting;
 
 namespace PythonTests.Setup
 {
@@ -6,6 +7,11 @@ namespace PythonTests.Setup
     {
         private static ScriptEngine _pythonEngine;
         private static ScriptScope _scope;
+
+
+        
+        public static dynamic? PythonDictionary { get; set; }
+
 
         public static dynamic? BaseClass { get; set; }
         public static dynamic? BOMValueClass { get; set; }

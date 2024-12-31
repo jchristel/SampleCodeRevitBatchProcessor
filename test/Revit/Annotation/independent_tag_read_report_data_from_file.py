@@ -140,7 +140,14 @@ class ReadIndependentTagReportDataFromFile(revit_test.RevitTest):
             )
             assert (write_json_file_result.status==True)
             # read data back in from file into a list of dictionaries
-            read_data = read_json_data_from_file(data_file_name)
+            read_result = read_json_data_from_file(data_file_name)
+            if read_result.status is False:
+                return_value.update_sep(
+                    False, "Failed to read data from file: {}".format(read_result.message)
+                )
+                return return_value
+            read_data = read_result.result[0]
+            
             # check what came back
             return_value.append_message(
                 " result: {} \n expected: {} ".format(sorted(read_data), sorted(tag_data))

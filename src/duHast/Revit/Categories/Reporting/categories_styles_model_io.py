@@ -83,8 +83,13 @@ def read_category_graphics_data_from_file(file_path):
 
     data_views = []
     # read json file
-    data_read = read_json_data_from_file(file_path=file_path)
-
+    read_result = read_json_data_from_file(file_path=file_path)
+    if(read_result.status is False):
+        raise ValueError(
+            "Failed to read category graphics data from file: {}".format(read_result.message)
+        )
+    data_read = read_result.result[0]
+    
     # check if this is a list of data view items
     if isinstance(data_read, list):
         for data_entry in data_read:

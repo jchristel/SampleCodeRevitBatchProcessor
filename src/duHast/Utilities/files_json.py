@@ -3,6 +3,7 @@
 Utility functions writing / reading json objects to/ from file.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -33,6 +34,7 @@ import codecs
 import json
 import os
 
+
 def _custom_default(o):
     """
     Encode string values to utf-8 for JSON formatted outputs.
@@ -43,7 +45,9 @@ def _custom_default(o):
     if isinstance(o, str):
         # Only encode if required
         if any(ord(char) > 127 for char in o):
-            return o.encode("utf-8").decode("utf-8")  # Encoding and decoding to ensure the type is str
+            return o.encode("utf-8").decode(
+                "utf-8"
+            )  # Encoding and decoding to ensure the type is str
     return o.__dict__
 
 
@@ -54,7 +58,7 @@ def serialize(obj):
     :param obj: The object to serialize.
     :return: A dictionary representation of the object.
     """
-    if hasattr(obj, 'to_json') and callable(getattr(obj, 'to_json')):
+    if hasattr(obj, "to_json") and callable(getattr(obj, "to_json")):
         return json.loads(obj.to_json())  # Use the to_json method
     else:
         return _custom_default(obj)  # Fallback to custom default
@@ -67,7 +71,7 @@ def serialize_utf(obj):
     :param obj: The object to serialize.
     :return: A dictionary representation of the object.
     """
-    if hasattr(obj, 'to_json_utf') and callable(getattr(obj, 'to_json_utf')):
+    if hasattr(obj, "to_json_utf") and callable(getattr(obj, "to_json_utf")):
         return json.loads(obj.to_json())  # Use the to_json method
     else:
         return _custom_default(obj)  # Fallback to custom default
@@ -80,7 +84,7 @@ def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
     :param json_data: A dictionary to be written to file.
     :param data_output_file_path: Fully qualified file path to JSON data file.
     :param enforce_utf8: Will encode any string value as UTF-8, Default is True (recommended!!).
-    
+
     :return:
         Result class instance.
 
@@ -129,7 +133,7 @@ def read_json_data_from_file(file_path):
 
     :param file_path: Fully qualified file path of json file to read.
     :type file_path: str
-    
+
     :return:
         Result class instance.
 
@@ -149,23 +153,22 @@ def read_json_data_from_file(file_path):
     data = {}
     try:
         # Opening JSON file as utf-8
-        with codecs.open(file_path, 'r', encoding='utf-8') as f:
+        with codecs.open(file_path, "r", encoding="utf-8") as f:
             # returns JSON object as
             # a dictionary
             data = json.load(f)
             f.close()
-            
+
         # store the data in the result object
         result.result.append(data)
-        result.update_sep(
-            True, "Data read from file: {}".format(file_path)
-        )
-        
+        result.update_sep(True, "Data read from file: {}".format(file_path))
+
     except Exception as e:
         result.update_sep(
             False, "Failed to read data to file with exception: {}".format(e)
         )
     return result
+
 
 def combine_files_json(
     folder_path,
@@ -195,7 +198,7 @@ def combine_files_json(
     :type out_put_file_name: str, optional
     :param file_getter: Function returning list of files to be combined, defaults to GetFilesSingleFolder
     :type file_getter: func(folder_path, file_prefix, file_suffix, file_extension), optional
-    
+
     :return:
         Result class instance.
 
@@ -209,7 +212,7 @@ def combine_files_json(
         - result.message will contain exception message.
          result.result be an empty list
     :rtype: :class:`.Result`
-    
+
     """
 
     result = res.Result()
@@ -234,5 +237,5 @@ def combine_files_json(
         result.update(result_write)
     except Exception as e:
         result.update_sep(False, "Failed to combine files with exception: {}".format(e))
-    
+
     return result

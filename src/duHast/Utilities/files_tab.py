@@ -3,6 +3,7 @@
 Helper functions relating to tab separated text files. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -30,15 +31,24 @@ Helper functions relating to tab separated text files.
 import csv
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_base_write import write_report_data
-from duHast.Utilities.files_base_read import  get_first_row_in_column_based_text_file,read_column_based_text_file
-from duHast.Utilities.files_base_combine import combine_files, combine_files_header_independent, append_to_file
+from duHast.Utilities.files_base_read import (
+    get_first_row_in_column_based_text_file,
+    read_column_based_text_file,
+)
+from duHast.Utilities.files_base_combine import (
+    combine_files,
+    combine_files_header_independent,
+    append_to_file,
+)
 from duHast.Utilities.files_get import get_files_single_directory
 
 
-def append_tab_separated_file(source_file, append_file, ignore_first_row=False, quoting=csv.QUOTE_MINIMAL):
+def append_tab_separated_file(
+    source_file, append_file, ignore_first_row=False, quoting=csv.QUOTE_MINIMAL
+):
     """
     Function to append the content of a tab separated file to another tab separated file.
-    
+
     :param source_file: The fully qualified file path of the source file.
     :type source_file: str
     :param append_file: The fully qualified file path of the file to append.
@@ -47,7 +57,7 @@ def append_tab_separated_file(source_file, append_file, ignore_first_row=False, 
     :type ignore_first_row: bool, optional
     :param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_MINIMAL. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
     :type quoting: int, optional
-    
+
     :return:
         Result class instance.
 
@@ -61,18 +71,18 @@ def append_tab_separated_file(source_file, append_file, ignore_first_row=False, 
         - result.message will contain exception message.
     :rtype: :class:`.Result`
     """
-    
+
     # use base function to append the file
     return_value = append_to_file(
-        source_file=source_file, 
-        append_file=append_file, 
+        source_file=source_file,
+        append_file=append_file,
         ignore_first_row=ignore_first_row,
         delimiter="\t",
         quoting=quoting,
     )
-    
+
     return return_value
-    
+
 
 def combine_tab_separated_files_header_independent(
     folder_path,
@@ -84,7 +94,7 @@ def combine_tab_separated_files_header_independent(
 ):
     """
     Function to combine multiple tab separated files into a single tab separated file combining all headers.
-    
+
     :param folder_path: The fully qualified folder path containing the tab separated files.
     :type folder_path: str
     :param file_prefix: The prefix of the tab separated files to be combined. Defaults to "".
@@ -97,7 +107,7 @@ def combine_tab_separated_files_header_independent(
     :type output_file_name: str, optional
     :param overwrite_existing: Flag to overwrite the existing output file. Defaults to False.
     :type overwrite_existing: bool, optional
-    
+
     :return:
         Result class instance.
 
@@ -111,7 +121,7 @@ def combine_tab_separated_files_header_independent(
         - result.message will contain exception message.
     :rtype: :class:`.Result`
     """
-    
+
     # use base function to combine the files
     return_value = combine_files_header_independent(
         folder_path=folder_path,
@@ -120,25 +130,26 @@ def combine_tab_separated_files_header_independent(
         file_extension=file_extension,
         output_file_name=output_file_name,
         overwrite_existing=overwrite_existing,
-        delimiter="\t"
+        delimiter="\t",
     )
-    
+
     return return_value
 
 
-def combine_tab_separated_files(folder_path,
+def combine_tab_separated_files(
+    folder_path,
     file_prefix="",
     file_suffix="",
     file_extension=".txt",
     output_file_name="result.txt",
     file_getter=get_files_single_directory,
-    quoting=csv.QUOTE_MINIMAL
-    ):
+    quoting=csv.QUOTE_MINIMAL,
+):
     """
     Function to combine multiple tab separated files into a single tab separated file.
-    
+
     Assumes all files have the same header. (number of columns)
-    
+
     :param folder_path: The fully qualified folder path containing the tab separated files.
     :type folder_path: str
     :param file_prefix: The prefix of the tab separated files to be combined. Defaults to "".
@@ -153,7 +164,7 @@ def combine_tab_separated_files(folder_path,
     :type file_getter: function, optional
     :param quoting: Quoting style used by the tab separated writer. Defaults to csv.QUOTE_MINIMAL. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
     :type quoting: int, optional
-    
+
     :return:
         Result class instance.
 
@@ -167,7 +178,7 @@ def combine_tab_separated_files(folder_path,
         - result.message will contain exception message.
     :rtype: :class:`.Result`
     """
-    
+
     # use base function to combine the files
     return_value = combine_files(
         folder_path=folder_path,
@@ -177,13 +188,22 @@ def combine_tab_separated_files(folder_path,
         output_file_name=output_file_name,
         file_getter=file_getter,
         delimiter="\t",
-        quoting=quoting
+        quoting=quoting,
     )
-    
+
     return return_value
 
 
-def write_report_data_as_tab_separated_file(file_name, header, data, write_type="w",enforce_ascii=False,  encoding="utf-8", bom=None, quoting=csv.QUOTE_NONE,):
+def write_report_data_as_tab_separated_file(
+    file_name,
+    header,
+    data,
+    write_type="w",
+    enforce_ascii=False,
+    encoding="utf-8",
+    bom=None,
+    quoting=csv.QUOTE_NONE,
+):
     """
     Function writing out report information in tab separated format.
 
@@ -203,7 +223,7 @@ def write_report_data_as_tab_separated_file(file_name, header, data, write_type=
     :type bom: str, default is NoneType
     :param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_NONE. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
     :type quoting: int, optional
-    
+
     :return: A Result object, with the result attribute set to True if the file was written successfully, False otherwise.
     :rtype: :class:`.Result`
     """
@@ -217,16 +237,15 @@ def write_report_data_as_tab_separated_file(file_name, header, data, write_type=
         encoding=encoding,
         quoting=quoting,
         bom=bom,
-        delimiter='\t',
+        delimiter="\t",
     )
     return write_result
-    
 
 
 def get_first_row_in_tab_separated_file(file_path):
     """
     Reads the first line of a tab separated text file and returns it as a list of strings
-    
+
     :param file_path: The fully qualified file path.
     :type file_path: str
     :return:
@@ -242,11 +261,13 @@ def get_first_row_in_tab_separated_file(file_path):
         - result.message will contain exception message.
     :rtype: :class:`.Result`
     """
-    
+
     return_value = Result()
-    return_value = get_first_row_in_column_based_text_file(file_path=file_path, delimiter='\t')
+    return_value = get_first_row_in_column_based_text_file(
+        file_path=file_path, delimiter="\t"
+    )
     return return_value
-    
+
 
 def read_tab_separated_file(file_path, increase_max_field_size_limit=False):
     """
@@ -256,7 +277,7 @@ def read_tab_separated_file(file_path, increase_max_field_size_limit=False):
     :type file_path: str
     :param increase_max_field_size_limit: Flag to increase the max field size limit. Defaults to False.
     :type increase_max_field_size_limit: bool, optional
-    
+
     :return:
         Result class instance.
 
@@ -273,9 +294,9 @@ def read_tab_separated_file(file_path, increase_max_field_size_limit=False):
 
     # read with encoding enabled
     read_result = read_column_based_text_file(
-        file_path=file_path, 
+        file_path=file_path,
         increase_max_field_size_limit=increase_max_field_size_limit,
-        delimiter='\t'
+        delimiter="\t",
     )
-    
+
     return read_result

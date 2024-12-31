@@ -29,7 +29,6 @@ Helper functions relating to writing text files.
 
 import codecs
 import csv
-#import System.IO
 
 from duHast.Utilities.files_io import (
     is_last_char_newline,
@@ -133,7 +132,7 @@ def write_report_data(
                     return (
                         encoded  # Keep the strings in their current state for writing
                     )
-            
+
             # Write header
             wrote_header = False
             if header and len(header) > 0:
@@ -161,7 +160,6 @@ def write_report_data(
                 wrote_date = True
             else:
                 return_value.append_message("No data provided, skipping writing.")
-
 
             # Remove the newline character from the last row if any data was written
             if wrote_date or wrote_header:

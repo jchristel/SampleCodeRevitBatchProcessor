@@ -31,15 +31,24 @@ import csv
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_base_write import write_report_data
-from duHast.Utilities.files_base_read import get_first_row_in_column_based_text_file, read_column_based_text_file
-from duHast.Utilities.files_base_combine import combine_files, combine_files_header_independent, append_to_file
+from duHast.Utilities.files_base_read import (
+    get_first_row_in_column_based_text_file,
+    read_column_based_text_file,
+)
+from duHast.Utilities.files_base_combine import (
+    combine_files,
+    combine_files_header_independent,
+    append_to_file,
+)
 from duHast.Utilities.files_get import get_files_single_directory
 
 
-def append_csv_file(source_file, append_file, ignore_first_row=False, quoting=csv.QUOTE_MINIMAL):
+def append_csv_file(
+    source_file, append_file, ignore_first_row=False, quoting=csv.QUOTE_MINIMAL
+):
     """
     Function to append the content of a csv file to another csv file.
-    
+
     :param source_file: The fully qualified file path of the source file.
     :type source_file: str
     :param append_file: The fully qualified file path of the file to append.
@@ -48,7 +57,7 @@ def append_csv_file(source_file, append_file, ignore_first_row=False, quoting=cs
     :type ignore_first_row: bool, optional
     :param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_MINIMAL. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
     :type quoting: int, optional
-    
+
     :return:
         Result class instance.
 
@@ -62,18 +71,18 @@ def append_csv_file(source_file, append_file, ignore_first_row=False, quoting=cs
         - result.message will contain exception message.
     :rtype: :class:`.Result`
     """
-    
+
     # use base function to append the file
     return_value = append_to_file(
-        source_file=source_file, 
-        append_file=append_file, 
+        source_file=source_file,
+        append_file=append_file,
         ignore_first_row=ignore_first_row,
         delimiter=",",
         quoting=quoting,
     )
-    
+
     return return_value
-    
+
 
 def combine_csv_files_header_independent(
     folder_path,
@@ -85,7 +94,7 @@ def combine_csv_files_header_independent(
 ):
     """
     Function to combine multiple csv files into a single csv combining all headers.
-    
+
     :param folder_path: The fully qualified folder path containing the csv files.
     :type folder_path: str
     :param file_prefix: The prefix of the csv files to be combined. Defaults to "".
@@ -98,7 +107,7 @@ def combine_csv_files_header_independent(
     :type output_file_name: str, optional
     :param overwrite_existing: Flag to overwrite the existing output file. Defaults to False.
     :type overwrite_existing: bool, optional
-    
+
     :return:
         Result class instance.
 
@@ -112,7 +121,7 @@ def combine_csv_files_header_independent(
         - result.message will contain exception message.
     :rtype: :class:`.Result`
     """
-    
+
     # use base function to combine the files
     return_value = combine_files_header_independent(
         folder_path=folder_path,
@@ -121,26 +130,26 @@ def combine_csv_files_header_independent(
         file_extension=file_extension,
         output_file_name=output_file_name,
         overwrite_existing=overwrite_existing,
-        delimiter=","
+        delimiter=",",
     )
-    
+
     return return_value
 
 
-
-def combine_csv_files(folder_path,
+def combine_csv_files(
+    folder_path,
     file_prefix="",
     file_suffix="",
     file_extension=".csv",
     output_file_name="result.csv",
     file_getter=get_files_single_directory,
-    quoting=csv.QUOTE_MINIMAL
-    ):
+    quoting=csv.QUOTE_MINIMAL,
+):
     """
     Function to combine multiple csv files into a single csv file.
-    
+
     Assumes all files have the same header. (number of columns)
-    
+
     :param folder_path: The fully qualified folder path containing the csv files.
     :type folder_path: str
     :param file_prefix: The prefix of the csv files to be combined. Defaults to "".
@@ -155,7 +164,7 @@ def combine_csv_files(folder_path,
     :type file_getter: function, optional
     :param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_MINIMAL. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
     :type quoting: int, optional
-    
+
     :return:
         Result class instance.
 
@@ -169,7 +178,7 @@ def combine_csv_files(folder_path,
         - result.message will contain exception message.
     :rtype: :class:`.Result`
     """
-    
+
     # use base function to combine the files
     return_value = combine_files(
         folder_path=folder_path,
@@ -178,10 +187,10 @@ def combine_csv_files(folder_path,
         file_extension=file_extension,
         output_file_name=output_file_name,
         file_getter=file_getter,
-        delimiter="," ,
-        quoting=quoting
+        delimiter=",",
+        quoting=quoting,
     )
-    
+
     return return_value
 
 
@@ -193,7 +202,7 @@ def read_csv_file(file_path, increase_max_field_size_limit=False):
     :type file_path: str
     :param increase_max_field_size_limit: Flag to increase the max field size limit. Defaults to False.
     :type increase_max_field_size_limit: bool, optional
-    
+
     :return:
         Result class instance.
 
@@ -210,18 +219,18 @@ def read_csv_file(file_path, increase_max_field_size_limit=False):
 
     # read with encoding enabled
     read_result = read_column_based_text_file(
-        file_path=file_path, 
+        file_path=file_path,
         increase_max_field_size_limit=increase_max_field_size_limit,
-        delimiter=','
+        delimiter=",",
     )
-    
+
     return read_result
 
 
 def get_first_row_in_csv_file(file_path):
     """
     Reads the first line of a csv text file and returns it as a list of strings
-    
+
     :param file_path: The fully qualified file path.
     :type file_path: str
     :return:
@@ -237,15 +246,24 @@ def get_first_row_in_csv_file(file_path):
         - result.message will contain exception message.
     :rtype: :class:`.Result`
     """
-    
+
     return_value = Result()
-    return_value = get_first_row_in_column_based_text_file(file_path=file_path, delimiter=',')
+    return_value = get_first_row_in_column_based_text_file(
+        file_path=file_path, delimiter=","
+    )
     return return_value
-    
 
 
 def write_report_data_as_csv(
-    file_name, header, data, write_type="w", enforce_ascii=False,  encoding="utf-8", bom=None, quoting=csv.QUOTE_NONE, delimiter=','
+    file_name,
+    header,
+    data,
+    write_type="w",
+    enforce_ascii=False,
+    encoding="utf-8",
+    bom=None,
+    quoting=csv.QUOTE_NONE,
+    delimiter=",",
 ):
     """
     Function writing out report information as CSV file.
@@ -265,7 +283,7 @@ def write_report_data_as_csv(
     :type bom: str, default is NoneType
     :param quoting: Quoting style used by the csv writer. Defaults to csv.QUOTE_NONE. Options are csv.QUOTE_ALL, csv.QUOTE_MINIMAL, csv.QUOTE_NONNUMERIC, csv.QUOTE_NONE
     :type quoting: int, optional
-    
+
     :return:
         Result class instance.
 
@@ -281,10 +299,18 @@ def write_report_data_as_csv(
     """
 
     return_value = Result()
-    
+
     # use base function to write the data
-    return_value = write_report_data (
-        file_name=file_name, header=header, data=data, write_type=write_type, enforce_ascii=enforce_ascii,  encoding=encoding, bom=bom, quoting=quoting, delimiter=delimiter
+    return_value = write_report_data(
+        file_name=file_name,
+        header=header,
+        data=data,
+        write_type=write_type,
+        enforce_ascii=enforce_ascii,
+        encoding=encoding,
+        bom=bom,
+        quoting=quoting,
+        delimiter=delimiter,
     )
-    
+
     return return_value

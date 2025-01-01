@@ -1,0 +1,11 @@
+layout:
+  - About
+
+# bundle tooltip
+tooltip: |
+    About duHast extension.
+
+
+# bundle author
+author: 
+  - Jan Christel

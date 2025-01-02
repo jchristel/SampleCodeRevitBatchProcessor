@@ -1,6 +1,6 @@
 
-from test.UI.PushIt.Models.Room import Room
-from test.UI.PushIt.Exceptions.RoomConflictException import RoomsConflictException
+from PushIt.Models.Room import Room
+from PushIt.Exceptions.RoomConflictException import RoomsConflictException
 
 from duHast.Utilities.Objects.base import Base
 

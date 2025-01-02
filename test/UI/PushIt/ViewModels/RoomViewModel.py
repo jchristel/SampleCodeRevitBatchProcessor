@@ -1,8 +1,9 @@
 from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
 
 
-from Objects.match_status_names import MatchStatusNames
-from test.UI.PushIt.Models.Room import Room
+from PushIt.Objects.match_status_names import MatchStatusNames
+from PushIt.Models.Room import Room
+
 class RoomViewModel(ViewModelBase):
     
     def __init__(self, room):
@@ -28,15 +29,15 @@ class RoomViewModel(ViewModelBase):
 
     @property
     def RoomId(self):
-        return self._room.id
+        return self._room.id.id
 
     @property
     def AreaBriefed(self):
-        return self._room.area_briefed
+        return self._room.area_briefed.value
 
     @property
     def AreaDesigned(self):
-        return self._room.area_designed
+        return self._room.area_designed.value
     
     @property
     def MatchStatus(self):

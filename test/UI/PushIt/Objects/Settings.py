@@ -1,6 +1,7 @@
 import json
+
 from duHast.Utilities.Objects.base import Base
-from Objects.settings_names import SettingsNames
+from PushIt.Objects.settings_names import SettingsNames
 
 class Settings(Base):
     def __init__(self, j=None):

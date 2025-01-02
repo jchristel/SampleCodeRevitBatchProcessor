@@ -2,7 +2,7 @@ from duHast.Utilities.Objects.base import Base
 
 class RoomProperty(Base):
     
-    def __init__(self, name, value, unit_converter = None):
+    def __init__(self, name, value, parameter_guid, unit_converter = None):
         
         super(RoomProperty, self).__init__()
         
@@ -15,6 +15,10 @@ class RoomProperty(Base):
         if (isinstance(value, str)==False):
             raise TypeError("value needs to be of type str. Got {} instead.".format(id))
         self.value = value
+        
+        if (isinstance(parameter_guid, str)==False):
+            raise TypeError("parameter_guid needs to be of type str. Got {} instead.".format(id))
+        self.parameter_guid = parameter_guid
         
         # unit converter used when pushing data to revit (some data is read as string but needs to be float in revit)
         self.unit_converter = unit_converter
@@ -33,7 +37,7 @@ class RoomProperty(Base):
         if isinstance(other, RoomProperty)== False:
             return False
         
-        if other.name == self.name and other.value == self.value:
+        if other.name == self.name and other.value == self.value and other.parameter_guid == self.parameter_guid:
             return True
         else:
             return False

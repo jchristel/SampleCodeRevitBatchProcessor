@@ -3,7 +3,7 @@ from duHast.Utilities.Objects.base import Base
 
 class RoomID(Base):
     
-    def __init__(self, id):
+    def __init__(self, id, parameter_guid,):
         
         super(RoomID, self).__init__()
         
@@ -13,6 +13,10 @@ class RoomID(Base):
         
         self.id = id
 
+        if (isinstance(parameter_guid, str)==False):
+            raise TypeError("parameter_guid needs to be of type str. Got {} instead.".format(id))
+        self.parameter_guid = parameter_guid
+        
     
     def __eq__(self, other):
         """
@@ -27,7 +31,7 @@ class RoomID(Base):
         if isinstance(other, RoomID)== False:
             return False
         
-        if other.id == self.id:
+        if other.id == self.id and other.parameter_guid == self.parameter_guid:
             return True
         else:
             return False

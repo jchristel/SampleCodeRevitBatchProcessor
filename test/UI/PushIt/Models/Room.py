@@ -1,7 +1,8 @@
 
 from duHast.Utilities.Objects.base import Base
-from test.UI.PushIt.Models.RoomId import RoomID
-from test.UI.PushIt.Models.RoomProperty import RoomProperty
+
+from PushIt.Models.RoomId import RoomID
+from PushIt.Models.RoomProperty import RoomProperty
 
 class Room(Base):
     
@@ -48,6 +49,14 @@ class Room(Base):
             return False
         else:
             return True
+    
+    def add_property(self, property):
+        
+        # check type
+        if(isinstance(property, RoomProperty)==False):
+            raise TypeError ("property needs to be of type RoomProperty, got {} instead".format(type(property)))
+        
+        self.other_properties.append(property)
     
     @property
     def id(self):

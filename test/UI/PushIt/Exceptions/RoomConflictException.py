@@ -1,5 +1,5 @@
 # Define a custom exception by subclassing Exception
-from test.UI.PushIt.Models.Room import Room
+from PushIt.Models.Room import Room
 
 class RoomsConflictException(Exception):
     def __init__(self, message, existing_room, new_room):

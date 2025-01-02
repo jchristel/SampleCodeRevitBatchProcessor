@@ -1,8 +1,8 @@
 from duHast.Utilities.Objects.base import Base
 
-from test.UI.PushIt.Models.Room import Room
-from test.UI.PushIt.Models.RoomsContainer import RoomsContainer
-from Objects.Settings import Settings
+from PushIt.Models.Room import Room
+from PushIt.Models.RoomsContainer import RoomsContainer
+from PushIt.Objects.Settings import Settings
 
 class RevitModel(Base):
     

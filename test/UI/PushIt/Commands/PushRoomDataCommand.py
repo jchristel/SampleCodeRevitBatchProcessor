@@ -1,6 +1,7 @@
 from duHast.UI.Objects.WPF.Commands.CommandBase import CommandBase
 from duHast.Utilities.directory_io import directory_exists
-from test.UI.PushIt.Models.Room import Room
+
+from PushIt.Models.Room import Room
 
 class PushRoomDataCommand(CommandBase):
 
@@ -21,7 +22,7 @@ class PushRoomDataCommand(CommandBase):
         """
         This method returns True if the file path  value is set  and points to a valid directory.
         """
-        print("in can execute check: {}".format(self.rooms_selection_view_model.LibraryPath ))
+        print("in can execute check: " )
         return True
     
     def Execute(self, parameter):

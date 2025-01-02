@@ -26,10 +26,6 @@ except ImportError:
 from duHast.Utilities.utility import get_local_app_data_path
 from duHast.Utilities.files_json import read_json_data_from_file, write_json_to_file
 
-#from families_reload.reload.Objects.Settings import Settings
-from Objects.Settings import Settings
-
-print_header("File Path in Settings")
 
 #: get the script location
 SCRIPT_DIRECTORY = get_directory_path_from_file_path(__file__)
@@ -38,6 +34,10 @@ print("Script dir: {}".format(SCRIPT_DIRECTORY))
 #: build flow directory name
 FLOW_DIRECTORY = get_parent_directory(SCRIPT_DIRECTORY)
 print("Flow dir: {}".format(FLOW_DIRECTORY))
+
+# add the flow directory to the path in order for imports from PushIt to work
+sys.path.insert(0, FLOW_DIRECTORY)
+
 
 # get the extension lib directory
 LIB_DIRECTORY= get_parent_directory(FLOW_DIRECTORY)
@@ -64,6 +64,12 @@ DU_HAST_SETTINGS_DIRECTORY_NAME = "duHast"
 DU_HAST_SETTINGS_DIRECTORY = os.path.join( get_local_app_data_path(), DU_HAST_SETTINGS_DIRECTORY_NAME)
 # settings file name
 APP_SETTINGS_FILE_NAME = os.path.join(DU_HAST_SETTINGS_DIRECTORY, "pushIt.json")
+
+
+#from families_reload.reload.Objects.Settings import Settings
+from PushIt.Objects.Settings import Settings
+
+print_header("File Path in Settings")
 
 def get_settings():
     # look for settings file in %AppData/Local/duHast%

@@ -46,7 +46,7 @@ The csv file contains as an absolute minimum the following columns (in this orde
 
 As an absolute minimum, the csv file should contain columns 1 and 2. The csv file can contain more columns, which will be pushed into Revit as well. 
 
-| For a sample refer to \Samples\Data_Min.csv
+  For a sample refer to \Samples\Data_Min.csv
 
 When the csv file is loaded into the add-in, the add-in will check if:
 

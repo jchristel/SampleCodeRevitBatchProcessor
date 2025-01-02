@@ -42,9 +42,10 @@ The csv file contains as an absolute minimum the following columns (in this orde
 
 1. Room unique id. This is a unique identifier for the room and is used to match the room in Revit to the data in the csv file.
 2. Briefed area. The briefed area of the room.
+3. Designed area. The designed area of the room. (Can be an empty column since the add-in will not push but read this data from Revit)
 
 
-As an absolute minimum, the csv file should contain columns 1 and 2. The csv file can contain more columns, which will be pushed into Revit as well. 
+As an absolute minimum, the csv file should contain columns 1, 2 and 3. The csv file can contain more columns, which will be pushed into Revit as well. 
 
   For a sample refer to \Samples\Data_Min.csv
 

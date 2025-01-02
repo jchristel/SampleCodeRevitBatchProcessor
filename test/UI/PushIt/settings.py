@@ -59,16 +59,16 @@ else:
 
 print("duHast dir: {}".format(DUH_AST_DIRECTORY))
 
-HASSELL_SETTINGS_DIRECTORY_NAME = "Hassell"
+DU_HAST_SETTINGS_DIRECTORY_NAME = "duHast"
 # settings directory
-HASSELL_SETTINGS_DIRECTORY = os.path.join( get_local_app_data_path(), HASSELL_SETTINGS_DIRECTORY_NAME)
+DU_HAST_SETTINGS_DIRECTORY = os.path.join( get_local_app_data_path(), DU_HAST_SETTINGS_DIRECTORY_NAME)
 # settings file name
-APP_SETTINGS_FILE_NAME = os.path.join(HASSELL_SETTINGS_DIRECTORY, "reloader.json")
+APP_SETTINGS_FILE_NAME = os.path.join(DU_HAST_SETTINGS_DIRECTORY, "pushIt.json")
 
 def get_settings():
     # look for settings file in %AppData/Local/duHast%
 
-    if create_target_directory(get_local_app_data_path(), HASSELL_SETTINGS_DIRECTORY_NAME):
+    if create_target_directory(get_local_app_data_path(), DU_HAST_SETTINGS_DIRECTORY_NAME):
         if file_exist(APP_SETTINGS_FILE_NAME):
             # load settings file
             read_result =  read_json_data_from_file(APP_SETTINGS_FILE_NAME)
@@ -82,7 +82,7 @@ def get_settings():
             print ("failed to get settings file: {}. First time usage?".format(APP_SETTINGS_FILE_NAME))
             return Settings()
     else:
-        print ("failed to create settings directory: {}".format(HASSELL_SETTINGS_DIRECTORY))
+        print ("failed to create settings directory: {}".format(DU_HAST_SETTINGS_DIRECTORY))
         return None
 
 def write_settings(settings_instance):

@@ -31,7 +31,7 @@ class Settings(Base):
             try:
                 self._library_path = j.get(SettingsNames.LIBRARY_PATH.value, self._library_path)
                 if not (isinstance(self._library_path, str)):
-                    raise ValueError("Expectred library_path as str, got {} instead".format(type(self._library_path)))
+                    raise ValueError("Expected library_path as str, got {} instead".format(type(self._library_path)))
             except Exception as e:
                 raise type(e)("Settings failed to initialise with: {}".format(e))
 

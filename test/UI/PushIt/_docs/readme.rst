@@ -1,3 +1,7 @@
+.. contents:: Index
+
+----
+
 #######################
 PushIt
 #######################
@@ -45,7 +49,7 @@ When are rooms counted as duplicated?
   
   - They have the same room id and exist in different design options within the same design set.
 
-PushIt will use the currently active design option to determine if rooms are duplicated or not. If the active design option is set to 'Main Model', PushIt will consider all rooms in the main model and the primary design options as one set of rooms. 
+.. contents::PushIt will use the currently active design option to determine if rooms are duplicated or not. If the active design option is set to 'Main Model', PushIt will consider all rooms in the main model and the primary design options as one set of rooms. 
 If the active design option is set to a specific design option, PushIt will consider all rooms in that design option and the main model as one set of rooms.
 
 =======================

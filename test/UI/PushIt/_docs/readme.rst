@@ -35,6 +35,7 @@ Room duplications
 When are rooms counted as duplicated?
 
 - Rooms are considered as duplicated if:
+
   - They have the same room id and exist in the same design option.
   - They have the same room id and exist in the main model.
   - They have the same room id and exist in any design option and the main model.

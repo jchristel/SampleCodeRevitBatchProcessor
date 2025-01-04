@@ -25,33 +25,52 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="PushIt..Real Good(tm)" FontSize="24"/>
         </Grid>
-        <!-- grid view -->
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto">
-            <Grid x:Name="grid" MinWidth="400" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}">
-                <DataGrid x:Name="dataGrid" 
-                ItemsSource="{Binding DataView}" 
-                AutoGenerateColumns="True" 
-                IsReadOnly="True" 
-                SelectionMode="Single" 
-                SelectedIndex="{Binding SelectedIndex}"
-                ColumnWidth="*"
-                HorizontalAlignment="Stretch">
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Setter Property="Background" Value="Red" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Count}" Value="1">
-                                    <Setter Property="Background" Value="LightGray"></Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Count}" Value="0">
-                                    <Setter Property="Background" Value="White"></Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle>
-                </DataGrid>
-            </Grid>
-        </ScrollViewer>
+        <!-- Other UI elements -->
+        <ListView Grid.Row="1" Margin="0 25 0 0" ItemsSource="{Binding RoomsView}">
+            <ListView.View>
+                <GridView>
+                    <!-- select to reload column -->
+                    <GridViewColumn>
+                        <GridViewColumnHeader Content="Select" Command="{Binding SortCommand}" CommandParameter="IsSelected"/>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Padding="0 0 20 0" IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <!-- family name column -->
+                    <GridViewColumn>
+                        <GridViewColumnHeader Content="Room Id" Command="{Binding SortCommand}" CommandParameter="RoomId"/>
+                        <!-- context menu on right click -->
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Padding="0 0 20 0" Text="{Binding RoomId}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <!-- family category column -->
+                    <GridViewColumn>
+                    <GridViewColumnHeader Content="Area Briefed" Command="{Binding SortCommand}" CommandParameter="AreaBriefed"/>
+                        <!-- context menu on right click -->
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Padding="0 0 20 0" Text="{Binding AreaBriefed}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <!-- family is shared column -->
+                    <GridViewColumn>
+                        <GridViewColumnHeader Content="Area Designed" Command="{Binding SortCommand}" CommandParameter="AreaDesigned"/>
+                        <!-- context menu on right click -->
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Padding="0 0 20 0" Text="{Binding AreaDesigned}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
         <!-- filter -->
         <Grid Grid.Row="2" Margin="0 25 0 0">
             <Grid.RowDefinitions>
@@ -61,10 +80,8 @@
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Select the column to filter by:"/>
-                <TextBlock Grid.Column="1" Text="Enter filter value:"/>
+                <TextBlock Grid.Column="0" Text="Filter columns"/>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -72,13 +89,13 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <!-- column selection to filter by -->
-                <ComboBox Grid.Row="0"  Grid.Column="0" Margin="0 5 5 0"
-                          ItemsSource="{Binding ColumnFilterItems}"
-                          SelectedValue="{Binding Path=SelectedColumnFilterItem}">
-                </ComboBox>
+                <ListView Grid.Row="0"  Grid.Column="0" Margin="0 25 5 0">
+                    <ListView.View>
+                    </ListView.View>
+                </ListView>
                 <!-- filter value -->
                 <TextBox
-                    Grid.Row="0"
+                    Grid.Row="1"
                     Grid.Column="1"
                     Margin="5 5 0 0"
                     Text=""/>

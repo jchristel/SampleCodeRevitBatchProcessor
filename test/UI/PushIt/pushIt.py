@@ -122,7 +122,7 @@ def load_rooms(file_path):
                     value=row[i], 
                     parameter_guid=data_rows[CSVColumnMapper.ROW_PARAMETER_GUID.value][i]
                 )
-                
+                print("...Property: {}".format(prop))
                 # add it to room
                 room.add_property(prop)
         rooms_list.append(room)
@@ -199,5 +199,6 @@ def pushIt_entry(doc, output, forms, rooms = None):
 
 
 if __name__ == "__main__":
-    dummy_rooms = load_rooms (file_path=os.path.join(settings.SCRIPT_DIRECTORY,  r"Samples\Data_Min.csv"))
+    #dummy_rooms = load_rooms (file_path=os.path.join(settings.SCRIPT_DIRECTORY,  r"Samples\Data_Min.csv"))
+    dummy_rooms = load_rooms (file_path=os.path.join(settings.SCRIPT_DIRECTORY,  r"Samples\Data_Extended.csv"))
     test_result = pushIt_entry(doc=None, output=None, forms=None, rooms = dummy_rooms)

@@ -58,6 +58,36 @@ class Room(Base):
         
         self.other_properties.append(property)
     
+    def get_property_names(self):
+        """
+        Returns the names of the properties of the room.
+        """
+        default_properties = ["room id", "area briefed", "area designed"]
+        additional_properties =  [prop.name for prop in self.other_properties]
+        return default_properties + additional_properties
+    
+    def get_property_value(self, property_name):
+        """
+        Returns the value of the property of the room.
+        """
+        if(property_name == "room id"):
+            return self.id.id
+        elif(property_name == "area briefed"):
+            return self.area_briefed.value
+        elif(property_name == "area designed"):
+            return self.area_designed.value
+        else:
+            for prop in self.other_properties:
+                if(prop.name == property_name):
+                    return prop.value
+        return None
+    
+    def get_revit_matches(self):
+        """
+        Returns the revit matches of the room.
+        """
+        return []
+    
     @property
     def id(self):
         return self._id

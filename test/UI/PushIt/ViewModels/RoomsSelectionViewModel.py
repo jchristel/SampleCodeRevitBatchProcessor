@@ -1,15 +1,15 @@
 import clr
 clr.AddReference('PresentationFramework')
 clr.AddReference('WindowsBase')
+clr.AddReference('System.Data')
 
 from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
 from duHast.UI.Objects.WPF.Commands.RelayCommand import RelayCommand
 from duHast.UI.Objects.WPF.ViewModels.FilterItem import FilterItem
 
-
 from System.Collections.ObjectModel import ObservableCollection
 from System.Windows.Data import CollectionViewSource, PropertyGroupDescription
-from System.ComponentModel import ListSortDirection, SortDescription
+from System.Data import DataTable
 
 from PushIt.ViewModels.RoomViewModel import RoomViewModel
 #from ViewModels.FilterItem import FilterItem
@@ -19,9 +19,13 @@ from PushIt.Objects.match_status_names import MatchStatusNames
 import os
 
 class RoomsSelectionViewModel(ViewModelBase):
+    
+    # the name of the count column in the data table
+    count_column_name = "Count"
+    
     def __init__(self, revit_model, navigation_service):
         super(RoomsSelectionViewModel, self).__init__()
-
+        
         # properties
         # the collection of families to be displayed in the view
         self._rooms = ObservableCollection[RoomViewModel]()
@@ -32,7 +36,16 @@ class RoomsSelectionViewModel(ViewModelBase):
         # the revit wpf model object containing the settings and families to be displayed
         self._revit_model = revit_model
 
+        # create the data table which is used to store the room data
+        self._data_table = self.create_rooms_data_table()
+        
+        # selected row content
+        self._selected_row_content = ""
+        # the selected item
+        self._selected_index = -1
+
         # commands
+        # the command used to push data into the revit model family instance
         self.push_data_command = PushRoomDataCommand(
             revit_model=revit_model,
             rooms_selection_view_model=self,
@@ -40,29 +53,72 @@ class RoomsSelectionViewModel(ViewModelBase):
             execute=self.close_window
         )
         
-        # add families to view model
-        self.update_families()
+        # add room data to view model
+        self.update_rooms()
         
-        # Set initial sort state
-        self._current_sort_column = "Id"
-        self._current_sort_direction = ListSortDirection.Ascending
-        self._rooms_view.SortDescriptions.Add(SortDescription(self._current_sort_column, self._current_sort_direction))
+        # list containing the column names for the filter
+        self._column_filter_items = []
+        
+        # create the column filter items
+        self.create_column_filter_items()
+        
+        # set the default filter value
+        self._selected_filter_item = self._column_filter_items[0]
         
     
     @property
-    def RoomsView(self):
+    def DataView(self):
         """
-        The collection view of the families collection.
+        The collection view of the data collection. to which the xaml view is bound to.
         """
-        return self._rooms_view
+        return self._data_table.DefaultView
+
 
     @property
-    def SortCommand(self):
+    def ColumnFilterItems(self):
         """
-        The command used to sort the collection view of the families collection.
+        The column filter items.
         """
-        return self._sort_command
+        return self._column_filter_items
     
+    
+    @property
+    def SelectedColumnFilterItem(self):
+        """
+        The selected column filter items.
+        """
+        return self._selected_filter_item
+    
+    
+    @property
+    def SelectedRowContent(self):
+        return self._selected_row_content
+    
+    
+    @property
+    def SelectedIndex(self):
+        return self._selected_index
+    
+    
+    @SelectedIndex.setter
+    def SelectedIndex(self, value):
+        # this returns the row index of the filtered default view not the actual data table.
+        self._selected_index = value
+        try:
+            # get the row view from the data table view
+            row_view = self._data_table.DefaultView[value]
+            # get the original row from the data table
+            row = row_view.Row
+            # update the selected row content
+            self._selected_row_content = ""
+            for i in range(row.Table.Columns.Count):
+                self._selected_row_content = self._selected_row_content + " Column:[{}] Value:[{}] ".format(row.Table.Columns[i].ColumnName, row[i])
+            
+            self.OnPropertyChanged("SelectedRowContent")
+        except Exception as e:
+            print("Error: ", e)
+
+
     @property
     def ReloadFamiliesCommand(self):
         """
@@ -72,13 +128,58 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
         return self.push_data_command 
 
-    def update_families(self):
+
+    def create_column_filter_items(self):
         """
-        Updates the families collection with the families from the revit model object and sets the match status of the families based on the library path.
+        Creates the column filter items.
+        This is used to populate the column filter combo box in the view.
         
-        Also sets up the collection view for the families collection.
-        Set up includes grouping the families by match status.
+        Note:
         
+        - Needs to be called after the data table has been created.
+        """
+        # get the columns from the data table
+        columns = self._data_table.Columns
+        
+        # add the column names to the column filter items
+        for column in columns:
+            self._column_filter_items.append(column.ColumnName)
+    
+    def create_rooms_data_table(self):
+        """
+        Creates a data table with the rooms data.
+        """
+        # set up the data table
+        data_table = DataTable()
+        
+        # add columns to the data table
+        for room_model_instance in self._revit_model.get_all_rooms():
+            # add a column per property
+            for prop in room_model_instance.get_property_names():
+                data_table.Columns.Add(prop)
+            # get out of the loop
+            break
+        
+        # add the count column
+        data_table.Columns.Add("Count")
+        
+        # add the rows to the data table
+        for room_model_instance in self._revit_model.get_all_rooms():
+            # add a row per room
+            row = data_table.NewRow()
+            for prop in room_model_instance.get_property_names():
+                row[prop] = room_model_instance.get_property_value(prop)
+            row["Count"] = len(room_model_instance.get_revit_matches())
+            data_table.Rows.Add(row)
+        
+        
+        return data_table
+    
+    def update_rooms(self):
+        """
+        Updates the rooms collection with the rooms from the revit model object.
+        
+        Also sets up the collection view for the rooms collection.
         """
         # clear the collection
         self._rooms.Clear()

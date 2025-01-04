@@ -14,8 +14,6 @@ class RoomViewModel(ViewModelBase):
             raise ValueError("room needs to be of type Room, got {} instead.".format(type(room)))
         
         self._room = room
-
-        self._match_status = MatchStatusNames.NO_MATCH.value
         self._is_selected = False
 
 

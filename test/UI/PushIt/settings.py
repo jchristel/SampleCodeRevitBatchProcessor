@@ -1,3 +1,23 @@
+# License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# BSD License
+# Copyright 2025, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+#
+#
 
 import os
 import sys
@@ -7,7 +27,9 @@ debug = True
 DU_HAST_PATH = None
 if debug:
     # setup duHast
-    DU_HAST_PATH = r"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\src"
+    DU_HAST_PATH = (
+        r"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\src"
+    )
 
     # insert duHast dev version at the beginning of path in case a prod version is in path
     sys.path.insert(0, DU_HAST_PATH)
@@ -16,15 +38,15 @@ if debug:
 from duHast.Utilities.files_io import get_directory_path_from_file_path, file_exist
 from duHast.Utilities.directory_io import create_target_directory
 from duHast.Utilities.directory_io import get_parent_directory
+from duHast.Utilities.utility import get_local_app_data_path
+from duHast.Utilities.files_json import read_json_data_from_file, write_json_to_file
 
 try:
     from duHast.pyRevit.console_output import print_header
 except ImportError:
+
     def print_header(message):
         print(message)
-
-from duHast.Utilities.utility import get_local_app_data_path
-from duHast.Utilities.files_json import read_json_data_from_file, write_json_to_file
 
 
 #: get the script location
@@ -35,12 +57,11 @@ print("Script dir: {}".format(SCRIPT_DIRECTORY))
 FLOW_DIRECTORY = get_parent_directory(SCRIPT_DIRECTORY)
 print("Flow dir: {}".format(FLOW_DIRECTORY))
 
-# add the flow directory to the path in order for imports from PushIt to work
+# add the flow directory to the path in order for imports from PushIt name space to work
 sys.path.insert(0, FLOW_DIRECTORY)
 
-
 # get the extension lib directory
-LIB_DIRECTORY= get_parent_directory(FLOW_DIRECTORY)
+LIB_DIRECTORY = get_parent_directory(FLOW_DIRECTORY)
 print("lib dir: {}".format(LIB_DIRECTORY))
 
 # get the extension directory
@@ -51,9 +72,9 @@ print("deployment Extension dir: {}".format(DEPLOYMENT_EXTENSION_DIRECTORY))
 ROOT_DEVELOPMENT_DIRECTORY = get_parent_directory(DEPLOYMENT_EXTENSION_DIRECTORY)
 print("root development dir: {}".format(ROOT_DEVELOPMENT_DIRECTORY))
 
-if (DU_HAST_PATH is None):
+if DU_HAST_PATH is None:
     # get the duHast directory within the lib directory
-    DUH_AST_DIRECTORY = os.path.join(ROOT_DEVELOPMENT_DIRECTORY,r"duHast.lib\duHast")
+    DUH_AST_DIRECTORY = os.path.join(ROOT_DEVELOPMENT_DIRECTORY, r"duHast.lib\duHast")
 else:
     DUH_AST_DIRECTORY = os.path.join(DU_HAST_PATH, "duHast")
 
@@ -61,39 +82,70 @@ print("duHast dir: {}".format(DUH_AST_DIRECTORY))
 
 DU_HAST_SETTINGS_DIRECTORY_NAME = "duHast"
 # settings directory
-DU_HAST_SETTINGS_DIRECTORY = os.path.join( get_local_app_data_path(), DU_HAST_SETTINGS_DIRECTORY_NAME)
+DU_HAST_SETTINGS_DIRECTORY = os.path.join(
+    get_local_app_data_path(), DU_HAST_SETTINGS_DIRECTORY_NAME
+)
 # settings file name
 APP_SETTINGS_FILE_NAME = os.path.join(DU_HAST_SETTINGS_DIRECTORY, "pushIt.json")
 
 
-#from families_reload.reload.Objects.Settings import Settings
+# from families_reload.reload.Objects.Settings import Settings
 from PushIt.Objects.Settings import Settings
 
 print_header("File Path in Settings")
 
+
 def get_settings():
+    """
+    Get the settings instance from the settings file.
+
+    :return: settings instance
+    :rtype: Settings
+    """
+
     # look for settings file in %AppData/Local/duHast%
 
-    if create_target_directory(get_local_app_data_path(), DU_HAST_SETTINGS_DIRECTORY_NAME):
+    if create_target_directory(
+        get_local_app_data_path(), DU_HAST_SETTINGS_DIRECTORY_NAME
+    ):
         if file_exist(APP_SETTINGS_FILE_NAME):
             # load settings file
-            read_result =  read_json_data_from_file(APP_SETTINGS_FILE_NAME)
-            if(read_result.status is False):
-                print ("failed to read settings file: {} with: {}".format(APP_SETTINGS_FILE_NAME, read_result.message))
+            read_result = read_json_data_from_file(APP_SETTINGS_FILE_NAME)
+            if read_result.status is False:
+                print(
+                    "failed to read settings file: {} with: {}".format(
+                        APP_SETTINGS_FILE_NAME, read_result.message
+                    )
+                )
                 return None
             data = read_result.result[0]
             settings_instance = Settings(j=data)
             return settings_instance
         else:
-            print ("failed to get settings file: {}. First time usage?".format(APP_SETTINGS_FILE_NAME))
+            print(
+                "failed to get settings file: {}. First time usage?".format(
+                    APP_SETTINGS_FILE_NAME
+                )
+            )
             return Settings()
     else:
-        print ("failed to create settings directory: {}".format(DU_HAST_SETTINGS_DIRECTORY))
+        print(
+            "failed to create settings directory: {}".format(DU_HAST_SETTINGS_DIRECTORY)
+        )
         return None
 
+
 def write_settings(settings_instance):
+    """
+    Write the settings instance to the settings file.
+
+    :param settings_instance: settings instance to write
+    :type settings_instance: Settings
+    :return: write result
+    :rtype: Result class
+    """
 
     # save json settings to file
-    write_result = write_json_to_file(settings_instance,APP_SETTINGS_FILE_NAME)
+    write_result = write_json_to_file(settings_instance, APP_SETTINGS_FILE_NAME)
     # return the outcome of the operation
     return write_result

@@ -272,7 +272,11 @@ class RoomsSelectionViewModel(ViewModelBase):
             # get the column index of the selected filter item
             column_index = self._data_table.Columns.IndexOf(self.SelectedColumnFilterItem)
             print("Column index: ", column_index)
-            #self.DataView.RowFilter = "" #self.filter_families
+            if self.SelectedColumnFilterValue == "":
+                return
+            
+            # filter the data view
+            self.DataView.RowFilter = "{} = '{}'".format(self.SelectedColumnFilterItem, self.SelectedColumnFilterValue)
     
     
     def refresh_view(self):

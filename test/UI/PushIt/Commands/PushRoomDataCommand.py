@@ -61,26 +61,22 @@ class PushRoomDataCommand(CommandBase):
 
     def CanExecute(self, parameter):
         """
-        This method returns True if the file path  value is set  and points to a valid directory.
+        This method returns True if the row selected has a count of 0 only.
         """
-        print("in can execute check: ")
-        return True
+        
+        # check if pushit is in safety off mode
+        if self.rooms_selection_view_model.SafetyOffMode:
+            return True
+        
+        # check if the selected rooms have a placement count of 0
+        if self.rooms_selection_view_model.CanPushRoomData:
+            return True
+        else:
+            return False
 
     def Execute(self, parameter):
-        print("In execute")
-        rooms_in_data_model = self.revit_model.get_all_rooms()
-
-        # TODO: store selected rooms in revit model property
-        for room_instance in self.rooms_selection_view_model.Families:
-            if room_instance.IsSelected:
-                # find the family in the revit family model
-                # Finding the object
-                result = [
-                    obj for obj in rooms_in_data_model if obj.id == room_instance.id
-                ]
-                if result:
-                    # push it to the revit model
-                    pass
+        print("In execute push room data command")
+        
 
         if self._execute:
             self._execute(parameter)
@@ -96,11 +92,7 @@ class PushRoomDataCommand(CommandBase):
             property_changed_args (_type_): _description_
 
         """
-        print(
-            "command property changed value: {}".format(
-                property_changed_args.PropertyName
-            )
-        )
-        # check if a library path is provided and if
-        if property_changed_args.PropertyName == "LibraryPath":
+        
+        # check if the selected row index has changed
+        if property_changed_args.PropertyName == "SelectedIndexChanged":
             self.on_can_execute_changed()

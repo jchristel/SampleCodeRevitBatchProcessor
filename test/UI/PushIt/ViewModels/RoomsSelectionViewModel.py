@@ -44,6 +44,13 @@ class RoomsSelectionViewModel(ViewModelBase):
         super(RoomsSelectionViewModel, self).__init__()
         
         # properties
+        # can a room be pushed to revit, default is false
+        # will be re-evaluated when a row is selected
+        self._can_push_room_data = False
+        
+        # is safety off mode enabled (default is false)
+        # safety off mode is used to allow pushing of rooms more than once to revit
+        self._safety_off_mode = False
         
         # the revit wpf model object containing the settings and families to be displayed
         self._revit_model = revit_model
@@ -55,9 +62,9 @@ class RoomsSelectionViewModel(ViewModelBase):
         # this is required to be able to sort, group and filter the collection view without affecting the observable collection
         self._data_view = DataView(self._data_table)
         
-        # selected row content
-        self._selected_row_content = ""
-        # the selected item
+        # the selected room
+        self._selected_room = None
+        # the selected row index
         self._selected_index = -1
 
         # commands
@@ -96,6 +103,24 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
         return self._data_view
 
+    @property
+    def SafetyOffMode(self):
+        """
+        A boolean value indicating if the safety off mode is enabled.
+        """
+        
+        return self._safety_off_mode
+    
+    @SafetyOffMode.setter
+    def SafetyOffMode(self, value):
+        """
+        Sets the safety off mode.
+        """
+        
+        self._safety_off_mode = value
+        # raise property change event
+        self.RaisePropertyChanged("SafetyOffMode")
+    
     @property
     def ColumnFilterItems(self):
         """
@@ -142,18 +167,27 @@ class RoomsSelectionViewModel(ViewModelBase):
     
     
     @property
-    def SelectedRowContent(self):
+    def CanPushRoomData(self):
         """
-        The content of the selected row.
+        A boolean value indicating if the room data can be pushed to the revit model.
         """
         
-        return self._selected_row_content
+        return self._can_push_room_data
+    
+    @property
+    def SelectedRoom(self):
+        """
+        The selected room.
+        """
+        
+        return self._selected_room
     
     @property
     def SelectedIndex(self):
         """
         The selected row index of the data table view.
         """
+        
         return self._selected_index
     
     
@@ -166,18 +200,24 @@ class RoomsSelectionViewModel(ViewModelBase):
             row_view = self._data_table.DefaultView[value]
             # get the original row from the data table
             row = row_view.Row
-            # update the selected row content
-            self._selected_row_content = ""
-            for i in range(row.Table.Columns.Count):
-                self._selected_row_content = self._selected_row_content + " Column:[{}] Value:[{}] ".format(row.Table.Columns[i].ColumnName, row[i])
             
-            self.OnPropertyChanged("SelectedRowContent")
+            # update the selected room
+            self._selected_room = None
+            # get the selected room based on the id
+            self._selected_room = self._revit_model.get_room_by_id(row[0])
+            
+            # set the flag as to whether a room can be pushed to the revit model
+            self._can_push_room_data = row[row.Table.Columns.Count-1] == "0"
+            
+            # raise property change event for the selected row content
+            # and push button enabled
+            self.RaisePropertyChanged("SelectedIndexChanged")
         except Exception as e:
             print("Error: ", e)
 
 
     @property
-    def ReloadFamiliesCommand(self):
+    def PushItCommand(self):
         """
         The command used to when the reload button in the view is clicked.
         
@@ -185,6 +225,33 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
         return self.push_data_command 
 
+    @property
+    def RefreshRoomDataFromModelCommand(self):
+        """
+        The command used to refresh the room data from the revit model.
+        
+        This is used when the user wants to refresh the room data in the view.
+        """
+        return None
+    
+    @property
+    def UpdateRoomsInRevitFromRoomDataCommand(self):
+        """
+        The command used to update the rooms in the revit model from the room data.
+        
+        This is used when the user wants to update the rooms in the revit model from the room data.
+        """
+        return None
+    
+    @property
+    def WipeStaleRoomDataCommand(self):
+        """
+        The command used to wipe stale room data.
+        
+        This is used when the user wants to wipe stale room data.
+        """
+        return None
+    
 
     def create_column_filter_items(self):
         """

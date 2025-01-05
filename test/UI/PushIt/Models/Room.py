@@ -24,6 +24,7 @@ from duHast.Utilities.Objects.base import Base
 from PushIt.Models.RoomId import RoomID
 from PushIt.Models.RoomProperty import RoomProperty
 
+import random
 
 class Room(Base):
 
@@ -144,7 +145,16 @@ class Room(Base):
         """
         Returns the revit matches of the room.
         """
-        return []
+        
+        # for now return a list with a random length of 0 to 3 elements
+        
+        # Generate a random number between 0 and 3
+        num_elements = random.randint(0, 3)
+        
+        # Create a list with that many elements
+        revit_matches = ["Match: {}".format(i) for i in range(num_elements)]
+        
+        return revit_matches
 
     @property
     def id(self):

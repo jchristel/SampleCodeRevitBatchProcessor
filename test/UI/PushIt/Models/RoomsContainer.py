@@ -48,6 +48,17 @@ class RoomsContainer(Base):
 
         return self._rooms
 
+    def get_room_by_id(self, room_id):
+        """
+        Get a room by its id.
+        """
+        
+        for room in self._rooms:
+            if room.id.id == room_id:
+                return room
+
+        return None
+    
     def add_room(self, room_instance):
         """
         Adds a new room to the container.

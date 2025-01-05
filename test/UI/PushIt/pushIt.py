@@ -122,7 +122,6 @@ def load_rooms(file_path):
         print("Warning: Not enough rows found in file.")
 
     # create a list of rooms from the data from row 3 onwards
-
     rooms_list = []
 
     for row in data_rows[2:]:

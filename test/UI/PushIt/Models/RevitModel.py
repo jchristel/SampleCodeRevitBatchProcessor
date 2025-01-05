@@ -51,8 +51,17 @@ class RevitModel(Base):
         self._settings = value
 
     def get_all_rooms(self):
+        """
+        Get all rooms from the model.
+        """
         return self._rooms_container.get_all_rooms()
 
+    def get_room_by_id(self, room_id):
+        """
+        Get a room by its id.
+        """
+        return self._rooms_container.get_room_by_id(room_id)
+    
     def add_room(self, room_model):
         # check type
         if isinstance(room_model, Room) == False:

@@ -9,13 +9,15 @@
         <Grid.RowDefinitions>
             <!-- header row -->
             <RowDefinition Height="auto"/>
-            <!-- families -->
+            <!-- filter -->
+            <RowDefinition Height="auto"/>
+            <!-- data -->
             <RowDefinition Height="*"/>
-            <!-- library path -->
+            <!-- refresh / model status -->
             <RowDefinition Height="auto"/>
-            <!-- buttons row 1 -->
+            <!-- admin expander -->
             <RowDefinition Height="auto"/>
-            <!-- buttons row 2 -->
+            <!-- push it buttons -->
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
         <!-- header row content -->
@@ -25,8 +27,40 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="PushIt..Real Good(tm)" FontSize="24"/>
         </Grid>
+        <!-- filter -->
+        <Expander Grid.Row="1" Header="Filters" Margin="0 5 0 5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0"
+                Grid.Column="0"
+                Margin="0 5 5 5"
+                Text="Select Column" />
+            <ComboBox Grid.Row="1"
+                Grid.Column="0"
+                Margin="0 5 5 5"
+                ItemsSource="{Binding ColumnFilterItems}"
+                SelectedValue="{Binding Path=SelectedColumnFilterItem}" />
+            <TextBlock Grid.Row="0"
+                Grid.Column="1"
+                Margin="5 5 0 5"
+                Text="Enter filter value" />
+            <!-- filter value -->
+            <TextBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="5 5 0 5"
+                    Text=""/>
+            </Grid>
+        </Expander>
         <!-- grid view -->
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto">
             <Grid x:Name="grid" MinWidth="400" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}">
                 <DataGrid x:Name="dataGrid" 
                 ItemsSource="{Binding DataView}" 
@@ -52,49 +86,31 @@
                 </DataGrid>
             </Grid>
         </ScrollViewer>
-        <!-- filter -->
-        <Grid Grid.Row="2" Margin="0 25 0 0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Select the column to filter by:"/>
-                <TextBlock Grid.Column="1" Text="Enter filter value:"/>
-            </Grid>
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <!-- column selection to filter by -->
-                <ComboBox Grid.Row="0"  Grid.Column="0" Margin="0 5 5 0"
-                          ItemsSource="{Binding ColumnFilterItems}"
-                          SelectedValue="{Binding Path=SelectedColumnFilterItem}">
-                </ComboBox>
-                <!-- filter value -->
-                <TextBox
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Margin="5 5 0 0"
-                    Text=""/>
-            </Grid>
-        </Grid>
         <!-- button row content -->
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Command="{Binding ReloadFamiliesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="0 10 5 10" Content="Refresh rooms from model"/>
-            <Button Grid.Column="1" Command="{Binding ReloadFamiliesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5 10 0 10" Content="Wipe stale data from rooms in model"/>
+            <Button Grid.Column="0" Command="{Binding ReloadFamiliesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="0 5 5 5" Content="Refresh rooms from model"/>
+            <TextBlock Grid.Column="1" Margin="5 5 0 5" Text="Design Set: Design Option"/>
         </Grid>
+        <!-- admin model data expander -->
+        <Expander Grid.Row="4" Header="Data Admin" Margin="0 5 0 5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Command="{Binding ReloadFamiliesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="0 10 5 10" Content="Update rooms in model"/>
+                <Button Grid.Column="1" Command="{Binding ReloadFamiliesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5 10 0 10" Content="Wipe stale data from rooms in model"/>
+            </Grid>
+        </Expander>
         <!-- push it button row content -->
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="5">
             <Button Command="{Binding ReloadFamiliesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="0 10 0 10" Content="Push It!" FontSize="24"/>
         </Grid>
     </Grid>

@@ -56,7 +56,7 @@
                     Grid.Row="1"
                     Grid.Column="1"
                     Margin="5 5 0 5"
-                    Text=""/>
+                    Text="{Binding SelectedColumnFilterValue,Mode=TwoWay}"/>
             </Grid>
         </Expander>
         <!-- grid view -->
@@ -65,7 +65,8 @@
                 <DataGrid x:Name="dataGrid" 
                 ItemsSource="{Binding DataView}" 
                 AutoGenerateColumns="True" 
-                IsReadOnly="True" 
+                IsReadOnly="True"
+                CanUserSortColumns="True"
                 SelectionMode="Single" 
                 SelectedIndex="{Binding SelectedIndex}"
                 ColumnWidth="*"

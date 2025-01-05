@@ -1,3 +1,24 @@
+# License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# BSD License
+# Copyright 2025, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+#
+#
+
 import clr
 clr.AddReference('PresentationFramework')
 clr.AddReference('WindowsBase')
@@ -26,8 +47,6 @@ class RoomsSelectionViewModel(ViewModelBase):
         super(RoomsSelectionViewModel, self).__init__()
         
         # properties
-        # the collection of families to be displayed in the view
-        self._rooms = ObservableCollection[RoomViewModel]()
         
         # the command used to sort when the user clicks on the column headers
         self._sort_command = RelayCommand(self.refresh_view)
@@ -52,9 +71,6 @@ class RoomsSelectionViewModel(ViewModelBase):
             execute=self.close_window
         )
         
-        # add room data to view model
-        self.update_rooms()
-        
         # list containing the column names for the filter
         self._column_filter_items = []
         
@@ -64,6 +80,16 @@ class RoomsSelectionViewModel(ViewModelBase):
         # set the default filter value
         self._selected_filter_item = self._column_filter_items[0]
         
+        # set the default filter value
+        self._selected_filter_value = ""
+        
+        # add room data to view model
+        # needs to be happening after data table has been created
+        # and after the column filter items have been created
+        #self.update_rooms()
+        # event handlers
+        self.add_PropertyChanged(self.filter_families)
+        
     
     @property
     def DataView(self):
@@ -72,30 +98,64 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
         return self._data_table.DefaultView
 
-
     @property
     def ColumnFilterItems(self):
         """
-        The column filter items.
+        The column names to display in the filter options drop down list.
         """
         return self._column_filter_items
-    
     
     @property
     def SelectedColumnFilterItem(self):
         """
-        The selected column filter items.
+        The selected column name to filter by.
         """
+        
         return self._selected_filter_item
+    
+    @SelectedColumnFilterItem.setter
+    def SelectedColumnFilterItem(self, value):
+        """
+        Sets the selected column name to filter by.
+        """
+        
+        self._selected_filter_item = value
+        # raise property change event
+        self.RaisePropertyChanged("SelectedColumnFilterItem")
+        
+    
+    @property
+    def SelectedColumnFilterValue(self):
+        """
+        The value entered to filter a column by.
+        """
+        
+        return self._selected_filter_value
+    
+    @SelectedColumnFilterValue.setter
+    def SelectedColumnFilterValue(self, value):
+        """
+        Sets the value entered to filter a column by.
+        """
+        
+        self._selected_filter_value = value
+        # raise property change event
+        self.RaisePropertyChanged("SelectedColumnFilterValue")
     
     
     @property
     def SelectedRowContent(self):
+        """
+        The content of the selected row.
+        """
+        
         return self._selected_row_content
-    
     
     @property
     def SelectedIndex(self):
+        """
+        The selected row index of the data table view.
+        """
         return self._selected_index
     
     
@@ -176,17 +236,14 @@ class RoomsSelectionViewModel(ViewModelBase):
     
     def update_rooms(self):
         """
-        Updates the rooms collection with the rooms from the revit model object.
+        Updates the rooms view with the rooms from the data table.
         
-        Also sets up the collection view for the rooms collection.
         """
-        # clear the collection
-        self._rooms.Clear()
-        
-        # set up collection view based on the observable collection of families
+
+        # set up collection view based on the data table rows
         # this is what the xaml view is binding to
         # this is required to be able to sort, group and filter the collection view without affecting the observable collection
-        self._rooms_view = CollectionViewSource.GetDefaultView(self._rooms)
+        #self._rooms_view = CollectionViewSource.GetDefaultView(self._data_table.Rows)
         
         # group the families by match status (this will mean that the families will be sorted by match status first and than by any other sort criteria)
         # MatchStatus is a property of the FamilyViewModel
@@ -194,13 +251,29 @@ class RoomsSelectionViewModel(ViewModelBase):
         
         # set up a filter for the collection view
         #self._rooms_view.Filter = self.filter_families
+        #self.DataView.RowFilter = self.filter_families
+        pass
         
-        # update the collection with families from the revit model object
-        for room_model_instance in self._revit_model.get_all_rooms():
-            room_view_model = RoomViewModel(room=room_model_instance)
+    def filter_families(self, sender, property_changed_args):
+        """
+        Filters the families based on the selected filter item.
+        
+        :param item: The item to be filtered.
+        :type item: object
+        :return: True if the item should be displayed, False otherwise.
+        :rtype: bool
+        """
+        
+        # check if a library path is provided and if
+        if property_changed_args.PropertyName == "SelectedColumnFilterValue" or property_changed_args.PropertyName == "SelectedColumnFilterItem":
+            print("Filtering... {}".format(property_changed_args.PropertyName))
             
-            # add the room to the observable collection
-            self._rooms.Add(room_view_model)
+        
+            # get the column index of the selected filter item
+            column_index = self._data_table.Columns.IndexOf(self.SelectedColumnFilterItem)
+            print("Column index: ", column_index)
+            #self.DataView.RowFilter = "" #self.filter_families
+    
     
     def refresh_view(self):
         """
@@ -208,6 +281,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
         # refreshes the view in the UI
         self._rooms_view.Refresh()
+    
     
     def close_window(self, window):
         """

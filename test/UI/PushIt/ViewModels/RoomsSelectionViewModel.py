@@ -25,18 +25,15 @@ clr.AddReference('WindowsBase')
 clr.AddReference('System.Data')
 
 from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
-from duHast.UI.Objects.WPF.Commands.RelayCommand import RelayCommand
-from duHast.UI.Objects.WPF.ViewModels.FilterItem import FilterItem
 
 from System.Collections.ObjectModel import ObservableCollection
 from System.Windows.Data import CollectionViewSource, PropertyGroupDescription
-from System.Data import DataTable
+from System.Data import DataTable,DataView
 
 from PushIt.ViewModels.RoomViewModel import RoomViewModel
 #from ViewModels.FilterItem import FilterItem
 from PushIt.Commands.PushRoomDataCommand import PushRoomDataCommand
 
-import os
 
 class RoomsSelectionViewModel(ViewModelBase):
     
@@ -48,14 +45,15 @@ class RoomsSelectionViewModel(ViewModelBase):
         
         # properties
         
-        # the command used to sort when the user clicks on the column headers
-        self._sort_command = RelayCommand(self.refresh_view)
-        
         # the revit wpf model object containing the settings and families to be displayed
         self._revit_model = revit_model
 
         # create the data table which is used to store the room data
         self._data_table = self.create_rooms_data_table()
+        
+        # set up a specific data view for the data table
+        # this is required to be able to sort, group and filter the collection view without affecting the observable collection
+        self._data_view = DataView(self._data_table)
         
         # selected row content
         self._selected_row_content = ""
@@ -74,11 +72,11 @@ class RoomsSelectionViewModel(ViewModelBase):
         # list containing the column names for the filter
         self._column_filter_items = []
         
-        # create the column filter items
+        # create the column filter items (list of column headers to filter by)
         self.create_column_filter_items()
         
-        # set the default filter value
-        self._selected_filter_item = self._column_filter_items[0]
+        # set the default column to filter by
+        self._selected_column_to_filter = self._column_filter_items[0]
         
         # set the default filter value
         self._selected_filter_value = ""
@@ -88,7 +86,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         # and after the column filter items have been created
         #self.update_rooms()
         # event handlers
-        self.add_PropertyChanged(self.filter_families)
+        self.add_PropertyChanged(self.filter_room_data)
         
     
     @property
@@ -96,7 +94,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
         The collection view of the data collection. to which the xaml view is bound to.
         """
-        return self._data_table.DefaultView
+        return self._data_view
 
     @property
     def ColumnFilterItems(self):
@@ -111,7 +109,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         The selected column name to filter by.
         """
         
-        return self._selected_filter_item
+        return self._selected_column_to_filter
     
     @SelectedColumnFilterItem.setter
     def SelectedColumnFilterItem(self, value):
@@ -119,7 +117,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         Sets the selected column name to filter by.
         """
         
-        self._selected_filter_item = value
+        self._selected_column_to_filter = value
         # raise property change event
         self.RaisePropertyChanged("SelectedColumnFilterItem")
         
@@ -190,7 +188,7 @@ class RoomsSelectionViewModel(ViewModelBase):
 
     def create_column_filter_items(self):
         """
-        Creates the column filter items.
+        Creates the column filter items (list of column headers to filter by).
         This is used to populate the column filter combo box in the view.
         
         Note:
@@ -233,60 +231,39 @@ class RoomsSelectionViewModel(ViewModelBase):
         
         
         return data_table
-    
-    def update_rooms(self):
+        
+    def filter_room_data(self, sender, property_changed_args):
         """
-        Updates the rooms view with the rooms from the data table.
+        Filters the room data based on the selected filter column and filter value entered.
         
-        """
-
-        # set up collection view based on the data table rows
-        # this is what the xaml view is binding to
-        # this is required to be able to sort, group and filter the collection view without affecting the observable collection
-        #self._rooms_view = CollectionViewSource.GetDefaultView(self._data_table.Rows)
-        
-        # group the families by match status (this will mean that the families will be sorted by match status first and than by any other sort criteria)
-        # MatchStatus is a property of the FamilyViewModel
-        #self._rooms_view.GroupDescriptions.Add(PropertyGroupDescription("MatchStatus"))
-        
-        # set up a filter for the collection view
-        #self._rooms_view.Filter = self.filter_families
-        #self.DataView.RowFilter = self.filter_families
-        pass
-        
-    def filter_families(self, sender, property_changed_args):
-        """
-        Filters the families based on the selected filter item.
-        
-        :param item: The item to be filtered.
-        :type item: object
-        :return: True if the item should be displayed, False otherwise.
-        :rtype: bool
         """
         
-        # check if a library path is provided and if
+        # check if either the selected column filter value or the selected column filter item has changed
         if property_changed_args.PropertyName == "SelectedColumnFilterValue" or property_changed_args.PropertyName == "SelectedColumnFilterItem":
-            print("Filtering... {}".format(property_changed_args.PropertyName))
             
-        
-            # get the column index of the selected filter item
-            column_index = self._data_table.Columns.IndexOf(self.SelectedColumnFilterItem)
-            print("Column index: ", column_index)
+            # check if the filter value is empty
             if self.SelectedColumnFilterValue == "":
+                self.DataView.RowFilter =""
                 return
             
+            # check if the column name contains a space
+            # if so add square brackets to the column name
+            column_name = self.SelectedColumnFilterItem
+            if " " in self.SelectedColumnFilterItem:
+                column_name = "[{}]".format(self.SelectedColumnFilterItem)
+            
+            # create the filter value for the data view
+            # check if the column value contains the filter value
+            filter_value = "{} LIKE '%{}%'".format(column_name, self.SelectedColumnFilterValue)
+            
             # filter the data view
-            self.DataView.RowFilter = "{} = '{}'".format(self.SelectedColumnFilterItem, self.SelectedColumnFilterValue)
-    
-    
-    def refresh_view(self):
-        """
-        Refreshes the view by updating the families collection and the unique values for the column filters.
-        """
-        # refreshes the view in the UI
-        self._rooms_view.Refresh()
-    
-    
+            try:
+                self.DataView.RowFilter = filter_value
+                # let the ui know that the data view has changed
+                self.RaisePropertyChanged("DataView")
+            except Exception as e:
+                print("Error: ", e)
+                   
     def close_window(self, window):
         """
         Closes the window that is passed in as an argument. 

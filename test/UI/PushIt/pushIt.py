@@ -1,3 +1,34 @@
+# License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# BSD License
+# Copyright 2025, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+#
+#
+
+
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PushIt.
+
+For further documentation please refer to the README.rst file in the _docs directory of this project.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""
+
+
 import os
 import settings
 
@@ -10,13 +41,15 @@ from duHast.UI.Objects.WPF.Services.NavigationService import NavigationService
 try:
     from duHast.pyRevit.console_output import print_header
 except ImportError:
+
     def print_header(message):
         print(message)
 
-from duHast.Utilities.files_csv import read_csv_file
-        
 
-#from families_reload.get_families import get_families_in_model
+from duHast.Utilities.files_csv import read_csv_file
+
+
+# from families_reload.get_families import get_families_in_model
 from PushIt.ViewModels.RoomsSelectionViewModel import RoomsSelectionViewModel
 from PushIt.Models.RevitModel import RevitModel
 from PushIt.Models.Room import Room
@@ -25,11 +58,13 @@ from PushIt.Models.RoomProperty import RoomProperty
 from PushIt.Objects.MainWindow import PushIt
 from PushIt.Objects.CSVColumnsMapper import CSVColumnMapper
 
-#from Autodesk.Revit.DB import ElementId
+# from Autodesk.Revit.DB import ElementId
 
 # view model types and their XAML file path
-XAML_BY_VIEW ={
-    RoomsSelectionViewModel: os.path.join(settings.SCRIPT_DIRECTORY,  r"Views\RoomsSelectionView.xaml"),
+XAML_BY_VIEW = {
+    RoomsSelectionViewModel: os.path.join(
+        settings.SCRIPT_DIRECTORY, r"Views\RoomsSelectionView.xaml"
+    ),
 }
 
 # set up a navigation store
@@ -43,11 +78,11 @@ def Create_Rooms_Selection_View_Model():
 
     # used to create a family selection view model
     fam_view_model = RoomsSelectionViewModel(
-        revit_model = REVIT_MODEL,
+        revit_model=REVIT_MODEL,
         navigation_service=NavigationService(
             navigation_store=NAVIGATION_STORE,
-            create_view_model=Create_Rooms_Selection_View_Model
-        )
+            create_view_model=Create_Rooms_Selection_View_Model,
+        ),
     )
 
     return fam_view_model
@@ -55,85 +90,104 @@ def Create_Rooms_Selection_View_Model():
 
 def load_rooms(file_path):
     """
-    Loads rooms from a file.
+    Loads rooms data from a file.
 
     :param file_path: path to the file to load rooms from.
     :type file_path: str
     :return: list of rooms
     :rtype: list
     """
-    
+
     print("Loading rooms from file: {}".format(file_path))
-    
+
     # read the file
     read_result = read_csv_file(file_path)
-    if(read_result.status == False):
+    if read_result.status == False:
         print("Error: {}".format(read_result.message))
         return None
-    
+
     data_rows = read_result.result
     print("Found {} rows.".format(len(data_rows)))
-    
+
     # do some sanity checks...
-    if(len(data_rows) == 0):
+    if len(data_rows) == 0:
         print("No data found in file.")
         return None
-    
-    if (len(data_rows[0]) < 3):
+
+    if len(data_rows[0]) < 3:
         print("Error: Not enough columns found in file.")
         return None
-    
-    if (len(data_rows) <=2 ):
+
+    if len(data_rows) <= 2:
         print("Warning: Not enough rows found in file.")
-        
+
     # create a list of rooms from the data from row 3 onwards
-    
+
     rooms_list = []
-    
+
     for row in data_rows[2:]:
         # create a room object
         id_room = RoomID(
-                id=row[CSVColumnMapper.COLUMN_ROOM_ID.value],
-                parameter_guid=data_rows[CSVColumnMapper.ROW_PARAMETER_GUID.value][CSVColumnMapper.COLUMN_ROOM_ID.value]
-            )
+            id=row[CSVColumnMapper.COLUMN_ROOM_ID.value],
+            parameter_guid=data_rows[CSVColumnMapper.ROW_PARAMETER_GUID.value][
+                CSVColumnMapper.COLUMN_ROOM_ID.value
+            ],
+        )
         print("...Room ID: {}".format(id_room.id))
-        area_room_briefed =RoomProperty(name="{}".format(
-                data_rows[CSVColumnMapper.ROW_PROPERTY_DESCRIPTION.value][CSVColumnMapper.COLUMN_AREA_BRIEFED.value]), 
-                value=row[CSVColumnMapper.COLUMN_AREA_BRIEFED.value], 
-                parameter_guid=data_rows[CSVColumnMapper.ROW_PARAMETER_GUID.value][CSVColumnMapper.COLUMN_AREA_BRIEFED.value]
-            )
+        area_room_briefed = RoomProperty(
+            name="{}".format(
+                data_rows[CSVColumnMapper.ROW_PROPERTY_DESCRIPTION.value][
+                    CSVColumnMapper.COLUMN_AREA_BRIEFED.value
+                ]
+            ),
+            value=row[CSVColumnMapper.COLUMN_AREA_BRIEFED.value],
+            parameter_guid=data_rows[CSVColumnMapper.ROW_PARAMETER_GUID.value][
+                CSVColumnMapper.COLUMN_AREA_BRIEFED.value
+            ],
+        )
         print("...Area briefed: {}".format(area_room_briefed.value))
-        area_room_designed=RoomProperty(name="{}".format(
-                data_rows[CSVColumnMapper.ROW_PROPERTY_DESCRIPTION.value][CSVColumnMapper.COLUMN_AREA_DESIGNED.value]), 
-                value=row[CSVColumnMapper.COLUMN_AREA_DESIGNED.value], 
-                parameter_guid=data_rows[CSVColumnMapper.ROW_PARAMETER_GUID.value][CSVColumnMapper.COLUMN_AREA_DESIGNED.value]
-            )
+        area_room_designed = RoomProperty(
+            name="{}".format(
+                data_rows[CSVColumnMapper.ROW_PROPERTY_DESCRIPTION.value][
+                    CSVColumnMapper.COLUMN_AREA_DESIGNED.value
+                ]
+            ),
+            value=row[CSVColumnMapper.COLUMN_AREA_DESIGNED.value],
+            parameter_guid=data_rows[CSVColumnMapper.ROW_PARAMETER_GUID.value][
+                CSVColumnMapper.COLUMN_AREA_DESIGNED.value
+            ],
+        )
         print("...Area designed: {}".format(area_room_designed.value))
-        
-        room = Room(id=id_room,area_briefed=area_room_briefed,area_designed=area_room_designed)
-        
+
+        room = Room(
+            id=id_room, area_briefed=area_room_briefed, area_designed=area_room_designed
+        )
+
         # get additional data from the row
-        if (len(row) > 3):
-            
+        if len(row) > 3:
+
             for i in range(3, len(row)):
                 # create a property object
-                prop=RoomProperty(
-                    name="{}".format(data_rows[CSVColumnMapper.ROW_PROPERTY_DESCRIPTION.value][i]), 
-                    value=row[i], 
-                    parameter_guid=data_rows[CSVColumnMapper.ROW_PARAMETER_GUID.value][i]
+                prop = RoomProperty(
+                    name="{}".format(
+                        data_rows[CSVColumnMapper.ROW_PROPERTY_DESCRIPTION.value][i]
+                    ),
+                    value=row[i],
+                    parameter_guid=data_rows[CSVColumnMapper.ROW_PARAMETER_GUID.value][
+                        i
+                    ],
                 )
                 print("...Property: {}".format(prop))
                 # add it to room
                 room.add_property(prop)
         rooms_list.append(room)
-    
+
     return rooms_list
 
 
-
-def pushIt_entry(doc, output, forms, rooms = None):
+def pushIt_entry(doc, output, forms, rooms=None):
     """
-    Reports on loaded families in a project file.
+    Start the PushIt UI.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -151,18 +205,18 @@ def pushIt_entry(doc, output, forms, rooms = None):
     return_value = Result()
 
     # load rooms from sample file
-    
-    if(rooms is None):
+
+    if rooms is None:
         # get all families in file
-        #families = get_families_in_model(doc=doc, library_path=None)
+        # families = get_families_in_model(doc=doc, library_path=None)
         return
 
-    print_header ("Starting UI...")
+    print_header("Starting UI...")
     print("\nFound {} room(s).".format(len(rooms)))
-    
+
     # sort by room id value ( to get to the actual is value use obj.id.id)
     sorted_rooms_list = sorted(rooms, key=lambda obj: obj.id.id)
-    
+
     # add family to the model
     for room_instance in sorted_rooms_list:
         REVIT_MODEL.add_room(room_model=room_instance)
@@ -170,8 +224,8 @@ def pushIt_entry(doc, output, forms, rooms = None):
     # get the settings path from file and assign the revit model
     settings_data = settings.get_settings()
     # check if any settings where found otherwise go with default
-    if(settings_data):
-        REVIT_MODEL.settings=settings_data
+    if settings_data:
+        REVIT_MODEL.settings = settings_data
         print("found settings: {}\n{}".format(settings_data, REVIT_MODEL.settings))
 
     # set up UI
@@ -179,16 +233,16 @@ def pushIt_entry(doc, output, forms, rooms = None):
     NAVIGATION_STORE.CurrentViewModel = Create_Rooms_Selection_View_Model()
 
     # the main view model ( container for all other view models)
-    main_view_model = MainViewModel(
-        navigation_store=NAVIGATION_STORE
-    )
+    main_view_model = MainViewModel(navigation_store=NAVIGATION_STORE)
 
     # set up a window instance
     my_window = PushIt(
-        xaml_path= os.path.join(settings.DUH_AST_DIRECTORY,  r"UI\Objects\WPF\Views\MainWindow_py.xaml"),
+        xaml_path=os.path.join(
+            settings.DUH_AST_DIRECTORY, r"UI\Objects\WPF\Views\MainWindow_py.xaml"
+        ),
         main_view_model=main_view_model,
         xaml_by_view_model=XAML_BY_VIEW,
-        resources_xaml_path=None
+        resources_xaml_path=None,
     )
 
     # show the window to the user
@@ -199,6 +253,8 @@ def pushIt_entry(doc, output, forms, rooms = None):
 
 
 if __name__ == "__main__":
-    #dummy_rooms = load_rooms (file_path=os.path.join(settings.SCRIPT_DIRECTORY,  r"Samples\Data_Min.csv"))
-    dummy_rooms = load_rooms (file_path=os.path.join(settings.SCRIPT_DIRECTORY,  r"Samples\Data_Extended.csv"))
-    test_result = pushIt_entry(doc=None, output=None, forms=None, rooms = dummy_rooms)
+    # dummy_rooms = load_rooms (file_path=os.path.join(settings.SCRIPT_DIRECTORY,  r"Samples\Data_Min.csv"))
+    dummy_rooms = load_rooms(
+        file_path=os.path.join(settings.SCRIPT_DIRECTORY, r"Samples\Data_Extended.csv")
+    )
+    test_result = pushIt_entry(doc=None, output=None, forms=None, rooms=dummy_rooms)

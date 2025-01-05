@@ -14,7 +14,6 @@ from System.Data import DataTable
 from PushIt.ViewModels.RoomViewModel import RoomViewModel
 #from ViewModels.FilterItem import FilterItem
 from PushIt.Commands.PushRoomDataCommand import PushRoomDataCommand
-from PushIt.Objects.match_status_names import MatchStatusNames
 
 import os
 

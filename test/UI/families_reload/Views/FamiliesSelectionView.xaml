@@ -11,7 +11,7 @@
             <RowDefinition Height="auto"/>
             <!-- families -->
             <RowDefinition Height="*"/>
-            <!-- library papth -->
+            <!-- library path -->
             <RowDefinition Height="auto"/>
             <!-- buttons -->
             <RowDefinition Height="auto"/>

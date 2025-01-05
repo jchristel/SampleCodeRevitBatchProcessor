@@ -46,7 +46,7 @@
                 Grid.Column="0"
                 Margin="0 5 5 5"
                 ItemsSource="{Binding ColumnFilterItems}"
-                SelectedValue="{Binding Path=SelectedColumnFilterItem}" />
+                SelectedValue="{Binding Path=SelectedColumnFilterItem,Mode=TwoWay}" />
             <TextBlock Grid.Row="0"
                 Grid.Column="1"
                 Margin="5 5 0 5"

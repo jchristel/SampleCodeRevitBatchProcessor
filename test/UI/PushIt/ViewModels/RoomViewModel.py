@@ -1,7 +1,6 @@
 from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
 
 
-from PushIt.Objects.match_status_names import MatchStatusNames
 from PushIt.Models.Room import Room
 
 class RoomViewModel(ViewModelBase):

@@ -52,13 +52,13 @@ class RoomsContainer(Base):
         """
         Get a room by its id.
         """
-        
+
         for room in self._rooms:
             if room.id.id == room_id:
                 return room
 
         return None
-    
+
     def add_room(self, room_instance):
         """
         Adds a new room to the container.

@@ -63,11 +63,11 @@ class PushRoomDataCommand(CommandBase):
         """
         This method returns True if the row selected has a count of 0 only.
         """
-        
+
         # check if pushit is in safety off mode
         if self.rooms_selection_view_model.SafetyOffMode:
             return True
-        
+
         # check if the selected rooms have a placement count of 0
         if self.rooms_selection_view_model.CanPushRoomData:
             return True
@@ -76,7 +76,6 @@ class PushRoomDataCommand(CommandBase):
 
     def Execute(self, parameter):
         print("In execute push room data command")
-        
 
         if self._execute:
             self._execute(parameter)
@@ -92,7 +91,7 @@ class PushRoomDataCommand(CommandBase):
             property_changed_args (_type_): _description_
 
         """
-        
+
         # check if the selected row index has changed
         if property_changed_args.PropertyName == "SelectedIndexChanged":
             self.on_can_execute_changed()

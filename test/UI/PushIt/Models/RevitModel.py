@@ -61,7 +61,7 @@ class RevitModel(Base):
         Get a room by its id.
         """
         return self._rooms_container.get_room_by_id(room_id)
-    
+
     def add_room(self, room_model):
         # check type
         if isinstance(room_model, Room) == False:

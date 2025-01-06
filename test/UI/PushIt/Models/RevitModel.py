@@ -63,6 +63,13 @@ class RevitModel(Base):
         return self._rooms_container.get_room_by_id(room_id)
 
     def add_room(self, room_model):
+        """
+        Add a room to the model.
+
+        :param room_model: The room to add.
+        :type room_model: Room
+        """
+
         # check type
         if isinstance(room_model, Room) == False:
             raise TypeError(

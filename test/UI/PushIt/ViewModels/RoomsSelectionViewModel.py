@@ -88,10 +88,6 @@ class RoomsSelectionViewModel(ViewModelBase):
         # set the default filter value
         self._selected_filter_value = ""
 
-        # add room data to view model
-        # needs to be happening after data table has been created
-        # and after the column filter items have been created
-        # self.update_rooms()
         # event handlers
         self.add_PropertyChanged(self.filter_room_data)
 
@@ -100,6 +96,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
         The collection view of the data collection. to which the xaml view is bound to.
         """
+
         return self._data_view
 
     @property
@@ -125,6 +122,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
         The column names to display in the filter options drop down list.
         """
+
         return self._column_filter_items
 
     @property
@@ -189,6 +187,19 @@ class RoomsSelectionViewModel(ViewModelBase):
 
     @SelectedIndex.setter
     def SelectedIndex(self, value):
+        """
+        Sets the selected row index of the data table view. 
+        
+        This is used to: 
+        
+        - get the selected room.
+        - set the flag as to whether a room can be pushed to the revit model.
+
+        
+        :param value: The selected row index.
+        :type value: int
+        """
+
         # this returns the row index of the filtered default view not the actual data table.
         self._selected_index = value
         try:
@@ -206,7 +217,7 @@ class RoomsSelectionViewModel(ViewModelBase):
             self._can_push_room_data = row[row.Table.Columns.Count - 1] == "0"
 
             # raise property change event for the selected row content
-            # and push button enabled
+            # this will trigger a re-evaluation of push it command availability
             self.RaisePropertyChanged("SelectedIndexChanged")
         except Exception as e:
             print("Error: ", e)
@@ -218,6 +229,7 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         Stores the selected family objects in the revit model object and triggers the close of the window.
         """
+        
         return self.push_data_command
 
     @property
@@ -227,6 +239,7 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         This is used when the user wants to refresh the room data in the view.
         """
+
         return None
 
     @property
@@ -236,6 +249,8 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         This is used when the user wants to update the rooms in the revit model from the room data.
         """
+
+        # scaffold the command
         return None
 
     @property
@@ -245,6 +260,8 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         This is used when the user wants to wipe stale room data.
         """
+
+        # scaffold the command
         return None
 
     def create_column_filter_items(self):
@@ -256,6 +273,7 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         - Needs to be called after the data table has been created.
         """
+
         # get the columns from the data table
         columns = self._data_table.Columns
 
@@ -267,6 +285,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
         Creates a data table with the rooms data.
         """
+
         # set up the data table
         data_table = DataTable()
 

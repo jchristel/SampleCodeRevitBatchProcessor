@@ -61,10 +61,13 @@ class PushRoomDataCommand(CommandBase):
 
     def CanExecute(self, parameter):
         """
-        This method returns True if the row selected has a count of 0 only.
+        This method returns True if the row selected room has a count of 0 only or if the safety off mode is enabled.
+
+        :param parameter: The parameter
+        :type parameter: object
         """
 
-        # check if pushit is in safety off mode
+        # check if push it is in safety off mode
         if self.rooms_selection_view_model.SafetyOffMode:
             return True
 

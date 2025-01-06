@@ -33,6 +33,8 @@ from System.Data import DataTable, DataView
 
 # from ViewModels.FilterItem import FilterItem
 from PushIt.Commands.PushRoomDataCommand import PushRoomDataCommand
+from PushIt.Commands.RaiseRevitEventCommand import RaiseRevitEventCommand
+
 
 
 class RoomsSelectionViewModel(ViewModelBase):
@@ -40,10 +42,13 @@ class RoomsSelectionViewModel(ViewModelBase):
     # the name of the count column in the data table
     count_column_name = "Count"
 
-    def __init__(self, revit_model, navigation_service):
+    def __init__(self, revit_model, revit_model_event_handler_manager, navigation_service):
         super(RoomsSelectionViewModel, self).__init__()
 
         # properties
+        # the revit model event handler manager
+        self._revit_model_event_handler_manager = revit_model_event_handler_manager
+
         # can a room be pushed to revit, default is false
         # will be re-evaluated when a row is selected
         self._can_push_room_data = False
@@ -68,12 +73,25 @@ class RoomsSelectionViewModel(ViewModelBase):
         self._selected_index = -1
 
         # commands
-        # the command used to push data into the revit model family instance
-        self.push_data_command = PushRoomDataCommand(
-            revit_model=revit_model,
+        # the command used to raise the revit external event which in turn calls a function pushing data into the revit model family instance
+        self._push_data_command = PushRoomDataCommand(
             rooms_selection_view_model=self,
-            rooms_selection_view_navigation_service=navigation_service,
-            execute=self.close_window,
+            execute=self._revit_model_event_handler_manager.push_single_room_data,
+        )
+
+        # the command used to raise the revit external event which in turn calls a function refreshing the rooms in the revit model
+        self._refresh_room_data_from_model_command = RaiseRevitEventCommand(
+            execute=self._revit_model_event_handler_manager.pull_data_from_revit
+        )
+
+        # the command used to raise the revit external event which in turn calls a function updating the rooms in the revit model from the room data
+        self._update_rooms_in_revit_from_room_data_command = RaiseRevitEventCommand(
+            execute=self._revit_model_event_handler_manager.update_all_revit_rooms
+        )
+
+        # the command used to raise the revit external event which in turn calls a function wiping stale room data
+        self._wipe_stale_room_data_command = RaiseRevitEventCommand(
+            execute=self._revit_model_event_handler_manager.wipe_stale_data
         )
 
         # list containing the column names for the filter
@@ -212,6 +230,8 @@ class RoomsSelectionViewModel(ViewModelBase):
             self._selected_room = None
             # get the selected room based on the id
             self._selected_room = self._revit_model.get_room_by_id(row[0])
+            # set the selected room in the revit model to make it available for pushing
+            self._revit_model.room_of_interest = self._selected_room
 
             # set the flag as to whether a room can be pushed to the revit model
             self._can_push_room_data = row[row.Table.Columns.Count - 1] == "0"
@@ -230,7 +250,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         Stores the selected family objects in the revit model object and triggers the close of the window.
         """
         
-        return self.push_data_command
+        return self._push_data_command
 
     @property
     def RefreshRoomDataFromModelCommand(self):
@@ -240,7 +260,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         This is used when the user wants to refresh the room data in the view.
         """
 
-        return None
+        return self._refresh_room_data_from_model_command
 
     @property
     def UpdateRoomsInRevitFromRoomDataCommand(self):
@@ -251,7 +271,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
 
         # scaffold the command
-        return None
+        return self._update_rooms_in_revit_from_room_data_command
 
     @property
     def WipeStaleRoomDataCommand(self):
@@ -262,7 +282,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
 
         # scaffold the command
-        return None
+        return self._wipe_stale_room_data_command
 
     def create_column_filter_items(self):
         """

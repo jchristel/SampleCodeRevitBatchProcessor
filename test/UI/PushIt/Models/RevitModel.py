@@ -35,8 +35,14 @@ class RevitModel(Base):
 
         super(RevitModel, self).__init__()
 
+        # the container for all rooms read from data file
         self._rooms_container = RoomsContainer()
+
+        # the app settings object
         self._settings = Settings()
+
+        # the room selected by the user in the UI
+        self._room_of_interest = None
 
     @property
     def settings(self):
@@ -49,6 +55,18 @@ class RevitModel(Base):
                 "Value must be of type Setting, got {} instead.".format(type(value))
             )
         self._settings = value
+    
+    @property
+    def room_of_interest(self):
+        return self._room_of_interest
+    
+    @room_of_interest.setter
+    def room_of_interest(self, value):
+        if not (isinstance(value, Room)):
+            raise ValueError(
+                "Value must be of type Room, got {} instead.".format(type(value))
+            )
+        self._room_of_interest = value
 
     def get_all_rooms(self):
         """
@@ -81,12 +99,3 @@ class RevitModel(Base):
         # add the room to the container and check for conflicts
         self._rooms_container.add_room(room_model)
 
-    def push_data(self, families):
-        for fam in families:
-            # check type
-            if isinstance(fam, Room) == False:
-                raise TypeError(
-                    "family needs to be of type Room, got {} instead".format(type(fam))
-                )
-
-            # reload ...

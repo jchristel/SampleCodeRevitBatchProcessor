@@ -19,17 +19,21 @@
 #
 #
 
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A  generic class used to raise Revit events.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+No Can execute method is required for this command.
+
+"""
+
 from duHast.UI.Objects.WPF.Commands.CommandBase import CommandBase
-from PushIt.Models.Room import Room
 
-
-class PushRoomDataCommand(CommandBase):
+class RaiseRevitEventCommand(CommandBase):
 
     def __init__(
         self,
-        revit_model,
-        rooms_selection_view_model,
-        rooms_selection_view_navigation_service,
         execute=None,
     ):
         """
@@ -37,53 +41,33 @@ class PushRoomDataCommand(CommandBase):
 
         :param revit_model: The Revit model
         :type revit_model: RevitModel
-        :param rooms_selection_view_model: The rooms selection view model
-        :type rooms_selection_view_model: RoomsSelectionViewModel
-        :param rooms_selection_view_navigation_service: The rooms selection view navigation service
-        :type rooms_selection_view_navigation_service: NavigateCommand
         :param execute: The execute method
         :type execute: func, optional
         """
 
-        super(PushRoomDataCommand, self).__init__(execute=None)
-
-        self.rooms_selection_view_model = rooms_selection_view_model
+        super(RaiseRevitEventCommand, self).__init__(execute=None)
         self._execute = execute
 
-        # sub scribe to property change event to enable or disable submit button
-        self.rooms_selection_view_model.add_PropertyChanged(
-            self.OnViewModelPropertyChanged
-        )
 
     def CanExecute(self, parameter):
         """
-        This method returns True if the row selected room has a count of 0 only or if the safety off mode is enabled.
+        This method always returns True 
 
         :param parameter: The parameter
         :type parameter: object
         """
 
-        # check if push it is in safety off mode
-        if self.rooms_selection_view_model.SafetyOffMode:
-            return True
-
-        # check if the selected rooms have a placement count of 0
-        if self.rooms_selection_view_model.CanPushRoomData:
-            return True
-        else:
-            return False
+        return True
 
     def Execute(self, parameter):
-        print("In execute push room data command")
+        print("In execute push  UPDATE     room data command")
 
         if self._execute:
             self._execute(parameter)
 
     def OnViewModelPropertyChanged(self, sender, property_changed_args):
         """
-        Forces to re-evaluate the reload button availability.
-
-        Number of arg to this function is not optional!!
+        Not required for this command.
 
         Args:
             sender (_type_): _description_
@@ -91,6 +75,4 @@ class PushRoomDataCommand(CommandBase):
 
         """
 
-        # check if the selected row index has changed
-        if property_changed_args.PropertyName == "SelectedIndexChanged":
-            self.on_can_execute_changed()
+        pass

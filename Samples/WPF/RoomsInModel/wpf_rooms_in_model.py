@@ -30,28 +30,6 @@ XAML_PATH = r"C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\Samp
 # main code
 
 
-def execute_at_event_raised_sample_refresh_rooms(uiapp):
-    # create a dummy list and return it
-    test_list = [
-        {
-            "room_id": 1,
-            "room_name": "Room 1",
-            "room_number": "1",
-            "phase": "Phase 1",
-            "level": "Level 1",
-        },
-        {
-            "room_id": 2,
-            "room_name": "Room 2",
-            "room_number": "2",
-            "phase": "Phase 2",
-            "level": "Level 2",
-        },
-    ]
-
-    return test_list
-
-
 def wpf_sample(uiapp):
     # set up a model
     revit_model = RevitModel("Revit Model")
@@ -83,7 +61,7 @@ def wpf_sample(uiapp):
         action_refresh_room=revit_action,
     )
 
-    # set up a window and show it modeless
+    # set up a window and show it mode less
     test = MyWindow(
         xaml_path=XAML_PATH,
         view_model=view_model_test,

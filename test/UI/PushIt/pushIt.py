@@ -48,8 +48,8 @@ except ImportError:
 from PushIt.ViewModels.RoomsSelectionViewModel import RoomsSelectionViewModel
 from PushIt.Models.RevitModel import RevitModel
 from PushIt.Objects.MainWindow import PushIt
-
 from PushIt.Utilities.load_rooms import load_rooms_from_file
+from PushIt.Objects.RevitEventHandlerManager import RevitEventHandlerManager
 
 # from Autodesk.Revit.DB import ElementId
 
@@ -66,12 +66,15 @@ NAVIGATION_STORE = NavigationStore()
 # set up the revit model container
 REVIT_MODEL = RevitModel()
 
+# set up the revit event handler manager
+REVIT_EVENT_HANDLER_MANAGER = RevitEventHandlerManager()
 
 def Create_Rooms_Selection_View_Model():
 
     # used to create a family selection view model
     fam_view_model = RoomsSelectionViewModel(
         revit_model=REVIT_MODEL,
+        revit_event_handler_manager=REVIT_EVENT_HANDLER_MANAGER,
         navigation_service=NavigationService(
             navigation_store=NAVIGATION_STORE,
             create_view_model=Create_Rooms_Selection_View_Model,
@@ -118,6 +121,9 @@ def pushIt_entry(doc, output, forms, rooms=None):
         print("found settings: {}\n{}".format(settings_data, REVIT_MODEL.settings))
 
     # set up UI
+    # set up the external event handlers for Revit
+    REVIT_EVENT_HANDLER_MANAGER.setup_event_handlers(doc=doc)
+    
     # set up the initial view to be displayed
     NAVIGATION_STORE.CurrentViewModel = Create_Rooms_Selection_View_Model()
 

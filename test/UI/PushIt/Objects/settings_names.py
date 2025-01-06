@@ -35,4 +35,17 @@ class SettingsNames(Enum):
     Contains property names used in settings file.
     """
 
-    LIBRARY_PATH = "library_path"
+    # the last used file path of the rooms data file
+    ROOMS_DATA_FILE_PATH = "rooms_data_file_path"
+
+    # the revit family categories into which data can be pushed
+    PUSH_IT_REVIT_TARGET_CATEGORIES = "push_it_revit_target_categories"
+
+    # last selected column filter 
+    LAST_COLUMN_FILTER = "last_column_filter"
+
+    # last column filter value
+    LAST_COLUMN_FILTER_VALUE = "last_column_filter_value"
+
+    #  directory path to where custom room shapes are to be stored
+    CUSTOM_ROOM_SHAPES_DIRECTORY = "custom_room_shapes_directory"

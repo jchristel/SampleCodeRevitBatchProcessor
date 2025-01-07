@@ -27,9 +27,7 @@ class PushRoomDataCommand(CommandBase):
 
     def __init__(
         self,
-        revit_model,
         rooms_selection_view_model,
-        rooms_selection_view_navigation_service,
         execute=None,
     ):
         """

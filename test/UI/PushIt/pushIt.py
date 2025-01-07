@@ -74,7 +74,7 @@ def Create_Rooms_Selection_View_Model():
     # used to create a family selection view model
     fam_view_model = RoomsSelectionViewModel(
         revit_model=REVIT_MODEL,
-        revit_event_handler_manager=REVIT_EVENT_HANDLER_MANAGER,
+        revit_model_event_handler_manager=REVIT_EVENT_HANDLER_MANAGER,
         navigation_service=NavigationService(
             navigation_store=NAVIGATION_STORE,
             create_view_model=Create_Rooms_Selection_View_Model,

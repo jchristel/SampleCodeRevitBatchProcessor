@@ -51,25 +51,25 @@ class RevitEventHandlerManager(Base):
         pass
     
 
-    def push_single_room_data(self):
+    def push_single_room_data(self, *args, **kwargs):
         """
         Push single room data from the WPF UI to Revit
         """
         pass
 
-    def update_all_revit_rooms(self):
+    def update_all_revit_rooms(self, *args, **kwargs):
         """
         Update all revit rooms with the data from the WPF UI
         """
         pass
 
-    def pull_data_from_revit(self):
+    def pull_data_from_revit(self,*args, **kwargs):
         """
         Pull data from Revit to the WPF UI (refresh the rooms list)
         """
         pass
 
-    def wipe_stale_data(self):
+    def wipe_stale_data(self,*args, **kwargs):
         """
         wipe stale data from the rooms in the revit model
         """

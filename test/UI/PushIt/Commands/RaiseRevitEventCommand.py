@@ -60,10 +60,13 @@ class RaiseRevitEventCommand(CommandBase):
         return True
 
     def Execute(self, parameter):
-        print("In execute push  UPDATE     room data command")
+        print("In execute raise event command")
 
         if self._execute:
-            self._execute(parameter)
+            try:
+                self._execute(parameter)
+            except Exception as e:
+                print("Error in execute push UPDATE room data command: {}".format(e))
 
     def OnViewModelPropertyChanged(self, sender, property_changed_args):
         """

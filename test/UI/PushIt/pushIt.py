@@ -67,10 +67,16 @@ NAVIGATION_STORE = NavigationStore()
 REVIT_MODEL = RevitModel()
 
 # set up the revit event handler manager
-REVIT_EVENT_HANDLER_MANAGER = RevitEventHandlerManager()
+REVIT_EVENT_HANDLER_MANAGER = RevitEventHandlerManager(REVIT_MODEL)
 
 def Create_Rooms_Selection_View_Model():
-
+    """
+    Create a RoomsSelectionViewModel instance.
+    
+    :return: RoomsSelectionViewModel instance.
+    :rtype: RoomsSelectionViewModel
+    """
+    
     # used to create a family selection view model
     fam_view_model = RoomsSelectionViewModel(
         revit_model=REVIT_MODEL,
@@ -104,15 +110,7 @@ def pushIt_entry(doc, output, forms, rooms=None):
     return_value = Result()
 
     print_header("Starting UI...")
-    print("\nFound {} room(s).".format(len(rooms)))
-
-    # sort by room id value ( to get to the actual is value use obj.id.id)
-    sorted_rooms_list = sorted(rooms, key=lambda obj: obj.id.id)
-
-    # add family to the model
-    for room_instance in sorted_rooms_list:
-        REVIT_MODEL.add_room(room_model=room_instance)
-
+    
     # get the settings path from file and assign the revit model
     settings_data = settings.get_settings()
     # check if any settings where found otherwise go with default
@@ -121,12 +119,12 @@ def pushIt_entry(doc, output, forms, rooms=None):
         print("found settings: {}\n{}".format(settings_data, REVIT_MODEL.settings))
 
     # set up UI
-    # set up the external event handlers for Revit
-    REVIT_EVENT_HANDLER_MANAGER.setup_event_handlers(doc=doc)
+    # set up initial data for the main view model
+    REVIT_MODEL.populate_room_data(doc=doc)
     
     # set up the initial view to be displayed
     NAVIGATION_STORE.CurrentViewModel = Create_Rooms_Selection_View_Model()
-
+    
     # the main view model ( container for all other view models)
     main_view_model = MainViewModel(navigation_store=NAVIGATION_STORE)
 

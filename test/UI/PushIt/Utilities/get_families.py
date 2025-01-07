@@ -59,7 +59,7 @@ def get_parameter_name_by_guid(parameters, guid):
     """
 
     for parameter in parameters:
-        if parameter.GUID.ToString() == guid:
+        if parameter.GuidValue.ToString() == guid:
             return parameter.Definition.Name
 
     return None
@@ -84,17 +84,17 @@ def get_shared_parameter_data(doc, room):
     shared_parameters = get_all_shared_parameters(doc)
     
     id_parameter_name = get_parameter_name_by_guid(shared_parameters, room.id.parameter_guid)
-    data.append({id_parameter_name: room.id.guid})
+    data.append({id_parameter_name: room.id.parameter_guid})
     
     area_briefed_parameter_name = get_parameter_name_by_guid(shared_parameters, room.area_briefed.parameter_guid)
-    data.append({area_briefed_parameter_name: room.area_briefed.guid})
+    data.append({area_briefed_parameter_name: room.area_briefed.parameter_guid})
     
-    area_design_parameter_name = get_parameter_name_by_guid(shared_parameters, room.area_design.parameter_guid)
-    data.append({area_design_parameter_name: room.area_design.guid})
+    area_design_parameter_name = get_parameter_name_by_guid(shared_parameters, room.area_designed.parameter_guid)
+    data.append({area_design_parameter_name: room.area_designed.parameter_guid})
     
-    for prop in room.properties:
+    for prop in room.other_properties:
         prop_name = get_parameter_name_by_guid(shared_parameters, prop.parameter_guid)
-        data.append({prop_name: prop.guid})
+        data.append({prop_name: prop.parameter_guid})
         
     return data
     

@@ -77,7 +77,7 @@ class RevitModel(Base):
         
         # Create a dictionary to keep track of families by their room ID
         family_dict = {}
-        for family in self.families:
+        for family in families:
             room_id = family.room_id
             if room_id not in family_dict:
                 family_dict[room_id] = []
@@ -101,6 +101,8 @@ class RevitModel(Base):
         :type doc: Autodesk.Revit.DB.Document
         """
 
+        #debug:
+        self._settings.rooms_data_file_path = r"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\test\UI\PushIt\Samples\Data_Extended.csv"
         # load rooms from file if file path is set
         if self._settings.rooms_data_file_path:
             rooms_result = load_rooms_from_file(self._settings.rooms_data_file_path)
@@ -123,11 +125,14 @@ class RevitModel(Base):
             )
         
             # update the rooms data with placed family data
-            room_data = self._update_room_data_with_family_data(rooms_result.result, families, active_view)
+            room_data = self._update_room_data_with_family_data(rooms_result.result, families)
             
             # add the rooms to the model
             for room in room_data:
                 self.add_room(room)
+                
+        else:
+            print("No room data file path set, skipping room data loading.")
 
     def get_all_rooms(self):
         """

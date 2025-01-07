@@ -263,7 +263,8 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         self._data_path = value
         # update the room data file
-        self.update_families()
+        self._revit_model.settings.rooms_data_file_path = value
+        
         
         # raise property change event
         self.RaisePropertyChanged("DataPath")
@@ -335,6 +336,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         # set up the data table
         data_table = DataTable()
 
+        print("Creating data table...of {} rooms.".format(len(self._revit_model.get_all_rooms())))
         # add columns to the data table
         for room_model_instance in self._revit_model.get_all_rooms():
             # add a column per property

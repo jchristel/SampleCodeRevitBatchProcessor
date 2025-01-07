@@ -19,18 +19,33 @@
 #
 #
 
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A class to store revit family information in.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""
+
 from duHast.Utilities.Objects.base import Base
+
 
 class RFamily(Base):
 
-    def __init__(self, room_id, area_designed, area_briefed, properties, design_set, design_option, design_option_is_primary):
+    def __init__(
+        self,
+        room_id,
+        area_designed,
+        area_briefed,
+        properties,
+        design_set,
+        design_option,
+        design_option_is_primary,
+    ):
         """
         Initializes a new instance of the Family class.
         """
 
         super(RFamily, self).__init__()
-        
-        
+
         self._room_id = room_id
         self._area_designed = area_designed
         self._area_briefed = area_briefed
@@ -38,32 +53,31 @@ class RFamily(Base):
         self._design_set = design_set
         self._design_option = design_option
         self._design_option_is_primary = design_option_is_primary
-    
+
     @property
     def room_id(self):
         return self._room_id
-    
+
     @property
     def area_designed(self):
         return self._area_designed
-    
+
     @property
     def area_briefed(self):
         return self._area_briefed
-    
+
     @property
     def properties(self):
         return self._properties
-    
+
     @property
     def design_set(self):
         return self._design_set
-        
+
     @property
     def design_option(self):
         return self._design_option
-    
+
     @property
     def design_option_is_primary(self):
         return self._design_option_is_primary
-    

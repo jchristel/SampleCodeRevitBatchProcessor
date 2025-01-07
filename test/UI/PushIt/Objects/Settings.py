@@ -23,10 +23,11 @@ import json
 
 from duHast.Utilities.Objects.base import Base
 from PushIt.Objects.settings_names import SettingsNames
+from duHast.Utilities.files_json import read_json_data_from_file, write_json_to_file
 
 
 class Settings(Base):
-    def __init__(self, j=None):
+    def __init__(self, j=None, settings_file_path=None):
         """
         Implementation of a settings class.
 
@@ -38,6 +39,9 @@ class Settings(Base):
         # ini super class to allow multi inheritance in children!
         super(Settings, self).__init__()
 
+        # Set the settings file path
+        self._settings_file_path = settings_file_path
+        
         # Set default values
         self._rooms_data_file_path = None
 
@@ -190,3 +194,17 @@ class Settings(Base):
                 "Value must be of type str, got {} instead.".format(type(value))
             )
         self._last_column_filter_value = value
+    
+    def load_settings(self):
+        try:
+            read_result = read_json_data_from_file(self._settings_file_path)
+            if read_result.status is False:
+                print(
+                    "failed to read settings file: {} with: {}".format(
+                        self._settings_file_path, read_result.message
+                    )
+                )
+                return None
+            data = read_result.result[0]
+        except FileNotFoundError:
+            pass

@@ -139,10 +139,7 @@ def pushIt_entry(doc, output, forms, rooms=None):
     )
 
     # show the window to the user
-    my_window.ShowDialog()
-
-    print("Finished.")
-    return return_value
+    my_window.Show()
 
 
 if __name__ == "__main__":

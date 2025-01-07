@@ -106,6 +106,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -125,18 +126,16 @@
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                     Margin="5 10 0 10" 
                     Content="Wipe stale data from rooms in model"/>
-                <!-- family path -->
-                <Grid Grid.Row="2" Margin="0 25 0 0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="Library Location"/>
-                        <TextBox
-                            Grid.Row="1"
-                            Margin="0 5 0 0"
-                            Text="{Binding LibraryPath, UpdateSourceTrigger=PropertyChanged}"/>
-                </Grid>
+                <TextBlock 
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Margin="0 5 0 0"
+                    Text="Room Data File"/>
+                <TextBox
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    Margin="0 5 0 0"
+                    Text="{Binding DataPath, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
         </Expander>
         <!-- push it button row content -->

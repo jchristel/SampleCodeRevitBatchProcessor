@@ -25,6 +25,9 @@ from PushIt.Models.Room import Room
 from PushIt.Models.RoomsContainer import RoomsContainer
 from PushIt.Objects.Settings import Settings
 
+from PushIt.Utilities.load_rooms import load_rooms_from_file
+from PushIt.Utilities.get_families import get_families_in_model
+
 
 class RevitModel(Base):
 
@@ -67,6 +70,64 @@ class RevitModel(Base):
                 "Value must be of type Room, got {} instead.".format(type(value))
             )
         self._room_of_interest = value
+
+    def _update_room_data_with_family_data(self, room_data, families):
+        
+        # loop over family instances and assign to rooms based on their room_id
+        
+        # Create a dictionary to keep track of families by their room ID
+        family_dict = {}
+        for family in self.families:
+            room_id = family.room_id
+            if room_id not in family_dict:
+                family_dict[room_id] = []
+            family_dict[room_id].append(family)
+        
+        # Assign families to rooms
+        for room in room_data:
+            if room.id.id in family_dict:
+                for family in family_dict[room.id.id]:
+                    room.add_family(family)
+                # Remove the matched families from the dictionary to speed up the search
+                del family_dict[room_id]
+        
+        return room_data
+    
+    def populate_room_data(self, doc):
+        """
+        Populate the room data from file and from the Revit document.
+
+        :param doc: The Revit document.
+        :type doc: Autodesk.Revit.DB.Document
+        """
+
+        # load rooms from file if file path is set
+        if self._settings.rooms_data_file_path:
+            rooms_result = load_rooms_from_file(self._settings.rooms_data_file_path)
+            if rooms_result.status is False:
+                raise ValueError(
+                    "Failed to load rooms from file: {}".format(rooms_result.message)
+                )
+            
+            # get elements from the document
+            # check if the target categories are set
+            if self._settings.push_it_revit_target_categories is None:
+                # set a default value to walls
+                self._settings.push_it_revit_target_categories = ["Walls"]
+            
+            # get the elements from the document
+            families = get_families_in_model(
+                doc, 
+                self._settings.push_it_revit_target_categories,  # the target categories
+                rooms_result.result[0], # a room object to get the properties we are interested in
+            )
+        
+            # update the rooms data with placed family data
+            room_data = self._update_room_data_with_family_data(rooms_result.result, families, active_view)
+            
+            # add the rooms to the model
+            for room in room_data:
+                self.add_room(room)
 
     def get_all_rooms(self):
         """

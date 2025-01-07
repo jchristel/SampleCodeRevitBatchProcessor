@@ -60,6 +60,11 @@ class RoomsSelectionViewModel(ViewModelBase):
         # the revit wpf model object containing the settings and families to be displayed
         self._revit_model = revit_model
 
+        # set the data path
+        self._data_path = self._revit_model.settings.rooms_data_file_path
+        
+        
+        
         # create the data table which is used to store the room data
         self._data_table = self.create_rooms_data_table()
 
@@ -242,6 +247,27 @@ class RoomsSelectionViewModel(ViewModelBase):
         except Exception as e:
             print("Error: ", e)
 
+    @property
+    def DataPath(self):
+        """
+        The path to the data file.
+        """
+
+        return self._data_path
+    
+    @DataPath.setter
+    def DataPath(self, value):
+        """
+        Sets the path to the data file.
+        """
+
+        self._data_path = value
+        # update the room data file
+        self.update_families()
+        
+        # raise property change event
+        self.RaisePropertyChanged("DataPath")
+    
     @property
     def PushItCommand(self):
         """

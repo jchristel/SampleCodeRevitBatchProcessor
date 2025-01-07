@@ -140,19 +140,6 @@ class Settings(Base):
                 raise type(e)("Settings failed to initialise with: {}".format(e))
 
     @property
-    def library_path(self):
-        """Read-only property to access the parsed JSON data."""
-        return self._library_path
-
-    @library_path.setter
-    def library_path(self, value):
-        if not (isinstance(value, str)):
-            raise ValueError(
-                "Value must be of type str, got {} instead.".format(type(value))
-            )
-        self._library_path = value
-
-    @property
     def rooms_data_file_path(self):
         """Read-only property to access the parsed JSON data."""
         return self._rooms_data_file_path

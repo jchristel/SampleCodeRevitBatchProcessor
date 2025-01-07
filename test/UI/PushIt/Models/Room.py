@@ -23,6 +23,7 @@ from duHast.Utilities.Objects.base import Base
 
 from PushIt.Models.RoomId import RoomID
 from PushIt.Models.RoomProperty import RoomProperty
+from PushIt.Models.RevitFamily import RFamily
 
 import random
 
@@ -141,6 +142,23 @@ class Room(Base):
                     return prop.value
         return None
 
+    def add_placed_family(self, family_instance):
+        """
+        Adds a placed family to the room.
+
+        :param family_instance: The family instance to add.
+        """
+
+        # check type
+        if isinstance(family_instance, RFamily) == False:
+            raise TypeError(
+                "family_instance needs to be of type FamilyInstance, got {} instead".format(
+                    type(family_instance)
+                )
+            )
+
+        self._revit_matches.append(family_instance)
+        
     def get_revit_matches(self):
         """
         Returns the revit matches of the room.
@@ -149,12 +167,12 @@ class Room(Base):
         # for now return a list with a random length of 0 to 3 elements
         
         # Generate a random number between 0 and 3
-        num_elements = random.randint(0, 3)
+        #num_elements = random.randint(0, 3)
         
         # Create a list with that many elements
-        revit_matches = ["Match: {}".format(i) for i in range(num_elements)]
+        #revit_matches = ["Match: {}".format(i) for i in range(num_elements)]
         
-        return revit_matches
+        return self._revit_matches
 
     @property
     def id(self):

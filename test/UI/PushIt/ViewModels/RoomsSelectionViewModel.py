@@ -126,44 +126,51 @@ class RoomsSelectionViewModel(ViewModelBase):
         # list containing the column names for the filter
         self._column_filter_items = []
 
+        # subscribe to the rooms changed event
+        self._revit_model.add_PropertyChanged(self.update_room_data)
+        
         # raise event to populate room data
         self._revit_model_event_handler_manager.setup_data()
+
+        # event handlers
+        self.add_PropertyChanged(self.filter_room_data)
 
 
         # the code below will need to go into an event handler only executed when the data is ready
         # this is just a placeholder for now
         
         # create the data table which is used to store the room data
-        self._data_table = self.create_rooms_data_table()
+        #self._data_table = self.create_rooms_data_table()
 
         # set up a specific data view for the data table
         # this is required to be able to sort, group and filter the collection view without affecting the observable collection
-        self._data_view = DataView(self._data_table)
+        #self._data_view = DataView(self._data_table)
+        self._data_view = None
+        
+        # # create the column filter items (list of column headers to filter by)
+        # self.create_column_filter_items()
 
-        # create the column filter items (list of column headers to filter by)
-        self.create_column_filter_items()
+        # # event handlers
+        # self.add_PropertyChanged(self.filter_room_data)
 
-        # event handlers
-        self.add_PropertyChanged(self.filter_room_data)
+        # # set the default column to filter by
+        # if self._revit_model.settings.last_column_filter in self._column_filter_items:
+        #     self.SelectedColumnFilterItem = (
+        #         self._revit_model.settings.last_column_filter
+        #     )
+        # else:
+        #     self.SelectedColumnFilterItem = self._column_filter_items[0]
 
-        # set the default column to filter by
-        if self._revit_model.settings.last_column_filter in self._column_filter_items:
-            self.SelectedColumnFilterItem = (
-                self._revit_model.settings.last_column_filter
-            )
-        else:
-            self.SelectedColumnFilterItem = self._column_filter_items[0]
-
-        # set the default filter value
-        if (
-            self._revit_model.settings.last_column_filter_value
-            and self._revit_model.settings.last_column_filter_value != ""
-        ):
-            self.SelectedColumnFilterValue = (
-                self._revit_model.settings.last_column_filter_value
-            )
-        else:
-            self.SelectedColumnFilterValue = ""
+        # # set the default filter value
+        # if (
+        #     self._revit_model.settings.last_column_filter_value
+        #     and self._revit_model.settings.last_column_filter_value != ""
+        # ):
+        #     self.SelectedColumnFilterValue = (
+        #         self._revit_model.settings.last_column_filter_value
+        #     )
+        # else:
+        #     self.SelectedColumnFilterValue = ""
 
     @property
     def DataView(self):
@@ -364,6 +371,40 @@ class RoomsSelectionViewModel(ViewModelBase):
         # scaffold the command
         return self._wipe_stale_room_data_command
 
+    def update_room_data(self, sender, property_changed_args):
+        print("Updating room data...")
+        # create the data table which is used to store the room data
+        self._data_table = self.create_rooms_data_table()
+
+        # set up a specific data view for the data table
+        # this is required to be able to sort, group and filter the collection view without affecting the observable collection
+        self._data_view = DataView(self._data_table)
+
+        # create the column filter items (list of column headers to filter by)
+        self.create_column_filter_items()
+
+        # event handlers
+        #self.add_PropertyChanged(self.filter_room_data)
+
+        # set the default column to filter by
+        if self._revit_model.settings.last_column_filter in self._column_filter_items:
+            self.SelectedColumnFilterItem = (
+                self._revit_model.settings.last_column_filter
+            )
+        else:
+            self.SelectedColumnFilterItem = self._column_filter_items[0]
+
+        # set the default filter value
+        if (
+            self._revit_model.settings.last_column_filter_value
+            and self._revit_model.settings.last_column_filter_value != ""
+        ):
+            self.SelectedColumnFilterValue = (
+                self._revit_model.settings.last_column_filter_value
+            )
+        else:
+            self.SelectedColumnFilterValue = ""
+        
     def create_column_filter_items(self):
         """
         Creates the column filter items (list of column headers to filter by).

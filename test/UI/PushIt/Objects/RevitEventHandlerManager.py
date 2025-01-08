@@ -183,4 +183,14 @@ class RevitEventHandlerManager(Base):
         """
 
         print("Setting up data for the event handlers..")
-        pass
+        
+        # current revit document
+        doc=uiapp.ActiveUIDocument.Document
+
+        print("populating room data from file and matching families from the Revit document to rooms..")
+        try:
+            # populate room data from file and match families from the Revit document to rooms
+            self._revit_model.populate_room_data(doc=doc)
+        except Exception as e:
+            print("Error while setting up data for the event handlers: {}".format(e))
+            return

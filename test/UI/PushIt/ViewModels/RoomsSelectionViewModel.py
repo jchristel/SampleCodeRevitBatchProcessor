@@ -64,7 +64,6 @@ class RoomsSelectionViewModel(ViewModelBase):
         self._data_path = self._revit_model.settings.rooms_data_file_path
         
         
-        
         # create the data table which is used to store the room data
         self._data_table = self.create_rooms_data_table()
 
@@ -76,6 +75,12 @@ class RoomsSelectionViewModel(ViewModelBase):
         self._selected_room = None
         # the selected row index
         self._selected_index = -1
+        
+        # set up class properties with default values
+        # these will be changed a little further down in the constructor
+        # but I need to set them up here to avoid errors
+        self._selected_column_to_filter = None
+        self._selected_filter_value = ""
 
         # commands
         # the command used to raise the revit external event which in turn calls a function pushing data into the revit model family instance
@@ -105,14 +110,22 @@ class RoomsSelectionViewModel(ViewModelBase):
         # create the column filter items (list of column headers to filter by)
         self.create_column_filter_items()
 
-        # set the default column to filter by
-        self._selected_column_to_filter = self._column_filter_items[0]
-
-        # set the default filter value
-        self._selected_filter_value = ""
-
         # event handlers
         self.add_PropertyChanged(self.filter_room_data)
+        
+        # set the default column to filter by
+        if self._revit_model.settings.last_column_filter in self._column_filter_items:
+            self.SelectedColumnFilterItem = self._revit_model.settings.last_column_filter
+        else:
+            self.SelectedColumnFilterItem = self._column_filter_items[0]
+
+        # set the default filter value
+        if self._revit_model.settings.last_column_filter_value and self._revit_model.settings.last_column_filter_value != "":
+            self.SelectedColumnFilterValue = self._revit_model.settings.last_column_filter_value
+        else:
+            self.SelectedColumnFilterValue = ""
+
+        
 
     @property
     def DataView(self):
@@ -165,6 +178,8 @@ class RoomsSelectionViewModel(ViewModelBase):
         self._selected_column_to_filter = value
         # raise property change event
         self.RaisePropertyChanged("SelectedColumnFilterItem")
+        # update the settings
+        self._revit_model.settings.last_column_filter = value
 
     @property
     def SelectedColumnFilterValue(self):
@@ -183,6 +198,8 @@ class RoomsSelectionViewModel(ViewModelBase):
         self._selected_filter_value = value
         # raise property change event
         self.RaisePropertyChanged("SelectedColumnFilterValue")
+        # update the settings
+        self._revit_model.settings.last_column_filter_value = value
 
     @property
     def CanPushRoomData(self):

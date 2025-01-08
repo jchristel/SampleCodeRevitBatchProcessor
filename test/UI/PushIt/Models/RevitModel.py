@@ -31,7 +31,7 @@ from PushIt.Utilities.get_families import get_families_in_model
 
 class RevitModel(Base):
 
-    def __init__(self):
+    def __init__(self, settings_file_path=None):
         """
         Constructor for the RevitModel class.
         """
@@ -42,7 +42,8 @@ class RevitModel(Base):
         self._rooms_container = RoomsContainer()
 
         # the app settings object
-        self._settings = Settings()
+        self._settings = Settings(settings_file_path=settings_file_path)
+        self._settings.add_PropertyChanged(self.on_settings_changed)
 
         # the room selected by the user in the UI
         self._room_of_interest = None
@@ -53,10 +54,16 @@ class RevitModel(Base):
 
     @settings.setter
     def settings(self, value):
+        # type checking
         if not (isinstance(value, Settings)):
             raise ValueError(
                 "Value must be of type Setting, got {} instead.".format(type(value))
             )
+            
+        # add the event handler to the settings object
+        value.add_PropertyChanged(self.on_settings_changed)
+        
+        # store settings in class
         self._settings = value
     
     @property
@@ -164,4 +171,17 @@ class RevitModel(Base):
 
         # add the room to the container and check for conflicts
         self._rooms_container.add_room(room_model)
+        
+    def on_settings_changed(self, sender, property_name):
+        """
+        Event handler for settings changed event.
+        Will save the settings to file.
+        
+        :param sender: The object that sent the event.
+        :type sender: object
+        :param property_name: The name of the property that changed.
+        :type property_name: str
+        """
+        
+        sender.save_settings()  
 

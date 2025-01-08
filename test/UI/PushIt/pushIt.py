@@ -63,8 +63,8 @@ XAML_BY_VIEW = {
 # set up a navigation store
 NAVIGATION_STORE = NavigationStore()
 
-# set up the revit model container
-REVIT_MODEL = RevitModel()
+# set up the revit model container with a settings file name
+REVIT_MODEL = RevitModel(settings_file_path = settings.APP_SETTINGS_FILE_NAME)
 
 # set up the revit event handler manager
 REVIT_EVENT_HANDLER_MANAGER = RevitEventHandlerManager(REVIT_MODEL)
@@ -112,12 +112,15 @@ def pushIt_entry(doc, output, forms, rooms=None):
     print_header("Starting UI...")
     
     # get the settings path from file and assign the revit model
-    settings_data = settings.get_settings()
+    #settings_data = settings.get_settings()
     # check if any settings where found otherwise go with default
-    if settings_data:
-        REVIT_MODEL.settings = settings_data
-        print("found settings: {}\n{}".format(settings_data, REVIT_MODEL.settings))
+    #if settings_data:
+    #     REVIT_MODEL.settings = settings_data
+    #    print("found settings: {}\n{}".format(settings_data, REVIT_MODEL.settings))
 
+    # load the settings
+    REVIT_MODEL.settings.load_settings()
+    
     # set up UI
     # set up initial data for the main view model
     REVIT_MODEL.populate_room_data(doc=doc)

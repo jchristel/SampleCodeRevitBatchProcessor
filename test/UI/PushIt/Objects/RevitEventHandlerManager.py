@@ -86,6 +86,14 @@ class RevitEventHandlerManager(Base):
             self.ex_event_handler_wipe_stale_data
         )
 
+        # set up the data for the event handlers
+        self.ex_event_handler_setup_data = ExternalEventHandler(
+            execute_at_event_raised=self.setup_data_action
+        )
+        self.ext_event_setup_data = ExternalEvent.Create(
+            self.ex_event_handler_setup_data
+        )
+
     def push_single_room_data(self, *args, **kwargs):
         """
         Push single room data from the WPF UI to Revit
@@ -155,4 +163,24 @@ class RevitEventHandlerManager(Base):
         """
 
         print("Wiping stale data from the rooms in the revit model..")
+        pass
+
+    def setup_data(self, *args, **kwargs):
+        """
+        Set up the data for ui event handler.
+        """
+
+        print("Raising set up data event...")
+        self.ext_event_setup_data.Raise()
+
+    def setup_data_action(self, uiapp):
+        """
+        Set up the data for ui:
+
+        - read data from file
+        - get families from model
+        - set up rooms with revit matches (make sure the current design set / option are taken into account)
+        """
+
+        print("Setting up data for the event handlers..")
         pass

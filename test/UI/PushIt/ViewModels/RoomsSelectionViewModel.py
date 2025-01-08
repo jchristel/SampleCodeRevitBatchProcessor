@@ -19,6 +19,32 @@
 #
 #
 
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A view model class.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+It displays the rooms data in a data grid view and allows the user to filter the data by column name and value.
+
+Room data will need updating:
+
+1 at start up: where the room data is read from the data file, the revit model is interrogated for already placed room place holders and the result is displayed in the data grid view.
+2 when a single room is pushed to revit: the room data is updated in the revit model and the data grid view.
+3 when all rooms are pushed to revit: the room data is updated in the revit model and the data grid view.
+4 when the room data is refreshed from the revit model: the room data is updated in the data grid view.
+5 when the room data path is changed to a new file: the room data is updated in the data grid view based on the new file and place holders in the revit model.
+
+All of the above cases will need an external event triggered to get access to the current revit model.
+
+
+Room data displayed will not need updating:
+
+1 when the room data is wiped from stale rooms: the room data is updated in the data grid view.
+
+
+"""
+
 import clr
 
 clr.AddReference("PresentationFramework")
@@ -64,13 +90,6 @@ class RoomsSelectionViewModel(ViewModelBase):
         # set the data path
         self._data_path = self._revit_model.settings.rooms_data_file_path
 
-        # create the data table which is used to store the room data
-        self._data_table = self.create_rooms_data_table()
-
-        # set up a specific data view for the data table
-        # this is required to be able to sort, group and filter the collection view without affecting the observable collection
-        self._data_view = DataView(self._data_table)
-
         # the selected room
         self._selected_room = None
         # the selected row index
@@ -106,6 +125,20 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         # list containing the column names for the filter
         self._column_filter_items = []
+
+        # raise event to populate room data
+        self._revit_model_event_handler_manager.setup_data()
+
+
+        # the code below will need to go into an event handler only executed when the data is ready
+        # this is just a placeholder for now
+        
+        # create the data table which is used to store the room data
+        self._data_table = self.create_rooms_data_table()
+
+        # set up a specific data view for the data table
+        # this is required to be able to sort, group and filter the collection view without affecting the observable collection
+        self._data_view = DataView(self._data_table)
 
         # create the column filter items (list of column headers to filter by)
         self.create_column_filter_items()

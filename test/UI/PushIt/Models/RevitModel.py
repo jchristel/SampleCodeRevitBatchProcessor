@@ -51,16 +51,16 @@ class RevitModel(Base):
     def settings(self):
         return self._settings
 
-    @settings.setter
-    def settings(self, value):
-        # type checking
-        if not (isinstance(value, Settings)):
-            raise ValueError(
-                "Value must be of type Setting, got {} instead.".format(type(value))
-            )
+    # @settings.setter
+    # def settings(self, value):
+    #     # type checking
+    #     if not (isinstance(value, Settings)):
+    #         raise ValueError(
+    #             "Value must be of type Setting, got {} instead.".format(type(value))
+    #         )
 
-        # store settings in class
-        self._settings = value
+    #     # store settings in class
+    #     self._settings = value
 
     @property
     def room_of_interest(self):

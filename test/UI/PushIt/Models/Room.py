@@ -25,7 +25,6 @@ from PushIt.Models.RoomId import RoomID
 from PushIt.Models.RoomProperty import RoomProperty
 from PushIt.Models.RevitFamily import RFamily
 
-import random
 
 class Room(Base):
 
@@ -157,21 +156,36 @@ class Room(Base):
                 )
             )
 
+        # make sure the properties in the family match room properties with exception of the area designed
+
+        # check if the room id matches
+        if family_instance.room_id != self.id.id:
+            return
+
+        # check if the area briefed matches
+        if family_instance.area_briefed != self.area_briefed.value:
+            return
+
+        # check if other properties match
+        for prop in self.other_properties:
+            if prop.value != family_instance.properties[prop.name]:
+                return
+
         self._revit_matches.append(family_instance)
-        
+
     def get_revit_matches(self):
         """
         Returns the revit matches of the room.
         """
-        
+
         # for now return a list with a random length of 0 to 3 elements
-        
+
         # Generate a random number between 0 and 3
-        #num_elements = random.randint(0, 3)
-        
+        # num_elements = random.randint(0, 3)
+
         # Create a list with that many elements
-        #revit_matches = ["Match: {}".format(i) for i in range(num_elements)]
-        
+        # revit_matches = ["Match: {}".format(i) for i in range(num_elements)]
+
         return self._revit_matches
 
     @property

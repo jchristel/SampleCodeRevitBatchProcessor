@@ -22,15 +22,16 @@
 from duHast.UI.Objects.WPF.Windows.WPFWindowBase import WPFWindowBase
 from PushIt.Objects.Settings import Settings
 
+
 class PushIt(WPFWindowBase):
 
     def __init__(
-        self, 
-        xaml_path, 
-        main_view_model, 
-        xaml_by_view_model, 
+        self,
+        xaml_path,
+        main_view_model,
+        xaml_by_view_model,
         resources_xaml_path,
-        settings
+        settings,
     ):
         """
         Initializes a new instance of the PushIt Window class.
@@ -43,6 +44,8 @@ class PushIt(WPFWindowBase):
         :type xaml_by_view_model: dict
         :param resources_xaml_path: The path to the resources xaml file.
         :type resources_xaml_path: str
+        :param settings: The settings.
+        :type settings: Settings
         """
 
         super(PushIt, self).__init__(
@@ -54,19 +57,19 @@ class PushIt(WPFWindowBase):
 
         # Additional window setup can go here
         self.Title = "PushIt, Real Good!"
-        
+
         if isinstance(settings, Settings) is False:
             raise ValueError("settings must be of type Settings")
-        
+
         # Set the settings
         self.settings = settings
-    
+
     def action_on_close(self):
         """
         Handles the action on close.
-        
+
         Save settings.
         """
-        
+
         # Handle cleanup here
         self.settings.save_settings()

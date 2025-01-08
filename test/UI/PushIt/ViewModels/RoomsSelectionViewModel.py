@@ -36,13 +36,14 @@ from PushIt.Commands.PushRoomDataCommand import PushRoomDataCommand
 from PushIt.Commands.RaiseRevitEventCommand import RaiseRevitEventCommand
 
 
-
 class RoomsSelectionViewModel(ViewModelBase):
 
     # the name of the count column in the data table
     count_column_name = "Count"
 
-    def __init__(self, revit_model, revit_model_event_handler_manager, navigation_service):
+    def __init__(
+        self, revit_model, revit_model_event_handler_manager, navigation_service
+    ):
         super(RoomsSelectionViewModel, self).__init__()
 
         # properties
@@ -62,8 +63,7 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         # set the data path
         self._data_path = self._revit_model.settings.rooms_data_file_path
-        
-        
+
         # create the data table which is used to store the room data
         self._data_table = self.create_rooms_data_table()
 
@@ -75,7 +75,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         self._selected_room = None
         # the selected row index
         self._selected_index = -1
-        
+
         # set up class properties with default values
         # these will be changed a little further down in the constructor
         # but I need to set them up here to avoid errors
@@ -112,20 +112,25 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         # event handlers
         self.add_PropertyChanged(self.filter_room_data)
-        
+
         # set the default column to filter by
         if self._revit_model.settings.last_column_filter in self._column_filter_items:
-            self.SelectedColumnFilterItem = self._revit_model.settings.last_column_filter
+            self.SelectedColumnFilterItem = (
+                self._revit_model.settings.last_column_filter
+            )
         else:
             self.SelectedColumnFilterItem = self._column_filter_items[0]
 
         # set the default filter value
-        if self._revit_model.settings.last_column_filter_value and self._revit_model.settings.last_column_filter_value != "":
-            self.SelectedColumnFilterValue = self._revit_model.settings.last_column_filter_value
+        if (
+            self._revit_model.settings.last_column_filter_value
+            and self._revit_model.settings.last_column_filter_value != ""
+        ):
+            self.SelectedColumnFilterValue = (
+                self._revit_model.settings.last_column_filter_value
+            )
         else:
             self.SelectedColumnFilterValue = ""
-
-        
 
     @property
     def DataView(self):
@@ -228,14 +233,13 @@ class RoomsSelectionViewModel(ViewModelBase):
     @SelectedIndex.setter
     def SelectedIndex(self, value):
         """
-        Sets the selected row index of the data table view. 
-        
-        This is used to: 
-        
+        Sets the selected row index of the data table view.
+
+        This is used to:
+
         - get the selected room.
         - set the flag as to whether a room can be pushed to the revit model.
 
-        
         :param value: The selected row index.
         :type value: int
         """
@@ -244,7 +248,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         self._selected_index = value
         try:
             # get the row view from the data table view
-            row_view = self._data_table.DefaultView[value]
+            row_view = self._data_view[value]
             # get the original row from the data table
             row = row_view.Row
 
@@ -271,7 +275,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
 
         return self._data_path
-    
+
     @DataPath.setter
     def DataPath(self, value):
         """
@@ -281,11 +285,10 @@ class RoomsSelectionViewModel(ViewModelBase):
         self._data_path = value
         # update the room data file
         self._revit_model.settings.rooms_data_file_path = value
-        
-        
+
         # raise property change event
         self.RaisePropertyChanged("DataPath")
-    
+
     @property
     def PushItCommand(self):
         """
@@ -293,7 +296,7 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         Stores the selected family objects in the revit model object and triggers the close of the window.
         """
-        
+
         return self._push_data_command
 
     @property
@@ -353,7 +356,11 @@ class RoomsSelectionViewModel(ViewModelBase):
         # set up the data table
         data_table = DataTable()
 
-        print("Creating data table...of {} rooms.".format(len(self._revit_model.get_all_rooms())))
+        print(
+            "Creating data table...of {} rooms.".format(
+                len(self._revit_model.get_all_rooms())
+            )
+        )
         # add columns to the data table
         for room_model_instance in self._revit_model.get_all_rooms():
             # add a column per property
@@ -380,6 +387,10 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
         Filters the room data based on the selected filter column and filter value entered.
 
+        :param sender: The sender of the event.
+        :type sender: object
+        :param property_changed_args: The property changed event arguments.
+        :type property_changed_args: PropertyChangedEventArgs
         """
 
         # check if either the selected column filter value or the selected column filter item has changed
@@ -412,11 +423,3 @@ class RoomsSelectionViewModel(ViewModelBase):
                 self.RaisePropertyChanged("DataView")
             except Exception as e:
                 print("Error: ", e)
-
-    def close_window(self, window):
-        """
-        Closes the window that is passed in as an argument.
-        """
-
-        if window:
-            window.Close()

@@ -20,7 +20,6 @@
 #
 
 from duHast.UI.Objects.WPF.Commands.CommandBase import CommandBase
-from PushIt.Models.Room import Room
 
 
 class PushRoomDataCommand(CommandBase):
@@ -72,7 +71,12 @@ class PushRoomDataCommand(CommandBase):
             return False
 
     def Execute(self, parameter):
-        print("In execute push room data command")
+        """
+        This method raises the external event for the push room data command.
+
+        :param parameter: The parameter
+        :type parameter: object
+        """
 
         if self._execute:
             self._execute(parameter)

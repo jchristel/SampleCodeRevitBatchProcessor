@@ -43,7 +43,7 @@ class RevitModel(Base):
 
         # the app settings object
         self._settings = Settings(settings_file_path=settings_file_path)
-        
+
         # the room selected by the user in the UI
         self._room_of_interest = None
 
@@ -58,14 +58,14 @@ class RevitModel(Base):
             raise ValueError(
                 "Value must be of type Setting, got {} instead.".format(type(value))
             )
-            
+
         # store settings in class
         self._settings = value
-    
+
     @property
     def room_of_interest(self):
         return self._room_of_interest
-    
+
     @room_of_interest.setter
     def room_of_interest(self, value):
         if not (isinstance(value, Room)):
@@ -75,9 +75,21 @@ class RevitModel(Base):
         self._room_of_interest = value
 
     def _update_room_data_with_family_data(self, room_data, families):
-        
+        """
+        Assign families to rooms based on their room_id.
+        Only rooms with matching room_id and all other properties matching, with exception of area designed, will be assigned.
+
+        :param room_data: The room data.
+        :type room_data: [Room]
+        :param families: The families.
+        :type families: [RFamily]
+
+        :return: The updated room data.
+        :rtype: [Room]
+        """
+
         # loop over family instances and assign to rooms based on their room_id
-        
+
         # Create a dictionary to keep track of families by their room ID
         family_dict = {}
         for family in families:
@@ -85,26 +97,29 @@ class RevitModel(Base):
             if room_id not in family_dict:
                 family_dict[room_id] = []
             family_dict[room_id].append(family)
-        
+
         # Assign families to rooms
         for room in room_data:
             if room.id.id in family_dict:
                 for family in family_dict[room.id.id]:
+                    # check if family properties match room properties when
+                    # adding a family to a room, except for area designed
+                    # if they do, add the family to the room otherwise skip
                     room.add_family(family)
                 # Remove the matched families from the dictionary to speed up the search
                 del family_dict[room_id]
-        
+
         return room_data
-    
+
     def populate_room_data(self, doc):
         """
-        Populate the room data from file and from the Revit document.
+        Populate the room data from file and matched families from the Revit document to rooms.
 
         :param doc: The Revit document.
         :type doc: Autodesk.Revit.DB.Document
         """
 
-        #debug:
+        # debug:
         self._settings.rooms_data_file_path = r"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\test\UI\PushIt\Samples\Data_Extended.csv"
         # load rooms from file if file path is set
         if self._settings.rooms_data_file_path:
@@ -113,27 +128,31 @@ class RevitModel(Base):
                 raise ValueError(
                     "Failed to load rooms from file: {}".format(rooms_result.message)
                 )
-            
+
             # get elements from the document
             # check if the target categories are set
             if self._settings.push_it_revit_target_categories is None:
                 # set a default value to walls
                 self._settings.push_it_revit_target_categories = ["Walls"]
-            
+
             # get the elements from the document
             families = get_families_in_model(
-                doc, 
+                doc,
                 self._settings.push_it_revit_target_categories,  # the target categories
-                rooms_result.result[0], # a room object to get the properties we are interested in
+                rooms_result.result[
+                    0
+                ],  # a room object to get the properties we are interested in
             )
-        
+
             # update the rooms data with placed family data
-            room_data = self._update_room_data_with_family_data(rooms_result.result, families)
-            
+            room_data = self._update_room_data_with_family_data(
+                rooms_result.result, families
+            )
+
             # add the rooms to the model
             for room in room_data:
                 self.add_room(room)
-                
+
         else:
             print("No room data file path set, skipping room data loading.")
 
@@ -167,5 +186,3 @@ class RevitModel(Base):
 
         # add the room to the container and check for conflicts
         self._rooms_container.add_room(room_model)
-     
-

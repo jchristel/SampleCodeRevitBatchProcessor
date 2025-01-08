@@ -66,6 +66,7 @@ class RoomProperty(Base):
 
         :param other: Another instance of  RoomProperty class
         :type other: :class:`.RoomProperty`
+        
         :return: True if name value of other colour class instance equal the name values of this instance, otherwise False.
         :rtype: Bool
         """

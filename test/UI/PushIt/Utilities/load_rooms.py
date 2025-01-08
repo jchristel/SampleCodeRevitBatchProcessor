@@ -28,7 +28,8 @@ from PushIt.Models.RoomId import RoomID
 from PushIt.Models.RoomProperty import RoomProperty
 from PushIt.Objects.CSVColumnsMapper import CSVColumnMapper
 
-def load_rooms_from_file(file_path, debug=False):
+
+def load_rooms_from_file(file_path):
     """
     Loads rooms data from a file.
 
@@ -52,7 +53,7 @@ def load_rooms_from_file(file_path, debug=False):
     return_value = Result()
 
     try:
-        
+
         return_value.append_message("Loading rooms from file: {}".format(file_path))
 
         # read the file
@@ -89,9 +90,14 @@ def load_rooms_from_file(file_path, debug=False):
 
             # check the length of the row
             if len(row) != row_length_required:
-                return_value.update_sep(False, "Error: Row {} length mismatch. Required: {}, Found: {}".format(row_counter,row_length_required, len(row)))
+                return_value.update_sep(
+                    False,
+                    "Error: Row {} length mismatch. Required: {}, Found: {}".format(
+                        row_counter, row_length_required, len(row)
+                    ),
+                )
                 return return_value
-            
+
             # create a room object
             id_room = RoomID(
                 id=row[CSVColumnMapper.COLUMN_ROOM_ID.value],
@@ -111,7 +117,9 @@ def load_rooms_from_file(file_path, debug=False):
                     CSVColumnMapper.COLUMN_AREA_BRIEFED.value
                 ],
             )
-            return_value.append_message("...Area briefed: {}".format(area_room_briefed.value))
+            return_value.append_message(
+                "...Area briefed: {}".format(area_room_briefed.value)
+            )
             area_room_designed = RoomProperty(
                 name="{}".format(
                     data_rows[CSVColumnMapper.ROW_PROPERTY_DESCRIPTION.value][
@@ -123,10 +131,15 @@ def load_rooms_from_file(file_path, debug=False):
                     CSVColumnMapper.COLUMN_AREA_DESIGNED.value
                 ],
             )
-            return_value.append_message("...Area designed: {}".format(area_room_designed.value))
+            return_value.append_message(
+                "...Area designed: {}".format(area_room_designed.value)
+            )
 
+            # create a room object
             room = Room(
-                id=id_room, area_briefed=area_room_briefed, area_designed=area_room_designed
+                id=id_room,
+                area_briefed=area_room_briefed,
+                area_designed=area_room_designed,
             )
 
             # get additional data from the row
@@ -139,14 +152,14 @@ def load_rooms_from_file(file_path, debug=False):
                             data_rows[CSVColumnMapper.ROW_PROPERTY_DESCRIPTION.value][i]
                         ),
                         value=row[i],
-                        parameter_guid=data_rows[CSVColumnMapper.ROW_PARAMETER_GUID.value][
-                            i
-                        ],
+                        parameter_guid=data_rows[
+                            CSVColumnMapper.ROW_PARAMETER_GUID.value
+                        ][i],
                     )
                     return_value.append_message("...Property: {}".format(prop))
                     # add it to room
                     room.add_property(prop)
-            
+
             # add the room to the list
             rooms_list.append(room)
 
@@ -158,6 +171,5 @@ def load_rooms_from_file(file_path, debug=False):
 
     except Exception as e:
         return_value.update_sep(False, "Error: {}".format(e))
-        
 
     return return_value

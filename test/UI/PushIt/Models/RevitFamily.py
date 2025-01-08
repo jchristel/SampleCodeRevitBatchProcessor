@@ -46,12 +46,25 @@ class RFamily(Base):
 
         super(RFamily, self).__init__()
 
+        # the unique id identifying a room
         self._room_id = room_id
+
+        # the area designed
         self._area_designed = area_designed
+
+        # the area briefed
         self._area_briefed = area_briefed
+
+        # any other properties
         self._properties = properties
+
+        # the design set in Revit the family instance is placed in
         self._design_set = design_set
+
+        # the design option in Revit the family is placed in
         self._design_option = design_option
+
+        # True, design option in Revit is the primary design option for a set
         self._design_option_is_primary = design_option_is_primary
 
     @property

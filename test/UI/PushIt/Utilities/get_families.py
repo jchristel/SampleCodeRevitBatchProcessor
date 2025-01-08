@@ -19,7 +19,7 @@ from duHast.Revit.Family.family_utils import get_family_instances_by_built_in_ca
 from PushIt.Models.RevitFamily import RFamily
 
 
-def get_built_in_categories(doc, category_names):
+def get_built_in_categories(category_names):
     """
     Returns all built in categories in a model
 
@@ -100,6 +100,17 @@ def get_shared_parameter_data(doc, room):
     
 
 def extract_family_data(family_instances, shared_parameter_data):
+    """
+    Extracts family data from family instances
+
+    :param family_instances: List of family instances
+    :type family_instances: [Autodesk.Revit.DB.FamilyInstance]
+    :param shared_parameter_data: Shared parameter data
+    :type shared_parameter_data: [dict]
+
+    :return: List of family instances
+    :rtype: [RFamily]
+    """
     
     family_data=[]
     # loop over family instances and extract properties matching room
@@ -142,7 +153,20 @@ def extract_family_data(family_instances, shared_parameter_data):
 
 
 def get_families_in_model(doc, categories, room):
-    
+    """
+    Returns all families in a model matching the categories provided and have an associated room_id value.
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param categories: List of category names
+    :type categories: [str]
+    :param room: A sample room containing all properties and the shared parameters they are meant to be stored in.
+    :type room: Room
+
+    :return: List of family instances
+    :rtype: [RFamily]
+    """
+
     # list of family instances
     family_data = []
     
@@ -151,7 +175,7 @@ def get_families_in_model(doc, categories, room):
     shared_parameter_data = get_shared_parameter_data(doc, room)
     
     # families in the model of all categories required
-    built_in_categories = get_built_in_categories(doc, categories)
+    built_in_categories = get_built_in_categories(categories)
     
     # get family instances in model
     family_instances = get_family_instances_by_built_in_categories(doc, built_in_categories)

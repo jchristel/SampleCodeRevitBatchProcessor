@@ -32,7 +32,6 @@ For further documentation please refer to the README.rst file in the _docs direc
 import os
 import settings
 
-
 from duHast.Utilities.Objects.result import Result
 from duHast.UI.Objects.WPF.ViewModels.MainViewModel import MainViewModel
 from duHast.UI.Objects.WPF.Stores.NavigationStore import NavigationStore
@@ -50,8 +49,6 @@ from PushIt.Models.RevitModel import RevitModel
 from PushIt.Objects.MainWindow import PushIt
 from PushIt.Utilities.load_rooms import load_rooms_from_file
 from PushIt.Objects.RevitEventHandlerManager import RevitEventHandlerManager
-
-# from Autodesk.Revit.DB import ElementId
 
 # view model types and their XAML file path
 XAML_BY_VIEW = {
@@ -106,18 +103,8 @@ def pushIt_entry(doc, output, forms, rooms=None):
     :rtype: :class:`.Result`
     """
 
-    # set up a status tracker
-    return_value = Result()
-
     print_header("Starting UI...")
     
-    # get the settings path from file and assign the revit model
-    #settings_data = settings.get_settings()
-    # check if any settings where found otherwise go with default
-    #if settings_data:
-    #     REVIT_MODEL.settings = settings_data
-    #    print("found settings: {}\n{}".format(settings_data, REVIT_MODEL.settings))
-
     # load the settings
     REVIT_MODEL.settings.load_settings()
     

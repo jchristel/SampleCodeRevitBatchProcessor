@@ -60,7 +60,12 @@ class RaiseRevitEventCommand(CommandBase):
         return True
 
     def Execute(self, parameter):
-        print("In execute raise event command")
+        """
+        This method raises the Revit event.
+
+        :param parameter: The parameter
+        :type parameter: object
+        """
 
         if self._execute:
             try:

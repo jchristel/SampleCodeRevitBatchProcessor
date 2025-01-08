@@ -25,13 +25,11 @@ from PushIt.Objects.settings_names import SettingsNames
 from PushIt.settings import DU_HAST_SETTINGS_DIRECTORY_NAME
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.Objects.base import Base
-from duHast.Utilities.files_json import (
-    read_json_data_from_file, 
-    write_json_to_file
-)
+from duHast.Utilities.files_json import read_json_data_from_file, write_json_to_file
 from duHast.Utilities.directory_io import create_target_directory, directory_exists
 from duHast.Utilities.files_io import get_directory_path_from_file_path
 from duHast.Utilities.utility import get_local_app_data_path
+
 
 class Settings(Base):
     def __init__(self, j=None, settings_file_path=None):
@@ -42,13 +40,13 @@ class Settings(Base):
         :type j: str, dict, optional
         :raises TypeError: "Input must be a JSON string or a dictionary."
         """
-        
+
         # ini super class to allow multi inheritance in children!
         super(Settings, self).__init__()
-        
+
         # Set the settings file path
         self._settings_file_path = settings_file_path
-        
+
         # Set default values
         self._rooms_data_file_path = None
 
@@ -71,12 +69,11 @@ class Settings(Base):
                 self._ini_from_file_data(j)
             elif not isinstance(j, dict):
                 raise TypeError("Input must be a JSON string or a dictionary.")
-        
+
         # check if settings file path is provided
         if self._settings_file_path is None:
             raise ValueError("Settings file path must be provided.")
-        
-        
+
     @property
     def rooms_data_file_path(self):
         """Read-only property to access the parsed JSON data."""
@@ -88,7 +85,7 @@ class Settings(Base):
             raise ValueError(
                 "Value must be of type str, got {} instead.".format(type(value))
             )
-        
+
         # only update if value has changed
         if value != self._rooms_data_file_path:
             self._rooms_data_file_path = value
@@ -104,9 +101,9 @@ class Settings(Base):
             raise ValueError(
                 "Value must be of type list, got {} instead.".format(type(value))
             )
-        
+
         # only update if value has changed
-        if sorted(value)!= sorted(self._push_it_revit_target_categories):
+        if sorted(value) != sorted(self._push_it_revit_target_categories):
             self._push_it_revit_target_categories = value
 
     @property
@@ -120,7 +117,7 @@ class Settings(Base):
             raise ValueError(
                 "Value must be of type str, got {} instead.".format(type(value))
             )
-        
+
         # only update if value has changed
         if value != self._last_column_filter:
             self._last_column_filter = value
@@ -136,31 +133,31 @@ class Settings(Base):
             raise ValueError(
                 "Value must be of type str, got {} instead.".format(type(value))
             )
-        
+
         # only update if value has changed
         if value != self._last_column_filter_value:
             self._last_column_filter_value = value
-    
+
     @property
     def custom_room_shapes_directory(self):
         """Read-only property to access the parsed JSON data."""
         return self._custom_room_shapes_directory
-    
+
     @custom_room_shapes_directory.setter
     def custom_room_shapes_directory(self, value):
         if not (isinstance(value, str)):
             raise ValueError(
                 "Value must be of type str, got {} instead.".format(type(value))
             )
-        
+
         # only update if value has changed
         if value != self._custom_room_shapes_directory:
             self._custom_room_shapes_directory = value
-    
+
     def _ini_from_file_data(self, data):
         """
         Initialise the settings from a dictionary.
-        
+
         :param data: The dictionary to initialise the settings from.
         :type data: dict
         :raises ValueError: "JSON must contain 'rooms_data_file_path' key(s)."
@@ -175,16 +172,16 @@ class Settings(Base):
         :raises ValueError: "Expected last_column_filter_value as str, got {} instead".
         :raises Exception: "Settings failed to initialise with: {}".
         """
-        
+
         try:
             if isinstance(data, str):
-                    # Parse the JSON string
-                    data_json = json.loads(data)
+                # Parse the JSON string
+                data_json = json.loads(data)
             elif not isinstance(data, dict):
                 raise TypeError("Input must be a JSON string or a dictionary.")
             else:
                 data_json = data
-                
+
             # Validate presence of required keys
             if SettingsNames.ROOMS_DATA_FILE_PATH.value not in data_json:
                 raise ValueError("JSON must contain 'rooms_data_file_path' key(s).")
@@ -210,7 +207,10 @@ class Settings(Base):
                 self._rooms_data_file_path = data_json.get(
                     SettingsNames.ROOMS_DATA_FILE_PATH.value, self._rooms_data_file_path
                 )
-                if not (isinstance(self._rooms_data_file_path, str) or self._rooms_data_file_path is None):
+                if not (
+                    isinstance(self._rooms_data_file_path, str)
+                    or self._rooms_data_file_path is None
+                ):
                     raise ValueError(
                         "Expected rooms_data_file_path as str, got {} instead".format(
                             type(self._rooms_data_file_path)
@@ -221,7 +221,10 @@ class Settings(Base):
                     SettingsNames.CUSTOM_ROOM_SHAPES_DIRECTORY.value,
                     self._custom_room_shapes_directory,
                 )
-                if not (isinstance(self._custom_room_shapes_directory, str) or self._custom_room_shapes_directory is None):
+                if not (
+                    isinstance(self._custom_room_shapes_directory, str)
+                    or self._custom_room_shapes_directory is None
+                ):
                     raise ValueError(
                         "Expected custom_room_shapes_directory as str, got {} instead".format(
                             type(self._custom_room_shapes_directory)
@@ -242,7 +245,10 @@ class Settings(Base):
                 self._last_column_filter = data_json.get(
                     SettingsNames.LAST_COLUMN_FILTER.value, self._last_column_filter
                 )
-                if not (isinstance(self._last_column_filter, str) or self._last_column_filter is None):
+                if not (
+                    isinstance(self._last_column_filter, str)
+                    or self._last_column_filter is None
+                ):
                     raise ValueError(
                         "Expected last_column_filter as str, got {} instead".format(
                             type(self._last_column_filter)
@@ -253,7 +259,10 @@ class Settings(Base):
                     SettingsNames.LAST_COLUMN_FILTER_VALUE.value,
                     self._last_column_filter_value,
                 )
-                if not (isinstance(self._last_column_filter_value, str) or self._last_column_filter_value is None):
+                if not (
+                    isinstance(self._last_column_filter_value, str)
+                    or self._last_column_filter_value is None
+                ):
                     raise ValueError(
                         "Expected last_column_filter_value as str, got {} instead".format(
                             type(self._last_column_filter_value)
@@ -263,51 +272,56 @@ class Settings(Base):
                 raise type(e)("Settings failed to initialise with: {}".format(e))
         except Exception as e:
             raise type(e)("{}".format(e))
-    
+
     def load_settings(self):
         """
         Load the settings from the settings file.
         """
-        
+
         read_result = read_json_data_from_file(self._settings_file_path)
         # can fail if first time running the app
         if read_result.status is False:
             # use default settings
             return None
-        
+
         data = read_result.result[0]
         # initialise the settings
         self._ini_from_file_data(data)
-           
+
     def save_settings(self):
         """
         Save the settings to the settings file.
         """
-        
+
         return_value = Result()
         # check if the settings directory exists
-        if not directory_exists(get_directory_path_from_file_path(self._settings_file_path)):
-            
+        if not directory_exists(
+            get_directory_path_from_file_path(self._settings_file_path)
+        ):
+
             # create the settings directory
-            if (create_target_directory(get_local_app_data_path(), DU_HAST_SETTINGS_DIRECTORY_NAME) is False):
+            if (
+                create_target_directory(
+                    get_local_app_data_path(), DU_HAST_SETTINGS_DIRECTORY_NAME
+                )
+                is False
+            ):
                 return_value.update_sep(False, "Failed to create settings directory.")
                 return return_value
-        
+
         # create a dictionary with the settings data
         # rather then using the class since it has properties I don't want to save
         settings_data = {
-            SettingsNames.ROOMS_DATA_FILE_PATH.value : self._rooms_data_file_path,
-            SettingsNames.CUSTOM_ROOM_SHAPES_DIRECTORY.value : self._custom_room_shapes_directory,
-            SettingsNames.PUSH_IT_REVIT_TARGET_CATEGORIES.value : self._push_it_revit_target_categories,
-            SettingsNames.LAST_COLUMN_FILTER.value : self._last_column_filter,
-            SettingsNames.LAST_COLUMN_FILTER_VALUE.value : self._last_column_filter_value,
+            SettingsNames.ROOMS_DATA_FILE_PATH.value: self._rooms_data_file_path,
+            SettingsNames.CUSTOM_ROOM_SHAPES_DIRECTORY.value: self._custom_room_shapes_directory,
+            SettingsNames.PUSH_IT_REVIT_TARGET_CATEGORIES.value: self._push_it_revit_target_categories,
+            SettingsNames.LAST_COLUMN_FILTER.value: self._last_column_filter,
+            SettingsNames.LAST_COLUMN_FILTER_VALUE.value: self._last_column_filter_value,
             # Add other settings here
         }
-        
+
         # save json settings to file
         write_result = write_json_to_file(settings_data, self._settings_file_path)
-        
+
         # return the outcome of the operation
         return write_result
-    
-    

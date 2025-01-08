@@ -121,5 +121,22 @@ class WPFWindowBase(Window):
             
         
     def on_closed(self, sender, event):
+        """
+        Handles the Closed event.
+        
+        :param sender: The sender.
+        :type sender: object
+        :param event: The event.
+        :type event: object
+        """
+        # Call the action on close method
+        self.action_on_close()
+    
+    def action_on_close(self):
+        """
+        Handles the action on close.
+        
+        Can be overwritten by derived classes to handle cleanup tasks.
+        """
         # Handle cleanup here
         pass

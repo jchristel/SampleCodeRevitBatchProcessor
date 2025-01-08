@@ -134,7 +134,7 @@ def pushIt_entry(doc, output, forms, rooms=None):
     # set up a window instance
     my_window = PushIt(
         xaml_path=os.path.join(
-            settings.DUH_AST_DIRECTORY, r"UI\Objects\WPF\Views\MainWindow_py.xaml"
+            settings.DU_HAST_DIRECTORY, r"UI\Objects\WPF\Views\MainWindow_py.xaml"
         ),
         main_view_model=main_view_model,
         xaml_by_view_model=XAML_BY_VIEW,

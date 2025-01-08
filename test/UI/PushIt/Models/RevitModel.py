@@ -167,17 +167,5 @@ class RevitModel(Base):
 
         # add the room to the container and check for conflicts
         self._rooms_container.add_room(room_model)
-        
-    def on_settings_changed(self, sender, property_name):
-        """
-        Event handler for settings changed event.
-        Will save the settings to file.
-        
-        :param sender: The object that sent the event.
-        :type sender: object
-        :param property_name: The name of the property that changed.
-        :type property_name: str
-        """
-        
-        sender.save_settings()  
+     
 

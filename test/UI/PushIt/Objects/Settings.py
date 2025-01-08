@@ -20,14 +20,18 @@
 #
 
 import json
-#import asyncio
 
-from duHast.Utilities.Objects.base import Base
 from PushIt.Objects.settings_names import SettingsNames
+from PushIt.settings import DU_HAST_SETTINGS_DIRECTORY_NAME
+from duHast.Utilities.Objects.result import Result
+from duHast.Utilities.Objects.base import Base
 from duHast.Utilities.files_json import (
     read_json_data_from_file, 
     write_json_to_file
 )
+from duHast.Utilities.directory_io import create_target_directory, directory_exists
+from duHast.Utilities.files_io import get_directory_path_from_file_path
+from duHast.Utilities.utility import get_local_app_data_path
 
 class Settings(Base):
     def __init__(self, j=None, settings_file_path=None):
@@ -105,7 +109,6 @@ class Settings(Base):
         if sorted(value)!= sorted(self._push_it_revit_target_categories):
             self._push_it_revit_target_categories = value
 
-
     @property
     def last_column_filter(self):
         """Read-only property to access the parsed JSON data."""
@@ -153,7 +156,6 @@ class Settings(Base):
         # only update if value has changed
         if value != self._custom_room_shapes_directory:
             self._custom_room_shapes_directory = value
-
     
     def _ini_from_file_data(self, data):
         """
@@ -276,12 +278,20 @@ class Settings(Base):
         data = read_result.result[0]
         # initialise the settings
         self._ini_from_file_data(data)
-        
-    
+           
     def save_settings(self):
         """
         Save the settings to the settings file.
         """
+        
+        return_value = Result()
+        # check if the settings directory exists
+        if not directory_exists(get_directory_path_from_file_path(self._settings_file_path)):
+            
+            # create the settings directory
+            if (create_target_directory(get_local_app_data_path(), DU_HAST_SETTINGS_DIRECTORY_NAME) is False):
+                return_value.update_sep(False, "Failed to create settings directory.")
+                return return_value
         
         # create a dictionary with the settings data
         # rather then using the class since it has properties I don't want to save
@@ -297,7 +307,6 @@ class Settings(Base):
         # save json settings to file
         write_result = write_json_to_file(settings_data, self._settings_file_path)
         
-        print ("Settings saved: {}".format(write_result.message))
         # return the outcome of the operation
         return write_result
     

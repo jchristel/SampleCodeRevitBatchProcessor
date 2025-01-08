@@ -43,8 +43,7 @@ class RevitModel(Base):
 
         # the app settings object
         self._settings = Settings(settings_file_path=settings_file_path)
-        self._settings.add_PropertyChanged(self.on_settings_changed)
-
+        
         # the room selected by the user in the UI
         self._room_of_interest = None
 
@@ -60,9 +59,6 @@ class RevitModel(Base):
                 "Value must be of type Setting, got {} instead.".format(type(value))
             )
             
-        # add the event handler to the settings object
-        value.add_PropertyChanged(self.on_settings_changed)
-        
         # store settings in class
         self._settings = value
     

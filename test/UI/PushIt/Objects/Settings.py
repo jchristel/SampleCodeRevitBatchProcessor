@@ -24,11 +24,12 @@ import json
 
 from duHast.Utilities.Objects.base import Base
 from PushIt.Objects.settings_names import SettingsNames
-from duHast.Utilities.files_json import read_json_data_from_file, write_json_to_file
+from duHast.Utilities.files_json import (
+    read_json_data_from_file, 
+    write_json_to_file
+)
 
-from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
-
-class Settings(ViewModelBase,Base):
+class Settings(Base):
     def __init__(self, j=None, settings_file_path=None):
         """
         Implementation of a settings class.
@@ -87,7 +88,6 @@ class Settings(ViewModelBase,Base):
         # only update if value has changed
         if value != self._rooms_data_file_path:
             self._rooms_data_file_path = value
-            self.RaisePropertyChanged("rooms_data_file_path")
 
     @property
     def push_it_revit_target_categories(self):
@@ -104,7 +104,7 @@ class Settings(ViewModelBase,Base):
         # only update if value has changed
         if sorted(value)!= sorted(self._push_it_revit_target_categories):
             self._push_it_revit_target_categories = value
-            self.RaisePropertyChanged("push_it_revit_target_categories")
+
 
     @property
     def last_column_filter(self):
@@ -121,7 +121,6 @@ class Settings(ViewModelBase,Base):
         # only update if value has changed
         if value != self._last_column_filter:
             self._last_column_filter = value
-            self.RaisePropertyChanged("last_column_filter")
 
     @property
     def last_column_filter_value(self):
@@ -138,7 +137,6 @@ class Settings(ViewModelBase,Base):
         # only update if value has changed
         if value != self._last_column_filter_value:
             self._last_column_filter_value = value
-            self.RaisePropertyChanged("last_column_filter_value")
     
     @property
     def custom_room_shapes_directory(self):
@@ -155,7 +153,7 @@ class Settings(ViewModelBase,Base):
         # only update if value has changed
         if value != self._custom_room_shapes_directory:
             self._custom_room_shapes_directory = value
-            self.RaisePropertyChanged("custom_room_shapes_directory")
+
     
     def _ini_from_file_data(self, data):
         """

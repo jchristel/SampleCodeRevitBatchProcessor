@@ -139,6 +139,7 @@ def pushIt_entry(doc, output, forms, rooms=None):
         main_view_model=main_view_model,
         xaml_by_view_model=XAML_BY_VIEW,
         resources_xaml_path=None,
+        settings=REVIT_MODEL.settings,
     )
 
     # show the window to the user

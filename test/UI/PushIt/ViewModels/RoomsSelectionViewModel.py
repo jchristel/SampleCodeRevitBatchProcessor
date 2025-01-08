@@ -405,6 +405,9 @@ class RoomsSelectionViewModel(ViewModelBase):
         else:
             self.SelectedColumnFilterValue = ""
         
+        # let the ui know that the data view has changed
+        self.RaisePropertyChanged("DataView")
+        
     def create_column_filter_items(self):
         """
         Creates the column filter items (list of column headers to filter by).

@@ -75,6 +75,6 @@ As an absolute minimum, the csv file should contain columns 1, 2 and 3. The csv 
 When the csv file is loaded into the add-in, the add-in will check if:
 
 - The values in the first column are indeed unique.
-- The shared parameters exist in the Revit model.
+- The shared parameters exist in the Revit model and are bound to the correct categories.
 
 If either of these checks fail, the add-in will display a warning message with details about the issue and will not load the data.

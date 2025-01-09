@@ -30,7 +30,13 @@ User interface
 
 The add-in provides a simple user interface to push data into Revit. The user interface consists of the following components:
 
-1. A list of rooms
+1. A filter section
+2. A list of rooms
+3. A section showing the current design option and design set
+4. A section allowing some data management
+5. PushIt button
+
+
 
 ----------------------
 Room duplications

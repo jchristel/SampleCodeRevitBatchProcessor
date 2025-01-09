@@ -221,12 +221,18 @@ class RevitModel(ViewModelBase, Base):
         # check if the shared parameters exist in the document and are bound to the correct categories
         # if not, return False
 
-        return check_shared_parameters_are_in_document(
+        check_shared_parameters_result = check_shared_parameters_are_in_document(
             doc,
             room,
             self._settings.push_it_revit_target_categories,
         )
-
+        
+        if check_shared_parameters_result.status is False:
+            #TODO: pop up a message box to inform the user
+            return False
+        
+        return True
+    
     def push_single_room_data_to_revit(self, doc, selected_element_id):
         """
         Pushes single room data into selected element in Revit only.

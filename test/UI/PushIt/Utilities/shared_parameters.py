@@ -119,14 +119,23 @@ def check_shared_parameters_are_in_document(doc, room, category_names):
         for shared_parameter in shared_parameters:
             if shared_parameter_guid == shared_parameter.GuidValue.ToString():
                 shared_parameter_found = True
+
                 # check if shared parameter is bound to the correct categories
                 category_binding_names = param_binding_exists_2023(
                     doc,
                     Element.Name.GetValue(shared_parameter),
                     shared_parameter.GetDefinition().GetDataType() # forge type id
                 )
+
+                parameters_are_all_bound = True
+                for category_name in category_names:
+                    if category_name not in category_binding_names:
+                        return_value.update_sep(False, "Shared parameter with guid: {} is not bound to category: {}.".format(shared_parameter_guid, category_name))
+                        parameters_are_all_bound = False
+
                 break
         
         if not shared_parameter_found:
             return_value.update_sep(False, "Shared parameter with guid: {} not found in document.".format(shared_parameter_guid))
-    return True
+    
+    return return_value

@@ -80,6 +80,14 @@ class RevitModel(ViewModelBase, Base):
         return self._settings
 
     @property
+    def active_design_option_name(self):
+        return self._active_design_option_name
+    
+    @property
+    def active_design_set_name(self):
+        return self._active_design_set_name
+
+    @property
     def room_of_interest(self):
         return self._room_of_interest
 
@@ -194,12 +202,12 @@ class RevitModel(ViewModelBase, Base):
             active_design_set = get_design_set_of_active_design_option(doc)
             
             # set class properties
-            self._active_design_option_name = active_design_option.Name
-            self._active_design_set_name = Element.Name.GetValue(active_design_set)
+            self._active_design_option_name = "" if active_design_option is None else active_design_option.Name
+            self._active_design_set_name = "Main Model" if active_design_set is None else Element.Name.GetValue(active_design_set)
 
             # update the rooms data with placed family data
             room_data = self._update_room_data_with_family_data(
-                rooms_result.result, families, active_design_option, active_design_set
+                rooms_result.result, families
             )
 
             # add the rooms to the model

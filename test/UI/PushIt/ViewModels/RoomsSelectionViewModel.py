@@ -105,8 +105,8 @@ class RoomsSelectionViewModel(ViewModelBase):
         self._data_view = None
 
         # get the active design option and design set names
-        self._active_design_option_name = self._revit_model.settings.active_design_option_name
-        self._active_design_set_name = self._revit_model.settings.active_design_set_name
+        self._active_design_option_name = self._revit_model.active_design_option_name
+        self._active_design_set_name = self._revit_model.active_design_set_name
         
         # commands
         # the command used to raise the revit external event which in turn calls a function pushing data into the revit model family instance
@@ -421,6 +421,13 @@ class RoomsSelectionViewModel(ViewModelBase):
             self.SelectedColumnFilterValue = ""
 
         # check design set and option too
+        if self._active_design_option_name != self._revit_model.active_design_option_name:
+            self._active_design_option_name = self._revit_model.active_design_option_name
+            self.RaisePropertyChanged(event_names.VIEW_MODEL_ACTIVE_DESIGN_SET_AND_OPTION)
+        
+        if self._active_design_set_name != self._revit_model.active_design_set_name:
+            self._active_design_set_name = self._revit_model.active_design_set_name
+            self.RaisePropertyChanged(event_names.VIEW_MODEL_ACTIVE_DESIGN_SET_AND_OPTION)
         
         # let the ui know that the data view has changed
         self.RaisePropertyChanged(event_names.VIEW_MODEL_DATA_VIEW_UPDATED)

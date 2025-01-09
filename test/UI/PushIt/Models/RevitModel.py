@@ -28,7 +28,7 @@ from PushIt.Models.RoomsContainer import RoomsContainer
 from PushIt.Objects.Settings import Settings
 from PushIt.Utilities.load_rooms import load_rooms_from_file
 from PushIt.Utilities.get_families import get_families_in_model
-from PushIt.Utilities.event_names import REVIT_MODEL_ROOMS_UPDATED
+from PushIt.Utilities import event_names
 
 from Autodesk.Revit.DB import Element
 
@@ -45,6 +45,7 @@ class RevitModel(ViewModelBase, Base):
 
         super(RevitModel, self).__init__()
 
+        # properties
         # the container for all rooms read from data file
         self._rooms_container = RoomsContainer()
 
@@ -53,6 +54,10 @@ class RevitModel(ViewModelBase, Base):
 
         # the room selected by the user in the UI
         self._room_of_interest = None
+
+        # event handlers
+        # event handler to check if the room data file path has changed
+        self.add_PropertyChanged(self.check_data_path_updates)
 
     @property
     def settings(self):
@@ -197,10 +202,27 @@ class RevitModel(ViewModelBase, Base):
             
             #print("raising property changed event to update the UI..")
             # raise property changed event to update the UI
-            self.RaisePropertyChanged(REVIT_MODEL_ROOMS_UPDATED)
+            self.RaisePropertyChanged(event_names.REVIT_MODEL_ROOMS_UPDATED)
             
         else:
             print("No room data file path set, skipping room data loading.")
+
+        def check_data_path_updates(self, sender, property_changed_args):
+            """
+            Checks if the data file path has changed and updates the room data accordingly.
+
+            :param sender: The sender of the event.
+            :type sender: object
+            :param property_changed_args: The property changed event arguments.
+            :type property_changed_args: PropertyChangedEventArgs
+            """
+
+            # check if data path has changed
+            if (property_changed_args.PropertyName != event_names.VIEW_MODEL_DATA_FILE_PATH):
+                return
+            
+            print("Data file path has changed, updating room data..{}".format(sender.DataPath))
+
 
     def get_all_rooms(self):
         """

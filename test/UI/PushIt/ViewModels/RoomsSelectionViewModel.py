@@ -510,8 +510,8 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         # check if either the selected column filter value or the selected column filter item has changed
         if (
-            property_changed_args.PropertyName == "SelectedColumnFilterValue"
-            or property_changed_args.PropertyName == "SelectedColumnFilterItem"
+            property_changed_args.PropertyName == event_names.VIEW_MODEL_SELECTED_FILTER_BY_COLUMN
+            or property_changed_args.PropertyName == event_names.VIEW_MODEL_SELECTED_FILTER_BY_VALUE
         ):
 
             # check if the filter value is empty

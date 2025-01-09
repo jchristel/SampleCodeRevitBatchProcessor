@@ -58,6 +58,7 @@ from PushIt.Commands.PushRoomDataCommand import PushRoomDataCommand
 from PushIt.Commands.RaiseRevitEventCommand import RaiseRevitEventCommand
 from PushIt.Utilities import event_names
 
+
 class RoomsSelectionViewModel(ViewModelBase):
 
     # the name of the count column in the data table
@@ -107,7 +108,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         # get the active design option and design set names
         self._active_design_option_name = self._revit_model.active_design_option_name
         self._active_design_set_name = self._revit_model.active_design_set_name
-        
+
         # commands
         # the command used to raise the revit external event which in turn calls a function pushing data into the revit model family instance
         self._push_data_command = PushRoomDataCommand(
@@ -143,7 +144,7 @@ class RoomsSelectionViewModel(ViewModelBase):
     @property
     def DataView(self):
         """
-        The collection view of the data collection. to which the xaml view is bound to.
+        The collection view of the data table collection to which the xaml view is bound to.
         """
 
         return self._data_view
@@ -152,6 +153,8 @@ class RoomsSelectionViewModel(ViewModelBase):
     def SafetyOffMode(self):
         """
         A boolean value indicating if the safety off mode is enabled.
+
+        Currently not used.
         """
 
         return self._safety_off_mode
@@ -193,7 +196,7 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         # raise property change event to update the data table filters
         self.RaisePropertyChanged(event_names.VIEW_MODEL_SELECTED_FILTER_BY_COLUMN)
-        
+
         # update the settings
         self._revit_model.settings.last_column_filter = value
 
@@ -297,16 +300,16 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         # set the data path value
         self._data_path = value
-        
+
         # update the room data file in the revit model
         # so it can be checked against the current path
         # and if it is valid
         self._revit_model._data_file_path_intermittent = value
 
-        # raise property change event in the revit model to 
+        # raise property change event in the revit model to
         # check the new file path
         self._revit_model.RaisePropertyChanged(event_names.VIEW_MODEL_DATA_FILE_PATH)
-        
+
         # raise property change event for the data path to populate the data grid view
         # with the new data from the new file and the revit model
         self._revit_model_event_handler_manager.setup_data()
@@ -317,8 +320,10 @@ class RoomsSelectionViewModel(ViewModelBase):
         The active design option name.
         """
 
-        return "Active design set: {} and option: {} ".format(self._active_design_set_name, self._active_design_option_name)
-    
+        return "Active design set: {} and option: {} ".format(
+            self._active_design_set_name, self._active_design_option_name
+        )
+
     @property
     def PushItCommand(self):
         """
@@ -381,7 +386,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         # check if the rooms in the model have been updated and therefore the UI needs to be updated
         if property_changed_args.PropertyName != event_names.REVIT_MODEL_ROOMS_UPDATED:
             return
-        
+
         print("Updating room data...")
 
         # create the data table which is used to store the room data
@@ -421,14 +426,23 @@ class RoomsSelectionViewModel(ViewModelBase):
             self.SelectedColumnFilterValue = ""
 
         # check design set and option too
-        if self._active_design_option_name != self._revit_model.active_design_option_name:
-            self._active_design_option_name = self._revit_model.active_design_option_name
-            self.RaisePropertyChanged(event_names.VIEW_MODEL_ACTIVE_DESIGN_SET_AND_OPTION)
-        
+        if (
+            self._active_design_option_name
+            != self._revit_model.active_design_option_name
+        ):
+            self._active_design_option_name = (
+                self._revit_model.active_design_option_name
+            )
+            self.RaisePropertyChanged(
+                event_names.VIEW_MODEL_ACTIVE_DESIGN_SET_AND_OPTION
+            )
+
         if self._active_design_set_name != self._revit_model.active_design_set_name:
             self._active_design_set_name = self._revit_model.active_design_set_name
-            self.RaisePropertyChanged(event_names.VIEW_MODEL_ACTIVE_DESIGN_SET_AND_OPTION)
-        
+            self.RaisePropertyChanged(
+                event_names.VIEW_MODEL_ACTIVE_DESIGN_SET_AND_OPTION
+            )
+
         # let the ui know that the data view has changed
         self.RaisePropertyChanged(event_names.VIEW_MODEL_DATA_VIEW_UPDATED)
 
@@ -503,8 +517,10 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         # check if either the selected column filter value or the selected column filter item has changed
         if (
-            property_changed_args.PropertyName == event_names.VIEW_MODEL_SELECTED_FILTER_BY_COLUMN
-            or property_changed_args.PropertyName == event_names.VIEW_MODEL_SELECTED_FILTER_BY_VALUE
+            property_changed_args.PropertyName
+            == event_names.VIEW_MODEL_SELECTED_FILTER_BY_COLUMN
+            or property_changed_args.PropertyName
+            == event_names.VIEW_MODEL_SELECTED_FILTER_BY_VALUE
         ):
 
             # check if the filter value is empty

@@ -20,7 +20,10 @@
 #
 
 from duHast.Utilities.Objects.base import Base
-from duHast.Revit.Common.design_set_options import get_active_design_option, get_design_set_of_active_design_option
+from duHast.Revit.Common.design_set_options import (
+    get_active_design_option,
+    get_design_set_of_active_design_option,
+)
 from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
 from duHast.Utilities.files_io import file_exist
 
@@ -34,8 +37,23 @@ from PushIt.Utilities import event_names
 from Autodesk.Revit.DB import Element
 
 
-# inherits from ViewModelBase in order to be able to use event handlers when the
-# rooms have changed
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A class representing the revit model.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It contains 
+
+- the rooms container, 
+- the settings object, 
+- the room of interest, 
+- the data file path intermittent storage,
+- the current design option and design set names,
+
+It inherits from ViewModelBase in order to be able to use event handlers when the rooms have changed.
+
+"""
+
 
 class RevitModel(ViewModelBase, Base):
 
@@ -58,7 +76,7 @@ class RevitModel(ViewModelBase, Base):
 
         # data file path intermittent storage
         self._data_file_path_intermittent = None
-        
+
         # flag to check if the data path requires an update of the rooms
         # is set to false when the intermittent data path is:
         # - the same as the current data path
@@ -66,11 +84,11 @@ class RevitModel(ViewModelBase, Base):
         # is set to true when the data path is changed and the file exists
         # and at start up
         self._data_path_requires_update_of_rooms = True
-        
+
         # active design option and design set names
-        self._active_design_option_name = ""
+        self._active_design_option_name = "-"
         self._active_design_set_name = "Main Model"
-        
+
         # event handlers
         # event handler to check if the room data file path has changed
         self.add_PropertyChanged(self.check_data_path_updates)
@@ -82,7 +100,7 @@ class RevitModel(ViewModelBase, Base):
     @property
     def active_design_option_name(self):
         return self._active_design_option_name
-    
+
     @property
     def active_design_set_name(self):
         return self._active_design_set_name
@@ -99,9 +117,7 @@ class RevitModel(ViewModelBase, Base):
             )
         self._room_of_interest = value
 
-    def _update_room_data_with_family_data(self,
-                                           room_data, 
-                                           families):
+    def _update_room_data_with_family_data(self, room_data, families):
         """
         Assign families to rooms based on their room_id.
         Only rooms with matching room_id and all other properties matching, with exception of area designed, will be assigned.
@@ -110,12 +126,13 @@ class RevitModel(ViewModelBase, Base):
         :type room_data: [Room]
         :param families: The families.
         :type families: [RFamily]
-        
+
         :return: The updated room data.
         :rtype: [Room]
         """
 
-        # loop over family instances and assign to rooms based on their room_id
+        # loop over family instances and assign to rooms based on their room_id,
+        # all other matching properties, design option and design set
 
         # Create a dictionary to keep track of families by their room ID
         family_dict = {}
@@ -129,28 +146,37 @@ class RevitModel(ViewModelBase, Base):
         for room in room_data:
             if room.id.id in family_dict:
                 for family in family_dict[room.id.id]:
-                    
+
                     # check if the family should be added to the room
                     add_family = False
                     # check if the family is placed in the active design option / set
-                    if family.design_option_name == self._active_design_option_name and family.design_set_name == self._active_design_set_name:
+                    if (
+                        family.design_option_name == self._active_design_option_name
+                        and family.design_set_name == self._active_design_set_name
+                    ):
                         add_family = True
-                        
+
                     # check if the family is placed in the main model
-                    elif family.design_set_name == "Main Model" and family.design_option_name == "":
+                    elif (
+                        family.design_set_name == "Main Model"
+                        and family.design_option_name == ""
+                    ):
                         add_family = True
-                    
+
                     # check if the family is placed in another design sets primary design option
-                    elif family.design_set_name == self._active_design_option_name and family.design_option_is_primary is True:
+                    elif (
+                        family.design_set_name == self._active_design_option_name
+                        and family.design_option_is_primary is True
+                    ):
                         add_family = True
-                    
+
                     # only add the family to the room if any of the above conditions are met
                     if add_family:
                         # check if family properties match room properties when
                         # adding a family to a room, except for area designed
                         # if they do, add the family to the room otherwise skip
                         room.add_family(family)
-                        
+
                 # Remove the matched families from the dictionary to speed up the search
                 del family_dict[room_id]
 
@@ -164,17 +190,18 @@ class RevitModel(ViewModelBase, Base):
         :type doc: Autodesk.Revit.DB.Document
         """
 
-        # debug:
-        # self._settings.rooms_data_file_path = r"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\test\UI\PushIt\Samples\Data_Extended.csv"
         # load rooms from file if file path is set and an update is required
-        if self._settings.rooms_data_file_path and self._data_path_requires_update_of_rooms:
+        if (
+            self._settings.rooms_data_file_path
+            and self._data_path_requires_update_of_rooms
+        ):
             # check if the file exists
             if file_exist(self._settings.rooms_data_file_path) is False:
                 return
-            
+
             # clear room data
             self.clear_rooms()
-            
+
             # load rooms from file
             rooms_result = load_rooms_from_file(self._settings.rooms_data_file_path)
             if rooms_result.status is False:
@@ -200,10 +227,16 @@ class RevitModel(ViewModelBase, Base):
             # get the active design option and design set
             active_design_option = get_active_design_option(doc)
             active_design_set = get_design_set_of_active_design_option(doc)
-            
+
             # set class properties
-            self._active_design_option_name = "" if active_design_option is None else active_design_option.Name
-            self._active_design_set_name = "Main Model" if active_design_set is None else Element.Name.GetValue(active_design_set)
+            self._active_design_option_name = (
+                "" if active_design_option is None else active_design_option.Name
+            )
+            self._active_design_set_name = (
+                "Main Model"
+                if active_design_set is None
+                else Element.Name.GetValue(active_design_set)
+            )
 
             # update the rooms data with placed family data
             room_data = self._update_room_data_with_family_data(
@@ -213,12 +246,11 @@ class RevitModel(ViewModelBase, Base):
             # add the rooms to the model
             for room in room_data:
                 self.add_room(room)
-            
-            
-            #print("raising property changed event to update the UI..")
+
+            # print("raising property changed event to update the UI..")
             # raise property changed event to update the UI
             self.RaisePropertyChanged(event_names.REVIT_MODEL_ROOMS_UPDATED)
-            
+
         else:
             print("No room data file path set, skipping room data loading.")
 
@@ -233,23 +265,23 @@ class RevitModel(ViewModelBase, Base):
         """
 
         # check if data path has changed
-        if (property_changed_args.PropertyName != event_names.VIEW_MODEL_DATA_FILE_PATH):
+        if property_changed_args.PropertyName != event_names.VIEW_MODEL_DATA_FILE_PATH:
             return
-        
+
         # check if the data file path has changed
         if self._data_file_path_intermittent == self._settings.rooms_data_file_path:
             # reset the intermittent storage
             self._data_file_path_intermittent = None
             # set the flag to avoid unnecessary updates
             self._data_path_requires_update_of_rooms = False
-               
+
         # check if the file path points to a valid file
         if file_exist(self._data_file_path_intermittent) is False:
             # reset the intermittent storage
             self._data_file_path_intermittent = None
             # set the flag to avoid unnecessary updates
             self._data_path_requires_update_of_rooms = False
-        
+
         # update the settings file path
         self._settings.rooms_data_file_path = self._data_file_path_intermittent
         # reset the intermittent storage
@@ -260,13 +292,24 @@ class RevitModel(ViewModelBase, Base):
     def get_all_rooms(self):
         """
         Get all rooms from the model.
+
+        :return: All rooms.
+        :rtype: [Room]
         """
+
         return self._rooms_container.get_all_rooms()
 
     def get_room_by_id(self, room_id):
         """
         Get a room by its id.
+
+        :param room_id: The room id.
+        :type room_id: str
+
+        :return: The room.
+        :rtype: Room
         """
+
         return self._rooms_container.get_room_by_id(room_id)
 
     def add_room(self, room_model):
@@ -287,9 +330,10 @@ class RevitModel(ViewModelBase, Base):
 
         # add the room to the container and check for conflicts
         self._rooms_container.add_room(room_model)
-        
+
     def clear_rooms(self):
         """
         Clear all rooms from the model.
         """
+
         self._rooms_container.clear_rooms()

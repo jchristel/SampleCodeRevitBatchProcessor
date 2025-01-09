@@ -50,17 +50,13 @@ import clr
 clr.AddReference("PresentationFramework")
 clr.AddReference("WindowsBase")
 clr.AddReference("System.Data")
+from System.Data import DataTable, DataView
 
 from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
 
-from System.Collections.ObjectModel import ObservableCollection
-from System.Windows.Data import CollectionViewSource, PropertyGroupDescription
-from System.Data import DataTable, DataView
-
-# from ViewModels.FilterItem import FilterItem
 from PushIt.Commands.PushRoomDataCommand import PushRoomDataCommand
 from PushIt.Commands.RaiseRevitEventCommand import RaiseRevitEventCommand
-
+from PushIt.Utilities import event_names
 
 class RoomsSelectionViewModel(ViewModelBase):
 
@@ -101,6 +97,13 @@ class RoomsSelectionViewModel(ViewModelBase):
         self._selected_column_to_filter = None
         self._selected_filter_value = ""
 
+        # list containing the column names for the filter
+        self._column_filter_items = []
+
+        # set up a specific data view for the data table
+        # this is required to be able to sort, group and filter the collection view without affecting the observable collection
+        self._data_view = None
+
         # commands
         # the command used to raise the revit external event which in turn calls a function pushing data into the revit model family instance
         self._push_data_command = PushRoomDataCommand(
@@ -123,30 +126,27 @@ class RoomsSelectionViewModel(ViewModelBase):
             execute=self._revit_model_event_handler_manager.wipe_stale_data
         )
 
-        # list containing the column names for the filter
-        self._column_filter_items = []
-
         # subscribe to the rooms changed event
         self._revit_model.add_PropertyChanged(self.update_room_data)
-        
-        # raise event to populate room data
+
+        # raise event to populate room data in the view
         self._revit_model_event_handler_manager.setup_data()
 
         # event handlers
+        # event handler to filter the room data upon filter selection or filter value entered/changed
         self.add_PropertyChanged(self.filter_room_data)
-
 
         # the code below will need to go into an event handler only executed when the data is ready
         # this is just a placeholder for now
-        
+
         # create the data table which is used to store the room data
-        #self._data_table = self.create_rooms_data_table()
+        # self._data_table = self.create_rooms_data_table()
 
         # set up a specific data view for the data table
         # this is required to be able to sort, group and filter the collection view without affecting the observable collection
-        #self._data_view = DataView(self._data_table)
-        self._data_view = None
-        
+        # self._data_view = DataView(self._data_table)
+        # self._data_view = None
+
         # # create the column filter items (list of column headers to filter by)
         # self.create_column_filter_items()
 
@@ -195,8 +195,9 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
 
         self._safety_off_mode = value
-        # raise property change event
-        self.RaisePropertyChanged("SafetyOffMode")
+
+        # raise property change event for safety off mode
+        self.RaisePropertyChanged(event_names.VIEW_MODEL_SAFETY_OFF_MODE)
 
     @property
     def ColumnFilterItems(self):
@@ -221,8 +222,10 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
 
         self._selected_column_to_filter = value
-        # raise property change event
-        self.RaisePropertyChanged("SelectedColumnFilterItem")
+
+        # raise property change event to update the data table filters
+        self.RaisePropertyChanged(event_names.VIEW_MODEL_SELECTED_FILTER_BY_COLUMN)
+        
         # update the settings
         self._revit_model.settings.last_column_filter = value
 
@@ -241,8 +244,10 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
 
         self._selected_filter_value = value
-        # raise property change event
-        self.RaisePropertyChanged("SelectedColumnFilterValue")
+
+        # raise property change event to update the data table filters
+        self.RaisePropertyChanged(event_names.VIEW_MODEL_SELECTED_FILTER_BY_VALUE)
+
         # update the settings
         self._revit_model.settings.last_column_filter_value = value
 
@@ -304,7 +309,7 @@ class RoomsSelectionViewModel(ViewModelBase):
 
             # raise property change event for the selected row content
             # this will trigger a re-evaluation of push it command availability
-            self.RaisePropertyChanged("SelectedIndexChanged")
+            self.RaisePropertyChanged(event_names.VIEW_MODEL_SELECTED_ROW)
         except Exception as e:
             print("Error: ", e)
 
@@ -326,8 +331,9 @@ class RoomsSelectionViewModel(ViewModelBase):
         # update the room data file
         self._revit_model.settings.rooms_data_file_path = value
 
-        # raise property change event
-        self.RaisePropertyChanged("DataPath")
+        # raise property change event in the revit model to reload the data
+        # from the new file path
+        self._revit_model.RaisePropertyChanged(event_names.VIEW_MODEL_DATA_FILE_PATH)
 
     @property
     def PushItCommand(self):
@@ -372,9 +378,37 @@ class RoomsSelectionViewModel(ViewModelBase):
         return self._wipe_stale_room_data_command
 
     def update_room_data(self, sender, property_changed_args):
+        """
+        Updates the room data in the view.
+
+        Builds a data table with the room data and sets up a specific data view for the data table.
+        This is required to be able to sort, group and filter the collection view without affecting the observable collection.
+
+        Applies filter column selection and filter value entered to the UI. Which in turn will trigger events to filter the data view.
+
+        And finally triggers a property changed event to let the UI know that the data view has changed.
+
+        :param sender: The sender of the event.
+        :type sender: object
+        :param property_changed_args: The property changed event arguments.
+        :type property_changed_args: PropertyChangedEventArgs
+        """
+
+        # check if the rooms in the model have been updated and therefore the UI needs to be updated
+        if property_changed_args.PropertyName != event_names.REVIT_MODEL_ROOMS_UPDATED:
+            return
+        
         print("Updating room data...")
+
         # create the data table which is used to store the room data
-        self._data_table = self.create_rooms_data_table()
+        data_table = self.create_rooms_data_table()
+
+        # check if data_table was created if not get out of the function
+        if data_table is None:
+            return
+
+        # set the data table
+        self._data_table = data_table
 
         # set up a specific data view for the data table
         # this is required to be able to sort, group and filter the collection view without affecting the observable collection
@@ -382,9 +416,6 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         # create the column filter items (list of column headers to filter by)
         self.create_column_filter_items()
-
-        # event handlers
-        #self.add_PropertyChanged(self.filter_room_data)
 
         # set the default column to filter by
         if self._revit_model.settings.last_column_filter in self._column_filter_items:
@@ -404,13 +435,13 @@ class RoomsSelectionViewModel(ViewModelBase):
             )
         else:
             self.SelectedColumnFilterValue = ""
-        
+
         # let the ui know that the data view has changed
-        self.RaisePropertyChanged("DataView")
-        
+        self.RaisePropertyChanged(event_names.VIEW_MODEL_DATA_VIEW_UPDATED)
+
     def create_column_filter_items(self):
         """
-        Creates the column filter items (list of column headers to filter by).
+        Populates the column filter items (list of column headers to filter by).
         This is used to populate the column filter combo box in the view.
 
         Note:
@@ -428,7 +459,14 @@ class RoomsSelectionViewModel(ViewModelBase):
     def create_rooms_data_table(self):
         """
         Creates a data table with the rooms data.
+
+        :return: The data table with the rooms data, or None if there are no rooms.
+        :rtype: DataTable or None
         """
+
+        # check if there are any rooms
+        if len(self._revit_model.get_all_rooms()) == 0:
+            return None
 
         # set up the data table
         data_table = DataTable()
@@ -497,6 +535,6 @@ class RoomsSelectionViewModel(ViewModelBase):
             try:
                 self.DataView.RowFilter = filter_value
                 # let the ui know that the data view has changed
-                self.RaisePropertyChanged("DataView")
+                self.RaisePropertyChanged(event_names.VIEW_MODEL_DATA_VIEW_UPDATED)
             except Exception as e:
                 print("Error: ", e)

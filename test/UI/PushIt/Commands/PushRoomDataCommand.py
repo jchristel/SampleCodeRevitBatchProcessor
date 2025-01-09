@@ -21,6 +21,7 @@
 
 from duHast.UI.Objects.WPF.Commands.CommandBase import CommandBase
 
+from PushIt.Utilities.event_names import VIEW_MODEL_SELECTED_ROW
 
 class PushRoomDataCommand(CommandBase):
 
@@ -94,5 +95,5 @@ class PushRoomDataCommand(CommandBase):
         """
 
         # check if the selected row index has changed
-        if property_changed_args.PropertyName == "SelectedIndexChanged":
+        if property_changed_args.PropertyName == VIEW_MODEL_SELECTED_ROW:
             self.on_can_execute_changed()

@@ -129,7 +129,7 @@ def reloaded_families_entry(doc, output, forms, families = None):
 
     # set up a window instance
     my_window = Reloader(
-        xaml_path= os.path.join(settings.DUH_AST_DIRECTORY,  r"UI\Objects\WPF\Views\MainWindow_py.xaml"),
+        xaml_path= os.path.join(settings.DU_HAST_DIRECTORY,  r"UI\Objects\WPF\Views\MainWindow_py.xaml"),
         main_view_model=main_view_model,
         xaml_by_view_model=XAML_BY_VIEW,
         resources_xaml_path=None

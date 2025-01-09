@@ -18,7 +18,7 @@ from views.view_templates_ui import _get_target_view_templates
 from pyrevit.framework import Forms
 
 # get the user to select a file to open
-from pyRevitHassell.file_picker import get_file_path_from_user
+from duHast.pyRevit.file_picker import get_file_path_from_user
 
 
 def export_overrides_of_selected_viewtemplates(doc, output, forms):

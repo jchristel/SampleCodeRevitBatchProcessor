@@ -26,9 +26,9 @@ from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
 from PushIt.Models.Room import Room
 from PushIt.Models.RoomsContainer import RoomsContainer
 from PushIt.Objects.Settings import Settings
-
 from PushIt.Utilities.load_rooms import load_rooms_from_file
 from PushIt.Utilities.get_families import get_families_in_model
+from PushIt.Utilities.event_names import REVIT_MODEL_ROOMS_UPDATED
 
 from Autodesk.Revit.DB import Element
 
@@ -195,9 +195,9 @@ class RevitModel(ViewModelBase, Base):
                 self.add_room(room)
             
             
-            print("raising property changed event to update the UI..")
+            #print("raising property changed event to update the UI..")
             # raise property changed event to update the UI
-            self.RaisePropertyChanged("Rooms")
+            self.RaisePropertyChanged(REVIT_MODEL_ROOMS_UPDATED)
             
         else:
             print("No room data file path set, skipping room data loading.")

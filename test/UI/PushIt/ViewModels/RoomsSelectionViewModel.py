@@ -104,6 +104,10 @@ class RoomsSelectionViewModel(ViewModelBase):
         # this is required to be able to sort, group and filter the collection view without affecting the observable collection
         self._data_view = None
 
+        # get the active design option and design set names
+        self._active_design_option_name = self._revit_model.settings.active_design_option_name
+        self._active_design_set_name = self._revit_model.settings.active_design_set_name
+        
         # commands
         # the command used to raise the revit external event which in turn calls a function pushing data into the revit model family instance
         self._push_data_command = PushRoomDataCommand(
@@ -135,42 +139,6 @@ class RoomsSelectionViewModel(ViewModelBase):
         # event handlers
         # event handler to filter the room data upon filter selection or filter value entered/changed
         self.add_PropertyChanged(self.filter_room_data)
-
-        # the code below will need to go into an event handler only executed when the data is ready
-        # this is just a placeholder for now
-
-        # create the data table which is used to store the room data
-        # self._data_table = self.create_rooms_data_table()
-
-        # set up a specific data view for the data table
-        # this is required to be able to sort, group and filter the collection view without affecting the observable collection
-        # self._data_view = DataView(self._data_table)
-        # self._data_view = None
-
-        # # create the column filter items (list of column headers to filter by)
-        # self.create_column_filter_items()
-
-        # # event handlers
-        # self.add_PropertyChanged(self.filter_room_data)
-
-        # # set the default column to filter by
-        # if self._revit_model.settings.last_column_filter in self._column_filter_items:
-        #     self.SelectedColumnFilterItem = (
-        #         self._revit_model.settings.last_column_filter
-        #     )
-        # else:
-        #     self.SelectedColumnFilterItem = self._column_filter_items[0]
-
-        # # set the default filter value
-        # if (
-        #     self._revit_model.settings.last_column_filter_value
-        #     and self._revit_model.settings.last_column_filter_value != ""
-        # ):
-        #     self.SelectedColumnFilterValue = (
-        #         self._revit_model.settings.last_column_filter_value
-        #     )
-        # else:
-        #     self.SelectedColumnFilterValue = ""
 
     @property
     def DataView(self):
@@ -327,14 +295,30 @@ class RoomsSelectionViewModel(ViewModelBase):
         Sets the path to the data file.
         """
 
+        # set the data path value
         self._data_path = value
-        # update the room data file
-        self._revit_model.settings.rooms_data_file_path = value
+        
+        # update the room data file in the revit model
+        # so it can be checked against the current path
+        # and if it is valid
+        self._revit_model._data_file_path_intermittent = value
 
-        # raise property change event in the revit model to reload the data
-        # from the new file path
+        # raise property change event in the revit model to 
+        # check the new file path
         self._revit_model.RaisePropertyChanged(event_names.VIEW_MODEL_DATA_FILE_PATH)
+        
+        # raise property change event for the data path to populate the data grid view
+        # with the new data from the new file and the revit model
+        self._revit_model_event_handler_manager.setup_data()
 
+    @property
+    def ActiveDesignSetAndOptionName(self):
+        """
+        The active design option name.
+        """
+
+        return "Active design set: {} and option: {} ".format(self._active_design_set_name, self._active_design_option_name)
+    
     @property
     def PushItCommand(self):
         """
@@ -436,6 +420,8 @@ class RoomsSelectionViewModel(ViewModelBase):
         else:
             self.SelectedColumnFilterValue = ""
 
+        # check design set and option too
+        
         # let the ui know that the data view has changed
         self.RaisePropertyChanged(event_names.VIEW_MODEL_DATA_VIEW_UPDATED)
 

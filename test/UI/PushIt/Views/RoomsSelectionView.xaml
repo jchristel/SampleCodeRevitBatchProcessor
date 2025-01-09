@@ -98,7 +98,7 @@
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                 Margin="0 5 5 5" 
                 Content="Refresh rooms from model"/>
-            <TextBlock Grid.Column="1" Margin="5 5 0 5" Text="Design Set: Design Option"/>
+            <TextBlock Grid.Column="1" Margin="5 5 0 5" Text="{Binding ActiveDesignSetAndOptionName}"/>
         </Grid>
         <!-- admin model data expander -->
         <Expander Grid.Row="4" Header="Data Admin" Margin="0 5 0 5">
@@ -135,7 +135,7 @@
                     Grid.Row="2"
                     Grid.ColumnSpan="2"
                     Margin="0 5 0 0"
-                    Text="{Binding DataPath, UpdateSourceTrigger=PropertyChanged}"/>
+                    Text="{Binding DataPath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
         </Expander>
         <!-- push it button row content -->

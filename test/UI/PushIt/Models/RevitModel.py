@@ -32,6 +32,7 @@ from PushIt.Models.RoomsContainer import RoomsContainer
 from PushIt.Objects.Settings import Settings
 from PushIt.Utilities.load_rooms import load_rooms_from_file
 from PushIt.Utilities.get_families import get_families_in_model
+from PushIt.Utilities.shared_parameters import check_shared_parameters_are_in_document
 from PushIt.Utilities import event_names
 
 from Autodesk.Revit.DB import Element
@@ -209,6 +210,23 @@ class RevitModel(ViewModelBase, Base):
             else Element.Name.GetValue(active_design_set)
         )
 
+    def _check_shared_parameters(self, doc, room):
+        """
+        Check if the shared parameters exist in the document and are bound to the correct categories.
+
+        :param doc: The Revit document.
+        :type doc: Autodesk.Revit.DB.Document
+        """
+
+        # check if the shared parameters exist in the document and are bound to the correct categories
+        # if not, return False
+
+        return check_shared_parameters_are_in_document(
+            doc,
+            room,
+            self._settings.push_it_revit_target_categories,
+        )
+
     def push_single_room_data_to_revit(self, doc, selected_element_id):
         """
         Pushes single room data into selected element in Revit only.
@@ -311,11 +329,17 @@ class RevitModel(ViewModelBase, Base):
                     "Failed to load rooms from file: {}".format(rooms_result.message)
                 )
 
+            # check if property shared parameters exist in the document and are bound to the correct categories
+            if self._check_shared_parameters(doc,room=rooms_result.result[0]) is False:
+                raise ValueError(
+                    "Shared parameters do not exist in the document or are not bound to the correct categories."
+                )
+
             # get elements from the document
             # check if the target categories are set
-            if self._settings.push_it_revit_target_categories is None:
+            #if self._settings.push_it_revit_target_categories is None:
                 # set a default value to walls
-                self._settings.push_it_revit_target_categories = ["Walls"]
+            #    self._settings.push_it_revit_target_categories = ["Walls"]
 
             # get the elements from the document
             families = get_families_in_model(

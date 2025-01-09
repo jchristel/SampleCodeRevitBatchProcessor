@@ -109,8 +109,29 @@ class RevitEventHandlerManager(Base):
         Push single room data from the WPF UI to Revit
         """
 
-        print("Pushing single room data to Revit..")
-        pass
+        try:
+            # current revit document
+            doc=uiapp.ActiveUIDocument.Document
+            
+            # get the UIDocument
+            uidoc=uiapp.ActiveUIDocument
+            
+            # get the current selection
+            element_ids =uidoc.Selection.GetElementIds()
+            
+            if len(element_ids) != 1:
+                print("Please select exactly one room to push data to Revit")
+                return
+
+            try:
+                # populate room data from file and match families from the Revit document to rooms
+                self._revit_model.push_single_room_data_to_revit(doc=doc, selected_element_id=element_ids[0])
+            except Exception as e:
+                print("Error while calling function pushing single room into Revit: {}".format(e))
+                return
+        except Exception as e:
+            print("Error while prepping for pushing single room into Revit: {}".format(e))
+            return
 
     def update_all_revit_rooms(self, *args, **kwargs):
         """
@@ -143,8 +164,14 @@ class RevitEventHandlerManager(Base):
         Pull data from Revit to the WPF UI (refresh the rooms list)
         """
 
-        print("Pulling data from Revit to the WPF UI..")
-        pass
+        # current revit document
+        doc=uiapp.ActiveUIDocument.Document
+
+        try:
+            self._revit_model.update_all_room_data_from_revit_only(doc)
+        except Exception as e:
+            print("Error while pulling data from Revit to the WPF UI: {}".format(e))
+            return
 
     def wipe_stale_data(self, *args, **kwargs):
         """
@@ -181,16 +208,13 @@ class RevitEventHandlerManager(Base):
         - get families from model
         - set up rooms with revit matches (make sure the current design set / option are taken into account)
         """
-
-        print("Setting up data for the event handlers..")
-        
+ 
         # current revit document
         doc=uiapp.ActiveUIDocument.Document
 
-        print("populating room data from file and matching families from the Revit document to rooms..")
         try:
             # populate room data from file and match families from the Revit document to rooms
             self._revit_model.populate_room_data(doc=doc)
         except Exception as e:
-            print("Error while setting up data for the event handlers: {}".format(e))
+            print("Error while loading and setting up data for ui: {}".format(e))
             return

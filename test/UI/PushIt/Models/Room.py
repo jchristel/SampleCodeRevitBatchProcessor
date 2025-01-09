@@ -173,6 +173,13 @@ class Room(Base):
 
         self._revit_matches.append(family_instance)
 
+    def clear_placed_families(self):
+        """
+        Clears the placed families of the room.
+        """
+
+        self._revit_matches = []
+        
     def get_revit_matches(self):
         """
         Returns the revit matches of the room.

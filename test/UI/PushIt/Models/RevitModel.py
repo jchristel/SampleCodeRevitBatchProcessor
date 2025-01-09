@@ -145,6 +145,11 @@ class RevitModel(ViewModelBase, Base):
         # Assign families to rooms
         for room in room_data:
             if room.id.id in family_dict:
+                # clear any families from the room
+                room.clear_families()
+                
+                # loop over the families and add them to the room if they match
+                # and conditions are met
                 for family in family_dict[room.id.id]:
 
                     # check if the family should be added to the room
@@ -182,6 +187,103 @@ class RevitModel(ViewModelBase, Base):
 
         return room_data
 
+    def _set_active_design_option_and_design_set(self, doc):
+        """
+        Set the active design option and design set names.
+
+        :param doc: The Revit document.
+        :type doc: Autodesk.Revit.DB.Document
+        """
+
+        # get the active design option and design set
+        active_design_option = get_active_design_option(doc)
+        active_design_set = get_design_set_of_active_design_option(doc)
+
+        # set class properties
+        self._active_design_option_name = (
+            "" if active_design_option is None else active_design_option.Name
+        )
+        self._active_design_set_name = (
+            "Main Model"
+            if active_design_set is None
+            else Element.Name.GetValue(active_design_set)
+        )
+
+    def push_single_room_data_to_revit(self, doc, selected_element_id):
+        """
+        Pushes single room data into selected element in Revit only.
+        
+        :param doc: The Revit document.
+        :type doc: Autodesk.Revit.DB.Document
+        :param selected_element_id: The selected element id.
+        :type selected_element_id: ElementId
+        """
+        
+        # check if the room of interest is set
+        if self._room_of_interest is None:
+            return
+        
+        # get the selected elements from the revit ui:
+        selected_element = doc.GetElement(selected_element_id)
+        
+        # check if the selected element is of the correct category(s)
+        if selected_element.Category.Name not in self._settings.push_it_revit_target_categories:
+            print("Selected element cat: {} is not supported.".format(selected_element.Category.Name))
+            print ("Supported categories: {}".format(self._settings.push_it_revit_target_categories))
+            
+        # get the room related properties from the element so matching room in data model can be updated
+        # the element can be removed from the room 
+        
+        # update the element with the new room properties
+        
+        # add the element to the room
+        
+        # remove previously pushed element from the room in data model
+        
+        
+        # raise property changed event to update the UI
+
+    def update_all_room_data_from_revit_only(self, doc):
+        """
+        Update all room data from room place holders in Revit only.
+        
+        :param doc: The Revit document.
+        :type doc: Autodesk.Revit.DB.Document
+        """
+        
+        # check if any rooms are loaded in the data model
+        rooms_in_data_model = self._rooms_container.get_all_rooms()
+        if len(rooms_in_data_model) == 0:
+            return
+        
+        # get the elements from the document
+        families = get_families_in_model(
+            doc,
+            self._settings.push_it_revit_target_categories,  # the target categories
+            rooms_in_data_model[
+                0
+            ],  # a room object to get the properties we are interested in
+        )
+
+        # set the active design option and design set names
+        self._set_active_design_option_and_design_set(doc)
+
+        # update the rooms data with placed family data
+        room_data = self._update_room_data_with_family_data(
+            rooms_in_data_model, families
+        )
+
+        # clear the old rooms
+        self.clear_rooms()
+        
+        # add the updated rooms to the model
+        for room in room_data:
+            self.add_room(room)
+
+        # raise property changed event to update the UI
+        self.RaisePropertyChanged(event_names.REVIT_MODEL_ROOMS_UPDATED)
+        
+        
     def populate_room_data(self, doc):
         """
         Populate the room data from file and matched families from the Revit document to rooms.
@@ -224,19 +326,8 @@ class RevitModel(ViewModelBase, Base):
                 ],  # a room object to get the properties we are interested in
             )
 
-            # get the active design option and design set
-            active_design_option = get_active_design_option(doc)
-            active_design_set = get_design_set_of_active_design_option(doc)
-
-            # set class properties
-            self._active_design_option_name = (
-                "" if active_design_option is None else active_design_option.Name
-            )
-            self._active_design_set_name = (
-                "Main Model"
-                if active_design_set is None
-                else Element.Name.GetValue(active_design_set)
-            )
+            # set the active design option and design set names
+            self._set_active_design_option_and_design_set(doc)
 
             # update the rooms data with placed family data
             room_data = self._update_room_data_with_family_data(

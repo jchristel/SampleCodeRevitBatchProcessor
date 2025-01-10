@@ -24,6 +24,9 @@ from duHast.Utilities.Objects.result import Result
 
 def update_single_family(doc, family_instance, room, shared_parameter_data):
 
+
+    #TODO: read the area designed value !!
+    # expects and RFamiliy object in Result.result list
     return_value = Result()
 
     return return_value

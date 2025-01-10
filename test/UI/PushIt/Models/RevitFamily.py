@@ -39,6 +39,7 @@ class RFamily(Base):
         design_set,
         design_option,
         design_option_is_primary,
+        revit_element_id
     ):
         """
         Initializes a new instance of the Family class.
@@ -67,6 +68,9 @@ class RFamily(Base):
         # True, design option in Revit is the primary design option for a set
         self._design_option_is_primary = design_option_is_primary
 
+        # the revit element id
+        self._revit_element_id = revit_element_id
+
     @property
     def room_id(self):
         return self._room_id
@@ -94,3 +98,7 @@ class RFamily(Base):
     @property
     def design_option_is_primary(self):
         return self._design_option_is_primary
+    
+    @property
+    def revit_element_id(self):
+        return self._revit_element_id

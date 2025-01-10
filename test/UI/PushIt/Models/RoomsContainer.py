@@ -104,4 +104,5 @@ class RoomsContainer(Base):
         """
 
         for room in self._rooms:
-            room.remove_family_instance(family_instance)
+            if room.id.id == family_instance.room_id:
+                room.remove_placed_family(family_instance)

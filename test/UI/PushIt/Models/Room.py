@@ -173,6 +173,14 @@ class Room(Base):
 
         self._revit_matches.append(family_instance)
 
+        # check how many placed matches there are
+        # if one match update the area designed accordingly from the family instance
+        # if multiple matches set the area designed to None
+        if len(self._revit_matches) == 1:
+            self.area_designed = family_instance.area_designed
+        else:
+            self.area_designed = None
+
     def clear_placed_families(self):
         """
         Clears the placed families of the room.
@@ -194,6 +202,28 @@ class Room(Base):
         # revit_matches = ["Match: {}".format(i) for i in range(num_elements)]
 
         return self._revit_matches
+
+    def remove_placed_family(self, family_instance):
+        """
+        Removes a placed family from the room.
+
+        :param family_instance: The family instance to remove.
+        """
+
+        # check type
+        if isinstance(family_instance, RFamily) == False:
+            raise TypeError(
+                "family_instance needs to be of type FamilyInstance, got {} instead".format(
+                    type(family_instance)
+                )
+            )
+        
+        # check if the family instance is in the list
+        if family_instance not in self._revit_matches:
+            return
+        
+        # remove the family instance from the list
+        self._revit_matches.remove(family_instance)
 
     @property
     def id(self):

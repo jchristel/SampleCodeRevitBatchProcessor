@@ -499,7 +499,7 @@ class RoomsSelectionViewModel(ViewModelBase):
             # add a row per room
             row = data_table.NewRow()
             for prop in room_model_instance.get_property_names():
-                row[prop] = room_model_instance.get_property_value(prop)
+                row[prop] = room_model_instance.get_property_value(prop) if room_model_instance.get_property_value(prop) is not None else "<varies>"
             row["Count"] = len(room_model_instance.get_revit_matches())
             data_table.Rows.Add(row)
 

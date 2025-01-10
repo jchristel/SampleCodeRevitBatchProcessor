@@ -286,7 +286,7 @@ class RevitModel(ViewModelBase, Base):
             shared_parameter_data=shared_parameter_data,
         )
 
-        # update the element with the new room properties
+        # update the element in Revit with the new room properties
         update_single_family_result = update_single_family(
             doc=doc,
             family_instance=selected_element,
@@ -294,7 +294,7 @@ class RevitModel(ViewModelBase, Base):
             shared_parameter_data=shared_parameter_data,
         )
 
-        # add the element to the room
+        # add the revit element to the room
         if update_single_family_result.status is True:
             self._room_of_interest.add_placed_family(
                 update_single_family_result.result[0]
@@ -504,5 +504,5 @@ class RevitModel(ViewModelBase, Base):
         :param family_instance: The family instance to remove.
         :type family_instance: RFamily
         """
-        
+
         self._rooms_container.remove_placed_family_from_room(family_instance)

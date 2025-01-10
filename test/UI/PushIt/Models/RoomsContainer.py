@@ -94,3 +94,14 @@ class RoomsContainer(Base):
         """
 
         self._rooms = []
+
+    def remove_placed_family_from_room(self, family_instance):
+        """
+        Removes a family instance from all rooms in the container.
+
+        :param family_instance: The family instance to be removed.
+        :type family_instance: Autodesk.Revit.DB.FamilyInstance
+        """
+
+        for room in self._rooms:
+            room.remove_family_instance(family_instance)

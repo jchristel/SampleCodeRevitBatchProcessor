@@ -30,9 +30,16 @@ from duHast.Utilities.files_io import file_exist
 from PushIt.Models.Room import Room
 from PushIt.Models.RoomsContainer import RoomsContainer
 from PushIt.Objects.Settings import Settings
-from PushIt.Utilities.load_rooms import load_rooms_from_file
-from PushIt.Utilities.get_families import get_families_in_model
-from PushIt.Utilities.shared_parameters import check_shared_parameters_are_in_document
+from PushIt.Utilities.rooms_load import load_rooms_from_file
+from PushIt.Utilities.families_get import (
+    get_families_in_model,
+    extract_single_family_data,
+)
+from PushIt.Utilities.families_update import update_single_family
+from PushIt.Utilities.shared_parameters import (
+    check_shared_parameters_are_in_document,
+    get_shared_parameter_data,
+)
 from PushIt.Utilities import event_names
 
 from Autodesk.Revit.DB import Element
@@ -148,7 +155,7 @@ class RevitModel(ViewModelBase, Base):
             if room.id.id in family_dict:
                 # clear any families from the room
                 room.clear_families()
-                
+
                 # loop over the families and add them to the room if they match
                 # and conditions are met
                 for family in family_dict[room.id.id]:
@@ -226,60 +233,92 @@ class RevitModel(ViewModelBase, Base):
             room,
             self._settings.push_it_revit_target_categories,
         )
-        
+
         if check_shared_parameters_result.status is False:
-            #TODO: pop up a message box to inform the user
+            # TODO: pop up a message box to inform the user
             return False
-        
+
         return True
-    
+
     def push_single_room_data_to_revit(self, doc, selected_element_id):
         """
         Pushes single room data into selected element in Revit only.
-        
+
         :param doc: The Revit document.
         :type doc: Autodesk.Revit.DB.Document
         :param selected_element_id: The selected element id.
         :type selected_element_id: ElementId
         """
-        
+
         # check if the room of interest is set
         if self._room_of_interest is None:
             return
-        
+
         # get the selected elements from the revit ui:
         selected_element = doc.GetElement(selected_element_id)
-        
+
         # check if the selected element is of the correct category(s)
-        if selected_element.Category.Name not in self._settings.push_it_revit_target_categories:
-            print("Selected element cat: {} is not supported.".format(selected_element.Category.Name))
-            print ("Supported categories: {}".format(self._settings.push_it_revit_target_categories))
-            
+        if (
+            selected_element.Category.Name
+            not in self._settings.push_it_revit_target_categories
+        ):
+            print(
+                "Selected element cat: {} is not supported.".format(
+                    selected_element.Category.Name
+                )
+            )
+            print(
+                "Supported categories: {}".format(
+                    self._settings.push_it_revit_target_categories
+                )
+            )
+
+        # get the shared parameter data
+        shared_parameter_data = get_shared_parameter_data(
+            doc=doc, room=self._room_of_interest
+        )
+
         # get the room related properties from the element so matching room in data model can be updated
-        # the element can be removed from the room 
-        
+        # the element can be removed from the room
+        # and the new element can be added to the room
+        revit_family_instance_old = extract_single_family_data(
+            family_instance=selected_element,
+            shared_parameter_data=shared_parameter_data,
+        )
+
         # update the element with the new room properties
-        
+        update_single_family_result = update_single_family(
+            doc=doc,
+            family_instance=selected_element,
+            room=self._room_of_interest,
+            shared_parameter_data=shared_parameter_data,
+        )
+
         # add the element to the room
-        
+        if update_single_family_result.status is True:
+            self._room_of_interest.add_placed_family(
+                update_single_family_result.result[0]
+            )
+
         # remove previously pushed element from the room in data model
-        
-        
+        self.remove_placed_family_from_room(revit_family_instance_old)
+
         # raise property changed event to update the UI
+        self.RaisePropertyChanged(event_names.REVIT_MODEL_ROOMS_UPDATED)
 
     def update_all_room_data_from_revit_only(self, doc):
         """
         Update all room data from room place holders in Revit only.
-        
+
         :param doc: The Revit document.
         :type doc: Autodesk.Revit.DB.Document
         """
-        
+
         # check if any rooms are loaded in the data model
         rooms_in_data_model = self._rooms_container.get_all_rooms()
         if len(rooms_in_data_model) == 0:
             return
-        
+
         # get the elements from the document
         families = get_families_in_model(
             doc,
@@ -299,15 +338,14 @@ class RevitModel(ViewModelBase, Base):
 
         # clear the old rooms
         self.clear_rooms()
-        
+
         # add the updated rooms to the model
         for room in room_data:
             self.add_room(room)
 
         # raise property changed event to update the UI
         self.RaisePropertyChanged(event_names.REVIT_MODEL_ROOMS_UPDATED)
-        
-        
+
     def populate_room_data(self, doc):
         """
         Populate the room data from file and matched families from the Revit document to rooms.
@@ -336,15 +374,15 @@ class RevitModel(ViewModelBase, Base):
                 )
 
             # check if property shared parameters exist in the document and are bound to the correct categories
-            if self._check_shared_parameters(doc,room=rooms_result.result[0]) is False:
+            if self._check_shared_parameters(doc, room=rooms_result.result[0]) is False:
                 raise ValueError(
                     "Shared parameters do not exist in the document or are not bound to the correct categories."
                 )
 
             # get elements from the document
             # check if the target categories are set
-            #if self._settings.push_it_revit_target_categories is None:
-                # set a default value to walls
+            # if self._settings.push_it_revit_target_categories is None:
+            # set a default value to walls
             #    self._settings.push_it_revit_target_categories = ["Walls"]
 
             # get the elements from the document
@@ -458,3 +496,7 @@ class RevitModel(ViewModelBase, Base):
         """
 
         self._rooms_container.clear_rooms()
+
+    def remove_placed_family_from_room(self, family_instance):
+
+        self._rooms_container.remove_placed_family_from_room(family_instance)

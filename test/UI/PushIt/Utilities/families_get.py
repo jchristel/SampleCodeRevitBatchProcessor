@@ -65,6 +65,63 @@ def get_built_in_categories(category_names):
 
     return categories
 
+def extract_single_family_data(family_instance, shared_parameter_data):
+    """
+    Extracts family data from a single family instance
+
+    :param family_instance: A family instance
+    :type family_instance: Autodesk.Revit.DB.FamilyInstance
+    :param shared_parameter_data: Shared parameter data
+    :type shared_parameter_data: [dict]
+
+    :return: A family instance
+    :rtype: RFamily
+    """
+
+    # get the room_id value
+    room_id = get_parameter_value_by_name(
+        family_instance, shared_parameter_data[0].keys()[0]
+    )
+    if room_id is None or room_id == "":
+        return None
+
+    # get the area_briefed value
+    area_briefed = get_parameter_value_by_name(
+        family_instance, shared_parameter_data[1].keys()[0]
+    )
+
+    # get the area_design value
+    area_design = get_parameter_value_by_name(
+        family_instance, shared_parameter_data[2].keys()[0]
+    )
+
+    # get the other properties
+    other_properties = []
+    for prop in shared_parameter_data[3:]:
+        prop_value = get_parameter_value_by_name(family_instance, prop.keys()[0])
+        other_properties.append(prop_value)
+
+    # get the design set and option values
+    design_set_and_option_data = get_design_set_option_info(family_instance)
+
+    # create a new family object
+    family = RFamily(
+        room_id=room_id,
+        area_designed=area_design,
+        area_briefed=area_briefed,
+        properties=other_properties,
+        design_set=design_set_and_option_data[
+            DesignSetPropertyNames.DESIGN_SET_NAME
+        ],
+        design_option=design_set_and_option_data[
+            DesignSetPropertyNames.DESIGN_OPTION_NAME
+        ],
+        design_option_is_primary=design_set_and_option_data[
+            DesignSetPropertyNames.DESIGN_OPTION_IS_PRIMARY
+        ],
+    )
+
+    return family
 
 def extract_family_data(family_instances, shared_parameter_data):
     """
@@ -83,50 +140,13 @@ def extract_family_data(family_instances, shared_parameter_data):
     # loop over family instances and extract properties matching room
     # ignore all families with no room_id value
     for family_instance in family_instances:
-        # get the room_id value
-        room_id = get_parameter_value_by_name(
-            family_instance, shared_parameter_data[0].keys()[0]
-        )
-        if room_id is None or room_id == "":
-            continue
+        
+        # get a single family instance
+        family_data_instance = extract_single_family_data(family_instance, shared_parameter_data)
 
-        # get the area_briefed value
-        area_briefed = get_parameter_value_by_name(
-            family_instance, shared_parameter_data[1].keys()[0]
-        )
-
-        # get the area_design value
-        area_design = get_parameter_value_by_name(
-            family_instance, shared_parameter_data[2].keys()[0]
-        )
-
-        # get the other properties
-        other_properties = []
-        for prop in shared_parameter_data[3:]:
-            prop_value = get_parameter_value_by_name(family_instance, prop.keys()[0])
-            other_properties.append(prop_value)
-
-        # get the design set and option values
-        design_set_and_option_data = get_design_set_option_info(family_instance)
-
-        # create a new family object
-        family = RFamily(
-            room_id=room_id,
-            area_designed=area_design,
-            area_briefed=area_briefed,
-            properties=other_properties,
-            design_set=design_set_and_option_data[
-                DesignSetPropertyNames.DESIGN_SET_NAME
-            ],
-            design_option=design_set_and_option_data[
-                DesignSetPropertyNames.DESIGN_OPTION_NAME
-            ],
-            design_option_is_primary=design_set_and_option_data[
-                DesignSetPropertyNames.DESIGN_OPTION_IS_PRIMARY
-            ],
-        )
-
-        family_data.append(family)
+        # check if family data instance is not None (room_id value exists)
+        if family_data_instance is not None:
+            family_data.append(family_data)
 
     return family_data
 

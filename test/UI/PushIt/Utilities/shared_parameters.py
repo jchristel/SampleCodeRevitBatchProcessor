@@ -143,7 +143,13 @@ def check_shared_parameters_are_in_document(doc, room, category_names):
                             ),
                         )
                         parameters_are_all_bound = False
-
+                        
+                if parameters_are_all_bound is True:
+                    return_value.append_message(
+                        "Shared parameter with guid: {} is bound to all required categories.".format(
+                            shared_parameter_guid
+                        )
+                    )
                 break
 
         if not shared_parameter_found:

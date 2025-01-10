@@ -21,22 +21,42 @@
 
 
 from duHast.Utilities.Objects.result import Result
+from duHast.Revit.Common.transaction import in_transaction_with_failure_handling
+from duHast.Revit.Common.failure_handling import process_failures
+from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
+    FailureHandlingConfig,
+)
+
 from PushIt.Models.Room import Room
 from PushIt.Utilities.shared_parameters import set_shared_parameter_value_by_guid
+from PushIt.Utilities.families_get import extract_single_family_data
 
+from Autodesk.Revit.DB import Transaction
 
 def update_single_family(doc, family_instance, room, shared_parameter_data):
+    """
+    Updates a single family instance with room data
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param family_instance: The family instance to be updated.
+    :type family_instance: Autodesk.Revit.DB.FamilyInstance
+    :param room: The room data.
+    :type room: Room
+    :param shared_parameter_data: The shared parameter data.
+    :type shared_parameter_data: [SharedParameterData]
+
+    :return: Result class instance.
+    :rtype: Result
+    """
+    
+    return_value = Result()
 
     # expects a family instance and a room object
     if isinstance(room, Room) == False:
         raise TypeError(
             "room needs to be of type Room. Got {} instead".format(type(room))
         )
-
-    # set up place holder for the area designed value
-    area_designed = get_parameter_value_by_name(
-        family_instance, shared_parameter_data[2].keys()[0]
-    )
 
     # set up an action which can be executed in a transaction which updates the family instance parameters
     def action():
@@ -63,8 +83,7 @@ def update_single_family(doc, family_instance, room, shared_parameter_data):
                         doc, family_instance, other_property.parameter_guid, other_property.value
                     )
                 )
-
-            # read the area designed value
+            action_return_value.append_message("Updated family instance parameters")
 
         except Exception as e:
             action_return_value.update_sep(
@@ -73,8 +92,26 @@ def update_single_family(doc, family_instance, room, shared_parameter_data):
 
         return action_return_value
 
-    # TODO: read the area designed value !!
-    # expects and RFamiliy object in Result.result list
-    return_value = Result()
+    # set up a transaction
+    transaction = Transaction(
+                doc,
+                "pushing it: {}".format(
+                    room.id.id
+                ),
+            )
+    
+    # execute the action in a transaction
+    dummy = in_transaction_with_failure_handling(
+        transaction= transaction, 
+        action=action, 
+        failure_config = FailureHandlingConfig(), 
+        failure_processing_func = process_failures)
+    
+    return_value.update(dummy)
+
+    # get the family data after the update
+    family_after_update = extract_single_family_data(family_instance=family_instance, shared_parameter_data=shared_parameter_data)
+    
+    return_value.Result.append(family_after_update)
 
     return return_value

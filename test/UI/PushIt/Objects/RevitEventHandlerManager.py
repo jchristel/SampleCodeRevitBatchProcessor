@@ -94,6 +94,31 @@ class RevitEventHandlerManager(Base):
             self.ex_event_handler_setup_data
         )
 
+    def dispose(self):
+        """
+        Dispose the external event handlers
+        """
+
+        # dispose the external event
+        self.ext_event_push_single_room.Dispose()
+        self.ext_event_push_single_room = None
+        self.ext_event_update_all_revit_rooms.Dispose()
+        self.ext_event_update_all_revit_rooms = None
+        self.ext_event_pull_data_from_revit.Dispose()
+        self.ext_event_pull_data_from_revit = None
+        self.ext_event_wipe_stale_data.Dispose()
+        self.ext_event_wipe_stale_data = None
+        self.ext_event_setup_data.Dispose()
+        self.ext_event_setup_data = None
+        
+        # dispose the external event handlers
+        self.ex_event_handler_push_single_room=None
+        self.ex_event_handler_update_all_revit_rooms=None
+        self.ex_event_handler_pull_data_from_revit=None
+        self.ex_event_handler_wipe_stale_data=None
+        self.ex_event_handler_setup_data=None
+        
+        
     def push_single_room_data(self, *args, **kwargs):
         """
         Push single room data from the WPF UI to Revit

@@ -195,7 +195,7 @@ class RevitModel(ViewModelBase, Base):
             else:
                 # if no matching family instances are found
                 # clear any families which might have been there at some point from the room
-                room.clear_families()
+                room.clear_placed_families()
         return room_data
 
     def _set_active_design_option_and_design_set(self, doc):

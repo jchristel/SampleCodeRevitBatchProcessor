@@ -32,6 +32,7 @@ class PushIt(WPFWindowBase):
         xaml_by_view_model,
         resources_xaml_path,
         settings,
+        event_handler_manager
     ):
         """
         Initializes a new instance of the PushIt Window class.
@@ -63,6 +64,9 @@ class PushIt(WPFWindowBase):
 
         # Set the settings
         self.settings = settings
+        
+        # Set the event handler manager
+        self.event_handler_manager = event_handler_manager
 
     def action_on_close(self):
         """
@@ -72,4 +76,8 @@ class PushIt(WPFWindowBase):
         """
 
         # Handle cleanup here
+        # dispose event handlers, etc.
+        self.event_handler_manager.dispose()
+        
+        # Save the settings
         self.settings.save_settings()

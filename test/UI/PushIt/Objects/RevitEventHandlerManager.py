@@ -33,7 +33,7 @@ Event handlers are set up in Revit to handle the communication between the Revit
 - wipe stale data from the rooms in the revit model
 
 """
-
+import traceback
 
 from duHast.Utilities.Objects.base import Base
 from duHast.Revit.UI.Objects.ExernalEventHandler import ExternalEventHandler
@@ -128,6 +128,7 @@ class RevitEventHandlerManager(Base):
                 self._revit_model.push_single_room_data_to_revit(doc=doc, selected_element_id=element_ids[0])
             except Exception as e:
                 print("Error while calling function pushing single room into Revit: {}".format(e))
+                print(traceback.format_exc())
                 return
         except Exception as e:
             print("Error while prepping for pushing single room into Revit: {}".format(e))

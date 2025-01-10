@@ -168,8 +168,12 @@ class Room(Base):
 
         # check if other properties match
         for prop in self.other_properties:
-            if prop.value != family_instance.properties[prop.name]:
-                return
+            # family instance properties are instances of RoomProperty:
+            
+            for prop_instance in family_instance.properties:
+                if prop.parameter_guid == prop_instance.parameter_guid:
+                    if prop.value != prop_instance.value:
+                        return
 
         self._revit_matches.append(family_instance)
 
@@ -177,9 +181,9 @@ class Room(Base):
         # if one match update the area designed accordingly from the family instance
         # if multiple matches set the area designed to None
         if len(self._revit_matches) == 1:
-            self.area_designed = family_instance.area_designed
+            self.area_designed.value = family_instance.area_designed
         else:
-            self.area_designed = None
+            self.area_designed.value = None
 
     def clear_placed_families(self):
         """
@@ -224,7 +228,15 @@ class Room(Base):
         
         # remove the family instance from the list
         self._revit_matches.remove(family_instance)
-
+        
+        # update the area designed
+        if len(self._revit_matches) == 1:
+            self.area_designed.value = self._revit_matches[0].area_designed
+        elif len(self._revit_matches) == 0:
+            self.area_designed.value = 0
+        else:
+            self.area_designed.value = None
+        
     @property
     def id(self):
         return self._id

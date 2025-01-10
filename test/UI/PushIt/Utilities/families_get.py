@@ -37,6 +37,7 @@ from duHast.Revit.Categories.categories_model import get_builtin_category_by_nam
 from duHast.Revit.Family.family_utils import get_family_instances_by_built_in_categories
 
 from PushIt.Models.RevitFamily import RFamily
+from PushIt.Models.RoomProperty import RoomProperty
 from PushIt.Utilities.shared_parameters import get_shared_parameter_data
 
 
@@ -110,7 +111,8 @@ def extract_single_family_data(doc, family_instance, shared_parameter_data):
     other_properties = []
     for prop in shared_parameter_data[3:]:
         prop_value = get_parameter_value_by_name(family_instance, prop.keys()[0])
-        other_properties.append((prop.keys()[0],prop[prop.keys()[0]] ,prop_value))
+        prop_instance = RoomProperty(name=prop.keys()[0], value=prop_value, parameter_guid=prop[prop.keys()[0]])
+        other_properties.append(prop_instance)
 
     # get the design set and option values
     design_set_and_option_data = get_design_set_option_info(doc=doc, element=family_instance)

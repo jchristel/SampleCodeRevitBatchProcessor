@@ -192,7 +192,10 @@ class RevitModel(ViewModelBase, Base):
 
                 # Remove the matched families from the dictionary to speed up the search
                 del family_dict[room_id]
-
+            else:
+                # if no matching family instances are found
+                # clear any families which might have been there at some point from the room
+                room.clear_families()
         return room_data
 
     def _set_active_design_option_and_design_set(self, doc):
@@ -287,7 +290,7 @@ class RevitModel(ViewModelBase, Base):
             family_instance=selected_element,
             shared_parameter_data=shared_parameter_data,
         )
-        print("revit_family_instance_old: {}".format(revit_family_instance_old))
+        #print("revit_family_instance_old: {}".format(revit_family_instance_old))
 
         # update the element in Revit with the new room properties
         update_single_family_result = update_single_family(
@@ -296,7 +299,7 @@ class RevitModel(ViewModelBase, Base):
             room=self._room_of_interest,
             shared_parameter_data=shared_parameter_data,
         )
-        print("update_single_family_result: {}".format(update_single_family_result))
+        #print("update_single_family_result: {}".format(update_single_family_result))
         
 
         # add the revit element to the room
@@ -305,8 +308,6 @@ class RevitModel(ViewModelBase, Base):
                 update_single_family_result.result[0]
             )
 
-        print("updated room of interest: {}".format(self._room_of_interest))
-        
         # remove previously pushed element from the room in data model
         self.remove_placed_family_from_room(revit_family_instance_old)
 

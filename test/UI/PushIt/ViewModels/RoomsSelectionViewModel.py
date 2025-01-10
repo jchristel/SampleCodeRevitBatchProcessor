@@ -192,13 +192,16 @@ class RoomsSelectionViewModel(ViewModelBase):
         Sets the selected column name to filter by.
         """
 
-        self._selected_column_to_filter = value
+        try:
+            self._selected_column_to_filter = value
 
-        # raise property change event to update the data table filters
-        self.RaisePropertyChanged(event_names.VIEW_MODEL_SELECTED_FILTER_BY_COLUMN)
+            # raise property change event to update the data table filters
+            self.RaisePropertyChanged(event_names.VIEW_MODEL_SELECTED_FILTER_BY_COLUMN)
 
-        # update the settings
-        self._revit_model.settings.last_column_filter = value
+            # update the settings
+            self._revit_model.settings.last_column_filter = value
+        except Exception as e:
+            print("Error: {} in selected column change. Value: {}".format(e, value))
 
     @property
     def SelectedColumnFilterValue(self):
@@ -260,6 +263,11 @@ class RoomsSelectionViewModel(ViewModelBase):
         :type value: int
         """
 
+        # check if the value is -1
+        # if so get out of the function
+        if value == -1:
+            return
+        
         # this returns the row index of the filtered default view not the actual data table.
         self._selected_index = value
         try:
@@ -282,7 +290,7 @@ class RoomsSelectionViewModel(ViewModelBase):
             # this will trigger a re-evaluation of push it command availability
             self.RaisePropertyChanged(event_names.VIEW_MODEL_SELECTED_ROW)
         except Exception as e:
-            print("Error: ", e)
+            print("Error: {} in selected row change. Value: {}".format(e, value))
 
     @property
     def DataPath(self):
@@ -522,7 +530,7 @@ class RoomsSelectionViewModel(ViewModelBase):
             or property_changed_args.PropertyName
             == event_names.VIEW_MODEL_SELECTED_FILTER_BY_VALUE
         ):
-
+            print("Filtering room data...{}".format(property_changed_args.PropertyName))
             # check if the filter value is empty
             if self.SelectedColumnFilterValue == "":
                 self.DataView.RowFilter = ""
@@ -546,4 +554,7 @@ class RoomsSelectionViewModel(ViewModelBase):
                 # let the ui know that the data view has changed
                 self.RaisePropertyChanged(event_names.VIEW_MODEL_DATA_VIEW_UPDATED)
             except Exception as e:
-                print("Error: ", e)
+                print("Error: {} in filter: {}".format(e, filter_value))
+        else:
+            print("not Filtering room data...{}".format(property_changed_args.PropertyName))
+            

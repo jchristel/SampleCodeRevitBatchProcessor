@@ -102,3 +102,51 @@ class RFamily(Base):
     @property
     def revit_element_id(self):
         return self._revit_element_id
+    
+    def __eq__(self, other):
+        """
+        Custom compare is equal override
+
+        :param other: Another instance of this class
+        :type other: :class:`.RFamily`
+        :return: True if properties of other equal properties of this instance, otherwise False.
+        :rtype: Bool
+        """
+
+        if not isinstance(other, self.__class__):
+            return False
+
+        return (
+            self.room_id == other.room_id
+            and self.area_designed == other.area_designed
+            and self.area_briefed == other.area_briefed
+            and self.properties == other.properties
+            and self.design_set == other.design_set
+            and self.design_option == other.design_option
+            and self.design_option_is_primary == other.design_option_is_primary
+            and self.revit_element_id == other.revit_element_id
+        )
+    
+    # python 2.7 needs custom implementation of not equal
+    def __ne__(self, other):
+        return not self.__eq__(other=other)
+
+    def __hash__(self):
+        """
+        Custom hash override
+
+        Required due to custom __eq__ override present in this class
+        """
+        
+        return hash(
+            (
+                self.room_id,
+                self.area_designed,
+                self.area_briefed,
+                self.properties,
+                self.design_set,
+                self.design_option,
+                self.design_option_is_primary,
+                self.revit_element_id
+            )
+        )

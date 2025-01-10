@@ -498,5 +498,11 @@ class RevitModel(ViewModelBase, Base):
         self._rooms_container.clear_rooms()
 
     def remove_placed_family_from_room(self, family_instance):
+        """
+        Remove a placed family from a room.
 
+        :param family_instance: The family instance to remove.
+        :type family_instance: RFamily
+        """
+        
         self._rooms_container.remove_placed_family_from_room(family_instance)

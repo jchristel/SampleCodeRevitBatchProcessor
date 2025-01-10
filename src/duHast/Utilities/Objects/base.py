@@ -263,9 +263,9 @@ class Base(object):
         """
         Custom compare is equal override
 
-        :param other: Another instance of pattern class
-        :type other: :class:`.PatternBase`
-        :return: True if name value of other colour class instance equal the name values of this instance, otherwise False.
+        :param other: Another instance of this class
+        :type other: :class:`.Base`
+        :return: True if other is a base instance, otherwise False.
         :rtype: Bool
         """
 

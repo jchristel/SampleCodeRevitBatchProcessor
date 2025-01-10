@@ -19,10 +19,17 @@
 #
 #
 
-from duHast.Revit.SharedParameters.shared_parameters import get_all_shared_parameters, param_binding_exists_2023
+from duHast.Revit.SharedParameters.shared_parameters import (
+    get_all_shared_parameters,
+    param_binding_exists_2023,
+)
+from duHast.Revit.Common.parameter_set_utils import (
+    set_parameter_without_transaction_wrapper_by_name,
+)
 from duHast.Utilities.Objects.result import Result
 
 from Autodesk.Revit.DB import Element
+
 
 def get_parameter_name_by_guid(parameters, guid):
     """
@@ -112,7 +119,6 @@ def check_shared_parameters_are_in_document(doc, room, category_names):
     for prop in room.other_properties:
         shared_parameter_guids.append(prop.parameter_guid)
 
-
     # check if shared parameters are in the document
     for shared_parameter_guid in shared_parameter_guids:
         shared_parameter_found = False
@@ -124,18 +130,71 @@ def check_shared_parameters_are_in_document(doc, room, category_names):
                 category_binding_names = param_binding_exists_2023(
                     doc,
                     Element.Name.GetValue(shared_parameter),
-                    shared_parameter.GetDefinition().GetDataType() # forge type id
+                    shared_parameter.GetDefinition().GetDataType(),  # forge type id
                 )
 
                 parameters_are_all_bound = True
                 for category_name in category_names:
                     if category_name not in category_binding_names:
-                        return_value.update_sep(False, "Shared parameter with guid: {} is not bound to category: {}.".format(shared_parameter_guid, category_name))
+                        return_value.update_sep(
+                            False,
+                            "Shared parameter with guid: {} is not bound to category: {}.".format(
+                                shared_parameter_guid, category_name
+                            ),
+                        )
                         parameters_are_all_bound = False
 
                 break
-        
+
         if not shared_parameter_found:
-            return_value.update_sep(False, "Shared parameter with guid: {} not found in document.".format(shared_parameter_guid))
-    
+            return_value.update_sep(
+                False,
+                "Shared parameter with guid: {} not found in document.".format(
+                    shared_parameter_guid
+                ),
+            )
+
+    return return_value
+
+
+def set_shared_parameter_value_by_guid(doc, element, guid, value):
+    """
+    Sets a shared parameter value by guid
+
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param element: The element.
+    :type element: Autodesk.Revit.DB.Element
+    :param guid: The guid of the parameter.
+    :type guid: str
+    :param value: The value to set.
+    :type value: object
+    """
+
+    return_value = Result()
+    try:
+        # get shared parameters from revit document
+        shared_parameters = get_all_shared_parameters(doc)
+
+        # get the parameter name
+        parameter_name = get_parameter_name_by_guid(shared_parameters, guid)
+
+        # set the parameter value
+        set_parameter_without_transaction_wrapper_by_name(
+            doc, element, parameter_name, value
+        )
+
+        return_value.append_message(
+            "Set shared parameter value for element with id: {}.".format(
+                element.Id.IntegerValue
+            )
+        )
+    except Exception as e:
+        return_value.update_sep(
+            False,
+            "Failed to set shared parameter value for element with id: {}. Error: {}".format(
+                element.Id.IntegerValue, str(e)
+            ),
+        )
+
     return return_value

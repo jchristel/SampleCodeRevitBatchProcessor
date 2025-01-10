@@ -21,15 +21,60 @@
 
 
 from duHast.Utilities.Objects.result import Result
+from PushIt.Models.Room import Room
+from PushIt.Utilities.shared_parameters import set_shared_parameter_value_by_guid
+
 
 def update_single_family(doc, family_instance, room, shared_parameter_data):
 
+    # expects a family instance and a room object
+    if isinstance(room, Room) == False:
+        raise TypeError(
+            "room needs to be of type Room. Got {} instead".format(type(room))
+        )
 
-    #TODO: read the area designed value !!
+    # set up place holder for the area designed value
+    area_designed = get_parameter_value_by_name(
+        family_instance, shared_parameter_data[2].keys()[0]
+    )
+
+    # set up an action which can be executed in a transaction which updates the family instance parameters
+    def action():
+        action_return_value = Result()
+        try:
+            # update the room id
+            action_return_value.update(
+                set_shared_parameter_value_by_guid(
+                    doc, family_instance, room.id.parameter_guid, room.id.value
+                )
+            )
+
+            # update the area briefed
+            action_return_value.update(
+                set_shared_parameter_value_by_guid(
+                    doc, family_instance, room.area_briefed.parameter_guid, room.area_briefed.value
+                )
+            )
+
+            # update the other properties
+            for other_property in room.other_properties:
+                action_return_value.update(
+                    set_shared_parameter_value_by_guid(
+                        doc, family_instance, other_property.parameter_guid, other_property.value
+                    )
+                )
+
+            # read the area designed value
+
+        except Exception as e:
+            action_return_value.update_sep(
+                False, "Failed to update family instance parameters: {}".format(e)
+            )
+
+        return action_return_value
+
+    # TODO: read the area designed value !!
     # expects and RFamiliy object in Result.result list
     return_value = Result()
 
     return return_value
-
-
-

@@ -65,7 +65,7 @@ def update_single_family(doc, family_instance, room, shared_parameter_data):
             # update the room id
             action_return_value.update(
                 set_shared_parameter_value_by_guid(
-                    doc, family_instance, room.id.parameter_guid, room.id.value
+                    doc, family_instance, room.id.parameter_guid, room.id.id
                 )
             )
 
@@ -110,8 +110,12 @@ def update_single_family(doc, family_instance, room, shared_parameter_data):
     return_value.update(dummy)
 
     # get the family data after the update
-    family_after_update = extract_single_family_data(family_instance=family_instance, shared_parameter_data=shared_parameter_data)
+    family_after_update = extract_single_family_data(
+        doc=doc, 
+        family_instance=family_instance, 
+        shared_parameter_data=shared_parameter_data
+    )
     
-    return_value.Result.append(family_after_update)
+    return_value.result.append(family_after_update)
 
     return return_value

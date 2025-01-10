@@ -5,21 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" >
     <!-- a style for the data grid to indicate a filter is applied-->
-    <UserControl.Resources>
-        <Style TargetType="DataGrid" x:Key="DataGridBorderStyle">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding SelectedColumnFilterValue}" Value="">
-                    <Setter Property="BorderBrush" Value="Gray"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding SelectedColumnFilterValue}" Value="{x:Null}">
-                    <Setter Property="BorderBrush" Value="Gray"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding SelectedColumnFilterValue}">
-                    <Setter Property="BorderBrush" Value="Red"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>
     <Grid>
         <!-- Add your UI elements here -->
         <Grid.RowDefinitions>

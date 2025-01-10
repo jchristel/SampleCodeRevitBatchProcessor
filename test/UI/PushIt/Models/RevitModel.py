@@ -252,6 +252,7 @@ class RevitModel(ViewModelBase, Base):
 
         # check if the room of interest is set
         if self._room_of_interest is None:
+            print("Room of interest is not set.")
             return
 
         # get the selected elements from the revit ui:
@@ -282,9 +283,11 @@ class RevitModel(ViewModelBase, Base):
         # the element can be removed from the room
         # and the new element can be added to the room
         revit_family_instance_old = extract_single_family_data(
+            doc=doc,
             family_instance=selected_element,
             shared_parameter_data=shared_parameter_data,
         )
+        print("revit_family_instance_old: {}".format(revit_family_instance_old))
 
         # update the element in Revit with the new room properties
         update_single_family_result = update_single_family(
@@ -293,6 +296,8 @@ class RevitModel(ViewModelBase, Base):
             room=self._room_of_interest,
             shared_parameter_data=shared_parameter_data,
         )
+        print("update_single_family_result: {}".format(update_single_family_result))
+        
 
         # add the revit element to the room
         if update_single_family_result.status is True:
@@ -300,6 +305,8 @@ class RevitModel(ViewModelBase, Base):
                 update_single_family_result.result[0]
             )
 
+        print("updated room of interest: {}".format(self._room_of_interest))
+        
         # remove previously pushed element from the room in data model
         self.remove_placed_family_from_room(revit_family_instance_old)
 

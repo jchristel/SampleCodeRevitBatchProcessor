@@ -46,7 +46,7 @@ def get_parameter_name_by_guid(parameters, guid):
 
     for parameter in parameters:
         if parameter.GuidValue.ToString() == guid:
-            return parameter.Definition.Name
+            return parameter.GetDefinition().Name
 
     return None
 
@@ -187,12 +187,12 @@ def set_shared_parameter_value_by_guid(doc, element, guid, value):
 
         # set the parameter value
         set_parameter_without_transaction_wrapper_by_name(
-            doc, element, parameter_name, value
+            element, parameter_name, value
         )
 
         return_value.append_message(
-            "Set shared parameter value for element with id: {}.".format(
-                element.Id.IntegerValue
+            "Set shared parameter: {} value: {} for element with id: {}.".format(
+                parameter_name, value, element.Id.IntegerValue
             )
         )
     except Exception as e:

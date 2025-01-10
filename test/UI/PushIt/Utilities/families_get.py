@@ -65,10 +65,12 @@ def get_built_in_categories(category_names):
 
     return categories
 
-def extract_single_family_data(family_instance, shared_parameter_data):
+def extract_single_family_data(doc, family_instance, shared_parameter_data):
     """
     Extracts family data from a single family instance
 
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
     :param family_instance: A family instance
     :type family_instance: Autodesk.Revit.DB.FamilyInstance
     :param shared_parameter_data: Shared parameter data
@@ -89,20 +91,29 @@ def extract_single_family_data(family_instance, shared_parameter_data):
     area_briefed = get_parameter_value_by_name(
         family_instance, shared_parameter_data[1].keys()[0]
     )
-
+    # check for spaces in the area_briefed value, indicating a unit string
+    # if so, split the string and get the first value
+    if " " in area_briefed:
+        area_briefed = area_briefed.split(" ")[0]
+        
     # get the area_design value
     area_design = get_parameter_value_by_name(
         family_instance, shared_parameter_data[2].keys()[0]
     )
+    # check for spaces in the area_design value, indicating a unit string
+    # if so, split the string and get the first value
+    if " " in area_design:
+        area_design = area_design.split(" ")[0]
+    
 
     # get the other properties
     other_properties = []
     for prop in shared_parameter_data[3:]:
         prop_value = get_parameter_value_by_name(family_instance, prop.keys()[0])
-        other_properties.append(prop_value)
+        other_properties.append((prop.keys()[0],prop[prop.keys()[0]] ,prop_value))
 
     # get the design set and option values
-    design_set_and_option_data = get_design_set_option_info(family_instance)
+    design_set_and_option_data = get_design_set_option_info(doc=doc, element=family_instance)
 
     # create a new family object
     family = RFamily(
@@ -124,7 +135,7 @@ def extract_single_family_data(family_instance, shared_parameter_data):
 
     return family
 
-def extract_family_data(family_instances, shared_parameter_data):
+def extract_family_data(doc, family_instances, shared_parameter_data):
     """
     Extracts family data from family instances
 
@@ -143,7 +154,11 @@ def extract_family_data(family_instances, shared_parameter_data):
     for family_instance in family_instances:
         
         # get a single family instance
-        family_data_instance = extract_single_family_data(family_instance, shared_parameter_data)
+        family_data_instance = extract_single_family_data(
+            doc=doc,
+            family_instance=family_instance, 
+            shared_parameter_data=shared_parameter_data
+        )
 
         # check if family data instance is not None (room_id value exists)
         if family_data_instance is not None:
@@ -184,6 +199,10 @@ def get_families_in_model(doc, categories, room):
 
     # loop over family instances and extract properties required
     # ignore all families with no room_id value
-    family_data = extract_family_data(family_instances, shared_parameter_data)
+    family_data = extract_family_data(
+        doc=doc,
+        family_instances=family_instances, 
+        shared_parameter_data=shared_parameter_data
+    )
 
     return family_data

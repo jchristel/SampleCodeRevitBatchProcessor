@@ -296,6 +296,9 @@ class RoomsSelectionViewModel(ViewModelBase):
         :type value: int
         """
 
+        # this returns the row index of the filtered data view not of the actual data table.
+        self._selected_index = value
+
         # check if the value is -1 which means no row is selected
         # if so get out of the function 
         if value == -1:
@@ -307,8 +310,6 @@ class RoomsSelectionViewModel(ViewModelBase):
             self._can_push_room_data = False
             return
 
-        # this returns the row index of the filtered default view not the actual data table.
-        self._selected_index = value
         try:
             # get the row view from the data table view
             row_view = self._data_view[value]

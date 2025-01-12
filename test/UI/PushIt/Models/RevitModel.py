@@ -154,7 +154,7 @@ class RevitModel(ViewModelBase, Base):
         for room in room_data:
             if room.id.id in family_dict:
                 # clear any families from the room
-                room.clear_families()
+                room.clear_placed_families()
 
                 # loop over the families and add them to the room if they match
                 # and conditions are met
@@ -164,21 +164,21 @@ class RevitModel(ViewModelBase, Base):
                     add_family = False
                     # check if the family is placed in the active design option / set
                     if (
-                        family.design_option_name == self._active_design_option_name
-                        and family.design_set_name == self._active_design_set_name
+                        family.design_option == self._active_design_option_name
+                        and family.design_set == self._active_design_set_name
                     ):
                         add_family = True
 
                     # check if the family is placed in the main model
                     elif (
-                        family.design_set_name == "Main Model"
-                        and family.design_option_name == ""
+                        family.design_set == "Main Model"
+                        and family.design_option == "-"
                     ):
                         add_family = True
 
                     # check if the family is placed in another design sets primary design option
                     elif (
-                        family.design_set_name == self._active_design_option_name
+                        family.design_set == self._active_design_option_name
                         and family.design_option_is_primary is True
                     ):
                         add_family = True
@@ -188,7 +188,7 @@ class RevitModel(ViewModelBase, Base):
                         # check if family properties match room properties when
                         # adding a family to a room, except for area designed
                         # if they do, add the family to the room otherwise skip
-                        room.add_family(family)
+                        room.add_placed_family(family)
 
                 # Remove the matched families from the dictionary to speed up the search
                 del family_dict[room_id]
@@ -212,7 +212,7 @@ class RevitModel(ViewModelBase, Base):
 
         # set class properties
         self._active_design_option_name = (
-            "" if active_design_option is None else active_design_option.Name
+            "-" if active_design_option is None else active_design_option.Name
         )
         self._active_design_set_name = (
             "Main Model"
@@ -336,6 +336,7 @@ class RevitModel(ViewModelBase, Base):
             ],  # a room object to get the properties we are interested in
         )
 
+        print("families in model: {}".format(len(families)))
         # set the active design option and design set names
         self._set_active_design_option_and_design_set(doc)
 

@@ -435,7 +435,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         if property_changed_args.PropertyName != event_names.REVIT_MODEL_ROOMS_UPDATED:
             return
 
-        print("Updating room data...")
+        #print("Updating room data...")
         
         # create the data table which is used to store the room data
         data_table = self.create_rooms_data_table()
@@ -570,11 +570,11 @@ class RoomsSelectionViewModel(ViewModelBase):
         # set up the data table
         data_table = DataTable()
 
-        print(
-            "Creating data table...of {} rooms.".format(
-                len(self._revit_model.get_all_rooms())
-            )
-        )
+        # print(
+        #     "Creating data table...of {} rooms.".format(
+        #         len(self._revit_model.get_all_rooms())
+        #     )
+        # )
         # add columns to the data table
         for room_model_instance in self._revit_model.get_all_rooms():
             # add a column per property
@@ -623,7 +623,7 @@ class RoomsSelectionViewModel(ViewModelBase):
             if self.DataView is None:
                 return
 
-            print("Filtering room data...{}".format(property_changed_args.PropertyName))
+            #print("Filtering room data...{}".format(property_changed_args.PropertyName))
             # check if the filter value is empty
             if self.SelectedColumnFilterValue == "":
                 # clear the filter on the data view
@@ -642,7 +642,7 @@ class RoomsSelectionViewModel(ViewModelBase):
                 column_name, self.SelectedColumnFilterValue
             )
 
-            print("...{}".format(filter_value))
+            #print("...{}".format(filter_value))
             # filter the data view
             try:
                 # set the filter on the data view
@@ -652,8 +652,9 @@ class RoomsSelectionViewModel(ViewModelBase):
             except Exception as e:
                 print("Error: {} in filter: {}".format(e, filter_value))
         else:
-            print(
-                "not Filtering room data...{}".format(
-                    property_changed_args.PropertyName
-                )
-            )
+            pass
+            #print(
+            #    "not Filtering room data...{}".format(
+            #        property_changed_args.PropertyName
+            #    )
+            #)

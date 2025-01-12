@@ -33,7 +33,7 @@ from System.Collections.Generic import List
 from duHast.Revit.Common.parameter_get_utils import get_parameter_value_by_name
 from duHast.Revit.Common.design_set_options import get_design_set_option_info
 from duHast.Revit.Common.Objects.design_set_property_names import DesignSetPropertyNames
-from duHast.Revit.Categories.categories_model import get_builtin_category_by_name
+from duHast.Revit.Categories.categories_model import get_builtin_category_by_name,get_category_by_names, get_builtInCategory_from_category
 from duHast.Revit.Family.family_utils import get_family_instances_by_built_in_categories
 
 from PushIt.Models.RevitFamily import RFamily
@@ -41,7 +41,7 @@ from PushIt.Models.RoomProperty import RoomProperty
 from PushIt.Utilities.shared_parameters import get_shared_parameter_data
 
 
-def get_built_in_categories(category_names):
+def get_built_in_categories(doc, category_names):
     """
     Returns all built in categories in a model
 
@@ -58,11 +58,13 @@ def get_built_in_categories(category_names):
     categories = List[BuiltInCategory]()
 
     for cat_name in category_names:
-        cat = get_builtin_category_by_name(cat_name)
-        if cat is None:
+        cat = get_category_by_names(doc=doc, main_category_name=cat_name, sub_category_name=cat_name)
+        cat_built_in = get_builtInCategory_from_category(doc, cat)
+        
+        if cat_built_in is None:
             continue
 
-        categories.Add(cat)
+        categories.Add(cat_built_in)
 
     return categories
 
@@ -164,7 +166,7 @@ def extract_family_data(doc, family_instances, shared_parameter_data):
 
         # check if family data instance is not None (room_id value exists)
         if family_data_instance is not None:
-            family_data.append(family_data)
+            family_data.append(family_data_instance)
 
     return family_data
 
@@ -192,7 +194,7 @@ def get_families_in_model(doc, categories, room):
     shared_parameter_data = get_shared_parameter_data(doc, room)
 
     # families in the model of all categories required
-    built_in_categories = get_built_in_categories(categories)
+    built_in_categories = get_built_in_categories(doc, categories)
 
     # get family instances in model
     family_instances = get_family_instances_by_built_in_categories(

@@ -89,11 +89,11 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         # the data table to store the room data
         self._data_table = None
-        
+
         # set up a specific data view for the data table
         # this is required to be able to sort, group and filter the collection view without affecting the observable collection
         self._data_view = None
-        
+
         # the selected room
         self._selected_room = None
         # the selected row index
@@ -110,7 +110,11 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         # list containing the default column names for the filter
         # place holder list really...will be removed once data is loaded
-        self._column_name_default_list = ["__room_id","__area_briefed","__area_designed"]
+        self._column_name_default_list = [
+            "__room_id",
+            "__area_briefed",
+            "__area_designed",
+        ]
         # create the column filter items (list of column headers to filter by)
         self.create_default_column_filter_items()
 
@@ -143,7 +147,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         # event handlers
         # event handler to filter the room data upon filter selection or filter value entered/changed
         self.add_PropertyChanged(self.filter_room_data)
-        
+
         # the below setting need to be applied here since otherwise the wpf bindings will not work
         # set the default column to filter by
         if self._revit_model.settings.last_column_filter in self._column_filter_items:
@@ -163,14 +167,13 @@ class RoomsSelectionViewModel(ViewModelBase):
             )
         else:
             self.SelectedColumnFilterValue = ""
-        
+
         # subscribe to the rooms changed event
         self._revit_model.add_PropertyChanged(self.update_room_data)
 
         # raise event to populate room data in the view
         self._revit_model_event_handler_manager.setup_data()
 
-        
     @property
     def DataView(self):
         """
@@ -232,8 +235,7 @@ class RoomsSelectionViewModel(ViewModelBase):
             self._revit_model.settings.last_column_filter = value
         except Exception as e:
             print("Error: {} in selected column change. Value: {}".format(e, value))
-        
-        
+
     @property
     def SelectedColumnFilterValue(self):
         """
@@ -294,11 +296,17 @@ class RoomsSelectionViewModel(ViewModelBase):
         :type value: int
         """
 
-        # check if the value is -1
-        # if so get out of the function
+        # check if the value is -1 which means no row is selected
+        # if so get out of the function 
         if value == -1:
+            # reset the selected room
+            self._selected_room = None
+            # set the selected room in the revit model to make it available for pushing
+            self._revit_model.room_of_interest = None
+            # set the flag as to whether a room can be pushed to the revit model
+            self._can_push_room_data = False
             return
-        
+
         # this returns the row index of the filtered default view not the actual data table.
         self._selected_index = value
         try:
@@ -427,7 +435,7 @@ class RoomsSelectionViewModel(ViewModelBase):
             return
 
         print("Updating room data...")
-
+        
         # create the data table which is used to store the room data
         data_table = self.create_rooms_data_table()
 
@@ -445,6 +453,10 @@ class RoomsSelectionViewModel(ViewModelBase):
         # create the column filter items (list of column headers to filter by)
         self.create_column_filter_items()
 
+        # flag indicating the column filter name is new (name saved in settings does not exist in data file)
+        # and therefore the default filter value should be set to ""
+        new_column_filter = False
+
         # set the default column to filter by
         if self._revit_model.settings.last_column_filter in self._column_filter_items:
             self.SelectedColumnFilterItem = (
@@ -452,17 +464,23 @@ class RoomsSelectionViewModel(ViewModelBase):
             )
         else:
             self.SelectedColumnFilterItem = self._column_filter_items[0]
+            # set the flag to indicate that the column filter name is new
+            new_column_filter = True
 
-        # set the default filter value
+        # set the filter value depending on settings and the new column filter name flag
         if (
             self._revit_model.settings.last_column_filter_value
             and self._revit_model.settings.last_column_filter_value != ""
+            and not new_column_filter
         ):
             self.SelectedColumnFilterValue = (
                 self._revit_model.settings.last_column_filter_value
             )
         else:
             self.SelectedColumnFilterValue = ""
+
+        # set a flag to indicate that the design set and option have changed
+        updated_design_set_and_option = False
 
         # check design set and option too
         if (
@@ -472,12 +490,18 @@ class RoomsSelectionViewModel(ViewModelBase):
             self._active_design_option_name = (
                 self._revit_model.active_design_option_name
             )
-            self.RaisePropertyChanged(
-                event_names.VIEW_MODEL_ACTIVE_DESIGN_SET_AND_OPTION
-            )
+            # set the flag to indicate that the design set and option have changed
+            # and therefore the UI needs to be updated
+            updated_design_set_and_option = True
 
         if self._active_design_set_name != self._revit_model.active_design_set_name:
             self._active_design_set_name = self._revit_model.active_design_set_name
+            # set the flag to indicate that the design set and option have changed
+            # and therefore the UI needs to be updated
+            updated_design_set_and_option = True
+
+        # raise property change event for the if required to update the UI
+        if updated_design_set_and_option:
             self.RaisePropertyChanged(
                 event_names.VIEW_MODEL_ACTIVE_DESIGN_SET_AND_OPTION
             )
@@ -497,30 +521,29 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         # get the columns from the data table
         columns = self._data_table.Columns
-        
+
         # build list of new entries
         new_entries = []
         for column in columns:
             new_entries.append(column.ColumnName)
-        
+
         # remove all old entries from global list
         for entry in self._column_filter_items:
             self._column_filter_items.remove(entry)
-        
+
         # add new entries
         for new_entry in new_entries:
             self._column_filter_items.append(new_entry)
-            
+
         # remove any left over default values
         for entry in self._column_name_default_list:
             if entry in self._column_filter_items:
                 self._column_filter_items.remove(entry)
-            
 
     def create_default_column_filter_items(self):
         """
-        Creates the column filter items (list of column headers to filter by).
-        This is used to populate the column filter combo box in the view.
+        Creates the default column filter items (list of column headers to filter by).
+        This is used to populate the column filter combo box in the view with some values.
 
         Note:
 
@@ -530,7 +553,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         # add the column names to the column filter items
         for entry in self._column_name_default_list:
             self._column_filter_items.append(entry)
-            
+
     def create_rooms_data_table(self):
         """
         Creates a data table with the rooms data.
@@ -567,7 +590,11 @@ class RoomsSelectionViewModel(ViewModelBase):
             # add a row per room
             row = data_table.NewRow()
             for prop in room_model_instance.get_property_names():
-                row[prop] = room_model_instance.get_property_value(prop) if room_model_instance.get_property_value(prop) is not None else "<varies>"
+                row[prop] = (
+                    room_model_instance.get_property_value(prop)
+                    if room_model_instance.get_property_value(prop) is not None
+                    else "<varies>"
+                )
             row["Count"] = len(room_model_instance.get_revit_matches())
             data_table.Rows.Add(row)
 
@@ -590,11 +617,15 @@ class RoomsSelectionViewModel(ViewModelBase):
             or property_changed_args.PropertyName
             == event_names.VIEW_MODEL_SELECTED_FILTER_BY_VALUE
         ):
+            # check if the data view is None if so get out of the function
+            # since there is nothing to filter
             if self.DataView is None:
                 return
+
             print("Filtering room data...{}".format(property_changed_args.PropertyName))
             # check if the filter value is empty
             if self.SelectedColumnFilterValue == "":
+                # clear the filter on the data view
                 self.DataView.RowFilter = ""
                 return
 
@@ -613,11 +644,15 @@ class RoomsSelectionViewModel(ViewModelBase):
             print("...{}".format(filter_value))
             # filter the data view
             try:
+                # set the filter on the data view
                 self.DataView.RowFilter = filter_value
-                # let the ui know that the data view has changed
+                # let the ui know that the data view has changed to force a refresh
                 self.RaisePropertyChanged(event_names.VIEW_MODEL_DATA_VIEW_UPDATED)
             except Exception as e:
                 print("Error: {} in filter: {}".format(e, filter_value))
         else:
-            print("not Filtering room data...{}".format(property_changed_args.PropertyName))
-            
+            print(
+                "not Filtering room data...{}".format(
+                    property_changed_args.PropertyName
+                )
+            )

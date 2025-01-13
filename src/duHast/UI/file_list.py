@@ -54,7 +54,6 @@ from duHast.Utilities.files_get import (
     get_files_from_directory_walker_with_filters_simple,
 )
 from duHast.Utilities.files_csv import get_first_row_in_csv_file, read_csv_file
-from duHast.Utilities.files_tab import get_first_row_in_file_no_strip
 from duHast.Revit.BIM360.util_bim_360 import get_bim_360_file_data
 
 

@@ -52,6 +52,33 @@ from duHast.Utilities.files_io import (
 from duHast.Revit.Family.Utility.xml_family_type_reader import read_xml_into_storage
 
 
+def write_data_to_xml_file(application, family_path, xml_path):
+    """
+    Write the family type data to an XML file.
+
+    :param application: The Revit application object.
+    :type application: Autodesk.Revit.ApplicationServices.Application
+    :param family_path: The path of the family file.
+    :type family_path: str
+    :param xml_path: The path of the XML file.
+    :type xml_path: str
+
+    :return: A result object with .status True if successful.
+    :rtype: Result
+    """
+    
+    return_value = Result()
+    try:
+      
+        # Save XML file to temporary location
+        # this is a method of the application object and does not require the family to be open...
+        application.ExtractPartAtomFromFamilyFile(family_path, xml_path)
+        return_value.update_sep(True, "Wrote data to XML file.")
+    except Exception as e:
+        return_value.update_sep(False, "Failed to write XML data: {}".format(e))
+
+    return return_value
+
 def write_data_to_temp_xml_file_and_read_it_back(an_action_to_write_xml_data):
     """
     Write the data to a temp XML file and read it back.

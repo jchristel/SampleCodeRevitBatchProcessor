@@ -106,7 +106,7 @@ def export_overrides_of_selected_viewtemplates(doc, output, forms):
 
         # update return value
         return_value.update(write_result)
-        print(write_result)
+        print(write_result.message)
 
         return return_value
 

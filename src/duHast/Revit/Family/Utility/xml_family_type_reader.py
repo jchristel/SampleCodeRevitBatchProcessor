@@ -61,7 +61,7 @@ def read_xml_file(file_path):
 
     try:
         # Read the data back from the file
-        # added utf-8 encoding to deal with special characters (i.e. °)
+        # added utf-8 encoding to deal with special characters (i.e. )
         with open(file_path, "r", encoding="utf-8") as file:
             xml_content = file.read()
 
@@ -185,7 +185,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
                     except Exception as e:
                         pass
 
-                    # Check if p_value contains a number followed by a unit string (including special characters like °)
+                    # Check if p_value contains a number followed by a unit string (including special characters)
                     number_unit_pattern = re.compile(r"^(\d+(\.\d+)?)\s*([^\d\s]+)$")
                     match = number_unit_pattern.match(p_value)
                     if match:

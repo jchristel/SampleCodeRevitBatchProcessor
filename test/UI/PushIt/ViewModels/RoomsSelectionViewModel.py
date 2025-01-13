@@ -53,9 +53,11 @@ clr.AddReference("System.Data")
 from System.Data import DataTable, DataView
 
 from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
+from duHast.Utilities.files_io import file_exist
 
 from PushIt.Commands.PushRoomDataCommand import PushRoomDataCommand
 from PushIt.Commands.RaiseRevitEventCommand import RaiseRevitEventCommand
+from PushIt.Commands.LoadRoomDataCommand import LoadRoomDataCommand
 from PushIt.Utilities import event_names
 
 
@@ -86,6 +88,8 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         # set the data path
         self._data_path = self._revit_model.settings.rooms_data_file_path
+        # check if the data path is valid
+        self._data_path_is_valid = file_exist(self._data_path)
 
         # the data table to store the room data
         self._data_table = None
@@ -127,6 +131,12 @@ class RoomsSelectionViewModel(ViewModelBase):
         self._push_data_command = PushRoomDataCommand(
             rooms_selection_view_model=self,
             execute=self._revit_model_event_handler_manager.push_single_room_data,
+        )
+
+        # the command used to raise the revit external event which in turn calls a function loading the room data from the data file
+        self._load_data_command = LoadRoomDataCommand(
+            rooms_selection_view_model=self,
+            execute=self._revit_model_event_handler_manager.setup_data,
         )
 
         # the command used to raise the revit external event which in turn calls a function refreshing the rooms in the revit model
@@ -300,7 +310,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         self._selected_index = value
 
         # check if the value is -1 which means no row is selected
-        # if so get out of the function 
+        # if so get out of the function
         if value == -1:
             # reset the selected room
             self._selected_room = None
@@ -349,6 +359,9 @@ class RoomsSelectionViewModel(ViewModelBase):
         # set the data path value
         self._data_path = value
 
+        # check if the data path is valid
+        self._data_path_is_valid = file_exist(value)
+
         # update the room data file in the revit model
         # so it can be checked against the current path
         # and if it is valid
@@ -361,6 +374,14 @@ class RoomsSelectionViewModel(ViewModelBase):
         # raise property change event for the data path to populate the data grid view
         # with the new data from the new file and the revit model
         self._revit_model_event_handler_manager.setup_data()
+
+    @property
+    def DataPathIsValid(self):
+        """
+        A boolean value indicating if the data path is valid.
+        """
+
+        return self._data_path_is_valid
 
     @property
     def ActiveDesignSetAndOptionName(self):
@@ -381,6 +402,16 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
 
         return self._push_data_command
+
+    @property
+    def LoadRoomDataCommand(self):
+        """
+        The command used to load the room data from the data file.
+
+        This is used when the user wants to load the room data from the data file.
+        """
+
+        return self._load_data_command
 
     @property
     def RefreshRoomDataFromModelCommand(self):
@@ -435,8 +466,8 @@ class RoomsSelectionViewModel(ViewModelBase):
         if property_changed_args.PropertyName != event_names.REVIT_MODEL_ROOMS_UPDATED:
             return
 
-        #print("Updating room data...")
-        
+        # print("Updating room data...")
+
         # create the data table which is used to store the room data
         data_table = self.create_rooms_data_table()
 
@@ -623,7 +654,7 @@ class RoomsSelectionViewModel(ViewModelBase):
             if self.DataView is None:
                 return
 
-            #print("Filtering room data...{}".format(property_changed_args.PropertyName))
+            # print("Filtering room data...{}".format(property_changed_args.PropertyName))
             # check if the filter value is empty
             if self.SelectedColumnFilterValue == "":
                 # clear the filter on the data view
@@ -642,7 +673,7 @@ class RoomsSelectionViewModel(ViewModelBase):
                 column_name, self.SelectedColumnFilterValue
             )
 
-            #print("...{}".format(filter_value))
+            # print("...{}".format(filter_value))
             # filter the data view
             try:
                 # set the filter on the data view
@@ -653,8 +684,8 @@ class RoomsSelectionViewModel(ViewModelBase):
                 print("Error: {} in filter: {}".format(e, filter_value))
         else:
             pass
-            #print(
+            # print(
             #    "not Filtering room data...{}".format(
             #        property_changed_args.PropertyName
             #    )
-            #)
+            # )

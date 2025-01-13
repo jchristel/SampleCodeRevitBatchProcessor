@@ -118,41 +118,64 @@
         </Grid>
         <!-- admin model data expander -->
         <Expander Grid.Row="4" Header="Data Admin" Margin="0 5 0 5">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Button 
-                    Grid.Row="0" 
-                    Grid.Column="0" 
-                    Command="{Binding UpdateRoomsInRevitFromRoomDataCommand}" 
-                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
-                    Margin="0 10 5 10" 
-                    Content="Update rooms in model"/>
-                <Button 
-                    Grid.Row="0"
-                    Grid.Column="1" 
-                    Command="{Binding WipeStaleRoomDataCommand}" 
-                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
-                    Margin="5 10 0 10" 
-                    Content="Wipe stale data from rooms in model"/>
-                <TextBlock 
-                    Grid.Row="1"
-                    Grid.ColumnSpan="2"
-                    Margin="0 5 0 0"
-                    Text="Room Data File"/>
-                <TextBox
-                    Grid.Row="2"
-                    Grid.ColumnSpan="2"
-                    Margin="0 5 0 0"
-                    Text="{Binding DataPath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-            </Grid>
+            <StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button 
+                        Grid.Row="0" 
+                        Grid.Column="0" 
+                        Command="{Binding UpdateRoomsInRevitFromRoomDataCommand}" 
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
+                        Margin="0 10 5 10" 
+                        Content="Update rooms in model"/>
+                    <Button 
+                        Grid.Row="0"
+                        Grid.Column="1" 
+                        Command="{Binding WipeStaleRoomDataCommand}" 
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
+                        Margin="5 10 0 10" 
+                        Content="Wipe stale data from rooms in model"/>
+                    <TextBlock 
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Margin="0 5 0 0"
+                        Text="Room Data File"/>
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.ColumnSpan="2"
+                        Margin="0 5 0 0"
+                        Text="{Binding DataPath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button 
+                        Grid.Row="0" 
+                        Grid.Column="1" 
+                        Command="{Binding LoadRoomDataCommand}" 
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
+                        Margin="0 10 5 10" 
+                        Content="Load"/>
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Margin="0 5 0 0"
+                        Text="{Binding DataPath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+            </StackPanel>
         </Expander>
         <!-- push it button row content -->
         <Grid Grid.Row="5">

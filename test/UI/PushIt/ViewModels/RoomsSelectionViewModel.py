@@ -89,7 +89,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         # set the data path
         self._data_path = self._revit_model.settings.rooms_data_file_path
         # check if the data path is valid
-        self._data_path_is_valid = file_exist(self._data_path)
+        self.DataPathIsValid = file_exist(self._data_path)
 
         # the data table to store the room data
         self._data_table = None
@@ -261,13 +261,31 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
 
         self._selected_filter_value = value
-
+        # Update the boolean property based on the filter value
+        self.IsFilterApplied = bool(value)
         # raise property change event to update the data table filters
         self.RaisePropertyChanged(event_names.VIEW_MODEL_SELECTED_FILTER_BY_VALUE)
 
         # update the settings
         self._revit_model.settings.last_column_filter_value = value
+    
+    @property
+    def IsFilterApplied(self):
+        """
+        A boolean value indicating if a filter is applied to the data view.
+        """
+        
+        return self._is_filter_applied
 
+    @IsFilterApplied.setter
+    def IsFilterApplied(self, value):
+        """
+        Sets the flag as to whether a filter is applied to the data view.
+        """
+        
+        self._is_filter_applied = value
+        self.RaisePropertyChanged(event_names.VIEW_MODEL_IS_FILTER_APPLIED)
+        
     @property
     def CanPushRoomData(self):
         """
@@ -360,7 +378,7 @@ class RoomsSelectionViewModel(ViewModelBase):
         self._data_path = value
 
         # check if the data path is valid
-        self._data_path_is_valid = file_exist(value)
+        self.DataPathIsValid = file_exist(value)
 
         # update the room data file in the revit model
         # so it can be checked against the current path
@@ -371,10 +389,6 @@ class RoomsSelectionViewModel(ViewModelBase):
         # check the new file path
         self._revit_model.RaisePropertyChanged(event_names.VIEW_MODEL_DATA_FILE_PATH)
 
-        # raise property change event for the data path to populate the data grid view
-        # with the new data from the new file and the revit model
-        self._revit_model_event_handler_manager.setup_data()
-
     @property
     def DataPathIsValid(self):
         """
@@ -382,6 +396,15 @@ class RoomsSelectionViewModel(ViewModelBase):
         """
 
         return self._data_path_is_valid
+
+    @DataPathIsValid.setter
+    def DataPathIsValid(self, value):
+        """
+        Sets the data path validity.
+        """
+
+        self._data_path_is_valid = value
+        self.RaisePropertyChanged(event_names.VIEW_MODEL_SELECTED_FILE_PATH_IS_VALID)
 
     @property
     def ActiveDesignSetAndOptionName(self):

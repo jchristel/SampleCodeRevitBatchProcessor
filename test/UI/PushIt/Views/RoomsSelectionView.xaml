@@ -6,10 +6,10 @@
              mc:Ignorable="d" >
     <!-- a style for the data grid to indicate a filter is applied-->
     <UserControl.Resources>
-        <Style TargetType="DataGrid" x:Key="DataGridBorderStyle">
+        <Style TargetType="Border" x:Key="grid_border">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding SelectedColumnFilterValue}" Value="">
-                    <Setter Property="BorderBrush" Value="Gray"/>
+                    <Setter Property="BorderBrush" Value="Blue"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding SelectedColumnFilterValue}" Value="{x:Null}">
                     <Setter Property="BorderBrush" Value="Gray"/>
@@ -44,65 +44,83 @@
             <TextBlock Grid.Column="0" Text="PushIt..Real Good(tm)" FontSize="24"/>
         </Grid>
         <!-- filter -->
-        <Expander Grid.Row="1" Header="Filters" Margin="0 5 0 5">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0"
-                Grid.Column="0"
-                Margin="0 5 5 5"
-                Text="Select Column" />
-            <ComboBox Grid.Row="1"
-                Grid.Column="0"
-                Margin="0 5 5 5"
-                ItemsSource="{Binding ColumnFilterItems}"
-                SelectedValue="{Binding Path=SelectedColumnFilterItem,Mode=TwoWay}" />
-            <TextBlock Grid.Row="0"
-                Grid.Column="1"
-                Margin="5 5 0 5"
-                Text="Enter filter value" />
-            <!-- filter value -->
-            <TextBox
-                    Grid.Row="1"
+        <Border Grid.Row="1" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+            <Expander Header="Filters" Margin="5 5 5 5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="0 5 5 5"
+                    Text="Select Column" />
+                <ComboBox Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="0 5 5 5"
+                    ItemsSource="{Binding ColumnFilterItems}"
+                    SelectedValue="{Binding Path=SelectedColumnFilterItem,Mode=TwoWay}" />
+                <TextBlock Grid.Row="0"
                     Grid.Column="1"
                     Margin="5 5 0 5"
-                    Text="{Binding SelectedColumnFilterValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-            </Grid>
-        </Expander>
+                    Text="Enter filter value" />
+                <!-- filter value -->
+                <TextBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="5 5 0 5"
+                        Text="{Binding SelectedColumnFilterValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+            </Expander>
+        </Border>
         <!-- grid view -->
-        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto">
-            <Grid x:Name="grid" MinWidth="400" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}">
-                <DataGrid x:Name="dataGrid" 
-                ItemsSource="{Binding DataView}" 
-                AutoGenerateColumns="True" 
-                IsReadOnly="True"
-                CanUserSortColumns="True"
-                SelectionMode="Single" 
-                SelectedIndex="{Binding SelectedIndex}"
-                ColumnWidth="*"
-                HorizontalAlignment="Stretch">
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Setter Property="Background" Value="Red" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Count}" Value="1">
-                                    <Setter Property="Background" Value="LightGray"></Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Count}" Value="0">
-                                    <Setter Property="Background" Value="White"></Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle>
-                </DataGrid>
-            </Grid>
-        </ScrollViewer>
+        <Border Grid.Row="2" CornerRadius="1"  Margin="0 2 0 2">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsFilterApplied}" Value="True">
+                            <Setter Property="BorderBrush" Value="Orange"/>
+                            <Setter Property="BorderThickness" Value="4"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsFilterApplied}" Value="False">
+                            <Setter Property="BorderBrush" Value="Gray"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+        </Border.Style>
+            <ScrollViewer  Margin="5" HorizontalScrollBarVisibility="Auto">
+                <Grid MinWidth="400" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}">
+                    <DataGrid x:Name="dataGrid" 
+                    ItemsSource="{Binding DataView}" 
+                    AutoGenerateColumns="True" 
+                    IsReadOnly="True"
+                    CanUserSortColumns="True"
+                    SelectionMode="Single" 
+                    SelectedIndex="{Binding SelectedIndex}"
+                    ColumnWidth="*"
+                    HorizontalAlignment="Stretch">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="Red" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Count}" Value="1">
+                                        <Setter Property="Background" Value="LightGray"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Count}" Value="0">
+                                        <Setter Property="Background" Value="White"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                    </DataGrid>
+                </Grid>
+            </ScrollViewer>
+        </Border>
         <!-- button row content -->
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
@@ -117,66 +135,65 @@
             <TextBlock Grid.Column="1" Margin="5 5 0 5" Text="{Binding ActiveDesignSetAndOptionName}"/>
         </Grid>
         <!-- admin model data expander -->
-        <Expander Grid.Row="4" Header="Data Admin" Margin="0 5 0 5">
-            <StackPanel>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Button 
-                        Grid.Row="0" 
-                        Grid.Column="0" 
-                        Command="{Binding UpdateRoomsInRevitFromRoomDataCommand}" 
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
-                        Margin="0 10 5 10" 
-                        Content="Update rooms in model"/>
-                    <Button 
-                        Grid.Row="0"
-                        Grid.Column="1" 
-                        Command="{Binding WipeStaleRoomDataCommand}" 
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
-                        Margin="5 10 0 10" 
-                        Content="Wipe stale data from rooms in model"/>
-                    <TextBlock 
-                        Grid.Row="1"
-                        Grid.ColumnSpan="2"
-                        Margin="0 5 0 0"
-                        Text="Room Data File"/>
-                    <TextBox
-                        Grid.Row="2"
-                        Grid.ColumnSpan="2"
-                        Margin="0 5 0 0"
-                        Text="{Binding DataPath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                </Grid>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Button 
-                        Grid.Row="0" 
-                        Grid.Column="1" 
-                        Command="{Binding LoadRoomDataCommand}" 
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
-                        Margin="5 10 0 10" 
-                        Content="Load"/>
-                    <TextBox
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Margin="0 10 5 10"
-                        Text="{Binding DataPath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                </Grid>
-            </StackPanel>
-        </Expander>
+        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
+            <Expander  Header="Data Admin" Margin="5 5 5 5">
+                <StackPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button 
+                            Grid.Row="0" 
+                            Grid.Column="0" 
+                            Command="{Binding UpdateRoomsInRevitFromRoomDataCommand}" 
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
+                            Margin="0 10 5 10" 
+                            Content="Update rooms in model"/>
+                        <Button 
+                            Grid.Row="0"
+                            Grid.Column="1" 
+                            Command="{Binding WipeStaleRoomDataCommand}" 
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
+                            Margin="5 10 0 10" 
+                            Content="Wipe stale data from rooms in model"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="0 10 5 10"
+                            Padding="0 0 5 0"
+                            Text="Path to SoA:" />
+                        <Button 
+                            Grid.Row="0" 
+                            Grid.Column="2" 
+                            Command="{Binding LoadRoomDataCommand}" 
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
+                            Padding="20 0 20 0"
+                            Margin="5 10 0 10" 
+                            Content="Load"/>
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="5 10 5 10"
+                            Text="{Binding DataPath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid>
+                </StackPanel>
+            </Expander>
+        </Border>
         <!-- push it button row content -->
         <Grid Grid.Row="5">
             <Button Command="{Binding PushItCommand}" 

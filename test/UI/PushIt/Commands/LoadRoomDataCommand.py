@@ -21,7 +21,7 @@
 
 from duHast.UI.Objects.WPF.Commands.CommandBase import CommandBase
 
-from PushIt.Utilities.event_names import VIEW_MODEL_DATA_FILE_PATH
+from PushIt.Utilities.event_names import VIEW_MODEL_SELECTED_FILE_PATH_IS_VALID
 
 class LoadRoomDataCommand(CommandBase):
 
@@ -91,5 +91,5 @@ class LoadRoomDataCommand(CommandBase):
         """
 
         # check if the property changed is the data file path
-        if property_changed_args.PropertyName == VIEW_MODEL_DATA_FILE_PATH:
+        if property_changed_args.PropertyName == VIEW_MODEL_SELECTED_FILE_PATH_IS_VALID:
             self.on_can_execute_changed()

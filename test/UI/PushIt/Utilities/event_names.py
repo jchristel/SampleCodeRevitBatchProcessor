@@ -45,6 +45,15 @@ VIEW_MODEL_DATA_FILE_PATH = "DataFilePath"
 # view data has been updated
 VIEW_MODEL_DATA_VIEW_UPDATED = "DataView"
 
+# selected file path has changed and the valid file path flag has been updated
+VIEW_MODEL_SELECTED_FILE_PATH = "SelectedFilePath"
+
+# event raised when the selected file path is valid flag has been updated
+VIEW_MODEL_SELECTED_FILE_PATH_IS_VALID = "SelectedFilePathIsValid"
+
+# event raised when a row filter is applied to the data view
+VIEW_MODEL_IS_FILTER_APPLIED = "IsFilterApplied"
+
 # view model active design set and option changed
 VIEW_MODEL_ACTIVE_DESIGN_SET_AND_OPTION = "ActiveDesignSetAndOptionName"
 

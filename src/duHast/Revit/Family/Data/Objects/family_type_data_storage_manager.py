@@ -41,7 +41,7 @@ class FamilyTypeDataStorageManager(Base):
 
     def __init__(self):
 
-        super(FamilyTypeDataStorageManager).__init__()
+        super(FamilyTypeDataStorageManager, self).__init__()
 
         # storage for family type data
         self._family_type_data_storage = []

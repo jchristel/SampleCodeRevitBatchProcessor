@@ -62,7 +62,7 @@ def read_xml_file(file_path):
     try:
         # Read the data back from the file
         # added utf-8 encoding to deal with special characters (i.e. )
-        with open(file_path, "r", encoding="utf-8") as file:
+        with open(file_path, "r") as file:
             xml_content = file.read()
 
         # Load the XML content
@@ -70,7 +70,7 @@ def read_xml_file(file_path):
         doc_xml.LoadXml(xml_content)
 
     except Exception as e:
-        pass
+        print(e)
 
     return doc_xml
 

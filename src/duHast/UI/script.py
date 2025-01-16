@@ -49,7 +49,7 @@ from duHast.UI.Objects import file_select_settings as set
 from duHast.UI import workloader as wl
 
 from duHast.Utilities.files_csv import read_csv_file, get_first_row_in_csv_file
-from duHast.Utilities.files_tab import get_first_row_in_file_no_strip
+from duHast.Utilities.files_tab import get_first_row_in_tab_separated_file
 from duHast.Utilities.files_io import (
     file_exist,
     get_file_size,
@@ -358,10 +358,13 @@ def get_file_data_from_text_file(file_path):
         if row_result.status:
             row = row_result.result
     else:
-        row = get_first_row_in_file_no_strip(file_path)
+        #row = get_first_row_in_file_no_strip(file_path)
+        row_result = get_first_row_in_tab_separated_file(file_path)
+        if row_result.status:
+            row = row_result.result
         # make sure we get a list of entries
-        if row is not None:
-            row = row.split("\t")
+        #if row is not None:
+        #    row = row.split("\t")
     if row is not None:
         # bim 360 or autodesk construction cloud files have at least 3 entries
         if len(row) > 2:

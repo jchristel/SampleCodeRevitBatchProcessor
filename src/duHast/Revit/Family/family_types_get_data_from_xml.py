@@ -49,6 +49,7 @@ from duHast.Utilities.files_io import (
     get_file_name_without_ext,
     get_directory_path_from_file_path,
 )
+from duHast.Utilities.files_base_read import read_non_column_based_text_file
 from duHast.Revit.Family.Utility.xml_family_type_reader import read_xml_into_storage
 
 
@@ -86,9 +87,23 @@ def write_data_to_temp_xml_file_and_read_it_back(an_action_to_write_xml_data):
     :param an_action_to_write_xml_data: The action to write the XML data.
     :type an_action_to_write_xml_data: function
 
-    :return: The data read back from the XML file.
-    :rtype: XmlDocument or None if an error occurred.
+    :return: 
+        Result class instance.
+
+        - result.status: True if data was written and read back successfully, False otherwise.
+        - result.message will contain the log data.
+        - result.result will be a XML document object.
+        
+        On exception
+        
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+        - Reload.result will be an empty list.
+
+    :rtype: :class:`.Result`
     """
+
+    return_value = Result()
 
     doc_xml = None
 
@@ -102,19 +117,26 @@ def write_data_to_temp_xml_file_and_read_it_back(an_action_to_write_xml_data):
         an_action_to_write_xml_data(temp_path_xml)
 
         # Read the data back from the file
-        with open(temp_path_xml, "r") as file:
-            xml_content = file.read()
+        read_result = read_non_column_based_text_file(temp_path_xml)
 
+        return_value.update(read_result)
+
+        # Check if the read was successful
+        if return_value.status is False:
+            return return_value
+        
         # Load the XML content
         doc_xml = XmlDocument()
-        doc_xml.LoadXml(xml_content)
+        doc_xml.LoadXml(return_value.result)
+
+        return_value.result = doc_xml
 
     finally:
         # Delete the temporary file
         if os.path.exists(temp_path_xml):
             os.remove(temp_path_xml)
 
-    return doc_xml
+    return return_value
 
 
 def write_data_to_xml_file_and_read_it_back(an_action_to_write_xml_data, xml_file_path):
@@ -126,9 +148,23 @@ def write_data_to_xml_file_and_read_it_back(an_action_to_write_xml_data, xml_fil
     :param xml_file_path: The path of the XML file.
     :type xml_file_path: str
 
-    :return: The data read back from the XML file.
-    :rtype: XmlDocument or None if an error occurred.
+    :return: 
+        Result class instance.
+
+        - result.status: True if data was written and read back successfully, False otherwise.
+        - result.message will contain log data
+        - result.result will be a XML document object.
+        
+        On exception
+        
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+        - Reload.result will be an empty list.
+
+    :rtype: :class:`.Result`
     """
+
+    return_value = Result()
 
     doc_xml = None
 
@@ -138,15 +174,23 @@ def write_data_to_xml_file_and_read_it_back(an_action_to_write_xml_data, xml_fil
         an_action_to_write_xml_data(xml_file_path)
 
         # Read the data back from the file
-        with open(xml_file_path, "r") as file:
-            xml_content = file.read()
+        read_result = read_non_column_based_text_file(xml_file_path)
 
+        return_value.update(read_result)
+
+        # Check if the read was successful
+        if return_value.status is False:
+            return return_value
+        
         # Load the XML content
         doc_xml = XmlDocument()
-        doc_xml.LoadXml(xml_content)
+        doc_xml.LoadXml(return_value.result)
+
+        return_value.result = doc_xml
+
     except Exception as e:
-        return None
-    return doc_xml
+        return_value.update_sep(False, "{}".format(e))
+    return return_value
 
 
 def get_type_data_via_XML_from_family_file(
@@ -181,12 +225,13 @@ def get_type_data_via_XML_from_family_file(
             # this is a method of the application object and does not require the family to be open...
             application.ExtractPartAtomFromFamilyFile(family_path, temp_path_xml)
 
-        doc_xml = None
+        doc_xml_result = Result()
 
         if use_temporary_file:
             # Write the data to an XML file and read it back
-            doc_xml = write_data_to_temp_xml_file_and_read_it_back(action)
+            doc_xml_result = write_data_to_temp_xml_file_and_read_it_back(action)
             return_value.append_message("Writing XML data to temp file.")
+            return_value.update(doc_xml_result)
         else:
             dir_out = get_directory_path_from_file_path(family_path)
             family_name = get_file_name_without_ext(family_path)
@@ -196,20 +241,20 @@ def get_type_data_via_XML_from_family_file(
                 )
             )
             # Write the data to an XML file and read it back
-            doc_xml = write_data_to_xml_file_and_read_it_back(
+            doc_xml_result = write_data_to_xml_file_and_read_it_back(
                 action, os.path.join(dir_out, family_name + ".xml")
             )
+            return_value.update(doc_xml_result)
 
         # check if an xml document was created
-        if doc_xml is None:
-            return_value.update_sep(False, "No XML document was created.")
+        if doc_xml_result.status is False:
             return return_value
 
         # read the xml data into the storage object
-        type_data = read_xml_into_storage(doc_xml, family_name, family_path)
+        type_data = read_xml_into_storage(doc_xml_result.result, family_name, family_path)
 
-        # store list in return object
-        return_value.result.append(type_data)
+        # store list in return object ( clear any previous results )
+        return_value.result =[type_data]
     except Exception as e:
         return_value.update_sep(False, "{}".format(e))
 
@@ -238,20 +283,21 @@ def get_type_data_via_XML_from_family_object(revit_family):
             revit_family.ExtractPartAtom(temp_path_xml)
 
         # Write the data to an XML file and read it back
-        doc_xml = write_data_to_temp_xml_file_and_read_it_back(action)
+        doc_xml_result = write_data_to_temp_xml_file_and_read_it_back(action)
+
+        return_value.update(doc_xml_result)
 
         # check if an xml document was created
-        if doc_xml is None:
-            return_value.update_sep(False, "No XML document was created.")
+        if doc_xml_result.status is False:
             return return_value
 
         # read the xml data into the storage object
         type_data = read_xml_into_storage(
-            doc_xml, family_name=Element.Name.GetValue(revit_family), family_path=""
+            doc_xml_result.result, family_name=Element.Name.GetValue(revit_family), family_path=""
         )
 
-        # store list in return object
-        return_value.result.append(type_data)
+        # store list in return object ( clear any previous results )
+        return_value.result=[type_data]
     except Exception as e:
         return_value.update_sep(False, "{}".format(e))
 

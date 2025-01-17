@@ -412,3 +412,28 @@ def get_unique_headers(files, delimiter=","):
             if header not in headers_unique:
                 headers_unique.append(header)
     return sorted(headers_unique)
+
+def read_non_column_based_text_file(file_path):
+    
+    return_value = Result()
+
+    file = None
+    try:
+        # Read the data from the file
+        with open(file_path, "r") as file:
+            content = file.read()
+            return_value.result = content
+            return_value.update_sep(
+                True, "Read file: {} successfully.".format(file_path)
+            )
+
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to read file: {} with exception: {}".format(file_path, e)
+        )
+
+    finally:
+        if file is not None:
+            file.close()
+
+    return return_value

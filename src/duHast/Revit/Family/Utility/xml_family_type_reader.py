@@ -37,14 +37,12 @@ import re
 clr.AddReference("System.Xml")
 from System.Xml import XmlDocument, XmlNamespaceManager
 
-from duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage import (
-    FamilyTypeParameterDataStorage,
-)
-from duHast.Revit.Family.Data.Objects.family_type_data_storage import (
-    FamilyTypeDataStorage,
-)
-from duHast.Utilities.Objects.result import Result
+from duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage import FamilyTypeParameterDataStorage
+from duHast.Revit.Family.Data.Objects.family_type_data_storage import FamilyTypeDataStorage
+from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
 
+from duHast.Utilities.Objects.result import Result
+from duHast.Utilities.files_base_read import read_non_column_based_text_file
 
 def read_xml_file(file_path):
     """
@@ -57,22 +55,24 @@ def read_xml_file(file_path):
     :rtype: XmlDocument or None if an error occurred.
     """
 
-    doc_xml = None
+    return_value = Result()
 
     try:
         # Read the data back from the file
-        # added utf-8 encoding to deal with special characters (i.e. )
-        with open(file_path, "r") as file:
-            xml_content = file.read()
+        read_reasult  = read_non_column_based_text_file(file_path)
+        return_value.update(read_reasult)
 
+        if read_reasult.status is False:
+            return return_value
+        
         # Load the XML content
         doc_xml = XmlDocument()
-        doc_xml.LoadXml(xml_content)
+        doc_xml.LoadXml(read_reasult.result)
 
     except Exception as e:
-        print(e)
+        return_value.update_sep(False, "Error reading XML file: {}".format(e))
 
-    return doc_xml
+    return return_value
 
 
 def read_xml_into_storage(doc_xml, family_name, family_path):
@@ -86,11 +86,11 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
     :param family_path: The path of the family file.
     :type family_path: str
 
-    :return: A list of family type data objects.
-    :rtype: list[FamilyTypeDataStorage]
+    :return: A family type data storage manager object.
+    :rtype: :class:`.FamilyTypeDataStorageManager`
     """
 
-    type_data = []
+    type_data_storage_manager = FamilyTypeDataStorageManager()
     # Add an XML namespace manager
     name_space_manager = XmlNamespaceManager(doc_xml.NameTable)
     name_space_manager.AddNamespace("atom", "http://www.w3.org/2005/Atom")
@@ -219,6 +219,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
                 last_updated_time=last_updated_time,
             )
 
-            # Add the family type to the list of types
-            type_data.append(fam_type)
-    return type_data
+            # Add the family type to the storage manager for this family
+            type_data_storage_manager.add_family_type_data_storage(fam_type)
+            
+    return type_data_storage_manager

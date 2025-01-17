@@ -34,11 +34,6 @@ Supports 2 methods of data extraction:
 #
 
 
-import clr
-
-clr.AddReference("System.Xml")
-from System.Xml import XmlDocument
-
 import tempfile
 import os
 
@@ -49,7 +44,7 @@ from duHast.Utilities.files_io import (
     get_file_name_without_ext,
     get_directory_path_from_file_path,
 )
-from duHast.Utilities.files_base_read import read_non_column_based_text_file
+from duHast.Utilities.files_xml import read_xml_file
 from duHast.Revit.Family.Utility.xml_family_type_reader import read_xml_into_storage
 
 
@@ -85,7 +80,7 @@ def write_data_to_temp_xml_file_and_read_it_back(an_action_to_write_xml_data):
     Write the data to a temp XML file and read it back.
 
     :param an_action_to_write_xml_data: The action to write the XML data.
-    :type an_action_to_write_xml_data: function
+    :type an_action_to_write_xml_data: function returning a Result object
 
     :return: 
         Result class instance.
@@ -105,8 +100,6 @@ def write_data_to_temp_xml_file_and_read_it_back(an_action_to_write_xml_data):
 
     return_value = Result()
 
-    doc_xml = None
-
     # Create a temporary file
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xml") as temp_file:
         temp_path_xml = temp_file.name
@@ -114,23 +107,20 @@ def write_data_to_temp_xml_file_and_read_it_back(an_action_to_write_xml_data):
     try:
 
         # Write the data to the file
-        an_action_to_write_xml_data(temp_path_xml)
+        write_result = an_action_to_write_xml_data(temp_path_xml)
+        # update the return value
+        return_value.update(write_result)
 
-        # Read the data back from the file
-        read_result = read_non_column_based_text_file(temp_path_xml)
-
-        return_value.update(read_result)
-
-        # Check if the read was successful
+        # Check if the write was successful
         if return_value.status is False:
             return return_value
         
-        # Load the XML content
-        doc_xml = XmlDocument()
-        doc_xml.LoadXml(return_value.result)
+        # Read the data back from the file
+        read_result = read_xml_file(temp_path_xml)
 
-        return_value.result = doc_xml
-
+        # update the return value
+        return_value.update(read_result)
+        
     finally:
         # Delete the temporary file
         if os.path.exists(temp_path_xml):
@@ -166,27 +156,23 @@ def write_data_to_xml_file_and_read_it_back(an_action_to_write_xml_data, xml_fil
 
     return_value = Result()
 
-    doc_xml = None
-
     try:
 
         # Write the data to the file
-        an_action_to_write_xml_data(xml_file_path)
+        write_result = an_action_to_write_xml_data(xml_file_path)
 
-        # Read the data back from the file
-        read_result = read_non_column_based_text_file(xml_file_path)
+        # update the return value
+        return_value.update(write_result)
 
-        return_value.update(read_result)
-
-        # Check if the read was successful
+        # Check if the write was successful
         if return_value.status is False:
             return return_value
         
-        # Load the XML content
-        doc_xml = XmlDocument()
-        doc_xml.LoadXml(return_value.result)
+        # Read the data back from the file
+        read_result = read_xml_file(xml_file_path)
 
-        return_value.result = doc_xml
+        # update the return value
+        return_value.update(read_result)
 
     except Exception as e:
         return_value.update_sep(False, "{}".format(e))
@@ -214,24 +200,24 @@ def get_type_data_via_XML_from_family_file(
     """
 
     return_value = Result()
-
-    # Set up list of type information to be returned
-    type_data = []
-
     try:
         # set up action to write xml data
         def action(temp_path_xml):
-            # Save XML file to temporary location
-            # this is a method of the application object and does not require the family to be open...
-            application.ExtractPartAtomFromFamilyFile(family_path, temp_path_xml)
+            action_return_value = Result()
+            try:
+                # Save XML file to temporary location
+                # this is a method of the application object and does not require the family to be open...
+                application.ExtractPartAtomFromFamilyFile(family_path, temp_path_xml)
+                action_return_value.update_sep(True, "Wrote data to XML file.")
+            except Exception as e:
+                action_return_value.update_sep(False, "Failed to write XML data: {}".format(e))
+            return action_return_value
 
         doc_xml_result = Result()
 
         if use_temporary_file:
             # Write the data to an XML file and read it back
             doc_xml_result = write_data_to_temp_xml_file_and_read_it_back(action)
-            return_value.append_message("Writing XML data to temp file.")
-            return_value.update(doc_xml_result)
         else:
             dir_out = get_directory_path_from_file_path(family_path)
             family_name = get_file_name_without_ext(family_path)
@@ -244,7 +230,8 @@ def get_type_data_via_XML_from_family_file(
             doc_xml_result = write_data_to_xml_file_and_read_it_back(
                 action, os.path.join(dir_out, family_name + ".xml")
             )
-            return_value.update(doc_xml_result)
+
+        return_value.update(doc_xml_result)
 
         # check if an xml document was created
         if doc_xml_result.status is False:
@@ -273,14 +260,17 @@ def get_type_data_via_XML_from_family_object(revit_family):
     """
 
     return_value = Result()
-    # Set up list of type information to be returned
-    type_data = []
-
+    
     try:
         # set up action to write xml data
         def action(temp_path_xml):
-            # Save XML file to temporary location
-            revit_family.ExtractPartAtom(temp_path_xml)
+            action_return_value = Result()
+            try:
+                # Save XML file to temporary location
+                revit_family.ExtractPartAtom(temp_path_xml)
+            except Exception as e:
+                action_return_value.update_sep(False, "Failed to write XML data: {}".format(e))
+            return action_return_value
 
         # Write the data to an XML file and read it back
         doc_xml_result = write_data_to_temp_xml_file_and_read_it_back(action)

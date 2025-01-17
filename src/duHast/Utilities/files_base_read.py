@@ -414,7 +414,26 @@ def get_unique_headers(files, delimiter=","):
     return sorted(headers_unique)
 
 def read_non_column_based_text_file(file_path):
-    
+    """
+    Read a non-column based text file.
+
+    :param file_path: The fully qualified file path to the text file.
+    :type file_path: str
+
+    :return:
+        Result class instance.
+
+        - result.status (bool) True if file was read without an exception, otherwise False.
+        - result.message contains log messages.
+        - result.result will contain the data read from file.
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
+    :rtype: :class:`.Result`
+    """
+
     return_value = Result()
 
     file = None

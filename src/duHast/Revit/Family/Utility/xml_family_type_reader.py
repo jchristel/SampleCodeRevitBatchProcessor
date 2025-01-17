@@ -41,40 +41,6 @@ from duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage import 
 from duHast.Revit.Family.Data.Objects.family_type_data_storage import FamilyTypeDataStorage
 from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
 
-from duHast.Utilities.Objects.result import Result
-from duHast.Utilities.files_base_read import read_non_column_based_text_file
-
-def read_xml_file(file_path):
-    """
-    Read xml data from a file into a XmlDocument object.
-
-    :param file_path: The path to the file.
-    :type file_path: str
-
-    :return: The data read back from the XML file.
-    :rtype: XmlDocument or None if an error occurred.
-    """
-
-    return_value = Result()
-
-    try:
-        # Read the data back from the file
-        read_reasult  = read_non_column_based_text_file(file_path)
-        return_value.update(read_reasult)
-
-        if read_reasult.status is False:
-            return return_value
-        
-        # Load the XML content
-        doc_xml = XmlDocument()
-        doc_xml.LoadXml(read_reasult.result)
-
-    except Exception as e:
-        return_value.update_sep(False, "Error reading XML file: {}".format(e))
-
-    return return_value
-
-
 def read_xml_into_storage(doc_xml, family_name, family_path):
     """
     Read the XML data into the storage object.

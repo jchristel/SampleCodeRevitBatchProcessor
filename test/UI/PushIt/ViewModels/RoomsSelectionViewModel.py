@@ -54,6 +54,7 @@ from System.Data import DataTable, DataView
 
 from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
 from duHast.Utilities.files_io import file_exist
+from duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel import ErrorsViewModel
 
 from PushIt.Commands.PushRoomDataCommand import PushRoomDataCommand
 from PushIt.Commands.RaiseRevitEventCommand import RaiseRevitEventCommand
@@ -61,7 +62,10 @@ from PushIt.Commands.LoadRoomDataCommand import LoadRoomDataCommand
 from PushIt.Utilities import event_names
 
 
-class RoomsSelectionViewModel(ViewModelBase):
+# required for data validation
+from System.ComponentModel import INotifyDataErrorInfo
+
+class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
 
     # the name of the count column in the data table
     count_column_name = "Count"
@@ -88,9 +92,16 @@ class RoomsSelectionViewModel(ViewModelBase):
 
         # set the data path
         self._data_path = self._revit_model.settings.rooms_data_file_path
+        
         # check if the data path is valid
         self.DataPathIsValid = file_exist(self._data_path)
 
+        # errors view model set up
+        self._errors_view_model = ErrorsViewModel()
+       
+        # subscribe to the ErrorsChanged event of the ErrorsViewModel
+        self._errors_view_model.add_ErrorsChanged(self.ErrorsViewModel_ErrorsChanged)
+        
         # the data table to store the room data
         self._data_table = None
 
@@ -377,16 +388,23 @@ class RoomsSelectionViewModel(ViewModelBase):
         # set the data path value
         self._data_path = value
 
+        # clear nay existing errors for the library path
+        self._errors_view_model.ClearErrors("DataPath")
+        
         # check if the data path is valid
         self.DataPathIsValid = file_exist(value)
-
+        
+        if not self.DataPathIsValid:
+            # add an error to the errors view model
+            self._errors_view_model.AddError("DataPath", "The data path is invalid.")
+            
         # update the room data file in the revit model
         # so it can be checked against the current path
         # and if it is valid
         self._revit_model._data_file_path_intermittent = value
 
         # raise property change event in the revit model to
-        # check the new file path
+        # check the new file path and save it if it is valid and different
         self._revit_model.RaisePropertyChanged(event_names.VIEW_MODEL_DATA_FILE_PATH)
 
     @property
@@ -712,3 +730,39 @@ class RoomsSelectionViewModel(ViewModelBase):
             #        property_changed_args.PropertyName
             #    )
             # )
+
+
+    # INotifyDataErrorInfo implementation
+    def GetErrors(self, propertyName):
+        """
+        Returns the errors for the specified property name from the ErrorsViewModel.
+        """
+
+        return self._errors_view_model.GetErrors(propertyName)
+
+    # INotifyDataErrorInfo implementation
+    def HasErrors(self):
+        """
+        Returns True if there are any errors in the errors view model, False otherwise.
+        """
+
+        return self._errors_view_model.HasErrors()
+    
+    # INotifyDataErrorInfo implementation
+    def ErrorsViewModel_ErrorsChanged(self, sender, e):
+        """
+        Event handler for the ErrorsChanged event of the ErrorsViewModel.
+        Raises the property changed event of this view model from the ErrorsChanged event of the ErrorsViewModel.
+        """
+        
+        self.RaisePropertyChanged(e.PropertyName)
+        
+    # INotifyDataErrorInfo implementation, already done in ErrorsViewModel
+    # but required here to implement the interface
+    def add_ErrorsChanged(self, handler):
+        pass
+
+    # INotifyDataErrorInfo implementation, already done in ErrorsViewModel
+    # but required here to implement the interface
+    def remove_ErrorsChanged(self, handler):
+        pass

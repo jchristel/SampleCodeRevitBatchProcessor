@@ -6,6 +6,8 @@ from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
 from duHast.UI.Objects.WPF.Commands.RelayCommand import RelayCommand
 from duHast.UI.Objects.WPF.ViewModels.FilterItem import FilterItem
 from duHast.Utilities.files_get import get_files_from_directory_walker_with_filters_simple
+from duHast.Utilities.directory_io import is_directory, directory_exists
+from duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel import ErrorsViewModel
 
 from System.Collections.ObjectModel import ObservableCollection
 from System.Windows.Data import CollectionViewSource, PropertyGroupDescription
@@ -18,7 +20,10 @@ from Objects.match_status_names import MatchStatusNames
 
 import os
 
-class FamiliesSelectionViewModel(ViewModelBase):
+# required for data validation
+from System.ComponentModel import INotifyDataErrorInfo
+
+class FamiliesSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
     def __init__(self, revit_model, navigation_service):
         super(FamiliesSelectionViewModel, self).__init__()
 
@@ -31,6 +36,13 @@ class FamiliesSelectionViewModel(ViewModelBase):
         
         # the revit wpf model object containing the settings and families to be displayed
         self._revit_model = revit_model
+        
+        # errors view model set up
+        self._errors_view_model = ErrorsViewModel()
+       
+        # subscribe to the ErrorsChanged event of the ErrorsViewModel
+        self._errors_view_model.add_ErrorsChanged(self.ErrorsViewModel_ErrorsChanged)
+        
 
         # commands
         self._reload_families_command = ReloadFamiliesCommand(
@@ -123,10 +135,25 @@ class FamiliesSelectionViewModel(ViewModelBase):
         
         # set the new library path value
         self._revit_model.settings.library_path = value
-        #print("settings: {}".format(self._revit_model.settings.to_json()))
         
-        # update the match status of all families
-        self.update_families()
+        # clear nay existing errors for the library path
+        self._errors_view_model.ClearErrors("LibraryPath")
+        
+        # check if the library path is valid if not add an error to the errors view model
+        lib_path_is_valid = True
+        if self.LibraryPath == "":
+            self._errors_view_model.AddError("LibraryPath", "Library path can not be empty")
+            lib_path_is_valid = False
+        elif is_directory(self.LibraryPath) == False:
+            self._errors_view_model.AddError("LibraryPath", "Library path is not a valid directory")
+            lib_path_is_valid = False
+        elif directory_exists(self.LibraryPath) == False:
+            self._errors_view_model.AddError("LibraryPath", "Library path does not exist")
+            lib_path_is_valid = False
+        
+        if lib_path_is_valid:
+            # update the match status of all families
+            self.update_families()
 
         # raise the change event in order for the reload buttons availability check to be triggered
         self.RaisePropertyChanged("LibraryPath")
@@ -332,6 +359,36 @@ class FamiliesSelectionViewModel(ViewModelBase):
         """
         # refreshes the view in the UI
         self._families_view.Refresh()
+    
+    def GetErrors(self, propertyName):
+        """
+        Returns the errors for the specified property name from the ErrorsViewModel.
+        """
+        return self._errors_view_model.GetErrors(propertyName)
+
+    def HasErrors(self):
+        """
+        Returns True if there are any errors in the errors view model, False otherwise.
+        """
+        return self._errors_view_model.HasErrors()
+    
+    def ErrorsViewModel_ErrorsChanged(self, sender, e):
+        """
+        Event handler for the ErrorsChanged event of the ErrorsViewModel.
+        Raises the property changed event of this view model from the ErrorsChanged event of the ErrorsViewModel.
+        """
+        self.RaisePropertyChanged(e.PropertyName)
+        
+    # INotifyDataErrorInfo implementation, already done in ErrorsViewModel
+    # but required here to implement the interface
+    def add_ErrorsChanged(self, handler):
+        pass
+
+    # INotifyDataErrorInfo implementation, already done in ErrorsViewModel
+    # but required here to implement the interface
+    def remove_ErrorsChanged(self, handler):
+        pass
+    
     
     def close_window(self, window):
         """

@@ -54,7 +54,7 @@ class ViewModelBase(INotifyPropertyChanged):
         Args:
             propertyName (str): the name of the property which has changed
         """
-        args = PropertyChangedEventArgs(propertyName)
+        args = PropertyChangedEventArgs(propertyName) 
         for handler in self.property_changed_handlers:
             handler(self, args)
 

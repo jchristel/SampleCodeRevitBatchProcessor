@@ -432,30 +432,41 @@ class RevitModel(ViewModelBase, Base):
         :type property_changed_args: PropertyChangedEventArgs
         """
 
-        # check if data path has changed
-        if property_changed_args.PropertyName != event_names.VIEW_MODEL_DATA_FILE_PATH:
-            return
+        try:
+            # check if data path has changed
+            if property_changed_args.PropertyName != event_names.VIEW_MODEL_DATA_FILE_PATH:
+                return
 
-        # check if the data file path has changed
-        if self._data_file_path_intermittent == self._settings.rooms_data_file_path:
+            # check if the data file path has changed
+            if self._data_file_path_intermittent == self._settings.rooms_data_file_path:
+                # reset the intermittent storage
+                self._data_file_path_intermittent = None
+                # set the flag to avoid unnecessary updates
+                self._data_path_requires_update_of_rooms = False
+                # no change
+                return
+
+            # check if the file path points to a valid file
+            if file_exist(self._data_file_path_intermittent) is False:
+                # reset the intermittent storage
+                self._data_file_path_intermittent = None
+                # set the flag to avoid unnecessary updates
+                self._data_path_requires_update_of_rooms = False
+                # changed but invalid file path
+                return
+
+            
+            # update the settings file path
+            self._settings.rooms_data_file_path = self._data_file_path_intermittent
+            
             # reset the intermittent storage
             self._data_file_path_intermittent = None
-            # set the flag to avoid unnecessary updates
-            self._data_path_requires_update_of_rooms = False
-
-        # check if the file path points to a valid file
-        if file_exist(self._data_file_path_intermittent) is False:
-            # reset the intermittent storage
-            self._data_file_path_intermittent = None
-            # set the flag to avoid unnecessary updates
-            self._data_path_requires_update_of_rooms = False
-
-        # update the settings file path
-        self._settings.rooms_data_file_path = self._data_file_path_intermittent
-        # reset the intermittent storage
-        self._data_file_path_intermittent = None
-        # set the flag to update the rooms
-        self._data_path_requires_update_of_rooms = True
+            
+            # set the flag to update the rooms
+            self._data_path_requires_update_of_rooms = True
+            
+        except Exception as e:
+            print("Error in check_data_path_updates: {}".format(e))
 
     def get_all_rooms(self):
         """

@@ -35,7 +35,7 @@ import datetime
 import re
 
 clr.AddReference("System.Xml")
-from System.Xml import  XmlNamespaceManager
+from System.Xml import  XmlNamespaceManager, XmlDocument
 
 from duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage import FamilyTypeParameterDataStorage
 from duHast.Revit.Family.Data.Objects.family_type_data_storage import FamilyTypeDataStorage
@@ -63,6 +63,10 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
     :rtype: :class:`.FamilyTypeDataStorageManager`
     """
 
+    if isinstance(doc_xml, XmlDocument) is False:
+        raise TypeError("doc_xml must be an instance of XmlDocument. Got: {}".format(doc_xml))
+    
+    
     type_data_storage_manager = FamilyTypeDataStorageManager()
     # Add an XML namespace manager
     name_space_manager = XmlNamespaceManager(doc_xml.NameTable)
@@ -88,6 +92,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
         # check if this is the category name
         if dummy_scheme == "adsk:revit:grouping":
             root_category_path = dummy_term
+
 
      # get the date and time of the last update
     last_updated_date = None

@@ -110,7 +110,7 @@ def write_data_to_temp_xml_file_and_read_it_back(an_action_to_write_xml_data):
         write_result = an_action_to_write_xml_data(temp_path_xml)
         # update the return value
         return_value.update(write_result)
-
+       
         # Check if the write was successful
         if return_value.status is False:
             return return_value
@@ -118,8 +118,12 @@ def write_data_to_temp_xml_file_and_read_it_back(an_action_to_write_xml_data):
         # Read the data back from the file
         read_result = read_xml_file(temp_path_xml)
 
-        # update the return value
+        # update the return value message and status
+        # for some reasons this adds a XMLDeclaration object to the result field...not sure why
         return_value.update(read_result)
+        
+        # overwrite result field with the actual XML document
+        return_value.result = read_result.result
         
     finally:
         # Delete the temporary file
@@ -171,8 +175,11 @@ def write_data_to_xml_file_and_read_it_back(an_action_to_write_xml_data, xml_fil
         # Read the data back from the file
         read_result = read_xml_file(xml_file_path)
 
-        # update the return value
+        # update the return value message and status
+        # for some reasons this adds a XMLDeclaration object to the result field...not sure why
         return_value.update(read_result)
+        # overwrite result field with the actual XML document
+        return_value.result = read_result.result
 
     except Exception as e:
         return_value.update_sep(False, "{}".format(e))
@@ -260,7 +267,6 @@ def get_type_data_via_XML_from_family_object(revit_family):
     """
 
     return_value = Result()
-    
     try:
         # set up action to write xml data
         def action(temp_path_xml):
@@ -268,24 +274,25 @@ def get_type_data_via_XML_from_family_object(revit_family):
             try:
                 # Save XML file to temporary location
                 revit_family.ExtractPartAtom(temp_path_xml)
+                action_return_value.update_sep(True, "Wrote data to XML file")
             except Exception as e:
                 action_return_value.update_sep(False, "Failed to write XML data: {}".format(e))
             return action_return_value
 
         # Write the data to an XML file and read it back
         doc_xml_result = write_data_to_temp_xml_file_and_read_it_back(action)
-
         return_value.update(doc_xml_result)
 
         # check if an xml document was created
         if doc_xml_result.status is False:
             return return_value
 
+
         # read the xml data into the storage object
         type_data = read_xml_into_storage(
             doc_xml_result.result, family_name=Element.Name.GetValue(revit_family), family_path=""
         )
-
+        
         # store list in return object ( clear any previous results )
         return_value.result=[type_data]
     except Exception as e:

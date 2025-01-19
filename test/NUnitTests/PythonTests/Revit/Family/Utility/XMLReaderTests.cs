@@ -21,41 +21,13 @@ namespace PythonTests.Revit.Family.Utility
             Console.WriteLine(dataTestDirectory);
         }
 
-        [Test]
-        public void ReadXMLFile_ValidPath()
-        {
-            dynamic xmlReader = PythonEngineManager.FamilyXMLTypeReaderModule;
-
-            // Arrange
-            string fileName = Path.Combine(dataTestDirectory, @"XMLData_01\Sample_Family_Five.xml");
-           
-
-            // Act
-            var result = xmlReader.read_xml_file(file_path: fileName);
-
-            // Assert
-            Assert.That(result, Is.Not.Null);
-        }
-
-        [Test]
-        public void ReadXMLFile_InvalidPath()
-        {
-            dynamic xmlReader = PythonEngineManager.FamilyXMLTypeReaderModule;
-
-            // Arrange
-            string invalidFileName = Path.Combine(dataTestDirectory, @"XMLData_01\NonExistentFile.xml");
-
-            // Act
-            var result = xmlReader.read_xml_file(file_path: invalidFileName);
-
-            // Assert
-            Assert.That(result, Is.Null, "should be null");
-        }
+       
 
         [Test]
         public void ReadXMLIntoStorage_ValidData()
         {
-            dynamic xmlReader = PythonEngineManager.FamilyXMLTypeReaderModule;
+            dynamic familyXMLTypeReader = PythonEngineManager.FamilyXMLTypeReaderModule;
+            dynamic xmlReader = PythonEngineManager.FilesXMLModule;
 
             // Arrange
             string fileName = Path.Combine(dataTestDirectory, @"XMLData_01\Sample_Family_Five.xml");
@@ -64,7 +36,7 @@ namespace PythonTests.Revit.Family.Utility
 
             // Act
             var docXml = xmlReader.read_xml_file(file_path: fileName);
-            var result = xmlReader.read_xml_into_storage(doc_xml: docXml, family_name: familyName, family_path: familyPath);
+            var result = familyXMLTypeReader.read_xml_into_storage(doc_xml: docXml.result, family_name: familyName, family_path: familyPath);
 
             // Assert
             Assert.That(result, Is.Not.Null);

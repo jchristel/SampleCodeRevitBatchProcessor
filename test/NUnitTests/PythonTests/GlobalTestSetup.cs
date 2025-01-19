@@ -40,6 +40,8 @@ namespace PythonTests
                 PythonEngineManager.FilesBaseWriteModule = scope.GetVariable("files_base_write");
                 engine.Execute("import duHast.Utilities.files_json as files_json", scope);
                 PythonEngineManager.FilesJSONModule = scope.GetVariable("files_json");
+                engine.Execute("import duHast.Utilities.files_xml as files_xml", scope);
+                PythonEngineManager.FilesXMLModule = scope.GetVariable("files_xml");
 
                 // geometry classes
                 PythonEngineManager.BoundingBoxBaseClass = scope.GetVariable("BoundingBoxBase");

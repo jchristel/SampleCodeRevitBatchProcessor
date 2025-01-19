@@ -35,11 +35,18 @@ import datetime
 import re
 
 clr.AddReference("System.Xml")
-from System.Xml import XmlDocument, XmlNamespaceManager
+from System.Xml import  XmlNamespaceManager
 
 from duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage import FamilyTypeParameterDataStorage
 from duHast.Revit.Family.Data.Objects.family_type_data_storage import FamilyTypeDataStorage
 from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
+
+
+def replace_newlines(input_string):
+    # Replace all new line characters with a space
+    modified_string = input_string.replace('\n', ' ')
+    # Remove trailing spaces
+    return modified_string.rstrip()
 
 def read_xml_into_storage(doc_xml, family_name, family_path):
     """
@@ -147,7 +154,8 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
                     # attempt to read out values
                     p_value = "unknown value"
                     try:
-                        p_value = child_node.InnerText
+                        # replace any new row characters with space and remove trailing spaces
+                        p_value = replace_newlines(child_node.InnerText)
                     except Exception as e:
                         pass
 

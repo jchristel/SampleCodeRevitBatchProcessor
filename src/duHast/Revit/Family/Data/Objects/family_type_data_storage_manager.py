@@ -116,3 +116,19 @@ class FamilyTypeDataStorageManager(Base):
         """
 
         return ["Family name", "Family category", "Family type name", "Family type exists in Library", "Parameter name", "Parameter exists in library", "Parameter difference"]
+    
+
+    def remove_ghost_types(self, type_names):
+        """
+        Remove ghost types from the family type data storage manager
+        Ghost types are types that are not present in the family file but listed in the part atom export from a Family class instance
+
+        Any type that is not in the type_names list is considered a ghost type
+        
+        :param type_names: list of type names which are present in the document (project file) for this family
+        :type type_names: [str]
+        """
+
+        for family_type_data_storage in self.family_type_data_storage:
+            if family_type_data_storage.family_type_name not in type_names:
+                self.family_type_data_storage.remove(family_type_data_storage)

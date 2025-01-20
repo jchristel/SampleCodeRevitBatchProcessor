@@ -46,6 +46,7 @@ from duHast.Utilities.files_io import (
 )
 from duHast.Utilities.files_xml import read_xml_file
 from duHast.Revit.Family.Utility.xml_family_type_reader import read_xml_into_storage
+from duHast.Revit.Family.family_functions import get_symbol_names_of_family
 
 
 def write_data_to_xml_file(application, family_path, xml_path):
@@ -62,10 +63,10 @@ def write_data_to_xml_file(application, family_path, xml_path):
     :return: A result object with .status True if successful.
     :rtype: Result
     """
-    
+
     return_value = Result()
     try:
-      
+
         # Save XML file to temporary location
         # this is a method of the application object and does not require the family to be open...
         application.ExtractPartAtomFromFamilyFile(family_path, xml_path)
@@ -75,6 +76,7 @@ def write_data_to_xml_file(application, family_path, xml_path):
 
     return return_value
 
+
 def write_data_to_temp_xml_file_and_read_it_back(an_action_to_write_xml_data):
     """
     Write the data to a temp XML file and read it back.
@@ -82,15 +84,15 @@ def write_data_to_temp_xml_file_and_read_it_back(an_action_to_write_xml_data):
     :param an_action_to_write_xml_data: The action to write the XML data.
     :type an_action_to_write_xml_data: function returning a Result object
 
-    :return: 
+    :return:
         Result class instance.
 
         - result.status: True if data was written and read back successfully, False otherwise.
         - result.message will contain the log data.
         - result.result will be a XML document object.
-        
+
         On exception
-        
+
         - Reload.status (bool) will be False
         - Reload.message will contain the exception message
         - Reload.result will be an empty list.
@@ -110,21 +112,21 @@ def write_data_to_temp_xml_file_and_read_it_back(an_action_to_write_xml_data):
         write_result = an_action_to_write_xml_data(temp_path_xml)
         # update the return value
         return_value.update(write_result)
-       
+
         # Check if the write was successful
         if return_value.status is False:
             return return_value
-        
+
         # Read the data back from the file
         read_result = read_xml_file(temp_path_xml)
 
         # update the return value message and status
         # for some reasons this adds a XMLDeclaration object to the result field...not sure why
         return_value.update(read_result)
-        
+
         # overwrite result field with the actual XML document
         return_value.result = read_result.result
-        
+
     finally:
         # Delete the temporary file
         if os.path.exists(temp_path_xml):
@@ -142,15 +144,15 @@ def write_data_to_xml_file_and_read_it_back(an_action_to_write_xml_data, xml_fil
     :param xml_file_path: The path of the XML file.
     :type xml_file_path: str
 
-    :return: 
+    :return:
         Result class instance.
 
         - result.status: True if data was written and read back successfully, False otherwise.
         - result.message will contain log data
         - result.result will be a XML document object.
-        
+
         On exception
-        
+
         - Reload.status (bool) will be False
         - Reload.message will contain the exception message
         - Reload.result will be an empty list.
@@ -171,7 +173,7 @@ def write_data_to_xml_file_and_read_it_back(an_action_to_write_xml_data, xml_fil
         # Check if the write was successful
         if return_value.status is False:
             return return_value
-        
+
         # Read the data back from the file
         read_result = read_xml_file(xml_file_path)
 
@@ -217,7 +219,9 @@ def get_type_data_via_XML_from_family_file(
                 application.ExtractPartAtomFromFamilyFile(family_path, temp_path_xml)
                 action_return_value.update_sep(True, "Wrote data to XML file.")
             except Exception as e:
-                action_return_value.update_sep(False, "Failed to write XML data: {}".format(e))
+                action_return_value.update_sep(
+                    False, "Failed to write XML data: {}".format(e)
+                )
             return action_return_value
 
         doc_xml_result = Result()
@@ -245,10 +249,12 @@ def get_type_data_via_XML_from_family_file(
             return return_value
 
         # read the xml data into the storage object
-        type_data = read_xml_into_storage(doc_xml_result.result, family_name, family_path)
+        type_data = read_xml_into_storage(
+            doc_xml_result.result, family_name, family_path
+        )
 
         # store list in return object ( clear any previous results )
-        return_value.result =[type_data]
+        return_value.result = [type_data]
     except Exception as e:
         return_value.update_sep(False, "{}".format(e))
 
@@ -276,7 +282,9 @@ def get_type_data_via_XML_from_family_object(revit_family):
                 revit_family.ExtractPartAtom(temp_path_xml)
                 action_return_value.update_sep(True, "Wrote data to XML file")
             except Exception as e:
-                action_return_value.update_sep(False, "Failed to write XML data: {}".format(e))
+                action_return_value.update_sep(
+                    False, "Failed to write XML data: {}".format(e)
+                )
             return action_return_value
 
         # Write the data to an XML file and read it back
@@ -287,14 +295,22 @@ def get_type_data_via_XML_from_family_object(revit_family):
         if doc_xml_result.status is False:
             return return_value
 
-
         # read the xml data into the storage object
         type_data = read_xml_into_storage(
-            doc_xml_result.result, family_name=Element.Name.GetValue(revit_family), family_path=""
+            doc_xml_result.result,
+            family_name=Element.Name.GetValue(revit_family),
+            family_path="",
         )
-        
+
+        # it looks like the part atom extraction does sometime include types which are no longer present
+        # in the family document (ghost types) so we need to check if we have any types
+        # since family inherits from Element, I should be able to get the document from the family object
+        # and check if the types are still present in the document
+        symbol_names = get_symbol_names_of_family(revit_family)
+        type_data.remove_ghost_types(symbol_names)
+
         # store list in return object ( clear any previous results )
-        return_value.result=[type_data]
+        return_value.result = [type_data]
     except Exception as e:
         return_value.update_sep(False, "{}".format(e))
 

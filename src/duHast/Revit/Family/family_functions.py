@@ -43,3 +43,18 @@ def get_name_to_family_dict(rvt_doc):
     # create a dictionary of family name and family object
     family_dict = {fam.Name: fam for fam in all_families}
     return family_dict
+
+def get_symbol_names_of_family(family):
+    """
+    Get all the symbol names of a family
+    
+    :param family: Family element
+    :type family: Autodesk.Revit.DB.Family
+    :return: List of symbol names of the family
+    :rtype: list
+    """
+
+    symbol_ids = [sym for sym in family.GetFamilySymbolIds()]
+    doc = family.Document
+    symbol_names = [doc.GetElement(sym_id).Name for sym_id in symbol_ids]
+    return symbol_names

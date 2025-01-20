@@ -148,7 +148,7 @@ class FamilyTypeDataStorageManager(Base):
             "Family type exists in Library",
             "Parameter name",
             "Parameter exists in library",
-            "Parameter difference",
+            "Parameter difference (Project -> Library)",
         ]
 
     def remove_ghost_types(self, type_names):
@@ -162,6 +162,13 @@ class FamilyTypeDataStorageManager(Base):
         :type type_names: [str]
         """
 
+        filtered_list = []
         for family_type_data_storage in self.family_type_data_storage:
-            if family_type_data_storage.family_type_name not in type_names:
-                self.family_type_data_storage.remove(family_type_data_storage)
+            if family_type_data_storage.family_type_name in type_names:
+                filtered_list.append(family_type_data_storage)
+            else:
+                # remove the family type data storage instance
+                pass
+        
+        # replace the old list with the filtered list
+        self._family_type_data_storage = filtered_list

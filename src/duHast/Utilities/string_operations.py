@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains a number of helper functions relating to Family elements
+This module contains string functions for string re-formatting. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 """
 #
 # License:
@@ -10,7 +13,7 @@ This module contains a number of helper functions relating to Family elements
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2023, Jan Christel
+# Copyright 2025, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -26,35 +29,33 @@ This module contains a number of helper functions relating to Family elements
 #
 #
 
-from Autodesk.Revit.DB import Element, FilteredElementCollector, Family
 
 
-def get_name_to_family_dict(rvt_doc):
-    """
-    Create a dictionary of family name and the Family element
-    :param rvt_doc: Revit document
-    :type rvt_doc: Autodesk.Revit.DB.Document
-    :return: Dictionary of family name and Family element
-    :rtype: dict
-    """
+import re
 
-    # Get all the families in the model
-    all_families = FilteredElementCollector(rvt_doc).OfClass(Family).ToElements()
-    # create a dictionary of family name and family object
-    family_dict = {fam.Name: fam for fam in all_families}
-    return family_dict
-
-def get_symbol_names_of_family(family):
-    """
-    Get all the symbol names of a family
+def remove_currency_sign(number_string):
+    # Regular expression to match common currency signs at the start of the string
+    pattern = r'^[\$\€\£\¥\₹]'
     
-    :param family: Family element
-    :type family: Autodesk.Revit.DB.Family
-    :return: List of symbol names of the family
-    :rtype: list
-    """
+    # Remove the currency sign if present
+    cleaned_string = re.sub(pattern, '', number_string)
+    
+    return cleaned_string
 
-    symbol_ids = [sym for sym in family.GetFamilySymbolIds()]
-    doc = family.Document
-    symbol_names = [Element.Name.GetValue(doc.GetElement(sym_id)) for sym_id in symbol_ids]
-    return symbol_names
+def replace_new_lines(input_string):
+    # Replace all new line characters with a space
+    modified_string = input_string.replace('\n', ' ')
+    # Remove trailing spaces
+    return modified_string.rstrip()
+
+def remove_trailing_characters_from_number_string(number_string):
+    # Check if p_value contains a number followed by a unit string (including special characters)
+    number_unit_pattern = re.compile(r"^(\d+(\.\d+)?)\s*([^\d\s]+)$")
+    match = number_unit_pattern.match(number_string)
+    if match:
+        # found a unit string, just return the number
+        value = match.group(1)
+        return value
+    else:
+        # No unit string found, just use the value as is
+        return number_string

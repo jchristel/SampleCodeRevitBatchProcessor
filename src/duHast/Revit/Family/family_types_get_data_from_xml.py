@@ -308,7 +308,7 @@ def get_type_data_via_XML_from_family_object(revit_family):
         # and check if the types are still present in the document
         symbol_names = get_symbol_names_of_family(revit_family)
         type_data.remove_ghost_types(symbol_names)
-
+    
         # store list in return object ( clear any previous results )
         return_value.result = [type_data]
     except Exception as e:

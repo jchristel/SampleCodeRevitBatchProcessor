@@ -39,6 +39,14 @@ class FamilyTypeParameterDataStorage(Base):
     # data type for this class ( used in reports as first entry per row )
     data_type = "FamilyTypeParameter"
 
+    unit_type_compare_values_as_floats = [
+        "Length",
+        "Area",
+        "Angle",
+        "Currency",
+        "Flow",
+    ]
+
     # number of properties in this class ( used in report reader function )
     number_of_properties = 5
 
@@ -60,6 +68,15 @@ class FamilyTypeParameterDataStorage(Base):
         self.type_of_parameter = type_of_parameter  # unit type of the parameter ( i.e. length, area, volume, string, etc.)
         self.units = units  # units of the parameter ( there are parameter type which do not have units i.e. string)
         self.value = value  # value of the parameter
+        self.value_as_float = None
+
+        # attempt to convert value to float if possible
+        if self.type_of_parameter in self.unit_type_compare_values_as_floats:
+            try:
+                self.value_as_float = float(self.value)
+            except Exception:
+                self.value_as_float = None
+          
 
     def __eq__(self, other):
         """
@@ -72,14 +89,27 @@ class FamilyTypeParameterDataStorage(Base):
         if not isinstance(other, FamilyTypeParameterDataStorage):
             raise ValueError("other must be an instance of FamilyTypeParameterDataStorage")
         
-        return (
-            self.data_type == other.data_type and
-            self.name == other.name and
-            self.type == other.type and
-            self.type_of_parameter == other.type_of_parameter and
-            self.units == other.units and
-            self.value == other.value
-        )
+        # compare values as floats if the type of parameter is in the list of unit types
+        # that should be compared as floats and the value as float is not None
+        if self.type_of_parameter in self.unit_type_compare_values_as_floats and self.value_as_float is not None:
+            return (
+                self.data_type == other.data_type and
+                self.name == other.name and
+                self.type == other.type and
+                self.type_of_parameter == other.type_of_parameter and
+                self.units == other.units and
+                self.value_as_float == other.value_as_float
+            )
+        else:
+            # compare values as strings
+            return (
+                self.data_type == other.data_type and
+                self.name == other.name and
+                self.type == other.type and
+                self.type_of_parameter == other.type_of_parameter and
+                self.units == other.units and
+                self.value == other.value
+            )
 
     def __ne__(self, other):
         """
@@ -105,6 +135,7 @@ class FamilyTypeParameterDataStorage(Base):
                 self.type_of_parameter,
                 self.units,
                 self.value,
+                self.value_as_float,
             )
         )
 
@@ -134,7 +165,15 @@ class FamilyTypeParameterDataStorage(Base):
             )
         if self.units != other.units:
             differences.append("units: {} != {}".format(self.units, other.units))
-        if self.value != other.value:
-            differences.append("value: {} != {}".format(self.value, other.value))
+        
+        # check if values need to be compared as floats
+        if self.type_of_parameter in self.unit_type_compare_values_as_floats and self.value_as_float is not None and other.value_as_float is not None:
+            # compare values as floats
+            if self.value_as_float != other.value_as_float:
+                differences.append("value: {} != {}".format(self.value_as_float, other.value_as_float))
+        else:
+            # compare values as strings
+            if self.value != other.value:
+                differences.append("value: {} != {}".format(self.value, other.value))
 
         return differences

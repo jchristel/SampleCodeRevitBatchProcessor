@@ -47,7 +47,9 @@ namespace PythonTests.Revit.Family.Utility
         [Test]
         public void ReadXMLIntoStorage_CheckFamilyTypeDataStorageProperties()
         {
-            dynamic xmlReader = PythonEngineManager.FamilyXMLTypeReaderModule;
+
+            dynamic familyXMLTypeReader = PythonEngineManager.FamilyXMLTypeReaderModule;
+            dynamic xmlReader = PythonEngineManager.FilesXMLModule;
 
             // Arrange
             var testFiles = new Dictionary<string, string>
@@ -71,7 +73,7 @@ namespace PythonTests.Revit.Family.Utility
 
                 // Act
                 var docXml = xmlReader.read_xml_file(file_path: fileName);
-                var result = xmlReader.read_xml_into_storage(doc_xml: docXml, family_name: familyName, family_path: familyPath);
+                var result = familyXMLTypeReader.read_xml_into_storage(doc_xml: docXml, family_name: familyName, family_path: familyPath);
 
                 // Assert
                 Assert.That(result, Is.Not.Null,"xml document should not be null");

@@ -64,3 +64,55 @@ class FamilyTypeDataStorageManager(Base):
             )
 
         self._family_type_data_storage.append(family_type_data_storage)
+    
+    def get_difference(self, other):
+        """
+        get the difference between two family type data storage managers
+
+        :param other: the other family type data storage manager
+        :type other: FamilyTypeDataStorageManager
+
+        :return: the difference between the two family type data storage managers
+        :rtype: FamilyTypeDataStorageManager
+        """
+
+        if not isinstance(other, FamilyTypeDataStorageManager):
+            raise ValueError(
+                "other must be an instance of FamilyTypeDataStorageManager"
+            )
+
+        difference = []
+
+        
+        for family_type_data_storage in self.family_type_data_storage:
+
+            # flag to check whether type (by name only exists in other)
+            type_data_storage_has_match = False
+            # loop over storage types from library to find a match
+            for other_family_type_data_storage in other.family_type_data_storage:
+                if family_type_data_storage.is_match_by_names_and_catgory(other_family_type_data_storage):
+                    # set a falg for match
+                    type_data_storage_has_match = True
+                    # get the differences between the two family type data storage instances
+                    diff_entries = family_type_data_storage.get_comparison_report_parameter_values(other_family_type_data_storage)
+                    # if there are differences, add them to the difference list
+                    for entry in diff_entries:
+                        difference.append(entry)
+                    break
+                else:
+                    continue
+
+            if not type_data_storage_has_match:
+                difference.append([family_type_data_storage.family_name, family_type_data_storage.root_category_path, family_type_data_storage.family_type_name, "Not found in library"])
+            
+        return difference
+
+    def get_differences_report_header_row(self):
+        """
+        get the header row for the differences report
+
+        :return: the header row for the differences report
+        :rtype: [str]
+        """
+
+        return ["Family name", "Family category", "Family type name", "Family type exists in Library", "Parameter name", "Parameter exists in library", "Parameter difference"]

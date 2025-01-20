@@ -70,14 +70,15 @@ class FamilyTypeParameterDataStorage(Base):
         """
 
         if not isinstance(other, FamilyTypeParameterDataStorage):
-            return NotImplemented
+            raise ValueError("other must be an instance of FamilyTypeParameterDataStorage")
+        
         return (
-            self.data_type == other.data_type,
-            self.name == other.name,
-            self.type == other.type,
-            self.type_of_parameter == other.type_of_parameter,
-            self.units == other.units,
-            self.value == other.value,
+            self.data_type == other.data_type and
+            self.name == other.name and
+            self.type == other.type and
+            self.type_of_parameter == other.type_of_parameter and
+            self.units == other.units and
+            self.value == other.value
         )
 
     def __ne__(self, other):

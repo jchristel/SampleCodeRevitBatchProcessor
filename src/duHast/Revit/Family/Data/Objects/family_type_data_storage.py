@@ -157,7 +157,7 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
             )
         )
 
-    def is_match_by_names_and_catgory(self, other):
+    def is_match_by_names_and_category(self, other):
         """
         check if this object is a match with another object by family name and category
         ignores:
@@ -196,7 +196,7 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
         return_list = []
 
         # repeats per parameter difference
-        diff_base = [self.family_name,  self.root_category_path,self.family_type_name, "Found match in library"]
+        diff_base = [self.family_name,  self.root_category_path, "Found match in library", self.family_type_name, "Found match in library"]
 
         for param in self.parameters:
             param_other = other.get_parameter_by_name(param.name)

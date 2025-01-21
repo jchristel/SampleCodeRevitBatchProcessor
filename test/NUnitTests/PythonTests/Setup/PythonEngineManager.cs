@@ -80,6 +80,8 @@ namespace PythonTests.Setup
         public static dynamic? FamilyReportReaderModule { get; set; }
         public static dynamic? FamilyMissingFamiliesModule { get; set; }
 
+        public static dynamic? FamilyTypeDataStorageManagerClass { get; set; }
+
         //duHast.Revit.Family.Utilities
 
         public static dynamic? FamilyXMLTypeReaderModule { get; set; }

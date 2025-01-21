@@ -34,6 +34,8 @@ from System.Xml import XmlDocument
 
 from duHast.Utilities.files_base_read import read_non_column_based_text_file
 from duHast.Utilities.Objects.result import Result
+from duHast.UI.file_list import get_revit_files
+
 
 def read_xml_file(file_path):
     """
@@ -72,3 +74,17 @@ def read_xml_file(file_path):
         return_value.update_sep(False, "Error while reading the XML file: {}" .format(e))
     
     return return_value
+
+
+def get_xml_files_from_directory(directory):
+    """
+    Gets all XML files from a directory.
+    :param directory: The directory to search for XML files.
+    :type directory: str
+
+    :return: A list of XML files.
+    :rtype: [:class:`.FileItem`]
+    """
+
+    xml_files = get_revit_files(directory, "*.xml")
+    return xml_files

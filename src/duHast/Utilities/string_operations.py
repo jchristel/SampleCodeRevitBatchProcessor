@@ -29,26 +29,60 @@ This module contains string functions for string re-formatting.
 #
 #
 
-
-
 import re
 
+
 def remove_currency_sign(number_string):
+    """
+    Remove a set of currency signs from a string.
+
+    supported currency signs: $, €, £, ¥, ₹
+
+    :param number_string: The string to remove the currency sign from.
+    :type number_string: str
+
+    :return: The string without the currency sign.
+    :rtype: str
+    """
+
     # Regular expression to match common currency signs at the start of the string
-    pattern = r'^[\$\€\£\¥\₹]'
-    
+    pattern = r"^[\$\€\£\¥\₹]"
+
     # Remove the currency sign if present
-    cleaned_string = re.sub(pattern, '', number_string)
-    
+    cleaned_string = re.sub(pattern, "", number_string)
+
     return cleaned_string
 
+
 def replace_new_lines(input_string):
+    """
+    Replace all new line characters with a space and remove trailing spaces.
+
+    :param input_string: The string to modify.
+    :type input_string: str
+
+    :return: The modified string.
+    :rtype: str
+    """
+
     # Replace all new line characters with a space
-    modified_string = input_string.replace('\n', ' ')
+    modified_string = input_string.replace("\n", " ")
     # Remove trailing spaces
     return modified_string.rstrip()
 
+
 def remove_trailing_characters_from_number_string(number_string):
+    """
+    Remove trailing characters from a number string.
+    This function is used to remove unit strings from a number string.
+
+    :param number_string: The string to remove trailing characters from.
+    :type number_string: str
+
+    :return: The number string without trailing characters.
+    :rtype: str
+    """
+
     # Check if p_value contains a number followed by a unit string (including special characters)
     number_unit_pattern = re.compile(r"^(\d+(\.\d+)?)\s*([^\d\s]+)$")
     match = number_unit_pattern.match(number_string)

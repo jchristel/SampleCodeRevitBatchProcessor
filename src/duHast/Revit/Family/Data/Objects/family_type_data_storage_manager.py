@@ -99,6 +99,7 @@ class FamilyTypeDataStorageManager(Base):
 
             # flag to check whether type (by name only exists in other)
             type_data_storage_has_match = False
+            
             # loop over storage types from library to find a match
             for other_family_type_data_storage in other.family_type_data_storage:
                 if family_type_data_storage.is_match_by_names_and_category(
@@ -124,9 +125,9 @@ class FamilyTypeDataStorageManager(Base):
                     [
                         family_type_data_storage.family_name,
                         family_type_data_storage.root_category_path,
-                        "Found in library",
+                        "Found match in library",
                         family_type_data_storage.family_type_name,
-                        "Not found in library",
+                        "No match in library",
                     ]
                 )
 

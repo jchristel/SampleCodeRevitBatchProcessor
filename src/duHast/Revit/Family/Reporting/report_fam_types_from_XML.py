@@ -37,11 +37,6 @@ import os
 
 from Autodesk.Revit.DB import Family
 
-
-from duHast.UI.file_list import (
-    get_revit_files,
-)
-
 from duHast.Revit.Family.Utility.xml_family_type_reader import read_xml_into_storage
 from duHast.Revit.Family.family_types_get_data_from_xml import get_type_data_via_XML_from_family_object
 from duHast.Revit.Family.family_functions import get_name_to_family_dict
@@ -53,7 +48,7 @@ from duHast.Utilities.Objects.result import Result
 from duHast.UI.Objects.ProgressBase import ProgressBase
 
 
-def get_xml_files_from_directory(process_directories):
+def get_all_xml_files_from_directories(process_directories):
 
     files_found = []
     try:
@@ -145,13 +140,13 @@ def get_type_data_from_project_file(doc, type_data_from_library, progress_callba
         counter = 0
         max_value_xml = len(families_loaded)
 
-        # update progress
-        if progress_callback:
-            progress_callback.update(counter,  max_value_xml )
-
         # loop over loaded families and search for matches based on name and category
         for fam_name, revit_family in families_loaded.items():
             
+            # update progress
+            if progress_callback:
+                progress_callback.update(counter,  max_value_xml )
+
             # check this is a family
             if isinstance(revit_family, Family) is False:
                 return_value.append_message("skipping family: {} as it is not a family".format(fam_name))
@@ -164,32 +159,34 @@ def get_type_data_from_project_file(doc, type_data_from_library, progress_callba
             # get the family category
             fam_cat = revit_family.FamilyCategory.Name
 
-            # get the family type data storage
+            # get the family type data storage from the library
+            found_match = False
+            match_library = None
             for type_data_storage_manager_library in type_data_from_library:
-                found_match = False
-                for fam_storage in type_data_storage_manager_library.family_type_data_storage:
-                    # check if the family name matches
-                    if fam_storage.family_name == fam_name and fam_storage.root_category_path == fam_cat:
-                        # found a match...
-                        found_match = True
-                        break
+                if type_data_storage_manager_library.family_type_data_storage[0].family_name == fam_name and type_data_storage_manager_library.family_type_data_storage[0].root_category_path == fam_cat:
+                    # found a match...
+                    found_match = True
+                    match_library = type_data_storage_manager_library
+                    break
 
-                if found_match is False:
-                    # no match found
-                    matched_data.append((type_data_storage_manager_loaded_fam, None))
+            # check if match in library was found
+            if found_match is False:
+                # no match found
+                matched_data.append(([fam_name,fam_cat ], None))
+                continue
 
-                # create temp xml files from laoded family
-                type_data_result = get_type_data_via_XML_from_family_object(revit_family=revit_family)
-                if (type_data_result.status == False):
-                    return_value.update_sep(False,"Failed to get type data from family: {} with exception: {}".format(fam_name, type_data_result.message))
-                    matched_data.append((type_data_storage_manager_loaded_fam, None))
-                    continue
+            # create temp xml files from laoded family
+            type_data_result = get_type_data_via_XML_from_family_object(revit_family=revit_family)
+            if (type_data_result.status == False):
+                return_value.update_sep(False,"Failed to get type data from family: {} with exception: {}".format(fam_name, type_data_result.message))
+                matched_data.append((type_data_storage_manager_loaded_fam, None))
+                continue
 
-                # get the type data of the family
-                type_data_storage_manager_loaded_fam = type_data_result.result[0]
-                # add to matched data
-                matched_data.append((type_data_storage_manager_loaded_fam, type_data_storage_manager_library))
-            
+            # get the type data of the family
+            type_data_storage_manager_loaded_fam = type_data_result.result[0]
+            # add to matched data
+            matched_data.append((type_data_storage_manager_loaded_fam, match_library))
+
             # update progress
             counter = counter + 1
 
@@ -210,6 +207,7 @@ def get_type_data_from_project_file(doc, type_data_from_library, progress_callba
 
 def build_comparison_report(type_data_matches, ignore_list_path):
 
+    not_in_library = []
     diff = []
     return_value = Result()
     try:
@@ -226,23 +224,37 @@ def build_comparison_report(type_data_matches, ignore_list_path):
 
         # loop over the data and compare
         for entry in type_data_matches:
-            
+            fam_name = ""
+            fam_category = ""
+
+            # get name and catgegory ( for non matched familie this may just be a list of name and category rather than a storage object)
+            if (isinstance(entry[0], list)):
+                fam_name = entry[0][0]
+                fam_category = entry[0][1]
+            else: 
+                # assume there is at least one entry in the storage object
+                fam_name = entry[0].family_type_data_storage[0].family_name
+                fam_category = entry[0].family_type_data_storage[0].root_category_path
+
+
             # check if the family is in ignore list based on name and category
             ignore = False
             for ignore_entry in ignore_data:
-                if ignore_entry[0] == entry[0].family_type_data_storage[0].family_name and ignore_entry[1] == entry[0].family_type_data_storage[0].root_category_path:
+                if ignore_entry[0] == fam_name and ignore_entry[1] == fam_category:
                     ignore = True
                     break
             if ignore:
                 continue
 
             if (entry[1] == None):
-                # family not found in library
-                diff.append([entry[0].family_type_data_storage[0].family_name,  entry[0].family_type_data_storage[0].root_category_path, "No match in library"])
+                if("{}{}".format(fam_name, fam_category) not in not_in_library):
+                    not_in_library.append("{}{}".format(fam_name, fam_category))
+                    # family not found in library
+                    diff.append([fam_name,  fam_category, "No match in library"])
                 continue
             else:
                 # compare the two data sets
-                diff = diff +  entry[0].get_difference(entry[1])
+                diff = diff + entry[0].get_difference(entry[1])
 
     except Exception as e:
         return_value.update_sep(False, "Failed to gather family data with exception: {}".format(e))
@@ -270,8 +282,9 @@ def compare_family_files_against_library(doc, process_directories, ignore_list_p
     t.start()
 
     try:
+
         # get all xml files from the directory representing families in the library (point of truth)
-        xml_files_in_libraries = get_xml_files_from_directory(process_directories)
+        xml_files_in_libraries = get_all_xml_files_from_directories(process_directories)
 
         # check if any xml files were found
         if len(xml_files_in_libraries) == 0:
@@ -280,7 +293,7 @@ def compare_family_files_against_library(doc, process_directories, ignore_list_p
             return return_value
         else:
             return_value.append_message("Found {} XML files in the directories: {}".format(len(xml_files_in_libraries), process_directories))
-        
+
         # get the type data from the library
         type_data_from_library_result = get_type_data_from_library(xml_files_in_libraries, progress_callback)
 
@@ -290,7 +303,7 @@ def compare_family_files_against_library(doc, process_directories, ignore_list_p
             return_value.append_message(t.stop())
             return return_value
         else:
-            return_value.append_message("Successfully gathered type data from the library.")
+            return_value.append_message("Successfully gathered family type data from the library.")
 
         # get type data from the family files in project file
         type_data_from_project_result = get_type_data_from_project_file(doc, type_data_from_library_result.result, progress_callback)
@@ -301,7 +314,7 @@ def compare_family_files_against_library(doc, process_directories, ignore_list_p
             return_value.append_message(t.stop())
             return return_value
         else:
-            return_value.append_message("Successfully gathered type data from the project file.")
+            return_value.append_message("Successfully gathered family type data from the project file.")
 
         # compare the data
         comparison_report_result = build_comparison_report(type_data_from_project_result.result, ignore_list_path)
@@ -310,11 +323,12 @@ def compare_family_files_against_library(doc, process_directories, ignore_list_p
             return_value.append_message(t.stop())
             return return_value
         else:
-            return_value.append_message("Successfully compared the type data.")
+            return_value.append_message("Successfully compared family type data from project file against library.")
             return_value.append_message(t.stop())
 
-        # store the comparison report
-        return_value.result = comparison_report_result.result
+        # store the comparison report as sorted list by family name
+        sorted_list = sorted(comparison_report_result.result, key=lambda x: x[0])
+        return_value.result = sorted_list
 
     except Exception as e:
         return_value.update_sep(

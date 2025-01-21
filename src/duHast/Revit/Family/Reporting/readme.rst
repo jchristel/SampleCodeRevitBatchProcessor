@@ -12,6 +12,19 @@ Standard Reporting
 Reporting based on XML data
 ----------------------------
 
+report_fam_types_differences_from_XML module contains a script which reports on family type differences between a project file and a library of families. 
+
+The script reads in xml files created through the PartAtomExport function of the Revit API and compares the family types in the project file to those in the library.
+The output can be filtered by an ignore list in form of a .csv file. 
+
+Ignore list format:
+
+- columns
+ 
+   - Family name
+   - Family category
+
+Output:
 
 Creates a .csv file with the following columns:
 
@@ -24,14 +37,11 @@ Creates a .csv file with the following columns:
 - Parameter exists in library
 - Parameter difference (Project -> Library)
 
-
-Reports:
+Output content:
 
 - if family does or does not exist in library
 - if type does not exist in library
 - if a parameter value for a given type is different to the parameter value for that type in the library
-
-
 
 
 This report assumes that:

@@ -49,6 +49,15 @@ from duHast.UI.Objects.ProgressBase import ProgressBase
 
 
 def get_all_xml_files_from_directories(process_directories):
+    """
+    Get all xml files from the directories
+
+    :param process_directories: list of directories to search for xml files
+    :type process_directories: list
+    
+    :return: list of xml files found
+    :rtype: [:class:`FileItem`]
+    """
 
     files_found = []
     try:
@@ -61,7 +70,31 @@ def get_all_xml_files_from_directories(process_directories):
     return files_found
 
 
-def get_type_data_from_library(xml_files_in_libraries, progress_callback=None):
+def get_family_type_data_from_library(xml_files_in_libraries, progress_callback=None):
+    """
+    Get the family type data from xml files in the library.
+    XML where created by Revit API PartAtomExport method.
+
+    :param xml_files_in_libraries: list of xml files to search for type data
+    :type xml_files_in_libraries: [:class:`FileItem`]
+    :param progress_callback: progress callback object
+    :type progress_callback: :class:`ProgressBase`
+
+    :return: 
+        Result class instance.
+
+        - result.status: XML conversion status will be returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain which xml file was read and converted into family type data.
+        - result.result will be [:class:`FamilyTypeDataStorageManager`]
+        
+        On exception
+        
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+        - Reload.result will be an empty list
+
+    :rtype: :class:`.Result`
+    """
 
     return_value = Result()
     type_data = []
@@ -89,6 +122,8 @@ def get_type_data_from_library(xml_files_in_libraries, progress_callback=None):
                 # update progress
                 counter = counter + 1
                 continue
+            else:
+                return_value.append_message("Read xml file: {}".format(xml_file.name))
             
             # get the xml document
             xml_doc = xml_doc_status.result
@@ -97,6 +132,8 @@ def get_type_data_from_library(xml_files_in_libraries, progress_callback=None):
                 # update progress
                 counter = counter + 1
                 continue
+            else:
+                return_value.append_message("Retrieved xml document object")
 
             # build the family path (required for xml data)
             fam_name = get_file_name_without_ext(xml_file.name)
@@ -128,7 +165,33 @@ def get_type_data_from_library(xml_files_in_libraries, progress_callback=None):
     return return_value
 
 
-def get_type_data_from_project_file(doc, type_data_from_library, progress_callback=None):
+def get_family_type_data_from_project_file(doc, type_data_from_library, progress_callback=None):
+    """
+    Get the family type data from the families in the project file of families that are in the library only.
+
+    :param doc: Revit document
+    :type doc: Autodesk.Revit.DB.Document
+    :param type_data_from_library: list of family type data from the library
+    :type type_data_from_library: [:class:`FamilyTypeDataStorageManager`]
+    :param progress_callback: progress callback object
+    :type progress_callback: :class:`ProgressBase`
+
+    :return:
+        Result class instance.
+
+        - result.status: XML conversion status will be returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain which xml file was read and converted into family type data.
+        - result.result will be [:class:`FamilyTypeDataStorageManager`]
+
+        On exception
+
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+        - Reload.result will be an empty list
+
+    :rtype: :class:`.Result`
+    """
+
     return_value = Result()
     matched_data = []
     try:
@@ -175,7 +238,7 @@ def get_type_data_from_project_file(doc, type_data_from_library, progress_callba
                 matched_data.append(([fam_name,fam_cat ], None))
                 continue
 
-            # create temp xml files from laoded family
+            # create temp xml files from loaded family
             type_data_result = get_type_data_via_XML_from_family_object(revit_family=revit_family)
             if (type_data_result.status == False):
                 return_value.update_sep(False,"Failed to get type data from family: {} with exception: {}".format(fam_name, type_data_result.message))
@@ -206,8 +269,34 @@ def get_type_data_from_project_file(doc, type_data_from_library, progress_callba
 
 
 def build_comparison_report(type_data_matches, ignore_list_path):
+    """
+    Build a comparison report of the family type data from the project file against the library.
+    Only differences are reported.
 
+    :param type_data_matches: list of matched family type data 
+    :type type_data_matches: [([:class:`FamilyTypeDataStorageManager`], [:class:`FamilyTypeDataStorageManager`])]
+    :param ignore_list_path: path to a csv file containing a list of families to ignore (name, category) in the comparison report.
+    :type ignore_list_path: str
+
+    :return:
+        Result class instance.
+
+        - result.status: Comparison status will be returned in result.status. False if an exception occurred, otherwise True.
+        - result.message: will be empty.
+        - result.result will be [[str]] where each entry is a list of family name, category etc and difference.
+
+        On exception
+
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+        - Reload.result will be an empty list
+
+    :rtype: :class:`.Result`
+    """
+    
+    # families not found in library, used to avoid duplicate entries
     not_in_library = []
+    # list of differences
     diff = []
     return_value = Result()
     try:
@@ -227,7 +316,7 @@ def build_comparison_report(type_data_matches, ignore_list_path):
             fam_name = ""
             fam_category = ""
 
-            # get name and catgegory ( for non matched familie this may just be a list of name and category rather than a storage object)
+            # get name and catgegory ( for non matched family this may just be a list of name and category rather than a storage object)
             if (isinstance(entry[0], list)):
                 fam_name = entry[0][0]
                 fam_category = entry[0][1]
@@ -265,7 +354,35 @@ def build_comparison_report(type_data_matches, ignore_list_path):
     return return_value
 
 
-def compare_family_files_against_library(doc, process_directories, ignore_list_path = None, progress_callback=None):
+def compare_family_files_in_project_against_library(doc, process_directories, ignore_list_path = None, progress_callback=None):
+    """
+    Compare the family type data from the project file against the library.
+    Only differences are reported.
+
+    :param doc: Revit document
+    :type doc: Autodesk.Revit.DB.Document
+    :param process_directories: list of directories to search for xml files
+    :type process_directories: list
+    :param ignore_list_path: path to a csv file containing a list of families to ignore (name, category) in the comparison report.
+    :type ignore_list_path: str
+    :param progress_callback: progress callback object
+    :type progress_callback: :class:`ProgressBase`
+
+    :return:
+        Result class instance.
+
+        - result.status: Comparison status will be returned in result.status. False if an exception occurred, otherwise True.
+        - result.message: Log entries.
+        - result.result will be [[str]] where each entry is a list of family name, category etc and difference.
+
+        On exception
+
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+        - Reload.result will be an empty list
+    
+    :rtype: :class:`.Result`
+    """
 
     return_value = Result()
 
@@ -295,7 +412,7 @@ def compare_family_files_against_library(doc, process_directories, ignore_list_p
             return_value.append_message("Found {} XML files in the directories: {}".format(len(xml_files_in_libraries), process_directories))
 
         # get the type data from the library
-        type_data_from_library_result = get_type_data_from_library(xml_files_in_libraries, progress_callback)
+        type_data_from_library_result = get_family_type_data_from_library(xml_files_in_libraries, progress_callback)
 
         # check if the type data from the library was successfully gathered
         if type_data_from_library_result.status == False or len(type_data_from_library_result.result)==0:
@@ -306,7 +423,7 @@ def compare_family_files_against_library(doc, process_directories, ignore_list_p
             return_value.append_message("Successfully gathered family type data from the library.")
 
         # get type data from the family files in project file
-        type_data_from_project_result = get_type_data_from_project_file(doc, type_data_from_library_result.result, progress_callback)
+        type_data_from_project_result = get_family_type_data_from_project_file(doc, type_data_from_library_result.result, progress_callback)
 
         # check if the type data from the project file was successfully gathered
         if type_data_from_project_result.status == False or len(type_data_from_project_result.result)==0:

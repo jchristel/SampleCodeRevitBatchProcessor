@@ -86,5 +86,9 @@ def get_xml_files_from_directory(directory):
     :rtype: [:class:`.FileItem`]
     """
 
-    xml_files = get_revit_files(directory, "*.xml")
+    xml_files = []
+    try:
+        xml_files = get_revit_files(directory, "*.xml")
+    except Exception:
+        pass
     return xml_files

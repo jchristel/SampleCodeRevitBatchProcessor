@@ -46,6 +46,7 @@ DEBUG_REVIT_FILE_NAME = r"C:\Users\jchristel\Documents\Temp\Debug.rvt"
 import clr
 import System
 import os
+import datetime
 
 # flag whether this runs in debug or not
 debug_ = False
@@ -76,42 +77,106 @@ else:
 # if not, skip
 
 def get_families_from_directory(directory):
+    """
+    Get all family files from a directory. (ignores subdirectories)
+    
+    :param directory: directory to search for family files
+    :type directory: str
+
+    :return: list of family files
+    :rtype: [FileItem]
+    """
+
     family_files = get_revit_files(directory, "*.rfa")
     return family_files
 
 def get_xml_files_from_directory(directory):
+    """
+    Get all xml files from a directory. (ignores subdirectories)
+
+    :param directory: directory to search for xml files
+    :type directory: str
+
+    :return: list of xml files
+    :rtype: [FileItem]
+    """
+
     xml_files = get_revit_files(directory, "*.xml")
     return xml_files
 
+def check_file_item_exists(instances, name_to_check):
+    """
+    Check if a file item exists in a list of file items based on the name property.
+
+    :param instances: list of file items
+    :type instances: [FileItem]
+    :param name_to_check: name to check
+    :type name_to_check: str
+
+    :return: True if a file item with the name exists, False otherwise
+    :rtype: bool
+    """
+
+    return any(instance.name == name_to_check for instance in instances)
+
 def get_families_requiring_update(family_files, xml_files):
+
+    """
+    Get all family files that require updating. A family file requires updating if the corresponding xml file does not exist or is older than the family file.
+
+    :param family_files: list of family files
+    :type family_files: [FileItem]
+    :param xml_files: list of xml files
+    :type xml_files: [FileItem]
+
+    :return: list of family files that require updating
+    :rtype: [str]
+    """
 
     family_files_to_update = []
     # loop over family files
     for fam_file in family_files:
-        #output("checking family: {}".format(fam_file.name), revit_script_util.Output)
+
         # and find a matching xml file
         xml_file = os.path.splitext(fam_file.name)[0] + ".xml"
-        #output("...looking for xml: {}".format(xml_file), revit_script_util.Output)
-        # if the xml file does not exist
-        if xml_file in xml_files:
-            #output("...found matching xml file", revit_script_util.Output)
+       
+        # check if the xml file does exist
+        if check_file_item_exists(xml_files,xml_file):
+            
+            # get time stamp of files
+            xml_file_time_stamp = os.path.getmtime(xml_file)
+            rfa_file_time_stamp = os.path.getmtime(fam_file.name)
+            
+            # convert to something human readable
+            xml_formatted_time = datetime.datetime.fromtimestamp(xml_file_time_stamp)
+            rfa_formatted_time = datetime.datetime.fromtimestamp(rfa_file_time_stamp)
+            
             # if the xml file is older than the family file
-            if os.path.getmtime(xml_file) < os.path.getmtime(fam_file.name):
-                #output("...xml file is older than family file, needs updating", revit_script_util.Output)
+            if xml_file_time_stamp < rfa_file_time_stamp:
+                
+                output("...xml file is older than family file, needs updating. [xml: {} vs rfa: {}]".format(xml_formatted_time, rfa_formatted_time), revit_script_util.Output)
                 # family xml file is older than family file, needs updating
                 family_files_to_update.append(fam_file.name)
             else:
                 # family xml file is up to date
                 pass
-                #output("...xml file is up to date", revit_script_util.Output)
                 
         else:
-            #output("...no matching xml file found", revit_script_util.Output)
             # no matching xml file found
             family_files_to_update.append(fam_file.name)
+
     return family_files_to_update
 
 def create_xml_file(revit_application, family_file):
+    """
+    Create an xml file for a given family file.
+
+    :param revit_application: revit application object
+    :type revit_application: Application
+    :param family_file: family file to create xml file for
+    :type family_file: str
+    """
+
     xml_file = os.path.splitext(family_file)[0] + ".xml"
     result = write_data_to_xml_file(revit_application, family_file, xml_file)
     print(result)
@@ -124,7 +189,7 @@ PROCESS_DIRECTORIES = [
     settings.PATH_TO_UNIONS_LIBRARY,
 ]
 
-output("Processing directories: {}".format(PROCESS_DIRECTORIES), revit_script_util.Output)
+output("Processing directories: \n{}".format("\n".join(PROCESS_DIRECTORIES)), revit_script_util.Output)
 
 # loop through directories
 for directory in PROCESS_DIRECTORIES:
@@ -139,14 +204,15 @@ for directory in PROCESS_DIRECTORIES:
     families_to_update = get_families_requiring_update(families, xml_files)
     output("Families requiring update: {}".format(len(families_to_update)), revit_script_util.Output)
 
+    # if there are families to update
     if families_to_update:
         
         # set up progress 
         fam_counter = 0
         max_fam = len(families_to_update)
+        # create progress , and pipe messages to Revit BatchProcessor console
         progress = ProgressRBPConsole(revit_script_util.Output)
         progress.update(0,max_fam,"Creating XML file(s) for families:")
-        
         
         # iterate through families
         for family in families_to_update:

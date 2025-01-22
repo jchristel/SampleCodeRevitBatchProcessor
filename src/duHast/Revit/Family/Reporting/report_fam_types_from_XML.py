@@ -66,7 +66,10 @@ def build_report(type_data_storage_manager_instances):
     report_data = []
     return_value = Result()
     try:
-        pass
+        for type_data_storage_manager_instance in type_data_storage_manager_instances:
+            report_data.extend(type_data_storage_manager_instance.get_report_data())
+        
+        return_value.result = report_data
     except Exception as e:
         return_value.update_sep(
             False, "Failed to gather family data with exception: {}".format(e)

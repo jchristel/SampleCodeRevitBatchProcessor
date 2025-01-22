@@ -177,3 +177,20 @@ class FamilyTypeParameterDataStorage(Base):
                 differences.append("value: {} != {}".format(self.value, other.value))
 
         return differences
+
+    def get_report_data(self):
+        """
+        get the report data for this object
+
+        :return: the report data
+        :rtype: [str]
+        """
+
+        return [
+            self.data_type,
+            self.name,
+            self.type,
+            self.type_of_parameter,
+            self.units,
+            self.value,
+        ]

@@ -68,7 +68,7 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
 
         # store args in base class
         super(FamilyTypeDataStorage, self).__init__(
-            #data_type=FamilyTypeDataStorage.data_type,
+            # data_type=FamilyTypeDataStorage.data_type,
             data_type=FamilyTypeDataStorage.data_type,
             root_name_path=root_name_path,
             root_category_path=root_category_path,
@@ -179,7 +179,6 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
             and self.family_name == other.family_name
             and self.family_type_name == other.family_type_name
         )
-    
 
     def get_comparison_report_parameter_values(self, other, ignore_property_names=[]):
         """
@@ -196,25 +195,33 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
         return_list = []
 
         # repeats per parameter difference
-        diff_base = [self.family_name,  self.root_category_path, "Found match in library", self.family_type_name, "Found match in library"]
+        diff_base = [
+            self.family_name,
+            self.root_category_path,
+            "Found match in library",
+            self.family_type_name,
+            "Found match in library",
+        ]
 
         for param in self.parameters:
             param_other = other.get_parameter_by_name(param.name)
             if param_other is None:
                 # parameter not found in other object
-                diff_parameter=[param.name,"No match in library"]
-                return_list.append(diff_base+diff_parameter)
+                diff_parameter = [param.name, "No match in library"]
+                return_list.append(diff_base + diff_parameter)
             else:
                 if param != param_other and param.name not in ignore_property_names:
                     para_diff = param.get_difference(param_other)
                     for single_difference in para_diff:
                         # write each difference as a separate entry
-                        parameter_diff_entry = [param.name, "Found match in library", single_difference]
-                        return_list.append(diff_base+parameter_diff_entry)
+                        parameter_diff_entry = [
+                            param.name,
+                            "Found match in library",
+                            single_difference,
+                        ]
+                        return_list.append(diff_base + parameter_diff_entry)
 
         return return_list
-        
-        
 
     def get_difference(self, other, ignore_property_names=[]):
         """
@@ -230,43 +237,57 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
         # holds all the differences per para
         diff = []
 
-        # repeats per parameter difference
-        diff_base = []
-
         # should return a list with an entry for each difference
         # if no differences are found the list should be empty
 
-
-        if self.data_type != other.data_type and "data_type" not in ignore_property_names:
+        if (
+            self.data_type != other.data_type
+            and "data_type" not in ignore_property_names
+        ):
             diff.append("data_type: {} != {}".format(self.data_type, other.data_type))
-        
-        if self.root_name_path != other.root_name_path and "root_name_path" not in ignore_property_names:
+
+        if (
+            self.root_name_path != other.root_name_path
+            and "root_name_path" not in ignore_property_names
+        ):
             diff.append(
                 "root_name_path: {} != {}".format(
                     self.root_name_path, other.root_name_path
                 )
             )
-        
-        if self.root_category_path != other.root_category_path and "root_category_path" not in ignore_property_names:
+
+        if (
+            self.root_category_path != other.root_category_path
+            and "root_category_path" not in ignore_property_names
+        ):
             diff.append(
                 "root_category_path: {} != {}".format(
                     self.root_category_path, other.root_category_path
                 )
             )
-        
-        if self.family_name != other.family_name and "family_name" not in ignore_property_names:
+
+        if (
+            self.family_name != other.family_name
+            and "family_name" not in ignore_property_names
+        ):
             diff.append(
                 "family_name: {} != {}".format(self.family_name, other.family_name)
             )
-        
-        if self.family_file_path != other.family_file_path and "family_file_path" not in ignore_property_names:
+
+        if (
+            self.family_file_path != other.family_file_path
+            and "family_file_path" not in ignore_property_names
+        ):
             diff.append(
                 "family_file_path: {} != {}".format(
                     self.family_file_path, other.family_file_path
                 )
             )
-        
-        if self.family_type_name != other.family_type_name  and "family_type_name" not in ignore_property_names:
+
+        if (
+            self.family_type_name != other.family_type_name
+            and "family_type_name" not in ignore_property_names
+        ):
             diff.append(
                 "family_type_name: {} != {}".format(
                     self.family_type_name, other.family_type_name
@@ -286,11 +307,35 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
                     for single_difference in para_diff:
                         diff.append(
                             "parameter {} is different: {}".format(
-                                param.name,single_difference
+                                param.name, single_difference
                             )
                         )
                 else:
                     pass
-                    #diff.append("parameter {} is equal. {}".format(param.name, para_diff))
-        
+                    # diff.append("parameter {} is equal. {}".format(param.name, para_diff))
+
         return diff
+
+    def get_report_data(self):
+        """
+        get the data for the report
+
+        :return: list of data for the report
+        """
+
+        data = []
+        
+        for param in self.parameters:
+            data.append(
+                [
+                    self.family_name,
+                    self.root_category_path,
+                    self.family_type_name,
+                    param.name,
+                    param.value,
+                    self.last_updated_date,
+                    self.last_updated_time,
+                ]
+            )
+        return data
+        

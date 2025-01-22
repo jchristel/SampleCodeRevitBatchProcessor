@@ -110,10 +110,6 @@ def get_family_type_data_from_project_file(
             # get the family category
             fam_cat = revit_family.FamilyCategory.Name
 
-            if type_data_from_library != None and len(type_data_from_library) > 0:
-                matched_data.append(([fam_name, fam_cat], None))
-                continue
-
             # get the family type data storage from the library
             found_match = False
             match_library = None
@@ -135,12 +131,10 @@ def get_family_type_data_from_project_file(
 
             # check if match in library was found
             if found_match is False:
-                print("No match found for family: {} in library".format(fam_name))
                 # no match found
                 matched_data.append(([fam_name, fam_cat], None))
                 continue
 
-            print("found match for family: {} in library".format(fam_name))
             # create temp xml files from loaded family
             type_data_result = get_type_data_via_XML_from_family_object(
                 revit_family=revit_family
@@ -350,7 +344,7 @@ def compare_family_files_in_project_against_library(
             return_value.append_message(
                 "Successfully gathered family type data from the library."
             )
-
+        
         # get type data from the family files in project file
         type_data_from_project_result = get_family_type_data_from_project_file(
             doc, type_data_from_library_result.result, progress_callback

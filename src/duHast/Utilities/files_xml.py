@@ -92,3 +92,25 @@ def get_xml_files_from_directory(directory):
     except Exception:
         pass
     return xml_files
+
+
+def get_all_xml_files_from_directories(process_directories):
+    """
+    Get all xml files from the directories
+
+    :param process_directories: list of directories to search for xml files
+    :type process_directories: list
+    
+    :return: list of xml files found
+    :rtype: [:class:`FileItem`]
+    """
+
+    files_found = []
+    try:
+        # get all xml files from the directory
+        for directory in process_directories:
+            files = get_xml_files_from_directory(directory)
+            files_found = files_found + files
+    except Exception as e:
+        raise Exception("Failed to gather xml files with exception: {}".format(e))
+    return files_found

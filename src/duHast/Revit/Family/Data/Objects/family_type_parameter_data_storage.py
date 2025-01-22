@@ -187,7 +187,6 @@ class FamilyTypeParameterDataStorage(Base):
         """
 
         return [
-            self.data_type,
             self.name,
             self.type,
             self.type_of_parameter,

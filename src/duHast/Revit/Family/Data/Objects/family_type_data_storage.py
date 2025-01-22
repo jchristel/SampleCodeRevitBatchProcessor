@@ -326,16 +326,22 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
         data = []
         
         for param in self.parameters:
-            data.append(
-                [
-                    self.family_name,
-                    self.root_category_path,
-                    self.family_type_name,
-                    param.name,
-                    param.value,
-                    self.last_updated_date,
-                    self.last_updated_time,
-                ]
-            )
+            # get the report data for the parameter
+            para_report_data = param.get_report_data()
+            # build the default type information repeated for each parameter
+            def_report_data = [
+                self.family_name,
+                self.root_category_path,
+                self.family_type_name,
+                self.last_updated_date,
+                self.last_updated_time,
+            ]
+
+            index = len(def_report_data)
+            # add the parameter report data to the default type information
+            def_report_data[index:index] = para_report_data
+
+            # append the data to the list
+            data.append(def_report_data)
         return data
         

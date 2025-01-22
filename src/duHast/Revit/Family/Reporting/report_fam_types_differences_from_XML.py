@@ -135,10 +135,12 @@ def get_family_type_data_from_project_file(
 
             # check if match in library was found
             if found_match is False:
+                print("No match found for family: {} in library".format(fam_name))
                 # no match found
                 matched_data.append(([fam_name, fam_cat], None))
                 continue
 
+            print("found match for family: {} in library".format(fam_name))
             # create temp xml files from loaded family
             type_data_result = get_type_data_via_XML_from_family_object(
                 revit_family=revit_family

@@ -76,7 +76,10 @@ class FamilyTypeDataStorageManager(Base):
         report_data = []
 
         for family_type_data_storage in self.family_type_data_storage:
-            report_data.append(family_type_data_storage.get_report_data())
+            type_data = family_type_data_storage.get_report_data()
+            for fam in type_data:
+                report_data.append(fam)
+            #report_data.append(family_type_data_storage.get_report_data())
 
         return report_data
 

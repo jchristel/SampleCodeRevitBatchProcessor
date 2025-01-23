@@ -3,6 +3,7 @@
 This module contains a number of helper functions relating to Family elements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
+
 #
 # License:
 #
@@ -44,10 +45,29 @@ def get_name_to_family_dict(rvt_doc):
     family_dict = {fam.Name: fam for fam in all_families}
     return family_dict
 
+
+def get_name_and_category_to_family_dict(rvt_doc):
+    """
+    Create a dictionary of family name and category concatenated and the Family element.
+    This is useful when there are multiple families with the same name but different categories.
+
+    :param rvt_doc: Revit document
+    :type rvt_doc: Autodesk.Revit.DB.Document
+    :return: Dictionary of family name and category and Family element
+    :rtype: dict
+    """
+
+    # Get all the families in the model
+    all_families = FilteredElementCollector(rvt_doc).OfClass(Family).ToElements()
+    # create a dictionary of family name and family object
+    family_dict = {fam.Name + fam.FamilyCategory.Name: fam for fam in all_families}
+    return family_dict
+
+
 def get_symbol_names_of_family(family):
     """
     Get all the symbol names of a family
-    
+
     :param family: Family element
     :type family: Autodesk.Revit.DB.Family
     :return: List of symbol names of the family
@@ -56,5 +76,7 @@ def get_symbol_names_of_family(family):
 
     symbol_ids = [sym for sym in family.GetFamilySymbolIds()]
     doc = family.Document
-    symbol_names = [Element.Name.GetValue(doc.GetElement(sym_id)) for sym_id in symbol_ids]
+    symbol_names = [
+        Element.Name.GetValue(doc.GetElement(sym_id)) for sym_id in symbol_ids
+    ]
     return symbol_names

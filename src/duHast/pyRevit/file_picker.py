@@ -46,3 +46,5 @@ def get_file_path_from_user(forms, title, file_extension, multi_file=False):
     file_path = forms.pick_file(file_ext=file_extension, multi_file=multi_file, title=title)
     if file_path is None or file_path == "" or file_path == []:
         return None
+
+    return file_path

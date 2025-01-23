@@ -5,8 +5,8 @@ from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.Objects.ProgressPyRevit import ProgressPyRevit
 from duHast.Revit.Family.family_rename_files_utils import (
     _read_rename_directives,
-    rename_directive,
 )
+from duHast.Revit.Family.Data.Objects.family_directive_rename import FamilyDirectiveRename
 from duHast.Utilities.files_get import (
     get_files_from_directory_walker_with_filters_simple,
 )
@@ -59,11 +59,11 @@ def updated_rename_directives(directory, rename_directives):
         # check the match status!!
         files_matching = find_files(families_in_directory, family.name + ".rfa")
         if len(files_matching) == 1:
-            data = rename_directive(
+            data = FamilyDirectiveRename(
                 family.name,
-                files_matching[0],
                 family.category,
-                family.newName,
+                files_matching[0],
+                family.new_name,
             )
             new_directives.append(data)
         elif len(files_matching) == 0:

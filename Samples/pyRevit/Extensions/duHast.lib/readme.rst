@@ -1,1 +1,0 @@
-Add any library shared between multiple extensions here. i.e. duHast. Anything in this directory will be available to all extensions in the same folder.

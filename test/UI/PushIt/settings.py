@@ -64,7 +64,7 @@ print("root development dir: {}".format(ROOT_DEVELOPMENT_DIRECTORY))
 
 if DU_HAST_PATH is None:
     # get the duHast directory within the lib directory
-    DU_HAST_DIRECTORY = os.path.join(ROOT_DEVELOPMENT_DIRECTORY, r"duHast.lib\duHast")
+    DU_HAST_DIRECTORY = os.path.join(ROOT_DEVELOPMENT_DIRECTORY, r"global.lib\duHast")
 else:
     DU_HAST_DIRECTORY = os.path.join(DU_HAST_PATH, "duHast")
 

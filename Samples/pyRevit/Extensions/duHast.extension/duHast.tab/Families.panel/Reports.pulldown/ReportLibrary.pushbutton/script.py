@@ -1,16 +1,12 @@
 """
-An extension reporting on families in a project file.
+An extension reporting on families in a library directory.
 
 The report includes:
 
     - family name
     - family type name
     - family category
-    - specific family type parameters and their values
-
-        - refer to variable FAMILY_PARAMETERS_TO_REPORT: a list of parameters to report on.
-    
-    - family instances placed by by type in model
+    - all family type parameters and their values
 
 
 Usage:
@@ -33,7 +29,7 @@ output = script.get_output()
 # get the revit document
 doc = revit.doc
 
-# reporting families
-from families.report import report_loaded_families_entry
+# reporting families in library
+from families.report_families_in_library_xml import report_families_in_library_entry
 
-report_loaded_families_entry(doc=doc, output=output, forms=forms)
+report_families_in_library_entry(doc=doc, output=output, forms=forms)

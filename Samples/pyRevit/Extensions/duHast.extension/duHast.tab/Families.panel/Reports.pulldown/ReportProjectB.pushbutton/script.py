@@ -34,6 +34,6 @@ output = script.get_output()
 doc = revit.doc
 
 # reporting families
-from families.report import report_loaded_families_entry
+#from families.report import report_loaded_families_entry
 
-report_loaded_families_entry(doc=doc, output=output, forms=forms)
+#report_loaded_families_entry(doc=doc, output=output, forms=forms)

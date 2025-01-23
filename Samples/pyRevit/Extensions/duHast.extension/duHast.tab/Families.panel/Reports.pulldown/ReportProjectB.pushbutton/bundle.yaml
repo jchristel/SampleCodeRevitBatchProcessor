@@ -1,10 +1,9 @@
 # bundle title
-title: "Report"
+title: "Report Loaded Families"
 
 # bundle tooltip
 tooltip: | 
-  Reports on all family instances
-  placed in the model.
+  Reports on all loaded families and their type properties.
 
 
 # bundle author

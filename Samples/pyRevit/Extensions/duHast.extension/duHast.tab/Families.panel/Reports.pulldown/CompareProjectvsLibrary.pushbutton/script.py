@@ -1,5 +1,6 @@
 """
-An extension reporting on families in a project file.
+An extension reporting on families in a project file compared to families in a library.
+Only differences between the two are reported.
 
 The report includes:
 
@@ -7,11 +8,6 @@ The report includes:
     - family type name
     - family category
     - specific family type parameters and their values
-
-        - refer to variable FAMILY_PARAMETERS_TO_REPORT: a list of parameters to report on.
-    
-    - family instances placed by by type in model
-
 
 Usage:
 
@@ -33,7 +29,7 @@ output = script.get_output()
 # get the revit document
 doc = revit.doc
 
-# reporting families
-from families.report import report_loaded_families_entry
+# compare families in library against families in project
+from families.compare_loaded_vs_library import compare_loaded_families_vs_library_entry
 
-report_loaded_families_entry(doc=doc, output=output, forms=forms)
+compare_loaded_families_vs_library_entry(doc=doc, output=output, forms=forms)

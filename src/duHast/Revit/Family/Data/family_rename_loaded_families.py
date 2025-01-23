@@ -103,7 +103,7 @@ def _rename_loaded_families(doc, rename_directives, families, progress_callback=
                             rename_directive.category,
                             rename_directive.name,
                             rename_directive.new_name,
-                        )
+                        ),
                     )
                 except Exception as e:
                     action_return_value.update_sep(
@@ -184,7 +184,9 @@ def rename_loaded_families(doc, directory_path):
         # check if any families are loaded
         if len(families) > 0:
             # rename files as per directives
-            return_value = _rename_loaded_families(doc=doc, rename_directives= rename_directives, families=families)
+            return_value = _rename_loaded_families(
+                doc=doc, rename_directives=rename_directives, families=families
+            )
         else:
             return_value.update_sep(True, "Mo loadable families in file.")
     else:

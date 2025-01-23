@@ -52,7 +52,7 @@ def _read_rename_directives(files):
 
     :param filePath: Fully qualified file path to rename directives file.
     :type filePath: str
-    :return: List of named tuples containing rename directives.
+    :return: List of rename directives.
     :rtype: [rename_directive]
     """
 

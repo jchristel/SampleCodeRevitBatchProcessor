@@ -254,12 +254,13 @@ def create_family_xml_files(revit_application, process_directories, progress_cal
                             break
         
         # stop the timer
-        return_value.update_sep("Successfully created family atom exports: {}".format(t.stop()))
+        return_value.append_message("Successfully created family atom exports: {}".format(t.stop()))
 
     except Exception as e:
         return_value.update_sep(
             False, "Failed to create family atom exports with exception: {}".format(e)
         )
-        return_value.append_message(t.stop())
+        if t.is_running():
+            return_value.append_message(t.stop())
     
     return return_value

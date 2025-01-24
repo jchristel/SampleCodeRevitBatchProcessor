@@ -45,10 +45,70 @@ from duHast.Revit.Family import family_rename_files_utils as rFamRenameUtils
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities import files_io as fileIO
 
+def _rename_associated_files(rename_directive):
+    """
+    Renames associated catalogue files and part atom xml files based on rename directives.
+
+    :param rename_directive: Rename directive object.
+    :type rename_directive: rename_directive
+
+    :return:
+        Result class instance.
+
+        - result.status. True if files where renamed successfully, otherwise False.
+        - result.message will contain each rename messages in format 'old name -> new name'.
+        - result.result empty list
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain an exception message.
+        - result.result will be empty
+
+    :rtype: :class:`.Result`
+    """
+    return_value = res.Result()
+
+    associated_file_extension = {
+        ".txt": "catalogue",
+        ".xml": "part atom",
+    }
+
+    try:
+        for file_extension_associated_file, associated_file_description in associated_file_extension.items():
+            old_full_name = rename_directive.file_path[:-4] + file_extension_associated_file
+            new_full_name = os.path.join(
+                os.path.dirname(rename_directive.file_path),
+                rename_directive.new_name + file_extension_associated_file,
+            )
+            old_txt_name = rename_directive.name + file_extension_associated_file
+            new_txt_name = rename_directive.new_name + file_extension_associated_file
+            try:
+                if fileIO.file_exist(old_full_name):
+                    os.rename(old_full_name, new_full_name)
+                    return_value.append_message("{} -> {}".format(old_txt_name, new_txt_name))
+                else:
+                    return_value.update_sep(
+                        True, "No {} file found: {}".format(associated_file_description,old_txt_name)
+                    )  # nothing gone wrong here...just no catalogue file present
+            except Exception as e:
+                return_value.update_sep(
+                    False,
+                    "Failed to rename {} file: {} with exception: {}".format(
+                        associated_file_description, old_full_name, e
+                    ),
+                )
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to rename associated files with exception: ".format(e)
+        )
+
+    return return_value
+
 
 def _rename_files(rename_directives, progress_callback=None):
     """
-    Renames family files and any associated catalogue files based on rename directives.
+    Renames family files and any associated catalogue files and part atom xml files based on rename directives.
 
     :param rename_directives: List of tuples representing rename directives.
     :type rename_directives: [rename_directive]
@@ -111,28 +171,8 @@ def _rename_files(rename_directives, progress_callback=None):
                     )
 
                 # take care of catalogue files as well
-                old_full_name = rename_directive.file_path[:-4] + ".txt"
-                new_full_name = os.path.join(
-                    os.path.dirname(rename_directive.file_path),
-                    rename_directive.new_name + ".txt",
-                )
-                old_txt_name = rename_directive.name + ".txt"
-                new_txt_name = rename_directive.new_name + ".txt"
-                try:
-                    if fileIO.file_exist(old_full_name):
-                        os.rename(old_full_name, new_full_name)
-                        return_value.append_message("{} -> {}".format(old_txt_name, new_txt_name))
-                    else:
-                        return_value.update_sep(
-                            True, "No catalogue file found: {}".format(old_txt_name)
-                        )  # nothing gone wrong here...just no catalogue file present
-                except Exception as e:
-                    return_value.update_sep(
-                        False,
-                        "Failed to rename file: {} with exception: {}".format(
-                            old_full_name, e
-                        ),
-                    )
+                result_assocaited_files = _rename_associated_files(rename_directive)
+                return_value.update(result_assocaited_files)
             else:
                 return_value.update_sep(
                     True, "No file path found: {}".format(rename_directive.name)

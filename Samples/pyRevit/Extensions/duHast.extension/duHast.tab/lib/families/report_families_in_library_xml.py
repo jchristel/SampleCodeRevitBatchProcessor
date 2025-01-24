@@ -1,11 +1,13 @@
 
 
 import csv
+import os
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Family.Reporting.report_fam_types_from_XML import get_family_type_data_from_library_xml
 from duHast.Revit.Family.Reporting.families_report_header import LIBRARY_FAMILIES_HEADER
 from duHast.pyRevit.Objects.ProgressPyRevit import ProgressPyRevit
+from duHast.pyRevit.console_output import print_header
 from duHast.Utilities.files_csv import write_report_data_as_csv
 
 
@@ -24,7 +26,23 @@ def report_families_in_library_entry(doc, output, forms):
 
     # set up a status tracker
     return_value = Result()
+    family_data= []
 
+    validated_directories = []
+
+    print_header("Checking directories")
+    # check if directories exist
+    for process_dir in PROCESS_DIRECTORIES:
+        if not os.path.exists(process_dir):
+            print ("Directory does not exist: {}".format(process_dir))
+        else:
+            print ("Processing directory: {}".format(process_dir))
+            validated_directories.append(process_dir)
+
+    if len(validated_directories) == 0:
+        return_value.update_sep(False, "No directories to process left after validation.")
+        return return_value
+    
     try:
 
         #set up a pyRevit progress bar
@@ -36,23 +54,40 @@ def report_families_in_library_entry(doc, output, forms):
             # set up a call back for pyRevit progressbar
             progress_callback = ProgressPyRevit(form=pb)
 
-            print("Reporting families in library:")
+            print_header("Reporting families in library:")
             report_result = get_family_type_data_from_library_xml( 
-                process_directories=PROCESS_DIRECTORIES,
+                process_directories=validated_directories,
                 progress_callback=progress_callback
             )
 
+            print("Finished reading families in library")
+
             # update return value with comparison result
             return_value.update(report_result)
+            if report_result.status == False:
+                print("Failed to get family data from library with exception: {}".format(report_result.message))
+                return return_value
+
+            # store report result
+            family_data = report_result.result
        
+        print("Finished reading families in library with status: {}".format(report_result.status))
+
         # print comparison result to pyRevit output
         print_result_table (
             output=output,
-            data=report_result.result, 
+            data=family_data, 
             header=LIBRARY_FAMILIES_HEADER,
             table_title="fams"
         )
 
+        print_header("Writing report to csv file")
+        
+        # pop a warning to user that this might take a while if rows exceed 10000
+        if len(family_data) > 10000:
+            print("This might take a while...rows to save: {}".format(len(family_data)))
+
+        # save report to csv file
         file_path = forms.save_file(file_ext='csv', title="Save report to csv file")
 
         if (file_path and len(file_path) > 0):
@@ -61,6 +96,7 @@ def report_families_in_library_entry(doc, output, forms):
                 return_value.append_message("Succefully wrote families report to: {} ".format(file_path))
             else:
                 return_value.update_sep(False, "Failed to write families report to: {} ".format(write_result.status))
+            print("Finished writing report to csv file: {} with status: {}".format(file_path, write_result.status))
                 
         else:
             return_value.append_message("No file path selected")
@@ -70,7 +106,6 @@ def report_families_in_library_entry(doc, output, forms):
             False, "Failed to compare families with exception: {}".format(e)
         )
 
-    print("\n{}".format(return_value.message))
     print("Finished")
 
     return return_value

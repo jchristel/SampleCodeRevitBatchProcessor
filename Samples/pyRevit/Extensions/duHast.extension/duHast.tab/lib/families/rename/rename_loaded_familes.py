@@ -6,6 +6,7 @@ from duHast.Revit.Family.Data.family_rename_loaded_families import (
 )
 from duHast.Revit.Family import family_utils as rFamUtils
 from duHast.pyRevit.file_picker import get_file_path_from_user
+from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict
 
 
 def rename_loaded_families(doc, output, forms):
@@ -63,8 +64,8 @@ def rename_loaded_families(doc, output, forms):
         return_value.update_sep(False, message=message)
         return return_value
 
-    # get all family ids in file
-    family_ids = rFamUtils.get_all_loadable_family_ids_through_types(doc)
+    # get all family in file
+    families = get_name_and_category_to_family_dict(doc)
 
     # set up a pyRevit progress bar
     with forms.ProgressBar(
@@ -77,7 +78,7 @@ def rename_loaded_families(doc, output, forms):
         rename_status = _rename_loaded_families(
             doc=doc,
             rename_directives=data,
-            family_ids=family_ids,
+            families=families,
             progress_callback=progress_callback,
         )
 

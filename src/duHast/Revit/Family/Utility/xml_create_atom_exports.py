@@ -36,7 +36,7 @@ import datetime
 
 from duHast.UI.file_list import  get_revit_files
 from duHast.Revit.Family.family_types_get_data_from_xml import write_data_to_xml_file
-from duHast.Utilities.files_io import get_file_name_without_ext
+from duHast.Utilities.files_io import get_file_name_without_ext, file_exist
 from duHast.Utilities.directory_io import directory_exists
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects.result import Result
@@ -106,6 +106,9 @@ def get_families_requiring_update(family_files, xml_files):
 
             # and find a matching xml file
             xml_file = os.path.splitext(fam_file.name)[0] + ".xml"
+
+            # get the catalogue file too
+            catalogue_file = os.path.splitext(fam_file.name)[0] + ".txt"
         
             # check if the xml file does exist
             if check_file_item_exists(xml_files,xml_file):
@@ -113,15 +116,21 @@ def get_families_requiring_update(family_files, xml_files):
                 # get time stamp of files
                 xml_file_time_stamp = os.path.getmtime(xml_file)
                 rfa_file_time_stamp = os.path.getmtime(fam_file.name)
+                txt_file_time_stamp = None if not (file_exist(catalogue_file)) else os.path.getmtime(catalogue_file)
                 
                 # convert to something human readable
                 xml_formatted_time = datetime.datetime.fromtimestamp(xml_file_time_stamp)
                 rfa_formatted_time = datetime.datetime.fromtimestamp(rfa_file_time_stamp)
+                txt_formatted_time = None if txt_file_time_stamp is None else datetime.datetime.fromtimestamp(txt_file_time_stamp)
                 
                 # if the xml file is older than the family file
                 if xml_file_time_stamp < rfa_file_time_stamp:
                     
                     return_value.append_message("...xml file is older than family file, needs updating. [xml: {} vs rfa: {}]".format(xml_formatted_time, rfa_formatted_time))
+                    # family xml file is older than family file, needs updating
+                    family_files_to_update.append(fam_file.name)
+                elif txt_file_time_stamp is not None and xml_file_time_stamp < txt_file_time_stamp:
+                    return_value.append_message("...xml file is older than catalogue file, needs updating. [xml: {} vs txt: {}]".format(xml_formatted_time, txt_formatted_time))
                     # family xml file is older than family file, needs updating
                     family_files_to_update.append(fam_file.name)
                 else:

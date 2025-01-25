@@ -191,7 +191,8 @@ class RevitModel(ViewModelBase, Base):
                         room.add_placed_family(family)
 
                 # Remove the matched families from the dictionary to speed up the search
-                del family_dict[room_id]
+                if room.id.id in family_dict:
+                    del family_dict[room.id.id ]
             else:
                 # if no matching family instances are found
                 # clear any families which might have been there at some point from the room
@@ -336,7 +337,8 @@ class RevitModel(ViewModelBase, Base):
             ],  # a room object to get the properties we are interested in
         )
 
-        print("families in model: {}".format(len(families)))
+        #print("families in model: {}".format(len(families)))
+        
         # set the active design option and design set names
         self._set_active_design_option_and_design_set(doc)
 

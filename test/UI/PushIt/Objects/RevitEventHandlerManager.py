@@ -124,9 +124,9 @@ class RevitEventHandlerManager(Base):
         Push single room data from the WPF UI to Revit
         """
 
-        print(
-            "raising external event to push single room data from the WPF UI to Revit.."
-        )
+        #print(
+        #    "raising external event to push single room data from the WPF UI to Revit.."
+        #)
         self.ext_event_push_single_room.Raise()
 
     def push_single_room_data_action(self, uiapp):
@@ -182,7 +182,7 @@ class RevitEventHandlerManager(Base):
         Pull data from Revit to the WPF UI (refresh the rooms list)
         """
 
-        print("raising external event to pull data from Revit to the WPF UI..")
+        #print("raising external event to pull data from Revit to the WPF UI..")
         self.ext_event_pull_data_from_revit.Raise()
 
     def pull_data_from_revit_action(self, uiapp):
@@ -223,7 +223,7 @@ class RevitEventHandlerManager(Base):
         Set up the data for ui event handler.
         """
 
-        print("Raising set up data event...")
+        #print("Raising set up data event...")
         self.ext_event_setup_data.Raise()
 
     def setup_data_action(self, uiapp):

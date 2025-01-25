@@ -87,7 +87,7 @@ def Create_Rooms_Selection_View_Model():
     return fam_view_model
 
 
-def pushIt_entry(doc, output, forms, rooms=None):
+def pushIt_entry(doc, uiapp, output, forms, rooms=None):
     """
     Start the PushIt UI.
 
@@ -110,7 +110,7 @@ def pushIt_entry(doc, output, forms, rooms=None):
     
     # set up UI
     # set up initial data for the main view model
-    REVIT_MODEL.populate_room_data(doc=doc)
+    REVIT_EVENT_HANDLER_MANAGER.setup_data_action(uiapp=uiapp)
     
     # set up the initial view to be displayed
     NAVIGATION_STORE.CurrentViewModel = Create_Rooms_Selection_View_Model()

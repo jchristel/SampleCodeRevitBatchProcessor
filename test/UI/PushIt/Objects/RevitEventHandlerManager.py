@@ -43,6 +43,7 @@ from PushIt.RevitActions.UpdateSingleRevitFamilyFromUI import (
 )
 from PushIt.RevitActions.UpdateDataModelFromRevit import UpdateDataModelFromRevit
 from PushIt.RevitActions.InitialiseRoomData import InitialiseRoomData
+from PushIt.RevitActions.WipeStaleDataInRevitFamilies import WipeStaleDataInRevitFamilies
 
 from Autodesk.Revit.UI import (
     ExternalEvent,
@@ -153,8 +154,10 @@ class RevitEventHandlerManager(Base):
                 print("Please select exactly one room to push data to Revit")
                 return
 
-            action = UpdateSingleRevitFamilyFromUI(revit_model=self._revit_model)
+            
             try:
+                # set up the revit action to update the room with the data from the WPF UI
+                action = UpdateSingleRevitFamilyFromUI(revit_model=self._revit_model)
                 # populate room data from file and match families from the Revit document to rooms
                 action.execute(doc=doc, selected_element_id=element_ids[0])
             except Exception as e:
@@ -186,12 +189,14 @@ class RevitEventHandlerManager(Base):
         Update all revit rooms with the data from the WPF UI
         """
 
-        print("Updating all revit rooms with the data from the WPF UI..")
+        #print("Updating all revit rooms with the data from the WPF UI..")
         # current revit document
         doc = uiapp.ActiveUIDocument.Document
 
         try:
+            # set up the revit action to update all revit rooms with the data from the WPF UI
             action = UpdateAllRevitFamiliesFromUI(revit_model=self._revit_model)
+            # execute the action
             action.execute(doc=doc)
         except Exception as e:
             print("Error while Updating all revit rooms from the WPF UI: {}".format(e))
@@ -214,7 +219,9 @@ class RevitEventHandlerManager(Base):
         doc = uiapp.ActiveUIDocument.Document
 
         try:
+            # set up the revit action to update the data model from the Revit model
             action = UpdateDataModelFromRevit(revit_model=self._revit_model)
+            # execute the action
             action.execute(doc=doc)
         except Exception as e:
             print("Error while pulling data from Revit to the WPF UI: {}".format(e))
@@ -224,20 +231,26 @@ class RevitEventHandlerManager(Base):
         """
         wipe stale data from the rooms in the revit model
         """
-
-        print(
-            "raising external event to wipe stale data from the rooms in the revit model.."
-        )
+        
         self.ext_event_wipe_stale_data.Raise()
-        pass
 
     def wipe_stale_data_action(self, uiapp):
         """
         wipe stale data from the rooms in the revit model
         """
-
-        print("Wiping stale data from the rooms in the revit model..")
-        pass
+        
+        # current revit document
+        doc = uiapp.ActiveUIDocument.Document
+        
+        try:
+            # set up the revit action to wipe stale data in the Revit model
+            action = WipeStaleDataInRevitFamilies(revit_model=self._revit_model)
+            # execute the action
+            action.execute(doc=doc)
+        except Exception as e:
+            print("Error while wiping stale data in the Revit model: {}".format(e))
+            return
+        
 
     def setup_data(self, *args, **kwargs):
         """
@@ -260,10 +273,10 @@ class RevitEventHandlerManager(Base):
         doc = uiapp.ActiveUIDocument.Document
 
         try:
+            # set up the revit action to initialise the room data
             action = InitialiseRoomData(revit_model=self._revit_model)
+            # execute the action
             action.execute(doc=doc)
-            # populate room data from file and match families from the Revit document to rooms
-            # self._revit_model.populate_room_data(doc=doc)
         except Exception as e:
             print("Error while loading and setting up data for ui: {}".format(e))
             return

@@ -21,35 +21,63 @@
 
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A class updating the data model with revit family instances representing rooms from the Revit model.
+A class updating wiping any room information from family instances in the Revit model.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Room information is wiped from families in the Revit model that do not have a matching room in the data model.
+
+The match is based on the room id.
 
 """
 
 from PushIt.RevitActions.RevitActionBase import RevitActionBase
-from PushIt.Utilities.shared_parameters import (
-    get_shared_parameter_data,
-)
-from PushIt.Utilities.families_get import (
-    get_families_in_model,
-)
+from PushIt.Utilities.shared_parameters import get_shared_parameter_data
+from PushIt.Utilities.families_get import get_families_in_model
 from PushIt.Models.Room import Room
 from PushIt.Models.RoomId import RoomID
+from PushIt.Models.RoomProperty import RoomProperty
 from PushIt.Utilities.families_update import update_single_family
+
 from Autodesk.Revit.DB import ElementId
-from PushIt.Utilities import event_names
 
 
-class UpdateDataModelFromRevit(RevitActionBase):
+class WipeStaleDataInRevitFamilies(RevitActionBase):
 
     def __init__(self, revit_model):
         """
         Constructor for the Revit Action class.
         """
 
-        super(UpdateDataModelFromRevit, self).__init__(revit_model=revit_model)
+        super(WipeStaleDataInRevitFamilies, self).__init__(revit_model=revit_model)
 
 
+
+    def setup_empty_room(self, room):
+        """
+        Sets up an room object where all properties from an existing room exist but their values are empty.
+
+        :param room: The room object to get the properties from.
+        :type room: Room
+        
+        :return: The empty room object.
+        :rtype: Room
+        """
+
+        
+        # get the other properties, and set up a blank equivalents
+        properties = []
+        for prop in room.other_properties:
+            properties.append(RoomProperty(name=prop.name, value="", parameter_guid=prop.parameter_guid))
+        
+        # set up a blank room id object
+        return Room(
+            id=RoomID(id="", parameter_guid=room.id.parameter_guid),
+            area_briefed=RoomProperty(name=room.area_briefed.name, value="0.0", parameter_guid=room.area_briefed.parameter_guid),
+            area_designed=RoomProperty(name=room.area_designed.name, value="0.0", parameter_guid=room.area_designed.parameter_guid),
+            other_properties=properties,
+        )   
+   
+   
     def get_stale_families(self, families):
         """
         Returns the families that are stale in the data model. (their room id does not match any room in the data model)
@@ -78,8 +106,16 @@ class UpdateDataModelFromRevit(RevitActionBase):
         return families_to_wipe
                 
     
-    
     def execute(self, doc):
+        """
+        Wipes any room information from family instances in the Revit model that do not have a matching room in the data model.
+        The match is based on the room id.
+        
+        :param doc: The current model document.
+        :type doc: Autodesk.Revit.DB.Document
+        
+        :return: None
+        """
         
         # check if any rooms are loaded in the data model
         rooms_in_data_model = self.revit_model._rooms_container.get_all_rooms()
@@ -101,14 +137,14 @@ class UpdateDataModelFromRevit(RevitActionBase):
         )
         
         # check if any stale data in the model
-        families_to_wipe = self.get_stale_families(rooms_in_data_model, families)
+        families_to_wipe = self.get_stale_families(families)
         if len(families_to_wipe) == 0:
             return
         
         # wipe data
         
         # setup an empty room object to wipe the data
-        empty_room = Room(id=RoomID(id=""), area_briefed="", area_designed="", other_properties=[])
+        empty_room = self.setup_empty_room(rooms_in_data_model[0])
         
         # loop over families and look for matches in the data model based on the room id
         for family in families_to_wipe:
@@ -123,3 +159,6 @@ class UpdateDataModelFromRevit(RevitActionBase):
             if update_single_family_result is False:
                 print("Failed to update family: ", family)
                 continue
+    
+        # there is no need to update the data model since the data amended in Revit 
+        # was not present in the data model

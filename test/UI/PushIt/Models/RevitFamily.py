@@ -39,7 +39,7 @@ class RFamily(Base):
         design_set,
         design_option,
         design_option_is_primary,
-        revit_element_id
+        revit_element_id,
     ):
         """
         Initializes a new instance of the Family class.
@@ -98,11 +98,11 @@ class RFamily(Base):
     @property
     def design_option_is_primary(self):
         return self._design_option_is_primary
-    
+
     @property
     def revit_element_id(self):
         return self._revit_element_id
-    
+
     def __eq__(self, other):
         """
         Custom compare is equal override
@@ -126,7 +126,7 @@ class RFamily(Base):
             and self.design_option_is_primary == other.design_option_is_primary
             and self.revit_element_id == other.revit_element_id
         )
-    
+
     # python 2.7 needs custom implementation of not equal
     def __ne__(self, other):
         return not self.__eq__(other=other)
@@ -137,7 +137,7 @@ class RFamily(Base):
 
         Required due to custom __eq__ override present in this class
         """
-        
+
         return hash(
             (
                 self.room_id,
@@ -147,6 +147,6 @@ class RFamily(Base):
                 self.design_set,
                 self.design_option,
                 self.design_option_is_primary,
-                self.revit_element_id
+                self.revit_element_id,
             )
         )

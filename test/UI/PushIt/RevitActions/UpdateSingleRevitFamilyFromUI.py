@@ -29,20 +29,20 @@ from PushIt.Utilities.families_get import (
 from PushIt.Utilities.families_update import update_single_family
 from PushIt.Utilities import event_names
 
+
 class UpdateSingleRevitFamilyFromUI(RevitActionBase):
-    
+
     def __init__(self, revit_model):
         """
         Constructor for the Revit Action class.
         """
 
         super(UpdateSingleRevitFamilyFromUI, self).__init__(revit_model=revit_model)
-        
-       
+
     def execute(self, doc, selected_element_id):
         """
         Execute the action.
-       
+
         Pushes single room data into selected element in Revit only.
 
         :param doc: The Revit document.
@@ -88,7 +88,7 @@ class UpdateSingleRevitFamilyFromUI(RevitActionBase):
             family_instance=selected_element,
             shared_parameter_data=shared_parameter_data,
         )
-        #print("revit_family_instance_old: {}".format(revit_family_instance_old))
+        # print("revit_family_instance_old: {}".format(revit_family_instance_old))
 
         # update the element in Revit with the new room properties
         update_single_family_result = update_single_family(
@@ -97,8 +97,7 @@ class UpdateSingleRevitFamilyFromUI(RevitActionBase):
             room=self.revit_model._room_of_interest,
             shared_parameter_data=shared_parameter_data,
         )
-        #print("update_single_family_result: {}".format(update_single_family_result))
-        
+        # print("update_single_family_result: {}".format(update_single_family_result))
 
         # add the revit element to the room
         if update_single_family_result.status is True:

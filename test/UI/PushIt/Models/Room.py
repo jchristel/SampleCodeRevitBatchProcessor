@@ -169,7 +169,7 @@ class Room(Base):
         # check if other properties match
         for prop in self.other_properties:
             # family instance properties are instances of RoomProperty:
-            
+
             for prop_instance in family_instance.properties:
                 if prop.parameter_guid == prop_instance.parameter_guid:
                     if prop.value != prop_instance.value:
@@ -191,7 +191,7 @@ class Room(Base):
         """
 
         self._revit_matches = []
-        
+
     def get_revit_matches(self):
         """
         Returns the revit matches of the room.
@@ -221,14 +221,14 @@ class Room(Base):
                     type(family_instance)
                 )
             )
-        
+
         # check if the family instance is in the list
         if family_instance not in self._revit_matches:
             return
-        
+
         # remove the family instance from the list
         self._revit_matches.remove(family_instance)
-        
+
         # update the area designed
         if len(self._revit_matches) == 1:
             self.area_designed.value = self._revit_matches[0].area_designed
@@ -236,7 +236,7 @@ class Room(Base):
             self.area_designed.value = 0
         else:
             self.area_designed.value = None
-        
+
     @property
     def id(self):
         return self._id

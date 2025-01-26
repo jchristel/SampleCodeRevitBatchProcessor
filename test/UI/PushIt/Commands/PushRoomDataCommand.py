@@ -23,6 +23,7 @@ from duHast.UI.Objects.WPF.Commands.CommandBase import CommandBase
 
 from PushIt.Utilities.event_names import VIEW_MODEL_SELECTED_ROW
 
+
 class PushRoomDataCommand(CommandBase):
 
     def __init__(

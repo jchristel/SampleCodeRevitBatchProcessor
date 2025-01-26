@@ -21,17 +21,18 @@
 
 from duHast.Utilities.Objects.base import Base
 
+
 class RevitActionBase(Base):
-    
+
     def __init__(self, revit_model):
         """
         Constructor for the Revit Action class.
         """
 
         super(RevitActionBase, self).__init__()
-        
+
         self._revit_model = revit_model
-    
+
     @property
     def revit_model(self):
         """
@@ -39,10 +40,9 @@ class RevitActionBase(Base):
         """
         return self._revit_model
 
-
     def execute(self, *args, **kwargs):
         """
         Execute the action.
         """
-        
+
         return NotImplemented

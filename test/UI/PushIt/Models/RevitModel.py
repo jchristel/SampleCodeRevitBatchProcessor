@@ -182,7 +182,7 @@ class RevitModel(ViewModelBase, Base):
 
                 # Remove the matched families from the dictionary to speed up the search
                 if room.id.id in family_dict:
-                    del family_dict[room.id.id ]
+                    del family_dict[room.id.id]
             else:
                 # if no matching family instances are found
                 # clear any families which might have been there at some point from the room
@@ -223,7 +223,10 @@ class RevitModel(ViewModelBase, Base):
 
         try:
             # check if data path has changed
-            if property_changed_args.PropertyName != event_names.VIEW_MODEL_DATA_FILE_PATH:
+            if (
+                property_changed_args.PropertyName
+                != event_names.VIEW_MODEL_DATA_FILE_PATH
+            ):
                 return
 
             # check if the data file path has changed
@@ -244,16 +247,15 @@ class RevitModel(ViewModelBase, Base):
                 # changed but invalid file path
                 return
 
-            
             # update the settings file path
             self._settings.rooms_data_file_path = self._data_file_path_intermittent
-            
+
             # reset the intermittent storage
             self._data_file_path_intermittent = None
-            
+
             # set the flag to update the rooms
             self._data_path_requires_update_of_rooms = True
-            
+
         except Exception as e:
             print("Error in check_data_path_updates: {}".format(e))
 

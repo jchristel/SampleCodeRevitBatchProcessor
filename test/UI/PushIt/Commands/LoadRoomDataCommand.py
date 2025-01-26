@@ -23,6 +23,7 @@ from duHast.UI.Objects.WPF.Commands.CommandBase import CommandBase
 
 from PushIt.Utilities.event_names import VIEW_MODEL_SELECTED_FILE_PATH_IS_VALID
 
+
 class LoadRoomDataCommand(CommandBase):
 
     def __init__(

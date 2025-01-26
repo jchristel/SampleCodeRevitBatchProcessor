@@ -87,7 +87,7 @@ class RoomsContainer(Base):
                 )
 
         self._rooms.append(room_instance)
-    
+
     def clear_rooms(self):
         """
         Clears all rooms from the container.

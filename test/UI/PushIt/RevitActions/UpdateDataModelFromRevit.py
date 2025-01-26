@@ -25,24 +25,25 @@ A class updating the data model with revit family instances representing rooms f
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """
+
 from PushIt.RevitActions.RevitActionBase import RevitActionBase
 from PushIt.Utilities.families_get import (
     get_families_in_model,
 )
 from PushIt.Utilities import event_names
 
+
 class UpdateDataModelFromRevit(RevitActionBase):
-    
+
     def __init__(self, revit_model):
         """
         Constructor for the Revit Action class.
         """
 
         super(UpdateDataModelFromRevit, self).__init__(revit_model=revit_model)
-        
-       
+
     def execute(self, doc):
-        
+
         # check if any rooms are loaded in the data model
         rooms_in_data_model = self.revit_model._rooms_container.get_all_rooms()
         if len(rooms_in_data_model) == 0:
@@ -56,7 +57,7 @@ class UpdateDataModelFromRevit(RevitActionBase):
                 0
             ],  # a room object to get the properties we are interested in
         )
-        
+
         # set the active design option and design set names
         self.revit_model._set_active_design_option_and_design_set(doc)
 

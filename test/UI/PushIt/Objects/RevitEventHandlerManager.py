@@ -38,7 +38,9 @@ import traceback
 from duHast.Utilities.Objects.base import Base
 from duHast.Revit.UI.Objects.ExernalEventHandler import ExternalEventHandler
 from PushIt.RevitActions.UpdateAllRevitFamilesFromUI import UpdateAllRevitFamiliesFromUI
-from PushIt.RevitActions.UpdateSingleRevitFamilyFromUI import UpdateSingleRevitFamilyFromUI
+from PushIt.RevitActions.UpdateSingleRevitFamilyFromUI import (
+    UpdateSingleRevitFamilyFromUI,
+)
 from PushIt.RevitActions.UpdateDataModelFromRevit import UpdateDataModelFromRevit
 from PushIt.RevitActions.InitialiseRoomData import InitialiseRoomData
 
@@ -114,23 +116,22 @@ class RevitEventHandlerManager(Base):
         self.ext_event_wipe_stale_data = None
         self.ext_event_setup_data.Dispose()
         self.ext_event_setup_data = None
-        
+
         # dispose the external event handlers
-        self.ex_event_handler_push_single_room=None
-        self.ex_event_handler_update_all_revit_rooms=None
-        self.ex_event_handler_pull_data_from_revit=None
-        self.ex_event_handler_wipe_stale_data=None
-        self.ex_event_handler_setup_data=None
-        
-        
+        self.ex_event_handler_push_single_room = None
+        self.ex_event_handler_update_all_revit_rooms = None
+        self.ex_event_handler_pull_data_from_revit = None
+        self.ex_event_handler_wipe_stale_data = None
+        self.ex_event_handler_setup_data = None
+
     def push_single_room_data(self, *args, **kwargs):
         """
         Push single room data from the WPF UI to Revit
         """
 
-        #print(
+        # print(
         #    "raising external event to push single room data from the WPF UI to Revit.."
-        #)
+        # )
         self.ext_event_push_single_room.Raise()
 
     def push_single_room_data_action(self, uiapp):
@@ -140,14 +141,14 @@ class RevitEventHandlerManager(Base):
 
         try:
             # current revit document
-            doc=uiapp.ActiveUIDocument.Document
-            
+            doc = uiapp.ActiveUIDocument.Document
+
             # get the UIDocument
-            uidoc=uiapp.ActiveUIDocument
-            
+            uidoc = uiapp.ActiveUIDocument
+
             # get the current selection
-            element_ids =uidoc.Selection.GetElementIds()
-            
+            element_ids = uidoc.Selection.GetElementIds()
+
             if len(element_ids) != 1:
                 print("Please select exactly one room to push data to Revit")
                 return
@@ -157,11 +158,17 @@ class RevitEventHandlerManager(Base):
                 # populate room data from file and match families from the Revit document to rooms
                 action.execute(doc=doc, selected_element_id=element_ids[0])
             except Exception as e:
-                print("Error while calling function pushing single room into Revit: {}".format(e))
+                print(
+                    "Error while calling function pushing single room into Revit: {}".format(
+                        e
+                    )
+                )
                 print(traceback.format_exc())
                 return
         except Exception as e:
-            print("Error while prepping for pushing single room into Revit: {}".format(e))
+            print(
+                "Error while prepping for pushing single room into Revit: {}".format(e)
+            )
             return
 
     def update_all_revit_rooms(self, *args, **kwargs):
@@ -180,12 +187,12 @@ class RevitEventHandlerManager(Base):
         """
 
         print("Updating all revit rooms with the data from the WPF UI..")
-         # current revit document
-        doc=uiapp.ActiveUIDocument.Document
-        
+        # current revit document
+        doc = uiapp.ActiveUIDocument.Document
+
         try:
             action = UpdateAllRevitFamiliesFromUI(revit_model=self._revit_model)
-            action.execute(doc=doc)  
+            action.execute(doc=doc)
         except Exception as e:
             print("Error while Updating all revit rooms from the WPF UI: {}".format(e))
             return
@@ -195,7 +202,7 @@ class RevitEventHandlerManager(Base):
         Pull data from Revit to the WPF UI (refresh the rooms list)
         """
 
-        #print("raising external event to pull data from Revit to the WPF UI..")
+        # print("raising external event to pull data from Revit to the WPF UI..")
         self.ext_event_pull_data_from_revit.Raise()
 
     def pull_data_from_revit_action(self, uiapp):
@@ -204,7 +211,7 @@ class RevitEventHandlerManager(Base):
         """
 
         # current revit document
-        doc=uiapp.ActiveUIDocument.Document
+        doc = uiapp.ActiveUIDocument.Document
 
         try:
             action = UpdateDataModelFromRevit(revit_model=self._revit_model)
@@ -237,7 +244,7 @@ class RevitEventHandlerManager(Base):
         Set up the data for ui event handler.
         """
 
-        #print("Raising set up data event...")
+        # print("Raising set up data event...")
         self.ext_event_setup_data.Raise()
 
     def setup_data_action(self, uiapp):
@@ -248,15 +255,15 @@ class RevitEventHandlerManager(Base):
         - get families from model
         - set up rooms with revit matches (make sure the current design set / option are taken into account)
         """
- 
+
         # current revit document
-        doc=uiapp.ActiveUIDocument.Document
+        doc = uiapp.ActiveUIDocument.Document
 
         try:
             action = InitialiseRoomData(revit_model=self._revit_model)
             action.execute(doc=doc)
             # populate room data from file and match families from the Revit document to rooms
-            #self._revit_model.populate_room_data(doc=doc)
+            # self._revit_model.populate_room_data(doc=doc)
         except Exception as e:
             print("Error while loading and setting up data for ui: {}".format(e))
             return

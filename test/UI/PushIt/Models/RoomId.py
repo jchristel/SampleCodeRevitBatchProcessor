@@ -60,7 +60,7 @@ class RoomID(Base):
 
         :param other: Another instance of  ID class
         :type other: :class:`.FamilyId`
-        
+
         :return: True if name value of other colour class instance equal the name values of this instance, otherwise False.
         :rtype: Bool
         """

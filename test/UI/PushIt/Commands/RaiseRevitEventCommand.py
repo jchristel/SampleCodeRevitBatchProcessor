@@ -30,6 +30,7 @@ No Can execute method is required for this command.
 
 from duHast.UI.Objects.WPF.Commands.CommandBase import CommandBase
 
+
 class RaiseRevitEventCommand(CommandBase):
 
     def __init__(
@@ -48,10 +49,9 @@ class RaiseRevitEventCommand(CommandBase):
         super(RaiseRevitEventCommand, self).__init__(execute=None)
         self._execute = execute
 
-
     def CanExecute(self, parameter):
         """
-        This method always returns True 
+        This method always returns True
 
         :param parameter: The parameter
         :type parameter: object

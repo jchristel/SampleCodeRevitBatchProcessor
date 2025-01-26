@@ -31,7 +31,7 @@ class NavigateCommand(CommandBase):
         :param navigation_service: The navigation service
         :type navigation_service: NavigationService
         """
-        
+
         super(NavigateCommand, self).__init__()
 
         self._navigation_service = navigation_service

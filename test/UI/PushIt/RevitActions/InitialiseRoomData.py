@@ -31,8 +31,7 @@ from PushIt.RevitActions.RevitActionBase import RevitActionBase
 from PushIt.Utilities.families_get import (
     get_families_in_model,
 )
-from PushIt.Utilities.shared_parameters import (
-    check_shared_parameters_are_in_document)
+from PushIt.Utilities.shared_parameters import check_shared_parameters_are_in_document
 
 from duHast.Utilities.files_io import file_exist
 from PushIt.Utilities.rooms_load import load_rooms_from_file
@@ -40,14 +39,14 @@ from PushIt.Utilities import event_names
 
 
 class InitialiseRoomData(RevitActionBase):
-    
+
     def __init__(self, revit_model):
         """
         Constructor for the Revit Action class.
         """
 
         super(InitialiseRoomData, self).__init__(revit_model=revit_model)
-        
+
     def _check_shared_parameters(self, doc, room):
         """
         Check if the shared parameters exist in the document and are bound to the correct categories.
@@ -70,12 +69,12 @@ class InitialiseRoomData(RevitActionBase):
             return False
 
         return True
-    
+
     def execute(self, doc):
         """
         Execute the action.
         """
-        
+
         # load rooms from file if file path is set and an update is required
         if (
             self.revit_model._settings.rooms_data_file_path
@@ -89,7 +88,9 @@ class InitialiseRoomData(RevitActionBase):
             self.revit_model.clear_rooms()
 
             # load rooms from file
-            rooms_result = load_rooms_from_file(self.revit_model._settings.rooms_data_file_path)
+            rooms_result = load_rooms_from_file(
+                self.revit_model._settings.rooms_data_file_path
+            )
             if rooms_result.status is False:
                 raise ValueError(
                     "Failed to load rooms from file: {}".format(rooms_result.message)

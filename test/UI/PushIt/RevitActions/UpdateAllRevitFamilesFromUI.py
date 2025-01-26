@@ -42,26 +42,26 @@ from PushIt.Utilities import event_names
 
 from Autodesk.Revit.DB import ElementId
 
+
 class UpdateAllRevitFamiliesFromUI(RevitActionBase):
-    
+
     def __init__(self, revit_model):
         """
         Constructor for the Revit Action class.
         """
 
         super(UpdateAllRevitFamiliesFromUI, self).__init__(revit_model=revit_model)
-        
-       
+
     def execute(self, doc):
         """
         Execute the action.
         """
-        
+
         # check if any rooms are loaded in the data model
         rooms_in_data_model = self.revit_model._rooms_container.get_all_rooms()
         if len(rooms_in_data_model) == 0:
             print("No rooms loaded in the data model. Please load rooms first.")
-        
+
         # get the elements from the document
         families = get_families_in_model(
             doc,
@@ -70,24 +70,23 @@ class UpdateAllRevitFamiliesFromUI(RevitActionBase):
                 0
             ],  # a room object to get the properties we are interested in
         )
-        
+
         # get the shared parameter mapping to room properties ( select the first room in the model)
         shared_parameter_data = get_shared_parameter_data(
             doc=doc, room=self.revit_model._rooms_container.get_all_rooms()[0]
         )
-        
-        
+
         # loop over families and look for matches in the data model based on the room id
         for family in families:
-            
+
             # get the room object from the data model
             room = self.revit_model._rooms_container.get_room_by_id(family.room_id)
-            
+
             # check if the room object is found
             if room is None:
                 # no match next family
                 continue
-            
+
             # update the element in Revit with the new room properties
             update_single_family_result = update_single_family(
                 doc=doc,
@@ -95,15 +94,14 @@ class UpdateAllRevitFamiliesFromUI(RevitActionBase):
                 room=room,
                 shared_parameter_data=shared_parameter_data,
             )
-        
+
             if update_single_family_result is False:
                 print("Failed to update family: ", family)
                 continue
-        
-        
+
         # set the active design option and design set names
         self.revit_model._set_active_design_option_and_design_set(doc)
-        
+
         # get the elements from the document
         families_updated = get_families_in_model(
             doc,
@@ -112,7 +110,7 @@ class UpdateAllRevitFamiliesFromUI(RevitActionBase):
                 0
             ],  # a room object to get the properties we are interested in
         )
-        
+
         # update the rooms data with placed family data
         room_data = self.revit_model._update_room_data_with_family_data(
             rooms_in_data_model, families_updated
@@ -124,7 +122,6 @@ class UpdateAllRevitFamiliesFromUI(RevitActionBase):
         # add the updated rooms to the model
         for room in room_data:
             self.revit_model.add_room(room)
-            
+
         # let the model know about the updated families
         self.revit_model.RaisePropertyChanged(event_names.REVIT_MODEL_ROOMS_UPDATED)
-    

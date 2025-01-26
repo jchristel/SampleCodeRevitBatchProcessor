@@ -595,23 +595,13 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
         # get the columns from the data table
         columns = self._data_table.Columns
 
-        # build list of new entries
-        new_entries = []
+        # clear the old entries (list.clear() does not work in IronPython 2.7)
+        del self._column_filter_items[:]
+
+        # add the column names to the column filter items
         for column in columns:
-            new_entries.append(column.ColumnName)
-
-        # remove all old entries from global list
-        for entry in self._column_filter_items:
-            self._column_filter_items.remove(entry)
-
-        # add new entries
-        for new_entry in new_entries:
-            self._column_filter_items.append(new_entry)
-
-        # remove any left over default values
-        for entry in self._column_name_default_list:
-            if entry in self._column_filter_items:
-                self._column_filter_items.remove(entry)
+            self._column_filter_items.append(column.ColumnName)
+        
 
     def create_default_column_filter_items(self):
         """
@@ -642,11 +632,6 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
         # set up the data table
         data_table = DataTable()
 
-        # print(
-        #     "Creating data table...of {} rooms.".format(
-        #         len(self._revit_model.get_all_rooms())
-        #     )
-        # )
         # add columns to the data table
         for room_model_instance in self._revit_model.get_all_rooms():
             # add a column per property

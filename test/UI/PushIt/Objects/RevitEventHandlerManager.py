@@ -44,11 +44,15 @@ from PushIt.RevitActions.UpdateSingleRevitFamilyFromUI import (
 from PushIt.RevitActions.UpdateDataModelFromRevit import UpdateDataModelFromRevit
 from PushIt.RevitActions.InitialiseRoomData import InitialiseRoomData
 from PushIt.RevitActions.WipeStaleDataInRevitFamilies import WipeStaleDataInRevitFamilies
+from PushIt.Utilities import event_names
 
 from Autodesk.Revit.UI import (
     ExternalEvent,
 )
 
+import clr
+clr.AddReference('PresentationFramework')
+from Microsoft.Win32 import OpenFileDialog
 
 class RevitEventHandlerManager(Base):
 
@@ -280,3 +284,24 @@ class RevitEventHandlerManager(Base):
         except Exception as e:
             print("Error while loading and setting up data for ui: {}".format(e))
             return
+
+    def browse_for_file_action(self, *args, **kwargs):
+        """
+        Browse for file
+        """
+
+        print("Raising browse for file event...")
+        # Create an OpenFileDialog
+        dialog = OpenFileDialog()
+        dialog.Title = "Select a file"
+        dialog.Filter = "Text files (*.txt)|*.txt|CSV files (*.csv)|*.csv"
+
+        # Show the dialog and get the selected file path
+        result = dialog.ShowDialog()
+        if result:
+            self._revit_model._data_file_path_intermittent = dialog.FileName
+            # raise the event to load the data from the file
+            # check the new file path and save it if it is valid and different
+            self._revit_model.RaisePropertyChanged(event_names.VIEW_MODEL_DATA_FILE_PATH)
+        
+        

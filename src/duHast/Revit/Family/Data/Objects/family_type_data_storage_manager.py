@@ -46,13 +46,52 @@ class FamilyTypeDataStorageManager(Base):
         # storage for family type data
         self._family_type_data_storage = []
 
+        # set up fields for family name and category
+        self._family_name = None
+        self._family_category = None
+
     @property
     def family_type_data_storage(self):
         return self._family_type_data_storage
+    
+    @property
+    def family_name(self):
+        return self._family_name
+    
+    @family_name.setter
+    def family_name(self, family_name):
+        # only allow to set the family name if its current value is None
+        if self._family_name is not None:
+            raise ValueError("family_name can only be set once")
+        self._family_name = family_name
+    
+    @property
+    def family_category(self):
+        return self._family_category
+    
+    @family_category.setter
+    def family_category(self, family_category):
+        # only allow to set the family category if its current value is None
+        if self._family_category is not None:
+            raise ValueError("family_category can only be set once")
+        self._family_category = family_category
 
+    @property
+    def family_has_types(self):
+        """
+        Check if the family has types
+
+        :return: True if the family has types, False otherwise
+        :rtype: bool
+        """
+
+        return len(self.family_type_data_storage) > 0
+    
     def add_family_type_data_storage(self, family_type_data_storage):
         """
-        add family type data storage to the manager
+        add family type data storage to the manager.
+
+        This will also set the family name and category of this storage manager instance if they are not set yet.
 
         :param family_type_data_storage: family type data storage instance
         :type family_type_data_storage: FamilyTypeDataStorage
@@ -63,6 +102,18 @@ class FamilyTypeDataStorageManager(Base):
                 "family_type_data_storage must be an instance of FamilyTypeDataStorage"
             )
 
+        # check if the family name and category are set
+        if self.family_name is None:
+            self.family_name = family_type_data_storage.family_name
+        if self.family_category is None:
+            self.family_category = family_type_data_storage.root_category_path
+        
+        # check if the family name and category match the family type data storage instance
+        if self.family_name != family_type_data_storage.family_name:
+            raise ValueError("family_name does not match the family type data storage instance")
+        if self.family_category != family_type_data_storage.root_category_path:
+            raise ValueError("family_category does not match the family type data storage instance")
+        
         self._family_type_data_storage.append(family_type_data_storage)
 
     def get_report_data(self):

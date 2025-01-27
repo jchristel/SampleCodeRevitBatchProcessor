@@ -109,6 +109,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
 
     # Get the family parameters
     for part_node in family_node.SelectNodes("A:part", name_space_manager):
+        
         # Get the family type name
         family_type_name = None
         for child_node in part_node.ChildNodes:
@@ -118,6 +119,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
 
         # If we got a type name, add the parameters, their values and units, parameter type and type of parameter
         if family_type_name:
+
             parameters = []
             for child_node in part_node.ChildNodes:
                 if child_node.Name != "title":
@@ -204,5 +206,11 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
 
             # Add the family type to the storage manager for this family
             type_data_storage_manager.add_family_type_data_storage(fam_type)
-            
+    
+    # set the family name and category if they are not set yet
+    if type_data_storage_manager.family_name is None:
+        type_data_storage_manager.family_name = family_name
+    if type_data_storage_manager.family_category is None:
+        type_data_storage_manager.family_category = root_category_path
+    
     return type_data_storage_manager

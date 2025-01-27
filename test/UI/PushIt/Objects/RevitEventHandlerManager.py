@@ -44,6 +44,7 @@ from PushIt.RevitActions.UpdateSingleRevitFamilyFromUI import (
 from PushIt.RevitActions.UpdateDataModelFromRevit import UpdateDataModelFromRevit
 from PushIt.RevitActions.InitialiseRoomData import InitialiseRoomData
 from PushIt.RevitActions.WipeStaleDataInRevitFamilies import WipeStaleDataInRevitFamilies
+from PushIt.RevitActions.HighlightRoomsInRevit import HighlightRoomsInRevit
 from PushIt.Utilities import event_names
 
 from Autodesk.Revit.UI import (
@@ -104,6 +105,14 @@ class RevitEventHandlerManager(Base):
         self.ext_event_setup_data = ExternalEvent.Create(
             self.ex_event_handler_setup_data
         )
+        
+        # highlight elements in Revit
+        self.ex_event_handler_highlight_elements_in_revit = ExternalEventHandler(
+            execute_at_event_raised=self.highlight_rooms_in_revit_action
+        )
+        self.ext_event_highlight_elements_in_revit = ExternalEvent.Create(
+            self.ex_event_handler_highlight_elements_in_revit
+        )
 
     def dispose(self):
         """
@@ -121,6 +130,8 @@ class RevitEventHandlerManager(Base):
         self.ext_event_wipe_stale_data = None
         self.ext_event_setup_data.Dispose()
         self.ext_event_setup_data = None
+        self.ext_event_highlight_elements_in_revit.Dispose()
+        self.ext_event_highlight_elements_in_revit = None
 
         # dispose the external event handlers
         self.ex_event_handler_push_single_room = None
@@ -128,6 +139,7 @@ class RevitEventHandlerManager(Base):
         self.ex_event_handler_pull_data_from_revit = None
         self.ex_event_handler_wipe_stale_data = None
         self.ex_event_handler_setup_data = None
+        self.ex_event_handler_highlight_elements_in_revit = None
 
     def push_single_room_data(self, *args, **kwargs):
         """
@@ -284,6 +296,32 @@ class RevitEventHandlerManager(Base):
         except Exception as e:
             print("Error while loading and setting up data for ui: {}".format(e))
             return
+
+
+    def highlight_rooms_in_revit(self, *args, **kwargs):
+        """
+        Set up the highlight elements in Revit event handler.
+        """
+        self.ext_event_highlight_elements_in_revit.Raise()
+        
+    
+    def highlight_rooms_in_revit_action(self, uiapp):
+        """
+        Highlight elements in Revit
+        """
+
+        # current revit document
+        doc = uiapp.ActiveUIDocument.Document
+
+        try:
+            # set up the revit action to highlight elements in Revit
+            action = HighlightRoomsInRevit(revit_model=self._revit_model)
+            # execute the action
+            action.execute(doc=doc, ui_app=uiapp)
+        except Exception as e:
+            print("Error while highlighting elements in Revit: {}".format(e))
+            return
+
 
     def browse_for_file_action(self, *args, **kwargs):
         """

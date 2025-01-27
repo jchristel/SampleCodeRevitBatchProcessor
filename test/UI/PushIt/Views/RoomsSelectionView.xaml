@@ -157,13 +157,19 @@
             <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" 
                 Command="{Binding RefreshRoomDataFromModelCommand}" 
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                 Margin="0 5 5 5" 
                 Content="Refresh rooms from model"/>
-            <TextBlock Grid.Column="1" Margin="5 5 0 5" Text="{Binding ActiveDesignSetAndOptionName}"/>
+            <Button Grid.Column="1" 
+                Command="{Binding HighlightSelectedRoomCommand}" 
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
+                Margin="0 5 5 5" 
+                Content="Highlight rooms in model"/>
+            <TextBlock Grid.Column="2" Margin="5 5 0 5" Text="{Binding ActiveDesignSetAndOptionName}"/>
         </Grid>
         <!-- admin model data expander -->
         <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">

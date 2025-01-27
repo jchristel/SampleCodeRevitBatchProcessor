@@ -57,6 +57,7 @@ from duHast.Utilities.files_io import file_exist
 from duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel import ErrorsViewModel
 
 from PushIt.Commands.PushRoomDataCommand import PushRoomDataCommand
+from PushIt.Commands.HighlightRoomsCommand import HighlightRoomsCommand
 from PushIt.Commands.RaiseRevitEventCommand import RaiseRevitEventCommand
 from PushIt.Commands.LoadRoomDataCommand import LoadRoomDataCommand
 from PushIt.Utilities import event_names
@@ -82,6 +83,10 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
         # can a room be pushed to revit, default is false
         # will be re-evaluated when a row is selected
         self._can_push_room_data = False
+        
+        # has a room been pushed and therefore a revit room can be highlighted, default is false
+        # will be re-evaluated when a row is selected
+        self._highlight_room_in_revit = False
 
         # is safety off mode enabled (default is false)
         # safety off mode is used to allow pushing of rooms more than once to revit
@@ -163,6 +168,12 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
         # the command used to raise the revit external event which in turn calls a function wiping stale room data
         self._wipe_stale_room_data_command = RaiseRevitEventCommand(
             execute=self._revit_model_event_handler_manager.wipe_stale_data
+        )
+
+        # the command used to highlight the selected room in the revit model
+        self._highlight_selected_room_command = HighlightRoomsCommand(
+            rooms_selection_view_model=self,
+            execute=self._revit_model_event_handler_manager.highlight_rooms_in_revit
         )
 
         # event handlers
@@ -306,6 +317,15 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
         return self._can_push_room_data
 
     @property
+    def CanHighlightRoomInRevit(self):
+        """
+        A boolean value indicating if a room can be highlighted in the revit model.
+        ( there is a room selected and the room has been pushed to the revit model )
+        """
+
+        return self._highlight_room_in_revit
+
+    @property
     def SelectedRoom(self):
         """
         The selected room.
@@ -347,6 +367,8 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
             self._revit_model.room_of_interest = None
             # set the flag as to whether a room can be pushed to the revit model
             self._can_push_room_data = False
+            # set the flag as to whether a room can be highlighted in the revit model
+            self._highlight_room_in_revit = False
             return
 
         try:
@@ -365,6 +387,9 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
             # set the flag as to whether a room can be pushed to the revit model
             self._can_push_room_data = row[row.Table.Columns.Count - 1] == "0"
 
+            # set the flag as to whether a room can be highlighted in the revit model
+            self._highlight_room_in_revit = row[row.Table.Columns.Count - 1] != "0"
+            
             # raise property change event for the selected row content
             # this will trigger a re-evaluation of push it command availability
             self.RaisePropertyChanged(event_names.VIEW_MODEL_SELECTED_ROW)
@@ -472,7 +497,6 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
         This is used when the user wants to update the rooms in the revit model from the room data.
         """
 
-        # scaffold the command
         return self._update_rooms_in_revit_from_room_data_command
 
     @property
@@ -483,8 +507,18 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
         This is used when the user wants to wipe stale room data.
         """
 
-        # scaffold the command
         return self._wipe_stale_room_data_command
+
+    @property
+    def HighlightSelectedRoomCommand(self):
+        """
+        The command used to highlight the selected room in the revit model.
+
+        This is used when the user wants to highlight the selected room in the revit model.
+        """
+
+        return self._highlight_selected_room_command
+
 
     def update_room_data(self, sender, property_changed_args):
         """

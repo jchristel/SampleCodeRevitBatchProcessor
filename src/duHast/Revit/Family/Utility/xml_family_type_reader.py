@@ -159,16 +159,6 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
                         p_value = replace_new_lines(child_node.InnerText)
                     except Exception as e:
                         pass
-
-                    # Check if p_value contains a number followed by a unit string (including special characters)
-                    #number_unit_pattern = re.compile(r"^(\d+(\.\d+)?)\s*([^\d\s]+)$")
-                    #match = number_unit_pattern.match(p_value)
-                    #if match:
-                        # found a unit string, just return the number
-                    #    p_value = match.group(1)
-                    #else:
-                        # No unit string found, just use the value as is
-                    #    pass
                     
                     # check if the value is a number and contains thousands separators
                     if type_of_parameter in FamilyTypeParameterDataStorage.unit_type_compare_values_as_floats:

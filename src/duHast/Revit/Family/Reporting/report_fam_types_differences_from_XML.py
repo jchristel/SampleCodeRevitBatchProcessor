@@ -47,6 +47,7 @@ from duHast.Utilities.files_csv import read_csv_file
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects.result import Result
 from duHast.UI.Objects.ProgressBase import ProgressBase
+from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
 
 
 def get_family_type_data_from_project_file(
@@ -221,15 +222,25 @@ def build_comparison_report(type_data_matches, ignore_list_path):
         for entry in type_data_matches:
             fam_name = ""
             fam_category = ""
-
+            # set a flag that the family export from revit project file resulted in no types exported
+            family_export_has_types = False
+            
             # get name and catgegory ( for non matched family this may just be a list of name and category rather than a storage object)
             if isinstance(entry[0], list):
                 fam_name = entry[0][0]
                 fam_category = entry[0][1]
+            elif isinstance(entry[0], FamilyTypeDataStorageManager):
+                # there is a chance that the family export from the project file contains no types
+                if entry[0].family_type_data_storage.family_has_types:
+                    # assume there is at least one entry in the storage object
+                    fam_name = entry[0].family_type_data_storage[0].family_name
+                    fam_category = entry[0].family_type_data_storage[0].root_category_path
+                    # set flag that types were exported
+                    family_export_has_types = True
+                else:
+                    fam_name = entry[0].family_type_data_storage.family_name
             else:
-                # assume there is at least one entry in the storage object
-                fam_name = entry[0].family_type_data_storage[0].family_name
-                fam_category = entry[0].family_type_data_storage[0].root_category_path
+                raise ValueError("entry[0] is not a list or FamilyTypeDataStorageManager: {}".format(type(entry[0])))
 
             # check if the family is in ignore list based on name and category
             ignore = False
@@ -246,6 +257,9 @@ def build_comparison_report(type_data_matches, ignore_list_path):
                     # family not found in library
                     diff.append([fam_name, fam_category, "No match in library"])
                 continue
+            elif family_export_has_types == False:
+                # family has no types
+                diff.append([fam_name, fam_category, "Family in project has no types exported"])
             else:
                 # compare the two data sets
                 diff = diff + entry[0].get_difference(entry[1])

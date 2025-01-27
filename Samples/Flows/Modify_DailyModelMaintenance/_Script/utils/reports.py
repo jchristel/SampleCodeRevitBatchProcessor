@@ -49,6 +49,9 @@ from csv import QUOTE_MINIMAL
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
 
+# rbp script util import
+import revit_script_util
+
 # import common library
 import settings as settings  # sets up all commonly used variables and path locations!
 
@@ -106,6 +109,7 @@ from duHast.Revit.Links.Reporting import links_report_header as rLinkHeader
 from duHast.Revit.Links.Reporting import cad_links_report_utils as rLinkCadRep
 from duHast.Revit.Links.Reporting import cad_links_report_header as rLinkCadHeader
 
+from duHast.Revit.RBP.Objects.ProgressRBPConsole import ProgressRBPConsole
 
 def report_sheets(doc, revit_file_path, output):
     """
@@ -877,8 +881,10 @@ def report_template_overrides(doc, revit_file_path, output):
             if vt.AreGraphicsOverridesAllowed():
                 view_template_filtered.append(vt)
 
+        # setup a progress call back
+        progress = ProgressRBPConsole(revit_script_util.Output)
         # get view template data
-        data = get_views_graphic_settings_data(doc, view_template_filtered)
+        data = get_views_graphic_settings_data(doc, view_template_filtered, progress)
 
         # write data to file
         try:

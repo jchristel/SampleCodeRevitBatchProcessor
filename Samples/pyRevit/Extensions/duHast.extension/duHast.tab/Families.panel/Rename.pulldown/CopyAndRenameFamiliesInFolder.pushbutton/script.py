@@ -9,10 +9,12 @@ Usage:
     - File path	: fully qualified file path to the family file. ( can be left blank when renaming families within a project )
     - Family category: the Revit category of the family.
     - New family name: the new family name without the file extension.
+    - target directory: the directory where the family file is located. ( can be left blank, when copying into the same directory )
 
     Note:
 
     - First row is treated as a header row and its content is ignored.
+    
 
 - Run the script.
 - Select the csv file you created.
@@ -31,7 +33,8 @@ doc = revit.doc
 # rename loaded families
 
 # import from library
-from families.rename.rename_loaded_familes import rename_loaded_families
+#from families.rename.rename_loaded_familes import rename_loaded_families
 
 # rename loaded families!
-rename_loaded_families(doc=doc, output=output, forms=forms)
+#rename_loaded_families(doc=doc, output=output, forms=forms)
+print("Oh, hi there!")

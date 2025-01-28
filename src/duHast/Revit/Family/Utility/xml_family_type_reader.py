@@ -35,12 +35,23 @@ import datetime
 import re
 
 clr.AddReference("System.Xml")
-from System.Xml import  XmlNamespaceManager, XmlDocument
+from System.Xml import XmlNamespaceManager, XmlDocument
 
-from duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage import FamilyTypeParameterDataStorage
-from duHast.Revit.Family.Data.Objects.family_type_data_storage import FamilyTypeDataStorage
-from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
-from duHast.Utilities.string_operations import remove_currency_sign, replace_new_lines, remove_trailing_characters_from_number_string
+from duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage import (
+    FamilyTypeParameterDataStorage,
+)
+from duHast.Revit.Family.Data.Objects.family_type_data_storage import (
+    FamilyTypeDataStorage,
+)
+from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import (
+    FamilyTypeDataStorageManager,
+)
+from duHast.Utilities.string_operations import (
+    remove_currency_sign,
+    replace_new_lines,
+    remove_trailing_characters_from_number_string,
+)
+
 
 def read_xml_into_storage(doc_xml, family_name, family_path):
     """
@@ -58,9 +69,10 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
     """
 
     if isinstance(doc_xml, XmlDocument) is False:
-        raise TypeError("doc_xml must be an instance of XmlDocument. Got: {}".format(doc_xml))
-    
-    
+        raise TypeError(
+            "doc_xml must be an instance of XmlDocument. Got: {}".format(doc_xml)
+        )
+
     type_data_storage_manager = FamilyTypeDataStorageManager()
     # Add an XML namespace manager
     name_space_manager = XmlNamespaceManager(doc_xml.NameTable)
@@ -87,8 +99,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
         if dummy_scheme == "adsk:revit:grouping":
             root_category_path = dummy_term
 
-
-     # get the date and time of the last update
+    # get the date and time of the last update
     last_updated_date = None
     last_updated_time = None
 
@@ -96,7 +107,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
     updated_node = doc_xml.SelectSingleNode("//atom:updated", name_space_manager)
     if updated_node is not None:
         last_updated_datetime = updated_node.InnerText
-        
+
         # Convert the date-time string to a date and time
         try:
             dt = datetime.datetime.strptime(last_updated_datetime, "%Y-%m-%dT%H:%M:%SZ")
@@ -109,7 +120,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
 
     # Get the family parameters
     for part_node in family_node.SelectNodes("A:part", name_space_manager):
-        
+
         # Get the family type name
         family_type_name = None
         for child_node in part_node.ChildNodes:
@@ -159,17 +170,19 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
                         p_value = replace_new_lines(child_node.InnerText)
                     except Exception as e:
                         pass
-                    
+
                     # check if the value is a number and contains thousands separators
-                    if type_of_parameter in FamilyTypeParameterDataStorage.unit_type_compare_values_as_floats:
+                    if (
+                        type_of_parameter
+                        in FamilyTypeParameterDataStorage.unit_type_compare_values_as_floats
+                    ):
                         # remove any thousands separators
                         p_value = p_value.replace(",", "")
                         # remove any currency signs
                         p_value = remove_currency_sign(p_value)
                         # remove any trailing units
                         p_value = remove_trailing_characters_from_number_string(p_value)
-                    
-                    
+
                     # Create a parameter object
                     parameter = FamilyTypeParameterDataStorage(
                         name=name,
@@ -196,11 +209,11 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
 
             # Add the family type to the storage manager for this family
             type_data_storage_manager.add_family_type_data_storage(fam_type)
-    
+
     # set the family name and category if they are not set yet
     if type_data_storage_manager.family_name is None:
         type_data_storage_manager.family_name = family_name
     if type_data_storage_manager.family_category is None:
         type_data_storage_manager.family_category = root_category_path
-    
+
     return type_data_storage_manager

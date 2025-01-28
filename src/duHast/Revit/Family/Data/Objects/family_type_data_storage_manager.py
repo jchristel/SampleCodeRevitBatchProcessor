@@ -53,22 +53,22 @@ class FamilyTypeDataStorageManager(Base):
     @property
     def family_type_data_storage(self):
         return self._family_type_data_storage
-    
+
     @property
     def family_name(self):
         return self._family_name
-    
+
     @family_name.setter
     def family_name(self, family_name):
         # only allow to set the family name if its current value is None
         if self._family_name is not None:
             raise ValueError("family_name can only be set once")
         self._family_name = family_name
-    
+
     @property
     def family_category(self):
         return self._family_category
-    
+
     @family_category.setter
     def family_category(self, family_category):
         # only allow to set the family category if its current value is None
@@ -80,13 +80,14 @@ class FamilyTypeDataStorageManager(Base):
     def family_has_types(self):
         """
         Check if the family has types
+        (might have not types if all types where purge from a model and just the family was left)
 
         :return: True if the family has types, False otherwise
         :rtype: bool
         """
 
         return len(self.family_type_data_storage) > 0
-    
+
     def add_family_type_data_storage(self, family_type_data_storage):
         """
         add family type data storage to the manager.
@@ -107,13 +108,17 @@ class FamilyTypeDataStorageManager(Base):
             self.family_name = family_type_data_storage.family_name
         if self.family_category is None:
             self.family_category = family_type_data_storage.root_category_path
-        
+
         # check if the family name and category match the family type data storage instance
         if self.family_name != family_type_data_storage.family_name:
-            raise ValueError("family_name does not match the family type data storage instance")
+            raise ValueError(
+                "family_name does not match the family type data storage instance"
+            )
         if self.family_category != family_type_data_storage.root_category_path:
-            raise ValueError("family_category does not match the family type data storage instance")
-        
+            raise ValueError(
+                "family_category does not match the family type data storage instance"
+            )
+
         self._family_type_data_storage.append(family_type_data_storage)
 
     def get_report_data(self):
@@ -130,10 +135,9 @@ class FamilyTypeDataStorageManager(Base):
             type_data = family_type_data_storage.get_report_data()
             for fam in type_data:
                 report_data.append(fam)
-            #report_data.append(family_type_data_storage.get_report_data())
+            # report_data.append(family_type_data_storage.get_report_data())
 
         return report_data
-
 
     def get_difference(self, other):
         """
@@ -169,7 +173,7 @@ class FamilyTypeDataStorageManager(Base):
 
             # flag to check whether type (by name only exists in other)
             type_data_storage_has_match = False
-            
+
             # loop over storage types from library to find a match
             for other_family_type_data_storage in other.family_type_data_storage:
                 if family_type_data_storage.is_match_by_names_and_category(
@@ -240,6 +244,6 @@ class FamilyTypeDataStorageManager(Base):
             else:
                 # remove the family type data storage instance
                 pass
-        
+
         # replace the old list with the filtered list
         self._family_type_data_storage = filtered_list

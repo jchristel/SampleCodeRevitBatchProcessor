@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Module containing reporting family type reporting functions.
+Module containing comparison reporting of family types in a project vs in a library functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Reports:
@@ -47,7 +47,9 @@ from duHast.Utilities.files_csv import read_csv_file
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects.result import Result
 from duHast.UI.Objects.ProgressBase import ProgressBase
-from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
+from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import (
+    FamilyTypeDataStorageManager,
+)
 
 
 def get_family_type_data_from_project_file(
@@ -224,7 +226,7 @@ def build_comparison_report(type_data_matches, ignore_list_path):
             fam_category = ""
             # set a flag that the family export from revit project file resulted in no types exported
             family_export_has_types = False
-            
+
             # get name and catgegory ( for non matched family this may just be a list of name and category rather than a storage object)
             if isinstance(entry[0], list):
                 fam_name = entry[0][0]
@@ -237,7 +239,11 @@ def build_comparison_report(type_data_matches, ignore_list_path):
                     # set flag that types were exported
                     family_export_has_types = True
             else:
-                raise ValueError("entry[0] is not a list or FamilyTypeDataStorageManager: {}".format(type(entry[0])))
+                raise ValueError(
+                    "entry[0] is not a list or FamilyTypeDataStorageManager: {}".format(
+                        type(entry[0])
+                    )
+                )
 
             # check if the family is in ignore list based on name and category
             ignore = False
@@ -256,7 +262,9 @@ def build_comparison_report(type_data_matches, ignore_list_path):
                 continue
             elif family_export_has_types == False:
                 # family has no types
-                diff.append([fam_name, fam_category, "Family in project has no types exported"])
+                diff.append(
+                    [fam_name, fam_category, "Family in project has no types exported"]
+                )
             else:
                 # compare the two data sets
                 diff = diff + entry[0].get_difference(entry[1])
@@ -355,7 +363,7 @@ def compare_family_files_in_project_against_library(
             return_value.append_message(
                 "Successfully gathered family type data from the library."
             )
-        
+
         # get type data from the family files in project file
         type_data_from_project_result = get_family_type_data_from_project_file(
             doc, type_data_from_library_result.result, progress_callback

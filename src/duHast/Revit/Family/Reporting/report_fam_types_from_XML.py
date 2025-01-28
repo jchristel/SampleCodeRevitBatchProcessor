@@ -5,7 +5,6 @@ Module containing reporting family type reporting functions.
 
 Reports:
 
-- all family types lopaded in the project ( based on xml files created temporary from families loaded in the project)
 - all family types in the library folder ( based on xml files located in the library folder)
 
 """
@@ -32,8 +31,10 @@ Reports:
 #
 #
 
-from duHast.Revit.Family.family_types_get_data_from_xml import get_family_type_data_from_library
-from duHast.Utilities.files_xml import  get_all_xml_files_from_directories
+from duHast.Revit.Family.family_types_get_data_from_xml import (
+    get_family_type_data_from_library,
+)
+from duHast.Utilities.files_xml import get_all_xml_files_from_directories
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects.result import Result
 from duHast.UI.Objects.ProgressBase import ProgressBase
@@ -44,7 +45,7 @@ def build_report(type_data_storage_manager_instances):
     Build a comparison report of the family type data from the project file against the library.
     Only differences are reported.
 
-    :param type_data_storage_manager_instances: list of matched family type data 
+    :param type_data_storage_manager_instances: list of matched family type data
     :type type_data_storage_manager_instances: [:class:`FamilyTypeDataStorageManager`]
 
     :return:
@@ -62,24 +63,23 @@ def build_report(type_data_storage_manager_instances):
 
     :rtype: :class:`.Result`
     """
-    
+
     report_data = []
     return_value = Result()
     try:
         for type_data_storage_manager_instance in type_data_storage_manager_instances:
-            fam_data=type_data_storage_manager_instance.get_report_data()
+            fam_data = type_data_storage_manager_instance.get_report_data()
             for fam in fam_data:
                 report_data.append(fam)
-            #report_data.extend(type_data_storage_manager_instance.get_report_data())
-        
+            # report_data.extend(type_data_storage_manager_instance.get_report_data())
+
         return_value.result = report_data
     except Exception as e:
         return_value.update_sep(
             False, "Failed to gather family data with exception: {}".format(e)
         )
-    
-    return return_value
 
+    return return_value
 
 
 def get_family_type_data_from_library_xml(process_directories, progress_callback=None):
@@ -87,7 +87,7 @@ def get_family_type_data_from_library_xml(process_directories, progress_callback
     Compare the family type data from the project file against the library.
     Only differences are reported.
 
-    
+
     :param process_directories: list of directories to search for xml files
     :type process_directories: list
     :param progress_callback: progress callback object
@@ -105,7 +105,7 @@ def get_family_type_data_from_library_xml(process_directories, progress_callback
         - Reload.status (bool) will be False
         - Reload.message will contain the exception message
         - Reload.result will be an empty list
-    
+
     :rtype: :class:`.Result`
     """
 
@@ -118,9 +118,9 @@ def get_family_type_data_from_library_xml(process_directories, progress_callback
                 type(progress_callback)
             )
         )
-    
-    #set up a timer
-    t=Timer()
+
+    # set up a timer
+    t = Timer()
     t.start()
 
     try:
@@ -130,23 +130,37 @@ def get_family_type_data_from_library_xml(process_directories, progress_callback
 
         # check if any xml files were found
         if len(xml_files_in_libraries) == 0:
-            return_value.update_sep(False, "No XML files found in the directories: {}".format(process_directories))
+            return_value.update_sep(
+                False,
+                "No XML files found in the directories: {}".format(process_directories),
+            )
             return_value.append_message(t.stop())
             return return_value
         else:
-            return_value.append_message("Found {} XML files in the directories: {}".format(len(xml_files_in_libraries), process_directories))
+            return_value.append_message(
+                "Found {} XML files in the directories: {}".format(
+                    len(xml_files_in_libraries), process_directories
+                )
+            )
 
         # get the type data from the library
-        type_data_from_library_result = get_family_type_data_from_library(xml_files_in_libraries, progress_callback)
+        type_data_from_library_result = get_family_type_data_from_library(
+            xml_files_in_libraries, progress_callback
+        )
 
         # check if the type data from the library was successfully gathered
-        if type_data_from_library_result.status == False or len(type_data_from_library_result.result)==0:
+        if (
+            type_data_from_library_result.status == False
+            or len(type_data_from_library_result.result) == 0
+        ):
             return_value.update_sep(False, type_data_from_library_result.message)
             return_value.append_message(t.stop())
             return return_value
         else:
-            return_value.append_message("Successfully gathered family type data from the library.")
-        
+            return_value.append_message(
+                "Successfully gathered family type data from the library."
+            )
+
         # build the report
         report_result = build_report(type_data_from_library_result.result)
 
@@ -156,8 +170,10 @@ def get_family_type_data_from_library_xml(process_directories, progress_callback
             return_value.append_message(t.stop())
             return return_value
         else:
-            return_value.append_message("Successfully built the report. {}".format(t.stop()))
-        
+            return_value.append_message(
+                "Successfully built the report. {}".format(t.stop())
+            )
+
         # store the report data
         return_value.result = report_result.result
 
@@ -166,5 +182,5 @@ def get_family_type_data_from_library_xml(process_directories, progress_callback
             False, "Failed to gather family data with exception: {}".format(e)
         )
         return_value.append_message(t.stop())
-    
+
     return return_value

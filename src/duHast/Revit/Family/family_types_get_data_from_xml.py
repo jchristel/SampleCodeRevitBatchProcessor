@@ -34,7 +34,6 @@ Supports 2 methods of data extraction:
 #
 
 
-
 import os
 
 from duHast.Utilities.Objects.result import Result
@@ -45,9 +44,10 @@ from duHast.Utilities.files_io import (
 from duHast.Utilities.files_xml import read_xml_file
 from duHast.Revit.Family.Utility.xml_family_type_reader import read_xml_into_storage
 from duHast.Revit.Family.Utility.xml_create_atom_exports import (
-    write_data_to_temp_xml_file_and_read_it_back, 
-    write_data_to_xml_file_and_read_it_back
+    write_data_to_temp_xml_file_and_read_it_back,
+    write_data_to_xml_file_and_read_it_back,
 )
+
 
 def get_type_data_via_XML_from_family_file(
     application, family_name, family_path, use_temporary_file=True
@@ -132,15 +132,15 @@ def get_family_type_data_from_library(xml_files_in_libraries, progress_callback=
     :param progress_callback: progress callback object
     :type progress_callback: :class:`ProgressBase`
 
-    :return: 
+    :return:
         Result class instance.
 
         - result.status: XML conversion status will be returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain which xml file was read and converted into family type data.
         - result.result will be [:class:`FamilyTypeDataStorageManager`]
-        
+
         On exception
-        
+
         - Reload.status (bool) will be False
         - Reload.message will contain the exception message
         - Reload.result will be an empty list
@@ -165,22 +165,29 @@ def get_family_type_data_from_library(xml_files_in_libraries, progress_callback=
 
             # update progress
             if progress_callback:
-                progress_callback.update(counter,  max_value_xml )
+                progress_callback.update(counter, max_value_xml)
 
             # read xml file
             xml_doc_status = read_xml_file(xml_file.name)
-            if(xml_doc_status == False):
-                return_value.update_sep(False, "Failed to read xml file: {} with exception: {}".format(xml_file.name, xml_doc_status.message))
+            if xml_doc_status == False:
+                return_value.update_sep(
+                    False,
+                    "Failed to read xml file: {} with exception: {}".format(
+                        xml_file.name, xml_doc_status.message
+                    ),
+                )
                 # update progress
                 counter = counter + 1
                 continue
             else:
                 return_value.append_message("Read xml file: {}".format(xml_file.name))
-            
+
             # get the xml document
             xml_doc = xml_doc_status.result
-            if  xml_doc is None:
-                return_value.update_sep(False, "Failed to read xml file: {}".format(xml_file.name))
+            if xml_doc is None:
+                return_value.update_sep(
+                    False, "Failed to read xml file: {}".format(xml_file.name)
+                )
                 # update progress
                 counter = counter + 1
                 continue
@@ -191,11 +198,11 @@ def get_family_type_data_from_library(xml_files_in_libraries, progress_callback=
             fam_name = get_file_name_without_ext(xml_file.name)
             fam_directory = get_directory_path_from_file_path(xml_file.name)
             fam_path = os.path.join(fam_directory, fam_name + ".rfa")
-            
+
             # load xml data into storage
             return_value.append_message("loading family: {}".format(fam_name))
             xml_data_family = read_xml_into_storage(xml_doc, fam_name, fam_path)
-            
+
             # add storage to global list
             type_data.append(xml_data_family)
 
@@ -207,10 +214,12 @@ def get_family_type_data_from_library(xml_files_in_libraries, progress_callback=
                 if progress_callback.is_cancelled():
                     return_value.append_message("User cancelled!")
                     break
-    
+
     except Exception as e:
-        return_value.update_sep(False, "Failed to gather family data with exception: {}".format(e))
-    
+        return_value.update_sep(
+            False, "Failed to gather family data with exception: {}".format(e)
+        )
+
     # store data to be returned
     return_value.result = type_data
 

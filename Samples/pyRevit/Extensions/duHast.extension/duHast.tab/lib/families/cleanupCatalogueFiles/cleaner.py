@@ -1,3 +1,25 @@
+# License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# BSD License
+# Copyright 2025, Jan Christel
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+#
+#
+#
+
 import os
 
 from duHast.Utilities.Objects.result import Result
@@ -14,7 +36,7 @@ from duHast.Utilities.Objects.file_encoding_bom import BOMValue
 
 
 # import Autodesk Revit DataBase namespace
-from Autodesk.Revit.DB import  Transaction
+from Autodesk.Revit.DB import Transaction
 
 
 def _print_parameters(parameters):
@@ -135,7 +157,7 @@ def _get_family_instance_parameters(doc):
         - result.status (bool) will be False.
         - result.message will contain exception message.
         - result.result will be an empty list.
-        
+
     :rtype: :class:`.Result`
     """
 
@@ -480,9 +502,9 @@ def clean_up_catalogue_file(doc, output, forms):
             )
             print(return_value.message)
             return return_value
-        
+
         row_data = row_data_result.result
-        
+
         print("Read {} rows.".format(len(row_data)))
 
         # build parameter names list:
@@ -513,7 +535,7 @@ def clean_up_catalogue_file(doc, output, forms):
         new_file_name = get_file_name_without_ext(file_selected)
         target_dir = get_directory_path_from_file_path(file_selected)
         new_full_file_name = os.path.join(target_dir, new_file_name + "__.txt")
-        
+
         # write new data to file
         write_result = write_report_data_as_csv(
             file_name=new_full_file_name,
@@ -523,8 +545,8 @@ def clean_up_catalogue_file(doc, output, forms):
             bom=BOMValue.UTF_16_LITTLE_ENDIAN,
         )
         if write_result.status is False:
-           raise ValueError(write_result.message)
-       
+            raise ValueError(write_result.message)
+
         print("BOM is present: {}".format(check_utf16le_bom(new_full_file_name)))
 
     except Exception as e:

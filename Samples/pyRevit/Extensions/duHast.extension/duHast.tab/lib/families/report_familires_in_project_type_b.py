@@ -21,51 +21,44 @@
 #
 
 import csv
-import os
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Revit.Family.Reporting.report_fam_types_from_XML import (
-    get_family_type_data_from_library_xml,
+from duHast.Revit.Family.Reporting.report_fam_types_from_project_via_xml import (
+    get_all_family_type_data_from_project_file,
 )
 from duHast.Revit.Family.Reporting.families_report_header import LIBRARY_FAMILIES_HEADER
 from duHast.pyRevit.Objects.ProgressPyRevit import ProgressPyRevit
 from duHast.pyRevit.console_output import print_header
 from duHast.Utilities.files_csv import write_report_data_as_csv
 
-
 from families.util.print_table import print_result_table
 
-# directories to process (add more directories as needed)
-# these directories will be searched for xml files
-PROCESS_DIRECTORIES = [
-    r"\\path\location\one",
-    r"\\path\location\two",
-    r"\\path\location\three",
-]
 
+def report_families_in_project_entry(doc, output, forms):
+    """
+    Report all families in project to csv file. This function is the entry point for the pyRevit command.
 
-def report_families_in_library_entry(doc, output, forms):
+    Reports:
+
+    - Family Name
+    - Family Category
+    - Family Type Name
+    - parameter properties
+    - parameter value
+
+    :param doc: Revit Document
+    :type doc: Document
+    :param output: pyRevit output
+    :type output: Output
+    :param forms: pyRevit forms
+    :type forms: Forms
+
+    :return: Result
+    """
 
     # set up a status tracker
     return_value = Result()
     family_data = []
-
-    validated_directories = []
-
-    print_header("Checking directories")
-    # check if directories exist
-    for process_dir in PROCESS_DIRECTORIES:
-        if not os.path.exists(process_dir):
-            print("Directory does not exist: {}".format(process_dir))
-        else:
-            print("Processing directory: {}".format(process_dir))
-            validated_directories.append(process_dir)
-
-    if len(validated_directories) == 0:
-        return_value.update_sep(
-            False, "No directories to process left after validation."
-        )
-        return return_value
 
     try:
 
@@ -78,19 +71,18 @@ def report_families_in_library_entry(doc, output, forms):
             # set up a call back for pyRevit progressbar
             progress_callback = ProgressPyRevit(form=pb)
 
-            print_header("Reporting families in library:")
-            report_result = get_family_type_data_from_library_xml(
-                process_directories=validated_directories,
-                progress_callback=progress_callback,
+            print_header("Reporting families in project:")
+            report_result = get_all_family_type_data_from_project_file(
+                doc=doc, ignore_list_path=None, progress_callback=progress_callback
             )
 
-            print("Finished reading families in library")
+            print("Finished reading families from project")
 
             # update return value with comparison result
             return_value.update(report_result)
             if report_result.status == False:
                 print(
-                    "Failed to get family data from library with exception: {}".format(
+                    "Failed to get family data from project with exception: {}".format(
                         report_result.message
                     )
                 )
@@ -100,7 +92,7 @@ def report_families_in_library_entry(doc, output, forms):
             family_data = report_result.result
 
         print(
-            "Finished reading families in library with status: {}".format(
+            "Finished reading families in project with status: {}".format(
                 report_result.status
             )
         )
@@ -131,7 +123,7 @@ def report_families_in_library_entry(doc, output, forms):
             )
             if write_result.status:
                 return_value.append_message(
-                    "Succefully wrote families report to: {} ".format(file_path)
+                    "Successfully wrote families report to: {} ".format(file_path)
                 )
             else:
                 return_value.update_sep(
@@ -151,7 +143,7 @@ def report_families_in_library_entry(doc, output, forms):
 
     except Exception as e:
         return_value.update_sep(
-            False, "Failed to compare families with exception: {}".format(e)
+            False, "Failed to report families with exception: {}".format(e)
         )
 
     print("Finished")

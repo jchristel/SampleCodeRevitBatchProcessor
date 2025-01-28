@@ -33,9 +33,6 @@ Reports:
 
 from Autodesk.Revit.DB import Family
 
-from duHast.Revit.Family.family_types_get_data_from_xml import (
-    get_family_type_data_from_library,
-)
 from duHast.Revit.Family.family_types_model_get_data_from_xml import (
     get_type_data_via_XML_from_family_object,
 )
@@ -44,9 +41,6 @@ from duHast.Utilities.files_csv import read_csv_file
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects.result import Result
 from duHast.UI.Objects.ProgressBase import ProgressBase
-from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import (
-    FamilyTypeDataStorageManager,
-)
 
 
 def build_type_report(doc_name, type_data, ignore_list_path):

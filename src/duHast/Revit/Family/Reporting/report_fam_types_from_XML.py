@@ -67,12 +67,12 @@ def build_report(type_data_storage_manager_instances):
     report_data = []
     return_value = Result()
     try:
+        # loop over the data and built the report
         for type_data_storage_manager_instance in type_data_storage_manager_instances:
             fam_data = type_data_storage_manager_instance.get_report_data()
             for fam in fam_data:
                 report_data.append(fam)
-            # report_data.extend(type_data_storage_manager_instance.get_report_data())
-
+        # store the report data
         return_value.result = report_data
     except Exception as e:
         return_value.update_sep(

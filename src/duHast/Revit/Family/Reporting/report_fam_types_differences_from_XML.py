@@ -37,10 +37,8 @@ import os
 
 from Autodesk.Revit.DB import Family
 
-from duHast.Revit.Family.family_types_get_data_from_xml import (
-    get_type_data_via_XML_from_family_object,
-    get_family_type_data_from_library,
-)
+from duHast.Revit.Family.family_types_get_data_from_xml import get_family_type_data_from_library
+from duHast.Revit.Family.family_types_model_get_data_from_xml import get_type_data_via_XML_from_family_object
 from duHast.Revit.Family.family_functions import get_name_to_family_dict
 from duHast.Utilities.files_xml import get_all_xml_files_from_directories
 from duHast.Utilities.files_csv import read_csv_file
@@ -404,6 +402,7 @@ def compare_family_files_in_project_against_library(
         return_value.update_sep(
             False, "Failed to gather family data with exception: {}".format(e)
         )
-        return_value.append_message(t.stop())
+        if t.is_running():
+            return_value.append_message(t.stop())
 
     return return_value

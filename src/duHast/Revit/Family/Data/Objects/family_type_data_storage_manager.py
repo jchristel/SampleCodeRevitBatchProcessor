@@ -121,7 +121,7 @@ class FamilyTypeDataStorageManager(Base):
 
         self._family_type_data_storage.append(family_type_data_storage)
 
-    def get_report_data(self):
+    def get_report_data(self, project_name=None):
         """
         Get the report data for the family type data storage manager
 

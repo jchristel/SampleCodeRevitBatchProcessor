@@ -316,10 +316,12 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
 
         return diff
 
-    def get_report_data(self):
+    def get_report_data(self, file_name=None):
         """
         get the data for the report
 
+        :param file_name: name of the file the data was retrieved from
+        :type file_name: str
         :return: list of data for the report
         """
 
@@ -328,8 +330,14 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
         for param in self.parameters:
             # get the report data for the parameter
             para_report_data = param.get_report_data()
+            
+            # add the file name if available
+            if file_name is None:
+                file_name = "N/A"
+            
             # build the default type information repeated for each parameter
             def_report_data = [
+                file_name,
                 self.family_name,
                 self.root_category_path,
                 self.family_type_name,

@@ -1,5 +1,5 @@
 # bundle title
-title: "Rename Loaded Families"
+title: "Copy And Rename Families in Folder"
 
 # bundle tooltip
 tooltip:  | 
@@ -9,6 +9,7 @@ tooltip:  |
   - 1 File path ( this column can stay empty )
   - 2 The revit catgeory i.e. Furniture
   - 3 the new family name
+  - 4 the new folder path (optional, if blank copy will be created in the same folder as the original)
 
 
 # bundle author

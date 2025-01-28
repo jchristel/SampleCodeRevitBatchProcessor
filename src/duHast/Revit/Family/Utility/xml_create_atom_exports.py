@@ -33,10 +33,11 @@ Reports:
 
 import os
 import datetime
+import tempfile
 
 from duHast.UI.file_list import  get_revit_files
-from duHast.Revit.Family.family_types_get_data_from_xml import write_data_to_xml_file
 from duHast.Utilities.files_io import get_file_name_without_ext, file_exist
+from duHast.Utilities.files_xml import read_xml_file
 from duHast.Utilities.directory_io import directory_exists
 from duHast.Utilities.Objects.timer import Timer
 from duHast.Utilities.Objects.result import Result
@@ -148,6 +149,33 @@ def get_families_requiring_update(family_files, xml_files):
 
     return return_value
 
+def write_data_to_xml_file(application, family_path, xml_path):
+    """
+    Write the family type data to an XML file.
+
+    :param application: The Revit application object.
+    :type application: Autodesk.Revit.ApplicationServices.Application
+    :param family_path: The path of the family file.
+    :type family_path: str
+    :param xml_path: The path of the XML file.
+    :type xml_path: str
+
+    :return: A result object with .status True if successful.
+    :rtype: Result
+    """
+
+    return_value = Result()
+    try:
+
+        # Save XML file to temporary location
+        # this is a method of the application object and does not require the family to be open...
+        application.ExtractPartAtomFromFamilyFile(family_path, xml_path)
+        return_value.update_sep(True, "Wrote data to XML file.")
+    except Exception as e:
+        return_value.update_sep(False, "Failed to write XML data: {}".format(e))
+
+    return return_value
+
 def create_xml_file(revit_application, family_file):
     """
     Create an xml file for a given family file.
@@ -167,6 +195,114 @@ def create_xml_file(revit_application, family_file):
         return_value.update_sep(False, "Failed to create xml file for family: {} with exception: {}".format(family_file, e))
     return return_value
     
+def write_data_to_temp_xml_file_and_read_it_back(an_action_to_write_xml_data):
+    """
+    Write the data to a temp XML file and read it back.
+
+    :param an_action_to_write_xml_data: The action to write the XML data.
+    :type an_action_to_write_xml_data: function returning a Result object
+
+    :return:
+        Result class instance.
+
+        - result.status: True if data was written and read back successfully, False otherwise.
+        - result.message will contain the log data.
+        - result.result will be a XML document object.
+
+        On exception
+
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+        - Reload.result will be an empty list.
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = Result()
+
+    # Create a temporary file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".xml") as temp_file:
+        temp_path_xml = temp_file.name
+
+    try:
+
+        # Write the data to the file
+        write_result = an_action_to_write_xml_data(temp_path_xml)
+        # update the return value
+        return_value.update(write_result)
+
+        # Check if the write was successful
+        if return_value.status is False:
+            return return_value
+
+        # Read the data back from the file
+        read_result = read_xml_file(temp_path_xml)
+
+        # update the return value message and status
+        # for some reasons this adds a XMLDeclaration object to the result field...not sure why
+        return_value.update(read_result)
+
+        # overwrite result field with the actual XML document
+        return_value.result = read_result.result
+
+    finally:
+        # Delete the temporary file
+        if os.path.exists(temp_path_xml):
+            os.remove(temp_path_xml)
+
+    return return_value
+
+def write_data_to_xml_file_and_read_it_back(an_action_to_write_xml_data, xml_file_path):
+    """
+    Write the data to an XML file and read it back.
+
+    :param an_action_to_write_xml_data: The action to write the XML data.
+    :type an_action_to_write_xml_data: function
+    :param xml_file_path: The path of the XML file.
+    :type xml_file_path: str
+
+    :return:
+        Result class instance.
+
+        - result.status: True if data was written and read back successfully, False otherwise.
+        - result.message will contain log data
+        - result.result will be a XML document object.
+
+        On exception
+
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+        - Reload.result will be an empty list.
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = Result()
+
+    try:
+
+        # Write the data to the file
+        write_result = an_action_to_write_xml_data(xml_file_path)
+
+        # update the return value
+        return_value.update(write_result)
+
+        # Check if the write was successful
+        if return_value.status is False:
+            return return_value
+
+        # Read the data back from the file
+        read_result = read_xml_file(xml_file_path)
+
+        # update the return value message and status
+        # for some reasons this adds a XMLDeclaration object to the result field...not sure why
+        return_value.update(read_result)
+        # overwrite result field with the actual XML document
+        return_value.result = read_result.result
+
+    except Exception as e:
+        return_value.update_sep(False, "{}".format(e))
+    return return_value
 
 def create_family_xml_files(revit_application, process_directories, progress_callback = None):
     """
@@ -240,15 +376,16 @@ def create_family_xml_files(revit_application, process_directories, progress_cal
             if families_to_update:
 
                 # set up progress 
-                fam_counter = 0
+                fam_counter = 1
                 max_fam = len(families_to_update)
-
-                # update progress
-                if progress_callback:
-                    progress_callback.update(fam_counter, max_fam)
                 
                 # iterate through families
                 for family in families_to_update:
+
+                    # update progress
+                    if progress_callback:
+                        progress_callback.update(fam_counter, max_fam)
+
                     fam_name = get_file_name_without_ext(family)
                     create_xml_file(revit_application, family)
                     return_value.append_message("Created xml file for family: {}".format(fam_name))

@@ -230,15 +230,12 @@ def build_comparison_report(type_data_matches, ignore_list_path):
                 fam_name = entry[0][0]
                 fam_category = entry[0][1]
             elif isinstance(entry[0], FamilyTypeDataStorageManager):
+                fam_name = entry[0].family_name
+                fam_category = entry[0].family_category
                 # there is a chance that the family export from the project file contains no types
-                if entry[0].family_type_data_storage.family_has_types:
-                    # assume there is at least one entry in the storage object
-                    fam_name = entry[0].family_type_data_storage[0].family_name
-                    fam_category = entry[0].family_type_data_storage[0].root_category_path
+                if entry[0].family_has_types:
                     # set flag that types were exported
                     family_export_has_types = True
-                else:
-                    fam_name = entry[0].family_type_data_storage.family_name
             else:
                 raise ValueError("entry[0] is not a list or FamilyTypeDataStorageManager: {}".format(type(entry[0])))
 

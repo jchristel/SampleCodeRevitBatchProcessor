@@ -1,7 +1,9 @@
 layout:
   - RenameLoadedFamilies
+  - RenameLoadedFamilyTypes.pushbutton
   - ----------
   - RenameFamiliesInFolder
+  - CopyAndRenameFamiliesInFolder
   
 
 # bundle tooltip

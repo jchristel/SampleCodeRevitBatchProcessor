@@ -3,11 +3,11 @@ title: "Rename Loaded Families"
 
 # bundle tooltip
 tooltip:  | 
-  Renames loaded families based on a csv file. The csv file needs to have a header row and the following columns 
+  Copies and renames families based on a csv file. The csv file needs to have a header row and the following columns 
   
   - 0 the current family name
   - 1 File path ( this column can stay empty )
-  - 2 The revit category i.e. Furniture
+  - 2 The revit catgeory i.e. Furniture
   - 3 the new family name
 
 

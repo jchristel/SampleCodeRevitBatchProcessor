@@ -148,4 +148,6 @@ def report_families_in_project_entry(doc, output, forms):
 
     print("Finished")
 
+    print("Return value: {}".format(return_value))
+
     return return_value

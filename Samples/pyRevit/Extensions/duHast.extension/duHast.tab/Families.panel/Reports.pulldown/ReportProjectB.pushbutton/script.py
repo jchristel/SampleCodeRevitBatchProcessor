@@ -33,7 +33,7 @@ output = script.get_output()
 # get the revit document
 doc = revit.doc
 
-# reporting families
-#from families.report import report_loaded_families_entry
+# reporting families loaded into model
+from families.report_familires_in_project_type_b import report_families_in_project_entry
 
-#report_loaded_families_entry(doc=doc, output=output, forms=forms)
+report_families_in_project_entry(doc=doc, output=output, forms=forms)

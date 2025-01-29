@@ -230,7 +230,7 @@ def delete_curves(doc, curves_to_delete, curve_descriptor, progress_callback=Non
             ]
             return ids
 
-        #set up a modified modifier ( filter out any modified rooms)
+        # set up a modified modifier ( filter out any modified rooms)
         modifier_modified_rooms = RoomSeparationLinesPurgeModifier(doc)
         # purge unused curves only if nothing else is affected
         purge_result = purge_unused_elements(
@@ -242,24 +242,6 @@ def delete_curves(doc, curves_to_delete, curve_descriptor, progress_callback=Non
             debug=False,
         )
 
-
-
-        # # need to declare ids first ....
-        # ids = []
-        # # populate ids
-        # ids = [
-        #     c.id for c in curves_to_delete if c and c.id is not None and c.id not in ids
-        # ]
-
-        # # bombs away...
-        # result_delete = delete_by_element_ids(
-        #     doc=doc,
-        #     ids=ids,
-        #     transaction_name="delete overlapping {}: {}".format(
-        #         curve_descriptor, len(ids)
-        #     ),
-        #     element_name="{}".format(curve_descriptor),
-        # )
         return_value.update(purge_result)
     else:
         return_value.update_sep(True, "No curves where required to be deleted.")

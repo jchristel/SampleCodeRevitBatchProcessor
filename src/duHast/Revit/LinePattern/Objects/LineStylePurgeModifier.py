@@ -58,7 +58,7 @@ class LineStylePurgeModifier(ModifierBase):
 
         """
 
-        super(ModifierBase, self).__init__()
+        super(LineStylePurgeModifier, self).__init__()
 
         # get dictionary of line styles
         self.graphic_style_id_by_line_style_id = (

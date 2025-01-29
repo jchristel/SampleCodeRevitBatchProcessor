@@ -8,7 +8,9 @@ from duHast.Revit.Common.Geometry.curve import (
 from duHast.Revit.Common.groups import get_model_group_instances_by_type
 from duHast.Revit.Common.delete import delete_by_element_ids
 from duHast.Revit.Common.transaction import in_transaction
+from duHast.Revit.Purge.purge_unused_by_delete import purge_unused_elements
 from duHast.Utilities.Objects import result as res
+from duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier import RoomSeparationLinesPurgeModifier
 
 from Autodesk.Revit.DB import (
     BuiltInCategory,
@@ -196,7 +198,7 @@ def _identify_curve_in_set_to_amend_lengthening(curve_set, group_id):
     return curves_to_amend, curves_to_delete
 
 
-def delete_curves(doc, curves_to_delete, curve_descriptor):
+def delete_curves(doc, curves_to_delete, curve_descriptor, progress_callback=None):
     """
     Deletes curves in a Revit model.
 
@@ -219,23 +221,46 @@ def delete_curves(doc, curves_to_delete, curve_descriptor):
     return_value = res.Result()
     # get unique ids for deletion
     if len(curves_to_delete) > 0:
-        # need to declare ids first ....
-        ids = []
-        # populate ids
-        ids = [
-            c.id for c in curves_to_delete if c and c.id is not None and c.id not in ids
-        ]
 
-        # bombs away...
-        result_delete = delete_by_element_ids(
+        # set up element Id getter
+        def action(doc):
+            ids = []
+            ids = [
+                c.id for c in curves_to_delete if c and c.id is not None and c.id not in ids
+            ]
+            return ids
+
+        #set up a modified modifier ( filter out any modified rooms)
+        modifier_modified_rooms = RoomSeparationLinesPurgeModifier(doc)
+        # purge unused curves only if nothing else is affected
+        purge_result = purge_unused_elements(
             doc=doc,
-            ids=ids,
-            transaction_name="delete overlapping {}: {}".format(
-                curve_descriptor, len(ids)
-            ),
-            element_name="{}".format(curve_descriptor),
+            element_id_getter=action,
+            deleted_elements_modifier=None,
+            modified_elements_modifier=modifier_modified_rooms,
+            progress_callback=progress_callback,
+            debug=False,
         )
-        return_value.update(result_delete)
+
+
+
+        # # need to declare ids first ....
+        # ids = []
+        # # populate ids
+        # ids = [
+        #     c.id for c in curves_to_delete if c and c.id is not None and c.id not in ids
+        # ]
+
+        # # bombs away...
+        # result_delete = delete_by_element_ids(
+        #     doc=doc,
+        #     ids=ids,
+        #     transaction_name="delete overlapping {}: {}".format(
+        #         curve_descriptor, len(ids)
+        #     ),
+        #     element_name="{}".format(curve_descriptor),
+        # )
+        return_value.update(purge_result)
     else:
         return_value.update_sep(True, "No curves where required to be deleted.")
     return return_value

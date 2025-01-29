@@ -126,7 +126,7 @@ def document_change_purge_element(
 
             if debug:
                 if len(modified_elements) == 0 and len(deleted_elements) == 1:
-                    debug_string += "No modified elements. Element will be deleted\n"
+                    debug_string += "No other modified elements than the intended. Element will be deleted\n"
                 elif len(modified_elements) > 0:
                     debug_string += (
                         "Element will not be deleted. Event modified elements:\n"
@@ -154,7 +154,7 @@ def document_change_purge_element(
                             )
 
                 elif len(deleted_elements) > 1:
-                    debug_string += "Element will not be deleted. More than one element got deleted:\n"
+                    debug_string += "Element will not be deleted. More than the intended element got deleted:\n"
                     for elem_id in deleted_elements:
                         debug_string += "Element Id: {}\n".format(str(elem_id))
                         elem = doc.GetElement(elem_id)

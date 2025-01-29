@@ -82,7 +82,7 @@ def build_type_report(doc_name, type_data, ignore_list_path):
 
     except Exception as e:
         return_value.update_sep(
-            False, "Failed to gather family data with exception: {}".format(e)
+            False, "Failed to build data report with exception: {}".format(e)
         )
 
     # store data to be returned
@@ -151,9 +151,6 @@ def get_all_family_type_data_from_project_file(
             if revit_family.IsInPlace:
                 continue
 
-            # get the family category
-            fam_cat = revit_family.FamilyCategory.Name
-
             # create temp xml files from loaded family
             type_data_result = get_type_data_via_XML_from_family_object(
                 revit_family=revit_family
@@ -168,7 +165,7 @@ def get_all_family_type_data_from_project_file(
                 continue
 
             # get the type data
-            data.append(type_data_result.result)
+            data = data + type_data_result.result
 
             # update progress
             counter = counter + 1
@@ -184,14 +181,22 @@ def get_all_family_type_data_from_project_file(
             "Successfully gathered family data: {}".format(t.stop())
         )
 
+        # build report
+        build_report_result = build_type_report(doc.Title, data, ignore_list_path)
+        # check what came back
+        return_value.update_sep(
+            build_report_result.status, build_report_result.message
+        )
+        if build_report_result.status == False:
+            return return_value
+        # store the report data
+        return_value.result = build_report_result.result
+
     except Exception as e:
         return_value.update_sep(
             False, "Failed to gather family data with exception: {}".format(e)
         )
         if t.is_running():
             return_value.append_message(t.stop())
-
-    # store data to be returned
-    return_value.result = build_type_report(data, ignore_list_path)
 
     return return_value

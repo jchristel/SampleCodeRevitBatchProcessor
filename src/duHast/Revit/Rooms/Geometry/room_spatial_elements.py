@@ -223,3 +223,22 @@ def get_only_rm_sep_lines_as_model_lines(rvt_doc, segments):
     :rtype: List[ModelLine]
     """
     return get_segment_hosts(rvt_doc, segments, filter_only=ModelLine)
+
+
+def get_rm_segments_centroid(rvt_doc, segments):
+    """
+    Get the centroid of the room boundary segments
+    :param rvt_doc: The Revit document
+    :type rvt_doc: Document
+    :param segments: The boundary segments of a room
+    :type segments: List[List[BoundarySegment]]
+    :return: The centroid of the room boundary segments
+    :rtype: XYZ
+    """
+    segs = get_all_segs_from_list(segments)
+    pts = [seg.GetCurve().GetEndPoint(0) for seg in segs]
+
+    x = sum([pt.X for pt in pts]) / len(pts)
+    y = sum([pt.Y for pt in pts]) / len(pts)
+    z = sum([pt.Z for pt in pts]) / len(pts)
+    return x, y, z

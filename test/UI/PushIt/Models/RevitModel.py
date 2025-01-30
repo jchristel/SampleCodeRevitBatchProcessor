@@ -174,7 +174,7 @@ class RevitModel(ViewModelBase, Base):
                     ):
                         add_family = True
 
-                    # check if the family is in a primary design option and the active design option belongs to another set
+                    # check if the family is in a primary design option which does not match the active design set
                     elif (
                         self._active_design_set_name != family.design_set 
                         and family.design_option_is_primary is True

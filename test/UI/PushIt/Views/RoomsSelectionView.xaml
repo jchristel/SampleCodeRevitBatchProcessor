@@ -71,8 +71,15 @@
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="PushIt..Real Good(tm)" FontSize="24"/>
+            <ToggleButton x:Name = "tb" 
+                Content = "Toggle"  
+                Checked = "{Binding SafetyOffMode}" 
+                Margin = "20"
+                Width = "108"
+                HorizontalAlignment = "Center" /> 
         </Grid>
         <!-- filter -->
         <Border Grid.Row="1" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">

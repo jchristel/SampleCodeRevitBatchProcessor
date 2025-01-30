@@ -68,7 +68,7 @@ def build_type_report(doc_name, type_data, ignore_list_path):
             for ignore_entry in ignore_data:
                 if (
                     entry.family_name == ignore_entry[0]
-                    and entry.category_name == ignore_entry[1]
+                    and entry.family_category == ignore_entry[1]
                 ):
                     ignore = True
                     break

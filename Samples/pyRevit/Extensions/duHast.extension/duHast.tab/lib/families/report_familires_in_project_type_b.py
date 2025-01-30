@@ -46,6 +46,10 @@ def report_families_in_project_entry(doc, output, forms):
     - parameter properties
     - parameter value
 
+    An ignore list file can be provided to exclude families from the report. This file needs to contain at least two columns:
+    - Family Name in first column
+    - Family Category in second column
+
     :param doc: Revit Document
     :type doc: Document
     :param output: pyRevit output
@@ -62,6 +66,10 @@ def report_families_in_project_entry(doc, output, forms):
 
     try:
 
+        # select an ignore list file
+        ignore_list_path = None
+        ignore_list_path = forms.pick_file(file_ext="csv", title="Select ignore list file")
+
         # set up a pyRevit progress bar
         with forms.ProgressBar(
             title="Reading: {value} of {max_value}",
@@ -73,7 +81,9 @@ def report_families_in_project_entry(doc, output, forms):
 
             print_header("Reporting families in project:")
             report_result = get_all_family_type_data_from_project_file(
-                doc=doc, ignore_list_path=None, progress_callback=progress_callback
+                doc=doc, 
+                ignore_list_path=ignore_list_path, 
+                progress_callback=progress_callback
             )
 
             print("Finished reading families from project")

@@ -450,13 +450,13 @@ def get_views_graphic_settings_data(doc, views, progress_callback=None):
     
     views_settings = []
     # progress call back
-    callback_counter = 0
+    callback_counter = 1
 
     # loop over past in views and retrieve settings
     for view in views:
 
         if progress_callback != None:
-            progress_callback.update(callback_counter, len(views))
+            progress_callback.update(callback_counter, len(views), "{}".format(Element.Name.GetValue(view)))
 
         view_setting = get_view_settings(
             doc=doc,

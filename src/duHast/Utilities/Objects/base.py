@@ -386,6 +386,9 @@ class Base(object):
                 return {
                     key: serialize(value) for key, value in obj.items()
                 }  # Recursively serialize dict values
+            elif isinstance(obj, str):
+                # Replace non-ASCII characters with a placeholder
+                return obj.encode("ascii", "replace").decode("ascii")
             else:
                 return obj  # Return the object as is
 

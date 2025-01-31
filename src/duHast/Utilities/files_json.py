@@ -27,6 +27,8 @@ Utility functions writing / reading json objects to/ from file.
 #
 #
 
+import traceback
+
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.files_get import get_files_single_directory
 
@@ -45,9 +47,9 @@ def _custom_default(o):
     if isinstance(o, str):
         # Only encode if required
         if any(ord(char) > 127 for char in o):
-            return o.encode("utf-8").decode(
-                "utf-8"
-            )  # Encoding and decoding to ensure the type is str
+            # replace non ascii characters
+            return o.encode("ascii", "replace").decode("ascii")
+            # Encoding and decoding to ensure the type is str
     return o.__dict__
 
 
@@ -72,7 +74,7 @@ def serialize_utf(obj):
     :return: A dictionary representation of the object.
     """
     if hasattr(obj, "to_json_utf") and callable(getattr(obj, "to_json_utf")):
-        return json.loads(obj.to_json())  # Use the to_json method
+        return json.loads(obj.to_json_utf())  # Use the to_json_utf method
     else:
         return _custom_default(obj)  # Fallback to custom default
 
@@ -113,6 +115,7 @@ def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
             json_object = json.dumps(
                 json_data, indent=None, default=serialize, ensure_ascii=False
             )
+
         with codecs.open(data_output_file_path, "w", encoding="utf-8") as f:
             f.write(json_object)
 
@@ -121,8 +124,9 @@ def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
         )
         result.result.append(json_object)
     except Exception as e:
+        tb = traceback.format_exc().strip().split("\n")
         result.update_sep(
-            False, "Failed to write data to file with exception: {}".format(e)
+            False, "Failed to write data to file with exception: {}. Trace back: {}".format(e, "::".join(tb))
         )
     return result
 

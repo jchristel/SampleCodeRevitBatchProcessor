@@ -37,7 +37,20 @@ import json
 import os
 
 
-def _custom_default(o):
+def serialize(obj):
+    """
+    Serialize the object for JSON output, using to_json() if available.
+
+    :param obj: The object to serialize.
+    :return: A dictionary representation of the object.
+    """
+    if hasattr(obj, "to_json") and callable(getattr(obj, "to_json")):
+        return json.loads(obj.to_json())  # Use the to_json method
+    else:
+        return obj.__dict__  # Fallback to default
+
+
+def _custom_default_utf_8(o):
     """
     Encode string values to utf-8 for JSON formatted outputs.
 
@@ -53,19 +66,6 @@ def _custom_default(o):
     return o.__dict__
 
 
-def serialize(obj):
-    """
-    Serialize the object for JSON output, using to_json() if available.
-
-    :param obj: The object to serialize.
-    :return: A dictionary representation of the object.
-    """
-    if hasattr(obj, "to_json") and callable(getattr(obj, "to_json")):
-        return json.loads(obj.to_json())  # Use the to_json method
-    else:
-        return _custom_default(obj)  # Fallback to custom default
-
-
 def serialize_utf(obj):
     """
     Serialize the object for JSON output including utf 8, using to_json_utf() if available.
@@ -76,7 +76,7 @@ def serialize_utf(obj):
     if hasattr(obj, "to_json_utf") and callable(getattr(obj, "to_json_utf")):
         return json.loads(obj.to_json_utf())  # Use the to_json_utf method
     else:
-        return _custom_default(obj)  # Fallback to custom default
+        return _custom_default_utf_8(obj)  # Fallback to custom default
 
 
 def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
@@ -116,16 +116,14 @@ def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
             )
             # write data with codecs to ensure utf-8 encoding (slow)
             with codecs.open(data_output_file_path, "w", encoding="utf-8") as f:
-                f.write(json_object) 
+                f.write(json_object)
 
         else:
-            json_object = json.dumps(
-                json_data, indent=None, default=serialize
-            )
+            json_object = json.dumps(json_data, indent=None, default=serialize)
 
             # write data without codecs (fast)?
             with open(data_output_file_path, "w") as f:
-                f.write(json_object) 
+                f.write(json_object)
 
         result.update_sep(
             True, "Data written to file: {}".format(data_output_file_path)
@@ -135,7 +133,10 @@ def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
     except Exception as e:
         tb = traceback.format_exc().strip().split("\n")
         result.update_sep(
-            False, "Failed to write data to file with exception: {}. Trace back: {}".format(e, "::".join(tb))
+            False,
+            "Failed to write data to file with exception: {}. Trace back: {}".format(
+                e, "::".join(tb)
+            ),
         )
     finally:
         # make sure to close the file

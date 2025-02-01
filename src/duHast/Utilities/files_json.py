@@ -103,31 +103,44 @@ def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
     """
 
     result = res.Result()
-
+    # file placeholder
+    f is None
     try:
+
         json_object = None
         # Check if UTF-8 is to be enforced
         if enforce_utf8:
+
             json_object = json.dumps(
                 json_data, indent=None, default=serialize_utf, ensure_ascii=False
             )
+            # write data with codecs to ensure utf-8 encoding (slow)
+            with codecs.open(data_output_file_path, "w", encoding="utf-8") as f:
+                f.write(json_object) 
+
         else:
             json_object = json.dumps(
-                json_data, indent=None, default=serialize, ensure_ascii=False
+                json_data, indent=None, default=serialize
             )
 
-        with codecs.open(data_output_file_path, "w", encoding="utf-8") as f:
-            f.write(json_object)
+            # write data without codecs (fast)?
+            with open(data_output_file_path, "w") as f:
+                f.write(json_object) 
 
         result.update_sep(
             True, "Data written to file: {}".format(data_output_file_path)
         )
+
         result.result.append(json_object)
     except Exception as e:
         tb = traceback.format_exc().strip().split("\n")
         result.update_sep(
             False, "Failed to write data to file with exception: {}. Trace back: {}".format(e, "::".join(tb))
         )
+    finally:
+        # make sure to close the file
+        if f is not None:
+            f.close()
     return result
 
 

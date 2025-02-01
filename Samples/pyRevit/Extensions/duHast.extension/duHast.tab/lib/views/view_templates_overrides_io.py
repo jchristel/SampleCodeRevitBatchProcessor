@@ -42,6 +42,8 @@ from pyrevit.framework import Forms
 # get the user to select a file to open
 from duHast.pyRevit.file_picker import get_file_path_from_user
 
+from duHast.Utilities.Objects.timer import Timer
+
 
 def export_overrides_of_selected_viewtemplates(doc, output, forms):
     """
@@ -87,6 +89,8 @@ def export_overrides_of_selected_viewtemplates(doc, output, forms):
         )
         return return_value
 
+    t = Timer()
+    t.start()
     # set up a pyrevit progress bar
     with forms.ProgressBar(
         title="Reporting view templates: {value} of {max_value}", cancellable=True
@@ -100,6 +104,9 @@ def export_overrides_of_selected_viewtemplates(doc, output, forms):
             doc=doc, views=view_templates_to_export, progress_callback=progress_callback
         )
 
+        print("Data export took: {}".format(t.stop()))
+        
+        
         # get file path from user
         file_name = None
         sf_dlg = Forms.SaveFileDialog()  # (file_ext="json", title="Save template data")
@@ -121,21 +128,23 @@ def export_overrides_of_selected_viewtemplates(doc, output, forms):
             # set a default value
             doc_name = "Detached file"
 
+        t.start()
         # write json data to file
         write_result = write_graphics_settings_report(
             revit_file_name=doc_name, file_path=file_name, data=data_json
         )
 
+        print("Data write took: {}".format(t.stop()))
         # update return value
-        return_value.update(write_result)
-        print(write_result.message)
+        #return_value.update(write_result)
+        #print(write_result)
 
         return return_value
 
 
 def import_overrides_from_file(doc, output, forms):
     """
-    Imports overides saved to file in json format and applies to matching templates (by template name)
+    Imports overrides saved to file in json format and applies to matching templates (by template name)
 
     :param doc: The current revit document
     :type doc: Autodesk.Revit.DB.Document

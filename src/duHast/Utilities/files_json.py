@@ -44,26 +44,10 @@ def serialize(obj):
     :param obj: The object to serialize.
     :return: A dictionary representation of the object.
     """
-    if hasattr(obj, "to_json") and callable(getattr(obj, "to_json")):
-        return json.loads(obj.to_json())  # Use the to_json method
+    if hasattr(obj, "class_to_dict") and callable(getattr(obj, "class_to_dict")):
+        return json.loads(json.dumps(obj.class_to_dict(), indent=None))  # Use the class_to_dict method
     else:
         return obj.__dict__  # Fallback to default
-
-
-def _custom_default_utf_8(o):
-    """
-    Encode string values to utf-8 for JSON formatted outputs.
-
-    :param o: The value to be encoded if of type string.
-    :return: Encoded string or the object's __dict__.
-    """
-    if isinstance(o, str):
-        # Only encode if required
-        if any(ord(char) > 127 for char in o):
-            # replace non ascii characters
-            return o.encode("ascii", "replace").decode("ascii")
-            # Encoding and decoding to ensure the type is str
-    return o.__dict__
 
 
 def serialize_utf(obj):
@@ -76,7 +60,7 @@ def serialize_utf(obj):
     if hasattr(obj, "to_json_utf") and callable(getattr(obj, "to_json_utf")):
         return json.loads(obj.to_json_utf())  # Use the to_json_utf method
     else:
-        return _custom_default_utf_8(obj)  # Fallback to custom default
+        return obj.__dict__  # Fallback to default
 
 
 def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
@@ -104,32 +88,32 @@ def write_json_to_file(json_data, data_output_file_path, enforce_utf8=True):
 
     result = res.Result()
     # file placeholder
-    f is None
+    f = None
     try:
 
-        json_object = None
+        json_string = None
         # Check if UTF-8 is to be enforced
         if enforce_utf8:
 
-            json_object = json.dumps(
+            json_string = json.dumps(
                 json_data, indent=None, default=serialize_utf, ensure_ascii=False
             )
             # write data with codecs to ensure utf-8 encoding (slow)
             with codecs.open(data_output_file_path, "w", encoding="utf-8") as f:
-                f.write(json_object)
+                f.write(json_string)
 
         else:
-            json_object = json.dumps(json_data, indent=None, default=serialize)
+            json_string = json.dumps(json_data, indent=None, default=serialize)
 
             # write data without codecs (fast)?
             with open(data_output_file_path, "w") as f:
-                f.write(json_object)
+                f.write(json_string)
 
         result.update_sep(
             True, "Data written to file: {}".format(data_output_file_path)
         )
 
-        result.result.append(json_object)
+        result.result.append(json_string)
     except Exception as e:
         tb = traceback.format_exc().strip().split("\n")
         result.update_sep(

@@ -64,7 +64,7 @@ def write_graphics_settings_report(revit_file_name, file_path, data):
     # wrap data to include file name
     json_data = {PROP_FILE_NAME: revit_file_name, PROP_VIEW_DATA: data}
 
-    result = write_json_to_file(json_data=json_data, data_output_file_path=file_path)
+    result = write_json_to_file(json_data=json_data, data_output_file_path=file_path, enforce_utf8=True)
     return result
 
 

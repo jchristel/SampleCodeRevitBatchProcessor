@@ -35,6 +35,7 @@ This class provides some utility functions to all child classes:
 
 import json
 from collections import OrderedDict
+from duHast.Utilities.utility import encode_ascii
 
 """
 The `Base` class is a parent class that provides common functionalities and methods for its subclasses. It includes a constructor, a debug output method, a comparison method, a hash method, a method to convert the instance to JSON, a method to convert string properties to UTF-8 in JSON conversion, a method to check if an object is a Python primitive, and a method to convert the class to a dictionary.
@@ -311,59 +312,9 @@ class Base(object):
         :rtype: str
         """
 
-        def serialize(obj):
-            """Helper function to recursively serialize objects."""
-            if isinstance(obj, Base):
-                return json.loads(
-                    obj.to_json()
-                )  # Call to_json() if it's an instance of Base
-            elif isinstance(obj, list):
-                return [
-                    serialize(item) for item in obj
-                ]  # Recursively serialize list items
-            elif isinstance(obj, dict):
-                return {
-                    key: serialize(value) for key, value in obj.items()
-                }  # Recursively serialize dict values
-            else:
-                return obj  # Return the object as is
+        return json.dumps(self.class_to_dict(), ensure_ascii=False)
 
-        # Create an OrderedDict to hold the JSON data
-        # Sort the dictionary by keys to be able to unit test output
-        json_data = OrderedDict()
-
-        # Include public attributes
-        for key, value in self.__dict__.items():
-            if not key.startswith("_"):
-                json_data[key] = serialize(
-                    value
-                )  # Use the recursive serialize function
-
-        # Include properties from this class and its parents
-        for cls in self.__class__.__mro__:
-            for key in dir(cls):
-                attr = getattr(cls, key)
-                if isinstance(attr, property) and key not in json_data:
-                    json_data[key] = attr.fget(self)
-
-        return json.dumps(json_data, indent=None, default=self._default_json_handler)
-
-    def string_to_utf(self, o):
-        """
-        Used to convert any properties stored as string to utf-8 in to json conversion of all class properties...
-
-        :param o: _description_
-        :type o: _type_
-        :return: _description_
-        :rtype: _type_
-        """
-
-        if isinstance(o, str):
-            return o.encode("utf-8").decode(
-                "utf-8"
-            )  # Encoding and decoding to ensure the type is str
-        return o.__dict__
-
+    
     def to_json_utf(self):
         """
         Convert the instance of this class to json, any string properties are converted to utf-8
@@ -372,45 +323,10 @@ class Base(object):
         :rtype: json
         """
 
-        def serialize(obj):
-            """Helper function to recursively serialize objects."""
-            if isinstance(obj, Base):
-                return json.loads(
-                    obj.to_json_utf()
-                )  # Call to_json() if it's an instance of Base
-            elif isinstance(obj, list):
-                return [
-                    serialize(item) for item in obj
-                ]  # Recursively serialize list items
-            elif isinstance(obj, dict):
-                return {
-                    key: serialize(value) for key, value in obj.items()
-                }  # Recursively serialize dict values
-            elif isinstance(obj, str):
-                # Replace non-ASCII characters with a placeholder
-                return obj.encode("ascii", "replace").decode("ascii")
-            else:
-                return obj  # Return the object as is
-
-        # Create an OrderedDict to hold the JSON data
-        # Sort the dictionary by keys to be able to unit test output
-        json_data = OrderedDict()
-
-        # Include public attributes
-        for key, value in self.__dict__.items():
-            if not key.startswith("_"):
-                json_data[key] = serialize(
-                    value
-                )  # Use the recursive serialize function
-
-        # Include properties from this class and its parents
-        for cls in self.__class__.__mro__:
-            for key in dir(cls):
-                attr = getattr(cls, key)
-                if isinstance(attr, property) and key not in json_data:
-                    json_data[key] = attr.fget(self)
-
-        return json.dumps(json_data, indent=None, default=self._default_json_handler)
+        json_string = self.to_json()
+        ascii_encoded = encode_ascii(json_string)
+        return ascii_encoded
+    
 
     def _is_primitive(self, obj):
         """
@@ -432,13 +348,70 @@ class Base(object):
         :rtype: {str:var,}
         """
 
+        def serialize(obj):
+            """Helper function to recursively serialize objects."""
+            if isinstance(obj, Base):
+                return obj.class_to_dict()  # Call if it's an instance of Base
+            elif isinstance(obj, list):
+                return [
+                    serialize(item) for item in obj
+                ]  # Recursively serialize list items
+            elif isinstance(obj, dict):
+                return {
+                    key: serialize(value) for key, value in obj.items()
+                }  # Recursively serialize dict values
+            else:
+                return obj  # Return the object as is
+        
         if isinstance(self, object):
             class_dict = {}
             for key, value in self.__dict__.items():
-                if self._is_primitive(value):
-                    class_dict[key] = value
-                else:
-                    class_dict[key] = value.class_to_dict()
+                # Exclude private properties
+                if not key.startswith("_"):
+                    if self._is_primitive(value):
+                        class_dict[key] = value
+                    else:
+                        # some custom object or list...
+                        class_dict[key] = serialize(value)
             return class_dict
         else:
             return self
+    
+    def class_to_ordered_dict(self):
+        """
+        Returns all class properties and their values as an OrderedDict in alphabetical order of the property names.
+        (This takes about double the time of class_to_dict)
+
+        :return: An OrderedDict of all class properties names and their values
+        :rtype: OrderedDict
+        """
+
+        def serialize(obj):
+            """Helper function to recursively serialize objects."""
+            if isinstance(obj, Base):
+                return obj.class_to_dict()  # Call if it's an instance of Base
+            elif isinstance(obj, list):
+                return [
+                    serialize(item) for item in obj
+                ]  # Recursively serialize list items
+            elif isinstance(obj, dict):
+                return {
+                    key: serialize(value) for key, value in obj.items()
+                }  # Recursively serialize dict values
+            else:
+                return obj  # Return the object as is
+
+        if isinstance(self, object):
+            class_dict = OrderedDict()
+            for key in sorted(self.__dict__.keys()):
+                if not key.startswith("_"):
+                    value = self.__dict__[key]
+                    if self._is_primitive(value):
+                        class_dict[key] = value
+                    else:
+                        # some custom object or list...
+                        class_dict[key] = serialize(value)
+            return class_dict
+        else:
+            return self
+

@@ -101,7 +101,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
                 dummy_scheme = child_node.InnerText
         # check if this is the category name
         if dummy_scheme == "adsk:revit:grouping":
-            root_category_path = encode_ascii(dummy_term)
+            root_category_path = dummy_term
 
     # get the date and time of the last update
     last_updated_date = None
@@ -129,7 +129,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
         family_type_name = None
         for child_node in part_node.ChildNodes:
             if child_node.Name == "title":
-                family_type_name = encode_ascii(child_node.InnerText)
+                family_type_name = child_node.InnerText
                 break
 
         # If we got a type name, add the parameters, their values and units, parameter type and type of parameter
@@ -142,28 +142,28 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
                     # attempt to read out values
                     name = "unknown name"
                     try:
-                        name = encode_ascii(child_node.Name)
+                        name = child_node.Name
                     except Exception as e:
                         name = "{}".format(name, e)
 
                     type = "unknown type"
                     try:
-                        type = encode_ascii(child_node.Attributes["type"].Value)
+                        type = child_node.Attributes["type"].Value
                     except Exception as e:
                         type = "{}".format(type, e)
 
                     type_of_parameter = "unknown type of parameter"
                     try:
-                        type_of_parameter = encode_ascii(child_node.Attributes[
+                        type_of_parameter = child_node.Attributes[
                             "typeOfParameter"
-                        ].Value)
+                        ].Value
                     except Exception as e:
                         type_of_parameter = "{}".format(type_of_parameter, e)
 
                     # there are parameters without units (i.e. text parameters)
                     units = "unitless"
                     try:
-                        units = encode_ascii(child_node.Attributes["units"].Value)
+                        units = child_node.Attributes["units"].Value
                     except Exception as e:
                         pass
 
@@ -171,7 +171,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
                     p_value = "unknown value"
                     try:
                         # replace any new row characters with space and remove trailing spaces
-                        p_value = encode_ascii(replace_new_lines(child_node.InnerText))
+                        p_value = replace_new_lines(child_node.InnerText)
                     except Exception as e:
                         pass
 
@@ -187,28 +187,29 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
                         # remove any trailing units
                         p_value = remove_trailing_characters_from_number_string(p_value)
 
-                    # ensure encoding
-                    p_value = encode_ascii(p_value)
-
-                    # Create a parameter object
+                    # Create a parameter object 
+                    # make sure all values are encoded to ascii to avoid 
+                    # issues with special characters when writing to file
                     parameter = FamilyTypeParameterDataStorage(
-                        name=name,
-                        type=type,
-                        type_of_parameter=type_of_parameter,
-                        units=units,
-                        value=p_value,
+                        name=encode_ascii(name),
+                        type=encode_ascii(type),
+                        type_of_parameter=encode_ascii(type_of_parameter),
+                        units=encode_ascii(units),
+                        value=encode_ascii(p_value),
                     )
 
                     # Add type to family
                     parameters.append(parameter)
 
             # Set up a family type data storage object
+            # make sure all values are encoded to ascii to avoid 
+            # issues with special characters when writing to file
             fam_type = FamilyTypeDataStorage(
-                root_name_path=family_name,
-                root_category_path=root_category_path,
-                family_name=family_name,
-                family_file_path=family_path,
-                family_type_name=family_type_name,
+                root_name_path=encode_ascii(family_name),
+                root_category_path=encode_ascii(root_category_path),
+                family_name=encode_ascii(family_name),
+                family_file_path=encode_ascii(family_path),
+                family_type_name=encode_ascii(family_type_name),
                 parameters=parameters,
                 last_updated_date=last_updated_date,
                 last_updated_time=last_updated_time,

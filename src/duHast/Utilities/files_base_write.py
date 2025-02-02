@@ -96,8 +96,11 @@ def write_report_data(
                 )
             )
 
+    # if no encoding is provided set the encoding to ascii (default)
+    encoding_file_open = encoding if encoding is not None else "ascii"
+    
     # Open the file with the codecs.open method to specify encoding
-    with codecs.open(file_name, write_type, encoding=encoding) as f:
+    with codecs.open(file_name, write_type, encoding=encoding_file_open) as f:
         try:
             # Write a newline character if appending to the file to make sure we are starting on a new line
             if write_type == "a" and need_newline:
@@ -160,12 +163,10 @@ def write_report_data(
                         # Encode the row using the specified encoding
                         row = encoded_row(data[i])
                     
+                    # write the row data
+                    # ( do not log what got written into result since that is a massive performance hit in the moment )
                     writer.writerow(row)
-                    return_value.append_message(
-                        "Row {} written to file. (including newline)>>{}".format(
-                            ",".join(encoded_row(row)), i
-                        )
-                    )
+                    
                 # set flag that data was written
                 wrote_date = True
             else:

@@ -164,7 +164,7 @@ def write_report_data(
                         row = encoded_row(data[i])
                     
                     # write the row data
-                    # ( do not log what got written into result since that is a massive performance hit in the moment )
+                    # ( do not log what got written into results message property since that is a massive performance hit in the moment )
                     writer.writerow(row)
                     
                 # set flag that data was written

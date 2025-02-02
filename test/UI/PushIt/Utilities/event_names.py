@@ -30,6 +30,9 @@ A module containing event names used by the view model and the Revit model.
 # safety off mode
 VIEW_MODEL_SAFETY_OFF_MODE = "ViewModelSafetyOffMode"
 
+# safety off button text
+VIEW_MODEL_SAFETY_BUTTON_TEXT="SafetyButtonText"
+
 # filter column changed
 VIEW_MODEL_SELECTED_FILTER_BY_COLUMN ="SelectedColumnFilterItem"
 

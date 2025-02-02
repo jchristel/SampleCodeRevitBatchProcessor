@@ -91,6 +91,8 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
         # is safety off mode enabled (default is false)
         # safety off mode is used to allow pushing of rooms more than once to revit
         self._safety_off_mode = revit_model.safety_off
+        # set the safety button text
+        self._safety_button_text = "Safety off" if self._safety_off_mode else "Safety on"
 
         # the revit wpf model object containing the settings and families to be displayed
         self._revit_model = revit_model
@@ -218,8 +220,6 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
     def SafetyOffMode(self):
         """
         A boolean value indicating if the safety off mode is enabled.
-
-        Currently not used.
         """
 
         return self._safety_off_mode
@@ -233,10 +233,30 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
         self._safety_off_mode = value
         # update the safety off mode in the revit model
         self._revit_model.safety_off = value
-
+        # set the safety button text
+        self.SafetyButtonText = "Safety off" if value else "Safety on"
+        
         # raise property change event for safety off mode
         self.RaisePropertyChanged(event_names.VIEW_MODEL_SAFETY_OFF_MODE)
 
+    @ property
+    def SafetyButtonText(self):
+        """
+        The text displayed on the safety button.
+        """
+
+        return self._safety_button_text
+    
+    @SafetyButtonText.setter
+    def SafetyButtonText(self, value):
+        """
+        Sets the text displayed on the safety button.
+        """
+
+        self._safety_button_text = value
+        # raise property change event for safety button text
+        self.RaisePropertyChanged(event_names.VIEW_MODEL_SAFETY_BUTTON_TEXT)
+    
     @property
     def ColumnFilterItems(self):
         """

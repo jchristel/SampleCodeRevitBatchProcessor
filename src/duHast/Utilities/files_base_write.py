@@ -60,7 +60,7 @@ def write_report_data(
     :type write_type: str, optional
     :param enforce_ascii: Flag to enforce ASCII encoding on data. If True, data will be encoded to ASCII. Defaults to False.
     :type enforce_ascii: bool, optional
-    :param encoding: Encoding used to write the file. Defaults to 'utf-8'.
+    :param encoding: Encoding used to write the file. Defaults to 'utf-8'. None no encoding applied.
     :type encoding: str, optional
     :param bom: the byte order mark, Default is None (none will be written). BOM: "utf-16" = , "utf-16-le" = ,  utf-8 =
     :type bom: str, default is NoneType
@@ -136,7 +136,11 @@ def write_report_data(
             # Write header
             wrote_header = False
             if header and len(header) > 0:
-                writer.writerow(encoded_row(header))
+                # check if encoding is required
+                if encoding is not None:
+                    # Encode the header using the specified encoding
+                    header = encoded_row(header)
+                writer.writerow(header)
                 return_value.append_message(
                     "Header written to file. (including newline)"
                 )
@@ -149,7 +153,13 @@ def write_report_data(
             wrote_date = False
             if data and len(data) > 0:
                 for i in range(len(data)):
-                    row = encoded_row(data[i])
+                    row = data[i]
+                    
+                    # check if encoding is required
+                    if encoding is not None:
+                        # Encode the row using the specified encoding
+                        row = encoded_row(data[i])
+                    
                     writer.writerow(row)
                     return_value.append_message(
                         "Row {} written to file. (including newline)>>{}".format(

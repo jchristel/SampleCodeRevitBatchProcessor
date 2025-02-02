@@ -290,19 +290,7 @@ class Base(object):
                     e, self.data_type, self.name
                 )
             )
-
-    def _default_json_handler(self, o):
-        """
-        Ensure compatibility to iron python 2.7 and 3.4.
-
-        :param o: The object to serialize.
-        :return: A dictionary representation of the object or its string.
-        """
-        
-        if hasattr(o, "__dict__"):
-            return vars(o)
-        else:
-            return str(o)
+            
 
     def to_json(self):
         """
@@ -362,16 +350,23 @@ class Base(object):
                 }  # Recursively serialize dict values
             else:
                 return obj  # Return the object as is
-        
+
         if isinstance(self, object):
             class_dict = {}
-            for key, value in self.__dict__.items():
-                # Exclude private properties
-                if not key.startswith("_"):
+            # Include instance attributes
+            for key, value in sorted(self.__dict__.items()):
+                if not key.startswith("_"):  # Exclude private properties
                     if self._is_primitive(value):
                         class_dict[key] = value
                     else:
-                        # some custom object or list...
+                        class_dict[key] = serialize(value)
+            # Include properties
+            for key in dir(self):
+                if isinstance(getattr(type(self), key, None), property):
+                    value = getattr(self, key)
+                    if self._is_primitive(value):
+                        class_dict[key] = value
+                    else:
                         class_dict[key] = serialize(value)
             return class_dict
         else:
@@ -403,13 +398,20 @@ class Base(object):
 
         if isinstance(self, object):
             class_dict = OrderedDict()
-            for key in sorted(self.__dict__.keys()):
-                if not key.startswith("_"):
-                    value = self.__dict__[key]
+            # Include instance attributes
+            for key, value in sorted(self.__dict__.items()):
+                if not key.startswith("_"):  # Exclude private properties
                     if self._is_primitive(value):
                         class_dict[key] = value
                     else:
-                        # some custom object or list...
+                        class_dict[key] = serialize(value)
+            # Include properties
+            for key in dir(self):
+                if isinstance(getattr(type(self), key, None), property):
+                    value = getattr(self, key)
+                    if self._is_primitive(value):
+                        class_dict[key] = value
+                    else:
                         class_dict[key] = serialize(value)
             return class_dict
         else:

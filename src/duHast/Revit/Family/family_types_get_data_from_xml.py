@@ -153,7 +153,7 @@ def get_family_type_data_from_library(xml_files_in_libraries, progress_callback=
     try:
 
         # set progress counter
-        counter = 0
+        counter = 1
         max_value_xml = len(xml_files_in_libraries)
 
         # update progress

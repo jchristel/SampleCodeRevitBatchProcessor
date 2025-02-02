@@ -45,7 +45,9 @@ def serialize(obj):
     :return: A dictionary representation of the object.
     """
     if hasattr(obj, "class_to_dict") and callable(getattr(obj, "class_to_dict")):
-        return json.loads(json.dumps(obj.class_to_dict(), indent=None))  # Use the class_to_dict method
+        return json.loads(
+            json.dumps(obj.class_to_dict(), indent=None)
+        )  # Use the class_to_dict method
     else:
         return obj.__dict__  # Fallback to default
 

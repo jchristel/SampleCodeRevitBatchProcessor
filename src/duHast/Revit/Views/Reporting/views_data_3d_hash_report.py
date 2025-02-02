@@ -86,7 +86,7 @@ def _get_category_hash_table_data_by_file(view_settings, progress_call_back=None
     """
 
     dic_tables_by_file = {}
-    counter = 0
+    counter = 1
     for key, vt_setting in view_settings.items():
         column_headers = _get_hash_headers(vt_setting)
         row_headers = _get_hash_rows_categories(vt_setting)
@@ -174,7 +174,7 @@ def _map_hash_values_to_range(hash_data_by_file, progress_call_back=None):
         # loop over current hash values and replace with index of value in mapper list
         # preserve -1, 0, 1 values
 
-        call_back_progress_counter = 0
+        call_back_progress_counter = 1
         for key, hash_data in hash_data_by_file.items():
             # update categories hash table
             mapped_hash_table_categories = []
@@ -327,7 +327,7 @@ def _assign_padded_default_array(hash_data_by_file, progress_call_back=None):
 
     result = res.Result()
     try:
-        call_back_progress_counter = 0
+        call_back_progress_counter = 1
         # build default hash tables where all values are -1 for categories and filters
         for key, hash_by_file in hash_data_by_file.items():
             padded_array_categories = _get_padded_default_array(
@@ -383,7 +383,7 @@ def _assign_row_indices_pointer(hash_data_by_file, progress_call_back=None):
 
     result = res.Result()
     try:
-        call_back_progress_counter = 0
+        call_back_progress_counter = 1
         # build row and column indices list for mapping of value hash table entries to default hash table
         for key, hash_by_file in hash_data_by_file.items():
             # Find the indices for row and column headers in the merged headers
@@ -463,7 +463,7 @@ def _assign_default_array_values(hash_data_by_file, progress_call_back=None):
 
     result = res.Result()
     try:
-        call_back_progress_counter = 0
+        call_back_progress_counter = 1
         # update the default hash table for each file with values from the value hash table from the same file
         for key, hash_by_file in hash_data_by_file.items():
             updated_array_categories = _update_default_array_values(
@@ -596,7 +596,7 @@ def _flatten_category_threeD_array(
 
     result = res.Result()
     try:
-        call_back_progress_counter = 0
+        call_back_progress_counter = 1
         # flatten 3D hash data for power bi
         flattened_data = []
         for model_name, layer in enumerate(array_3d):
@@ -647,7 +647,7 @@ def _flatten_filter_threeD_array(
 
     result = res.Result()
     try:
-        call_back_progress_counter = 0
+        call_back_progress_counter = 1
         # flatten 3D hash data for power bi
         flattened_data = []
         for model_name, layer in enumerate(array_3d):

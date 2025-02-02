@@ -178,7 +178,7 @@ def change_grid_extends_in_views(
         return return_value
 
     try:
-        view_counter = 0
+        view_counter = 1
         # loop over views and update grids based on template data
         for view in views_to_change_grid_elements:
 

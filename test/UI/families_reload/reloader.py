@@ -55,7 +55,7 @@ def reload_families (doc, families, forms):
 
     return_value = Result()
 
-    fam_counter = 0
+    fam_counter = 1
     # set up a pyrevit progress bar
     with forms.ProgressBar(title='Reloading families: {value} of {max_value}', cancellable=True) as pb:
         try:

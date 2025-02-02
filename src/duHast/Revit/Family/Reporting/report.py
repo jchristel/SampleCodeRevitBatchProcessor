@@ -260,7 +260,7 @@ def report_loaded_families(
         revit_project_file_name = doc.Title
 
         # get some progress data
-        fam_counter = 0
+        fam_counter = 1
         max_fam_counter = len(family_symbols.ToList())
 
 

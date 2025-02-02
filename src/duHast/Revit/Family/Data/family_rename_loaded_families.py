@@ -76,7 +76,7 @@ def _rename_loaded_families(doc, rename_directives, families, progress_callback=
     rename_match_counter = 0
 
     # progress call back
-    callback_counter = 0
+    callback_counter = 1
 
     for rename_directive in rename_directives:
 

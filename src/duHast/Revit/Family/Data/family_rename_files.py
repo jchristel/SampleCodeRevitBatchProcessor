@@ -133,7 +133,7 @@ def _rename_files(rename_directives, progress_callback=None):
     return_value.update_sep(True, "Renaming families:")
 
     # progress call back
-    callback_counter = 0
+    callback_counter = 1
 
     for rename_directive in rename_directives:
 

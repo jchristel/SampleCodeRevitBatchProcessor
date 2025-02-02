@@ -76,7 +76,7 @@ class RevitWarningsSolverRoomTagToRoom(base.Base):
         if len(warnings) > 0:
 
             # set up progress counter
-            counter = 0
+            counter = 1
 
             for warning in warnings:
                 # report progress to call back if required

@@ -89,7 +89,7 @@ def copy_annotation_to_views(
 
     # progress bar data
     max = len(source_dims_by_view_name)
-    counter = 0
+    counter = 1
 
     # loop over target views and copy specific annotation form active view to it
     for target_view_name, source_dims in source_dims_by_view_name.items():

@@ -111,7 +111,7 @@ class RevitWarningsSolverDuplicateMark(base.Base):
         if len(warnings) > 0:
 
             # report progress to call back if required
-            counter = 0
+            counter = 1
 
             for warning in warnings:
 

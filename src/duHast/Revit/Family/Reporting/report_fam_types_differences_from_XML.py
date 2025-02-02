@@ -87,7 +87,7 @@ def get_family_type_data_from_project_file(
         families_loaded = get_name_to_family_dict(doc)
 
         # set progress counter
-        counter = 0
+        counter = 1
         max_value_xml = len(families_loaded)
 
         # loop over loaded families and search for matches based on name and category

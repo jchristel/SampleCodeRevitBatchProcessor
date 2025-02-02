@@ -90,7 +90,7 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
 
         # is safety off mode enabled (default is false)
         # safety off mode is used to allow pushing of rooms more than once to revit
-        self._safety_off_mode = False
+        self._safety_off_mode = revit_model.safety_off
 
         # the revit wpf model object containing the settings and families to be displayed
         self._revit_model = revit_model
@@ -231,6 +231,8 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
         """
 
         self._safety_off_mode = value
+        # update the safety off mode in the revit model
+        self._revit_model.safety_off = value
 
         # raise property change event for safety off mode
         self.RaisePropertyChanged(event_names.VIEW_MODEL_SAFETY_OFF_MODE)

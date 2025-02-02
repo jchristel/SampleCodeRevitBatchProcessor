@@ -86,6 +86,9 @@ class RevitModel(ViewModelBase, Base):
         # active design option and design set names
         self._active_design_option_name = "-"
         self._active_design_set_name = "Main Model"
+        
+        # in safety off mode?
+        self._safety_off = False
 
         # event handlers
         # event handler to check if the room data file path has changed
@@ -114,6 +117,14 @@ class RevitModel(ViewModelBase, Base):
                 "Value must be of type Room, got {} instead.".format(type(value))
             )
         self._room_of_interest = value
+    
+    @property
+    def safety_off(self):
+        return self._safety_off
+    
+    @safety_off.setter
+    def safety_off(self, value):
+        self._safety_off = value
 
     def _update_room_data_with_family_data(self, room_data, families):
         """

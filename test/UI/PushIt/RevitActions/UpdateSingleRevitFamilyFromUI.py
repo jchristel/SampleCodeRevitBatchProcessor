@@ -96,6 +96,7 @@ class UpdateSingleRevitFamilyFromUI(RevitActionBase):
             family_instance=selected_element,
             room=self.revit_model._room_of_interest,
             shared_parameter_data=shared_parameter_data,
+            safety_off=self.revit_model.safety_off,
         )
         # print("update_single_family_result: {}".format(update_single_family_result))
 

@@ -90,6 +90,9 @@ def extract_single_family_data(doc, family_instance, shared_parameter_data):
     if room_id is None or room_id == "":
         return None
 
+    # strip any safety off information from the id
+    room_id = room_id.split("::")[0]
+    
     # get the area_briefed value
     area_briefed = get_parameter_value_by_name(
         family_instance, shared_parameter_data[1].keys()[0]

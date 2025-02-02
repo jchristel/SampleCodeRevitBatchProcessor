@@ -160,6 +160,7 @@ class Room(Base):
 
         # check if the room id matches
         if family_instance.room_id != self.id.id:
+            print("[{}]".format(family_instance.room_id))
             return
 
         # check if the area briefed matches

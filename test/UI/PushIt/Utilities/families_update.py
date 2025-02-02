@@ -30,10 +30,11 @@ from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
 from PushIt.Models.Room import Room
 from PushIt.Utilities.shared_parameters import set_shared_parameter_value_by_guid
 from PushIt.Utilities.families_get import extract_single_family_data
+from duHast.Utilities.date_stamps import get_date_stamp, FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC
 
 from Autodesk.Revit.DB import Transaction
 
-def update_single_family(doc, family_instance, room, shared_parameter_data):
+def update_single_family(doc, family_instance, room, shared_parameter_data, safety_off=False):
     """
     Updates a single family instance with room data
 
@@ -62,10 +63,18 @@ def update_single_family(doc, family_instance, room, shared_parameter_data):
     def action():
         action_return_value = Result()
         try:
+            
+            room_id = room.id.id
+            # check safety off?
+            if safety_off :
+                user_name = doc.Application.Username
+                # append the date stamp to the room id
+                room_id = "{}::{}<{}>".format(room_id, user_name, get_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC))
+            
             # update the room id
             action_return_value.update(
                 set_shared_parameter_value_by_guid(
-                    doc, family_instance, room.id.parameter_guid, room.id.id
+                    doc, family_instance, room.id.parameter_guid, room_id
                 )
             )
 

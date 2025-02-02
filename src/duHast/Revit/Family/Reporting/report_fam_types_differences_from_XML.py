@@ -225,7 +225,7 @@ def build_comparison_report(type_data_matches, ignore_list_path):
             # set a flag that the family export from revit project file resulted in no types exported
             family_export_has_types = False
 
-            # get name and catgegory ( for non matched family this may just be a list of name and category rather than a storage object)
+            # get name and category ( for non matched family this may just be a list of name and category rather than a storage object)
             if isinstance(entry[0], list):
                 fam_name = entry[0][0]
                 fam_category = entry[0][1]

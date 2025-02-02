@@ -127,6 +127,7 @@ def report_families_in_library_entry(doc, output, forms):
                 file_name=file_path,
                 header=LIBRARY_FAMILIES_HEADER,
                 data=report_result.result,
+                encoding=None,
                 quoting=csv.QUOTE_MINIMAL,
             )
             if write_result.status:

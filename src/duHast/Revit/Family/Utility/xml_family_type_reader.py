@@ -46,6 +46,8 @@ from duHast.Revit.Family.Data.Objects.family_type_data_storage import (
 from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import (
     FamilyTypeDataStorageManager,
 )
+from duHast.Utilities.utility import encode_ascii
+
 from duHast.Utilities.string_operations import (
     remove_currency_sign,
     replace_new_lines,
@@ -56,6 +58,8 @@ from duHast.Utilities.string_operations import (
 def read_xml_into_storage(doc_xml, family_name, family_path):
     """
     Read the XML data into the storage object.
+
+    Note all names and values will be encoded to ascii.
 
     :param doc_xml: The XML document.
     :type doc_xml: XmlDocument
@@ -97,7 +101,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
                 dummy_scheme = child_node.InnerText
         # check if this is the category name
         if dummy_scheme == "adsk:revit:grouping":
-            root_category_path = dummy_term
+            root_category_path = encode_ascii(dummy_term)
 
     # get the date and time of the last update
     last_updated_date = None
@@ -125,7 +129,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
         family_type_name = None
         for child_node in part_node.ChildNodes:
             if child_node.Name == "title":
-                family_type_name = child_node.InnerText
+                family_type_name = encode_ascii(child_node.InnerText)
                 break
 
         # If we got a type name, add the parameters, their values and units, parameter type and type of parameter
@@ -138,28 +142,28 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
                     # attempt to read out values
                     name = "unknown name"
                     try:
-                        name = child_node.Name
+                        name = encode_ascii(child_node.Name)
                     except Exception as e:
                         name = "{}".format(name, e)
 
                     type = "unknown type"
                     try:
-                        type = child_node.Attributes["type"].Value
+                        type = encode_ascii(child_node.Attributes["type"].Value)
                     except Exception as e:
                         type = "{}".format(type, e)
 
                     type_of_parameter = "unknown type of parameter"
                     try:
-                        type_of_parameter = child_node.Attributes[
+                        type_of_parameter = encode_ascii(child_node.Attributes[
                             "typeOfParameter"
-                        ].Value
+                        ].Value)
                     except Exception as e:
                         type_of_parameter = "{}".format(type_of_parameter, e)
 
                     # there are parameters without units (i.e. text parameters)
                     units = "unitless"
                     try:
-                        units = child_node.Attributes["units"].Value
+                        units = encode_ascii(child_node.Attributes["units"].Value)
                     except Exception as e:
                         pass
 
@@ -167,7 +171,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
                     p_value = "unknown value"
                     try:
                         # replace any new row characters with space and remove trailing spaces
-                        p_value = replace_new_lines(child_node.InnerText)
+                        p_value = encode_ascii(replace_new_lines(child_node.InnerText))
                     except Exception as e:
                         pass
 
@@ -182,6 +186,9 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
                         p_value = remove_currency_sign(p_value)
                         # remove any trailing units
                         p_value = remove_trailing_characters_from_number_string(p_value)
+
+                    # ensure encoding
+                    p_value = encode_ascii(p_value)
 
                     # Create a parameter object
                     parameter = FamilyTypeParameterDataStorage(

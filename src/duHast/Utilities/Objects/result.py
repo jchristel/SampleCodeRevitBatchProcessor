@@ -81,13 +81,12 @@ class Result(base.Base):
         self.message = "-"
         self.status = True
         self.result = []
+        self._messages = [] # performance improvement to store messages as a list
 
     def __repr__(self):
-        # Split the message string into individual lines
-        lines = self.message.splitlines()
 
         # Use str.format() to add indentation and line breaks
-        formatted_string = "\n".join(["...{}".format(line) for line in lines])
+        formatted_string = "\n".join(["...{}".format(line) for line in self._messages])
 
         return "message: \n{} \nstatus: [{}] \nresult: {}".format(
             formatted_string, self.status, self.result
@@ -95,23 +94,39 @@ class Result(base.Base):
 
     def append_message(self, message):
         """
-        Appends a new line and new message string to the existing message.
-
-        First message appended will replace the default value of -
+        Appends a  new message string to the existing messages list.
 
         :param message: The new message to be appended.
         :type message: str
         """
 
-        try:
-            if self.message == "-":
-                self.message = "{}".format(message)
-            else:
-                self.message = "{}\n{}".format(self.message, message)
-        except Exception as e:
-            self.message = "{} \nAn exception in result class occurred!!! {}".format(
-                self.message, e
-            )
+        if (isinstance(message,str) == False):
+            raise TypeError("message must be an instance of string")
+        
+       
+        self._messages.append(message)
+
+        # try:
+        #     if self.message == "-":
+        #         self.message = "{}".format(message)
+        #     else:
+        #         self.message = "{}\n{}".format(self.message, message)
+        # except Exception as e:
+        #     self.message = "{} \nAn exception in result class occurred!!! {}".format(
+        #         self.message, e
+        #     )
+
+    @property
+    def messages(self):
+
+        if len(self._messages) == 0:
+            return "-"
+        else:
+            return "\n".join(self._messages)
+    
+    @property
+    def message_as_list(self):
+        return self._messages
 
     def update(self, otherResult):
         """
@@ -130,8 +145,8 @@ class Result(base.Base):
 
         try:
             # check if default message string, if so do not update
-            if otherResult.message != "-":
-                self.append_message(otherResult.message)
+            if len(otherResult.message_as_list)>0 :
+                self._messages = self._messages + otherResult.message_as_list
             self.status = self.status & otherResult.status
             # check if result property that was passed in has values
             if any(otherResult.result):

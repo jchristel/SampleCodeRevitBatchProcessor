@@ -82,7 +82,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             // Act
             instance.update(minPoint, maxPoint);
 
-            Console.WriteLine(instance.to_json());
+            Console.WriteLine(instance.to_json_ordered());
 
             // Assert
             Assert.That(5.5, Is.EqualTo(instance.min_x));

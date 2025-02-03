@@ -302,6 +302,17 @@ class Base(object):
 
         return json.dumps(self.class_to_dict(), ensure_ascii=False)
 
+    def to_json_ordered(self):
+        """
+        Convert the instance of this class to JSON, including public attributes and properties.
+        Properties and attributes are ordered alphabetically.
+        Note: This method takes about double the time of to_json()
+
+        :return: A JSON object.
+        :rtype: str
+        """
+
+        return json.dumps(self.class_to_ordered_dict(), ensure_ascii=False)
     
     def to_json_utf(self):
         """
@@ -315,6 +326,20 @@ class Base(object):
         ascii_encoded = encode_ascii(json_string)
         return ascii_encoded
     
+    
+    def to_json_utf_ordered(self):
+        """
+        Convert the instance of this class to json, any string properties are converted to utf-8
+        Properties and attributes are ordered alphabetically.
+        Note: This method takes about double the time of to_json_utf()
+        :return: A Json object.
+        :rtype: json
+        """
+
+        json_string = self.to_json_ordered()
+        ascii_encoded = encode_ascii(json_string)
+        return ascii_encoded
+
 
     def _is_primitive(self, obj):
         """
@@ -354,7 +379,7 @@ class Base(object):
         if isinstance(self, object):
             class_dict = {}
             # Include instance attributes
-            for key, value in sorted(self.__dict__.items()):
+            for key, value in self.__dict__.items():
                 if not key.startswith("_"):  # Exclude private properties
                     if self._is_primitive(value):
                         class_dict[key] = value
@@ -384,35 +409,47 @@ class Base(object):
         def serialize(obj):
             """Helper function to recursively serialize objects."""
             if isinstance(obj, Base):
-                return obj.class_to_dict()  # Call if it's an instance of Base
+                return obj.class_to_ordered_dict()  # Call if it's an instance of Base
             elif isinstance(obj, list):
                 return [
                     serialize(item) for item in obj
                 ]  # Recursively serialize list items
             elif isinstance(obj, dict):
-                return {
-                    key: serialize(value) for key, value in obj.items()
-                }  # Recursively serialize dict values
+                return OrderedDict(
+                sorted(
+                    ((key, serialize(value)) for key, value in obj.items()),
+                    key=lambda item: item[0]
+                )
+            )  # Recursively serialize and sort dict values
             else:
                 return obj  # Return the object as is
 
         if isinstance(self, object):
+            items = []
             class_dict = OrderedDict()
             # Include instance attributes
-            for key, value in sorted(self.__dict__.items()):
+            for key, value in self.__dict__.items():
                 if not key.startswith("_"):  # Exclude private properties
                     if self._is_primitive(value):
-                        class_dict[key] = value
+                        items.append((key, value))
                     else:
-                        class_dict[key] = serialize(value)
+                        items.append((key, serialize(value)))
             # Include properties
             for key in dir(self):
                 if isinstance(getattr(type(self), key, None), property):
                     value = getattr(self, key)
                     if self._is_primitive(value):
-                        class_dict[key] = value
+                        items.append((key, value))
                     else:
-                        class_dict[key] = serialize(value)
+                        items.append((key, serialize(value)))
+            
+            # Sort items alphabetically by key
+            items.sort(key=lambda item: item[0])
+            
+            # Add sorted items to OrderedDict
+            for key, value in items:
+                class_dict[key] = value
+            
             return class_dict
         else:
             return self

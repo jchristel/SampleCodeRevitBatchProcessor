@@ -159,7 +159,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             // Act
             polygon.add_inner_loop(innerLoop);
 
-            Console.WriteLine(polygon.to_json());
+            Console.WriteLine(polygon.to_json_ordered());
             // Assert
             Assert.That(1, Is.EqualTo(polygon.inner_loops.Count));
             Assert.That(3, Is.EqualTo(polygon.inner_loops[0].Count));
@@ -222,7 +222,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             var polygonA = PythonEngineManager.DataGeometryPolygon2Class(jsonString);
             var polygonB = PythonEngineManager.DataGeometryPolygon2Class(jsonString);
 
-            Console.WriteLine(polygonA.to_json());
+            Console.WriteLine(polygonA.to_json_ordered());
 
             Assert.That(polygonA == polygonB, Is.True, "Expected equal instances to return true.");
         }

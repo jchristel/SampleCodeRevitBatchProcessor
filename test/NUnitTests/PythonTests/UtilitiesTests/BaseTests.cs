@@ -24,7 +24,7 @@ namespace PythonTests.UtilitiesTests
         [Test]
         public void BaseClass_ToJson_ShouldReturnValidJson()
         {
-            string json = _baseInstance.to_json();
+            string json = _baseInstance.to_json_ordered();
             Assert.That(json, Is.Not.Null, "JSON output should not be null.");
             Assert.That(json.StartsWith("{") && json.EndsWith("}"), Is.True, "Output should be a JSON object.");
         }
@@ -32,7 +32,7 @@ namespace PythonTests.UtilitiesTests
         [Test]
         public void BaseClass_ToJsonUtf_ShouldHandleUtfEncoding()
         {
-            string jsonUtf = _baseInstance.to_json_utf();
+            string jsonUtf = _baseInstance.to_json_utf_ordered();
             Assert.That(jsonUtf, Is.Not.Null, "UTF-8 JSON output should not be null.");
             Assert.That(jsonUtf.StartsWith("{") && jsonUtf.EndsWith("}"), Is.True, "Output should be a JSON object.");
         }

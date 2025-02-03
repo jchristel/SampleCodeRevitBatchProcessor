@@ -18,7 +18,7 @@ namespace PythonTests.GeometryTests
             // set up a point2 instance
             dynamic vector2Instance = PythonEngineManager.Vector2Class(0.0, 0.0);
 
-            var result = vector2Instance.to_json();
+            var result = vector2Instance.to_json_ordered();
 
             // Output the result to the console
             Console.WriteLine($"Result of to_json: {result}");
@@ -35,7 +35,7 @@ namespace PythonTests.GeometryTests
             // set up a point2 instance
             dynamic vector2Instance = PythonEngineManager.Vector2Class(0.0, 0.0);
 
-            var result = vector2Instance.to_json_utf();
+            var result = vector2Instance.to_json_utf_ordered();
 
             // Output the result to the console
             Console.WriteLine($"Result of to_json: {result}");

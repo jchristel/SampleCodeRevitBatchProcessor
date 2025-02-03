@@ -217,8 +217,8 @@ namespace PythonTests.DataTests
             var dataView1 = PythonEngineManager.DataViewThreeDClass(validJsonString);
             var dataView2 = PythonEngineManager.DataViewThreeDClass(jsonString2);
 
-            Console.WriteLine(dataView2.to_json());
-            Console.WriteLine(dataView1.to_json());
+            Console.WriteLine(dataView2.to_json_ordered());
+            Console.WriteLine(dataView1.to_json_ordered());
 
             // Act & Assert
             Assert.That(dataView1 == dataView2, Is.False, "Operator == should return false for instances with different bounding boxes.");

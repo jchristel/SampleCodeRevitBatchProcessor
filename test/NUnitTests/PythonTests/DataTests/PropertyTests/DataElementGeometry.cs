@@ -101,7 +101,7 @@ namespace PythonTests.DataTests.PropertyTests
             Assert.That(instance.polygon, Is.Not.Null);
             Assert.That(0, Is.EqualTo(instance.polygon.outer_loop.Count));
             Assert.That(0, Is.EqualTo(instance.polygon.inner_loops.Count));
-            Console.WriteLine(instance.to_json());
+            Console.WriteLine(instance.to_json_ordered());
         }
 
         
@@ -112,7 +112,7 @@ namespace PythonTests.DataTests.PropertyTests
 
             // Act
             dynamic instance = PythonEngineManager.DataElementGeometryBaseClass(jsonString);
-            var result = instance.to_json();
+            var result = instance.to_json_ordered();
 
             // Output the result to the console
             Console.WriteLine($"Result of to_json: {result}");

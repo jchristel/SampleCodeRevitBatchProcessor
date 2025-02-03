@@ -68,7 +68,8 @@ namespace PythonTests.UtilitiesTests
             dynamic result = PythonEngineManager.ResultClass();
 
             result.update_sep(false, "Update message");
-            Assert.That("Update message", Is.EqualTo(result.message));
+            Console.WriteLine(result.message);
+            Assert.That("Update message", Is.EqualTo(result.message), "message");
             Assert.That(result.status, Is.False);
 
             result.update_sep(true, "Another update");

@@ -78,7 +78,7 @@ class Result(base.Base):
 
         super(Result, self).__init__()
 
-        self.message = "-"
+        #self.message = "-"
         self.status = True
         self.result = []
         self._messages = [] # performance improvement to store messages as a list
@@ -117,7 +117,7 @@ class Result(base.Base):
         #     )
 
     @property
-    def messages(self):
+    def message(self):
 
         if len(self._messages) == 0:
             return "-"

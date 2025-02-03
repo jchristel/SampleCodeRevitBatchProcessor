@@ -141,8 +141,8 @@ namespace PythonTests.DataTests
             var dataViewPlan2 = PythonEngineManager.DataViewPlanClass(validJsonString);
 
 
-            Console.WriteLine(dataViewPlan1.to_json());
-            Console.WriteLine(dataViewPlan2.to_json());
+            Console.WriteLine(dataViewPlan1.to_json_ordered());
+            Console.WriteLine(dataViewPlan2.to_json_ordered());
             // Act
             var areEqual = dataViewPlan1==dataViewPlan2;
 

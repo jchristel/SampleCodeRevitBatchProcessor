@@ -138,8 +138,8 @@ namespace PythonTests.DataTests.PropertyTests
             var segmentA = PythonEngineManager.DataScheduleSegmentClass(jsonA);
             var segmentB = PythonEngineManager.DataScheduleSegmentClass(jsonB);
 
-            Console.WriteLine(segmentA.to_json());
-            Console.WriteLine(segmentB.to_json());
+            Console.WriteLine(segmentA.to_json_ordered());
+            Console.WriteLine(segmentB.to_json_ordered());
 
             // Assert: the two instances should not be equal
             Assert.That(segmentA != segmentB, Is.True, "Expected instances with different indexes to be unequal.");

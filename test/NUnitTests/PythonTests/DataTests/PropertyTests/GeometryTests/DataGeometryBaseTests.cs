@@ -65,7 +65,7 @@ namespace PythonTests.DataTests.PropertyTests.GeometryTests
             // Act
             dynamic instance = PythonEngineManager.DataGeometryBaseClass(dataType, json);
 
-            Console.WriteLine(instance.to_json());
+            Console.WriteLine(instance.to_json_ordered());
 
             // Act & Assert
             Assert.That(1.1, Is.EqualTo(instance.translation_coord.x));

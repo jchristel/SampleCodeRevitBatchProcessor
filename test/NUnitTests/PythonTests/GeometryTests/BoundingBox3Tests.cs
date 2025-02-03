@@ -22,7 +22,7 @@ namespace PythonTests.GeometryTests
             // Initialize bounding box with points
             dynamic bbox = PythonEngineManager.BoundingBox3Class(point1, point2);
 
-            var result = bbox.to_json();
+            var result = bbox.to_json_ordered();
 
             // Output the result to the console
             Console.WriteLine($"Result of to_json: {result}");
@@ -43,7 +43,7 @@ namespace PythonTests.GeometryTests
             // Initialize bounding box with points
             dynamic bbox = PythonEngineManager.BoundingBox3Class(point1, point2);
 
-            var result = bbox.to_json_utf();
+            var result = bbox.to_json_utf_ordered();
 
             // Output the result to the console
             Console.WriteLine($"Result of to_json: {result}");

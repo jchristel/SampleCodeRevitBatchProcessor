@@ -17,13 +17,13 @@ namespace PythonTests.GeometryTests
             // set up a point2 instance
             dynamic point3Instance = PythonEngineManager.Point3Class(0.0, 0.0,0.0);
 
-            var result = point3Instance.to_json();
+            var result = point3Instance.to_json_ordered();
 
             // Output the result to the console
             Console.WriteLine($"Result of to_json: {result}");
 
             // The expected JSON string
-            string jsonString = "{\"x\": 0.0, \"y\": 0.0, \"z\": 0.0, \"json_ini\": null}";
+            string jsonString = "{\"json_ini\": null, \"x\": 0.0, \"y\": 0.0, \"z\": 0.0}";
 
             Assert.That(jsonString, Is.EqualTo(result));
         }
@@ -34,13 +34,13 @@ namespace PythonTests.GeometryTests
             // set up a point2 instance
             dynamic point3Instance = PythonEngineManager.Point3Class(0.0, 0.0,0.0);
 
-            var result = point3Instance.to_json_utf();
+            var result = point3Instance.to_json_utf_ordered();
 
             // Output the result to the console
             Console.WriteLine($"Result of to_json: {result}");
 
             // The expected JSON string
-            string jsonString = "{\"x\": 0.0, \"y\": 0.0, \"z\": 0.0, \"json_ini\": null}";
+            string jsonString = "{\"json_ini\": null, \"x\": 0.0, \"y\": 0.0, \"z\": 0.0}";
 
             Assert.That(jsonString, Is.EqualTo(result));
         }

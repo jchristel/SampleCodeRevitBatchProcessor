@@ -17,7 +17,7 @@ namespace PythonTests.GeometryTests
             // set up a point2 instance
             dynamic matrixInstance = PythonEngineManager.MatrixClass(3, 3);
 
-            var result = matrixInstance.to_json();
+            var result = matrixInstance.to_json_ordered();
 
             // Output the result to the console
             Console.WriteLine($"Result of to_json: {result}");
@@ -34,7 +34,7 @@ namespace PythonTests.GeometryTests
             // set up a point2 instance
             dynamic matrixInstance = PythonEngineManager.MatrixClass(3, 3);
 
-            var result = matrixInstance.to_json_utf();
+            var result = matrixInstance.to_json_utf_ordered();
 
             // Output the result to the console
             Console.WriteLine($"Result of to_json: {result}");

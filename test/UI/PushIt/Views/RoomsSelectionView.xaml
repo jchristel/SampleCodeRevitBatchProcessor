@@ -51,6 +51,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <!-- a style for the toggle button -->
         <Style TargetType="ToggleButton">
             <Setter Property="Background" Value="#FF1F3B53"/>
             <Setter Property="Foreground" Value="#FF000000"/>
@@ -331,6 +332,16 @@
                             Grid.Column="1"
                             Margin="5 10 5 10"
                             Text="{Binding DataPath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid>
+                    <Grid>
+                        <Expander  Header="Settings" Margin="5 5 5 5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                        </Expander>
                     </Grid>
                 </StackPanel>
             </Expander>

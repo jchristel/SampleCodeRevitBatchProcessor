@@ -336,7 +336,13 @@
                     <Border CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
                         <Expander  Header="Settings" Margin="5 5 5 5">
                             <ScrollViewer  Margin="5" HorizontalScrollBarVisibility="Auto">
-                                <ListView ItemsSource="{Binding CategoriesView}">
+                                <ListView 
+                                    ItemsSource="{Binding CategoriesView}" 
+                                    MinWidth="400" 
+                                    Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}"
+                                    MinHeight="200"
+                                    Height="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}"
+                                    >
                                     <ListView.View>
                                         <GridView>
                                             <!-- select to reload column -->

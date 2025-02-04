@@ -29,6 +29,12 @@ A module containing helper function to retrieve the available categories from th
 from duHast.Revit.Categories.categories_model import get_main_categories_in_model
 from PushIt.Models.RevitCategory import RCategory
 
+SUPPORTED_CATEGORIES =[
+    "Ceilings",
+    "Columns",
+    "Mass",
+    "Walls",
+]
 
 def get_revit_categories(doc):
     """
@@ -46,8 +52,8 @@ def get_revit_categories(doc):
     revit_category_data = get_main_categories_in_model(doc)
     for category in revit_category_data:
         # filter out the "Tags" category
-        if "Tags" not in category.category_name:
+        if category.category_name in SUPPORTED_CATEGORIES:
             dummy = RCategory(category_name=category.category_name)
             cats.append(dummy)
-            print("Category: {}".format(dummy))
+            #print("Category: {}".format(dummy))
     return cats

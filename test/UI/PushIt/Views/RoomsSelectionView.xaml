@@ -336,31 +336,30 @@
                     <Border CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
                         <Expander  Header="Settings" Margin="5 5 5 5">
                             <ScrollViewer  Margin="5" HorizontalScrollBarVisibility="Auto">
-                                <Grid MinWidth="400" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}">
-                                    <DataGrid x:Name="settingsGrid" 
-                                        ItemsSource="{Binding DataView}" 
-                                        AutoGenerateColumns="True" 
-                                        IsReadOnly="True"
-                                        CanUserSortColumns="True"
-                                        SelectionMode="Single" 
-                                        SelectedIndex="{Binding SelectedIndex}"
-                                        ColumnWidth="*"
-                                        HorizontalAlignment="Stretch">
-                                        <DataGrid.RowStyle>
-                                            <Style TargetType="DataGridRow">
-                                                <Setter Property="Background" Value="Red" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Count}" Value="1">
-                                                        <Setter Property="Background" Value="LightGray"></Setter>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Count}" Value="0">
-                                                        <Setter Property="Background" Value="White"></Setter>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGrid.RowStyle>
-                                    </DataGrid>
-                                </Grid>
+                                <ListView ItemsSource="{Binding CategoriesView}">
+                                    <ListView.View>
+                                        <GridView>
+                                            <!-- select to reload column -->
+                                            <GridViewColumn>
+                                                <GridViewColumnHeader Content="Select" />
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox Padding="0 0 20 0" IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <!-- category name column -->
+                                            <GridViewColumn>
+                                                <GridViewColumnHeader Content="Category Name"/>
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Padding="0 0 20 0" Text="{Binding CategoryName}"/>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
                             </ScrollViewer>
                         </Expander>
                     </Border>

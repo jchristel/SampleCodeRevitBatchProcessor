@@ -90,6 +90,9 @@ class RevitModel(ViewModelBase, Base):
         # in safety off mode?
         self._safety_off = False
 
+        # initialise revit categories list (empty)
+        self._revit_categories = []
+        
         # event handlers
         # event handler to check if the room data file path has changed
         self.add_PropertyChanged(self.check_data_path_updates)
@@ -125,6 +128,15 @@ class RevitModel(ViewModelBase, Base):
     @safety_off.setter
     def safety_off(self, value):
         self._safety_off = value
+        
+    @property
+    def revit_categories(self):
+        return self._revit_categories
+    
+    @revit_categories.setter
+    def revit_categories(self, value):
+        self._revit_categories = value
+        
 
     def _update_room_data_with_family_data(self, room_data, families):
         """

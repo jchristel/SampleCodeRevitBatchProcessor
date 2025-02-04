@@ -51,6 +51,8 @@ clr.AddReference("PresentationFramework")
 clr.AddReference("WindowsBase")
 clr.AddReference("System.Data")
 from System.Data import DataTable, DataView
+from System.Collections.ObjectModel import ObservableCollection
+from System.Windows.Data import CollectionViewSource
 
 from duHast.UI.Objects.WPF.ViewModels.ViewModelBase import ViewModelBase
 from duHast.Utilities.files_io import file_exist
@@ -61,6 +63,7 @@ from PushIt.Commands.HighlightRoomsCommand import HighlightRoomsCommand
 from PushIt.Commands.RaiseRevitEventCommand import RaiseRevitEventCommand
 from PushIt.Commands.LoadRoomDataCommand import LoadRoomDataCommand
 from PushIt.Utilities import event_names
+from PushIt.ViewModels.RevitCategoryViewModel import RevitCategoryViewModel
 
 
 # required for data validation
@@ -80,6 +83,9 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
         # the revit model event handler manager
         self._revit_model_event_handler_manager = revit_model_event_handler_manager
 
+        # the collection of categories to display in the settings section of the view
+        self._categories = ObservableCollection[RevitCategoryViewModel]()
+        
         # can a room be pushed to revit, default is false
         # will be re-evaluated when a row is selected
         self._can_push_room_data = False
@@ -96,6 +102,9 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
 
         # the revit wpf model object containing the settings and families to be displayed
         self._revit_model = revit_model
+
+        # populate category settings data
+        self.update_categories()
 
         # set the data path
         self._data_path = self._revit_model.settings.rooms_data_file_path
@@ -144,6 +153,7 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
         self._active_design_option_name = self._revit_model.active_design_option_name
         self._active_design_set_name = self._revit_model.active_design_set_name
 
+        
         # commands
         # the command used to raise the revit external event which in turn calls a function pushing data into the revit model family instance
         self._push_data_command = PushRoomDataCommand(
@@ -204,7 +214,7 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
 
         # subscribe to the rooms changed event
         self._revit_model.add_PropertyChanged(self.update_room_data)
-
+        
         # raise event to populate room data in the view
         self._revit_model_event_handler_manager.setup_data()
 
@@ -480,6 +490,15 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
         return "Active design set: {} and option: {} ".format(
             self._active_design_set_name, self._active_design_option_name
         )
+
+    @property
+    def CategoriesView(self):
+        """
+        The collection view of the categories collection to which the xaml view is bound to.
+        """
+
+        return self._categories_view
+    
 
     @property
     def PushItCommand(self):
@@ -772,6 +791,23 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
             #    )
             # )
 
+
+    def update_categories(self):
+        # clear the collection
+        self._categories.Clear()
+        
+        # set up collection view based on the observable collection of categories
+        # this is what the xaml view is binding to
+        # this is required to be able to sort, group and filter the collection view without affecting the observable collection
+        self._categories_view = CollectionViewSource.GetDefaultView(self._categories)
+        
+        # add the categories to the collection
+        for category in self._revit_model.revit_categories:
+            if category.category_name in self._revit_model.settings.push_it_revit_target_categories:
+                # mark category as selected
+                self._categories.Add(RevitCategoryViewModel(category,True))
+            else:
+                self._categories.Add(RevitCategoryViewModel(category))
 
     # INotifyDataErrorInfo implementation
     def GetErrors(self, propertyName):

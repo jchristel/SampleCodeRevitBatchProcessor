@@ -48,6 +48,7 @@ from PushIt.ViewModels.RoomsSelectionViewModel import RoomsSelectionViewModel
 from PushIt.Models.RevitModel import RevitModel
 from PushIt.Objects.MainWindow import PushIt
 from PushIt.Utilities.rooms_load import load_rooms_from_file
+from PushIt.Utilities.categories_get import get_revit_categories
 from PushIt.Objects.RevitEventHandlerManager import RevitEventHandlerManager
 
 # view model types and their XAML file path
@@ -107,6 +108,9 @@ def pushIt_entry(doc, uiapp, output, forms, rooms=None):
     
     # load the settings
     REVIT_MODEL.settings.load_settings()
+    
+    # add revit categories to model
+    REVIT_MODEL.revit_categories = get_revit_categories(doc=doc)
     
     # set up UI
     # set up initial data for the main view model

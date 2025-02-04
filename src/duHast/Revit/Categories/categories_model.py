@@ -69,6 +69,30 @@ def get_categories_in_model(doc):
     return categories
 
 
+def get_main_categories_in_model(doc):
+    """
+    Returns all main categories in a model
+    
+    :param doc: The current model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: List of named tuples of type category_data
+    :rtype: [category_data]
+    """
+    
+    cats = doc.Settings.Categories
+    categories = []
+    for main_category in cats:
+        categories.append(
+            category_data(
+                category_name=main_category.Name,
+                sub_category_name=main_category.Name,
+                id=main_category.Id,
+            )
+        )
+    return categories
+
+
 def get_category_from_builtInCategory(doc, built_in_category):
     """
     Returns a category based on the build in category enum value.

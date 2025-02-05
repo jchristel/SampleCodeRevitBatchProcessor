@@ -100,10 +100,12 @@ def compare_loaded_families_vs_library_entry(doc, output, forms):
             # update return value with comparison result
             return_value.update(compare_result)
 
+        # sort the comparison result by family name
+        sorted_result = sorted(compare_result.result)
         # print comparison result to pyRevit output
         print_result_table(
             output=output,
-            data=compare_result.result,
+            data=sorted_result,
             header=LIBRARY_VS_PROJECT_FAMILIES_COMPARISON_HEADER,
             table_title="comparison result",
         )
@@ -118,7 +120,7 @@ def compare_loaded_families_vs_library_entry(doc, output, forms):
             write_result = write_report_data_as_csv(
                 file_name=file_path,
                 header=LIBRARY_VS_PROJECT_FAMILIES_COMPARISON_HEADER,
-                data=compare_result.result,
+                data=sorted_result,
                 quoting=csv.QUOTE_MINIMAL,
             )
 

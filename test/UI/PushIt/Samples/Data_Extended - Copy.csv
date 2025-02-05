@@ -1,0 +1,807 @@
+room id,area briefed,area designed,department,sub department,functional group
+ceb8cb23-2ef1-43a6-87f8-e1efcd683ad8,7b81b3fa-2468-45d8-a7f2-bff7ea87143f,71513b6f-4db9-4da9-9af4-270d43196d26,f2cc1953-5a97-416b-9d8f-156d2cf12914,369ef9d6-b9d6-4bb6-94d9-571d2eefbbc9,9038015b-6476-4b63-82f9-7eef48f76c1a
+01.01.01.01,100,0,Emergency Department,Triage,Staff Areas
+01.01.01.02,90,0,Emergency Department,Triage,Staff Areas
+01.01.01.03,50,0,Emergency Department,Triage,Staff Areas
+01.01.02.01,78,0,Emergency Department,Triage,Patient Areas
+01.01.02.02,12,0,Emergency Department,Triage,Patient Areas
+01.02.01.01,13,0,Emergency Department,Discharge,Patient Areas
+02.01.01.01,100,0,CSSD,Trolley Wash,Clean
+02.01.01.02,90,0,CSSD,Trolley Wash,Clean
+02.02.01.01,50,0,CSSD,Trolley Storage,In
+02.02.01.02,78,0,CSSD,Trolley Storage,In
+02.02.02.01,12,0,CSSD,Trolley Storage,Out
+02.02.02.02,13,0,CSSD,Trolley Storage,Out
+03.01.01.01,100,0,FOH,Public,Reception
+03.01.01.02,90,0,FOH,Public,Reception
+03.02.01.03,50,0,FOH,Staff,Amenities
+03.03.02.01,78,0,FOH,Storage,Public
+03.03.03.01,0,0,FOH,Storage,Staff
+03.03.04.01,0,0,FOH,Storage,Other
+CS.AMC.01.001,10,24.29,AIRLOCK,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.002,20,25.28,REC CLERICAL,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.003,10,35.19,WAIT,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.004,20,20.76,WAIT,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.005,10,9.15,PLAY 10,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.006,4,4.19,B WCH,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.007,1,0.98,B WATER,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.008,3,3.03,WC PUB,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.009,3,3.18,WC PUB,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.010,6,6.78,WC ACC,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.011,0,0,PARENT,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.012,8,12.05,STR COPY STN,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.013,6,0,WC ACC,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.014,3,3.03,WC PUB,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.015,9,11.06,SPEC C,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.016,9,10.74,SPEC C,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.017,9,12.15,SPEC C,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.018,20,20.41,STR CLN / MED,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.019,4,3.51,B MEQ,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.020,1,1.02,B PTS,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.021,2,1.98,BHW,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.023,0,0,CLN MED S,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.024,8,8.14,DU SUB,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.025,9,10.92,OFF 1P 9,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.026,10,10.04,TROLL BAY,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.02.001,15,14.84,PACE ICD,Ambulatory Care (20 bay),Cardiac Diagnostic Services
+CS.AMC.02.002,20,19.81,STRT,Ambulatory Care (20 bay),Cardiac Diagnostic Services
+CS.AMC.02.003,2,2.62,CH PT,Ambulatory Care (20 bay),Cardiac Diagnostic Services
+CS.AMC.02.004,1.5,1.99,B RES,Ambulatory Care (20 bay),Cardiac Diagnostic Services
+CS.AMC.02.005,2,1.99,B LIN,Ambulatory Care (20 bay),Cardiac Diagnostic Services
+CS.AMC.02.006,16,15.48,PUL TEST,Ambulatory Care (20 bay),Cardiac Diagnostic Services
+CS.AMC.03.001,14,13.61,CONS,Ambulatory Care (20 bay),Patient Area-POD1
+CS.AMC.03.002,14,14.04,CONS,Ambulatory Care (20 bay),Patient Area-POD1
+CS.AMC.03.003,14,13.68,CONS,Ambulatory Care (20 bay),Patient Area-POD1
+CS.AMC.03.004,14,14.04,CONS,Ambulatory Care (20 bay),Patient Area-POD1
+CS.AMC.03.005,14,13.68,CONS,Ambulatory Care (20 bay),Patient Area-POD1
+CS.AMC.03.006,14,13.75,CONS,Ambulatory Care (20 bay),Patient Area-POD1
+CS.AMC.03.007,14,14.11,CONS,Ambulatory Care (20 bay),Patient Area-POD1
+CS.AMC.03.008,14,13.95,CONS,Ambulatory Care (20 bay),Patient Area-POD1
+CS.AMC.03.009,12,14.8,INT,Ambulatory Care (20 bay),Patient Area-POD1
+CS.AMC.03.010,4,3.69,B MEQ,Ambulatory Care (20 bay),Patient Area-POD1
+CS.AMC.03.011,15,15.02,OFF CLN,Ambulatory Care (20 bay),Patient Area-POD1
+CS.AMC.03.012,17,17.51,CONS UN,Ambulatory Care (20 bay),Patient Area-POD1
+CS.AMC.03.014,0,7.39,WC PT,Ambulatory Care (20 bay),Patient Area-POD1
+CS.AMC.04.001,17,17.84,CONS UN,Ambulatory Care (20 bay),Patient Area-POD2
+CS.AMC.04.002,14,14.11,CONS,Ambulatory Care (20 bay),Patient Area-POD2
+CS.AMC.04.003,14,14.11,CONS,Ambulatory Care (20 bay),Patient Area-POD2
+CS.AMC.04.004,14,13.83,CONS,Ambulatory Care (20 bay),Patient Area-POD2
+CS.AMC.04.005,14,13.95,CONS,Ambulatory Care (20 bay),Patient Area-POD2
+CS.AMC.04.006,14,13.86,CONS,Ambulatory Care (20 bay),Patient Area-POD2
+CS.AMC.04.007,14,13.99,CONS,Ambulatory Care (20 bay),Patient Area-POD2
+CS.AMC.04.008,14,13.99,CONS,Ambulatory Care (20 bay),Patient Area-POD2
+CS.AMC.04.009,14,14.08,CONS,Ambulatory Care (20 bay),Patient Area-POD2
+CS.AMC.04.010,12,11.28,INT,Ambulatory Care (20 bay),Patient Area-POD2
+CS.AMC.04.011,4,4.77,B MEQ,Ambulatory Care (20 bay),Patient Area-POD2
+CS.AMC.04.012,18,17.34,PLASTER,Ambulatory Care (20 bay),Patient Area-POD2
+CS.AMC.04.013,15,15.02,OFF CLN,Ambulatory Care (20 bay),Patient Area-POD2
+CS.AMC.05.001,105,95.12,GYM GRP,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.002,14,13.97,STEQ,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.003,1,0.96,B HWB,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.004,4,3.94,B MEQ,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.005,2,2.89,B LIN,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.006,2.5,4.25,STF WI,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.007,28,28.36,OC THERAPY,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.008,28,28.43,TRMT HAND SPLNT,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.009,20,21,STEQ,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.010,0,0,ADL KITCHEN,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.011,14,13.99,TRMT,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.012,20,20.59,MEET 20,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.013,6,8.11,WRKSHOP,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.014,9,10.6,OBSERVE,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.015,14,14,TRMT PODIATRY,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.016,1,1.07,B HWB,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.017,20,23.23,MEET 20,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.018,20,22.84,MEET 20,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.019,2.5,4.25,STF WI,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.020,14,13.64,TRMT PODIATRY,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.021,9,9.44,STGN,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.022,6,6.74,WC ACC,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.023,4,3.98,B BEV OP,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.024,5,5.02,CLNR,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.025,10,10.09,DISP,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.026,9,8.99,STGN,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.027,2,2.04,B LIN,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.035,1.5,2.31,B RES,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.05.036,12,13.11,CONS,Ambulatory Care (20 bay),Assessment / Treatment Areas
+CS.AMC.06.001,189,199.67,OFF SWS(42P),Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.002,20,21.18,STAFF RM 15,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.003,2,2.28,B PROP-ST,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.004,3,3.32,WC ST,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.005,3,3.37,WC ST,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.006,3,3.46,WC ST,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.007,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.008,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.009,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.010,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.011,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.012,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.013,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.014,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.015,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.016,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.017,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.018,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.019,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.020,3,3.32,WC ST,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.021,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.022,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.023,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.024,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.025,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.026,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.027,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.028,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.029,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.030,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.031,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.032,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.033,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.034,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.035,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.036,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.037,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.038,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.039,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.040,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.041,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.042,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.043,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.044,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.045,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.046,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.047,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.048,0,0,OFF SWS,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.049,15,16.5,MEET 15,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.06.050,9,9.84,MEET 9,Ambulatory Care (20 bay),Staff Areas
+CS.AMC.IDC.002,0,60.04,CIRC,Ambulatory Care (20 bay),Intra Departmental Circulation
+CS.AMC.IDC.003,0,332.23,CIRC,Ambulatory Care (20 bay),Intra Departmental Circulation
+CS.AMC.IDC.004,0,8.38,CIRC,Ambulatory Care (20 bay),Intra Departmental Circulation
+CS.AMC.IDC.005,0,133.74,CIRC,Ambulatory Care (20 bay),Intra Departmental Circulation
+CS.BIR.01.001,1,1.11,B WATER,Birthing and MAU,Entry/ Reception/ Waiting
+CS.BIR.01.002,6,6.39,WC ACC,Birthing and MAU,Entry/ Reception/ Waiting
+CS.BIR.01.003,3,3.65,WC PUB,Birthing and MAU,Entry/ Reception/ Waiting
+CS.BIR.01.004,3,3.04,WC PUB,Birthing and MAU,Entry/ Reception/ Waiting
+CS.BIR.01.005,15,14.94,WAIT,Birthing and MAU,Entry/ Reception/ Waiting
+CS.BIR.01.006,3,2.97,B VEND,Birthing and MAU,Entry/ Reception/ Waiting
+CS.BIR.01.007,15,14.94,REC CLERICAL,Birthing and MAU,Entry/ Reception/ Waiting
+CS.BIR.01.008,6,6.18,PARENT,Birthing and MAU,Entry/ Reception/ Waiting
+CS.BIR.02.001,5,14.82,WAIT 10,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.002,12,11.79,CONS,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.003,14,14.27,ULTRA,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.004,4,3.89,WC PT,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.005,5,4.93,ENS IN,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.006,4,4.66,WC PT,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.007,4,4.3,B BEV OP,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.008,4,4.06,B MEQ,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.009,10,9.92,STAFF STN 10,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.010,8,7.84,STGN,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.011,9,8.67,PBAY HOLD,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.012,9,8.68,PBAY HOLD,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.013,9,8.69,PBAY HOLD,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.014,9,8.71,PBAY HOLD,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.015,9,8.64,PBAY HOLD,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.016,12,11.99,CONS,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.017,12,11.99,CONS,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.018,12,11.84,1 BED HOLD,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.019,12,14.15,INT,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.020,1,0.98,B HWB,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.021,1,0.66,B HWB,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.022,8,10.65,DU SUB,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.02.023,6,6.04,CLUP,Birthing and MAU,Maternity Assessment and Day Unit
+CS.BIR.03.001,20,19.95,ASSESS,Birthing and MAU,Birth Unit
+CS.BIR.03.002,1.5,2.85,B RES,Birthing and MAU,Birth Unit
+CS.BIR.03.003,20,19.81,LNG PF 20,Birthing and MAU,Birth Unit
+CS.BIR.03.004,1,0.96,B BFW,Birthing and MAU,Birth Unit
+CS.BIR.03.005,2,1.99,B LIN,Birthing and MAU,Birth Unit
+CS.BIR.03.006,2,1.79,B LIN,Birthing and MAU,Birth Unit
+CS.BIR.03.007,0,0,CLNR,Birthing and MAU,Birth Unit
+CS.BIR.03.008,20,19.32,MEET 20,Birthing and MAU,Birth Unit
+CS.BIR.03.009,15,14.97,OFF CLN,Birthing and MAU,Birth Unit
+CS.BIR.03.010,9,9.5,OFF 1P,Birthing and MAU,Birth Unit
+CS.BIR.03.011,12,12.62,DU,Birthing and MAU,Birth Unit
+CS.BIR.03.012,0,9.23,DISP,Birthing and MAU,Birth Unit
+CS.BIR.03.013,4,3.79,B MEQ,Birthing and MAU,Birth Unit
+CS.BIR.03.014,4,3.96,B MEQ,Birthing and MAU,Birth Unit
+CS.BIR.03.015,16,14.9,STAFF STN 10,Birthing and MAU,Birth Unit
+CS.BIR.03.016,12.5,12.62,STGN,Birthing and MAU,Birth Unit
+CS.BIR.03.017,20,19.8,STEQ,Birthing and MAU,Birth Unit
+CS.BIR.03.018,34,33.84,BIRTH LDR A,Birthing and MAU,Birth Unit
+CS.BIR.03.019,34,34.12,BIRTH LDR A,Birthing and MAU,Birth Unit
+CS.BIR.03.020,7,6.85,ENS BIRTH,Birthing and MAU,Birth Unit
+CS.BIR.03.021,7,6.85,ENS BIRTH,Birthing and MAU,Birth Unit
+CS.BIR.03.022,7,6.85,ENS BIRTH,Birthing and MAU,Birth Unit
+CS.BIR.03.023,7,7.02,ENS BIRTH,Birthing and MAU,Birth Unit
+CS.BIR.03.024,15,15,MULTI,Birthing and MAU,Birth Unit
+CS.BIR.03.025,3,2.98,B PATH,Birthing and MAU,Birth Unit
+CS.BIR.03.026,5,4.91,B BEV ENCL,Birthing and MAU,Birth Unit
+CS.BIR.03.027,3,0,WC ST,Birthing and MAU,Birth Unit
+CS.BIR.03.028,3,3.36,WC ST,Birthing and MAU,Birth Unit
+CS.BIR.03.029,0,0,SHOWER ST,Birthing and MAU,Birth Unit
+CS.BIR.03.030,3,1.52,B PROP-ST,Birthing and MAU,Birth Unit
+CS.BIR.03.031,40.5,40.59,BIRTH LDR B,Birthing and MAU,Birth Unit
+CS.BIR.03.032,40.5,41.01,BIRTH LDR B,Birthing and MAU,Birth Unit
+CS.BIR.03.033,7,6.85,ENS BIRTH,Birthing and MAU,Birth Unit
+CS.BIR.03.034,7,7.11,ENS BIRTH,Birthing and MAU,Birth Unit
+CS.BIR.03.035,20,20.49,STR CLN / MED,Birthing and MAU,Birth Unit
+CS.BIR.03.036,40.5,41.34,BIRTH LDR B,Birthing and MAU,Birth Unit
+CS.BIR.03.037,40.5,41.01,BIRTH LDR B,Birthing and MAU,Birth Unit
+CS.BIR.03.038,5,5.09,ENS IN,Birthing and MAU,Birth Unit
+CS.BIR.03.039,5,5,ENS IN,Birthing and MAU,Birth Unit
+CS.BIR.03.040,1,0.96,B PTS,Birthing and MAU,Birth Unit
+CS.BIR.03.041,1,0.78,B HWB,Birthing and MAU,Birth Unit
+CS.BIR.03.042,1,0.68,B HWB,Birthing and MAU,Birth Unit
+CS.BIR.03.043,1,1.8,B HWB,Birthing and MAU,Birth Unit
+CS.BIR.03.044,1,1,B PPE,Birthing and MAU,Birth Unit
+CS.BIR.03.045,10,10.05,CH M,Birthing and MAU,Birth Unit
+CS.BIR.03.046,20,19.1,CH F,Birthing and MAU,Birth Unit
+CS.BIR.03.047,22.5,20.57,OFF SWS(5P),Birthing and MAU,Birth Unit
+CS.BIR.03.048,0,0,OFF SWS,Birthing and MAU,Birth Unit
+CS.BIR.03.049,0,0,OFF SWS,Birthing and MAU,Birth Unit
+CS.BIR.03.050,0,0,OFF SWS,Birthing and MAU,Birth Unit
+CS.BIR.03.051,0,0,OFF SWS,Birthing and MAU,Birth Unit
+CS.BIR.03.052,20,20.64,ASSESS,Birthing and MAU,Birth Unit
+CS.BIR.03.063,2.5,2.27,B MEQ,Birthing and MAU,Birth Unit
+CS.BIR.IDC.001,0,53.88,CIRC,Birthing and MAU,Intra Departmental Circulation
+CS.BIR.IDC.002,0,203.03,CIRC,Birthing and MAU,Intra Departmental Circulation
+CS.BIR.IDC.003,0,8.39,CIRC,Birthing and MAU,Intra Departmental Circulation
+CS.BIR.IDC.004,0,29.59,CIRC,Birthing and MAU,Intra Departmental Circulation
+CS.BIR.IDC.005,0,9.25,CIRC,Birthing and MAU,Intra Departmental Circulation
+CS.EDS.01.001,85,85.95,LIBRARY,"Cold Shell-Education, Training and Research",Library / Study Space
+CS.EDS.02.001,4,6.08,B BEV ENCL,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.002,20,19.76,MEET 20,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.003,20,20.06,MEET 20,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.004,10,10.44,SIM CTRL,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.005,25,24.07,SIM,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.006,6.5,4.62,STEQ,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.007,0,0,B HWB,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.008,20,22.35,MEET 20,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.009,55,55.67,MEET 55,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.010,25,24.11,SIM,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.011,15,9.62,MEET,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.012,15,20.14,SIM TUT,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.013,55,55.86,MEET 55,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.041,6.5,5.11,STEQ,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.042,6.5,5.63,STEQ,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.02.043,15,9.62,MEET,"Cold Shell-Education, Training and Research",Education and Meeting Rooms
+CS.EDS.03.001,90,91.02,OFF SWS(20P),"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.002,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.003,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.004,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.005,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.006,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.007,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.008,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.009,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.010,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.011,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.012,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.013,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.014,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.015,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.016,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.017,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.018,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.019,0,0,OFF SWS,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.020,0,25.83,BREAKOUT,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.03.021,2,3.64,PROP STF,"Cold Shell-Education, Training and Research",Staff Areas
+CS.EDS.IDC.001,0,41.28,CIRC,"Cold Shell-Education, Training and Research",Intra Departmental Circulation
+CS.EDS.IDC.002,0,48.28,CIRC,"Cold Shell-Education, Training and Research",Intra Departmental Circulation
+CS.FOH.01.001,12,12.19,REC CLERICAL,Front of House Unit,Main Entrance
+CS.FOH.01.002,2,3.24,B WCH,Front of House Unit,Main Entrance
+CS.FOH.01.003,3,4.85,WC ST,Front of House Unit,Main Entrance
+CS.FOH.01.004,10,26.59,AIRLOCK,Front of House Unit,Main Entrance
+CS.FOH.01.005,20,26.74,WAIT,Front of House Unit,Main Entrance
+CS.FOH.01.006,20,25.97,LOBBY,Front of House Unit,Main Entrance
+CS.FOH.01.007,12,12.25,OFF 2P,Front of House Unit,Main Entrance
+CS.FOH.01.008,75,76.36,RETAIL,Front of House Unit,Main Entrance
+CS.FOH.01.009,5,5.2,CLNR,Front of House Unit,Main Entrance
+CS.FOH.01.010,9,9.77,CASH,Front of House Unit,Main Entrance
+CS.FOH.01.017,9,19.1,STGN,Front of House Unit,Main Entrance
+CS.FOH.01.018,0,5,VOL ST,Front of House Unit,Main Entrance
+CS.FOH.01.019,0,4.97,VOL ST,Front of House Unit,Main Entrance
+CS.FOH.01.020,10,4.9,CLN-10,Front of House Unit,Main Entrance
+CS.FOH.01.021,0,8.98,DISPLAY,Front of House Unit,Main Entrance
+CS.FOH.01.022,0,2.79,B WCH,Front of House Unit,Main Entrance
+CS.FOH.02.001,20,23.43,ABORIGINAL FAM RM,Front of House Unit,Retail and Cultural Space
+CS.FOH.03.001,14,15.31,CH PLACE,Front of House Unit,Public Amenities
+CS.FOH.03.002,6,8.19,WC ACC,Front of House Unit,Public Amenities
+CS.FOH.03.003,10,10.47,PARENT,Front of House Unit,Public Amenities
+CS.FOH.03.004,1,1.89,B WATER,Front of House Unit,Public Amenities
+CS.FOH.03.005,3,3.01,B VEND,Front of House Unit,Public Amenities
+CS.FOH.03.006,2,2.79,B ATM,Front of House Unit,Public Amenities
+CS.FOH.03.007,3,3.79,WC PUB,Front of House Unit,Public Amenities
+CS.FOH.03.008,3,0,WC PUB,Front of House Unit,Public Amenities
+CS.FOH.03.009,3,3.79,WC PUB,Front of House Unit,Public Amenities
+CS.FOH.03.010,3,0,WC PUB,Front of House Unit,Public Amenities
+CS.FOH.04.001,4,5.2,WASH,Front of House Unit,Multi-faith Space
+CS.FOH.04.002,9,12.37,INT,Front of House Unit,Multi-faith Space
+CS.FOH.04.003,9,12.73,OFF 1P 9,Front of House Unit,Multi-faith Space
+CS.FOH.04.004,15,36.86,FAITH,Front of House Unit,Multi-faith Space
+CS.FOH.05.001,4,3.97,SECURITY REC,Front of House Unit,Security
+CS.FOH.05.002,9,9.86,STGN,Front of House Unit,Security
+CS.FOH.05.003,15,15.01,CCT MON RM,Front of House Unit,Security
+CS.FOH.05.004,20,20.52,SECURITY RM,Front of House Unit,Security
+CS.FOH.IDC.001,0,11.04,CIRC,Front of House Unit,Intra Departmental Circulation
+CS.FOH.IDC.002,0,34.84,CIRC,Front of House Unit,Intra Departmental Circulation
+CS.ICU.01.001,20,18,WAIT 10,Intensive Care Unit - Adult ICU (12 beds),"Entry, Waiting & Family Support"
+CS.ICU.01.002,2,1.98,B VEND,Intensive Care Unit - Adult ICU (12 beds),"Entry, Waiting & Family Support"
+CS.ICU.01.003,1,1.04,B WATER,Intensive Care Unit - Adult ICU (12 beds),"Entry, Waiting & Family Support"
+CS.ICU.01.004,3,3.03,WC PUB,Intensive Care Unit - Adult ICU (12 beds),"Entry, Waiting & Family Support"
+CS.ICU.01.005,6,6.29,WC ACC,Intensive Care Unit - Adult ICU (12 beds),"Entry, Waiting & Family Support"
+CS.ICU.01.006,6,6.54,PARENT,Intensive Care Unit - Adult ICU (12 beds),"Entry, Waiting & Family Support"
+CS.ICU.01.007,14,12.98,INT,Intensive Care Unit - Adult ICU (12 beds),"Entry, Waiting & Family Support"
+CS.ICU.01.008,20,18.17,MEET 20,Intensive Care Unit - Adult ICU (12 beds),"Entry, Waiting & Family Support"
+CS.ICU.01.009,10,10.99,OV BED,Intensive Care Unit - Adult ICU (12 beds),"Entry, Waiting & Family Support"
+CS.ICU.01.010,4,4.02,OV ENS,Intensive Care Unit - Adult ICU (12 beds),"Entry, Waiting & Family Support"
+CS.ICU.01.011,1,1.08,PROP,Intensive Care Unit - Adult ICU (12 beds),"Entry, Waiting & Family Support"
+CS.ICU.02.001,25,26.21,1 BED IC,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.002,25,26.52,1 BED IC,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.003,25,24.15,1 BED IC,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.004,25,23.84,1 BED IC,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.005,25,26.13,1 BED IC,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.006,25,26.45,1 BED IC,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.007,25,23.84,1 BED IC,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.008,25,24.34,1 BED IC,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.009,25,24.16,1 BED IC,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.010,25,24.16,1 BED IC,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.011,25,25.17,1 BED IC,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.012,6,5.44,ANTE,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.013,15,14.94,BATH,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.014,6,6.03,ENS SP,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.015,6,6.15,ENS SP,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.016,6,6.39,ENS SP,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.017,6,6.15,ENS SP,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.018,6,6.07,ENS SP,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.019,25,22.47,STAFF STN 10,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.020,15,12.21,OFF CLN,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.021,2,1.97,WRK STN,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.022,2,1.82,WRK STN,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.023,2,1.82,WRK STN,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.024,2,1.87,WRK STN,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.025,2,1.82,WRK STN,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.026,2,1.82,WRK STN,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.027,1,0.92,B HWA,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.028,1,1,B HWA,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.029,2,1.81,B LIN,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.030,1.5,1.47,B RES,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.031,3,2.67,B PATH,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.032,1,0.42,B PTS,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.033,4,4.09,B MEQ,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.034,4,3.6,B MEQ,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.035,4,1.93,B MEQ,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.036,1,1.06,B BFW,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.037,25,24.56,1 BED IC,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.038,6,5.82,ANTE,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.039,2,1.82,B LIN,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.040,6,6.07,ENS SP,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.041,6,7.11,ENS SP,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.042,6,6.1,ENS SP,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.043,1.5,1.73,B MEQ,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.044,1.5,1.36,B MEQ,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.058,1.5,1.63,B RES,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.02.059,1.5,1.78,B RES,Intensive Care Unit - Adult ICU (12 beds),Patient Areas
+CS.ICU.03.001,4,3.95,B BEV OP,Intensive Care Unit - Adult ICU (12 beds),Support Areas
+CS.ICU.03.002,4,2.59,B MEAL,Intensive Care Unit - Adult ICU (12 beds),Support Areas
+CS.ICU.03.003,12,13.55,MED,Intensive Care Unit - Adult ICU (12 beds),Support Areas
+CS.ICU.03.004,30,26.96,CLN-10,Intensive Care Unit - Adult ICU (12 beds),Support Areas
+CS.ICU.03.005,28,25.75,STEQ,Intensive Care Unit - Adult ICU (12 beds),Support Areas
+CS.ICU.03.006,14,14.16,STGN,Intensive Care Unit - Adult ICU (12 beds),Support Areas
+CS.ICU.03.007,12,12.77,RESP BIO WORK,Intensive Care Unit - Adult ICU (12 beds),Support Areas
+CS.ICU.03.008,12,12.82,DU,Intensive Care Unit - Adult ICU (12 beds),Support Areas
+CS.ICU.03.009,7,7.64,CLUP,Intensive Care Unit - Adult ICU (12 beds),Support Areas
+CS.ICU.03.010,5,6.53,CLNR,Intensive Care Unit - Adult ICU (12 beds),Support Areas
+CS.ICU.03.011,10,10.86,DISP,Intensive Care Unit - Adult ICU (12 beds),Support Areas
+CS.ICU.03.012,12,11.93,WR TELE,Intensive Care Unit - Adult ICU (12 beds),Support Areas
+CS.ICU.03.013,3,3.28,WC ST,Intensive Care Unit - Adult ICU (12 beds),Support Areas
+CS.ICU.03.014,3,3.28,WC ST,Intensive Care Unit - Adult ICU (12 beds),Support Areas
+CS.ICU.04.001,9,9.79,OFF 1P,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.002,9,9.87,OFF 1P,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.003,45,43.12,OFF SWS(10),Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.004,25,25.35,MEET 15,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.005,5,5.04,STR COPY STN,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.006,20,19.71,STAFF RM 15,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.007,15,14.55,CH STF M/F,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.008,15,14.89,CH STF M/F,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.009,10,10.33,OV BED,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.010,25,25.19,MEET 15,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.011,9,9.89,OFF 1P,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.012,12,12.77,OFF 2P,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.013,12,13.19,OFF 2P,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.014,12,12.61,OFF 2P,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.015,0,0,OFF SWS,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.016,0,0,OFF SWS,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.017,0,0,OFF SWS,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.018,0,0,OFF SWS,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.019,0,0,OFF SWS,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.020,0,0,OFF SWS,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.021,0,0,OFF SWS,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.022,0,0,OFF SWS,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.04.023,0,0,OFF SWS,Intensive Care Unit - Adult ICU (12 beds),Staff Areas
+CS.ICU.IDC.001,0,29.12,CIRC,Intensive Care Unit - Adult ICU (12 beds),Intra Departmental Circulation
+CS.ICU.IDC.002,0,87.4,CIRC,Intensive Care Unit - Adult ICU (12 beds),Intra Departmental Circulation
+CS.ICU.IDC.003,0,287.81,CIRC,Intensive Care Unit - Adult ICU (12 beds),Intra Departmental Circulation
+CS.ICU.IDC.004,0,40.29,CIRC,Intensive Care Unit - Adult ICU (12 beds),Intra Departmental Circulation
+CS.IP1.01.001,16.5,17.76,1 BED A,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.002,16.5,17.71,1 BED A,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.003,16.5,17.76,1 BED A,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.004,16.5,17.71,1 BED A,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.005,16.5,17.76,1 BED A,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.006,16.5,17.71,1 BED A,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.007,16.5,17.81,1 BED A,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.008,16.5,17.68,1 BED A,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.009,16.5,17.76,1 BED A,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.010,16.5,18.8,1 BED A,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.011,16.5,17.71,1 BED A,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.012,16.5,17.71,1 BED A,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.013,18,26.04,1 BED BARI,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.014,16.5,18.05,1 BED ISO N2,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.015,6,5.87,ANTE,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.016,29,29.61,2 BED A2,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.017,29,29.6,2 BED A2,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.018,29,29.61,2 BED A2,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.019,29,29.61,2 BED A2,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.020,29,29.6,2 BED A2,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.021,5,5.15,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.022,5,5.16,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.023,5,5.16,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.024,5,5.15,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.025,5,5.16,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.026,5,5.16,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.027,5,5.24,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.028,5,5.3,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.029,5,5.24,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.030,5,5.3,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.031,5,5.24,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.032,5,5.3,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.033,5,5.3,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.034,5,5.24,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.035,5,5.24,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.036,5,5.27,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.037,5,5.24,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.038,5,5.3,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.039,7,6.66,ENS BARI,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.040,20,20.98,LNG PF 20,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.041,16.5,17.76,1 BED A,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.042,16.5,17.71,1 BED A,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.043,29,29.61,2 BED A2,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.044,5,5.3,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.045,5,5.24,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.01.046,5,5.79,ENS IN,(1) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP1.02.001,4,4.98,B BEV OP,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.002,4,6.69,B MEAL,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.003,1,2.87,B HWB,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.004,1,1.76,B HWB,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.005,1,1.5,B HWB,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.006,1,0.77,B HWB,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.007,2,1.3,B LIN,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.008,2,3.94,B LIN,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.009,4,7.18,B MEQ,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.010,4,2.34,B MEQ,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.011,1.5,2.06,B RES,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.012,5,6.24,CLNR,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.013,14,14.55,DU,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.014,12,12.17,INT,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.015,14,14.16,STAFF STN 10,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.016,10,12.71,STAFF STN 10,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.017,0,0,STAFF STN 10,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.018,15,15.28,OFF CLN,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.019,3,3.12,B STATIONERY,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.020,9,9.18,OFF 1P,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.021,20,21.15,STEQ,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.022,9,9.18,STGN,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.023,20,18.65,STR CLN / MED,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.02.024,1,0.96,B PTS,(1) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP1.03.001,27,27.07,OFF SWS(6P),(1) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP1.03.002,18,17.55,STAFF RM 15,(1) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP1.03.003,3,1.81,B PROP-ST,(1) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP1.03.004,3,3.84,WC ST,(1) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP1.03.005,0,0,OFF SWS,(1) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP1.03.006,0,0,OFF SWS,(1) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP1.03.007,0,0,OFF SWS,(1) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP1.03.008,0,0,OFF SWS,(1) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP1.03.009,0,0,OFF SWS,(1) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP1.03.010,3,3.49,WC ST,(1) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP1.03.011,20,20.24,MEET 20,(1) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP1.04.001,28,27.98,MF AH AREA,(1) Inpatient Accommodation Unit (28 Beds),Shared Areas
+CS.IP1.04.002,12,9.95,STGN,(1) Inpatient Accommodation Unit (28 Beds),Shared Areas
+CS.IP1.04.003,15,18.4,DISP,(1) Inpatient Accommodation Unit (28 Beds),Shared Areas
+CS.IP1.04.004,3,3.37,WC PUB,(1) Inpatient Accommodation Unit (28 Beds),Shared Areas
+CS.IP1.04.005,6,6.7,WC ACC,(1) Inpatient Accommodation Unit (28 Beds),Shared Areas
+CS.IP1.04.006,3,3.14,WC PUB,(1) Inpatient Accommodation Unit (28 Beds),Shared Areas
+CS.IP1.IDC.001,0,134.35,CIRC,(1) Inpatient Accommodation Unit (28 Beds),Intra Departmental Circulation
+CS.IP1.IDC.002,0,176.39,CIRC,(1) Inpatient Accommodation Unit (28 Beds),Intra Departmental Circulation
+CS.IP1.IDC.003,0,92.38,CIRC,(1) Inpatient Accommodation Unit (28 Beds),Intra Departmental Circulation
+CS.IP2.01.001,16.5,17.92,1 BED A,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.002,16.5,17.71,1 BED A,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.003,16.5,17.76,1 BED A,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.004,16.5,17.71,1 BED A,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.005,16.5,17.76,1 BED A,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.006,16.5,17.54,1 BED A,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.007,16.5,18.8,1 BED A,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.008,16.5,17.21,1 BED A,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.009,16.5,17.76,1 BED A,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.010,16.5,17.44,1 BED A,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.011,16.5,17.76,1 BED A,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.012,16.5,17.71,1 BED A,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.013,18,25.96,1 BED BARI,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.014,16.5,19.59,1 BED ISO N2,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.015,6,5.87,ANTE,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.016,29,29.6,2 BED A2,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.017,29,29.61,2 BED A2,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.018,29,29.6,2 BED A2,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.019,29,29.61,2 BED A2,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.020,29,29.72,2 BED A2,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.021,5,5.16,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.022,5,5.16,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.023,5,5.15,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.024,5,5.15,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.025,5,5.16,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.026,5,5.21,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.027,5,5.15,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.028,5,5.24,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.029,5,5.3,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.030,5,5.24,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.031,5,5.3,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.032,5,5.24,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.033,5,5.3,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.034,5,5.24,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.035,5,5.15,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.036,5,5.24,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.037,5,5.3,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.038,5,5.24,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.039,7,6.6,ENS BARI,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.040,20,19.91,LNG PF 20,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.041,16.5,17.76,1 BED A,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.042,16.5,17.81,1 BED A,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.043,29,29.76,2 BED A2,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.044,5,5.3,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.045,5,5.24,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.01.046,5,5.26,ENS IN,(2) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP2.02.001,4,2.96,B BEV OP,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.002,4,4.08,B MEAL,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.003,1,2.1,B HWB,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.004,1,1.72,B HWB,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.005,1,1.72,B HWB,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.006,1,0.8,B HWB,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.007,2,2.1,B LIN,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.008,2,3.06,B LIN,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.009,4,5.31,B MEQ,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.010,4,2.87,B MEQ,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.011,1.5,1.55,B RES,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.012,5,5.34,CLNR,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.013,14,13.25,DU,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.014,12,11.97,INT,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.015,14,14.04,STAFF STN 10,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.016,10,13.79,STAFF STN 10,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.017,0,0,STAFF STN 10,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.018,15,15.33,OFF CLN,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.019,3,3.1,B STATIONERY,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.020,9,8.98,OFF 1P,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.021,20,20.12,STEQ,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.022,9,9.06,STGN,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.023,20,18.94,STR CLN / MED,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.02.024,1,1.04,B PTS,(2) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP2.03.001,27,26.51,OFF SWS(6P),(2) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP2.03.002,18,16.93,STAFF RM 15,(2) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP2.03.003,3,2.79,B PROP-ST,(2) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP2.03.004,3,3.01,WC ST,(2) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP2.03.005,0,0,OFF SWS,(2) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP2.03.006,0,0,OFF SWS,(2) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP2.03.007,0,0,OFF SWS,(2) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP2.03.008,0,0,OFF SWS,(2) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP2.03.009,0,0,OFF SWS,(2) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP2.03.010,3,4.17,WC ST,(2) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP2.03.011,18,18.31,MEET 20,(2) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP2.04.002,0,0,STGN,(2) Inpatient Accommodation Unit (28 Beds),Shared Areas
+CS.IP2.IDC.001,0,177.74,CIRC,(2) Inpatient Accommodation Unit (28 Beds),Intra Departmental Circulation
+CS.IP2.IDC.002,0,20.84,CIRC,(2) Inpatient Accommodation Unit (28 Beds),Intra Departmental Circulation
+CS.IP2.IDC.003,0,146.63,CIRC,(2) Inpatient Accommodation Unit (28 Beds),Intra Departmental Circulation
+CS.IP2.IDC.004,0,42.93,CIRC,(2) Inpatient Accommodation Unit (28 Beds),Intra Departmental Circulation
+CS.IP3.01.001,16.5,17.72,1 BED A,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.002,16.5,17.68,1 BED A,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.003,16.5,17.71,1 BED A,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.004,16.5,17.76,1 BED A,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.005,16.5,17.71,1 BED A,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.006,16.5,17.76,1 BED A,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.007,16.5,18.8,1 BED A,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.008,16.5,17.71,1 BED A,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.009,16.5,17.76,1 BED A,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.010,16.5,17.71,1 BED A,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.011,16.5,17.76,1 BED A,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.012,16.5,17.71,1 BED A,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.013,18,26.04,1 BED BARI,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.014,16.5,18.05,1 BED ISO N2,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.015,6,5.87,ANTE,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.016,29,29.61,2 BED A2,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.017,29,29.6,2 BED A2,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.018,29,29.61,2 BED A2,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.019,29,29.61,2 BED A2,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.020,29,29.6,2 BED A2,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.021,5,5.15,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.022,5,5.16,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.023,5,5.16,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.024,5,5.79,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.025,5,5.15,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.026,5,5.16,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.027,5,5.16,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.028,5,5.3,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.029,5,5.24,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.030,5,5.3,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.031,5,5.24,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.032,5,5.3,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.033,5,5.24,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.034,5,5.3,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.035,5,5.24,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.036,5,5.24,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.037,5,5.3,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.038,5,5.24,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.039,5,5.3,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.040,7,6.66,ENS BARI,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.041,20,23.03,LNG PF 20,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.042,16.5,17.76,1 BED A,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.043,5,5.24,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.044,16.5,17.71,1 BED A,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.045,5,5.15,ENS IN,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.01.046,29,29.61,2 BED A2,(3) Inpatient Accommodation Unit (28 Beds),Patient Areas
+CS.IP3.02.001,4,4.93,B BEV OP,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.002,4,7.52,B MEAL,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.003,1,1.16,B HWB,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.004,1,1.76,B HWB,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.005,1,2.87,B HWB,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.006,1,0.77,B HWB,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.007,2,3.14,B LIN,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.008,2,1.3,B LIN,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.009,4,2.34,B MEQ,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.010,4,7.83,B MEQ,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.011,1.5,2.06,B RES,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.012,5,5.41,CLNR,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.013,14,14.6,DU,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.014,12,12.58,INT,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.015,14,14.16,STAFF STN 10,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.016,10,12.16,STAFF STN 10,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.017,0,0,STAFF STN 10,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.018,15,15.8,OFF CLN,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.019,3,3.24,B STATIONERY,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.020,9,9.27,OFF 1P,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.021,20,19.96,STEQ,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.022,9,8.63,STGN,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.023,20,18.67,STR CLN / MED,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.02.024,1,0.96,B PTS,(3) Inpatient Accommodation Unit (28 Beds),Support Areas
+CS.IP3.03.001,27,27.65,OFF SWS(6P),(3) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP3.03.002,18,17.81,STAFF RM 15,(3) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP3.03.003,3,1.8,B PROP-ST,(3) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP3.03.004,3,3.49,WC ST,(3) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP3.03.005,0,0,OFF SWS,(3) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP3.03.006,0,0,OFF SWS,(3) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP3.03.007,0,0,OFF SWS,(3) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP3.03.008,0,0,OFF SWS,(3) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP3.03.009,0,0,OFF SWS,(3) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP3.03.010,3,3.3,WC ST,(3) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP3.03.011,18,16.89,MEET,(3) Inpatient Accommodation Unit (28 Beds),Staff Areas
+CS.IP3.04.001,14,14.32,MF AH AREA,(3) Inpatient Accommodation Unit (28 Beds),Shared Areas
+CS.IP3.04.002,12,8.04,STGN,(3) Inpatient Accommodation Unit (28 Beds),Shared Areas
+CS.IP3.04.003,15,18.93,DISP,(3) Inpatient Accommodation Unit (28 Beds),Shared Areas
+CS.IP3.04.004,3,3.37,WC PUB,(3) Inpatient Accommodation Unit (28 Beds),Shared Areas
+CS.IP3.04.005,6,6.7,WC ACC,(3) Inpatient Accommodation Unit (28 Beds),Shared Areas
+CS.IP3.04.006,3,3.14,WC PUB,(3) Inpatient Accommodation Unit (28 Beds),Shared Areas
+CS.IP3.IDC.001,0,152.66,CIRC,(3) Inpatient Accommodation Unit (28 Beds),Intra Departmental Circulation
+CS.IP3.IDC.002,0,155.27,CIRC,(3) Inpatient Accommodation Unit (28 Beds),Intra Departmental Circulation
+CS.IP3.IDC.003,0,92.6,CIRC,(3) Inpatient Accommodation Unit (28 Beds),Intra Departmental Circulation
+CS.MAT.01.001,16.5,18.87,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.002,16.5,19.07,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.003,16.5,19.06,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.004,16.5,19.06,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.005,16.5,19.06,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.006,16.5,19.06,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.007,16.5,19.06,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.008,16.5,19.06,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.009,16.5,19.06,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.010,16.5,19.06,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.011,16.5,19.06,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.012,16.5,19.07,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.013,16.5,19.06,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.014,16.5,19.06,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.015,16.5,19.06,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.016,16.5,19.07,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.017,16.5,19.07,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.018,16.5,19.06,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.019,29,29.6,2 BED A2,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.020,5,5.26,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.021,5,5.26,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.022,5,5.26,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.023,5,5.26,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.024,5,5.26,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.025,5,5.15,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.026,5,5.15,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.027,5,6.62,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.028,5,5.21,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.029,5,5.21,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.030,5,5.21,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.031,5,5.21,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.032,5,5.21,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.033,5,5.21,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.034,5,5.21,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.035,5,5.21,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.036,5,5.21,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.037,5,5.21,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.038,5,5.21,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.039,5,5.21,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.040,5,5.21,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.041,5,5.21,ENS IN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.043,20,19.53,LNG PF 20,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.044,15,14.79,BATH NEWBORN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.045,14,13.81,STAFF STN 10,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.046,15,14.99,OFF CLN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.047,1,0.78,B HWB,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.048,20,20.08,STEQ,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.049,15,12.94,STGN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.050,4,4,B BEV OP,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.051,4,4.8,B MEAL,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.052,12,12.73,DU,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.053,2,2.08,B LIN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.054,2,2.15,B LIN,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.055,1.5,1.97,B RES,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.056,5,4.8,CLNR,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.057,20,21.09,STR CLN / MED,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.058,10,9.97,FORMULA,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.059,29,31.58,2 BED A2,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.060,16.5,18.82,1 BED ISO N2,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.061,16.5,19.07,1 BED A,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.062,6,5.82,ANTE,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.063,1,1.27,B HWB,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.064,1,1.56,B HWB,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.065,1,0.84,B HWB,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.066,1,0.98,B PTS,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.067,15,17.53,NEO RESUS / PROC,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.068,4,5.96,B MEQ,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.069,20,19.86,MULTI,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.070,4,2.66,B MEQ,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.071,2,2.85,B MEQ,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.01.089,2,1.95,B MEQ,Maternity Unit,Inpatient Unit - Antenatal/ Postnatal
+CS.MAT.02.001,3,3.04,WC ST,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.002,3,3.04,WC ST,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.003,27,26.42,OFF SWS(6P),Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.004,9,9.09,OFF 1P,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.005,8,6.75,STR COPY STN,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.006,2,1.89,B PROP-ST,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.007,0,0,OFF SWS,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.008,0,0,OFF SWS,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.009,0,0,OFF SWS,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.010,0,0,OFF SWS,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.011,18,18.44,STAFF RM 15,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.012,0,0,OFF SWS,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.013,0,0,WC ST,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.014,3,2.79,BMFD-3,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.015,20,19.78,MEET 20,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.018,3,2.75,B MEQ,Maternity Unit,Staff Areas & Amenities
+CS.MAT.02.019,2,1.89,STGN,Maternity Unit,Staff Areas & Amenities
+CS.MAT.IDC.002,0,121.04,CIRC,Maternity Unit,Intra Departmental Circulation
+CS.MAT.IDC.004,0,146.73,CIRC,Maternity Unit,Intra Departmental Circulation
+CS.MAT.IDC.005,0,110.26,CIRC,Maternity Unit,Intra Departmental Circulation
+CS.MHU.1.001,10,9.56,AIRLOCK,Adult Acute Mental Health Inpatient Unit (32 beds),"Entry, Reception and Waiting"
+CS.MHU.1.002,10,10.65,REC CLERICAL,Adult Acute Mental Health Inpatient Unit (32 beds),"Entry, Reception and Waiting"
+CS.MHU.1.003,15,24.03,WAIT 10,Adult Acute Mental Health Inpatient Unit (32 beds),"Entry, Reception and Waiting"
+CS.MHU.1.004,6,6.7,WC ACC,Adult Acute Mental Health Inpatient Unit (32 beds),"Entry, Reception and Waiting"
+CS.MHU.1.005,3,3.37,WC PUB,Adult Acute Mental Health Inpatient Unit (32 beds),"Entry, Reception and Waiting"
+CS.MHU.1.006,2,1.81,PROP VIS,Adult Acute Mental Health Inpatient Unit (32 beds),"Entry, Reception and Waiting"
+CS.MHU.1.007,14,12.35,INT MH,Adult Acute Mental Health Inpatient Unit (32 beds),"Entry, Reception and Waiting"
+CS.MHU.1.008,20,16.49,MEET 20,Adult Acute Mental Health Inpatient Unit (32 beds),"Entry, Reception and Waiting"
+CS.MHU.1.009,30,30.11,TRIBUNAL,Adult Acute Mental Health Inpatient Unit (32 beds),"Entry, Reception and Waiting"
+CS.MHU.1.013,0,3.14,WC PUB,Adult Acute Mental Health Inpatient Unit (32 beds),"Entry, Reception and Waiting"
+CS.MHU.2.001,15,17.28,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.002,15,16.97,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.003,15,17.28,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.004,15,16.97,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.005,15,17.28,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.006,15,17.01,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.007,15,17.4,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.008,15,18.47,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.009,15,17.4,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.010,15,16.97,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.011,15,16.93,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.012,15,17.24,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.013,15,16.93,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.014,15,17.24,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.015,15,16.93,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)
+CS.MHU.2.016,15,17.24,1 BED MH A,Adult Acute Mental Health Inpatient Unit (32 beds),General Care Area (21 beds)

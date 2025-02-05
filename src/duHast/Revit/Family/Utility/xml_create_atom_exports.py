@@ -438,11 +438,13 @@ def create_family_xml_files(
                 # iterate through families
                 for family in families_to_update:
 
+                    # get the family name
+                    fam_name = get_file_name_without_ext(family)
+
                     # update progress
                     if progress_callback:
-                        progress_callback.update(fam_counter, max_fam)
+                        progress_callback.update(fam_counter, max_fam, fam_name)
 
-                    fam_name = get_file_name_without_ext(family)
                     create_xml_file(revit_application, family)
                     return_value.append_message(
                         "Created xml file for family: {}".format(fam_name)

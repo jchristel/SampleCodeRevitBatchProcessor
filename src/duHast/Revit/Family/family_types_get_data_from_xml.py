@@ -163,9 +163,11 @@ def get_family_type_data_from_library(xml_files_in_libraries, progress_callback=
         # get the type data from the library
         for xml_file in xml_files_in_libraries:
 
+            # get a file name without extension to report progress
+            file_name_progress = get_file_name_without_ext(xml_file.name)
             # update progress
             if progress_callback:
-                progress_callback.update(counter, max_value_xml)
+                progress_callback.update(counter, max_value_xml, file_name_progress)
 
             # read xml file
             xml_doc_status = read_xml_file(xml_file.name)

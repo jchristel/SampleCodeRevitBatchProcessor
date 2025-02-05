@@ -44,15 +44,18 @@ from duHast.Utilities.files_csv import read_csv_file
 from duHast.Utilities.files_io import get_file_name_without_ext
 
 
-def _build_report_dict(report):
+def _build_report_dict(reports):
     # build a dictionary of the report
     report_dic = {}
-    for row in report:
-        family_name = row[0]
-        type_name = row[1]
-        parameter_name = row[2]
-        value = row[3]
-        report_dic[(family_name, type_name, parameter_name)] = value
+    for report in reports:
+        for report_name, report_content in report.items():
+            for row in report_content [1:]:
+                family_name = row[1]
+                family_category = row[2]
+                type_name = row[3]
+                parameter_name = row[6]
+                value = row[10]
+                report_dic[(family_name, family_category, type_name, parameter_name)] = value
     
     return report_dic
 
@@ -73,8 +76,7 @@ def outer_join_report_a_vs_b(report_a, report_b):
     # Perform the outer join
     outer_join = {}
     for key in all_keys:
-        outer_join[key] = (report_a_dict.get(key), report_a_dict.get(key))
-    
+        outer_join[key] = [report_a_dict.get(key), report_a_dict.get(key)]
     
     return outer_join
 
@@ -103,11 +105,11 @@ def compare_outer_join_result_with_report(report, outer_join_result):
     for key in all_keys:
         if key in report_dict:
             if key in outer_join_result:
-                outer_join_result[key] = outer_join_result[key] + (report_dict[key],)
+                outer_join_result[key] = outer_join_result[key] + [report_dict[key],]
             else:
-                outer_join_result[key] = (n_a_value * padding_length) + (report_dict[key],)
+                outer_join_result[key] = [n_a_value for _ in range(padding_length)] + [report_dict[key],]
         else:
-            outer_join_result[key] = outer_join_result[key] + (n_a_value,)
+            outer_join_result[key] = outer_join_result[key] + [n_a_value,]
     
     return outer_join_result
    
@@ -152,14 +154,18 @@ def compare_family_reports_outer_join(file_paths):
         if not read_report_result.status:
             return read_report_result
         reports.append(read_report_result.result)
-        
+    
+    #l og updates
+    return_value.append_message("read {} reports.".format(len(reports)))
+    
     # compare reports
     # do the initial report comparison
     outer_join_results = outer_join_report_a_vs_b(report_a= reports[0], report_b= reports[1])
 
     # get out if there are only 2 reports to compare
     if len(reports) == 2:
-        return outer_join_results
+        return_value.result = outer_join_results
+        return return_value
     
     # compare the outer join results with the remaining reports
     for report in reports[2:]:

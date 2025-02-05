@@ -1,4 +1,5 @@
 import os
+import random
 import settings
 
 
@@ -157,12 +158,20 @@ def reloaded_families_entry(doc, output, forms, families = None):
     print("Finished.")
     return return_value
 
+def generate_random_family(index, existing_ids):
+    while True:
+        family_id = FamilyID(random.randint(1, 9999))
+        if family_id.id not in existing_ids:
+            existing_ids.add(family_id.id)
+            break
+    family_name = "family_{}".format(index)
+    family_category = random.choice(["Casework", "Furniture", "Doors", "Windows"])
+    is_shared = random.choice([True, False])
+    match_status = random.choice(["None", "OK", "Mismatch"])
+    return RevitFamily(id=family_id, family_name=family_name, family_category=family_category, is_shared=is_shared, match_status=match_status)
+
 
 if __name__ == "__main__":
-    dummy_families = [
-        RevitFamily(id=FamilyID(1231), family_name="abc_1", family_category="Casework",is_shared=False,match_status="None"),
-        RevitFamily(id=FamilyID(1234), family_name="test_1", family_category="Furniture",is_shared=False,match_status="None"),
-        RevitFamily(id=FamilyID(5678), family_name="test_2", family_category="Casework",is_shared=True,match_status="OK"),
-        RevitFamily(id=FamilyID(5679), family_name="test_3", family_category="Casework",is_shared=True,match_status="OK")
-    ]
+    existing_ids = set()
+    dummy_families = [generate_random_family(i, existing_ids) for i in range(2000)]
     test_result = reloaded_families_entry(doc=None, output=None, forms=None, families = dummy_families)

@@ -341,7 +341,7 @@
                                     MinWidth="400" 
                                     Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}"
                                     MinHeight="200"
-                                    Height="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}"
+                                    Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}"
                                     >
                                     <ListView.View>
                                         <GridView>

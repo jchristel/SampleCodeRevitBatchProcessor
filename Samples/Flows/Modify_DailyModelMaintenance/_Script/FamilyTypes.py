@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Module executed as the task script in Revit batch processor.
@@ -7,8 +9,6 @@ Module executed as the task script in Revit batch processor.
 
 """
 
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 #
 # License:
 #
@@ -35,18 +35,15 @@ Module executed as the task script in Revit batch processor.
 # import common library
 import settings as settings  # sets up all commonly used variables and path locations!
 from duHast.Utilities.console_out import output
-from duHast.UI.file_list import  get_revit_files
+from duHast.Utilities.Objects.result import Result
 from duHast.Revit.RBP.Objects.ProgressRBPConsole import ProgressRBPConsole
-from duHast.Revit.Family.family_types_get_data_from_xml import write_data_to_xml_file
-from duHast.Utilities.files_io import get_file_name_without_ext
+from duHast.Revit.Family.Utility.xml_create_atom_exports import create_family_xml_files
+
 
 # debug mode revit project file name
 DEBUG_REVIT_FILE_NAME = r"C:\Users\jchristel\Documents\Temp\Debug.rvt"
 
 import clr
-import System
-import os
-import datetime
 
 # flag whether this runs in debug or not
 debug_ = False
@@ -65,122 +62,7 @@ else:
     # get default revit file name
     revitFilePath_ = DEBUG_REVIT_FILE_NAME
 
-# process all files in a given directory
-# processes all files in a given directory
-# works with one revit session only (might be slow for large directories with many files at initial run)
-# get family files in directory
-# get XML files in directory
-# checks if XML type file exists:
-# if not, creates XML type file
-# if it does: check if XML file is older than family file
-# if it is, update XML file
-# if not, skip
 
-def get_families_from_directory(directory):
-    """
-    Get all family files from a directory. (ignores subdirectories)
-    
-    :param directory: directory to search for family files
-    :type directory: str
-
-    :return: list of family files
-    :rtype: [FileItem]
-    """
-
-    family_files = get_revit_files(directory, "*.rfa")
-    return family_files
-
-def get_xml_files_from_directory(directory):
-    """
-    Get all xml files from a directory. (ignores subdirectories)
-
-    :param directory: directory to search for xml files
-    :type directory: str
-
-    :return: list of xml files
-    :rtype: [FileItem]
-    """
-
-    xml_files = get_revit_files(directory, "*.xml")
-    return xml_files
-
-def check_file_item_exists(instances, name_to_check):
-    """
-    Check if a file item exists in a list of file items based on the name property.
-
-    :param instances: list of file items
-    :type instances: [FileItem]
-    :param name_to_check: name to check
-    :type name_to_check: str
-
-    :return: True if a file item with the name exists, False otherwise
-    :rtype: bool
-    """
-
-    return any(instance.name == name_to_check for instance in instances)
-
-def get_families_requiring_update(family_files, xml_files):
-
-    """
-    Get all family files that require updating. A family file requires updating if the corresponding xml file does not exist or is older than the family file.
-
-    :param family_files: list of family files
-    :type family_files: [FileItem]
-    :param xml_files: list of xml files
-    :type xml_files: [FileItem]
-
-    :return: list of family files that require updating
-    :rtype: [str]
-    """
-
-    family_files_to_update = []
-    # loop over family files
-    for fam_file in family_files:
-
-        # and find a matching xml file
-        xml_file = os.path.splitext(fam_file.name)[0] + ".xml"
-       
-        # check if the xml file does exist
-        if check_file_item_exists(xml_files,xml_file):
-            
-            # get time stamp of files
-            xml_file_time_stamp = os.path.getmtime(xml_file)
-            rfa_file_time_stamp = os.path.getmtime(fam_file.name)
-            
-            # convert to something human readable
-            xml_formatted_time = datetime.datetime.fromtimestamp(xml_file_time_stamp)
-            rfa_formatted_time = datetime.datetime.fromtimestamp(rfa_file_time_stamp)
-            
-            # if the xml file is older than the family file
-            if xml_file_time_stamp < rfa_file_time_stamp:
-                
-                output("...xml file is older than family file, needs updating. [xml: {} vs rfa: {}]".format(xml_formatted_time, rfa_formatted_time), revit_script_util.Output)
-                # family xml file is older than family file, needs updating
-                family_files_to_update.append(fam_file.name)
-            else:
-                # family xml file is up to date
-                pass
-                
-        else:
-            # no matching xml file found
-            family_files_to_update.append(fam_file.name)
-
-    return family_files_to_update
-
-def create_xml_file(revit_application, family_file):
-    """
-    Create an xml file for a given family file.
-
-    :param revit_application: revit application object
-    :type revit_application: Application
-    :param family_file: family file to create xml file for
-    :type family_file: str
-    """
-
-    xml_file = os.path.splitext(family_file)[0] + ".xml"
-    result = write_data_to_xml_file(revit_application, family_file, xml_file)
-    print(result)
-    
 
 # directories to process
 PROCESS_DIRECTORIES = [
@@ -189,36 +71,53 @@ PROCESS_DIRECTORIES = [
     settings.PATH_TO_UNIONS_LIBRARY,
 ]
 
-output("Processing directories: \n{}".format("\n".join(PROCESS_DIRECTORIES)), revit_script_util.Output)
 
-# loop through directories
-for directory in PROCESS_DIRECTORIES:
-    output("Processing directory: {}".format(directory), revit_script_util.Output)
+def create_part_atom_exports_in_library_entry(doc , process_directories):
+    """
+    Entry point for creating family types XML exports from families in library directory.
+
+    :param doc: Revit document
+    :param type: Document
+    :param process_directories: directories to process
+    :type process_directories: [str]
+
+    :return: Result object
+    :rtype: Result
+    """
     
-    families = get_families_from_directory(directory=directory)
-    output("Families found: {}".format(len(families)), revit_script_util.Output)
+    # set up a status tracker
+    return_value = Result()
+
+    try:
+
+        output("Processing directories:", revit_script_util.Output)
+        for directory in process_directories:
+            output("...{}".format(directory), revit_script_util.Output)
+
+        # set up a call back for pyRevit progressbar
+        progress_callback = ProgressRBPConsole(revit_script_util.Output)
+
+        output("Creating family xml exports in library:", revit_script_util.Output)
+
+        # create the xml files
+        create_result = create_family_xml_files(
+            revit_application=doc.Application,
+            process_directories=process_directories,
+            progress_callback=progress_callback
+        )
+
+        return_value.update(create_result)
+
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to create families exports exception: {}".format(e)
+        )
+
+    output("{}".format(return_value.message), revit_script_util.Output)
     
-    xml_files = get_xml_files_from_directory(directory=directory)
-    output("XML files found: {}".format(len(xml_files)), revit_script_util.Output)
+    return return_value
 
-    families_to_update = get_families_requiring_update(families, xml_files)
-    output("Families requiring update: {}".format(len(families_to_update)), revit_script_util.Output)
 
-    # if there are families to update
-    if families_to_update:
-        
-        # set up progress 
-        fam_counter = 0
-        max_fam = len(families_to_update)
-        # create progress , and pipe messages to Revit BatchProcessor console
-        progress = ProgressRBPConsole(revit_script_util.Output)
-        progress.update(0,max_fam,"Creating XML file(s) for families:")
-        
-        # iterate through families
-        for family in families_to_update:
-            fam_name = get_file_name_without_ext(family)
-            progress.update(fam_counter, max_fam, "Creating XML file for: {}".format(fam_name))
-            create_xml_file(doc.Application, family)
-            # update counter
-            fam_counter += 1
 
+# run the script to create family types XML exports from families in library directory
+create_part_atom_exports_in_library_entry(doc, PROCESS_DIRECTORIES)

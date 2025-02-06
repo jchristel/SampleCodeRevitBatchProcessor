@@ -81,6 +81,7 @@ class Settings(Base):
 
     @rooms_data_file_path.setter
     def rooms_data_file_path(self, value):
+        print("rooms_data_file_path setter: {}".format(value))
         if not (isinstance(value, str)):
             raise ValueError(
                 "Value must be of type str, got {} instead.".format(type(value))

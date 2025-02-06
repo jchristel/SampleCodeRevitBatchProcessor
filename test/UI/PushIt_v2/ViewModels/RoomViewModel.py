@@ -61,3 +61,14 @@ class RoomViewModel(ViewModelBase):
             return self._room.sub_department.value
         except Exception as e:
             return "{error}".format(error=e)
+    
+    @property
+    def PlacedRoomCount(self):
+        try:
+            matching_fams = self._room.get_revit_matches()
+            if matching_fams:
+                return len(matching_fams)
+            else:
+                return 0
+        except Exception as e:
+            return "{error}".format(error=e)

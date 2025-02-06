@@ -30,8 +30,16 @@ For further documentation please refer to the README.rst file in the _docs direc
 
 
 import os
-import settings
 
+import sys
+
+# duHast dev
+DU_HAST_DEV = r"C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\src"
+sys.path.insert(0, DU_HAST_DEV)
+sys.path.append(r"C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\test\UI")
+
+
+from PushIt_v2 import settings
 from duHast.Utilities.Objects.result import Result
 from duHast.UI.Objects.WPF.ViewModels.MainViewModel import MainViewModel
 from duHast.UI.Objects.WPF.Stores.NavigationStore import NavigationStore
@@ -104,7 +112,7 @@ def pushIt_entry(doc, uiapp, output, forms, rooms=None):
     :rtype: :class:`.Result`
     """
 
-    print_header("Starting UI...")
+    #print_header("Starting UI...")
     
     try:
         # load the settings
@@ -139,7 +147,8 @@ def pushIt_entry(doc, uiapp, output, forms, rooms=None):
         # show the window to the user
         my_window.Show()
     except Exception as e:
-        print_header("An exception occurred in the PushIt UI: {}".format(e))
+        #print_header("An exception occurred in the PushIt UI: {}".format(e))
+        print(e)
 
 # if __name__ == "__main__":
 #     # dummy_rooms = load_rooms (file_path=os.path.join(settings.SCRIPT_DIRECTORY,  r"Samples\Data_Min.csv"))
@@ -152,4 +161,4 @@ def pushIt_entry(doc, uiapp, output, forms, rooms=None):
 #     else:
 #         print (dummy_rooms_result.message)
 
-test_result = pushIt_entry(doc=None, output=None, forms=None, rooms=None)
+test_result = pushIt_entry(doc=doc,  uiapp = None, output=None, forms=None, rooms=None)

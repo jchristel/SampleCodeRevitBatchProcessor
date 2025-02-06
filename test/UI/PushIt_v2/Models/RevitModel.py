@@ -31,6 +31,7 @@ from PushIt_v2.Models.Room import Room
 from PushIt_v2.Models.RoomsContainer import RoomsContainer
 from PushIt_v2.Objects.Settings import Settings
 from PushIt_v2.Utilities import event_names
+from PushIt_v2.Utilities.rooms_load import load_rooms_from_file
 
 from Autodesk.Revit.DB import Element
 
@@ -290,6 +291,39 @@ class RevitModel(ViewModelBase, Base):
 
         except Exception as e:
             print("Error in check_data_path_updates: {}".format(e))
+    
+    def load_room_data(self):
+
+        try:
+            #check if the file exists
+            if file_exist(self._settings.rooms_data_file_path) is False:
+                print("Room data file path does not exist, skipping room data loading.{}".format(self._settings.rooms_data_file_path))
+                return
+            else:
+                print("Room data file path exists: {}".format(self._settings.rooms_data_file_path))
+
+            print("Number of rooms before clearing: {}".format(len(self.get_all_rooms())))
+            # clear room data
+            self.clear_rooms()
+
+            # load rooms from file
+            rooms_result = load_rooms_from_file(
+                self._settings.rooms_data_file_path
+            )
+
+            if rooms_result.status is False:
+                raise ValueError(
+                    "Failed to load rooms from file: {}".format(rooms_result.message)
+                )
+            else:
+                print("Rooms loaded from file: {}".format(len(rooms_result.result)))
+            
+            # add the rooms to the model
+            for room in rooms_result.result:
+                self.add_room(room)
+        except Exception as e:
+            print("Error in load_room_data: {}".format(e))
+        
 
     def get_all_rooms(self):
         """

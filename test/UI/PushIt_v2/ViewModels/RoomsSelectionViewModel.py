@@ -221,9 +221,14 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
 
         # subscribe to the rooms changed event
         self._revit_model.add_PropertyChanged(self.update_room_data)
+
+        # raise event to populate room data in the view
+        print("Raise event to populate room data in the view in view model ini")
+        self._revit_model.RaisePropertyChanged(event_names.REVIT_MODEL_ROOMS_UPDATED)
         
         # raise event to populate room data in the view
-        self._revit_model_event_handler_manager.setup_data()
+        #print("Raise event to populate room data in the view in view model ini")
+        #self._revit_model_event_handler_manager.setup_data()
 
     @property
     def DataView(self):
@@ -587,16 +592,16 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
         :param property_changed_args: The property changed event arguments.
         :type property_changed_args: PropertyChangedEventArgs
         """
-        
+    
         try:
             # check if the rooms in the model have been updated and therefore the UI needs to be updated
             if property_changed_args.PropertyName != event_names.REVIT_MODEL_ROOMS_UPDATED:
                 print("Rooms not updated...{}".format(property_changed_args.PropertyName))
                 return
 
-            print("in update_room_data...event name: {}".format(property_changed_args.PropertyName))
             print("Updating room data...")
 
+           
             # clear the collection
             self._rooms.Clear()
             
@@ -605,6 +610,7 @@ class RoomsSelectionViewModel(ViewModelBase, INotifyDataErrorInfo):
             # this is required to be able to sort, group and filter the collection view without affecting the observable collection
             self._rooms_view = CollectionViewSource.GetDefaultView(self._rooms)
             
+            print("found {} rooms in data model".format(len(self._revit_model.get_all_rooms())))
             # add the categories to the collection
             for room_in_data_model in self._revit_model.get_all_rooms():
                 

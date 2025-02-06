@@ -118,7 +118,7 @@ class RevitEventHandlerManager(Base):
         """
         Dispose the external event handlers
         """
-
+        print("Disposing the external event handlers..")
         # dispose the external event
         self.ext_event_push_single_room.Dispose()
         self.ext_event_push_single_room = None
@@ -140,6 +140,8 @@ class RevitEventHandlerManager(Base):
         self.ex_event_handler_wipe_stale_data = None
         self.ex_event_handler_setup_data = None
         self.ex_event_handler_highlight_elements_in_revit = None
+
+
 
     def push_single_room_data(self, *args, **kwargs):
         """
@@ -222,9 +224,15 @@ class RevitEventHandlerManager(Base):
         """
         Pull data from Revit to the WPF UI (refresh the rooms list)
         """
-
-        # print("raising external event to pull data from Revit to the WPF UI..")
-        self.ext_event_pull_data_from_revit.Raise()
+        try:
+            print("raising external event to pull data from Revit to the WPF UI..")
+            
+            # print("raising external event to pull data from Revit to the WPF UI..")
+            self.ext_event_pull_data_from_revit.Raise()
+            print("raised external event)")
+        except Exception as e:
+            print("Error while pulling data from Revit to the WPF UI: {}".format(e))
+            return
 
     def pull_data_from_revit_action(self, uiapp):
         """
@@ -276,6 +284,9 @@ class RevitEventHandlerManager(Base):
         # print("Raising set up data event...")
         self.ext_event_setup_data.Raise()
 
+        # print("raising property changed event to update the UI..")
+        self._revit_model.RaisePropertyChanged(event_names.REVIT_MODEL_ROOMS_UPDATED)
+
     def setup_data_action(self, uiapp):
         """
         Set up the data for ui:
@@ -293,6 +304,9 @@ class RevitEventHandlerManager(Base):
             action = InitialiseRoomData(revit_model=self._revit_model)
             # execute the action
             action.execute(doc=doc)
+
+            # print("raising property changed event to update the UI..")
+            
         except Exception as e:
             print("Error while loading and setting up data for ui: {}".format(e))
             return

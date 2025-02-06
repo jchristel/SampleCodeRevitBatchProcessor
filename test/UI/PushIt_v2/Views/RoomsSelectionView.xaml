@@ -267,6 +267,14 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
+                    <GridViewColumn>
+                        <GridViewColumnHeader Content="Count" />
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock HorizontalAlignment="Center" Padding="0 0 20 0" Text="{Binding PlacedRoomCount}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -277,10 +285,14 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" 
+            <Button Grid.Column="0"
+                Command="{Binding RefreshRoomDataFromModelCommand}" 
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                 Margin="0 5 5 5" 
                 Content="Refresh rooms from model"/>
-            <Button Grid.Column="1" 
+            <Button Grid.Column="1"
+                Command="{Binding HighlightSelectedRoomCommand}" 
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                 Margin="0 5 5 5" 
                 Content="Highlight rooms in model"/>
             <TextBlock Grid.Column="2" Margin="5 5 0 5" Text="Stuff"/>
@@ -301,12 +313,16 @@
                         </Grid.ColumnDefinitions>
                         <Button 
                             Grid.Row="0" 
-                            Grid.Column="0" 
+                            Grid.Column="0"
+                            Command="{Binding UpdateRoomsInRevitFromRoomDataCommand}" 
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                             Margin="0 10 5 10" 
                             Content="Update rooms in model"/>
                         <Button 
                             Grid.Row="0"
-                            Grid.Column="1" 
+                            Grid.Column="1"
+                            Command="{Binding WipeStaleRoomDataCommand}" 
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                             Margin="5 10 0 10" 
                             Content="Wipe stale data from rooms in model"/>
                     </Grid>

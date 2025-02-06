@@ -124,12 +124,10 @@ def pushIt_entry(doc, uiapp, output, forms, rooms=None):
         # the main view model ( container for all other view models)
         #main_view_model = MainViewModel(navigation_store=NAVIGATION_STORE)
         main_view_model = MainViewModel(navigation_store=NAVIGATION_STORE)
-        
+        path=r"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\test\UI\PushIt_v3\Views\RoomsSelectionView.xaml"
         # set up a window instance
         my_window = PushIt(
-            xaml_path=os.path.join(
-                settings.DU_HAST_DIRECTORY, r"UI\Objects\WPF\Views\MainWindow_py.xaml"
-            ),
+            xaml_path=path,
             main_view_model=main_view_model,
             xaml_by_view_model=None,
             resources_xaml_path=None,

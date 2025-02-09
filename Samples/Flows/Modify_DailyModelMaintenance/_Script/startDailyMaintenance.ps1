@@ -8,12 +8,18 @@ Param (
 Write-ToLogAndConsole -Message "Argument 1: $UI"
 
 Write-ToLogAndConsole -Message "SETTINGS" -IsHeader $True
+
 # Define the paths to your batch processor settings as a list
 $settings_step_one = @(
-    "BatchRvt.2022.DailyModelMaintenanceOneA.Settings.json", 
-    "BatchRvt.2022.DailyModelMaintenanceOneB.Settings.json",
-    "BatchRvt.2022.DailyModelMaintenanceOneC.Settings.json"
-) 
+    "BatchRvt.2024.DailyModelMaintenanceOneA.Settings.json"
+)
+
+# Define the paths to your batch processor settings as a list
+$settings_step_two = @(
+    "BatchRvt.2024.DailyModelMaintenanceTwoA.Settings.json", 
+    "BatchRvt.2024.DailyModelMaintenanceTwoB.Settings.json",
+    "BatchRvt.2024.DailyModelMaintenanceTwoC.Settings.json"
+)
 
 $user_name = $env:USERNAME.ToLower()
 #Write-ToLogAndConsole ( "The current user is: $user_name" , $log_file_path)
@@ -85,6 +91,16 @@ if($UI.ToLower() -eq "no") {
 }
 # check whether any files got selected before proceeding
 if ($exitCode -eq 0) {
+
+    # start batch processor
+    Write-ToLogAndConsole -Message "Updating family data" -IsHeader $True
+
+    # start batch processor sessions with settings to update family data
+    start-batchProcessor -settings_directory $settings_directory -settings_file_names $settings_step_one
+
+    # there is no separate post processing script for this step
+    Write-ToLogAndConsole -Message "*" -IsHeader $True
+    
     # start batch processor
     Write-ToLogAndConsole -Message "starting model maintenance" -IsHeader $True
     

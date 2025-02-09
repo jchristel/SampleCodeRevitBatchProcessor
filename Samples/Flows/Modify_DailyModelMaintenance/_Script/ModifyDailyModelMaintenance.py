@@ -139,6 +139,7 @@ ACTIONS = [
     reload_families,
     check_ffe_tags_locations, # needs to run after families are reloaded to restore tag location after reload
     mark_views_for_deletion,
+    rep.report_families_in_project_vs_library, # needs to happen after reload to get latest data from the project
 ]
 
 # save revit file to new location

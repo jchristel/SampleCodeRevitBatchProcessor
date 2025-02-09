@@ -53,11 +53,10 @@ from duHast.Utilities.files_io import (
     get_file_name_without_ext,
 )
 
-from duHast.Utilities.files_csv import combine_csv_files_header_independent, append_csv_file, combine_csv_files
+from duHast.Utilities.files_csv import combine_csv_files_header_independent, append_csv_file, combine_csv_files,  write_report_data_as_csv
 from duHast.Utilities.files_json import combine_files_json
 
 from duHast.Utilities.files_get import get_files_with_filter, get_files_single_directory
-from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.date_stamps import FILE_DATE_STAMP_YYYY_MM_DD
 from duHast.Revit.ModelHealth.Reporting import report_file_names as rFns
 from utils.view_templates import (
@@ -411,6 +410,11 @@ FILE_DATA_TO_COMBINE = [
         settings.COMBINED_REPORT_NAME_WARNING_TYPES,
         append_files_wrapper,
     ],
+     [
+        settings.REPORT_EXTENSION_FAM_LIB_VS_PROJECT,
+        settings.COMBINED_REPORT_NAME_FAM_LIB_VS_PROJECT,
+        combine_files_wrapper,
+    ]
 ]
 
 # exit code for this script

@@ -113,6 +113,7 @@ REPORT_EXTENSION_CAD_LINKS = "_CAD_Links"
 REPORT_EXTENSION_REVIT_LINKS = "_Revit_Links"
 REPORT_EXTENSION_VIEW_TEMPLATE_OVERRIDES = "_VT_Overrides"
 REPORT_EXTENSION_WARNING_TYPES = "_Warning_Types"
+REPORT_EXTENSION_FAM_LIB_VS_PROJECT= "_Project_Fam_Compare"
 
 # combined report file names
 COMBINED_REPORT_NAME_LEVELS = "ProjectsLevels.csv"
@@ -131,6 +132,7 @@ COMBINED_REPORT_NAME_REVIT_LINKS = "Revit_Links.csv"
 COMBINED_REPORT_NAME_VIEW_TEMPLATE_OVERRIDES = "VT_Overrides.json"
 COMBINED_REPORT_NAME_VIEW_TEMPLATE_FILTER_OVERRIDES = "VT_Filter_Overrides.json"
 COMBINED_REPORT_NAME_WARNING_TYPES = "WarningTypes.csv"
+COMBINED_REPORT_NAME_FAM_LIB_VS_PROJECT = "All_Projects_Fam_Compare.csv"
 
 # list containing default worksets for levels grids, scope boxes per project file
 DEFAULT_WORKSETS = [["Revit", ["Shared Levels and Grids"]]]
@@ -207,3 +209,12 @@ VIEW_TEMPLATE_HASH_FILE_PREFIX = "VT"
 
 # json formatted view template hash files end on:
 VIEW_TEMPLATE_HASH_FILE_SUFFIX = "Overrides"
+
+# ignore file used in family comparison
+COMPARISON_IGNORE_FILE_PATH = os.path.join(SCRIPT_DIRECTORY,"type_ignore_file.csv")
+
+# list of files of which to check families in project file vs library
+FAM_COMPARISON_FILE_LIST = [
+    "File Name One",
+    "File Name Two",
+]

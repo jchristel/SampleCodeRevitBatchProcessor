@@ -60,6 +60,9 @@ from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Utilities.files_csv import write_report_data_as_csv
 
 from duHast.Revit.Family.Reporting.report import report_loaded_families
+from duHast.Revit.Family.Reporting.report_fam_types_differences_from_XML import compare_family_files_in_project_against_library
+from duHast.Revit.Family.Reporting.families_report_header import LIBRARY_VS_PROJECT_FAMILIES_COMPARISON_HEADER
+
 
 from duHast.Revit.Views.Reporting.sheets_report import (
     write_sheet_data,
@@ -952,5 +955,88 @@ def report_warning_types(doc, revit_file_path, output):
     except Exception as e:
         return_value.update_sep(
             False, "Failed to write warning type data with exception: {}".format(e)
+        )
+    return return_value
+
+def report_families_in_project_vs_library (doc, revit_file_path, output):
+    """
+    Reports all families in the project against the library
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revit_file_path: The current model document file path
+    :type revit_file_path: str
+    :param output: A function piping messages to designated target.
+    :type output: func(message)
+
+    return:
+        Result class instance.
+
+        - result.status False if an exception occurred, otherwise True.
+        - result.message will contain processing messages.
+        - result.result empty list
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+        - result.result will be an empty list
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+    output("Reporting family differences between project and library...start")
+
+    revit_file_name = get_file_name_without_ext(revit_file_path)
+    # check if document requires loaded families to be compared
+    export_fam_comp_data = False
+    for name in settings.FAM_COMPARISON_FILE_LIST:
+        if revit_file_name in name:
+            export_fam_comp_data = True
+            break
+
+    # if no comp required get out
+    if not export_fam_comp_data:
+        return_value.update_sep(
+            True,
+            "Document: {} is not marked for family comparison reporting".format(
+                revit_file_name
+            ),
+        )
+        return return_value
+    
+    file_name = os.path.join(
+        settings.OUTPUT_FOLDER,
+        get_file_name_without_ext(revit_file_path)
+        + settings.REPORT_EXTENSION_FAM_LIB_VS_PROJECT
+        + settings.REPORT_FILE_NAME_EXTENSION,
+    )
+
+    # set up a progress call back
+    progress_callback = ProgressRBPConsole(revit_script_util.Output)
+
+    try:
+        compare_result = compare_family_files_in_project_against_library( 
+                doc=doc, 
+                process_directories=[settings.PATH_TO_CLINICAL_LIBRARY, settings.PATH_TO_BESPOKE_JOINERY_LIBRARY, settings.PATH_TO_UNIONS_LIBRARY],
+                ignore_list_path=settings.COMPARISON_IGNORE_FILE_PATH, 
+                progress_callback=progress_callback
+            )
+        
+        return_value.update(compare_result)
+
+        write_result = write_report_data_as_csv(
+                    file_name=file_name, 
+                    header= LIBRARY_VS_PROJECT_FAMILIES_COMPARISON_HEADER,  
+                    data=compare_result.result, 
+                    quoting=QUOTE_MINIMAL
+                )
+        
+        return_value.update(write_result)
+    
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to write family comparison data with exception: {}".format(e)
         )
     return return_value

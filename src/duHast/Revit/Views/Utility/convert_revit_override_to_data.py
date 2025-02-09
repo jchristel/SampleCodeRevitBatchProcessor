@@ -448,7 +448,19 @@ def get_views_graphic_settings_data(doc, views, progress_callback=None):
             )
         )
     
+    if (isinstance(views, list) == False):
+        raise TypeError("views must be a list of Autodesk.Revit.DB.View instances.")
+
+    # set up list to store view settings
     views_settings = []
+
+    # check if there are any views to process
+    if len(views) == 0:
+        return views_settings
+    
+    # sort views by name
+    views = sorted(views, key=lambda x: Element.Name.GetValue)
+
     # progress call back
     callback_counter = 1
 

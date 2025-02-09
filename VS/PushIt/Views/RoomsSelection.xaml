@@ -146,7 +146,9 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
                 Margin="0 5 5 5" 
-                Content="Refresh rooms from model"/>
+                Content="Refresh rooms from model"
+                Command="{Binding RefreshGUICommand}" 
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
             <Button Grid.Column="1"
                 Margin="0 5 5 5" 
                 Content="Highlight rooms in model"/>

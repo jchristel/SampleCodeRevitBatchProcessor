@@ -161,7 +161,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stores\MessageStore.cs" />
     <Compile Include="Stores\NavigationStore.cs" />
+    <Compile Include="Utilities\ICloseable.cs" />
     <Compile Include="Utilities\ReadRoomsData.cs" />
+    <Compile Include="Utilities\RevitExternalEventHandlerManager.cs" />
+    <Compile Include="Utilities\Revit\CustomExternalEvent.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\RoomsSelectionViewModel.cs" />
     <Compile Include="ViewModels\RoomViewModel.cs" />

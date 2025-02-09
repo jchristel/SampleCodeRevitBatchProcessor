@@ -10,6 +10,7 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.DB.Architecture;
 using PushIt.Views;
+using PushIt.Utilities;
 
 
 namespace PushIt
@@ -21,6 +22,7 @@ namespace PushIt
         Models.RevitDataModel _revitDataModel = new Models.RevitDataModel();
         Stores.NavigationStore _navigationStore = new Stores.NavigationStore();
         Stores.MessageStore _messageStore = new Stores.MessageStore();
+        RevitExternalEventHandlerManager _eventManager = new RevitExternalEventHandlerManager();
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -58,11 +60,16 @@ namespace PushIt
             //set up the navigation store
             _navigationStore.CurrentViewModel = CreateRoomsSelectionViewModel();
 
+            //set up the external event manager
+            _eventManager.RevitDataModel = _revitDataModel;
+
+
             //show the main window
             MainWindow mainWindow = new MainWindow()
             {
-                DataContext = new ViewModels.MainViewModel(_navigationStore)
+                DataContext = new ViewModels.MainViewModel(_navigationStore, _eventManager)
             };
+
             mainWindow.Show();
 
             return Result.Succeeded;
@@ -72,7 +79,7 @@ namespace PushIt
         private ViewModels.RoomsSelectionViewModel CreateRoomsSelectionViewModel()
         {
             return new ViewModels.RoomsSelectionViewModel(
-                _revitDataModel, _navigationStore, _messageStore);
+                _revitDataModel, _navigationStore, _messageStore, _eventManager);
         }
 
         public List<Models.RoomsDataModel> GetRooms(string dataPath)

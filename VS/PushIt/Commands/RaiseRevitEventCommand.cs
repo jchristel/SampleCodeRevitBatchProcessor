@@ -14,15 +14,20 @@ namespace PushIt.Commands
         //private readonly Services.NavigationService _reservationViewNavigationService;
 
         private readonly Stores.MessageStore _messageStore;
+        private readonly Action _action;
+
+
         public RaiseRevitEventCommand(
             ViewModels.RoomsSelectionViewModel roomsSelectionViewModel, 
             Models.RevitDataModel revitDataModel,
-            Stores.MessageStore messageStore)
+            Stores.MessageStore messageStore,
+            Action action
+            )
         {
             _revitDataModel = revitDataModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;
-            
             _messageStore = messageStore;
+            _action = action;
             _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
@@ -36,6 +41,7 @@ namespace PushIt.Commands
             
             try
             {
+                _action?.Invoke();
                 //_revitDataModel.MakeReservation(reservation);
 
                 //_messageStore.SetCurrentMessage("Reservation added", Stores.MessageTypes.Information);

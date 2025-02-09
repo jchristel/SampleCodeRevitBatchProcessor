@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PushIt.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,21 @@ namespace PushIt.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        
         public MainWindow()
         {
             InitializeComponent();
+            this.Closing += MainWindow_Closing;
+
         }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (DataContext is ICloseable closeable)
+            {
+                closeable.OnClosing();
+            }
+        }
+
     }
 }

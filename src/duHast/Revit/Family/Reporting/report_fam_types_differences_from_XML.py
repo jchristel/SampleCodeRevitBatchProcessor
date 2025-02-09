@@ -95,7 +95,7 @@ def get_family_type_data_from_project_file(
 
             # update progress
             if progress_callback:
-                progress_callback.update(counter, max_value_xml)
+                progress_callback.update(counter, max_value_xml,fam_name)
 
             # check this is a family
             if isinstance(revit_family, Family) is False:
@@ -134,6 +134,8 @@ def get_family_type_data_from_project_file(
             if found_match is False:
                 # no match found
                 matched_data.append(([fam_name, fam_cat], None))
+                # update progress
+                counter = counter + 1
                 continue
 
             # create temp xml files from loaded family
@@ -148,6 +150,8 @@ def get_family_type_data_from_project_file(
                     ),
                 )
                 matched_data.append((type_data_storage_manager_loaded_fam, None))
+                # update progress
+                counter = counter + 1
                 continue
 
             # get the type data of the family

@@ -459,7 +459,7 @@ def get_views_graphic_settings_data(doc, views, progress_callback=None):
         return views_settings
     
     # sort views by name
-    views = sorted(views, key=lambda x: Element.Name.GetValue)
+    views = sorted(views, key=lambda x: Element.Name.GetValue(x))
 
     # progress call back
     callback_counter = 1

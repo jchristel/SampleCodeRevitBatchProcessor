@@ -32,8 +32,8 @@ This module contains a number of helper functions relating to:
 
 #: default file stamp date format using underscores as delimiter: 21_03_01
 import datetime
-import os
-from .files_io import get_file_name_without_ext
+
+from duHast.Utilities.files_io import get_file_name_without_ext
 
 
 FILE_DATE_STAMP_YY_MM_DD = "%y_%m_%d"

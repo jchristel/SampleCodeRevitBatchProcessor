@@ -84,7 +84,10 @@ namespace PushIt
             return rooms;
         }
 
-        private void setupLogger()
+        /// <summary>
+        /// Sets up the logger using Serilog to log messages to a file.
+        /// </summary>
+        public void setupLogger()
         {
             // Configure Serilog
             string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -96,6 +99,7 @@ namespace PushIt
                     rollingInterval: RollingInterval.Day,
                     retainedFileCountLimit: 4) // Keep the last 4 weeks of logs
                 .CreateLogger();
-            {
+
+        }
     }
 }

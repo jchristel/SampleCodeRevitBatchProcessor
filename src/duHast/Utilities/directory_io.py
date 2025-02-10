@@ -88,6 +88,7 @@ def directory_delete(full_directory_path):
 def get_child_directories(full_directory_path):
     """
     Returns the immediate subdirectories of directory
+    
     :param full_directory_path: Path to directory
     :type full_directory_path: str
     :return: any sub directories, empty list if none exist
@@ -100,6 +101,26 @@ def get_child_directories(full_directory_path):
             sub_folders_with_paths.append(os.path.join(root, dir))
         break
     return sub_folders_with_paths
+
+
+def get_all_nested_directories(full_directory_path):
+    # returns all nested direcory paths
+    """
+    Returns all nested directories of directory
+
+    :param full_directory_path: Path to directory
+    :type full_directory_path: str
+    :return: any sub directories, empty list if none exist
+    :rtype: list of str
+    """
+
+    nested_directories = []
+    for entry in os.listdir(full_directory_path):
+        full_path = os.path.join(full_directory_path, entry)
+        if os.path.isdir(full_path):
+            nested_directories.append(full_path)
+            nested_directories.extend(get_all_nested_directories(full_path))
+    return nested_directories
 
 
 def get_parent_directory(full_directory_path):

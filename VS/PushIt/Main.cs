@@ -11,6 +11,8 @@ using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.DB.Architecture;
 using PushIt.Views;
 using PushIt.Utilities;
+using Serilog;
+using System.IO;
 
 
 namespace PushIt
@@ -26,11 +28,15 @@ namespace PushIt
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            //set up the logger
+            setupLogger();
+
+            // Example log entry
+            Log.Information("Starting PushIt.");
+
             //Get application and document objects
             UIApplication uiapp = commandData.Application;
             Document doc = uiapp.ActiveUIDocument.Document;
-
-
 
             // get room data from file
             string dataPath = @"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\PushIt\Testdata\20250205_CSB.csv";
@@ -42,17 +48,7 @@ namespace PushIt
                 _revitDataModel.AddRoom(room);
             }
 
-            TaskDialog td = new TaskDialog("TaskDialog Demonstration by Spiderinnet");
-            td.Title = "This is 'Title'.";
-            td.TitleAutoPrefix = true;
-            td.AllowCancellation = true;
-            td.MainInstruction = "This is 'MainInstruction'.";
-            td.MainContent = "Found rooms:" + (rooms.Count).ToString();
-            td.FooterText = "This is 'FooterText'.";
-            td.ExpandedContent = "This is 'ExpandedContent'.\nLine1: blar blar...\nLine2: blar blar...\nLine3: blar blar...";
-
-            // Dialog showup stuffs
-            TaskDialogResult tdRes = td.Show();
+            Log.Information("Found rooms: {0}", rooms.Count);
 
             //RoomsSelection roomsSelection = new RoomsSelection();
             //roomsSelection.Show();
@@ -87,5 +83,19 @@ namespace PushIt
             List<Models.RoomsDataModel> rooms = Utilities.ReadRoomsData.GetRoomsData(dataPath);
             return rooms;
         }
+
+        private void setupLogger()
+        {
+            // Configure Serilog
+            string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string logDirectory = Path.Combine(localAppDataPath, "duHast");
+            Directory.CreateDirectory(logDirectory);
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File(
+                    path: Path.Combine(logDirectory, "log-pushit.txt"),
+                    rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 4) // Keep the last 4 weeks of logs
+                .CreateLogger();
+            {
     }
 }

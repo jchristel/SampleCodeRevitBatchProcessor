@@ -164,10 +164,12 @@
     <Compile Include="Commands\RaiseRevitEventCommand.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Models\RevitDataModel.cs" />
+    <Compile Include="Models\RoomDataProperty.cs" />
     <Compile Include="Models\RoomId.cs" />
     <Compile Include="Models\RoomsDataModel.cs" />
     <Compile Include="Models\RoomsRevit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RevitActions\RefreshRoomDataWithRevitData.cs" />
     <Compile Include="Stores\MessageStore.cs" />
     <Compile Include="Stores\NavigationStore.cs" />
     <Compile Include="Utilities\ICloseable.cs" />
@@ -191,7 +193,12 @@
     <None Include="PushItPlugin.addin" />
     <None Include="Testdata\20250205_CSB.csv" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\RevitUtils\RevitUtils.csproj">
+      <Project>{06b86732-e929-4467-8ce5-e98e637bf5e8}</Project>
+      <Name>RevitUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Views\MainWindow.xaml">
       <SubType>Designer</SubType>

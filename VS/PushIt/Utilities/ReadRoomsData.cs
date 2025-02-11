@@ -15,6 +15,7 @@ namespace PushIt.Utilities
     {
         public static List<Models.RoomsDataModel> GetRoomsData(string filePath, int rowsToSkip = 2)
         {
+            Console.WriteLine("Reading Rooms Data from file: " + filePath);
             // read data from comma separated file
             List<Models.RoomsDataModel> roomsData = new List<Models.RoomsDataModel>();
 
@@ -24,24 +25,42 @@ namespace PushIt.Utilities
             };
 
             using (StreamReader sr = new StreamReader(filePath))
-            using (var csv = new CsvReader(sr, config))
             {
-                csv.Context.RegisterClassMap<RoomsDataModelMap>();
+                //Read the first two lines as headers
+                var header1 = sr.ReadLine().Split(',');
+                var header2 = sr.ReadLine().Split(',');
 
-                // Read the header row
-                csv.Read();
-                csv.ReadHeader();
+                // Reset the stream position to the beginning
+                sr.BaseStream.Seek(0, SeekOrigin.Begin);
+                sr.DiscardBufferedData();
 
-                // Skip the specified number of rows
-                for (int i = 0; i < rowsToSkip; i++)
+                using (var csv = new CsvReader(sr, config))
                 {
                     csv.Read();
-                }
+                    csv.ReadHeader();
+                    // Read the first row as header not required in the moment
+                    //string id = csv.GetField(0);
 
-                var records = csv.GetRecords<Models.RoomsDataModel>().ToList();
-                foreach (var record in records)
-                {
-                    roomsData.Add(record);
+                    // Skip the specified number of rows (minus 1 since one row is already read)
+                    for (int i = 0; i < rowsToSkip - 1; i++)
+                    {
+                        csv.Read();
+                    }
+
+                    // read the rest of the file
+                    while (csv.Read())
+                    {
+                        var record = new RoomsDataModel
+                        {
+                            Id = new RoomDataProperty("Id", header2[0], "", csv.GetField(0)),
+                            AreaBriefed = new RoomDataProperty("AreaBriefed", header2[1], "", csv.GetField(1)),
+                            AreaDesigned = new RoomDataProperty("AreaDesigned", header2[2], "", csv.GetField(2)),
+                            NameShort = new RoomDataProperty("NameShort", header2[3], "", csv.GetField(3)),
+                            Department = new RoomDataProperty("Department", header2[4], "", csv.GetField(4)),
+                            SubDepartment = new RoomDataProperty("SubDepartment", header2[5], "", csv.GetField(5)),
+                        };
+                        roomsData.Add(record);
+                    }
                 }
             }
 
@@ -49,18 +68,4 @@ namespace PushIt.Utilities
             return roomsData;
         }
     }
-
-    public sealed class RoomsDataModelMap : ClassMap<Models.RoomsDataModel>
-    {
-        public RoomsDataModelMap()
-        {
-            Map(m => m.Id).Name("Id");
-            Map(m => m.AreaBriefed).Name("AreaBriefed");
-            Map(m => m.AreaDesigned).Name("AreaDesigned");
-            Map(m => m.NameShort).Name("NameShort");
-            Map(m => m.Department).Name("Department");
-            Map(m => m.SubDepartment).Name("SubDepartment");
-        }
-    }
-
 }

@@ -8,26 +8,15 @@ namespace PushIt.Models
 {
     public class RoomsDataModel
     {
-        public string Id { get; set; }
-        public double AreaBriefed { get; set; }
-        public double AreaDesigned { get; set; }
-        public string NameShort { get; set; }
-        public string Department { get; set; }
-        public string SubDepartment { get; set; }
+        public RoomDataProperty Id { get; set; }
+        public RoomDataProperty AreaBriefed { get; set; }
+        public RoomDataProperty AreaDesigned { get; set; }
+        public RoomDataProperty NameShort { get; set; }
+        public RoomDataProperty Department { get; set; }
+        public RoomDataProperty SubDepartment { get; set; }
 
         public List<RoomsRevit> MatchingRevitRooms { get; set; }
-        public RoomsDataModel(string id, double areaBriefed, double areaDesigned, string nameShort, string department, string subDepartment)
-        {
-            Id = id;
-            AreaBriefed = areaBriefed;
-            AreaDesigned = areaDesigned;
-            NameShort = nameShort;
-            Department = department;
-            SubDepartment = subDepartment;
-
-            // initialize the list of matching rooms
-            MatchingRevitRooms = new List<RoomsRevit>();
-        }
+        
 
         public RoomsDataModel()
         {

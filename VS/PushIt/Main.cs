@@ -11,6 +11,7 @@ using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.DB.Architecture;
 using PushIt.Views;
 using PushIt.Utilities;
+using PushIt.RevitActions;
 using Serilog;
 using System.IO;
 
@@ -29,10 +30,10 @@ namespace PushIt
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             //set up the logger
-            setupLogger();
+            //Utils.LoggerUtility.setupLogger();
 
             // Example log entry
-            Log.Information("Starting PushIt.");
+            //Log.Information("Starting PushIt.");
 
             //Get application and document objects
             UIApplication uiapp = commandData.Application;
@@ -48,7 +49,10 @@ namespace PushIt
                 _revitDataModel.AddRoom(room);
             }
 
-            Log.Information("Found rooms: {0}", rooms.Count);
+            //Log.Information("Found rooms: {0}", rooms.Count);
+
+            //RefreshRoomDataWithRevitData room data with placed families
+            rooms = RefreshRoomDataWithRevitData.RefreshRoomData(doc, rooms, new List<string> { "Walls" });
 
             //RoomsSelection roomsSelection = new RoomsSelection();
             //roomsSelection.Show();
@@ -84,22 +88,7 @@ namespace PushIt
             return rooms;
         }
 
-        /// <summary>
-        /// Sets up the logger using Serilog to log messages to a file.
-        /// </summary>
-        public void setupLogger()
-        {
-            // Configure Serilog
-            string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string logDirectory = Path.Combine(localAppDataPath, "duHast");
-            Directory.CreateDirectory(logDirectory);
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.File(
-                    path: Path.Combine(logDirectory, "log-pushit.txt"),
-                    rollingInterval: RollingInterval.Day,
-                    retainedFileCountLimit: 4) // Keep the last 4 weeks of logs
-                .CreateLogger();
-
-        }
+       
+        
     }
 }

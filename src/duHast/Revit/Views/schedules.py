@@ -29,7 +29,8 @@ This module contains a number of helper functions relating to Revit view schedul
 from Autodesk.Revit.DB import (
     FilteredElementCollector,
     FilteredElementCollector, 
-    ScheduleSheetInstance, 
+    ScheduleSheetInstance,
+    ViewSchedule,
     ViewType
     )
 
@@ -94,3 +95,21 @@ def get_schedule_instance_on_sheet(doc, sheet):
 
     return schedule_instances_on_sheet
 
+
+def get_schedules(doc):
+    """
+    Get all schedules in the current document excluding titleblock revision schedules.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of schedules in the current document.
+    :rtype: list[Autodesk.Revit.DB.ViewSchedule]
+    """
+    schedules_filtered = []
+    collector = FilteredElementCollector(doc).OfClass(ViewSchedule)
+    
+    for schedule in collector:
+        if not schedule.IsTitleblockRevisionSchedule:
+            schedules_filtered.append(schedule)
+    return schedules_filtered

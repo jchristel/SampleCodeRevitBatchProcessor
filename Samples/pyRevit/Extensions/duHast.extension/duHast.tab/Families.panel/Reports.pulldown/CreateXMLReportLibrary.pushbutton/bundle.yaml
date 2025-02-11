@@ -1,0 +1,22 @@
+# bundle title
+title: "Create XML Files Of Families"
+
+# bundle tooltip
+tooltip: | 
+  Creates part atom XML files of all families in the project and the library location.
+  These files contain type information, parameters, but no geometry information.
+
+
+# bundle author
+author: 
+  - Jan Christel
+
+
+# bundle highlighting ('new' or 'updated')
+# Revit UI will show a orange marker on the button and a border around the tooltip
+#highlight: new      # highlight as new
+highlight: updated  # highlight as updated
+
+
+# bundle help url
+help_url: "https://www.youtube.com/watch?v=H7b8hjHbauE&t=8s&list=PLc_1PNcpnV57FWI6G8Cd09umHpSOzvamf"

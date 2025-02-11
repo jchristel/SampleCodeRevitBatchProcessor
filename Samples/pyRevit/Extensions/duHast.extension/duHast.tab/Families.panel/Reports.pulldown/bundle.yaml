@@ -5,6 +5,10 @@ layout:
   - ReportLibrary
   - --------
   - CompareProjectvsLibrary
+  - CompareLibraryVsLibrary
+  - --------
+  - CreateXMLReportLibrary
+
 
 # bundle tooltip
 tooltip: It's all in the family.

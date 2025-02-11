@@ -21,7 +21,6 @@
 #
 
 import csv
-import os
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Family.Reporting.report_fam_types_from_XML import (
@@ -30,42 +29,42 @@ from duHast.Revit.Family.Reporting.report_fam_types_from_XML import (
 from duHast.Revit.Family.Reporting.families_report_header import LIBRARY_FAMILIES_HEADER
 from duHast.pyRevit.Objects.ProgressPyRevit import ProgressPyRevit
 from duHast.pyRevit.console_output import print_header
+from duHast.pyRevit.directory_picker import get_process_directories
+
 from duHast.Utilities.files_csv import write_report_data_as_csv
-
-
 from families.util.print_table import print_result_table
 
-# directories to process (add more directories as needed)
-# these directories will be searched for xml files
-PROCESS_DIRECTORIES = [
-    r"\\path\location\one",
-    r"\\path\location\two",
-    r"\\path\location\three",
-]
 
 
 def report_families_in_library_entry(doc, output, forms):
+    """
+    Reports on families in a library location based on xml part atom exports.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param output: pyRevit output.
+    :type output: pyRevit.output
+    :param forms: pyRevit forms.
+    :type forms: pyRevit.forms
+    :return: Result object with status and message.
+    :rtype: Result
+    """
 
     # set up a status tracker
     return_value = Result()
     family_data = []
 
-    validated_directories = []
-
-    print_header("Checking directories")
-    # check if directories exist
-    for process_dir in PROCESS_DIRECTORIES:
-        if not os.path.exists(process_dir):
-            print("Directory does not exist: {}".format(process_dir))
-        else:
-            print("Processing directory: {}".format(process_dir))
-            validated_directories.append(process_dir)
-
-    if len(validated_directories) == 0:
-        return_value.update_sep(
-            False, "No directories to process left after validation."
-        )
+    print_header("Getting directories")
+    # get user to select library directories to process
+    process_dirs_result = get_process_directories(forms)
+    if not process_dirs_result.status:
+        print(process_dirs_result.message)
+        return_value.update_sep(False, process_dirs_result.message)
         return return_value
+
+    process_dirs = process_dirs_result.result
+    for d in process_dirs:
+        print("Processing directories: {}".format(d))
 
     try:
 
@@ -80,7 +79,7 @@ def report_families_in_library_entry(doc, output, forms):
 
             print_header("Reporting families in library:")
             report_result = get_family_type_data_from_library_xml(
-                process_directories=validated_directories,
+                process_directories=process_dirs,
                 progress_callback=progress_callback,
             )
 
@@ -146,7 +145,6 @@ def report_families_in_library_entry(doc, output, forms):
                     file_path, write_result.status
                 )
             )
-
         else:
             return_value.append_message("No file path selected")
 

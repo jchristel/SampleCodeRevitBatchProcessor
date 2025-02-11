@@ -42,8 +42,7 @@ from duHast.UI.Objects.ProgressBase import ProgressBase
 
 def build_report(type_data_storage_manager_instances):
     """
-    Build a comparison report of the family type data from the project file against the library.
-    Only differences are reported.
+    Build a report of the family type data retrieved from the library.
 
     :param type_data_storage_manager_instances: list of matched family type data
     :type type_data_storage_manager_instances: [:class:`FamilyTypeDataStorageManager`]
@@ -84,9 +83,7 @@ def build_report(type_data_storage_manager_instances):
 
 def get_family_type_data_from_library_xml(process_directories, progress_callback=None):
     """
-    Compare the family type data from the project file against the library.
-    Only differences are reported.
-
+    Reads family xml atom files from library directories and saves them out to a combined csv report.
 
     :param process_directories: list of directories to search for xml files
     :type process_directories: list
@@ -96,7 +93,7 @@ def get_family_type_data_from_library_xml(process_directories, progress_callback
     :return:
         Result class instance.
 
-        - result.status: Comparison status will be returned in result.status. False if an exception occurred, otherwise True.
+        - result.status: Report status will be returned in result.status. False if an exception occurred, otherwise True.
         - result.message: Log entries.
         - result.result will be [[str]] where each entry is a list of family name, category etc and difference.
 

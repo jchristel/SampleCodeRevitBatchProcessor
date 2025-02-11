@@ -30,25 +30,9 @@ from duHast.Revit.Family.Reporting.families_report_header import (
     LIBRARY_VS_PROJECT_FAMILIES_COMPARISON_HEADER,
 )
 from duHast.pyRevit.Objects.ProgressPyRevit import ProgressPyRevit
+from duHast.pyRevit.directory_picker import get_process_directories
 from duHast.Utilities.files_csv import write_report_data_as_csv
-
-
 from families.util.print_table import print_result_table
-
-# directories to process (add more directories as needed)
-# these directories will be searched for xml files
-PROCESS_DIRECTORIES = [
-    r"\\path\location\one",
-    r"\\path\location\two",
-    r"\\path\location\three",
-]
-
-# path to the ignore list file
-# this file will be used to ignore certain families in the comparison
-# the file should be a csv file with a two columns:
-# family name
-# family category
-IGNORE_FAMILIES_LIST_PATH = r"\\location\to\your\ignore\file\type_ignore_file_test.csv"
 
 
 def compare_loaded_families_vs_library_entry(doc, output, forms):
@@ -80,6 +64,28 @@ def compare_loaded_families_vs_library_entry(doc, output, forms):
     return_value = Result()
 
     try:
+
+        # get user to select library directories to process
+        # these directories will be searched for xml files
+        process_dirs_result = get_process_directories(forms)
+        if not process_dirs_result.status:
+            print(process_dirs_result.message)
+            return_value.update_sep(False, process_dirs_result.message)
+            return return_value
+
+        process_dirs = process_dirs_result.result
+        for d in process_dirs:
+            print("Processing directories: {}".format(d))
+
+        # select an ignore list file
+        # this file will be used to ignore certain families in the comparison
+        # the file should be a csv file with a two columns:
+        # family name
+        # family category
+        # can be an empty selection ( no family will be ignored)
+        ignore_list_path = None
+        ignore_list_path = forms.pick_file(file_ext="csv", title="Select ignore list file")
+
         # set up a pyRevit progress bar
         with forms.ProgressBar(
             title="Comparing: {value} of {max_value}",
@@ -92,8 +98,8 @@ def compare_loaded_families_vs_library_entry(doc, output, forms):
             print("Comparing families against library:")
             compare_result = compare_family_files_in_project_against_library(
                 doc=doc,
-                process_directories=PROCESS_DIRECTORIES,
-                ignore_list_path=IGNORE_FAMILIES_LIST_PATH,
+                process_directories=process_dirs_result,
+                ignore_list_path=ignore_list_path,
                 progress_callback=progress_callback,
             )
 

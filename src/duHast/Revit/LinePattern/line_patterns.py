@@ -144,10 +144,20 @@ def delete_line_patterns_contains(doc, contains):
     :rtype: :class:`.Result`
     """
 
-    lps = FilteredElementCollector(doc).OfClass(LinePatternElement).ToList()
+    return_value = res.Result()
+
+    # get all line patterns
+    lps = get_all_line_patterns(doc)
+    
     ids = list(
         lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)
     ).ToList[ElementId]()
+
+    # is there anything to delete?
+    if (ids.Count == 0):
+        return_value.append_message("No line patterns found containing: {}".format(contains))
+        return return_value
+    
     result = rDel.delete_by_element_ids(
         doc,
         ids,
@@ -175,15 +185,26 @@ def delete_line_pattern_starts_with(doc, starts_with):
     :rtype: :class:`.Result`
     """
 
-    lps = FilteredElementCollector(doc).OfClass(LinePatternElement).ToList()
+    return_value = res.Result()
+
+    # get all line patterns
+    lps = get_all_line_patterns(doc)
+    
+    # built a .net list of element ids for deletion
     ids = list(
         lp.Id for lp in lps if lp.GetLinePattern().Name.StartsWith(starts_with)
     ).ToList[ElementId]()
+
+    # is there anything to delete?
+    if (ids.Count == 0):
+        return_value.append_message("No line patterns found starting with: {}".format(starts_with))
+        return return_value
+
     result = rDel.delete_by_element_ids(
         doc,
         ids,
-        "Delete line patterns where name starts with: " + str(starts_with),
-        "line patterns starting with: " + str(starts_with),
+        "Delete line patterns where name starts with: {}".format(starts_with),
+        "line patterns starting with: {}".format(starts_with),
     )
     return result
 
@@ -206,18 +227,28 @@ def delete_line_patterns_without(doc, contains):
     :rtype: :class:`.Result`
     """
 
-    lps = FilteredElementCollector(doc).OfClass(LinePatternElement).ToList()
-    ids = list(lp.Id for lp in lps).ToList[ElementId]()
-    ids_contain = list(
-        lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)
+    return_value = res.Result()
+
+    # get all line patterns
+    lps = get_all_line_patterns(doc)
+
+    # built a .net list of element ids for deletion
+    ids = list(
+        lp.Id for lp in lps if not lp.GetLinePattern().Name.Contains(contains)
     ).ToList[ElementId]()
-    delete_ids = list(set(ids) - set(ids_contain))
+
+    # is there anything to delete?
+    if (ids.Count == 0):
+        return_value.append_message("No line patterns found starting with: {}".format(contains))
+        return return_value
+    
     result = rDel.delete_by_element_ids(
         doc,
-        delete_ids,
-        "Delete line patterns where name does not contain: " + str(contains),
-        "line patterns without: " + str(contains),
+        ids,
+        "Delete line patterns where name does not contain: {}".format(contains),
+        "line patterns without: ".format(contains),
     )
+    
     return result
 
 

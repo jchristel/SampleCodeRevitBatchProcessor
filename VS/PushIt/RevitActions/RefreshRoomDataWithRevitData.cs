@@ -27,7 +27,7 @@ namespace PushIt.RevitActions
         public static bool sharedParametersCheck(Document doc, List<Models.RoomsDataModel> roomsDataModel, List<string> supportedCategoryName)
         {
             
-            //get the first room data modelto check if all shared parameters exist
+            //get the first room data model to check if all shared parameters exist
             Models.RoomsDataModel firstRoomDataModel = roomsDataModel[0];
             var test = RevitUtils.SharedParaUtils.GetSharedParameters(doc);
             List<string> bindingsId = RevitUtils.SharedParaUtils.ParameterBindingsByGUID  (doc, firstRoomDataModel.Id.ParameterGUID);
@@ -89,7 +89,13 @@ namespace PushIt.RevitActions
                 string subDepartment_value = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.SubDepartment.ParameterGUID]);
 
                 // create a new revit room
-                Models.RoomsRevit revitRoom = new Models.RoomsRevit(id_value, areaBriefed_value_string, areaDesigned_value_string, nameShort_value, department_value, subDepartment_value);
+                Models.RoomsRevit revitRoom = new Models.RoomsRevit(
+                    id_value, 
+                    areaBriefed_value_string, 
+                    nameShort_value, 
+                    department_value, 
+                    subDepartment_value,
+                    familyInstance.Id.IntegerValue);
                   
                 revitRooms.Add(revitRoom);
             }

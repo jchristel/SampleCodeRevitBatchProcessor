@@ -67,7 +67,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SharedParas.cs">
+    <Compile Include="CategoryUtils.cs" />
+    <Compile Include="Families.cs" />
+    <Compile Include="SharedParaUtils.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

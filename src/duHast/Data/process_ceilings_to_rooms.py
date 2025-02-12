@@ -46,8 +46,8 @@ import csv
 
 
 from duHast.Utilities.Objects import result as res
-from duHast.Data.Objects import data_ceiling as dc
-from duHast.Data.Objects import data_room as dr
+from duHast.Data.Objects.Collectors import data_ceiling as dc
+from duHast.Data.Objects.Collectors import data_room as dr
 from duHast.Data.Utils import data_import as dReader
 from duHast.Data import data_to_shapely as dToS
 

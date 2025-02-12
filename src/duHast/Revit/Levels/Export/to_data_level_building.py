@@ -33,7 +33,7 @@ from Autodesk.Revit.DB import (
 
 
 from duHast.Revit.Levels.levels import get_levels_list_ascending
-from duHast.Data.Objects.data_level_building import DataLevelBuilding
+from duHast.Data.Objects.Collectors.data_level_building import DataLevelBuilding
 from duHast.Revit.Exports.export_data import (
     get_model_data,
 )

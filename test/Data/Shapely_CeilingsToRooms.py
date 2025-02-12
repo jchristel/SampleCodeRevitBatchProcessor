@@ -35,8 +35,8 @@ from duHast.Data.Utils import data_import as dReader
 from duHast.Data.Utils.data_to_file import build_json_for_file
 from duHast.Utilities.files_json import write_json_to_file
 
-from duHast.Data.Objects import data_ceiling as dc
-from duHast.Data.Objects import data_room as dr
+from duHast.Data.Objects.Collectors import data_ceiling as dc
+from duHast.Data.Objects.Collectors import data_room as dr
 
 #: input file path for data exported from model previously
 DATA_IN = r"C:\Users\jchristel\Documents\DebugRevitBP\CeilingsVsRooms\jsonFromModel.json"

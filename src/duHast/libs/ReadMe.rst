@@ -1,1 +1,1 @@
-A directory for .dll files.
+A directory for .dll files. Refer to the /VS directory in this repository for the source code.

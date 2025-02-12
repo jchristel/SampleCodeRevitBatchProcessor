@@ -33,8 +33,8 @@ Data storage reader class.
 # from System import Linq
 # clr.ImportExtensions(Linq)
 
-from duHast.Data.Objects import data_ceiling as dc
-from duHast.Data.Objects import data_room as dr
+from duHast.Data.Objects.Collectors import data_ceiling as dc
+from duHast.Data.Objects.Collectors import data_room as dr
 from duHast.Data.Utils.data_to_file import CONSTANT_DATA_FIELDS
 from duHast.Utilities.files_json import read_json_data_from_file
 

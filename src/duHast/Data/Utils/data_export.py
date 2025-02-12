@@ -29,8 +29,8 @@ Utility functions exporting revit geometry to data objects.
 from duHast.Revit.Ceilings.Export import to_data_ceiling as rCeil
 from duHast.Revit.Rooms.Export import to_data_room as rRoom
 
-from duHast.Data.Objects import data_ceiling as dc
-from duHast.Data.Objects import data_room as dr
+from duHast.Data.Objects.Collectors import data_ceiling as dc
+from duHast.Data.Objects.Collectors import data_room as dr
 
 
 # -------------------------------- write data to file -------------------------------------------------------

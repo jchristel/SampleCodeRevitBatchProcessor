@@ -94,7 +94,10 @@ def get_process_directories(forms, form_title="Select directory"):
         elif user_option == NESTED_FOLDER_OPTION:
             # get all subdirs
             child_dirs = get_all_nested_directories(library_path)
+            # get all children
             return_value.result=child_dirs
+            # make sure root dir is included too
+            return_value.result.append(library_path)
         else:
             return_value.update_sep(False, "No valid directory option selected")
     except Exception as e:

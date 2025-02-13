@@ -258,7 +258,7 @@ def save_file(
     :return:
             Result class instance.
             - .status True if file was saved successfully. Otherwise False.
-            - .message = 'Saved revit file!'
+            - .message: 'Saved revit file!'
             On exception:
             - result.status (bool) will be False.
             - result.message will contain exception message.
@@ -296,7 +296,7 @@ def enable_worksharing(
     :return:
             Result class instance.
             - .status True if worksharing was enabled successfully. Otherwise False.
-            - .message = 'Successfully enabled worksharing.'
+            - .message: 'Successfully enabled worksharing.'
             On exception:
             - result.status (bool) will be False.
             - result.message will contain exception message.

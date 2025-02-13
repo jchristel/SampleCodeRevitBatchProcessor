@@ -32,7 +32,11 @@ from duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults import
     DATA_TYPE_PROCESSOR as data_type_family_base_processor,
 )
 from duHast.Revit.Family.Data.Objects import family_type_data as rFamData
+from duHast.Revit.Family.family_types_get_data_from_xml import get_type_data_via_XML_from_family_file
+from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Utilities import util_batch_p as uBP
+from duHast.Utilities.Objects import result as res
+from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
 
 
 class FamilyTypeProcessor(IFamilyProcessor):
@@ -44,6 +48,8 @@ class FamilyTypeProcessor(IFamilyProcessor):
         session_id=None,
         pre_actions=None,
         post_actions=None,
+        family_file_path=None,
+        revit_application=None,
     ):
         """
         Class constructor.
@@ -60,9 +66,21 @@ class FamilyTypeProcessor(IFamilyProcessor):
             self.session_id = uBP.adjust_session_id_for_directory_name(session_id)
         else:
             self.session_id = session_id
+        
+        # store the file path of the family file
+        self.family_file_path = family_file_path
 
-        # self.preActions = preActions
-        # self.postActions = postActions
+        # store the revit application object
+        self.revit_application = revit_application
+
+        # add default pre actions
+        if pre_actions == None:
+            self.pre_actions=[self._pre_action_get_xml_root]
+        else:
+            self.pre_actions.append(self._pre_action_get_xml_root)
+        
+        # currently no post actions...
+       
 
     def process(self, doc, root_path, root_category_path):
         """
@@ -84,3 +102,49 @@ class FamilyTypeProcessor(IFamilyProcessor):
             self.session_id,
         )
         self.data.append(dummy)
+    
+
+    def _pre_action_get_xml_root(self, doc):
+        """
+        Pre action to get the xml data from the root family.
+        
+        - need to use the family file on disc to get the xml data...which I can get through the ini...
+
+        :param doc: Current family document.
+        :type doc: Autodesk.Revit.DB.Document
+        """
+
+        return_value = res.Result()
+        try:
+            # note to self:
+            # this will add an xml family_type_data_storage_manager of the root family to the data property of the processor
+            # will need to return a result object confirming success or failure
+            family_name = get_file_name_without_ext(self.family_file_path)
+            #family_category = doc.OwnerFamily.FamilyCategory.Name
+
+            # get the type data from the family file
+            type_data_result = get_type_data_via_XML_from_family_file(
+                self.revit_application,
+                family_name, 
+                self.family_file_path, 
+                True
+            )
+
+            # check if type data was retrieved successfully
+            if type_data_result.status and len(type_data_result.result) > 0:
+                # in the moment data contains a list of storage objects rather than a single storage manager object
+                storage_manager = type_data_result.result[0]
+                for storage in storage_manager.family_type_data_storage:
+                    self.data.append(storage)
+                return_value.update_sep(True, "Pre Action Get XML Root successful.")
+            else:
+                return_value.update_sep(False, type_data_result.message)
+
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "Post Action Update shared parameters data failed with exception: {}".format(
+                    e
+                ),
+            )
+        return return_value

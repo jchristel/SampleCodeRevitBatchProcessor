@@ -39,7 +39,7 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
     data_type = "FamilyType"
 
     # number of properties in this class ( used in report reader function )
-    number_of_properties = 5
+    number_of_properties = 8
 
     def __init__(
         self,

@@ -36,10 +36,12 @@ from duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults import
     NESTING_SEPARATOR,
 )
 
-from duHast.Revit.Family.Data.Objects.family_type_data_storage import (
-    FamilyTypeDataStorage,
+from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import (
+    FamilyTypeDataStorageManager,
 )
 
+from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict
+from duHast.Revit.Family.family_types_model_get_data_from_xml import get_type_data_via_XML_from_family_object
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
 
@@ -75,6 +77,7 @@ class FamilyTypeData(IFamData.IFamilyData):
 
         self.saved_file_name = ""
 
+
     def process(self, doc, session_id):
         """
         Collects all base data from the document and stores it in the class property .data
@@ -87,32 +90,26 @@ class FamilyTypeData(IFamData.IFamilyData):
         if doc.PathName != "":
             self.saved_file_name = doc.PathName
 
-        # TODO: xml out may be tricky to implement, there only exist 2 functions:
-        #   1. xml from family file ( gets data from a family file on disc)
-        #   2. xml from family class instance
-        # Need to implement a version whicj just works with the open family document
-            
-
-        # save out xml and read family type data back in
-        # types_data = get_type_data_via_XML_from_family_file(
-        #     doc=doc,
-        #     family_name=doc.Title,
-        #     family_path=self.saved_file_name,
-        #     root_path=self.root_path,
-        #     root_category_path=self.root_category_path,
-        # )
-
-        # # add type data to data
-        # for type_data in types_data:
-        #     self.add_data(type_data)
+        # get all nested families and export to xml
+        families = get_name_and_category_to_family_dict(doc)
+        
+        for family_name, family in families.items():
+            type_data_result = get_type_data_via_XML_from_family_object(family)
+            if type_data_result.status and len(type_data_result.result) > 0:
+                
+                # in the moment data contains a list of storage objects rather than a single storage manager object
+                storage_manager = type_data_result.result[0]
+                for storage in storage_manager.family_type_data_storage:
+                    self.data.append(storage)
+                
 
     def get_data(self):
         return self.data
 
     def add_data(self, storage_instance):
-        if isinstance(storage_instance, FamilyTypeDataStorage):
+        if isinstance(storage_instance, FamilyTypeDataStorageManager):
             self.data.append(storage_instance)
         else:
             raise ValueError(
-                "storage instance must be an instance of FamilyTypeDataStorage"
+                "storage instance must be an instance of FamilyTypeDataStorageManager"
             )

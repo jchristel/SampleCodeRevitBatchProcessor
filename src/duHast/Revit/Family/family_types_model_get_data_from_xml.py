@@ -52,7 +52,7 @@ def get_type_data_via_XML_from_family_object(revit_family):
     :param revit_family: The Revit family object.
     :type revit_family: Autodesk.Revit.DB.Family
 
-    :return: A result object with .result containing a list of family type data objects. (or empty if failed)
+    :return: A result object with .result containing a single FamilyTypeDataStorage object. (or empty if failed)
     :rtype: Result
     """
 

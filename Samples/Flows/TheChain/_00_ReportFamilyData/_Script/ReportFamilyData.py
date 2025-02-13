@@ -72,6 +72,9 @@ from duHast.Revit.Categories.Data.Objects.category_data_processor import (
 from duHast.Revit.Family.Data.Objects.family_base_data_processor import (
     FamilyBaseProcessor,
 )
+
+from duHast.Revit.Family.Data.Objects.family_type_data_processor import FamilyTypeProcessor
+
 from duHast.Revit.Warnings.Data.Objects.warnings_data_processor import WarningsProcessor
 
 # family data collector class
@@ -217,9 +220,18 @@ output("Reporting On Revit File.... start", revit_script_util.Output)
 SESSION_ID = adjust_session_id_for_directory_name(SESSION_ID)
 RESULT_DIRECTORY = create_target_directory(ROOT_PATH, str(SESSION_ID))
 
+
+# set up a type processor instance with the file path to this family
+family_type_processor = FamilyTypeProcessor(
+    family_file_path=REVIT_FILE_PATH, 
+    revit_application=doc.Application
+)
+
+
 # Set up list containing all family processor instances to be executed per family.
 processor_instances = [
     FamilyBaseProcessor(),
+    family_type_processor,
     SharedParameterProcessor(),
     LinePatternProcessor(),
     CategoryProcessor(),

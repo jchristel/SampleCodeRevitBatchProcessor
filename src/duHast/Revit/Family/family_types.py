@@ -121,8 +121,8 @@ def delete_family_type(doc, type_name):
                     action_return_value = Result()
                     try:
                         # delete the current type
-                        family_manager.RemoveType(familyType)
-                        action_return_value.update_sep(True, "Deleted family type: {}".format(type_name))
+                        family_manager.DeleteCurrentType()
+                        action_return_value.append_message("Deleted family type: {}".format(type_name))
                         deleted_type = True
                     except Exception as e:
                         action_return_value.update_sep(False, "Failed to delete family type with exception: {}".format(e))
@@ -135,7 +135,7 @@ def delete_family_type(doc, type_name):
                 break
        
         if not deleted_type:
-            return_value.update_sep("No matching type {} in family found.".format(type_name))
+            return_value.append_message("No matching type {} in family found.".format(type_name))
 
     except Exception as e:
         return_value.update_sep(False, "Failed to delete family type with exception: {}".format(e))

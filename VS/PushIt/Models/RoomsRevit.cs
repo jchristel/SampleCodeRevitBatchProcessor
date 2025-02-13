@@ -8,6 +8,17 @@ namespace PushIt.Models
 {
     public class RoomsRevit
     {
+        string _id;
+        string _areaBriefed;
+        string _areaDesigned;
+        string _roomNameShort;
+        string _department;
+        string _subDepartment;
+        string _designSet;
+        string _designOption;
+        bool _designOptionIsPrimary;
+        int _revitElementId;
+
         public string Id { get => _id; set => _id = value; }
         public string AreaBriefed { get => _areaBriefed; set => _areaBriefed = value; }
         public string AreaDesigned { get => _areaDesigned; set => _areaDesigned = value; }
@@ -27,6 +38,9 @@ namespace PushIt.Models
                           string roomNameShort,
                           string department,
                           string subDepartment,
+                          string designSet,
+                            string designOption,
+                            bool designOptionIsPrimary,
                           int revitElementId)
         {
             _id = id;
@@ -35,6 +49,9 @@ namespace PushIt.Models
             _roomNameShort = roomNameShort;
             _department = department;
             _subDepartment = subDepartment;
+            _designSet = designSet;
+            _designOption = designOption;
+            _designOptionIsPrimary = designOptionIsPrimary;
             _revitElementId = revitElementId;
         }
     }

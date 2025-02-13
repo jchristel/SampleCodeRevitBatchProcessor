@@ -88,13 +88,19 @@ namespace PushIt.RevitActions
                 string department_value = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.Department.ParameterGUID]);
                 string subDepartment_value = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.SubDepartment.ParameterGUID]);
 
+                var designSetAndOptionData = RevitUtils.DesignSetAndOptionsUtils.GetDesignSetOptionInfo(familyInstance.Document, familyInstance);
+
                 // create a new revit room
                 Models.RoomsRevit revitRoom = new Models.RoomsRevit(
-                    id_value, 
-                    areaBriefed_value_string, 
-                    nameShort_value, 
-                    department_value, 
-                    subDepartment_value,
+                    id: id_value,
+                    areaBriefed: areaBriefed_value_string,
+                    areaDesigned: areaDesigned_value_string,
+                    roomNameShort: nameShort_value,
+                    department: department_value,
+                    subDepartment: subDepartment_value,
+                    designSet: designSetAndOptionData[DesignSetAndOptionsUtils.DESIGN_SET_NAME].ToString(),
+                    designOption: designSetAndOptionData[DesignSetAndOptionsUtils.DESIGN_OPTION_NAME].ToString(),
+                    designOptionIsPrimary: (bool)designSetAndOptionData[DesignSetAndOptionsUtils.DESIGN_OPTION_IS_PRIMARY],
                     familyInstance.Id.IntegerValue);
                   
                 revitRooms.Add(revitRoom);

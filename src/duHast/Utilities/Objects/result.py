@@ -78,7 +78,6 @@ class Result(base.Base):
 
         super(Result, self).__init__()
 
-        #self.message = "-"
         self.status = True
         self.result = []
         self._messages = [] # performance improvement to store messages as a list
@@ -106,15 +105,6 @@ class Result(base.Base):
        
         self._messages.append(message)
 
-        # try:
-        #     if self.message == "-":
-        #         self.message = "{}".format(message)
-        #     else:
-        #         self.message = "{}\n{}".format(self.message, message)
-        # except Exception as e:
-        #     self.message = "{} \nAn exception in result class occurred!!! {}".format(
-        #         self.message, e
-        #     )
 
     @property
     def message(self):
@@ -174,7 +164,6 @@ class Result(base.Base):
 
         try:
             self.append_message(message)
-            # self.message = self.message + '\n' + message
             self.status = self.status & status
         except Exception as e:
             print(str(e))

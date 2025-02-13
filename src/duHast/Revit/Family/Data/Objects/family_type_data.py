@@ -88,7 +88,7 @@ class FamilyTypeData(IFamData.IFamilyData):
             self.saved_file_name = doc.PathName
 
         # TODO: xml out may be tricky to implement, there only exist 2 functions:
-        #   1. gxml from family file ( gets data from a family file on disc)
+        #   1. xml from family file ( gets data from a family file on disc)
         #   2. xml from family class instance
         # Need to implement a version whicj just works with the open family document
             

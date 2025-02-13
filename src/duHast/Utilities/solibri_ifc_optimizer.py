@@ -74,7 +74,7 @@ def optimize_all_ifc_files_in_directory(directory_path):
     return_value = res.Result()
     # check if ifc optimizer is installed:
     if fileIO.file_exist(solibri_install_path_):
-        return_value.message = "Solibri IFC optimizer is installed."
+        return_value.append_message ("Solibri IFC optimizer is installed.")
         ifc_files = fileGet.get_files(directory_path, ".ifc")
         if len(ifc_files) > 0:
             process_files_result = process_ifc_files(ifc_files, directory_path)
@@ -118,7 +118,7 @@ def optimize_ifc_files_in_list(ifc_files, directory_path):
     return_value = res.Result()
     # check if ifc optimizer is installed:
     if fileIO.file_exist(solibri_install_path_):
-        return_value.message = "Solibri IFC optimizer is installed."
+        return_value.append_message ("Solibri IFC optimizer is installed.")
         if len(ifc_files) > 0:
             process_files_result = process_ifc_files(ifc_files, directory_path)
             return_value.update(process_files_result)

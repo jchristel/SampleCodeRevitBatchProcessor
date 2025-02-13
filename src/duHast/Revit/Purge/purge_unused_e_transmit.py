@@ -239,9 +239,9 @@ def purge_unused_e_transmit(doc):
             )
         # update messaging
         if result_value.status == True:
-            result_value.message = "Successfully purged model!"
+            result_value.append_message ("Successfully purged model!")
         else:
-            result_value.message = "Failed to purge model!"
+            result_value.append_message ("Failed to purge model!")
     except Exception as e:
         result_value.update_sep(
             False, "Terminated purge unused actions with exception: {}".format(e)

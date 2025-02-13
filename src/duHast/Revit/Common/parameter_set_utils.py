@@ -95,7 +95,7 @@ def set_parameter_value(
             action_return_value = res.Result()
             try:
                 para.Set(new_id)
-                action_return_value.message = (
+                action_return_value.append_message (
                     "Changed parameter value of type Id.[ {} ] from: {} to: {}".format(
                         para.Definition.Name, old_value, value_as_string
                     )
@@ -119,9 +119,9 @@ def set_parameter_value(
             action_return_value = res.Result()
             try:
                 para.SetValueString(value_as_string)
-                action_return_value.message = "Changed parameter value of type double.[ {} ] from: {} to: {}".format(
+                action_return_value.append_message ("Changed parameter value of type double.[ {} ] from: {} to: {}".format(
                     para.Definition.Name, old_value, value_as_string
-                )
+                ))
             except Exception as e:
                 action_return_value.update_sep(
                     False, "Failed with exception: {}".format(e)
@@ -136,9 +136,9 @@ def set_parameter_value(
             action_return_value = res.Result()
             try:
                 para.Set(int(value_as_string))
-                action_return_value.message = "Changed parameter value of type integer.[ {} ] from: {} to: {}".format(
+                action_return_value.append_message("Changed parameter value of type integer.[ {} ] from: {} to: {}".format(
                     para.Definition.Name, old_value, value_as_string
-                )
+                ))
             except Exception as e:
                 action_return_value.update_sep(
                     False, "Failed with exception: {}".format(e)
@@ -153,9 +153,9 @@ def set_parameter_value(
             action_return_value = res.Result()
             try:
                 para.Set(value_as_string)
-                action_return_value.message = "Changed parameter value of type string.[ {} ] from: {} to: {}".format(
+                action_return_value.append_message ("Changed parameter value of type string.[ {} ] from: {} to: {}".format(
                     para.Definition.Name, old_value, value_as_string
-                )
+                ))
             except Exception as e:
                 action_return_value.update_sep(
                     False, "Failed with exception: {}".format(e)
@@ -263,7 +263,7 @@ def set_parameter_value_simple(
     if para.StorageType == rdb.StorageType.ElementId:
         new_id = rdb.ElementId(int(value_as_string))
         para.Set(new_id)
-        return_value.message = (
+        return_value.append_message (
             "Changed parameter value of type Id.[ {} ] from: {} to: {}".format(
                 para.Definition.Name, old_value, value_as_string
             )
@@ -276,21 +276,21 @@ def set_parameter_value_simple(
         #
         # So SetValueString is basically how the Revit GUI works.
         para.SetValueString(value_as_string)
-        return_value.message = (
+        return_value.append_message (
             "Changed parameter value of type double.[ {} ] from: {} to: {}".format(
                 para.Definition.Name, old_value, value_as_string
             )
         )
     elif para.StorageType == rdb.StorageType.Integer:
         para.Set(int(value_as_string))
-        return_value.message = (
+        return_value.append_message (
             "Changed parameter value of type integer.[ {} ] from: {} to: {}".format(
                 para.Definition.Name, old_value, value_as_string
             )
         )
     elif para.StorageType == rdb.StorageType.String:
         para.Set(value_as_string)
-        return_value.message = (
+        return_value.append_message (
             "Changed parameter value of type string.[ {} ] from: {} to: {}".format(
                 para.Definition.Name, old_value, value_as_string
             )

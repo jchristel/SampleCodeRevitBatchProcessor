@@ -177,9 +177,9 @@ def _modifyRevitLinkInstanceData(revitLink, doc):
                 returnValue = rTran.in_transaction(transaction,  rWork.get_action_change_element_workset(revitLink, typeWorksetId))
                 output(linkInstanceNameEncoded + ' ' + str(returnValue.status))
             else:
-               returnValue.message = str(linkInstanceNameEncoded + ' is already on default workset ' + str(typeWorksetName))
+               returnValue.append_message (str(linkInstanceNameEncoded + ' is already on default workset ' + str(typeWorksetName)))
         else:
-          returnValue.message = str('Link is not loaded' + str(util.encode_ascii(lN[0:-1])))
+          returnValue.append_message (str('Link is not loaded' + str(util.encode_ascii(lN[0:-1]))))
     else:
         returnValue.update_sep(False, 'Failed to split link name into 3 parts')
     return returnValue

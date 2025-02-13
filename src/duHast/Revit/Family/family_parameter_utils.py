@@ -128,7 +128,7 @@ def set_family_parameter_value(doc, manager, fam_para, value):
             )
         except Exception as e:
             action_return_value.status = False
-            action_return_value.message = (
+            action_return_value.append_message (
                 "{} : Failed to set parameter value: with exception: {}".format(
                     fam_para.Definition.Name, e
                 )
@@ -162,7 +162,7 @@ def set_parameter_formula(doc, manager, fam_para, formula):
         try:
             # set parameter formula
             manager.SetFormula(fam_para, formula)
-            action_return_value.message = (
+            action_return_value.append_message (
                 "{} : parameter formulas successfully set.".format(
                     fam_para.Definition.Name
                 )

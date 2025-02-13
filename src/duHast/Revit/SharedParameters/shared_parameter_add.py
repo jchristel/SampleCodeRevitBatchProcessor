@@ -117,7 +117,7 @@ def bind_shared_parameter(
                                 # check parameter type
                                 if definition.ParameterType != parameter_type:
                                     return_value.status = False
-                                    return_value.message = (
+                                    return_value.append_message (
                                         "{}: wrong parameter type: {}".format(
                                             parameter_name, definition.ParameterType
                                         )
@@ -127,24 +127,24 @@ def bind_shared_parameter(
                                 if is_instance:
                                     if elem_bind.GetType() != rdb.InstanceBinding:
                                         return_value.status = False
-                                        return_value.message = "{}: wrong binding type (looking for instance but got type)".format(
+                                        return_value.append_message ("{}: wrong binding type (looking for instance but got type)".format(
                                             parameter_name
-                                        )
+                                        ))
                                         return return_value
                                 else:
                                     if elem_bind.GetType() != rdb.TypeBinding:
                                         return_value.status = False
-                                        return_value.message = "{}: wrong binding type (looking for type but got instance)".format(
+                                        return_value.append_message("{}: wrong binding type (looking for type but got instance)".format(
                                             parameter_name
-                                        )
+                                        ))
                                         return return_value
 
                                 # Check Visibility - cannot (not exposed)
                                 # If here, everything is fine,
                                 # ie already defined correctly
-                                return_value.message = "{}: Parameter already bound to category: {}".format(
+                                return_value.append_message ("{}: Parameter already bound to category: {}".format(
                                     parameter_name, cat.Name
-                                )
+                                ))
                                 return return_value
                         except Exception as e:
                             return_value.append_message(
@@ -200,7 +200,7 @@ def bind_shared_parameter(
                     if doc.ParameterBindings.Insert(
                         definition, bind, parameter_grouping
                     ):
-                        action_return_value.message = (
+                        action_return_value.append_message(
                             "{} : parameter successfully bound to: {}".format(
                                 parameter_name, cat_object.Name
                             )
@@ -210,7 +210,7 @@ def bind_shared_parameter(
                         if doc.ParameterBindings.ReInsert(
                             definition, bind, parameter_grouping
                         ):
-                            action_return_value.message = (
+                            action_return_value.append_message (
                                 "{} : parameter successfully bound to: {}".format(
                                     parameter_name, cat_object.Name
                                 )
@@ -218,16 +218,16 @@ def bind_shared_parameter(
                             return action_return_value
                         else:
                             action_return_value.status = False
-                            action_return_value.message = (
+                            action_return_value.append_message (
                                 "{} : failed to bind parameter to: {}".format(
                                     parameter_name, cat_object.Name
                                 )
                             )
                 except Exception as e:
                     action_return_value.status = False
-                    action_return_value.message = "{} : Failed to bind parameter to: {} with exception: {}".format(
+                    action_return_value.append_message ("{} : Failed to bind parameter to: {} with exception: {}".format(
                         parameter_name, cat_object.Name, e
-                    )
+                    ))
                 return action_return_value
 
             transaction = rdb.Transaction(doc, "Binding parameter")
@@ -240,7 +240,7 @@ def bind_shared_parameter(
 
     except Exception as e:
         return_value.status = False
-        return_value.message = (
+        return_value.append_message (
             "{} : Failed to bind parameter with exception: {}".format(parameter_name, e)
         )
     return return_value
@@ -295,13 +295,13 @@ def add_shared_parameter_to_family(para, mgr, doc, def_file):
                         fam_para = mgr.AddParameter(
                             def_para, para.builtInParameterGroup, para.isInstance
                         )
-                        action_return_value.message = (
+                        action_return_value.append_message(
                             para.name + " : parameter successfully added."
                         )
                         action_return_value.result.append(fam_para)
                     except Exception as e:
                         action_return_value.status = False
-                        action_return_value.message = (
+                        action_return_value.append_message (
                             para.name
                             + " : Failed to add shared parameter: with exception: "
                             + str(e)
@@ -319,13 +319,13 @@ def add_shared_parameter_to_family(para, mgr, doc, def_file):
                 break
     except Exception as e:
         return_value.status = False
-        return_value.message = (
+        return_value.append_message (
             para.name + " : Failed to add parameter to family with exception: " + str(e)
         )
 
     if found_para == False:
         return_value.status = False
-        return_value.message = (
+        return_value.append_message (
             para.name + " : No match for parameter found in shared parameter file."
         )
 

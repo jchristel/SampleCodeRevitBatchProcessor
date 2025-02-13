@@ -124,7 +124,7 @@ def get_failure_warning_report(failure, failure_definition):
                 failure_message.append("\n")
                 failure_message.append("\t" + "WARNING: no resolutions available")
 
-        result.message = "\n".join(failure_message)
+        result.append_message ("\n".join(failure_message))
     except Exception as e:
         result.update_sep(False, "Failed to get failure warning report: {}".format(e))
     return result.message

@@ -212,9 +212,9 @@ def modify_element_workset(doc, default_workset_name, collector, element_type_na
     """
 
     return_value = res.Result()
-    return_value.message = "Changing: {} workset to: {} ".format(
+    return_value.append_message ("Changing: {} workset to: {} ".format(
         element_type_name, default_workset_name
-    )
+    ))
     # get the ID of the default grids workset
     default_id = get_workset_id_by_name(doc, default_workset_name)
     counter_success = 0
@@ -275,7 +275,7 @@ def get_action_change_element_workset(el, default_id):
         try:
             ws_param = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
             ws_param.Set(default_id.IntegerValue)
-            action_return_value.message = "Changed element workset."
+            action_return_value.append_message("Changed element workset.")
         except Exception as e:
             action_return_value.update_sep(False, "Failed with exception: {}".format(e))
         return action_return_value

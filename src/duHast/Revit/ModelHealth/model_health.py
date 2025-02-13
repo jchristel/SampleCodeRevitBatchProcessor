@@ -250,7 +250,7 @@ def get_parameters_of_instance(fam_instance, doc):
                         ),
                     )
     if flag_update == False:
-        result_value.message = "No family parameters where updated"
+        result_value.append_message( "No family parameters where updated")
         result_value.status = True
     return result_value
 

@@ -31,6 +31,7 @@ from Autodesk.Revit.DB import (
     RelinquishOptions,
     TransactWithCentralOptions,
     SaveAsOptions,
+    SaveOptions,
     SimpleWorksetConfiguration,
     SynchronizeWithCentralOptions,
     WorksharingUtils,
@@ -73,7 +74,7 @@ def sync_file(
         doc.SynchronizeWithCentral(transaction_options, sync)
         # relinquish all
         WorksharingUtils.RelinquishOwnership(doc, ro, transaction_options)
-        return_value.message = "Successfully synched file."
+        return_value.append_message("Successfully synched file.")
     except Exception as e:
         return_value.update_sep(False, "Failed with exception: {}".format(e))
     return return_value
@@ -114,7 +115,7 @@ def saves_as_workshared_file(
         save_option.MaximumBackups = 5
         save_option.Compact = True
         doc.SaveAs(full_file_name, save_option)
-        return_value.message = "Successfully saved file: " + str(full_file_name)
+        return_value.append_message ("Successfully saved file: " + str(full_file_name))
     except Exception as e:
         return_value.update_sep(False, "Failed with exception: {}".format(e))
     return return_value
@@ -157,18 +158,18 @@ def save_as_family(
     for old_name, new_name in name_data:
         if revit_file_name.startswith(old_name):
             match = True
-            return_value.message = "Found file name match for: {} new name: {}".format(
+            return_value.append_message("Found file name match for: {} new name: {}".format(
                 revit_file_name, new_name
-            )
+            ))
             # save file under new name
             new_file_name = target_directory_path + "\\" + new_name + file_extension
             break
     if match == False:
         # save under same file name
         new_file_name = target_directory_path + "\\" + revit_file_name + file_extension
-        return_value.message = "Found no file name match for: {}".format(
+        return_value.append_message("Found no file name match for: {}".format(
             current_full_file_name
-        )
+        ))
     try:
         # setup save as option
         so = SaveAsOptions()
@@ -217,9 +218,9 @@ def save_as(
     for old_name, new_name in name_data:
         if revit_file_name.startswith(old_name):
             match = True
-            return_value.message = "Found file name match for: {} new name: {}".format(
+            return_value.append_message("Found file name match for: {} new name: {}".format(
                 revit_file_name, new_name
-            )
+            ))
             # save file under new name
             new_file_name = target_directory_path + "\\" + new_name + file_extension
             break
@@ -227,9 +228,9 @@ def save_as(
         # save under same file name
         new_file_name = target_directory_path + "\\" + revit_file_name + file_extension
         # added str.format around this expression to satisfy sphinx auto code documentation
-        return_value.message = "Found no file name match for: {}".format(
+        return_value.append_message ("Found no file name match for: {}".format(
             current_full_file_name
-        )
+        ))
     try:
         return_value.status = saves_as_workshared_file(doc, new_file_name).status
         return_value.append_message("Saved file: {}".format(new_file_name))
@@ -305,7 +306,7 @@ def enable_worksharing(
     return_value = res.Result()
     try:
         doc.EnableWorksharing(workset_name_grid_level, workset_name)
-        return_value.message = "Successfully enabled worksharing."
+        return_value.append_message ("Successfully enabled worksharing.")
     except Exception as e:
         return_value.update_sep(False, "Failed with exception: {}".format(e))
     return return_value

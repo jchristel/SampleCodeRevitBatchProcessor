@@ -199,7 +199,7 @@ def reload_cad_links(
                         action_return_value = res.Result()
                         try:
                             result = p.LoadFrom(new_link_path)
-                            action_return_value.message = (
+                            action_return_value.append_message (
                                 link_type_name + " :: " + str(result.LoadResult)
                             )
                         except Exception as e:

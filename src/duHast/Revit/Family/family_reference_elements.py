@@ -144,5 +144,5 @@ def set_symbolic_and_model_lines_to_not_a_reference(doc):
             result.update(result_change)
     if match_at_all == False:
         result.status = False
-        result.message = "No curve elements found requiring reference type update"
+        result.append_message ("No curve elements found requiring reference type update")
     return result

@@ -104,9 +104,9 @@ def change_shared_parameter_to_family_parameter(doc, parameter_name, prefix="_")
     # check if the parameter was changed
     if changed_parameter == False:
         return_value.status = False
-        return_value.message = "No parameter matching: {} was found. No shared parameter was changed.".format(
+        return_value.append_message ("No parameter matching: {} was found. No shared parameter was changed.".format(
             parameter_name
-        )
+        ))
 
     return return_value
 
@@ -183,8 +183,8 @@ def change_family_parameter_to_shared_parameter(
     # check if the parameter was changed
     if changed_parameter == False:
         return_value.status = False
-        return_value.message = "No parameter matching: {} was found. No shared parameter was changed.".format(
+        return_value.append_message("No parameter matching: {} was found. No shared parameter was changed.".format(
             parameter_name
-        )
+        ))
 
     return return_value

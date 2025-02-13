@@ -156,7 +156,7 @@ def modify_views(doc, revit_file_path, view_data):
     #set default values
     return_value = res.Result()
     return_value.status = False
-    return_value.message = 'No view data provided for current Revit file'
+    return_value.append_message ('No view data provided for current Revit file')
 
     revit_file_name =  fileIO.get_file_name_without_ext(revit_file_path)
     for file_name, view_rules in view_data:

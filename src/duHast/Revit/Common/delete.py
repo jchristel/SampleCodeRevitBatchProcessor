@@ -71,7 +71,7 @@ def delete_by_element_ids(
         action_return_value = res.Result()
         try:
             doc.Delete(ids.ToList[ElementId]())
-            action_return_value.message = "Deleted {} {}".format(len(ids), element_name)
+            action_return_value.append_message("Deleted {} {}".format(len(ids), element_name))
         except Exception as e:
             action_return_value.update_sep(
                 False, "Failed to delete {} with exception: {}".format(element_name, e)
@@ -119,7 +119,7 @@ def delete_by_element_ids_one_by_one(
             n = Element.Name.GetValue(element)
             try:
                 doc.Delete(id)
-                action_return_value.message = "Deleted [{}] {}".format(id, n)
+                action_return_value.append_message ("Deleted [{}] {}".format(id, n))
             except Exception as e:
                 action_return_value.update_sep(
                     False,

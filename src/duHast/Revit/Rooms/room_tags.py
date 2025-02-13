@@ -77,7 +77,7 @@ def move_tag_to_room(doc, tag_id, transaction_manager=in_transaction):
 
             # and move the tag
             rt.Location.Move(translation)
-            action_return_value.message = "Moved tag to room: {}".format(room_data)
+            action_return_value.append_message ("Moved tag to room: {}".format(room_data))
         except Exception as e:
             action_return_value.update_sep(
                 False,

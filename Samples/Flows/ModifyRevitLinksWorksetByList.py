@@ -189,7 +189,7 @@ def _ModifyRevitLinkTypeWorksetName(doc, link_name, workset_name):
                     return_value = _changeWorkset(doc, p, link_type_name, type_workset_name, workset_name, target_workset_id,'Type')
                 else:
                     # no need to do anything
-                    return_value.message = 'Type {} is already on default workset {}.'.format(link_type_name, workset_name)
+                    return_value.append_message('Type {} is already on default workset {}.'.format(link_type_name, workset_name))
                 break
     else:
         return_value.update_sep(False, 'Workset {} does no longer exist in file!'.format(workset_name ))
@@ -243,7 +243,7 @@ def _ModifyRevitLinkInstanceWorkset(doc, link_name, workset_name):
                         return_value = _changeWorkset(doc, p, link_instance_name_encoded, instance_workset_name, workset_name, target_workset_id, 'Instance')
                     else:
                         # no need to do anything
-                        return_value.message = 'Instance {} is already on default workset: '.format(link_instance_name_encoded ,workset_name)
+                        return_value.append_message ('Instance {} is already on default workset: '.format(link_instance_name_encoded ,workset_name))
             else:
                 return_value.update_sep(False, 'Failed to split link name into 3 parts')
     else:

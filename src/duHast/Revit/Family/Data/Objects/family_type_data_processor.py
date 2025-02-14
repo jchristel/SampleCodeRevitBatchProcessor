@@ -120,7 +120,7 @@ class FamilyTypeProcessor(IFamilyProcessor):
             # this will add an xml family_type_data_storage_manager of the root family to the data property of the processor
             # will need to return a result object confirming success or failure
             family_name = get_file_name_without_ext(self.family_file_path)
-            #family_category = doc.OwnerFamily.FamilyCategory.Name
+            family_category = doc.OwnerFamily.FamilyCategory.Name
 
             # get the type data from the family file
             type_data_result = get_type_data_via_XML_from_family_file(
@@ -134,8 +134,16 @@ class FamilyTypeProcessor(IFamilyProcessor):
             if type_data_result.status and len(type_data_result.result) > 0:
                 # in the moment data contains a list of storage objects rather than a single storage manager object
                 storage_manager = type_data_result.result[0]
+
+                # data needs to be of type FamilyTypeData...
+                dummy = rFamData.FamilyTypeData(family_name, family_category)
+                # add the storage to the dummy object
                 for storage in storage_manager.family_type_data_storage:
-                    self.data.append(storage)
+                    dummy.add_data(storage)
+                
+                # add the dummy object to the data property of the processor
+                self.data.append(dummy)
+
                 return_value.update_sep(True, "Pre Action Get XML Root successful.")
             else:
                 return_value.update_sep(False, type_data_result.message)

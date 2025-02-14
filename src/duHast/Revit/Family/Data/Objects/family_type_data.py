@@ -36,10 +36,6 @@ from duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults import
     NESTING_SEPARATOR,
 )
 
-from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import (
-    FamilyTypeDataStorageManager,
-)
-
 from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict
 from duHast.Revit.Family.family_types_model_get_data_from_xml import get_type_data_via_XML_from_family_object
 # import Autodesk
@@ -100,16 +96,16 @@ class FamilyTypeData(IFamData.IFamilyData):
                 # in the moment data contains a list of storage objects rather than a single storage manager object
                 storage_manager = type_data_result.result[0]
                 for storage in storage_manager.family_type_data_storage:
-                    self.data.append(storage)
+                    self.add_data(storage)
                 
 
     def get_data(self):
         return self.data
 
     def add_data(self, storage_instance):
-        if isinstance(storage_instance, FamilyTypeDataStorageManager):
+        if isinstance(storage_instance, FamilyTypeDataStorage):
             self.data.append(storage_instance)
         else:
             raise ValueError(
-                "storage instance must be an instance of FamilyTypeDataStorageManager"
+                "storage instance must be an instance of FamilyTypeDataStorage"
             )

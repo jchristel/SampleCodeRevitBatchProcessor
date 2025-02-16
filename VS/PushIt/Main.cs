@@ -40,7 +40,7 @@ namespace PushIt
             Document doc = uiapp.ActiveUIDocument.Document;
 
             // load settings from file
-            Models.Settings settings = SettingsLoader.LoadSettings();
+            Models.Settings settings = SettingsUtils.LoadSettings();
             _revitDataModel.Settings = settings;
 
             //load room data into model
@@ -55,7 +55,7 @@ namespace PushIt
 
 
             //show the main window
-            MainWindow mainWindow = new MainWindow()
+            MainWindow mainWindow = new MainWindow(settings)
             {
                 DataContext = new ViewModels.MainViewModel(_navigationStore, _eventManager)
             };
@@ -71,14 +71,5 @@ namespace PushIt
             return new ViewModels.RoomsSelectionViewModel(
                 _revitDataModel, _navigationStore, _messageStore, _eventManager);
         }
-
-        public List<Models.RoomsDataModel> GetRooms(string dataPath)
-        {
-            List<Models.RoomsDataModel> rooms = Utilities.ReadRoomsData.GetRoomsData(dataPath);
-            return rooms;
-        }
-
-       
-        
     }
 }

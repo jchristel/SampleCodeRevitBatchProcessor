@@ -192,23 +192,34 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Row="0"
                             Grid.Column="0"
                             Margin="0 10 5 10"
                             Padding="0 0 5 0"
                             Text="Path to SoA:" />
+                        <TextBox
+                            x:Name="FilePathTextBox"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="5 10 5 10"
+                            Text="{Binding DataFilePath}"/>
                         <Button 
                             Grid.Row="0" 
                             Grid.Column="2" 
                             Padding="20 0 20 0"
                             Margin="5 10 0 10" 
-                            Content="Load"/>
-                        <TextBox
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="5 10 5 10"
-                            Text="TRest"/>
+                            Content="Browse"
+                            Click="PickFile_OnClick"/>
+                        <Button 
+                            Grid.Row="0" 
+                            Grid.Column="3" 
+                            Padding="20 0 20 0"
+                            Margin="5 10 0 10" 
+                            Content="Load"
+                            Command="{Binding ReloadDataCommand}" 
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
                     </Grid>
                     <Border CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
                         <Expander  Header="Settings" Margin="5 5 5 5">

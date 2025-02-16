@@ -1,0 +1,12 @@
+Id,AreaBriefed,AreaDesigned,NameShort,Department,SubDepartment
+ceb8cb23-2ef1-43a6-87f8-e1efcd683ad8,7b81b3fa-2468-45d8-a7f2-bff7ea87143f,71513b6f-4db9-4da9-9af4-270d43196d26,bfc6b0e6-d47b-4f2f-8477-b2408e277eac,f2cc1953-5a97-416b-9d8f-156d2cf12914,369ef9d6-b9d6-4bb6-94d9-571d2eefbbc9
+CS.AMC.01.001,10,24.29,AIRLOCK,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.002,20,25.28,REC CLERICAL,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.003,10,35.19,WAIT,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.004,20,20.76,WAIT,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.005,10,9.15,PLAY 10,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.006,4,4.19,B WCH,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.007,1,0.98,B WATER,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.008,3,3.03,WC PUB,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.009,3,3.18,WC PUB,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
+CS.AMC.01.010,6,6.78,WC ACC,Ambulatory Care (20 bay),"Entry, Reception, Waiting"

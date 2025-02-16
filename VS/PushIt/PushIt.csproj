@@ -147,6 +147,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -160,6 +161,8 @@
     <Compile Include="Commands\CommandBase.cs" />
     <Compile Include="Commands\PushSingleRoomDataToRevit.cs" />
     <Compile Include="Commands\RaiseRevitEventCommand.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Commands\ReloadDataCommand.cs" />
     <Compile Include="Exceptions\RoomConflictException.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Models\RevitDataModel.cs" />
@@ -184,7 +187,7 @@
     <Compile Include="Utilities\Revit\FamilyUpdate.cs" />
     <Compile Include="Utilities\Revit\RevitRoomObjectsConverter.cs" />
     <Compile Include="Utilities\Revit\SharedParameters.cs" />
-    <Compile Include="Utilities\SettingsLoader.cs" />
+    <Compile Include="Utilities\SettingsUtils.cs" />
     <Compile Include="Utilities\UpdateRoomDataModelWithRoomsRevitModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\RoomsSelectionViewModel.cs" />
@@ -202,6 +205,7 @@
     <None Include="packages.config" />
     <None Include="PushItPlugin.addin" />
     <None Include="Testdata\20250205_CSB.csv" />
+    <None Include="Testdata\20250205_Short_CSB.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RevitUtils\RevitUtils.csproj">

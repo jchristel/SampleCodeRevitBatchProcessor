@@ -31,7 +31,25 @@ namespace PushIt.ViewModels
         private readonly Commands.RaiseRevitEventCommand _raiseRefreshGUICommand;
         //command to push a single room to revit
         private readonly Commands.PushSingleRoomDataToRevit _raisePushSingleRoomCommand;
+        //command to raise an event to reload data from file path
+        private readonly Commands.ReloadDataCommand _raiseReloadDataCommand;
 
+        private string _dataFilePath;
+        public string DataFilePath
+        {
+            get => _dataFilePath;
+            set
+            {
+                _dataFilePath = value;
+
+                // update the data path in the settings
+                _revitDataModel.Settings.DataPath = value;
+
+                // call ui update
+                OnPropertyChanged(nameof(DataFilePath));
+
+            }
+        }
 
         //binding in xaml propertry to the default view of the rooms collection
         public ICollectionView Rooms => _roomsView;
@@ -97,6 +115,8 @@ namespace PushIt.ViewModels
         //commands
         public ICommand RefreshGUICommand { get { return _raiseRefreshGUICommand; } }
         public ICommand PushSingleRoomCommand { get { return _raisePushSingleRoomCommand; } }
+        public ICommand ReloadDataCommand { get { return _raiseReloadDataCommand; } }
+
 
         //updates the rooms in the observable collection with rooms from the data model
         private void UpdateRooms()
@@ -136,7 +156,7 @@ namespace PushIt.ViewModels
         /// <param name="e"></param>
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            // check whcih property changed in the underlying model
+            // check which property changed in the underlying model
             switch (e.PropertyName)
             {
                 case PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED:
@@ -185,6 +205,9 @@ namespace PushIt.ViewModels
             _rooms = new ObservableCollection<RoomViewModel>();
             _roomsView = CollectionViewSource.GetDefaultView(_rooms);
 
+            //set the data file path
+            _dataFilePath = _revitDataModel.Settings.DataPath;
+
             // filter may need to be set after populating the collection...
             _roomsView.Filter = RoomFilter;
 
@@ -201,6 +224,9 @@ namespace PushIt.ViewModels
             _raiseRefreshGUICommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.RefreshUIDataEventRaise(); });
             // push single room to revit
             _raisePushSingleRoomCommand = new Commands.PushSingleRoomDataToRevit(this, _revitDataModel, _messageStore, () => { _eventManager.PushItSingleEventRaise(); });
+            //load data from file path
+            _raiseReloadDataCommand = new Commands.ReloadDataCommand(this, _revitDataModel, _messageStore, () => { _eventManager.ReloadDataEventRaise(); });
+
         }
     }
 }

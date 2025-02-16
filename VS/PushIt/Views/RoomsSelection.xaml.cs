@@ -1,5 +1,4 @@
-﻿using Autodesk.Revit.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +23,23 @@ namespace PushIt.Views
         public RoomsSelection()
         {
             InitializeComponent();
+        }
+
+        private void PickFile_OnClick(object sender, EventArgs e)
+        {
+            var dialog = new System.Windows.Forms.OpenFileDialog();
+            dialog.Filter = "csv Files (*.csv)|*.csv|All Files (*.*)|*.*";
+            var dialogResult = dialog.ShowDialog();
+            if (dialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                FilePathTextBox.Text = dialog.FileName;
+
+                // Since setting the property explicitly bypasses the data binding, 
+                // we must explicitly update it by calling BindingExpression.UpdateSource()
+                this.FilePathTextBox
+                  .GetBindingExpression(TextBox.TextProperty)
+                  .UpdateSource();
+            }
         }
     }
 }

@@ -21,11 +21,13 @@ namespace PushIt.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        
-        public MainWindow()
+        Models.Settings _settings;
+        public MainWindow(Models.Settings settings)
         {
             InitializeComponent();
             this.Closing += MainWindow_Closing;
+
+            _settings = settings;
 
         }
 
@@ -35,7 +37,9 @@ namespace PushIt.Views
             {
                 closeable.OnClosing();
             }
-        }
 
+            // store settings
+            Utilities.SettingsUtils.SaveSettings(_settings);
+        }
     }
 }

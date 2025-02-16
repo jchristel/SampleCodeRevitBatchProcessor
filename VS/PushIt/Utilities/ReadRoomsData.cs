@@ -19,6 +19,16 @@ namespace PushIt.Utilities
             // read data from comma separated file
             List<Models.RoomsDataModel> roomsData = new List<Models.RoomsDataModel>();
 
+            //check if valid path
+            if (!File.Exists(filePath))
+            {
+                System.Windows.Forms.MessageBox.Show(
+                            $"Invalid data file path: {filePath}",
+                            "Attention",
+                            System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                return null;
+            }
+
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 HasHeaderRecord = true

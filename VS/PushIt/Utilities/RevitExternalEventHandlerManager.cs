@@ -34,9 +34,17 @@ namespace PushIt.Utilities
         Revit.CustomExternalEvent _pushSingleRoomEventHandler;
         ExternalEvent _pushSingleRoomEvent;
 
+        Revit.CustomExternalEvent _reloadDataEventHandler;
+        ExternalEvent _reloadDataEvent;
+
 
         public RevitExternalEventHandlerManager()
         {
+            // Create an instance of the CustomExternalEvent class to reload the data from the file path
+            _reloadDataEventHandler = new Utilities.Revit.CustomExternalEvent((UIApplication uiapp) => ReloadDataEventExecute(uiapp));
+            // External Event for the dialog to use (to post requests)
+            _reloadDataEvent = ExternalEvent.Create(_reloadDataEventHandler);
+
             // Create an instance of the CustomExternalEvent class to push a single room to the Revit model
             _pushSingleRoomEventHandler = new Utilities.Revit.CustomExternalEvent((UIApplication uiapp) => PushItSingleEventExecute(uiapp));
             // External Event for the dialog to use (to post requests)
@@ -48,6 +56,36 @@ namespace PushIt.Utilities
             _refreshUIDataEvent = ExternalEvent.Create(_refreshUIDataEventHandler);
         }
 
+
+        public void ReloadDataEventRaise()
+        {
+            // Raise the external event
+            _reloadDataEvent.Raise();
+        }
+
+        public void ReloadDataEventExecute(UIApplication uiapp)
+        {
+            Autodesk.Revit.DB.Document doc = uiapp.ActiveUIDocument.Document;
+            try
+            {
+                //clear out all rooms
+                _revitDataModel.ClearRooms();
+
+                // reload data from the file path
+                _revitDataModel.LoadRoomsData();
+                
+                // Execute the action to refresh the room data with the Revit data
+                RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel);
+                action.Execute(doc);
+                
+                // raise event to notify the view model that the model has been updated
+                _revitDataModel.RaisePropertyChanged(PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED);
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("External Event Handler", $"An exception occurred within the external event handler: {ex.Message}");
+            }
+        }
 
         public void PushItSingleEventRaise()
         {

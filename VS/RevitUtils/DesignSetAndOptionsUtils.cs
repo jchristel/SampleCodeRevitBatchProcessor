@@ -9,10 +9,7 @@ namespace RevitUtils
 {
     public static class DesignSetAndOptionsUtils
     {
-        public static string DESIGN_SET_NAME = "designSetName";
-        public static string DESIGN_OPTION_NAME = "designOptionName";
-        public static string DESIGN_OPTION_IS_PRIMARY = "designOptionIsPrimary";
-
+       
         public static FilteredElementCollector GetDesginOptions(Document doc)
         {
             return new FilteredElementCollector(doc).OfClass(typeof(DesignOption));
@@ -34,7 +31,7 @@ namespace RevitUtils
             return designSet;
         }
 
-        public static Element GertDesignSetOfActiveDesignOption(Document doc)
+        public static Element GetDesignSetOfActiveDesignOption(Document doc)
         {
             DesignOption activeDesignOption = GetActiveDesignOption(doc);
             if (activeDesignOption == null)
@@ -110,9 +107,9 @@ namespace RevitUtils
             // keys match properties in DataDesignSetOption class!!
             var dic = new Dictionary<string, object>
             {
-                { DesignSetAndOptionsUtils.DESIGN_SET_NAME, "Main Model" },
-                { DesignSetAndOptionsUtils.DESIGN_OPTION_NAME, string.Empty },
-                { DesignSetAndOptionsUtils.DESIGN_OPTION_IS_PRIMARY, true }
+                { DesignSetAndOptionDefaultNames.DESIGN_SET_NAME, DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME },
+                { DesignSetAndOptionDefaultNames.DESIGN_OPTION_NAME, DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME },
+                { DesignSetAndOptionDefaultNames.DESIGN_OPTION_IS_PRIMARY, true }
             };
 
             try
@@ -121,13 +118,13 @@ namespace RevitUtils
                 DesignOption designOption = element.DesignOption;
                 if (designOption != null)
                 {
-                    dic[DESIGN_OPTION_NAME] = designOption.Name;
-                    dic[DESIGN_OPTION_IS_PRIMARY] = designOption.IsPrimary;
+                    dic[DesignSetAndOptionDefaultNames.DESIGN_OPTION_NAME] = designOption.Name;
+                    dic[DesignSetAndOptionDefaultNames.DESIGN_OPTION_IS_PRIMARY] = designOption.IsPrimary;
 
                     Element designSet = doc.GetElement(designOption.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId());
                     if (designSet != null)
                     {
-                        dic[DESIGN_SET_NAME] = designSet.Name;
+                        dic[DesignSetAndOptionDefaultNames.DESIGN_SET_NAME] = designSet.Name;
                     }
                 }
             }

@@ -18,6 +18,10 @@ namespace PushIt.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public void RaisePropertyChanged(string name)
+        {
+            OnPropertyChanged(name);
+        }
 
         public virtual void OnClosing()
         {

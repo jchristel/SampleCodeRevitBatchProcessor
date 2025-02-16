@@ -67,7 +67,6 @@ namespace RevitUtils
             return parameterBindings;
         }
 
-
         public static string GetSharedParameterValueFromElementByGUID(Element element, string parameterGUID)
         {
             string parameterValue = null;
@@ -88,7 +87,6 @@ namespace RevitUtils
             }
             return parameterValue;
         }
-
 
         public static string GetSharedParameterValueFromElementByElementId(Element element, ElementId parameterId)
         {
@@ -136,6 +134,67 @@ namespace RevitUtils
                 sharedParameterIds.Add(sharedParameter.GuidValue.ToString(), sharedParameter.Id);
             }
             return sharedParameterIds;
+        }
+
+
+        public static bool SetParameterValue(Parameter parameter, string value)
+        {
+            if (parameter.StorageType == StorageType.String)
+            {
+                parameter.Set(value);
+            }
+            else if (parameter.StorageType == StorageType.Double)
+            {
+                // THIS IS THE KEY:  Use SetValueString instead of Set.  Set requires your data to be in//
+                //whatever internal units of measure Revit uses. SetValueString expects your value to
+                //be in whatever the current DisplayUnitType (units of measure) the document is set to
+                //for the UnitType associated with the parameter.
+                //
+                //So SetValueString is basically how the Revit GUI works.
+
+                parameter.SetValueString(value);
+            }
+            else if (parameter.StorageType == StorageType.Integer)
+            {
+                int intValue = 0;
+                if (int.TryParse(value, out intValue))
+                {
+                    parameter.Set(intValue);
+                }
+            }
+            else
+            {
+                ElementId elementIdValue = new ElementId(int.Parse(value));
+                parameter.Set(elementIdValue);
+            }
+            return true;
+        }
+
+        public static bool SetSharedParameterValueByGUID(Document doc, Element el, string GUID, string value)
+        {
+            // get the shared parameter id
+            ElementId sharedParameterId = null;
+            Dictionary<string, ElementId> sharedParameterIdsByGUID = GetSharedParameterIdsByGUID(doc);
+            if (sharedParameterIdsByGUID.ContainsKey(GUID))
+            {
+                sharedParameterId = sharedParameterIdsByGUID[GUID];
+            }
+            else
+            {
+                return false;
+            }
+
+            // set the value
+            IList<Parameter> parameters = el.GetOrderedParameters();
+            foreach (Parameter parameter in parameters)
+            {
+                if (parameter.Id == sharedParameterId)
+                {
+                    bool setResult = SetParameterValue(parameter, value);
+                    return setResult;
+                }
+            }
+            return false;
         }
     }
 }

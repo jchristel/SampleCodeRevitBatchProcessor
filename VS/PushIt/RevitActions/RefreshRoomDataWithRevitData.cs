@@ -1,117 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Autodesk.Revit.DB;
+using PushIt.Models;
 using RevitUtils;
 
 namespace PushIt.RevitActions
 {
-    public static class RefreshRoomDataWithRevitData
+    public class RefreshRoomDataWithRevitData:IRevitAction
     {
+        private readonly RevitDataModel _revitModel;
+        public Models.RevitDataModel RevitModel => _revitModel;
 
-        public static bool CheckBindingsList(List<string> bindings, List<string> supportedCategoryNames)
+        
+        public void Execute(Document doc)
         {
-            // check if all shared parameters exist and are bound to the correct categories
-            foreach (string supportedCategoryName in supportedCategoryNames)
-            {
-                if (!bindings.Contains(supportedCategoryName))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public static bool sharedParametersCheck(Document doc, List<Models.RoomsDataModel> roomsDataModel, List<string> supportedCategoryName)
-        {
+            List<Models.RoomsDataModel> updatedRooms = RefreshRoomData(
+                doc, 
+                _revitModel._roomsContainer.GetAllRooms(),
+                _revitModel.Settings.SupportedCategories
+             );
             
-            //get the first room data model to check if all shared parameters exist
-            Models.RoomsDataModel firstRoomDataModel = roomsDataModel[0];
-            var test = RevitUtils.SharedParaUtils.GetSharedParameters(doc);
-            List<string> bindingsId = RevitUtils.SharedParaUtils.ParameterBindingsByGUID  (doc, firstRoomDataModel.Id.ParameterGUID);
-            List<string> bindingsAreaBriefed = RevitUtils.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.AreaBriefed.ParameterGUID);
-            List<string> bindingsAreaDesigned = RevitUtils.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.AreaDesigned.ParameterGUID);
-            List<string> bindingsNameShort = RevitUtils.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.NameShort.ParameterGUID);
-            List<string> bindingsDepartment = RevitUtils.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.Department.ParameterGUID);
-            List<string> bindingsSubDepartment = RevitUtils.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.SubDepartment.ParameterGUID);
-
-            // check if all shared parameters exist and are bound to the correct categories
-            bool parameterCheck = CheckBindingsList(bindingsId, supportedCategoryName) &&
-                CheckBindingsList(bindingsAreaBriefed, supportedCategoryName) &&
-                CheckBindingsList(bindingsAreaDesigned, supportedCategoryName) &&
-                CheckBindingsList(bindingsNameShort, supportedCategoryName) &&
-                CheckBindingsList(bindingsDepartment, supportedCategoryName) &&
-                CheckBindingsList(bindingsSubDepartment, supportedCategoryName);
-
-            return parameterCheck;
-            //return false;
-        }
-
-        public static List<PushIt.Models.RoomsRevit> ConvertFamiliesToRevitRooms(List<FamilyInstance> familyInstances, Models.RoomsDataModel sampleModelRoom)
-        {
-            List<Models.RoomsRevit> revitRooms = new List<PushIt.Models.RoomsRevit>();
-            Dictionary<string, ElementId> sharedParameterIdsByGUIDs = RevitUtils.SharedParaUtils.GetSharedParameterIdsByGUID(familyInstances[0].Document);
-
-            foreach (FamilyInstance familyInstance in familyInstances)
-            { 
-                IList<Parameter> parameters = familyInstance.GetOrderedParameters();
-                string id_value = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.Id.ParameterGUID]);
-
-                // ignore fam instance if id is null or empt
-                if (id_value == null || id_value=="")
+            if (updatedRooms != null)
+            {
+                //clear all rooms
+                _revitModel.ClearRooms();
+                // add updated rooms
+                foreach (var rooms in updatedRooms)
                 {
-                    continue;
+                    _revitModel.AddRoom(rooms);
                 }
-
-                // convert area values from square feet to square meters
-                string areaBriefed_value_string = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.AreaBriefed.ParameterGUID]);
-                double areaBriefed_value = 0;
-                if (double.TryParse(areaBriefed_value_string, out double areaBriefed ))
-                {
-                    areaBriefed_value = areaBriefed * 0.092903; // Convert square feet to square meters
-                }
-                areaBriefed_value_string = areaBriefed_value.ToString();
-
-                // convert area values from square feet to square meters
-                string areaDesigned_value_string = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.AreaDesigned.ParameterGUID]);
-               
-                double areaDesigned_value = 0;
-                if (double.TryParse(areaDesigned_value_string, out double areaDesigned))
-                {
-                    areaDesigned_value = areaDesigned * 0.092903; // Convert square feet to square meters
-                }
-                areaDesigned_value_string = areaDesigned_value.ToString();
-
-                string nameShort_value = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.NameShort.ParameterGUID]);
-                string department_value = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.Department.ParameterGUID]);
-                string subDepartment_value = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.SubDepartment.ParameterGUID]);
-
-                var designSetAndOptionData = RevitUtils.DesignSetAndOptionsUtils.GetDesignSetOptionInfo(familyInstance.Document, familyInstance);
-
-                // create a new revit room
-                Models.RoomsRevit revitRoom = new Models.RoomsRevit(
-                    id: id_value,
-                    areaBriefed: areaBriefed_value_string,
-                    areaDesigned: areaDesigned_value_string,
-                    roomNameShort: nameShort_value,
-                    department: department_value,
-                    subDepartment: subDepartment_value,
-                    designSet: designSetAndOptionData[DesignSetAndOptionsUtils.DESIGN_SET_NAME].ToString(),
-                    designOption: designSetAndOptionData[DesignSetAndOptionsUtils.DESIGN_OPTION_NAME].ToString(),
-                    designOptionIsPrimary: (bool)designSetAndOptionData[DesignSetAndOptionsUtils.DESIGN_OPTION_IS_PRIMARY],
-                    familyInstance.Id.IntegerValue);
-                  
-                revitRooms.Add(revitRoom);
             }
-            return revitRooms;
         }
 
+        /// <summary>
+        /// Refresh the rooms data model with the rooms from the revit model
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="roomsDataModel"></param>
+        /// <param name="supportedCategoryName"></param>
+        /// <returns></returns>
         public static List<Models.RoomsDataModel> RefreshRoomData(Document doc, List<Models.RoomsDataModel> roomsDataModel, List<string> supportedCategoryName)
         {
             // check if all shared parameters exist and are bound to the correct categories
-            bool parameterCheck = sharedParametersCheck(doc, roomsDataModel, supportedCategoryName);
+            bool parameterCheck = Utilities.Revit.SharedParameters.sharedParametersCheck(doc, roomsDataModel, supportedCategoryName);
             
             // if not get out
             if (!parameterCheck){
@@ -132,11 +62,26 @@ namespace PushIt.RevitActions
             List<FamilyInstance> familyInstances = RevitUtils.Families.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
 
             // convert family instances to revit rooms
-            List < PushIt.Models.RoomsRevit > revitRooms = ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
+            List < PushIt.Models.RoomsRevit > revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
 
 
+            // get the documents current design set and option
+            (string designSetName, string designOptionName) = Utilities.Revit.DesignSetAndOptionUtils.GetActiveDesignSetAndOptionName(doc);
+
+            // update rooms data model with revit rooms
+            roomsDataModel = Utilities.UpdateRoomDataModelWithRoomsRevitModelUtils.UpdateRoomDataModelWithRoomsRevitModel(
+                 roomsDataModel: roomsDataModel,
+                 roomsRevit: revitRooms,
+                 revitModelActiveDesignSetName: designSetName,
+                 revitModelActiveDesignOptionName: designOptionName);
 
             return roomsDataModel;
+        }
+
+
+        public RefreshRoomDataWithRevitData(RevitDataModel revitModel)
+        {
+            _revitModel = revitModel;
         }
     }
 }

@@ -6,19 +6,17 @@ using System.Threading.Tasks;
 
 namespace PushIt.Models
 {
-    public class RoomDataProperty
+    public class RoomDataProperty:Utilities.IRoomProperty
     {
         private string _name;
         private string _parameterGUID;
         private string _parameterName;
         private string _value;
 
-        public string Value { get => _value; }
+        public string Value { get => _value; set => _value = value; }
         public string Name { get => _name; }
         public string ParameterGUID { get => _parameterGUID; }
         public string ParameterName { get => _parameterName; }
-
-
 
 
         public RoomDataProperty(string name, string parameterGUID, string parameterName, string value)

@@ -28,6 +28,7 @@ namespace PushIt
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+
             //set up the logger
             //Utils.LoggerUtility.setupLogger();
 
@@ -38,23 +39,13 @@ namespace PushIt
             UIApplication uiapp = commandData.Application;
             Document doc = uiapp.ActiveUIDocument.Document;
 
-            // get room data from file
-            string dataPath = @"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\PushIt\Testdata\20250205_CSB.csv";
+            // load settings from file
+            Models.Settings settings = SettingsLoader.LoadSettings();
+            _revitDataModel.Settings = settings;
 
-            // add rooms to RevitDataModel
-            List<Models.RoomsDataModel> rooms = GetRooms(dataPath);
-            foreach (Models.RoomsDataModel room in rooms)
-            {
-                _revitDataModel.AddRoom(room);
-            }
+            //load room data into model
+            _revitDataModel.LoadRoomsData();
 
-            //Log.Information("Found rooms: {0}", rooms.Count);
-
-            //RefreshRoomDataWithRevitData room data with placed families
-            rooms = RefreshRoomDataWithRevitData.RefreshRoomData(doc, rooms, new List<string> { "Walls" });
-
-            //RoomsSelection roomsSelection = new RoomsSelection();
-            //roomsSelection.Show();
 
             //set up the navigation store
             _navigationStore.CurrentViewModel = CreateRoomsSelectionViewModel();

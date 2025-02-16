@@ -9,14 +9,28 @@ namespace PushIt.Utilities.Revit
 {
     public class CustomExternalEvent : IExternalEventHandler
     {
-        public void Execute(UIApplication app)
+        private readonly Action<UIApplication> _executeAtEventRaised;
+
+        public void Execute(UIApplication uiapp)
         {
-            TaskDialog.Show("External Event", "Click Close to close.");
+            try
+            {
+                _executeAtEventRaised(uiapp);
+            }
+            catch (InvalidOperationException e)
+            {
+                TaskDialog.Show("External Event Handler", $"An exception occurred within the external event handler: {e.Message}");
+            }
         }
 
         public string GetName()
         {
-            return "External Event Example";
+            return $"Function executed {_executeAtEventRaised.Method.Name}";
+        }
+
+        public CustomExternalEvent(Action<UIApplication> executeAtEventRaised)
+        {
+            _executeAtEventRaised = executeAtEventRaised;
         }
     }
 }

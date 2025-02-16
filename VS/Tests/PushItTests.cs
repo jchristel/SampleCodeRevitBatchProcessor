@@ -1,6 +1,7 @@
 using System.Reflection;
 using PushIt.Utilities;
 using PushIt.Models;
+
 namespace PushItTests
 
 {
@@ -28,5 +29,6 @@ namespace PushItTests
             Console.WriteLine("First room: id: {0}", rooms[0].Id.Value);
             Console.WriteLine("First room: area briefed: {0}", rooms[0].AreaBriefed.Value);
         }
+
     }
 }

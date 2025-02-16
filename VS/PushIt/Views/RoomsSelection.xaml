@@ -70,7 +70,12 @@
             </Expander>
         </Border>
         <!-- grid view -->
-        <ListView Grid.Row="2" Margin="0 25 0 0" ItemsSource="{Binding Rooms}">
+        <ListView 
+            Grid.Row="2" 
+            Margin="0 25 0 0" 
+            ItemsSource="{Binding Rooms}"
+            SelectionMode="Single"
+            SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}">
             <ListView.View>
                 <GridView>
                     <!-- room id column -->
@@ -248,7 +253,9 @@
             <Button  
                 Margin="0 10 0 10" 
                 Content="Push It!" 
-                FontSize="24"/>
+                FontSize="24"
+                Command="{Binding PushSingleRoomCommand}" 
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
         </Grid>
     </Grid>
 </UserControl>

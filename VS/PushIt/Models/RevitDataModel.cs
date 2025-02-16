@@ -3,28 +3,74 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
+using NUnit.Framework.Internal;
 
 namespace PushIt.Models
 {
-    public class RevitDataModel
+    public class RevitDataModel:INotifyPropertyChanged
     {
+        public Models.RoomsDataModelContainer _roomsContainer;
+        private Models.Settings _settings;
 
-        public List<Models.RoomsDataModel> rooms;
+        public Settings Settings { get => _settings; set => _settings = value; }
 
-        public RevitDataModel()
+        //event handlers for property changed
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
         {
-            rooms = new List<Models.RoomsDataModel>();
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+        public void RaisePropertyChanged(string name)
+        {
+            OnPropertyChanged(name);
         }
 
         public void AddRoom(Models.RoomsDataModel room)
         {
-            rooms.Add(room);
+            _roomsContainer.AddRoom(room);
         }
 
         public List<Models.RoomsDataModel> GetAllRooms()
         {
-            return rooms;
+            return _roomsContainer.GetAllRooms();
         }
 
+        public void ClearRooms()
+        {
+            _roomsContainer.ClearRooms();
+        }
+
+        public void RemovePlacedRevitRoom(int revitElementId)
+        {
+            _roomsContainer.RemovePlacedRevitRoom(revitElementId);
+        }
+
+        public void AddPlacedRevitRoom(string roomId, Models.RoomsRevit revitRoom)
+        {
+            _roomsContainer.AddPlacedRevitRoom(roomId, revitRoom);
+        }
+
+        public void LoadRoomsData()
+        {
+            // add rooms to RevitDataModel
+            List<Models.RoomsDataModel> rooms = Utilities.ReadRoomsData.GetRoomsData(_settings.DataPath);
+
+            // TODO: if no rooms return (need to pop message to user...)
+            if (rooms == null) return;
+            
+            foreach (Models.RoomsDataModel room in rooms)
+            {
+                AddRoom(room);
+            }
+        }
+
+        public RevitDataModel()
+        {
+            _roomsContainer = new Models.RoomsDataModelContainer();
+        }
     }
 }

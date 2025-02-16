@@ -68,12 +68,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CategoryUtils.cs" />
+    <Compile Include="DesignSetAndOptionDefaultNames.cs" />
     <Compile Include="DesignSetAndOptionsUtils.cs" />
     <Compile Include="Families.cs" />
     <Compile Include="SharedParaUtils.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TransactionUtils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

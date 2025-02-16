@@ -42,26 +42,12 @@ namespace PushIt.Commands
             try
             {
                 _action?.Invoke();
-                //_revitDataModel.MakeReservation(reservation);
-
-                //_messageStore.SetCurrentMessage("Reservation added", Stores.MessageTypes.Information);
-                //System.Windows.MessageBox.Show(
-                //    "Reservation added",
-                //    "ok",
-                //    System.Windows.MessageBoxButton.OK,
-                //    System.Windows.MessageBoxImage.Information
-                //    );
+                _messageStore.SetCurrentMessage("Data refreshed from Revit", Stores.MessageTypes.Information);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //_messageStore.SetCurrentMessage("Reservation conflict", Stores.MessageTypes.Error);
-                //System.Windows.MessageBox.Show(
-                //    "Reservation conflict",
-                //    "Error",
-                //    System.Windows.MessageBoxButton.OK, 
-                //    System.Windows.MessageBoxImage.Error
-                //    );
+                _messageStore.SetCurrentMessage($"Failed to refresh data {ex.Message}", Stores.MessageTypes.Error);
             }
         }
 

@@ -61,6 +61,14 @@ from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import
     DATA_REPORT_NAME as data_type_family_base_report_name,
 )
 
+from duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults import (
+    DATA_TYPE_PROCESSOR as data_type_family_type_processor,
+)
+
+from duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults import (
+    DATA_REPORT_NAME as data_type_family_type_report_name,
+)
+
 from duHast.Revit.Categories.Data.Objects.category_data_processor_defaults import (
     DATA_TYPE_PROCESSOR as data_type_category_processor,
 )
@@ -114,6 +122,10 @@ FILE_DATA_TO_COMBINE = [
     [
         data_type_warnings_processor,
         data_type_warnings_report_name + settings.REPORT_FILE_EXTENSION,
+    ],
+    [
+        data_type_family_type_processor,
+        data_type_family_type_report_name + settings.REPORT_FILE_EXTENSION,
     ],
 ]
 

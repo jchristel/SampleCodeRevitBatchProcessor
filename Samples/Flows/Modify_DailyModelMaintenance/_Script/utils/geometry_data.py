@@ -77,11 +77,21 @@ def write_out_geometry_data(doc, revit_file_path, output):
         + settings.REPORT_EXTENSION_GEO_DATA
         + settings.REPORT_FILE_NAME_EXTENSION,
     )
+
     # get the data from the model
     data = get_data_from_model(doc)
+
     # prefix data with file name and date stamp node
     data_to_file = build_json_for_file(data, get_file_name_without_ext(revit_file_path))
+    
     # write data to file
     task_value = write_json_to_file(data_to_file, file_name)
+
+    # output formatting
+    if task_value.status:
+        return_value.update_sep(True, "Successfully wrote data file.")
+    else:
+        return_value.update(task_value)
+
     return_value.update(task_value)
     return return_value

@@ -559,7 +559,10 @@ def report_views_filtered(doc, revit_file_path, output):
             revit_file_path,
             settings.VIEW_DATA_FILTERS,
         )
-        return_value.update(task_value)
+        if task_value.status:
+            return_value.update_sep(True, "Successfully wrote data file.")
+        else:
+            return_value.update(task_value)
     except Exception as e:
         return_value.update_sep(
             False, "Failed to write view data with exception: {}".format(e)
@@ -869,46 +872,53 @@ def report_template_overrides(doc, revit_file_path, output):
             export_vt = True
             break
 
-    if export_vt:
-        file_name = os.path.join(
-            settings.OUTPUT_FOLDER,
-            revit_file_name
-            + settings.REPORT_EXTENSION_VIEW_TEMPLATE_OVERRIDES
-            + settings.REPORT_FILE_NAME_EXTENSION,
-        )
-
-        # get view templates which allow for graphical overrides
-        view_templates_in_model = get_view_templates(doc)
-        view_template_filtered = []
-        for vt in view_templates_in_model:
-            if vt.AreGraphicsOverridesAllowed():
-                view_template_filtered.append(vt)
-
-        # setup a progress call back
-        progress = ProgressRBPConsole(revit_script_util.Output)
-        # get view template data
-        data = get_views_graphic_settings_data(doc, view_template_filtered, progress)
-
-        # write data to file
-        try:
-            write_json_file_result = write_graphics_settings_report(
-                revit_file_name=revit_file_name,
-                file_path=file_name,
-                data=data,
-            )
-            return_value.update(write_json_file_result)
-        except Exception as e:
-            return_value.update_sep(
-                False, "Failed to write view template data with exception: {}".format(e)
-            )
-    else:
+    if not export_vt:
         return_value.update_sep(
             True,
             "Document: {} is not marked for view template reporting".format(
                 revit_file_name
             ),
         )
+        return return_value
+    
+    file_name = os.path.join(
+        settings.OUTPUT_FOLDER,
+        revit_file_name
+        + settings.REPORT_EXTENSION_VIEW_TEMPLATE_OVERRIDES
+        + settings.REPORT_FILE_NAME_EXTENSION,
+    )
 
+    # get view templates which allow for graphical overrides
+    view_templates_in_model = get_view_templates(doc)
+    view_template_filtered = []
+    for vt in view_templates_in_model:
+        if vt.AreGraphicsOverridesAllowed():
+            view_template_filtered.append(vt)
+
+    # set up a progress call back
+    progress = ProgressRBPConsole(revit_script_util.Output)
+
+    # get view template data
+    data = get_views_graphic_settings_data(doc, view_template_filtered, progress)
+
+    # write data to file
+    try:
+        write_json_file_result = write_graphics_settings_report(
+            revit_file_name=revit_file_name,
+            file_path=file_name,
+            data=data,
+        )
+
+        # output formatting
+        if write_json_file_result.status:
+            return_value.update_sep(True, "Successfully wrote data file.")
+        else:
+            return_value.update(write_json_file_result)
+
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to write view template data with exception: {}".format(e)
+        )
     return return_value
 
 
@@ -951,7 +961,13 @@ def report_warning_types(doc, revit_file_path, output):
     data = get_warnings_report_data(doc, get_file_name_without_ext(revit_file_path))
     try:
         write_data = write_warnings_data(file_name, data)
-        return_value.update(write_data)
+
+        # output formatting
+        if write_data.status:
+            return_value.update_sep(True, "Successfully wrote data file.")
+        else:
+            return_value.update(write_data)
+
     except Exception as e:
         return_value.update_sep(
             False, "Failed to write warning type data with exception: {}".format(e)

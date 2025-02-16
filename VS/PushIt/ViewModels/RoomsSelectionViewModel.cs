@@ -81,9 +81,14 @@ namespace PushIt.ViewModels
             get
             {
                 var selectedRoom = SelectedRoom;
-                if (selectedRoom != null)
+                if (selectedRoom != null && SelectedIndex >=0 )
                 {
                     return selectedRoom.MatchingRevitRooms.Count == 0;
+                }
+                // if no room is selected, return false to avoid pushing null or stale data
+                else if (SelectedIndex < 0)
+                {
+                    return false;
                 }
                 return true;
             }

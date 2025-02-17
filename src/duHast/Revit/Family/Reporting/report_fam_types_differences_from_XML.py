@@ -341,12 +341,12 @@ def compare_family_files_in_project_against_library(
             )
             return_value.append_message(t.stop())
             return return_value
-        else:
-            return_value.append_message(
-                "Found {} XML files in the directories: {}".format(
-                    len(xml_files_in_libraries), process_directories
-                )
+        
+        return_value.append_message(
+            "Found {} XML files in the directories: {}".format(
+                len(xml_files_in_libraries), process_directories
             )
+        )
 
         # get the type data from the library
         type_data_from_library_result = get_family_type_data_from_library(
@@ -361,10 +361,10 @@ def compare_family_files_in_project_against_library(
             return_value.update_sep(False, type_data_from_library_result.message)
             return_value.append_message(t.stop())
             return return_value
-        else:
-            return_value.append_message(
-                "Successfully gathered family type data from the library."
-            )
+        
+        return_value.append_message(
+            "Successfully gathered family type data from the library."
+        )
 
         # get type data from the family files in project file
         type_data_from_project_result = get_family_type_data_from_project_file(
@@ -379,10 +379,10 @@ def compare_family_files_in_project_against_library(
             return_value.update_sep(False, type_data_from_project_result.message)
             return_value.append_message(t.stop())
             return return_value
-        else:
-            return_value.append_message(
-                "Successfully gathered family type data from the project file."
-            )
+        
+        return_value.append_message(
+            "Successfully gathered family type data from the project file."
+        )
 
         # compare the data
         comparison_report_result = build_comparison_report(
@@ -392,11 +392,11 @@ def compare_family_files_in_project_against_library(
             return_value.update_sep(False, comparison_report_result.message)
             return_value.append_message(t.stop())
             return return_value
-        else:
-            return_value.append_message(
-                "Successfully compared family type data from project file against library."
-            )
-            return_value.append_message(t.stop())
+        
+        return_value.append_message(
+            "Successfully compared family type data from project file against library."
+        )
+        return_value.append_message(t.stop())
 
         # store the comparison report as sorted list by family name
         sorted_list = sorted(comparison_report_result.result, key=lambda x: x[0])

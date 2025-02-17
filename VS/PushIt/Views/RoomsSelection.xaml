@@ -50,98 +50,116 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Row="0"
-                    Grid.Column="0"
-                    Margin="0 5 5 5"
-                    Text="Select Column" />
+                        Grid.Column="0"
+                        Margin="0 5 5 5"
+                        Text="Select Column" />
                     <ComboBox Grid.Row="1"
-                    Grid.Column="0"
-                    Margin="0 5 5 5" />
+                        Grid.Column="0"
+                        Margin="0 5 5 5" 
+                        ItemsSource="{Binding ColumnNameDefaultList}"
+                        SelectedValue="{Binding Path=SelectedColumnFilterItem,Mode=TwoWay}"/>
                     <TextBlock Grid.Row="0"
-                    Grid.Column="1"
-                    Margin="5 5 0 5"
-                    Text="Enter filter value" />
+                        Grid.Column="1"
+                        Margin="5 5 0 5"
+                        Text="Filter:" />
                     <!-- filter value -->
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
                         Margin="5 5 0 5"
-                        Text=""/>
+                        Text="{Binding FilterValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </Expander>
         </Border>
         <!-- grid view -->
-        <ListView 
-            Grid.Row="2" 
-            Margin="0 25 0 0" 
-            ItemsSource="{Binding Rooms}"
-            SelectionMode="Single"
-            SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}">
-            <ListView.View>
-                <GridView>
-                    <!-- room id column -->
-                    <GridViewColumn>
-                        <GridViewColumnHeader Content="Room Id"/>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Padding="0 0 20 0" Text="{Binding Id}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <!-- area briefed column -->
-                    <GridViewColumn>
-                        <GridViewColumnHeader Content="Area Briefed"/>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Padding="0 0 20 0" Text="{Binding  AreaBriefed}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <!-- Area Designed column -->
-                    <GridViewColumn>
-                        <GridViewColumnHeader Content="Area Designed" />
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Padding="0 0 20 0" Text="{Binding  AreaDesigned}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <!-- RoomName Short -->
-                    <GridViewColumn>
-                        <GridViewColumnHeader Content="Room Name Short" />
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Padding="0 0 20 0" Text="{Binding NameShort}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <!-- department -->
-                    <GridViewColumn>
-                        <GridViewColumnHeader Content="Department" />
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock HorizontalAlignment="Center" Padding="0 0 20 0" Text="{Binding Department}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn>
-                        <GridViewColumnHeader Content="Subdepartment" />
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock HorizontalAlignment="Center" Padding="0 0 20 0" Text="{Binding SubDepartment}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn>
-                        <GridViewColumnHeader Content="Count" />
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock HorizontalAlignment="Center" Padding="0 0 20 0" Text="{Binding Count}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <Border Grid.Row="2" CornerRadius="1"  Margin="0 2 0 2">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsFilterApplied}" Value="True">
+                            <Setter Property="BorderBrush" Value="Orange"/>
+                            <Setter Property="BorderThickness" Value="4"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsFilterApplied}" Value="False">
+                            <Setter Property="BorderBrush" Value="Gray"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <ListView 
+                Grid.Row="2" 
+                Margin="0 25 0 0" 
+                ItemsSource="{Binding Rooms}"
+                SelectionMode="Single"
+                SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}">
+                <ListView.View>
+                    <GridView>
+                        <!-- room id column -->
+                        <GridViewColumn>
+                            <GridViewColumnHeader Content="Room Id"/>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Padding="0 0 20 0" Text="{Binding Id}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <!-- area briefed column -->
+                        <GridViewColumn>
+                            <GridViewColumnHeader Content="Area Briefed"/>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Padding="0 0 20 0" Text="{Binding  AreaBriefed}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <!-- Area Designed column -->
+                        <GridViewColumn>
+                            <GridViewColumnHeader Content="Area Designed" />
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Padding="0 0 20 0" Text="{Binding  AreaDesigned}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <!-- RoomName Short -->
+                        <GridViewColumn>
+                            <GridViewColumnHeader Content="Room Name Short" />
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Padding="0 0 20 0" Text="{Binding NameShort}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <!-- department -->
+                        <GridViewColumn>
+                            <GridViewColumnHeader Content="Department" />
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock HorizontalAlignment="Center" Padding="0 0 20 0" Text="{Binding Department}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn>
+                            <GridViewColumnHeader Content="Subdepartment" />
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock HorizontalAlignment="Center" Padding="0 0 20 0" Text="{Binding SubDepartment}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn>
+                            <GridViewColumnHeader Content="Count" />
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock HorizontalAlignment="Center" Padding="0 0 20 0" Text="{Binding Count}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Border>
         <!-- button row content -->
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
@@ -156,7 +174,9 @@
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
             <Button Grid.Column="1"
                 Margin="0 5 5 5" 
-                Content="Highlight rooms in model"/>
+                Content="Highlight rooms in model"
+                Command="{Binding HighLightRoomCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
             <TextBlock Grid.Column="2" Margin="5 5 0 5" Text="Stuff"/>
         </Grid>
         <!-- admin model data expander -->

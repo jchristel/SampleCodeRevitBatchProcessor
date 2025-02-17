@@ -172,6 +172,7 @@
     <Compile Include="Models\RoomsRevit.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RevitActions\HighlightRoomsInRevit.cs" />
     <Compile Include="RevitActions\IRevitAction.cs" />
     <Compile Include="RevitActions\PushSingleRoomDataToRevit.cs" />
     <Compile Include="RevitActions\RefreshRoomDataWithRevitData.cs" />
@@ -202,6 +203,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="LICENSE" />
     <None Include="packages.config" />
     <None Include="PushItPlugin.addin" />
     <None Include="Testdata\20250205_CSB.csv" />

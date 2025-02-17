@@ -1,4 +1,28 @@
-﻿using System;
+﻿//
+//License:
+//
+//
+// Revit Batch Processor Sample Code
+//
+// BSD License
+// Copyright 2025, Jan Christel
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+// - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+// - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+// - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+//
+// This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+// In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+// or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+//
+//
+//
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -24,9 +48,9 @@ namespace PushIt.Utilities
         ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         public RoomsSelectionViewModel RoomsSelectionViewModel { get => _roomsSelectionViewModel; set => _roomsSelectionViewModel = value; }
 
-        
 
-
+        Revit.CustomExternalEvent _highlightSelectedRoomEventHandler;
+        ExternalEvent _highlightSelectedRoomEvent;
 
         Revit.CustomExternalEvent _refreshUIDataEventHandler;
         ExternalEvent _refreshUIDataEvent;
@@ -40,6 +64,11 @@ namespace PushIt.Utilities
 
         public RevitExternalEventHandlerManager()
         {
+            // Create an instance of the CustomExternalEvent class to highlight the selected room
+            _highlightSelectedRoomEventHandler = new Utilities.Revit.CustomExternalEvent((UIApplication uiapp) => HighlightSelectedRoomEventExecute(uiapp));
+            // External Event for the dialog to use (to post requests)
+            _highlightSelectedRoomEvent = ExternalEvent.Create(_highlightSelectedRoomEventHandler);
+
             // Create an instance of the CustomExternalEvent class to reload the data from the file path
             _reloadDataEventHandler = new Utilities.Revit.CustomExternalEvent((UIApplication uiapp) => ReloadDataEventExecute(uiapp));
             // External Event for the dialog to use (to post requests)
@@ -56,6 +85,38 @@ namespace PushIt.Utilities
             _refreshUIDataEvent = ExternalEvent.Create(_refreshUIDataEventHandler);
         }
 
+
+        public void HighlightSelectedRoomEventRaise()
+        {
+            // Raise the external event
+            _highlightSelectedRoomEvent.Raise();
+        }
+
+        public void HighlightSelectedRoomEventExecute(UIApplication uiapp)
+        {
+            Autodesk.Revit.DB.Document doc = uiapp.ActiveUIDocument.Document;
+            try
+            {
+                //check if there is a room to highlight
+                if (_roomsSelectionViewModel.SelectedRoom == null)
+                {
+                    _roomsSelectionViewModel.AddMessage("No room selected in the user interface to highlight in Revit.", Stores.MessageTypes.Error);
+                    TaskDialog.Show("Highlight Room", "No room selected to highlight in Revit.");
+                    return;
+                }
+                // Execute the action to highlight the selected room in the Revit model
+                HighlightRoomsInRevit action = new HighlightRoomsInRevit(
+                    revitModel: _revitDataModel,
+                    roomToPush: _roomsSelectionViewModel.SelectedRoom,
+                    uiDoc: uiapp.ActiveUIDocument
+                );
+                action.Execute(doc);
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("External Event Handler", $"An exception occurred within the external event handler: {ex.Message}");
+            }
+        }
 
         public void ReloadDataEventRaise()
         {
@@ -184,6 +245,11 @@ namespace PushIt.Utilities
         /// </summary>
         public void DisposeEvents()
         {
+            
+            _highlightSelectedRoomEvent.Dispose();
+            _highlightSelectedRoomEvent = null;
+            _highlightSelectedRoomEventHandler = null;
+
             _refreshUIDataEvent.Dispose();
             _refreshUIDataEvent = null;
             _refreshUIDataEventHandler = null;

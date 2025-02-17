@@ -1,17 +1,35 @@
-﻿using Autodesk.Revit.DB.Architecture;
+﻿//
+//License:
+//
+//
+// Revit Batch Processor Sample Code
+//
+// BSD License
+// Copyright 2025, Jan Christel
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+// - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+// - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+// - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+//
+// This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+// In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+// or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+//
+//
+//
+
+
 using PushIt.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Xml.Linq;
 
 namespace PushIt.ViewModels
 {
@@ -33,6 +51,10 @@ namespace PushIt.ViewModels
         private readonly Commands.PushSingleRoomDataToRevit _raisePushSingleRoomCommand;
         //command to raise an event to reload data from file path
         private readonly Commands.ReloadDataCommand _raiseReloadDataCommand;
+        //command to highlight a room in Revit
+        private readonly Commands.RaiseRevitEventCommand _highLightRoomCommand;
+
+        #region settings
 
         private string _dataFilePath;
         public string DataFilePath
@@ -47,9 +69,67 @@ namespace PushIt.ViewModels
 
                 // call ui update
                 OnPropertyChanged(nameof(DataFilePath));
-
             }
         }
+
+        #endregion settings
+
+        #region Column Filtering
+
+        // Field to return a default list of column names
+        private readonly List<string> _columnNameDefaultList = new List<string>
+        {
+            "Room Id",
+            "Area Briefed",
+            "Area Designed",
+            "Room Name Short",
+            "Department",
+            "Sub Department",
+            "Count"
+        };
+
+        // Property to expose the default list of column names
+        public List<string> ColumnNameDefaultList => _columnNameDefaultList;
+
+        // field to store the selected column filter item
+        private string _selectedColumnFilterItem;
+        public string SelectedColumnFilterItem
+        {
+            get => _selectedColumnFilterItem;
+            set
+            {
+                _selectedColumnFilterItem = value;
+                OnPropertyChanged(nameof(SelectedColumnFilterItem));
+                
+                //update is filter applied property
+                OnPropertyChanged(nameof(IsFilterApplied));
+            }
+        }
+
+        // field to store the filter value
+        private string _filterValue;
+        public string FilterValue
+        {
+            get => _filterValue;
+            set
+            {
+                _filterValue = value;
+                OnPropertyChanged(nameof(FilterValue));
+
+                //update is filter applied property
+                OnPropertyChanged(nameof(IsFilterApplied));
+
+                // Refresh the view to apply the filter
+                _roomsView.Refresh(); 
+            }
+        }
+
+        // Property to indicate if a filter is applied
+        public bool IsFilterApplied => !string.IsNullOrEmpty(SelectedColumnFilterItem) && !string.IsNullOrEmpty(FilterValue);
+
+        #endregion Column Filtering
+
+        #region user selection
 
         //binding in xaml propertry to the default view of the rooms collection
         public ICollectionView Rooms => _roomsView;
@@ -112,11 +192,17 @@ namespace PushIt.ViewModels
             }
         }
 
+        #endregion user selection
+
+        #region Commands
+
         //commands
         public ICommand RefreshGUICommand { get { return _raiseRefreshGUICommand; } }
         public ICommand PushSingleRoomCommand { get { return _raisePushSingleRoomCommand; } }
         public ICommand ReloadDataCommand { get { return _raiseReloadDataCommand; } }
+        public ICommand HighLightRoomCommand { get { return _highLightRoomCommand; } }
 
+        #endregion Commands
 
         //updates the rooms in the observable collection with rooms from the data model
         private void UpdateRooms()
@@ -141,9 +227,30 @@ namespace PushIt.ViewModels
         {
             if (item is RoomViewModel room)
             {
-                // Add your filtering logic here
-                // For example, filter by a specific property of the room
-                return true; // Return true to include the item, false to exclude it
+                if (string.IsNullOrEmpty(SelectedColumnFilterItem) || string.IsNullOrEmpty(FilterValue))
+                {
+                    return true; // No filter applied
+                }
+
+                switch (SelectedColumnFilterItem)
+                {
+                    case "Room Id":
+                        return room.Id.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
+                    case "Area Briefed":
+                        return room.AreaBriefed.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
+                    case "Area Designed":
+                        return room.AreaDesigned.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
+                    case "Room Name Short":
+                        return room.NameShort.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
+                    case "Department":
+                        return room.Department.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
+                    case "Sub Department":
+                        return room.SubDepartment.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
+                    case "Count":
+                        return room.Count.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
+                    default:
+                        return true; // No filter applied
+                }
             }
             return false;
         }
@@ -226,7 +333,8 @@ namespace PushIt.ViewModels
             _raisePushSingleRoomCommand = new Commands.PushSingleRoomDataToRevit(this, _revitDataModel, _messageStore, () => { _eventManager.PushItSingleEventRaise(); });
             //load data from file path
             _raiseReloadDataCommand = new Commands.ReloadDataCommand(this, _revitDataModel, _messageStore, () => { _eventManager.ReloadDataEventRaise(); });
-
+            //highlight room in Revit
+            _highLightRoomCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.HighlightSelectedRoomEventRaise(); });
         }
     }
 }

@@ -21,49 +21,59 @@
 //
 //
 
-
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using PushIt.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace PushIt.Views
+namespace PushIt.RevitActions
 {
-    /// <summary>
-    /// Interaction logic for UserControl1.xaml
-    /// </summary>
-    public partial class RoomsSelection : UserControl
+    public class HighlightRoomsInRevit : IRevitAction
     {
-        public RoomsSelection()
+        private readonly RoomsDataModel _roomToPush;
+        private readonly UIDocument _uiDoc;
+        private readonly RevitDataModel _revitModel;
+
+        public Models.RevitDataModel RevitModel => _revitModel;
+
+        public void Execute(Document doc)
         {
-            InitializeComponent();
+            List<ElementId> elementIds = new List<ElementId>();
+
+            // get the selected elements
+            foreach (var room in _roomToPush.MatchingRevitRooms)
+            {
+                elementIds.Add(new ElementId(room.RevitElementId));
+            }
+
+            // attempt to highlight and zoom to selected elements
+            try
+            {
+                // highlight the elements
+                _uiDoc.Selection.SetElementIds(elementIds);
+
+                // zoom to the elements
+                _uiDoc.ShowElements(elementIds);
+
+                // regenerate the view
+                _uiDoc.RefreshActiveView();
+            }
+            catch (Exception ex)
+            {
+                // TODO: log the exception
+                
+            }
         }
 
-        private void PickFile_OnClick(object sender, EventArgs e)
+        public HighlightRoomsInRevit(Models.RevitDataModel revitModel, Models.RoomsDataModel roomToPush, UIDocument uiDoc)
         {
-            var dialog = new System.Windows.Forms.OpenFileDialog();
-            dialog.Filter = "csv Files (*.csv)|*.csv|All Files (*.*)|*.*";
-            var dialogResult = dialog.ShowDialog();
-            if (dialogResult == System.Windows.Forms.DialogResult.OK)
-            {
-                FilePathTextBox.Text = dialog.FileName;
-
-                // Since setting the property explicitly bypasses the data binding, 
-                // we must explicitly update it by calling BindingExpression.UpdateSource()
-                this.FilePathTextBox
-                  .GetBindingExpression(TextBox.TextProperty)
-                  .UpdateSource();
-            }
+            _revitModel = revitModel;
+            _roomToPush = roomToPush;
+            _uiDoc = uiDoc;
         }
     }
 }

@@ -45,6 +45,11 @@ namespace PushIt.ViewModels
         //default view of the rooms collection
         private ICollectionView _roomsView;
 
+        //observable collection of supported categories in Revit to push data into
+        private readonly ObservableCollection<RoomViewModel> _supportedCategories;
+        //default view of the supported categories collection
+        private ICollectionView _supportedCategoriesView;
+
         //command to raise an event to refresh the gui
         private readonly Commands.RaiseRevitEventCommand _raiseRefreshGUICommand;
         //command to push a single room to revit
@@ -131,8 +136,11 @@ namespace PushIt.ViewModels
 
         #region user selection
 
-        //binding in xaml propertry to the default view of the rooms collection
+        //binding in xaml property to the default view of the rooms collection
         public ICollectionView Rooms => _roomsView;
+
+        //binding in xaml property to the default view of the supported categories collection
+        public ICollectionView SupportedCategories => _supportedCategoriesView;
 
         //binding to show selected index
         private int _selectedIndex;
@@ -223,6 +231,11 @@ namespace PushIt.ViewModels
             OnPropertyChanged(nameof(Rooms));
         }
 
+        public void UpdateCategories()
+        {
+
+        }
+
         private bool RoomFilter(object item)
         {
             if (item is RoomViewModel room)
@@ -309,8 +322,12 @@ namespace PushIt.ViewModels
             _eventManager = eventManager;
 
             //initialize properties
+            // rooms collection
             _rooms = new ObservableCollection<RoomViewModel>();
             _roomsView = CollectionViewSource.GetDefaultView(_rooms);
+            // supported categories collection
+            _supportedCategories = new ObservableCollection<SupportedCategoriesViewModel>();
+            _supportedCategoriesView = CollectionViewSource.GetDefaultView(_supportedCategories);
 
             //set the data file path
             _dataFilePath = _revitDataModel.Settings.DataPath;
@@ -318,6 +335,9 @@ namespace PushIt.ViewModels
             // filter may need to be set after populating the collection...
             _roomsView.Filter = RoomFilter;
 
+            //update supported categories from settings
+            UpdateCategories();
+            
             //subscribe to underlying model changes
             _revitDataModel.PropertyChanged += Model_PropertyChanged;
 

@@ -90,7 +90,8 @@ class FamilyTypeData(IFamData.IFamilyData):
         families = get_name_and_category_to_family_dict(doc)
         
         for family_name, family in families.items():
-            type_data_result = get_type_data_via_XML_from_family_object(family)
+            # get the type data and make sure to pass in root category path and root name path
+            type_data_result = get_type_data_via_XML_from_family_object(family, self.root_path, self.root_category_path)
             if type_data_result.status and len(type_data_result.result) > 0:
                 
                 # in the moment data contains a list of storage objects rather than a single storage manager object

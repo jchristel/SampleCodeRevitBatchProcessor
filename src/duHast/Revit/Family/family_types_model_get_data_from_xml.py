@@ -45,12 +45,17 @@ from duHast.Revit.Family.family_functions import get_symbol_names_of_family
 from duHast.Revit.Family.Utility.xml_create_atom_exports import write_data_to_temp_xml_file_and_read_it_back
 
 
-def get_type_data_via_XML_from_family_object(revit_family):
+def get_type_data_via_XML_from_family_object(revit_family, family_name_nesting_path = None, root_category_path = None):
     """
     Get the family type data from the family element in a REvit document using the XML extraction method.
 
     :param revit_family: The Revit family object.
     :type revit_family: Autodesk.Revit.DB.Family
+    :param family_name_nesting_path: The nesting path of the family in a tree: rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo\
+        This includes the actual family name as the last node.
+    :type family_name_nesting_path: str
+    :param root_category_path: The path of the family category in a tree: rootCategoryName :: nestedCategoryNameOne :: nestedCategoryTwo\
+        This includes the actual category name as the last node.
 
     :return: A result object with .result containing a single FamilyTypeDataStorage object. (or empty if failed)
     :rtype: Result
@@ -79,11 +84,16 @@ def get_type_data_via_XML_from_family_object(revit_family):
         if doc_xml_result.status is False:
             return return_value
 
+        # set the family name and root category path
+        fam_name = Element.Name.GetValue(revit_family) if family_name_nesting_path is None else family_name_nesting_path
+        root_category_path = "None" if root_category_path is None else root_category_path
+
         # read the xml data into the storage object
         type_data = read_xml_into_storage(
             doc_xml_result.result,
-            family_name=Element.Name.GetValue(revit_family),
+            family_name=fam_name,
             family_path="",
+            root_category_path=root_category_path,
         )
 
         # it looks like the part atom extraction does sometime include types which are no longer present

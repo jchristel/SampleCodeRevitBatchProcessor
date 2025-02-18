@@ -55,7 +55,7 @@ from duHast.Utilities.string_operations import (
 )
 
 
-def read_xml_into_storage(doc_xml, family_name, family_path):
+def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path = "None"):
     """
     Read the XML data into the storage object.
 
@@ -82,9 +82,6 @@ def read_xml_into_storage(doc_xml, family_name, family_path):
     name_space_manager = XmlNamespaceManager(doc_xml.NameTable)
     name_space_manager.AddNamespace("atom", "http://www.w3.org/2005/Atom")
     name_space_manager.AddNamespace("A", "urn:schemas-autodesk-com:partatom")
-
-    # get some family information i.e. the root category path
-    root_category_path = "None"
 
     # Select the family node
     family_node = doc_xml.SelectSingleNode("//A:family", name_space_manager)

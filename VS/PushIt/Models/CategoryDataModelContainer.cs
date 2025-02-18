@@ -21,59 +21,48 @@
 //
 //
 
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using PushIt.Models;
+
+using Autodesk.Revit.DB.Architecture;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PushIt.RevitActions
+namespace PushIt.Models
 {
-    public class HighlightRoomsInRevit : IRevitAction
+    public class CategoryDataModelContainer
     {
-        private readonly RoomDataModel _roomToPush;
-        private readonly UIDocument _uiDoc;
-        private readonly RevitDataModel _revitModel;
+        public List<Models.CategoryDataModel> _categories;
 
-        public Models.RevitDataModel RevitModel => _revitModel;
-
-        public void Execute(Document doc)
+        public void AddCategory(Models.CategoryDataModel category)
         {
-            List<ElementId> elementIds = new List<ElementId>();
-
-            // get the selected elements
-            foreach (var room in _roomToPush.MatchingRevitRooms)
+            //check if rooms are conflicting by id value
+            foreach (var existingCategory in _categories)
             {
-                elementIds.Add(new ElementId(room.RevitElementId));
+                if (existingCategory.Name == category.Name)
+                {
+                    // throw an exception
+                    throw new Exceptions.CategoryConflictException(
+                        existingCategory, category);
+                }
             }
-
-            // attempt to highlight and zoom to selected elements
-            try
-            {
-                // highlight the elements
-                _uiDoc.Selection.SetElementIds(elementIds);
-
-                // zoom to the elements
-                _uiDoc.ShowElements(elementIds);
-
-                // regenerate the view
-                _uiDoc.RefreshActiveView();
-            }
-            catch (Exception ex)
-            {
-                // TODO: log the exception
-                
-            }
+            _categories.Add(category);
         }
 
-        public HighlightRoomsInRevit(Models.RevitDataModel revitModel, Models.RoomDataModel roomToPush, UIDocument uiDoc)
+        public List<Models.CategoryDataModel> GetAllCategories()
         {
-            _revitModel = revitModel;
-            _roomToPush = roomToPush;
-            _uiDoc = uiDoc;
+            return _categories;
+        }
+
+        public void ClearCategories()
+        {
+            _categories = new List<Models.CategoryDataModel>();
+        }
+
+        public CategoryDataModelContainer()
+        {
+            _categories = new List<Models.CategoryDataModel>();
         }
     }
 }

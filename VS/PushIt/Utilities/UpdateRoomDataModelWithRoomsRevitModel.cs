@@ -36,8 +36,8 @@ namespace PushIt.Utilities
         /// <summary>
         /// Attach the rooms from the revit model to the rooms in the data model based on the room id property
         /// <\summary>
-        public static List<Models.RoomsDataModel> UpdateRoomDataModelWithRoomsRevitModel(
-            List<Models.RoomsDataModel> roomsDataModel, 
+        public static List<Models.RoomDataModel> UpdateRoomDataModelWithRoomsRevitModel(
+            List<Models.RoomDataModel> roomsDataModel, 
             List<Models.RoomsRevit> roomsRevit,
             string revitModelActiveDesignSetName,
             string revitModelActiveDesignOptionName
@@ -55,7 +55,7 @@ namespace PushIt.Utilities
             }
 
             // loop over all rooms in the data model and check if they exist in the revit model
-            foreach (Models.RoomsDataModel roomDataModel in roomsDataModel)
+            foreach (Models.RoomDataModel roomDataModel in roomsDataModel)
             {
                 // clear the list of matching rooms in revit from the room in the data model
                 roomDataModel.ClearMatchingRevitRooms();

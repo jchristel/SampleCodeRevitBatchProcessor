@@ -41,6 +41,17 @@ namespace RevitUtils
             return builtInCategories;
         }
 
+        public static List<Category>GetMainCategoriesInModel(Document doc)
+        {
+            List<Category> categories = new List<Category>();
+            Categories categoriesInModel = doc.Settings.Categories;
+            foreach (Category category in categoriesInModel)
+            {
+                categories.Add(category);
+            }
+            return categories;
+        }
+
         public static List<Category> GetMainCategoriesByName(Document doc, List<string> categoryNames)
         {
             List<Category> categories = new List<Category>();

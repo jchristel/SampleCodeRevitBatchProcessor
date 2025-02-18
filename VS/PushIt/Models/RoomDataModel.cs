@@ -26,7 +26,7 @@ using System.Collections.Generic;
 
 namespace PushIt.Models
 {
-    public class RoomsDataModel
+    public class RoomDataModel
     {
         private List<RoomsRevit> _matchingRevitRooms;
 
@@ -59,7 +59,7 @@ namespace PushIt.Models
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Conflicts(RoomsDataModel other)
+        public bool Conflicts(RoomDataModel other)
         {
             if (other == null) return false;
             else if (other.Id.Value != Id.Value) { return false; }
@@ -69,7 +69,7 @@ namespace PushIt.Models
             }
         }
 
-        public RoomsDataModel()
+        public RoomDataModel()
         {
             // initialize the list of matching rooms
             _matchingRevitRooms = new List<RoomsRevit>();

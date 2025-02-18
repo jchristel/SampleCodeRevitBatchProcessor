@@ -25,7 +25,7 @@ namespace PushIt.ViewModels
 {
     public class RoomViewModel
     {
-        public Models.RoomsDataModel _room;
+        public Models.RoomDataModel _room;
         public string Id => _room.Id.Value;
 
         public string AreaBriefed => _room.AreaBriefed.Value;
@@ -36,7 +36,7 @@ namespace PushIt.ViewModels
 
         public string Count => _room.MatchingRevitRooms.Count.ToString();
 
-        public RoomViewModel(Models.RoomsDataModel room)
+        public RoomViewModel(Models.RoomDataModel room)
         {
             _room = room;
         }

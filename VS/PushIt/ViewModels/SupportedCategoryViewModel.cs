@@ -1,4 +1,4 @@
-﻿//
+//
 //License:
 //
 //
@@ -21,59 +21,24 @@
 //
 //
 
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using PushIt.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PushIt.RevitActions
+namespace PushIt.ViewModels
 {
-    public class HighlightRoomsInRevit : IRevitAction
+    public class SupportedCategoryViewModel
     {
-        private readonly RoomDataModel _roomToPush;
-        private readonly UIDocument _uiDoc;
-        private readonly RevitDataModel _revitModel;
 
-        public Models.RevitDataModel RevitModel => _revitModel;
+        Models.CategoryDataModel _category;
+        bool _isSelected;
 
-        public void Execute(Document doc)
+        public string CategoryName => _category.Name;
+        public bool IsSelected 
         {
-            List<ElementId> elementIds = new List<ElementId>();
-
-            // get the selected elements
-            foreach (var room in _roomToPush.MatchingRevitRooms)
-            {
-                elementIds.Add(new ElementId(room.RevitElementId));
-            }
-
-            // attempt to highlight and zoom to selected elements
-            try
-            {
-                // highlight the elements
-                _uiDoc.Selection.SetElementIds(elementIds);
-
-                // zoom to the elements
-                _uiDoc.ShowElements(elementIds);
-
-                // regenerate the view
-                _uiDoc.RefreshActiveView();
-            }
-            catch (Exception ex)
-            {
-                // TODO: log the exception
-                
-            }
+            get => _isSelected;
+            set => _isSelected = value;
         }
-
-        public HighlightRoomsInRevit(Models.RevitDataModel revitModel, Models.RoomDataModel roomToPush, UIDocument uiDoc)
+        public SupportedCategoryViewModel(Models.CategoryDataModel category, bool isSelected)
         {
-            _revitModel = revitModel;
-            _roomToPush = roomToPush;
-            _uiDoc = uiDoc;
+            _category = category;
+            _isSelected = isSelected;
         }
     }
 }

@@ -23,17 +23,44 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Autodesk.Revit.DB;
+
 
 namespace PushIt.Utilities.Revit
 {
     public static class FamilyUpdate
     {
+        public static bool updateProperties(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff)
+        {
+            try
+            {
+                string room_id = roomData.Id.Value;
+                if (safetyOff)
+                {
+                    string userName = doc.Application.Username;
+                    string dateStamp = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss");
+                    room_id = $"{room_id}::{userName}<{dateStamp}>";
+                }
 
-        public static bool updateSingleFamilyInstance(Document doc, FamilyInstance familyInstance, Models.RoomsDataModel roomData, bool safetyOff )
+                // set the room id parameter
+                bool flag_Id = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Id.ParameterGUID, room_id);
+
+                // set the room area briefed parameter
+                bool flag_AreaBriefed = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.AreaBriefed.ParameterGUID, roomData.AreaBriefed.Value);
+                // set the room name short parameter
+                bool flag_NameShort = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.NameShort.ParameterGUID, roomData.NameShort.Value);
+                // set the room department and subdepartment parameters
+                bool flag_Department = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Department.ParameterGUID, roomData.Department.Value);
+                bool flag_SubDepartment = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.SubDepartment.ParameterGUID, roomData.SubDepartment.Value);
+
+                return flag_Id && flag_AreaBriefed && flag_NameShort && flag_Department && flag_SubDepartment;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        public static bool updateSingleFamilyInstance(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff )
         {
 
             // set up an action to run inside a Revit transaction
@@ -41,25 +68,7 @@ namespace PushIt.Utilities.Revit
             {
                 try
                 {
-                    string room_id = roomData.Id.Value;
-                    if (safetyOff)
-                    {
-                        string userName = doc.Application.Username;
-                        string dateStamp = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss");
-                        room_id = $"{room_id}::{userName}<{dateStamp}>";
-                    }
-
-                    // set the room id parameter
-                    bool flag_Id = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Id.ParameterGUID, room_id);
-
-                    // set the room area parameter
-                    bool flag_AreaBriefed = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.AreaBriefed.ParameterGUID, roomData.AreaBriefed.Value);
-                    bool flag_AreaDesigned = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.AreaDesigned.ParameterGUID, roomData.AreaDesigned.Value);
-                    bool flag_NameShort = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.NameShort.ParameterGUID, roomData.NameShort.Value);
-                    bool flag_Department = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Department.ParameterGUID, roomData.Department.Value);
-                    bool flag_SubDepartment = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.SubDepartment.ParameterGUID, roomData.SubDepartment.Value);
-
-                    return flag_Id && flag_AreaBriefed && flag_AreaDesigned && flag_NameShort && flag_Department && flag_SubDepartment;
+                    return updateProperties(doc, familyInstance, roomData, safetyOff);
                 }
                 catch (Exception)
                 {
@@ -72,6 +81,42 @@ namespace PushIt.Utilities.Revit
 
             return transactionFlag;
 
+        }
+
+
+        public static bool wipeMultipleFamilyInstances(Document doc, List<FamilyInstance> familyInstances, Models.RoomDataModel sampleRoom)
+        {
+            // setup an empty room data model
+            Models.RoomDataModel emptyRoom = new Models.RoomDataModel();
+            //update all room data properties
+            emptyRoom.Id =  new Models.RoomDataProperty(sampleRoom.Id.Name, sampleRoom.Id.ParameterGUID, sampleRoom.Id.ParameterName,"");
+            emptyRoom.AreaBriefed = new Models.RoomDataProperty(sampleRoom.AreaBriefed.Name, sampleRoom.AreaBriefed.ParameterGUID, sampleRoom.AreaBriefed.ParameterName, "0.0");
+            emptyRoom.NameShort = new Models.RoomDataProperty(sampleRoom.NameShort.Name, sampleRoom.NameShort.ParameterGUID, sampleRoom.NameShort.ParameterName, "");
+            emptyRoom.Department = new Models.RoomDataProperty(sampleRoom.Department.Name, sampleRoom.Department.ParameterGUID, sampleRoom.Department.ParameterName, "");
+            emptyRoom.SubDepartment = new Models.RoomDataProperty(sampleRoom.SubDepartment.Name, sampleRoom.SubDepartment.ParameterGUID, sampleRoom.SubDepartment.ParameterName, "");
+
+
+            // set up an action to run inside a Revit transaction
+            Func<bool> actionInTranny = () =>
+            {
+                //run this outside of a try catch so the transaction can be rolled back if update fails
+               
+                foreach (var familyInstance in familyInstances)
+                {
+                    bool flag_update = updateProperties(doc, familyInstance, emptyRoom, false);
+                    if (!flag_update)
+                    {
+                        throw new Exception("Failed to update family instance");
+                    }
+                }
+                return true;
+            };
+
+
+            bool transactionFlag = RevitUtils.TransactionUtils.inTransaction(
+                doc, "Wiping stale room data", actionInTranny);
+
+            return transactionFlag;
         }
     }
 }

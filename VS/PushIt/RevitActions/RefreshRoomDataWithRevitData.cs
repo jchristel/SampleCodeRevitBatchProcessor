@@ -36,7 +36,7 @@ namespace PushIt.RevitActions
         
         public void Execute(Document doc)
         {
-            List<Models.RoomsDataModel> updatedRooms = RefreshRoomData(
+            List<Models.RoomDataModel> updatedRooms = RefreshRoomData(
                 doc, 
                 _revitModel._roomsContainer.GetAllRooms(),
                 _revitModel.Settings.SupportedCategories
@@ -61,7 +61,7 @@ namespace PushIt.RevitActions
         /// <param name="roomsDataModel"></param>
         /// <param name="supportedCategoryName"></param>
         /// <returns></returns>
-        public static List<Models.RoomsDataModel> RefreshRoomData(Document doc, List<Models.RoomsDataModel> roomsDataModel, List<string> supportedCategoryName)
+        public static List<Models.RoomDataModel> RefreshRoomData(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName)
         {
             // check if all shared parameters exist and are bound to the correct categories
             bool parameterCheck = Utilities.Revit.SharedParameters.sharedParametersCheck(doc, roomsDataModel, supportedCategoryName);
@@ -78,14 +78,14 @@ namespace PushIt.RevitActions
                 return null;
             }
 
-            // conver revit categories into revit builtIncategories for filtering
+            // convert revit categories into revit builtIncategories for filtering
             List<BuiltInCategory> familyInstanceFilterCategories = CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
 
             //get families of supported built in categories
             List<FamilyInstance> familyInstances = RevitUtils.Families.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
 
             // convert family instances to revit rooms
-            List < PushIt.Models.RoomsRevit > revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
+            List <PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
 
 
             // get the documents current design set and option

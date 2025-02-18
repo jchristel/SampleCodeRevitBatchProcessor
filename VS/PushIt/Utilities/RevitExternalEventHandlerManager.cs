@@ -48,6 +48,8 @@ namespace PushIt.Utilities
         ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         public RoomsSelectionViewModel RoomsSelectionViewModel { get => _roomsSelectionViewModel; set => _roomsSelectionViewModel = value; }
 
+        Revit.CustomExternalEvent _wipeStaleRoomDataEventHandler;
+        ExternalEvent _wipeStaleRoomDataEvent;
 
         Revit.CustomExternalEvent _highlightSelectedRoomEventHandler;
         ExternalEvent _highlightSelectedRoomEvent;
@@ -64,6 +66,12 @@ namespace PushIt.Utilities
 
         public RevitExternalEventHandlerManager()
         {
+
+            // Create an instance of the CustomExternalEvent class to wipe stale room data
+            _wipeStaleRoomDataEventHandler = new Utilities.Revit.CustomExternalEvent((UIApplication uiapp) => WipeStaleRoomDataEventExecute(uiapp));
+            // External Event for the dialog to use (to post requests)
+            _wipeStaleRoomDataEvent = ExternalEvent.Create(_wipeStaleRoomDataEventHandler);
+
             // Create an instance of the CustomExternalEvent class to highlight the selected room
             _highlightSelectedRoomEventHandler = new Utilities.Revit.CustomExternalEvent((UIApplication uiapp) => HighlightSelectedRoomEventExecute(uiapp));
             // External Event for the dialog to use (to post requests)
@@ -85,6 +93,29 @@ namespace PushIt.Utilities
             _refreshUIDataEvent = ExternalEvent.Create(_refreshUIDataEventHandler);
         }
 
+
+        public void WipeStaleRoomDataEventRaise()
+        {
+            // Raise the external event
+            _wipeStaleRoomDataEvent.Raise();
+        }
+
+        public void WipeStaleRoomDataEventExecute(UIApplication uiapp)
+        {
+            Autodesk.Revit.DB.Document doc = uiapp.ActiveUIDocument.Document;
+            try
+            {
+                // Execute the action to wipe stale room data from the Revit model
+                WipeStaleRoomData action = new WipeStaleRoomData(
+                    revitModel: _revitDataModel
+                );
+                action.Execute(doc);
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("External Event Handler", $"An exception occurred within the external event handler: {ex.Message}");
+            }
+        }
 
         public void HighlightSelectedRoomEventRaise()
         {
@@ -245,7 +276,10 @@ namespace PushIt.Utilities
         /// </summary>
         public void DisposeEvents()
         {
-            
+            _wipeStaleRoomDataEvent.Dispose();
+            _wipeStaleRoomDataEvent = null;
+            _wipeStaleRoomDataEventHandler = null;
+
             _highlightSelectedRoomEvent.Dispose();
             _highlightSelectedRoomEvent = null;
             _highlightSelectedRoomEventHandler = null;

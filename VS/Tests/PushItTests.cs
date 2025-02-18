@@ -18,7 +18,7 @@ namespace PushItTests
         [Test]
         public void LoadRoomsData()
         {
-            List<RoomsDataModel> rooms = ReadRoomsData.GetRoomsData(_dataPath,2);
+            List<RoomDataModel> rooms = ReadRoomsData.GetRoomsData(_dataPath,2);
             Assert.That(rooms, Is.Not.Null, "should succesfully read file.");
             Assert.That(rooms.Count, Is.EqualTo(1622), "should read 1622 rooms");
 

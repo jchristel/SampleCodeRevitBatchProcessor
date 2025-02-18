@@ -34,7 +34,7 @@ namespace PushIt.Utilities.Revit
     public static class RevitRoomObjectsConverter
     {
 
-        public static Models.RoomsRevit ConvertSingleFamilyToRevitRoom(FamilyInstance familyInstance, Models.RoomsDataModel sampleModelRoom, Dictionary<string, ElementId> sharedParameterIdsByGUIDs)
+        public static Models.RoomsRevit ConvertSingleFamilyToRevitRoom(FamilyInstance familyInstance, Models.RoomDataModel sampleModelRoom, Dictionary<string, ElementId> sharedParameterIdsByGUIDs)
         {
             // get the parameters of the family instance
             IList<Parameter> parameters = familyInstance.GetOrderedParameters();
@@ -89,7 +89,7 @@ namespace PushIt.Utilities.Revit
 
             return revitRoom;
         }
-        public static List<PushIt.Models.RoomsRevit> ConvertFamiliesToRevitRooms(List<FamilyInstance> familyInstances, Models.RoomsDataModel sampleModelRoom)
+        public static List<PushIt.Models.RoomsRevit> ConvertFamiliesToRevitRooms(List<FamilyInstance> familyInstances, Models.RoomDataModel sampleModelRoom)
         {
             // create a list of revit rooms
             List<Models.RoomsRevit> revitRooms = new List<PushIt.Models.RoomsRevit>();
@@ -101,6 +101,12 @@ namespace PushIt.Utilities.Revit
             {
                 // create a new revit room
                 Models.RoomsRevit revitRoom = ConvertSingleFamilyToRevitRoom(familyInstance, sampleModelRoom, sharedParameterIdsByGUIDs);
+
+                // ignore if revit room is null
+                if (revitRoom == null)
+                {
+                    continue;
+                }
 
                 // add to list to be returned
                 revitRooms.Add(revitRoom);

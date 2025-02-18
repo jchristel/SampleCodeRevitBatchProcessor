@@ -37,11 +37,11 @@ namespace PushIt.Utilities
 {
     public static class ReadRoomsData
     {
-        public static List<Models.RoomsDataModel> GetRoomsData(string filePath, int rowsToSkip = 2)
+        public static List<Models.RoomDataModel> GetRoomsData(string filePath, int rowsToSkip = 2)
         {
             Console.WriteLine("Reading Rooms Data from file: " + filePath);
             // read data from comma separated file
-            List<Models.RoomsDataModel> roomsData = new List<Models.RoomsDataModel>();
+            List<Models.RoomDataModel> roomsData = new List<Models.RoomDataModel>();
 
             //check if valid path
             if (!File.Exists(filePath))
@@ -84,7 +84,7 @@ namespace PushIt.Utilities
                     // read the rest of the file
                     while (csv.Read())
                     {
-                        var record = new RoomsDataModel
+                        var record = new RoomDataModel
                         {
                             Id = new RoomDataProperty("Id", header2[0], "", csv.GetField(0)),
                             AreaBriefed = new RoomDataProperty("AreaBriefed", header2[1], "", csv.GetField(1)),

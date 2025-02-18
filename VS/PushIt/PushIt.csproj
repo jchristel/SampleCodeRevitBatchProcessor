@@ -120,15 +120,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandBase.cs" />
+    <Compile Include="Commands\HighlightRoomsInRevitCommand.cs" />
     <Compile Include="Commands\PushSingleRoomDataToRevit.cs" />
     <Compile Include="Commands\RaiseRevitEventCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Commands\ReloadDataCommand.cs" />
+    <Compile Include="Exceptions\CategoryConflictException.cs" />
     <Compile Include="Exceptions\RoomConflictException.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Models\CategoryDataModel.cs" />
+    <Compile Include="Models\CategoryDataModelContainer.cs" />
     <Compile Include="Models\RevitDataModel.cs" />
     <Compile Include="Models\RoomDataProperty.cs" />
-    <Compile Include="Models\RoomsDataModel.cs" />
+    <Compile Include="Models\RoomDataModel.cs" />
     <Compile Include="Models\RoomsDataModelContainer.cs" />
     <Compile Include="Models\RoomsRevit.cs" />
     <Compile Include="Models\Settings.cs" />
@@ -137,6 +141,7 @@
     <Compile Include="RevitActions\IRevitAction.cs" />
     <Compile Include="RevitActions\PushSingleRoomDataToRevit.cs" />
     <Compile Include="RevitActions\RefreshRoomDataWithRevitData.cs" />
+    <Compile Include="RevitActions\WipeStaleRoomData.cs" />
     <Compile Include="Stores\MessageStore.cs" />
     <Compile Include="Stores\NavigationStore.cs" />
     <Compile Include="Utilities\ICloseable.cs" />
@@ -147,6 +152,7 @@
     <Compile Include="Utilities\Revit\CustomExternalEvent.cs" />
     <Compile Include="Utilities\Revit\DesignSetAndOption.cs" />
     <Compile Include="Utilities\Revit\FamilyUpdate.cs" />
+    <Compile Include="Utilities\Revit\RevitCategoryObjectsConverter.cs" />
     <Compile Include="Utilities\Revit\RevitRoomObjectsConverter.cs" />
     <Compile Include="Utilities\Revit\SharedParameters.cs" />
     <Compile Include="Utilities\SettingsUtils.cs" />
@@ -154,6 +160,7 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\RoomsSelectionViewModel.cs" />
     <Compile Include="ViewModels\RoomViewModel.cs" />
+    <Compile Include="ViewModels\SupportedCategoryViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

@@ -21,12 +21,13 @@
 //
 //
 
+
 using System;
 using System.ComponentModel;
 
 namespace PushIt.Commands
 {
-    public class PushSingleRoomDataToRevit: CommandBase
+    public class HighlightRoomsInRevitCommand : CommandBase
     {
         private readonly Models.RevitDataModel _revitDataModel;
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
@@ -35,11 +36,10 @@ namespace PushIt.Commands
         private readonly Stores.MessageStore _messageStore;
         private readonly Action _action;
 
-
         public override bool CanExecute(object parameter)
         {
-            // check if IsMatchingRevitRoomsEmpty is true and call the base CanExecute method
-            return _roomsSelectionViewModel.IsMatchingRevitRoomsEmpty && base.CanExecute(parameter);
+            // check if IsMatchingRevitRoomsEmpty is false and call the base CanExecute method
+            return !_roomsSelectionViewModel.IsMatchingRevitRoomsEmpty && base.CanExecute(parameter);
         }
 
         public override void Execute(object parameter)
@@ -47,12 +47,12 @@ namespace PushIt.Commands
             try
             {
                 _action?.Invoke();
-                _messageStore.SetCurrentMessage("Pushed data into Revit room", Stores.MessageTypes.Information);
+                _messageStore.SetCurrentMessage("Highlighted Revit room", Stores.MessageTypes.Information);
 
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage($"Failed to push data into Revit room {ex.Message}", Stores.MessageTypes.Error);
+                _messageStore.SetCurrentMessage($"Failed to highlight Revit room {ex.Message}", Stores.MessageTypes.Error);
             }
         }
 
@@ -65,7 +65,7 @@ namespace PushIt.Commands
             }
         }
 
-        public PushSingleRoomDataToRevit(
+        public HighlightRoomsInRevitCommand(
             ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
             Models.RevitDataModel revitDataModel,
             Stores.MessageStore messageStore,

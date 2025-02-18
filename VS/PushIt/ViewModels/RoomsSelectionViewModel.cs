@@ -46,7 +46,7 @@ namespace PushIt.ViewModels
         private ICollectionView _roomsView;
 
         //observable collection of supported categories in Revit to push data into
-        private readonly ObservableCollection<RoomViewModel> _supportedCategories;
+        private readonly ObservableCollection<SupportedCategoryViewModel> _supportedCategories;
         //default view of the supported categories collection
         private ICollectionView _supportedCategoriesView;
 
@@ -57,7 +57,9 @@ namespace PushIt.ViewModels
         //command to raise an event to reload data from file path
         private readonly Commands.ReloadDataCommand _raiseReloadDataCommand;
         //command to highlight a room in Revit
-        private readonly Commands.RaiseRevitEventCommand _highLightRoomCommand;
+        private readonly Commands.HighlightRoomsInRevitCommand _highLightRoomCommand;
+        //command to wipe stale rooms data
+        private readonly Commands.RaiseRevitEventCommand _wipeStaleRoomsDataCommand;
 
         #region settings
 
@@ -160,7 +162,7 @@ namespace PushIt.ViewModels
         }
 
         //property to get the selected room from the revit data model
-        public Models.RoomsDataModel SelectedRoom
+        public Models.RoomDataModel SelectedRoom
         {
             get
             {
@@ -209,6 +211,7 @@ namespace PushIt.ViewModels
         public ICommand PushSingleRoomCommand { get { return _raisePushSingleRoomCommand; } }
         public ICommand ReloadDataCommand { get { return _raiseReloadDataCommand; } }
         public ICommand HighLightRoomCommand { get { return _highLightRoomCommand; } }
+        public ICommand WipeStaleRoomsDataCommand { get { return _wipeStaleRoomsDataCommand; } }
 
         #endregion Commands
 
@@ -216,7 +219,7 @@ namespace PushIt.ViewModels
         private void UpdateRooms()
         {
             _rooms.Clear();
-            foreach (Models.RoomsDataModel room in _revitDataModel.GetAllRooms())
+            foreach (Models.RoomDataModel room in _revitDataModel.GetAllRooms())
             {
                 {
                     ViewModels.RoomViewModel roomViewModel = new RoomViewModel(room);
@@ -233,7 +236,18 @@ namespace PushIt.ViewModels
 
         public void UpdateCategories()
         {
-
+            //loop over categories supported as per data model and categories used in settings and add to the supported categories collection
+            _supportedCategories.Clear();
+            foreach (Models.CategoryDataModel category in _revitDataModel.GetAllCategories())
+            {
+                {
+                    bool isUsed = _revitDataModel.Settings.SupportedCategories.Contains(category.Name);
+                    ViewModels.SupportedCategoryViewModel categoryViewModel = new SupportedCategoryViewModel(category, isUsed);
+                    _supportedCategories.Add(categoryViewModel);
+                }
+            }
+            _supportedCategoriesView.Refresh();
+            OnPropertyChanged(nameof(SupportedCategories));
         }
 
         private bool RoomFilter(object item)
@@ -326,7 +340,7 @@ namespace PushIt.ViewModels
             _rooms = new ObservableCollection<RoomViewModel>();
             _roomsView = CollectionViewSource.GetDefaultView(_rooms);
             // supported categories collection
-            _supportedCategories = new ObservableCollection<SupportedCategoriesViewModel>();
+            _supportedCategories = new ObservableCollection<SupportedCategoryViewModel>();
             _supportedCategoriesView = CollectionViewSource.GetDefaultView(_supportedCategories);
 
             //set the data file path
@@ -354,7 +368,9 @@ namespace PushIt.ViewModels
             //load data from file path
             _raiseReloadDataCommand = new Commands.ReloadDataCommand(this, _revitDataModel, _messageStore, () => { _eventManager.ReloadDataEventRaise(); });
             //highlight room in Revit
-            _highLightRoomCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.HighlightSelectedRoomEventRaise(); });
+            _highLightRoomCommand = new Commands.HighlightRoomsInRevitCommand(this, _revitDataModel, _messageStore, () => { _eventManager.HighlightSelectedRoomEventRaise(); });
+            //wipe stale rooms data
+            _wipeStaleRoomsDataCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.WipeStaleRoomDataEventRaise(); });
         }
     }
 }

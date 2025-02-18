@@ -31,6 +31,7 @@ namespace PushIt.Models
     public class RevitDataModel:INotifyPropertyChanged
     {
         public Models.RoomsDataModelContainer _roomsContainer;
+        public Models.CategoryDataModelContainer _categoriesContainer;
         private Models.Settings _settings;
 
         public Settings Settings { get => _settings; set => _settings = value; }
@@ -49,12 +50,12 @@ namespace PushIt.Models
             OnPropertyChanged(name);
         }
 
-        public void AddRoom(Models.RoomsDataModel room)
+        public void AddRoom(Models.RoomDataModel room)
         {
             _roomsContainer.AddRoom(room);
         }
 
-        public List<Models.RoomsDataModel> GetAllRooms()
+        public List<Models.RoomDataModel> GetAllRooms()
         {
             return _roomsContainer.GetAllRooms();
         }
@@ -77,20 +78,45 @@ namespace PushIt.Models
         public void LoadRoomsData()
         {
             // add rooms to RevitDataModel
-            List<Models.RoomsDataModel> rooms = Utilities.ReadRoomsData.GetRoomsData(_settings.DataPath);
+            List<Models.RoomDataModel> rooms = Utilities.ReadRoomsData.GetRoomsData(_settings.DataPath);
 
             // TODO: if no rooms return (need to pop message to user...)
             if (rooms == null) return;
             
-            foreach (Models.RoomsDataModel room in rooms)
+            foreach (Models.RoomDataModel room in rooms)
             {
                 AddRoom(room);
+            }
+        }
+
+
+        public void AddCategory(Models.CategoryDataModel category)
+        {
+            _categoriesContainer.AddCategory(category);
+        }
+
+        public List<Models.CategoryDataModel> GetAllCategories()
+        {
+            return _categoriesContainer.GetAllCategories();
+        }
+
+        public void ClearCategories()
+        {
+            _categoriesContainer.ClearCategories();
+        }
+
+        public void LoadCategoryData(List<Models.CategoryDataModel> revitCategories)
+        {
+            foreach (Models.CategoryDataModel category in revitCategories)
+            {
+                AddCategory(category);
             }
         }
 
         public RevitDataModel()
         {
             _roomsContainer = new Models.RoomsDataModelContainer();
+            _categoriesContainer = new Models.CategoryDataModelContainer();
         }
     }
 }

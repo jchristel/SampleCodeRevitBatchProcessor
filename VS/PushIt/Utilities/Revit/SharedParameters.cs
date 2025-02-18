@@ -45,13 +45,13 @@ namespace PushIt.Utilities.Revit
             return true;
         }
 
-        public static bool sharedParametersCheck(Document doc, List<Models.RoomsDataModel> roomsDataModel, List<string> supportedCategoryName)
+        public static bool sharedParametersCheck(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName)
         {
             // check if rooms data model is empty
             if (roomsDataModel.Count == 0){ return false; }
            
             //get the first room data model to check if all shared parameters exist
-            Models.RoomsDataModel firstRoomDataModel = roomsDataModel[0];
+            Models.RoomDataModel firstRoomDataModel = roomsDataModel[0];
 
             // get all shared parameters in the model
             var test = RevitUtils.SharedParaUtils.GetSharedParameters(doc);

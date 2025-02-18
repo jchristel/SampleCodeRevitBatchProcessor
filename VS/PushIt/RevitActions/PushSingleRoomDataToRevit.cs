@@ -34,7 +34,7 @@ namespace PushIt.RevitActions
     public class PushSingleRoomDataToRevit : IRevitAction
     {
         private readonly RevitDataModel _revitModel;
-        private readonly RoomsDataModel _roomToPush;
+        private readonly RoomDataModel _roomToPush;
         private readonly Element _pushTarget;
 
         public Models.RevitDataModel RevitModel => _revitModel;
@@ -84,7 +84,7 @@ namespace PushIt.RevitActions
 
         }
 
-        public PushSingleRoomDataToRevit(RevitDataModel revitModel, Models.RoomsDataModel roomToPush, Element pushTarget)
+        public PushSingleRoomDataToRevit(RevitDataModel revitModel, Models.RoomDataModel roomToPush, Element pushTarget)
         {
             _revitModel = revitModel;
             _roomToPush = roomToPush;

@@ -28,22 +28,22 @@ namespace PushIt.Exceptions
 {
     public class RoomConflictException:Exception
     {
-        public RoomsDataModel ExistingRoom { get; }
-        public RoomsDataModel IncomingRoom { get; }
+        public RoomDataModel ExistingRoom { get; }
+        public RoomDataModel IncomingRoom { get; }
 
-        public RoomConflictException(RoomsDataModel existingRoom, RoomsDataModel incomingRoom)
+        public RoomConflictException(RoomDataModel existingRoom, RoomDataModel incomingRoom)
         {
             ExistingRoom = existingRoom;
             IncomingRoom = incomingRoom;
         }
 
-        public RoomConflictException(string message, RoomsDataModel existingRoom, RoomsDataModel incomingRoom) : base(message)
+        public RoomConflictException(string message, RoomDataModel existingRoom, RoomDataModel incomingRoom) : base(message)
         {
             ExistingRoom = existingRoom;
             IncomingRoom = incomingRoom;
         }
 
-        public RoomConflictException(string message, Exception innerException, RoomsDataModel existingRoom, RoomsDataModel incomingRoom) : base(message, innerException)
+        public RoomConflictException(string message, Exception innerException, RoomDataModel existingRoom, RoomDataModel incomingRoom) : base(message, innerException)
         {
             ExistingRoom = existingRoom;
             IncomingRoom = incomingRoom;

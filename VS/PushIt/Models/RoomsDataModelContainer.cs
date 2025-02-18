@@ -30,9 +30,9 @@ namespace PushIt.Models
 {
     public class RoomsDataModelContainer
     {
-        public List<Models.RoomsDataModel> _rooms;
+        public List<Models.RoomDataModel> _rooms;
 
-        public void AddRoom(Models.RoomsDataModel room)
+        public void AddRoom(Models.RoomDataModel room)
         {
             //check if rooms are conflicting by id value
             foreach (var existingRoom in _rooms)
@@ -48,14 +48,14 @@ namespace PushIt.Models
             _rooms.Add(room);
                 
         }
-        public List<Models.RoomsDataModel> GetAllRooms()
+        public List<Models.RoomDataModel> GetAllRooms()
         {
             return _rooms;
         }
 
         public void ClearRooms() 
         {
-            _rooms = new List<Models.RoomsDataModel>();
+            _rooms = new List<Models.RoomDataModel>();
         }
 
         public void RemovePlacedRevitRoom(int revitElementId)
@@ -101,7 +101,7 @@ namespace PushIt.Models
 
         public RoomsDataModelContainer()
         {
-            _rooms = new List<Models.RoomsDataModel>();
+            _rooms = new List<Models.RoomDataModel>();
         }
     }
 }

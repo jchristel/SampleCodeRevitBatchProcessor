@@ -1,4 +1,4 @@
-//
+﻿//
 //License:
 //
 //
@@ -21,17 +21,33 @@
 //
 //
 
-namespace PushIt.ViewModels
+using System;
+using PushIt.Models;
+
+namespace PushIt.Exceptions
 {
-    public class SupportedCategoriesViewModel
+    public class CategoryConflictException : Exception
     {
-        
-        string _categoryName;
-        bool _isSelected;
-        public RoomViewModel(string categoryName, bool isSelected)
+        public CategoryDataModel ExistingCategory { get; }
+        public CategoryDataModel IncomingCategory { get; }
+
+        public CategoryConflictException(CategoryDataModel existingCategory, CategoryDataModel incomingCategory)
         {
-            _categoryName = categoryName;
-            _isSelected = isSelected;
+            ExistingCategory = existingCategory;
+            IncomingCategory = incomingCategory;
+        }
+
+        public CategoryConflictException(string message, CategoryDataModel existingCategory, CategoryDataModel incomingCategory) : base(message)
+        {
+            ExistingCategory = existingCategory;
+            IncomingCategory = incomingCategory;
+        }
+
+        public CategoryConflictException(string message, Exception innerException, CategoryDataModel existingCategory, CategoryDataModel incomingCategory) : base(message, innerException)
+        {
+            ExistingCategory = existingCategory;
+            IncomingCategory = incomingCategory;
         }
     }
 }
+

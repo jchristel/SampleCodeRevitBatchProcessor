@@ -5,7 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PushIt.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="650" d:DesignWidth="800">
+    <UserControl.Resources>
+        <!-- a style for the text box if it contains a validation error-->
+    </UserControl.Resources>
     <Grid Margin="10 10 10 10">
         <!-- Add your UI elements here -->
         <Grid.RowDefinitions>
@@ -93,6 +96,20 @@
                 ItemsSource="{Binding Rooms}"
                 SelectionMode="Single"
                 SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}">
+                <!-- a style colouring rows depending on the count property  -->
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Background" Value="Red" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Count}" Value="1">
+                                <Setter Property="Background" Value="LightGray"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Count}" Value="0">
+                                <Setter Property="Background" Value="White"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
                         <!-- room id column -->
@@ -140,6 +157,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
+                        <!-- sub department -->
                         <GridViewColumn>
                             <GridViewColumnHeader Content="Subdepartment" />
                             <GridViewColumn.CellTemplate>
@@ -148,6 +166,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
+                        <!-- count -->
                         <GridViewColumn>
                             <GridViewColumnHeader Content="Count" />
                             <GridViewColumn.CellTemplate>
@@ -202,7 +221,9 @@
                             Grid.Row="0"
                             Grid.Column="1"
                             Margin="5 10 0 10" 
-                            Content="Wipe stale data from rooms in model"/>
+                            Content="Wipe stale data from rooms in model"
+                            Command="{Binding WipeStaleRoomsDataCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
                     </Grid>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -243,37 +264,52 @@
                     </Grid>
                     <Border CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
                         <Expander  Header="Settings" Margin="5 5 5 5">
-                            <ScrollViewer  Margin="5" HorizontalScrollBarVisibility="Auto">
-                                <ListView 
-                                    MinWidth="400" 
-                                    Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}"
-                                    MinHeight="200"
-                                    Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}"
-                                    >
-                                    <ListView.View>
-                                        <GridView>
-                                            <!-- select to reload column -->
-                                            <GridViewColumn>
-                                                <GridViewColumnHeader Content="Select" />
-                                                <GridViewColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <CheckBox Padding="0 0 20 0" />
-                                                    </DataTemplate>
-                                                </GridViewColumn.CellTemplate>
-                                            </GridViewColumn>
-                                            <!-- category name column -->
-                                            <GridViewColumn>
-                                                <GridViewColumnHeader Content="Category Name"/>
-                                                <GridViewColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Padding="0 0 20 0" Text="ff"/>
-                                                    </DataTemplate>
-                                                </GridViewColumn.CellTemplate>
-                                            </GridViewColumn>
-                                        </GridView>
-                                    </ListView.View>
-                                </ListView>
-                            </ScrollViewer>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <ScrollViewer   Grid.Row="0" Margin="5" HorizontalScrollBarVisibility="Auto">
+                                    <ListView 
+                                        ItemsSource="{Binding SupportedCategories}" 
+                                        Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}"
+                                        Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}">
+                                        <ListView.View>
+                                            <GridView>
+                                                <!-- select to reload column -->
+                                                <GridViewColumn>
+                                                    <GridViewColumnHeader Content="Select" />
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <CheckBox 
+                                                                    Padding="0 0 20 0" 
+                                                                    IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"/>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                                <!-- category name column -->
+                                                <GridViewColumn>
+                                                    <GridViewColumnHeader Content="Category Name"/>
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock 
+                                                                    Padding="0 0 20 0" 
+                                                                    Text="{Binding CategoryName}"/>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                            </GridView>
+                                        </ListView.View>
+                                    </ListView>
+                                </ScrollViewer>
+                                <Button 
+                                     Grid.Row="1" 
+                                     Grid.Column="2" 
+                                     Padding="20 0 20 0"
+                                     Margin="5 10 0 10" 
+                                     Content="Apply"
+                                     />     
+                            </Grid>
                         </Expander>
                     </Border>
                 </StackPanel>

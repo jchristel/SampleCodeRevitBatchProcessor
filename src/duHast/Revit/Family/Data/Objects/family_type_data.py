@@ -39,7 +39,7 @@ from duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults import
 from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict
 from duHast.Revit.Family.family_types_model_get_data_from_xml import get_type_data_via_XML_from_family_object
 # import Autodesk
-# import Autodesk.Revit.DB as rdb
+from  Autodesk.Revit.DB import Element
 
 # data dictionary key values specific to this class
 CATEGORY_NAME = "categoryName"
@@ -91,7 +91,18 @@ class FamilyTypeData(IFamData.IFamilyData):
         
         for family_name, family in families.items():
             # get the type data and make sure to pass in root category path and root name path
-            type_data_result = get_type_data_via_XML_from_family_object(family, self.root_path, self.root_category_path)
+            
+            # add the family processed to the path
+            fam_name = Element.Name.GetValue(family)
+            # strip .rfa of name
+            if fam_name.lower().endswith(".rfa"):
+                fam_name = family_name[:-4]
+            fam_root_path = self.root_path + NESTING_SEPARATOR + fam_name
+            # get the category of the family to be processed
+            fam_cat_name = Element.Name.GetValue(family.Category)
+            fam_root_category_path = self.root_category_path + NESTING_SEPARATOR + fam_cat_name
+
+            type_data_result = get_type_data_via_XML_from_family_object(family, fam_root_path, fam_root_category_path)
             if type_data_result.status and len(type_data_result.result) > 0:
                 
                 # in the moment data contains a list of storage objects rather than a single storage manager object

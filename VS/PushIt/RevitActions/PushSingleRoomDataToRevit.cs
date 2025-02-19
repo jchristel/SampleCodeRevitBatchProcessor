@@ -41,9 +41,6 @@ namespace PushIt.RevitActions
 
         public void Execute(Document doc)
         {
-            
-            // No matching rooms found
-            Console.WriteLine("PushSingleRoomDataToRevit.Execute()");
 
             // get shared parameter data from the model
             // get shared parameter ids by GUID
@@ -76,8 +73,13 @@ namespace PushIt.RevitActions
                 sharedParameterIdsByGUIDs: sharedParameterIdsByGUIDs
             );
 
-            // remove the previous Revit room from the data model before adding it back in with new data
-            _revitModel.RemovePlacedRevitRoom(modelDataPrevious.RevitElementId);
+            //only remove previous data if there is a valid room
+            if (modelDataPrevious != null)
+            {
+                // remove the previous Revit room from the data model before adding it back in with new data
+                _revitModel.RemovePlacedRevitRoom(modelDataPrevious.RevitElementId);
+            }
+            
 
             // add the updated Revit room to the data model
             _revitModel.AddPlacedRevitRoom(_roomToPush.Id.Value, modelDataUpdated);

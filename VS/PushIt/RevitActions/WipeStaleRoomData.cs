@@ -110,31 +110,33 @@ namespace PushIt.RevitActions
                 }
             }
 
-
+            // keep track of the overall success of the wipe operation
+            bool overallWipeSuccess = true;
+            
             //attempt to wipe the stale data in bundles of 20 family instances to speed up the process
             List<FamilyInstance> familyInstancesToWipe = new List<FamilyInstance>();
             foreach (var staleFamilyInstance in staleFamilyInstances)
             {
+                //fill the task bucket
                 familyInstancesToWipe.Add(staleFamilyInstance);
-                
-                //overall flag indicating whether a wipe task bucket has been filled
-                bool hasWiped = false;
                 
                 //reached bucket limit?
                 if (familyInstancesToWipe.Count == 20)
                 {
-                    //set flag indicating that a wipe task bucket has been filled, and therfore a wipe task has been executed
-                    hasWiped = true;
-
+                    // update the family instances
                     bool wipeSuccess = wipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
-                    
+                    overallWipeSuccess = overallWipeSuccess && wipeSuccess;
+                    // clear the update family instances
                     familyInstancesToWipe.Clear();
                 }
-                //wipe the remaining family instances
-                if (!hasWiped)
-                {
-                    bool wipeSuccess = wipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
-                }
+                
+            }
+
+            //wipe the remaining family instances
+            if (familyInstancesToWipe.Count > 0)
+            {
+                bool wipeSuccess = wipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
+                overallWipeSuccess = overallWipeSuccess && wipeSuccess;
             }
 
         }

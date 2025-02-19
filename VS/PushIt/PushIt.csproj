@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandBase.cs" />
+    <Compile Include="Commands\CommandUpdateFromChangedCategories.cs" />
     <Compile Include="Commands\HighlightRoomsInRevitCommand.cs" />
     <Compile Include="Commands\PushSingleRoomDataToRevit.cs" />
     <Compile Include="Commands\RaiseRevitEventCommand.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RevitActions\HighlightRoomsInRevit.cs" />
     <Compile Include="RevitActions\IRevitAction.cs" />
+    <Compile Include="RevitActions\PushAllRoomDataToRevit.cs" />
     <Compile Include="RevitActions\PushSingleRoomDataToRevit.cs" />
     <Compile Include="RevitActions\RefreshRoomDataWithRevitData.cs" />
     <Compile Include="RevitActions\WipeStaleRoomData.cs" />

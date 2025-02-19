@@ -60,6 +60,10 @@ namespace PushIt.ViewModels
         private readonly Commands.HighlightRoomsInRevitCommand _highLightRoomCommand;
         //command to wipe stale rooms data
         private readonly Commands.RaiseRevitEventCommand _wipeStaleRoomsDataCommand;
+        //command to update from changed categories
+        private readonly Commands.CommandUpdateFromChangedCategories _updateFromChangedCategoriesCommand;
+        //command to update all rooms in revit from data model
+        private readonly Commands.RaiseRevitEventCommand _updateAllRoomsCommand;
 
         #region settings
 
@@ -212,6 +216,8 @@ namespace PushIt.ViewModels
         public ICommand ReloadDataCommand { get { return _raiseReloadDataCommand; } }
         public ICommand HighLightRoomCommand { get { return _highLightRoomCommand; } }
         public ICommand WipeStaleRoomsDataCommand { get { return _wipeStaleRoomsDataCommand; } }
+        public ICommand UpdateFromChangedCategoriesCommand { get { return _updateFromChangedCategoriesCommand; } }
+        public ICommand UpdateAllRoomsCommand { get { return _updateAllRoomsCommand; } }
 
         #endregion Commands
 
@@ -371,6 +377,11 @@ namespace PushIt.ViewModels
             _highLightRoomCommand = new Commands.HighlightRoomsInRevitCommand(this, _revitDataModel, _messageStore, () => { _eventManager.HighlightSelectedRoomEventRaise(); });
             //wipe stale rooms data
             _wipeStaleRoomsDataCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.WipeStaleRoomDataEventRaise(); });
+            //update from changed categories
+            _updateFromChangedCategoriesCommand = new Commands.CommandUpdateFromChangedCategories(this, _revitDataModel, _messageStore, () => { _eventManager.UpdateAfterSupportedCategoryChangeEventRaise(); });
+            //update all rooms in revit from data model
+            _updateAllRoomsCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.UpdateAllRoomsInRevitEventRaise(); });
+
         }
     }
 }

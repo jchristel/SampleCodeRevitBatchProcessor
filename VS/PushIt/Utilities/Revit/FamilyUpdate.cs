@@ -30,6 +30,14 @@ namespace PushIt.Utilities.Revit
 {
     public static class FamilyUpdate
     {
+        /// <summary>
+        /// Update the properties of a family instance with the room data
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="familyInstance"></param>
+        /// <param name="roomData"></param>
+        /// <param name="safetyOff"></param>
+        /// <returns></returns>
         public static bool updateProperties(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff)
         {
             try
@@ -60,6 +68,17 @@ namespace PushIt.Utilities.Revit
                 return false;
             }
         }
+
+        /// <summary>
+        /// Update a single family instance with the room data
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="familyInstance"></param>
+        /// <param name="roomData"></param>
+        /// <param name="safetyOff"></param>
+        /// <returns> 
+        /// True if the update was successful, false if not
+        /// </returns>
         public static bool updateSingleFamilyInstance(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff )
         {
 
@@ -68,6 +87,7 @@ namespace PushIt.Utilities.Revit
             {
                 try
                 {
+                    //update single family instance
                     return updateProperties(doc, familyInstance, roomData, safetyOff);
                 }
                 catch (Exception)
@@ -83,7 +103,54 @@ namespace PushIt.Utilities.Revit
 
         }
 
+        /// <summary>
+        /// Update the properties of multiple family instances with the room data
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="familyData"></param>
+        /// <returns>True if the update was successful, false if not</returns>
+        /// <exception cref="Exception"></exception>
+        public static bool updateMultipleFamilyInstances(Document doc, Dictionary<string, (PushIt.Models.RoomDataModel, List<FamilyInstance>)> familyData)
+        {
+            // set up an action to run inside a Revit transaction
+            Func<bool> actionInTranny = () =>
+            {
+                //run this outside of a try catch so the transaction can be rolled back if update fails
+                // loop over instances and update with room data
+                foreach (var (roomData, familyInstances) in familyData.Values)
+                {
+                    // loop over instances and update with blank room data
+                    foreach (var familyInstance in familyInstances)
+                    {
+                        // update the family instance
+                        bool flag_update = updateProperties(doc, familyInstance, roomData, false);
+                        // if the update fails throw an exception to roll back the transaction and attempt to update one by one
+                        if (!flag_update)
+                        {
+                            throw new Exception("Failed to update family instance");
+                        }
+                    }
+                }
+                // if all updates are successful return true
+                return true;
+            };
 
+            // run the action in a transaction
+            bool transactionFlag = RevitUtils.TransactionUtils.inTransaction(
+                doc, "Wiping stale room data", actionInTranny);
+            return transactionFlag;
+        }
+
+
+
+        /// <summary>
+        /// Wipe the properties of multiple family instances with the room data
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="familyInstances"></param>
+        /// <param name="sampleRoom"></param>
+        /// <returns>True if the update was successful, false if not</returns>
+        /// <exception cref="Exception"></exception>
         public static bool wipeMultipleFamilyInstances(Document doc, List<FamilyInstance> familyInstances, Models.RoomDataModel sampleRoom)
         {
             // setup an empty room data model
@@ -100,19 +167,23 @@ namespace PushIt.Utilities.Revit
             Func<bool> actionInTranny = () =>
             {
                 //run this outside of a try catch so the transaction can be rolled back if update fails
-               
+                // loop over instances and update with blank room data
                 foreach (var familyInstance in familyInstances)
                 {
+                    // update the family instance
                     bool flag_update = updateProperties(doc, familyInstance, emptyRoom, false);
+
+                    // if the update fails throw an exception to roll back the transaction and attempt to update one by one
                     if (!flag_update)
                     {
                         throw new Exception("Failed to update family instance");
                     }
                 }
+                // if all updates are successful return true
                 return true;
             };
 
-
+            // run the action in a transaction
             bool transactionFlag = RevitUtils.TransactionUtils.inTransaction(
                 doc, "Wiping stale room data", actionInTranny);
 

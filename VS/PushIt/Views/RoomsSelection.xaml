@@ -216,7 +216,9 @@
                             Grid.Row="0" 
                             Grid.Column="0"
                             Margin="0 10 5 10" 
-                            Content="Update rooms in model"/>
+                            Content="Update rooms in model"
+                            Command="{Binding UpdateAllRoomsCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
                         <Button 
                             Grid.Row="0"
                             Grid.Column="1"
@@ -308,6 +310,8 @@
                                      Padding="20 0 20 0"
                                      Margin="5 10 0 10" 
                                      Content="Apply"
+                                    Command="{Binding UpdateFromChangedCategoriesCommand}" 
+                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                                      />     
                             </Grid>
                         </Expander>

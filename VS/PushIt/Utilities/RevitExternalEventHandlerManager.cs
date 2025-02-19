@@ -33,6 +33,7 @@ using Autodesk.Revit.DB;
 using PushIt.RevitActions;
 using System.CodeDom.Compiler;
 using PushIt.ViewModels;
+using System.Runtime.InteropServices;
 
 namespace PushIt.Utilities
 {
@@ -47,6 +48,13 @@ namespace PushIt.Utilities
 
         ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         public RoomsSelectionViewModel RoomsSelectionViewModel { get => _roomsSelectionViewModel; set => _roomsSelectionViewModel = value; }
+
+
+        Revit.CustomExternalEvent _updateAllRoomsInRevitEventHandler;
+        ExternalEvent _updateAllRoomsInRevitEvent;
+
+        Revit.CustomExternalEvent _updateAfterSupportedCategoryChangeEventHandler;
+        ExternalEvent _updateAfterSupportedCategoryChangeEvent;
 
         Revit.CustomExternalEvent _wipeStaleRoomDataEventHandler;
         ExternalEvent _wipeStaleRoomDataEvent;
@@ -66,6 +74,15 @@ namespace PushIt.Utilities
 
         public RevitExternalEventHandlerManager()
         {
+            // Create an instance of the CustomExternalEvent class to update all rooms in the Revit model
+            _updateAllRoomsInRevitEventHandler = new Utilities.Revit.CustomExternalEvent((UIApplication uiapp) => UpdateAllRoomsInRevitEventExecute(uiapp));
+            // External Event for the dialog to use (to post requests)
+            _updateAllRoomsInRevitEvent = ExternalEvent.Create(_updateAllRoomsInRevitEventHandler);
+
+            // Create an instance of the CustomExternalEvent class to update the model after a supported category change
+            _updateAfterSupportedCategoryChangeEventHandler = new Utilities.Revit.CustomExternalEvent((UIApplication uiapp) => UpdateAfterSupportedCategoryChangeEventExecute(uiapp));
+            // External Event for the dialog to use (to post requests)
+            _updateAfterSupportedCategoryChangeEvent = ExternalEvent.Create(_updateAfterSupportedCategoryChangeEventHandler);
 
             // Create an instance of the CustomExternalEvent class to wipe stale room data
             _wipeStaleRoomDataEventHandler = new Utilities.Revit.CustomExternalEvent((UIApplication uiapp) => WipeStaleRoomDataEventExecute(uiapp));
@@ -94,6 +111,61 @@ namespace PushIt.Utilities
         }
 
 
+
+        public void UpdateAllRoomsInRevitEventRaise()
+        {
+            // Raise the external event
+            _updateAllRoomsInRevitEvent.Raise();
+        }
+
+        public void UpdateAllRoomsInRevitEventExecute(UIApplication uiapp)
+        {
+            Autodesk.Revit.DB.Document doc = uiapp.ActiveUIDocument.Document;
+            try
+            {
+                // Execute the action to update all rooms in the Revit model
+                PushAllRoomDataToRevitIRevitAction action = new PushAllRoomDataToRevitIRevitAction(_revitDataModel);
+                action.Execute(doc);
+            }
+            catch (Exception ex)
+            {
+                _roomsSelectionViewModel.AddMessage($"An exception occurred within the external event handler update all rooms in Revit event: {ex.Message}", Stores.MessageTypes.Error);
+            }
+        }
+
+        public void UpdateAfterSupportedCategoryChangeEventRaise()
+        {
+            // Raise the external event
+            _updateAfterSupportedCategoryChangeEvent.Raise();
+        }
+
+        public void UpdateAfterSupportedCategoryChangeEventExecute(UIApplication uiapp)
+        {
+
+            // this is the same code as in the RefreshUIDataEventExecute method...
+            //but it is here to be able to raise the event from the view model
+            Autodesk.Revit.DB.Document doc = uiapp.ActiveUIDocument.Document;
+
+            try
+            {
+                // Execute the action to refresh the room data with the Revit data
+                RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel);
+                action.Execute(doc);
+
+                // raise event to notify the view model that the model has been updated
+                _revitDataModel.RaisePropertyChanged(PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED);
+
+            }
+            catch (Exception ex)
+            {
+                _roomsSelectionViewModel.AddMessage( 
+                    $"An exception occurred within the external event handler update after supported category change event: { ex.Message}", 
+                    Stores.MessageTypes.Error
+                );
+            }
+        }
+
+
         public void WipeStaleRoomDataEventRaise()
         {
             // Raise the external event
@@ -113,7 +185,10 @@ namespace PushIt.Utilities
             }
             catch (Exception ex)
             {
-                TaskDialog.Show("External Event Handler", $"An exception occurred within the external event handler: {ex.Message}");
+                _roomsSelectionViewModel.AddMessage(
+                    $"An exception occurred within the external event handler update after wipe stale room data event: {ex.Message}",
+                    Stores.MessageTypes.Error
+                );
             }
         }
 
@@ -145,7 +220,10 @@ namespace PushIt.Utilities
             }
             catch (Exception ex)
             {
-                TaskDialog.Show("External Event Handler", $"An exception occurred within the external event handler: {ex.Message}");
+                _roomsSelectionViewModel.AddMessage(
+                    $"An exception occurred within the external event handler update after highlight selected room event: {ex.Message}",
+                    Stores.MessageTypes.Error
+                );
             }
         }
 
@@ -175,7 +253,7 @@ namespace PushIt.Utilities
             }
             catch (Exception ex)
             {
-                TaskDialog.Show("External Event Handler", $"An exception occurred within the external event handler: {ex.Message}");
+                _roomsSelectionViewModel.AddMessage($"An exception occurred within the external event handler update after reload data event: {ex.Message}", Stores.MessageTypes.Error);
             }
         }
 
@@ -240,7 +318,7 @@ namespace PushIt.Utilities
             }
             catch (Exception ex)
             {
-                TaskDialog.Show("External Event Handler", $"An exception occurred within the external event handler: {ex.Message}");
+                _roomsSelectionViewModel.AddMessage($"An exception occurred within the external event handler update after push single room event: {ex.Message}", Stores.MessageTypes.Error);
             }
         }
 
@@ -267,7 +345,7 @@ namespace PushIt.Utilities
             }
             catch (Exception ex)
             {
-                TaskDialog.Show("External Event Handler", $"An exception occurred within the external event handler: {ex.Message}");
+                _roomsSelectionViewModel.AddMessage($"An exception occurred within the external event handler update after refresh UI data event: {ex.Message}", Stores.MessageTypes.Error);
             }
         }
 
@@ -276,6 +354,14 @@ namespace PushIt.Utilities
         /// </summary>
         public void DisposeEvents()
         {
+            _updateAllRoomsInRevitEvent.Dispose();
+            _updateAllRoomsInRevitEvent = null;
+            _updateAllRoomsInRevitEventHandler = null;
+
+            _updateAfterSupportedCategoryChangeEvent.Dispose();
+            _updateAfterSupportedCategoryChangeEvent = null;
+            _updateAfterSupportedCategoryChangeEventHandler = null;
+
             _wipeStaleRoomDataEvent.Dispose();
             _wipeStaleRoomDataEvent = null;
             _wipeStaleRoomDataEventHandler = null;

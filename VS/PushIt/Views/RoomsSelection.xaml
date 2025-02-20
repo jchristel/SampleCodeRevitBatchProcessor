@@ -33,10 +33,11 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="PushIt..Real Good(tm)" FontSize="24"/>
             <ToggleButton x:Name = "toggleSafety" 
-                Content = "LL"   
+                Content = "{Binding  SafetyOffButtonText}"   
                 Margin = "0 10 0 10"
                 Width = "108"
-                HorizontalAlignment = "Right">
+                HorizontalAlignment = "Right"
+                IsChecked="{Binding SafetyOffMode, Mode=TwoWay}">
             </ToggleButton>
 
         </Grid>
@@ -196,7 +197,15 @@
                 Content="Highlight rooms in model"
                 Command="{Binding HighLightRoomCommand}"
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
-            <TextBlock Grid.Column="2" Margin="5 5 0 5" Text="Stuff"/>
+            <TextBlock 
+                Grid.Column="2" 
+                Margin="5 5 0 5" >
+                <Run Text="Design Set: " />
+                <Run Text="{Binding ActiveDesignSetName}" />
+                <LineBreak />
+                <Run Text="Design Option: " />
+                <Run Text="{Binding ActiveDesignOptionName}" />
+            </TextBlock>
         </Grid>
         <!-- admin model data expander -->
         <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">

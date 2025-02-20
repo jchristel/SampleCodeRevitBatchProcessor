@@ -45,6 +45,14 @@ namespace PushIt.ViewModels
         //default view of the rooms collection
         private ICollectionView _roomsView;
 
+        //flag to indicate if safety off mode is enabled
+        private bool _safetyOffMode = false;
+        //default button text for safety off mode
+        private string _safetyOffButtonText = "Safety on";
+
+        private string _activeDesignSetName = RevitUtils.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME;
+        private string _activeDesignOptionName = RevitUtils.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME;
+
         //observable collection of supported categories in Revit to push data into
         private readonly ObservableCollection<SupportedCategoryViewModel> _supportedCategories;
         //default view of the supported categories collection
@@ -80,6 +88,51 @@ namespace PushIt.ViewModels
 
                 // call ui update
                 OnPropertyChanged(nameof(DataFilePath));
+            }
+        }
+
+        //is UI in safety off mode ? (rooms can be pushed multiple times)
+        public bool SafetyOffMode
+        {
+            get => _safetyOffMode;
+            set
+            {
+                _safetyOffMode = value;
+
+                // set the button text
+                _safetyOffButtonText = value ? "Safety off" : "Safety on";
+
+                // notify ui of changes
+                OnPropertyChanged(nameof(SafetyOffButtonText));
+                OnPropertyChanged(nameof(SafetyOffMode));
+            }
+        }
+
+        //button text for safety off mode
+        public string SafetyOffButtonText
+        {
+            get => _safetyOffButtonText;
+        }
+
+        // the currently active design set name
+        public string ActiveDesignSetName
+        {
+            get => _activeDesignSetName;
+            set
+            {
+                _activeDesignSetName = value;
+                OnPropertyChanged(nameof(ActiveDesignSetName));
+            }
+        }
+
+        // the currently active design option name
+        public string ActiveDesignOptionName
+        {
+            get => _activeDesignOptionName;
+            set
+            {
+                _activeDesignOptionName = value;
+                OnPropertyChanged(nameof(ActiveDesignOptionName));
             }
         }
 

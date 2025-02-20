@@ -45,9 +45,10 @@ namespace PushIt.Utilities.Revit
                 string room_id = roomData.Id.Value;
                 if (safetyOff)
                 {
-                    string userName = doc.Application.Username;
-                    string dateStamp = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss");
-                    room_id = $"{room_id}::{userName}<{dateStamp}>";
+                    // in the moment, this will just push the same id again without changing it
+                    //string userName = doc.Application.Username;
+                    //string dateStamp = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss");
+                    // room_id = $"{room_id}::{userName}<{dateStamp}>";
                 }
 
                 // set the room id parameter

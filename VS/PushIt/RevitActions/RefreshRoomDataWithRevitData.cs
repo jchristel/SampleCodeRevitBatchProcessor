@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 using PushIt.Models;
+using PushIt.ViewModels;
 using RevitUtils;
 
 namespace PushIt.RevitActions
@@ -31,9 +32,11 @@ namespace PushIt.RevitActions
     public class RefreshRoomDataWithRevitData:IRevitAction
     {
         private readonly RevitDataModel _revitModel;
+        private ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         public Models.RevitDataModel RevitModel => _revitModel;
+        public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
 
-        
+
         public void Execute(Document doc)
         {
             List<Models.RoomDataModel> updatedRooms = RefreshRoomData(
@@ -61,7 +64,7 @@ namespace PushIt.RevitActions
         /// <param name="roomsDataModel"></param>
         /// <param name="supportedCategoryName"></param>
         /// <returns></returns>
-        public static List<Models.RoomDataModel> RefreshRoomData(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName)
+        public List<Models.RoomDataModel> RefreshRoomData(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName)
         {
             // check if all shared parameters exist and are bound to the correct categories
             bool parameterCheck = Utilities.Revit.SharedParameters.sharedParametersCheck(doc, roomsDataModel, supportedCategoryName);
@@ -91,6 +94,10 @@ namespace PushIt.RevitActions
             // get the documents current design set and option
             (string designSetName, string designOptionName) = Utilities.Revit.DesignSetAndOptionUtils.GetActiveDesignSetAndOptionName(doc);
 
+            // update the ui with the current design set and option
+            _roomsSelectionViewModel.ActiveDesignOptionName = designOptionName;
+            _roomsSelectionViewModel.ActiveDesignSetName = designSetName;
+
             // update rooms data model with revit rooms
             roomsDataModel = Utilities.UpdateRoomDataModelWithRoomsRevitModelUtils.UpdateRoomDataModelWithRoomsRevitModel(
                  roomsDataModel: roomsDataModel,
@@ -102,9 +109,10 @@ namespace PushIt.RevitActions
         }
 
 
-        public RefreshRoomDataWithRevitData(RevitDataModel revitModel)
+        public RefreshRoomDataWithRevitData(RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
         {
             _revitModel = revitModel;
+            _roomsSelectionViewModel = roomsSelectionViewModel;
         }
     }
 }

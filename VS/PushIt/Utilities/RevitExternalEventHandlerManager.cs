@@ -149,7 +149,7 @@ namespace PushIt.Utilities
             try
             {
                 // Execute the action to refresh the room data with the Revit data
-                RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel);
+                RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
                 action.Execute(doc);
 
                 // raise event to notify the view model that the model has been updated
@@ -245,7 +245,7 @@ namespace PushIt.Utilities
                 _revitDataModel.LoadRoomsData();
                 
                 // Execute the action to refresh the room data with the Revit data
-                RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel);
+                RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
                 action.Execute(doc);
                 
                 // raise event to notify the view model that the model has been updated
@@ -309,7 +309,8 @@ namespace PushIt.Utilities
                 PushSingleRoomDataToRevit action = new PushSingleRoomDataToRevit(
                     revitModel: _revitDataModel,
                     roomToPush: _roomsSelectionViewModel.SelectedRoom,
-                    pushTarget: selectedElement
+                    pushTarget: selectedElement,
+                    roomsSelectionViewModel: _roomsSelectionViewModel
                 );
 
                 action.Execute(doc);
@@ -336,7 +337,7 @@ namespace PushIt.Utilities
             try
             {
                 // Execute the action to refresh the room data with the Revit data
-                RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel);
+                RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
                 action.Execute(doc);
 
                 // raise event to notify the view model that the model has been updated

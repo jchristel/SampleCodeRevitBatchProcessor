@@ -38,6 +38,9 @@ namespace PushIt.Commands
 
         public override bool CanExecute(object parameter)
         {
+            // if safety off mode enabled this command is always available
+            if (_roomsSelectionViewModel.SafetyOffMode) { return true; }
+
             // check if IsMatchingRevitRoomsEmpty is true and call the base CanExecute method
             return _roomsSelectionViewModel.IsMatchingRevitRoomsEmpty && base.CanExecute(parameter);
         }

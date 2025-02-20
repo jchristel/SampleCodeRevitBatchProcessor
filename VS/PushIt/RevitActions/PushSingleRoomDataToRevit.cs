@@ -36,8 +36,10 @@ namespace PushIt.RevitActions
         private readonly RevitDataModel _revitModel;
         private readonly RoomDataModel _roomToPush;
         private readonly Element _pushTarget;
+        private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
 
         public Models.RevitDataModel RevitModel => _revitModel;
+        public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
 
         public void Execute(Document doc)
         {
@@ -57,7 +59,7 @@ namespace PushIt.RevitActions
                 doc: doc,
                 familyInstance: _pushTarget as Autodesk.Revit.DB.FamilyInstance,
                 roomData: _roomToPush,
-                safetyOff: false
+                safetyOff: _roomsSelectionViewModel.SafetyOffMode
             );
 
             if (!updateFamily)
@@ -86,11 +88,12 @@ namespace PushIt.RevitActions
 
         }
 
-        public PushSingleRoomDataToRevit(RevitDataModel revitModel, Models.RoomDataModel roomToPush, Element pushTarget)
+        public PushSingleRoomDataToRevit(RevitDataModel revitModel, Models.RoomDataModel roomToPush, Element pushTarget, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
         {
             _revitModel = revitModel;
             _roomToPush = roomToPush;
             _pushTarget = pushTarget;
+            _roomsSelectionViewModel = roomsSelectionViewModel;
         }
     }
 }

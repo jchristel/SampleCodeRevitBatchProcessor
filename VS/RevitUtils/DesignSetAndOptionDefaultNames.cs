@@ -30,7 +30,7 @@ namespace RevitUtils
         public static string DESIGN_OPTION_IS_PRIMARY = "designOptionIsPrimary";
 
         // default names for design set and design option of the mmain model ( no design set or design option is active)
-        public static string MAIN_MODEL_DEFAULT_DESIGN_SET_NAME = "-";
-        public static string MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME = "Main Model";
+        public static string MAIN_MODEL_DEFAULT_DESIGN_SET_NAME = "Main Model";
+        public static string MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME = "-";
     }
 }

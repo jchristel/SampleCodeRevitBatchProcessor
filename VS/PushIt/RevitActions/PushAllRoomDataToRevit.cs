@@ -35,6 +35,7 @@ namespace PushIt.RevitActions
     public class PushAllRoomDataToRevitIRevitAction
     {
         private readonly RevitDataModel _revitModel;
+        private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
 
         public Models.RevitDataModel RevitModel => _revitModel;
 
@@ -94,6 +95,9 @@ namespace PushIt.RevitActions
             // keep track of the overall success of the wipe operation
             bool overallUpdateSuccess = true;
 
+            // tell the UI we are busy
+            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
+
             //attempt to update room data in bundles of 20 family instances to speed up the process
             Dictionary<string, (RoomDataModel, List<FamilyInstance>)> updateFamilyInstances = new Dictionary<string, (RoomDataModel, List<FamilyInstance>)>();
             foreach (var currentFamilyInstance in currentFamilyInstances)
@@ -126,11 +130,15 @@ namespace PushIt.RevitActions
                 // clear the update family instances
                 updateFamilyInstances.Clear();
             }
+
+            // tell the UI we are done
+            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = false;
         }
 
-        public PushAllRoomDataToRevitIRevitAction(RevitDataModel revitModel)
+        public PushAllRoomDataToRevitIRevitAction(RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
         {
             _revitModel = revitModel;
+            _roomsSelectionViewModel = roomsSelectionViewModel;
         }
     }
 }

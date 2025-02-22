@@ -110,8 +110,6 @@ namespace PushIt.Utilities
             _refreshUIDataEvent = ExternalEvent.Create(_refreshUIDataEventHandler);
         }
 
-
-
         public void UpdateAllRoomsInRevitEventRaise()
         {
             // Raise the external event
@@ -124,7 +122,7 @@ namespace PushIt.Utilities
             try
             {
                 // Execute the action to update all rooms in the Revit model
-                PushAllRoomDataToRevitIRevitAction action = new PushAllRoomDataToRevitIRevitAction(_revitDataModel);
+                PushAllRoomDataToRevitIRevitAction action = new PushAllRoomDataToRevitIRevitAction(_revitDataModel, _roomsSelectionViewModel);
                 action.Execute(doc);
             }
             catch (Exception ex)
@@ -179,7 +177,8 @@ namespace PushIt.Utilities
             {
                 // Execute the action to wipe stale room data from the Revit model
                 WipeStaleRoomData action = new WipeStaleRoomData(
-                    revitModel: _revitDataModel
+                    revitModel: _revitDataModel,
+                    roomsSelectionViewModel: _roomsSelectionViewModel
                 );
                 action.Execute(doc);
             }

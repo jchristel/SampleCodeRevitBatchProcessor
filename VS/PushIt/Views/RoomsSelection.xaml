@@ -4,10 +4,46 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PushIt.Views"
+             xmlns:converters="clr-namespace:PushIt.Converters"
+             xmlns:spinner="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinner"
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="800">
     <UserControl.Resources>
         <!-- a style for the text box if it contains a validation error-->
+        <Style TargetType="TextBox">
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <AdornedElementPlaceholder/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <StackPanel>
+                            <Border
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3">
+                                <ScrollViewer x:Name="PART_ContentHost"/>
+                            </Border>
+                            <ItemsControl Margin="0 1 0 0" FontSize="12" ItemsSource="{TemplateBinding Validation.Errors}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ErrorContent}" Foreground="Red"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--boolean visibility converter-->
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid Margin="10 10 10 10">
         <!-- Add your UI elements here -->
@@ -102,10 +138,20 @@
                     </Style.Triggers>
                 </Style>
             </Border.Style>
+            <!-- a loading spinner  -->
+            <Grid>
+            <TextBlock 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                Visibility="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource BooleanToVisibilityConverter}}"
+                FontSize="24"
+                Text="Updating Revit..."/>
+            
             <ListView 
                 Grid.Row="2" 
                 Margin="0 25 0 0" 
                 ItemsSource="{Binding Rooms}"
+                Visibility="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
                 SelectionMode="Single"
                 SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}">
                 <!-- a style colouring rows depending on the count property  -->
@@ -190,6 +236,7 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+            </Grid>
         </Border>
         <!-- button row content -->
         <Grid Grid.Row="4">
@@ -267,7 +314,7 @@
                             Grid.Row="0"
                             Grid.Column="1"
                             Margin="5 10 5 10"
-                            Text="{Binding DataFilePath}"/>
+                            Text="{Binding DataFilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                         <Button 
                             Grid.Row="0" 
                             Grid.Column="2" 

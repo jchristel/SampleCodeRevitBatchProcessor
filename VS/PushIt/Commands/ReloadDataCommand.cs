@@ -38,18 +38,7 @@ namespace PushIt.Commands
 
         public override bool CanExecute(object parameter)
         {
-            // check if DataFilePath is a valid path and call the base CanExecute method
-            bool isValidFilePath = true;
-            try
-            {
-                System.IO.Path.GetFullPath(_roomsSelectionViewModel.DataFilePath);
-            }
-            catch (Exception)
-            {
-                isValidFilePath = false;
-            }
-
-            return isValidFilePath && base.CanExecute(parameter);
+            return _roomsSelectionViewModel.DataFilePathValid && base.CanExecute(parameter);
         }
 
         public override void Execute(object parameter)

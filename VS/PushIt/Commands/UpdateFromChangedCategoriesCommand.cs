@@ -29,7 +29,7 @@ using System.Windows;
 
 namespace PushIt.Commands
 {
-    public class CommandUpdateFromChangedCategories : CommandBase
+    public class UpdateFromChangedCategoriesCommand : CommandBase
     {
        
    
@@ -125,7 +125,7 @@ namespace PushIt.Commands
             }
         }
 
-        public CommandUpdateFromChangedCategories(
+        public UpdateFromChangedCategoriesCommand(
            ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
            Models.RevitDataModel revitDataModel,
            Stores.MessageStore messageStore,

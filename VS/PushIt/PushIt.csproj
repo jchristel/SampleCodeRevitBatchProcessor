@@ -56,6 +56,9 @@
     <Reference Include="CsvHelper, Version=33.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>packages\CsvHelper.33.0.1\lib\net48\CsvHelper.dll</HintPath>
     </Reference>
+    <Reference Include="LoadingSpinner, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\LoadingSpinner.1.0.0\lib\net48\LoadingSpinner.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -122,12 +125,13 @@
   <ItemGroup>
     <Compile Include="Commands\ClearMessageCommand.cs" />
     <Compile Include="Commands\CommandBase.cs" />
-    <Compile Include="Commands\CommandUpdateFromChangedCategories.cs" />
+    <Compile Include="Commands\UpdateFromChangedCategoriesCommand.cs" />
     <Compile Include="Commands\HighlightRoomsInRevitCommand.cs" />
-    <Compile Include="Commands\PushSingleRoomDataToRevit.cs" />
+    <Compile Include="Commands\PushSingleRoomDataToRevitCommand.cs" />
     <Compile Include="Commands\RaiseRevitEventCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Commands\ReloadDataCommand.cs" />
+    <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Exceptions\CategoryConflictException.cs" />
     <Compile Include="Exceptions\RoomConflictException.cs" />
     <Compile Include="Main.cs" />
@@ -161,6 +165,7 @@
     <Compile Include="Utilities\Revit\SharedParameters.cs" />
     <Compile Include="Utilities\SettingsUtils.cs" />
     <Compile Include="Utilities\UpdateRoomDataModelWithRoomsRevitModel.cs" />
+    <Compile Include="ViewModels\ErrorsViewModel.cs" />
     <Compile Include="ViewModels\GlobalMessageViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\RoomsSelectionViewModel.cs" />

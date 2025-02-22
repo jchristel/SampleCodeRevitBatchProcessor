@@ -24,21 +24,24 @@
 
 using PushIt.Utilities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Data;
 using System.Windows.Input;
 
 namespace PushIt.ViewModels
 {
-    public class RoomsSelectionViewModel : ViewModelBase
+    public class RoomsSelectionViewModel : ViewModelBase, INotifyDataErrorInfo
     {
         private readonly Stores.NavigationStore _navigationStore;
         private readonly Stores.MessageStore _messageStore;
         private readonly Models.RevitDataModel _revitDataModel;
         private readonly RevitExternalEventHandlerManager _eventManager;
+        private readonly ViewModels.ErrorsViewModel _errorsViewModel;
 
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
 
@@ -63,7 +66,7 @@ namespace PushIt.ViewModels
         //command to raise an event to refresh the gui
         private readonly Commands.RaiseRevitEventCommand _raiseRefreshGUICommand;
         //command to push a single room to revit
-        private readonly Commands.PushSingleRoomDataToRevit _raisePushSingleRoomCommand;
+        private readonly Commands.PushSingleRoomDataToRevitCommand _raisePushSingleRoomCommand;
         //command to raise an event to reload data from file path
         private readonly Commands.ReloadDataCommand _raiseReloadDataCommand;
         //command to highlight a room in Revit
@@ -71,9 +74,26 @@ namespace PushIt.ViewModels
         //command to wipe stale rooms data
         private readonly Commands.RaiseRevitEventCommand _wipeStaleRoomsDataCommand;
         //command to update from changed categories
-        private readonly Commands.CommandUpdateFromChangedCategories _updateFromChangedCategoriesCommand;
+        private readonly Commands.UpdateFromChangedCategoriesCommand _updateFromChangedCategoriesCommand;
         //command to update all rooms in revit from data model
         private readonly Commands.RaiseRevitEventCommand _updateAllRoomsCommand;
+
+        //property to check if there are any errors
+        public bool HasErrors => _errorsViewModel.HasErrors;
+        // event handler for errors changed
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        // flag indicating whether the view model is waiting for a Revit command to finish
+        private bool _isWaitingForRevitCommandToFinish;
+        public bool IsWaitingForRevitCommandToFinish
+        {
+            get => _isWaitingForRevitCommandToFinish;
+            set
+            {
+                _isWaitingForRevitCommandToFinish = value;
+                OnPropertyChanged(nameof(IsWaitingForRevitCommandToFinish));
+            }
+        }
 
         #region settings
 
@@ -84,13 +104,48 @@ namespace PushIt.ViewModels
             set
             {
                 _dataFilePath = value;
+                
+                _errorsViewModel.ClearErrors(nameof(DataFilePath));
 
-                // update the data path in the settings
-                _revitDataModel.Settings.DataPath = value;
+                // check if the file path is valid, if not add an error
+                if (string.IsNullOrEmpty(value))
+                {
+                    // set the data path to invalid
+                    _dataFilePathValid = false;
+                    // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(DataFilePathValid))
+                    // from the eventhandler ErrorsViewModel_ErrorsChanged
+                    _errorsViewModel.AddError(nameof(DataFilePath), "Data file path cannot be empty");
+                }
+                else if (!System.IO.File.Exists(value))
+                {
+                    // set the data path to invalid
+                    _dataFilePathValid = false;
+                    // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(DataFilePathValid))
+                    // from the eventhandler ErrorsViewModel_ErrorsChanged
+                    _errorsViewModel.AddError(nameof(DataFilePath), "Data file path does not exist");
+                }
+                else
+                {
+                    // set the data path to valid
+                    _dataFilePathValid = true;
+                    // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(DataFilePathValid))
+                    // from the eventhandler ErrorsViewModel_ErrorsChanged
+                    _errorsViewModel.ClearErrors(nameof(DataFilePath));
+                    
+                    // update the data path in the settings
+                    _revitDataModel.Settings.DataPath = value;
+                }
 
                 // call ui update
                 OnPropertyChanged(nameof(DataFilePath));
+                
             }
+        }
+
+        private bool _dataFilePathValid;
+        public bool DataFilePathValid
+        {
+            get => _dataFilePathValid;
         }
 
         //is UI in safety off mode ? (rooms can be pushed multiple times)
@@ -205,6 +260,7 @@ namespace PushIt.ViewModels
 
         //binding to show selected index
         private int _selectedIndex;
+
         public int SelectedIndex
         {
             get => _selectedIndex;
@@ -381,7 +437,6 @@ namespace PushIt.ViewModels
             base.Dispose();
         }
 
-
         /// <summary>
         /// Custom closing logic for RoomsSelectionViewModel
         /// Disposes all external events from the event manager
@@ -390,9 +445,33 @@ namespace PushIt.ViewModels
         {
             // Custom closing logic for RoomsSelectionViewModel
             _eventManager.DisposeEvents();
+
+            //unbsubscribe from underlying model changes
             _revitDataModel.PropertyChanged -= Model_PropertyChanged;
+
+            //unsubscribe from errors changed event
+            _errorsViewModel.ErrorsChanged -= ErrorsViewModel_ErrorsChanged;
             GlobalMessageViewModel.Dispose();
+
             base.OnClosing();
+        }
+
+        /// <summary>
+        /// Data validation
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public IEnumerable GetErrors(string propertyName)
+        {
+            return _errorsViewModel.GetErrors(propertyName);
+        }
+
+        private void ErrorsViewModel_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
+        {
+            ErrorsChanged?.Invoke(this, e);
+            // update the data file path valid property
+            OnPropertyChanged(nameof(DataFilePathValid));
         }
 
         public RoomsSelectionViewModel(
@@ -407,6 +486,11 @@ namespace PushIt.ViewModels
             _messageStore = messageStore;
             _revitDataModel = revitDataModel;
             _eventManager = eventManager;
+
+            //initialize the errors view model
+            _errorsViewModel = new ErrorsViewModel();
+            //subscribe to errors changed event
+            _errorsViewModel.ErrorsChanged += ErrorsViewModel_ErrorsChanged;
 
             //store the global message view model
             GlobalMessageViewModel = globalMessageViewModel;
@@ -440,7 +524,7 @@ namespace PushIt.ViewModels
             // refresh gui with data from model
             _raiseRefreshGUICommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.RefreshUIDataEventRaise(); });
             // push single room to revit
-            _raisePushSingleRoomCommand = new Commands.PushSingleRoomDataToRevit(this, _revitDataModel, _messageStore, () => { _eventManager.PushItSingleEventRaise(); });
+            _raisePushSingleRoomCommand = new Commands.PushSingleRoomDataToRevitCommand(this, _revitDataModel, _messageStore, () => { _eventManager.PushItSingleEventRaise(); });
             //load data from file path
             _raiseReloadDataCommand = new Commands.ReloadDataCommand(this, _revitDataModel, _messageStore, () => { _eventManager.ReloadDataEventRaise(); });
             //highlight room in Revit
@@ -448,7 +532,7 @@ namespace PushIt.ViewModels
             //wipe stale rooms data
             _wipeStaleRoomsDataCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.WipeStaleRoomDataEventRaise(); });
             //update from changed categories
-            _updateFromChangedCategoriesCommand = new Commands.CommandUpdateFromChangedCategories(this, _revitDataModel, _messageStore, () => { _eventManager.UpdateAfterSupportedCategoryChangeEventRaise(); });
+            _updateFromChangedCategoriesCommand = new Commands.UpdateFromChangedCategoriesCommand(this, _revitDataModel, _messageStore, () => { _eventManager.UpdateAfterSupportedCategoryChangeEventRaise(); });
             //update all rooms in revit from data model
             _updateAllRoomsCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.UpdateAllRoomsInRevitEventRaise(); });
         }

@@ -37,6 +37,7 @@ namespace PushIt.RevitActions
     public class WipeStaleRoomData : IRevitAction
     {
         private readonly RevitDataModel _revitModel;
+        private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         public Models.RevitDataModel RevitModel => _revitModel;
 
         public void Execute(Document doc)
@@ -110,6 +111,12 @@ namespace PushIt.RevitActions
                 }
             }
 
+            // tell the UI we are busy
+            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
+
+            // DEBUG
+            Task.Delay(2000);
+
             // keep track of the overall success of the wipe operation
             bool overallWipeSuccess = true;
             
@@ -139,10 +146,14 @@ namespace PushIt.RevitActions
                 overallWipeSuccess = overallWipeSuccess && wipeSuccess;
             }
 
+            // tell the UI we are done
+            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = false;
+
         }
-        public WipeStaleRoomData(Models.RevitDataModel revitModel)
+        public WipeStaleRoomData(Models.RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
         {
             _revitModel = revitModel;
+            _roomsSelectionViewModel = roomsSelectionViewModel;
         }
     }
 }

@@ -26,7 +26,7 @@ using System.ComponentModel;
 
 namespace PushIt.Commands
 {
-    public class PushSingleRoomDataToRevit: CommandBase
+    public class PushSingleRoomDataToRevitCommand: CommandBase
     {
         private readonly Models.RevitDataModel _revitDataModel;
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
@@ -71,7 +71,7 @@ namespace PushIt.Commands
             }
         }
 
-        public PushSingleRoomDataToRevit(
+        public PushSingleRoomDataToRevitCommand(
             ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
             Models.RevitDataModel revitDataModel,
             Stores.MessageStore messageStore,

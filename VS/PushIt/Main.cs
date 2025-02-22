@@ -45,13 +45,20 @@ namespace PushIt
     [Regeneration(RegenerationOption.Manual)]
     public class Main : IExternalCommand
     {
-        Models.RevitDataModel _revitDataModel = new Models.RevitDataModel();
-        Stores.NavigationStore _navigationStore = new Stores.NavigationStore();
-        Stores.MessageStore _messageStore = new Stores.MessageStore();
-        RevitExternalEventHandlerManager _eventManager = new RevitExternalEventHandlerManager();
+        Models.RevitDataModel _revitDataModel;
+        Stores.NavigationStore _navigationStore;
+        Stores.MessageStore _messageStore;
+        RevitExternalEventHandlerManager _eventManager;
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            //set up stores
+            _navigationStore = new Stores.NavigationStore();
+            _messageStore = new Stores.MessageStore();
+            //set up the event manager
+            _eventManager = new RevitExternalEventHandlerManager();
+            // set up th revit data model
+            _revitDataModel = new Models.RevitDataModel();
 
             //set up the logger
             //Utils.LoggerUtility.setupLogger();
@@ -94,8 +101,14 @@ namespace PushIt
 
         private ViewModels.RoomsSelectionViewModel CreateRoomsSelectionViewModel()
         {
+            ViewModels.GlobalMessageViewModel _globa = new ViewModels.GlobalMessageViewModel(_messageStore);
+
             return new ViewModels.RoomsSelectionViewModel(
-                _revitDataModel, _navigationStore, _messageStore, _eventManager);
+                _revitDataModel,
+                _navigationStore,
+                _messageStore,
+                _eventManager,
+                _globa);
         }
     }
 }

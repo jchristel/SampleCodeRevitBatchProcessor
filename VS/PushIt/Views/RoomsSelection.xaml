@@ -14,6 +14,8 @@
         <Grid.RowDefinitions>
             <!-- header row -->
             <RowDefinition Height="auto"/>
+            <!-- message banner -->
+            <RowDefinition Height="auto"/>
             <!-- filter -->
             <RowDefinition Height="auto"/>
             <!-- data -->
@@ -27,22 +29,31 @@
         </Grid.RowDefinitions>
         <!-- header row content -->
         <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <!-- header row -->
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="PushIt..Real Good(tm)" FontSize="24"/>
-            <ToggleButton x:Name = "toggleSafety" 
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="PushIt..Real Good(tm)" FontSize="24"/>
+            <ToggleButton
+                Grid.Column="1" Grid.Row="0"
+                x:Name = "toggleSafety" 
                 Content = "{Binding  SafetyOffButtonText}"   
                 Margin = "0 10 0 10"
                 Width = "108"
                 HorizontalAlignment = "Right"
                 IsChecked="{Binding SafetyOffMode, Mode=TwoWay}">
             </ToggleButton>
-
+        </Grid>
+        <!-- message banner -->
+        <Grid Grid.Row="1">
+            <local:GlobalMessageBanner DataContext="{Binding GlobalMessageViewModel}"/>
         </Grid>
         <!-- filter -->
-        <Border Grid.Row="1" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <Expander Header="Filters" Margin="5 5 5 5">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -76,7 +87,7 @@
             </Expander>
         </Border>
         <!-- grid view -->
-        <Border Grid.Row="2" CornerRadius="1"  Margin="0 2 0 2">
+        <Border Grid.Row="3" CornerRadius="1"  Margin="0 2 0 2">
             <Border.Style>
                 <Style TargetType="Border">
                     <Style.Triggers>
@@ -181,7 +192,7 @@
             </ListView>
         </Border>
         <!-- button row content -->
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -208,7 +219,7 @@
             </TextBlock>
         </Grid>
         <!-- admin model data expander -->
-        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
+        <Border Grid.Row="5" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">
             <Expander  Header="Data Admin" Margin="5 5 5 5">
                 <StackPanel>
                     <Grid>
@@ -329,7 +340,7 @@
             </Expander>
         </Border>
         <!-- push it button row content -->
-        <Grid Grid.Row="5">
+        <Grid Grid.Row="6">
             <Button  
                 Margin="0 10 0 10" 
                 Content="Push It!" 

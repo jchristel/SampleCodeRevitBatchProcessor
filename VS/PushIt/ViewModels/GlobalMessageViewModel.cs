@@ -21,58 +21,56 @@
 //
 //
 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
-namespace PushIt.Stores
+namespace PushIt.ViewModels
 {
-    public enum MessageTypes
+    public class GlobalMessageViewModel : ViewModelBase
     {
-        Error,
-        Information
-    }
-    public class MessageStore
-    {
-        string _currentMessage;
-        public string CurrentMessage { 
-            get =>_currentMessage;
-            private set
-            {
-                _currentMessage = value;
-                CurrentMessageChanged?.Invoke();
-            }
+        private readonly Stores.MessageStore _messageStore;
+
+        public string CurrentMessage => _messageStore.CurrentMessage;
+        public bool IsErrorMessage  => _messageStore.CurrentMessageType == Stores.MessageTypes.Error;
+        public bool IsInformationMessage => _messageStore.CurrentMessageType == Stores.MessageTypes.Information;
+        public bool HasMessage => _messageStore.HasCurrentMessage;
+
+
+        public ICommand ClearMessageCommand { get; }
+
+
+        private void MessageStore_CurrentMessageChanged()
+        {   
+           OnPropertyChanged(nameof(CurrentMessage));
+            OnPropertyChanged(nameof(HasMessage));
         }
 
-        MessageTypes _currentMessageType;
-        public MessageTypes CurrentMessageType
+        private void MessageStore_CurrentMessageTypeChanged()
         {
-            get => _currentMessageType;
-            private set
-            {
-                _currentMessageType = value;
-                CurrentMessageTypeChanged?.Invoke();
-            }
+            OnPropertyChanged(nameof(IsErrorMessage));
+            OnPropertyChanged(nameof(IsInformationMessage));
         }
-       
-        public event Action CurrentMessageChanged;
-        public event Action CurrentMessageTypeChanged;
 
-
-        public bool HasCurrentMessage => !string.IsNullOrEmpty(CurrentMessage);
-
-        public void ClearCurrentMessage()
+        public override void OnClosing()
         {
-            CurrentMessage = string.Empty;
+            _messageStore.CurrentMessageChanged -= MessageStore_CurrentMessageChanged;
+            _messageStore.CurrentMessageTypeChanged -= MessageStore_CurrentMessageTypeChanged;
         }
 
-        public void SetCurrentMessage(string message, MessageTypes messageType)
+        public GlobalMessageViewModel(Stores.MessageStore messageStore)
         {
-            CurrentMessage = message;
-            CurrentMessageType = messageType;
-        }
+            _messageStore = messageStore;
+            _messageStore.CurrentMessageChanged += MessageStore_CurrentMessageChanged;
+            _messageStore.CurrentMessageTypeChanged += MessageStore_CurrentMessageTypeChanged;
 
+            ClearMessageCommand = new Commands.ClearMessageCommand(_messageStore);
+
+        }
     }
 }

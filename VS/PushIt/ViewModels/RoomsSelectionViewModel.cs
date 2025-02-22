@@ -40,6 +40,8 @@ namespace PushIt.ViewModels
         private readonly Models.RevitDataModel _revitDataModel;
         private readonly RevitExternalEventHandlerManager _eventManager;
 
+        public GlobalMessageViewModel GlobalMessageViewModel { get; }
+
         //observable collection of rooms
         private readonly ObservableCollection<RoomViewModel> _rooms;
         //default view of the rooms collection
@@ -367,7 +369,16 @@ namespace PushIt.ViewModels
 
         public void AddMessage(string message, Stores.MessageTypes messageType)
         {
+            
             _messageStore.SetCurrentMessage(message, messageType);
+        }
+
+        // not sure whether this is actually required or not
+        // when on closing, dispose of the event manager
+        // and remove the event handler
+        public override void Dispose()
+        {
+            base.Dispose();
         }
 
 
@@ -379,6 +390,8 @@ namespace PushIt.ViewModels
         {
             // Custom closing logic for RoomsSelectionViewModel
             _eventManager.DisposeEvents();
+            _revitDataModel.PropertyChanged -= Model_PropertyChanged;
+            GlobalMessageViewModel.Dispose();
             base.OnClosing();
         }
 
@@ -386,13 +399,17 @@ namespace PushIt.ViewModels
             Models.RevitDataModel revitDataModel,
             Stores.NavigationStore navigationStore,
             Stores.MessageStore messageStore,
-            RevitExternalEventHandlerManager eventManager)
+            RevitExternalEventHandlerManager eventManager,
+            GlobalMessageViewModel globalMessageViewModel)
         {
             //store services
             _navigationStore = navigationStore;
             _messageStore = messageStore;
             _revitDataModel = revitDataModel;
             _eventManager = eventManager;
+
+            //store the global message view model
+            GlobalMessageViewModel = globalMessageViewModel;
 
             //initialize properties
             // rooms collection
@@ -410,7 +427,7 @@ namespace PushIt.ViewModels
 
             //update supported categories from settings
             UpdateCategories();
-            
+
             //subscribe to underlying model changes
             _revitDataModel.PropertyChanged += Model_PropertyChanged;
 
@@ -418,7 +435,7 @@ namespace PushIt.ViewModels
             _eventManager.RoomsSelectionViewModel = this;
             //update rooms data with data from revit through an external event
             _eventManager.RefreshUIDataEventRaise();
-           
+
             // set up commands
             // refresh gui with data from model
             _raiseRefreshGUICommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.RefreshUIDataEventRaise(); });
@@ -434,7 +451,6 @@ namespace PushIt.ViewModels
             _updateFromChangedCategoriesCommand = new Commands.CommandUpdateFromChangedCategories(this, _revitDataModel, _messageStore, () => { _eventManager.UpdateAfterSupportedCategoryChangeEventRaise(); });
             //update all rooms in revit from data model
             _updateAllRoomsCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.UpdateAllRoomsInRevitEventRaise(); });
-
         }
     }
 }

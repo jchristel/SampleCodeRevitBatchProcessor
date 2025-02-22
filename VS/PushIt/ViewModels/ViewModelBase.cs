@@ -46,5 +46,9 @@ namespace PushIt.ViewModels
         {
             // Override this method in derived classes to perform clean-up operations
         }
+
+        public virtual void Dispose()
+        {
+        }
     }
 }

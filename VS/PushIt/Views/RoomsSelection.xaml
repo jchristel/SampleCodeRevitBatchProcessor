@@ -140,14 +140,13 @@
             </Border.Style>
             <!-- a loading spinner  -->
             <Grid>
-            <TextBlock 
+                <TextBlock 
                 HorizontalAlignment="Center" 
                 VerticalAlignment="Center" 
                 Visibility="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource BooleanToVisibilityConverter}}"
                 FontSize="24"
                 Text="Updating Revit..."/>
-            
-            <ListView 
+                <ListView 
                 Grid.Row="2" 
                 Margin="0 25 0 0" 
                 ItemsSource="{Binding Rooms}"

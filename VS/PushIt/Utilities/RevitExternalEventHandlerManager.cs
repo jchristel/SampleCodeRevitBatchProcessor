@@ -207,7 +207,6 @@ namespace PushIt.Utilities
                 if (_roomsSelectionViewModel.SelectedRoom == null)
                 {
                     _roomsSelectionViewModel.AddMessage("No room selected in the user interface to highlight in Revit.", Stores.MessageTypes.Error);
-                    TaskDialog.Show("Highlight Room", "No room selected to highlight in Revit.");
                     return;
                 }
                 // Execute the action to highlight the selected room in the Revit model
@@ -272,7 +271,6 @@ namespace PushIt.Utilities
                 if (_roomsSelectionViewModel.SelectedRoom == null)
                 {
                     _roomsSelectionViewModel.AddMessage("No room selected in the user interface to push to Revit.", Stores.MessageTypes.Error);
-                    TaskDialog.Show("Push Single Room", "No room selected to push to Revit.");
                     return;
                 }
 
@@ -285,13 +283,11 @@ namespace PushIt.Utilities
                 if (selectedElementIds.Count == 0)
                 {
                     _roomsSelectionViewModel.AddMessage("No room selected in the Revit model to push to.", Stores.MessageTypes.Error);
-                    TaskDialog.Show("Push Single Room", "No room selected in the Revit model to push to.");
                     return;
                 }
                 else if (selectedElementIds.Count > 1)
                 {
                     _roomsSelectionViewModel.AddMessage("More than one room selected in the Revit model to push to.", Stores.MessageTypes.Error);
-                    TaskDialog.Show("Push Single Room", "More than one room selected in the Revit model to push to.");
                     return;
                 }
 
@@ -301,7 +297,6 @@ namespace PushIt.Utilities
                 {
                     string supportedCategories = string.Join(", ", _revitDataModel.Settings.SupportedCategories);
                     _roomsSelectionViewModel.AddMessage($"The selected element is not of a supported category. Supported categories are: {supportedCategories}.", Stores.MessageTypes.Error);
-                    TaskDialog.Show("Push Single Room", $"The selected element is not of a supported category. Supported categories are: {supportedCategories}.");
                     return;
                 }
 

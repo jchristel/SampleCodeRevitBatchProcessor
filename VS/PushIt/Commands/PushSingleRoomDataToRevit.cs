@@ -50,12 +50,15 @@ namespace PushIt.Commands
             try
             {
                 _action?.Invoke();
-                _messageStore.SetCurrentMessage("Pushed data into Revit room", Stores.MessageTypes.Information);
+                // get the selected room id
+
+                var selectedRoomId = _roomsSelectionViewModel.SelectedRoom != null ? _roomsSelectionViewModel.SelectedRoom.Id.Value : "";
+                _messageStore.SetCurrentMessage($"Pushed data for [{selectedRoomId}] into Revit room.", Stores.MessageTypes.Information);
 
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage($"Failed to push data into Revit room {ex.Message}", Stores.MessageTypes.Error);
+                _messageStore.SetCurrentMessage($"Failed to push data into Revit room: {ex.Message}", Stores.MessageTypes.Error);
             }
         }
 

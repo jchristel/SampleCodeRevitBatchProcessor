@@ -5,9 +5,10 @@ layout:
   - Purge Unused
   - Warnings
   - Families
+  - PushIt
 
 # bundle tooltip
-tooltip: Hassell
+tooltip: A collection of tools for Revit
 
 
 # bundle author

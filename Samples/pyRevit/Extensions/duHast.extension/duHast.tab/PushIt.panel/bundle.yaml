@@ -1,0 +1,9 @@
+layout:
+  - PushIt
+
+# bundle tooltip
+tooltip: Rapid layout prototyping with PushIt
+
+# bundle author
+author: 
+  - Jan Christel

@@ -1,0 +1,7 @@
+title: PushIt
+tooltip: A rapid layouting extension for Revit
+author: "Jan Christel"
+highlight: new
+context: zero-doc
+assembly: 'PushIt'
+command_class: Main

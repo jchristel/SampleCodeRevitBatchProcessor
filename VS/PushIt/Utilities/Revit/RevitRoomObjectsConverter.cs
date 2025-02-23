@@ -29,7 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PushIt.Utilities.Revit
+namespace duHast.PushIt.Utilities.Revit
 {
     public static class RevitRoomObjectsConverter
     {
@@ -89,10 +89,10 @@ namespace PushIt.Utilities.Revit
 
             return revitRoom;
         }
-        public static List<PushIt.Models.RoomsRevit> ConvertFamiliesToRevitRooms(List<FamilyInstance> familyInstances, Models.RoomDataModel sampleModelRoom)
+        public static List<duHast.PushIt.Models.RoomsRevit> ConvertFamiliesToRevitRooms(List<FamilyInstance> familyInstances, Models.RoomDataModel sampleModelRoom)
         {
             // create a list of revit rooms
-            List<Models.RoomsRevit> revitRooms = new List<PushIt.Models.RoomsRevit>();
+            List<Models.RoomsRevit> revitRooms = new List<duHast.PushIt.Models.RoomsRevit>();
 
             // get shared parameter ids by GUID
             Dictionary<string, ElementId> sharedParameterIdsByGUIDs = RevitUtils.SharedParaUtils.GetSharedParameterIdsByGUID(familyInstances[0].Document);

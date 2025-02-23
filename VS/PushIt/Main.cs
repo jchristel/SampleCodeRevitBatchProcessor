@@ -33,28 +33,28 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.DB.Architecture;
-using PushIt.Views;
-using PushIt.Utilities;
-using PushIt.RevitActions;
+using duHast.PushIt.Views;
+using duHast.PushIt.Utilities;
+using duHast.PushIt.RevitActions;
 using System.IO;
 
 
-namespace PushIt
+namespace duHast.PushIt
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     public class Main : IExternalCommand
     {
         Models.RevitDataModel _revitDataModel;
-        Stores.NavigationStore _navigationStore;
-        Stores.MessageStore _messageStore;
+        duHast.Utils.WPF.Stores.NavigationStore _navigationStore;
+        duHast.Utils.WPF.Stores.MessageStore _messageStore;
         RevitExternalEventHandlerManager _eventManager;
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             //set up stores
-            _navigationStore = new Stores.NavigationStore();
-            _messageStore = new Stores.MessageStore();
+            _navigationStore = new duHast.Utils.WPF.Stores.NavigationStore();
+            _messageStore = new duHast.Utils.WPF.Stores.MessageStore();
             //set up the event manager
             _eventManager = new RevitExternalEventHandlerManager();
             // set up th revit data model
@@ -64,7 +64,7 @@ namespace PushIt
             //Utils.LoggerUtility.setupLogger();
 
             // Example log entry
-            //Log.Information("Starting PushIt.");
+            //Log.Information("Starting duHast.PushIt.");
 
             //Get application and document objects
             UIApplication uiapp = commandData.Application;
@@ -101,7 +101,7 @@ namespace PushIt
 
         private ViewModels.RoomsSelectionViewModel CreateRoomsSelectionViewModel()
         {
-            ViewModels.GlobalMessageViewModel _globa = new ViewModels.GlobalMessageViewModel(_messageStore);
+            duHast.Utils.WPF.ViewModels.GlobalMessageViewModel _globa = new duHast.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
 
             return new ViewModels.RoomsSelectionViewModel(
                 _revitDataModel,

@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PushIt.Views
+namespace duHast.Utils.WPF.Views
 {
     /// <summary>
     /// Interaction logic for GlobalMessageBanner.xaml

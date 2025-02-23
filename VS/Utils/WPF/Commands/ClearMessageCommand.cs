@@ -21,30 +21,29 @@
 //
 //
 
-using System;
-using System.Windows;
-using System.Windows.Data;
-
-namespace PushIt.Converters
+namespace duHast.Utils.WPF.Commands
 {
-    public class InverseBooleanToVisibilityConverter: IValueConverter
+    public class ClearMessageCommand : CommandBase
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        private readonly Stores.MessageStore _messageStore;
+        public override bool CanExecute(object parameter)
         {
-            if (value is bool boolValue && boolValue)
-            {
-                return Visibility.Collapsed;
-            }
-            else
-            {
-                return Visibility.Visible;
-            }
+            return true;
         }
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+
+        public override void Execute(object parameter)
         {
-            throw new NotImplementedException();
+            _messageStore.ClearCurrentMessage();
+        }
+
+        public void RaiseCanExecuteChanged()
+        {
+            OnCanExecutedChanged();
+        }
+
+        public ClearMessageCommand(Stores.MessageStore messageStore)
+        {
+            _messageStore = messageStore;
         }
     }
-   
 }
-

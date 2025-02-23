@@ -29,7 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PushIt.Utilities
+namespace duHast.PushIt.Utilities
 {
     public static class SettingsUtils
     {

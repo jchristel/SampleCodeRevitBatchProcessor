@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
 
-namespace PushIt.Utilities.Revit
+namespace duHast.PushIt.Utilities.Revit
 {
     public static class FamilyUpdate
     {
@@ -111,7 +111,7 @@ namespace PushIt.Utilities.Revit
         /// <param name="familyData"></param>
         /// <returns>True if the update was successful, false if not</returns>
         /// <exception cref="Exception"></exception>
-        public static bool updateMultipleFamilyInstances(Document doc, Dictionary<string, (PushIt.Models.RoomDataModel, List<FamilyInstance>)> familyData)
+        public static bool updateMultipleFamilyInstances(Document doc, Dictionary<string, (duHast.PushIt.Models.RoomDataModel, List<FamilyInstance>)> familyData)
         {
             // set up an action to run inside a Revit transaction
             Func<bool> actionInTranny = () =>

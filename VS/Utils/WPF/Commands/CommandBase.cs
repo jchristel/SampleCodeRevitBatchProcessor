@@ -22,30 +22,25 @@
 //
 
 using System;
-using System.IO;
-using Serilog;
+using System.Windows.Input;
 
-namespace Utils
+namespace duHast.Utils.WPF.Commands
 {
-    public static class LoggerUtility
-
+    public abstract class CommandBase : ICommand
     {
-        /// <summary>
-        /// Sets up the logger using Serilog to log messages to a file.
-        /// </summary>
-        public static void setupLogger()
-        {
-            // Configure Serilog
-            string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string logDirectory = Path.Combine(localAppDataPath, "duHast");
-            Directory.CreateDirectory(logDirectory);
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.File(
-                    path: Path.Combine(logDirectory, "log-pushit.txt"),
-                    rollingInterval: RollingInterval.Day,
-                    retainedFileCountLimit: 4) // Keep the last 4 weeks of logs
-                .CreateLogger();
+        public event EventHandler CanExecuteChanged;
 
+        public virtual bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public abstract void Execute(object parameter);
+
+
+        protected void OnCanExecutedChanged()
+        {
+            CanExecuteChanged?.Invoke(this, new EventArgs ());
         }
     }
 }

@@ -21,34 +21,49 @@
 //
 //
 
-using System;
 
-namespace PushIt.Commands
+using System.Windows.Input;
+
+namespace duHast.Utils.WPF.ViewModels
 {
-    public class RelayCommand : CommandBase
+    public class GlobalMessageViewModel : ViewModelBase
     {
-        private readonly Action<object> _execute;
-        private readonly Func<object, bool> _canExecute;
+        private readonly Stores.MessageStore _messageStore;
 
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
-        {
-            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            _canExecute = canExecute;
+        public string CurrentMessage => _messageStore.CurrentMessage;
+        public bool IsErrorMessage  => _messageStore.CurrentMessageType == Stores.MessageTypes.Error;
+        public bool IsInformationMessage => _messageStore.CurrentMessageType == Stores.MessageTypes.Information;
+        public bool HasMessage => _messageStore.HasCurrentMessage;
+
+
+        public ICommand ClearMessageCommand { get; }
+
+
+        private void MessageStore_CurrentMessageChanged()
+        {   
+           OnPropertyChanged(nameof(CurrentMessage));
+            OnPropertyChanged(nameof(HasMessage));
         }
 
-        public override bool CanExecute(object parameter)
+        private void MessageStore_CurrentMessageTypeChanged()
         {
-            return _canExecute == null || _canExecute(parameter);
+            OnPropertyChanged(nameof(IsErrorMessage));
+            OnPropertyChanged(nameof(IsInformationMessage));
         }
 
-        public override void Execute(object parameter)
+        public override void OnClosing()
         {
-            _execute(parameter);
+            _messageStore.CurrentMessageChanged -= MessageStore_CurrentMessageChanged;
+            _messageStore.CurrentMessageTypeChanged -= MessageStore_CurrentMessageTypeChanged;
         }
 
-        public void RaiseCanExecuteChanged()
+        public GlobalMessageViewModel(Stores.MessageStore messageStore)
         {
-            OnCanExecutedChanged();
+            _messageStore = messageStore;
+            _messageStore.CurrentMessageChanged += MessageStore_CurrentMessageChanged;
+            _messageStore.CurrentMessageTypeChanged += MessageStore_CurrentMessageTypeChanged;
+
+            ClearMessageCommand = new Commands.ClearMessageCommand(_messageStore);
         }
     }
 }

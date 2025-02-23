@@ -23,7 +23,7 @@
 
 
 
-namespace PushIt.Models
+namespace duHast.PushIt.Models
 {
     public class RoomDataProperty:Utilities.IRoomProperty
     {

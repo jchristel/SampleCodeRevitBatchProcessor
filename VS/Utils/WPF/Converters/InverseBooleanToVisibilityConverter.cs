@@ -21,49 +21,30 @@
 //
 //
 
+using System;
+using System.Windows;
+using System.Windows.Data;
 
-using System.Windows.Input;
-
-namespace PushIt.ViewModels
+namespace duHast.Utils.WPF.Converters
 {
-    public class GlobalMessageViewModel : ViewModelBase
+    public class InverseBooleanToVisibilityConverter: IValueConverter
     {
-        private readonly Stores.MessageStore _messageStore;
-
-        public string CurrentMessage => _messageStore.CurrentMessage;
-        public bool IsErrorMessage  => _messageStore.CurrentMessageType == Stores.MessageTypes.Error;
-        public bool IsInformationMessage => _messageStore.CurrentMessageType == Stores.MessageTypes.Information;
-        public bool HasMessage => _messageStore.HasCurrentMessage;
-
-
-        public ICommand ClearMessageCommand { get; }
-
-
-        private void MessageStore_CurrentMessageChanged()
-        {   
-           OnPropertyChanged(nameof(CurrentMessage));
-            OnPropertyChanged(nameof(HasMessage));
-        }
-
-        private void MessageStore_CurrentMessageTypeChanged()
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            OnPropertyChanged(nameof(IsErrorMessage));
-            OnPropertyChanged(nameof(IsInformationMessage));
+            if (value is bool boolValue && boolValue)
+            {
+                return Visibility.Collapsed;
+            }
+            else
+            {
+                return Visibility.Visible;
+            }
         }
-
-        public override void OnClosing()
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            _messageStore.CurrentMessageChanged -= MessageStore_CurrentMessageChanged;
-            _messageStore.CurrentMessageTypeChanged -= MessageStore_CurrentMessageTypeChanged;
-        }
-
-        public GlobalMessageViewModel(Stores.MessageStore messageStore)
-        {
-            _messageStore = messageStore;
-            _messageStore.CurrentMessageChanged += MessageStore_CurrentMessageChanged;
-            _messageStore.CurrentMessageTypeChanged += MessageStore_CurrentMessageTypeChanged;
-
-            ClearMessageCommand = new Commands.ClearMessageCommand(_messageStore);
+            throw new NotImplementedException();
         }
     }
+   
 }
+

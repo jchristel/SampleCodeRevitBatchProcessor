@@ -24,15 +24,15 @@
 using System;
 using System.ComponentModel;
 
-namespace PushIt.Commands
+namespace duHast.PushIt.Commands
 {
-    public class ReloadDataCommand : CommandBase
+    public class ReloadDataCommand : Utils.WPF.Commands.CommandBase
     {
         private readonly Models.RevitDataModel _revitDataModel;
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
 
-        private readonly Stores.MessageStore _messageStore;
+        private readonly Utils.WPF.Stores.MessageStore _messageStore;
         private readonly Action _action;
 
 
@@ -46,12 +46,12 @@ namespace PushIt.Commands
             try
             {
                 _action?.Invoke();
-                _messageStore.SetCurrentMessage("Reloaded data", Stores.MessageTypes.Information);
+                _messageStore.SetCurrentMessage("Reloaded data", Utils.WPF. Stores.MessageTypes.Information);
 
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage($"Failed to reload data {ex.Message}", Stores.MessageTypes.Error);
+                _messageStore.SetCurrentMessage($"Failed to reload data {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
             }
         }
 
@@ -67,7 +67,7 @@ namespace PushIt.Commands
         public ReloadDataCommand(
             ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
             Models.RevitDataModel revitDataModel,
-            Stores.MessageStore messageStore,
+            Utils.WPF.Stores.MessageStore messageStore,
             Action action
             )
         {

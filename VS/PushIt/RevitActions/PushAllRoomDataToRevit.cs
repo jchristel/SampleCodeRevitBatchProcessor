@@ -21,7 +21,7 @@
 //
 //
 
-using PushIt.Models;
+using duHast.PushIt.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +30,7 @@ using System.Threading.Tasks;
 using Autodesk.Revit.DB;
 using RevitUtils;
 
-namespace PushIt.RevitActions
+namespace duHast.PushIt.RevitActions
 {
     public class PushAllRoomDataToRevitIRevitAction
     {
@@ -68,7 +68,7 @@ namespace PushIt.RevitActions
             List<FamilyInstance> familyInstances = RevitUtils.Families.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
 
             // convert family instances to revit rooms
-            List<PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
+            List<duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
 
             // build a dictioanry of family instances that contain valid data ( valid data is a family instance where the room id has a match in the rooms data model)
             // the dictionary key is the room id and the value is a tuple of the room data model and a list of revit family instances

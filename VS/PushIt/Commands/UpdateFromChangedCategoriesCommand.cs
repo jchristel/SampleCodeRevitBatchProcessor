@@ -21,15 +21,14 @@
 //
 //
 
-using PushIt.ViewModels;
+using duHast.PushIt.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows;
 
-namespace PushIt.Commands
+namespace duHast.PushIt.Commands
 {
-    public class UpdateFromChangedCategoriesCommand : CommandBase
+    public class UpdateFromChangedCategoriesCommand : Utils.WPF.Commands.CommandBase
     {
        
    
@@ -37,7 +36,7 @@ namespace PushIt.Commands
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
 
-        private readonly Stores.MessageStore _messageStore;
+        private readonly Utils.WPF.Stores.MessageStore _messageStore;
         private readonly Action _action;
 
         /// <summary>
@@ -78,7 +77,7 @@ namespace PushIt.Commands
                 //check if any categories are selected
                 if (supportedCategoryNamesFromViewModel.Count == 0)
                 {
-                    _messageStore.SetCurrentMessage("Please select at least one category to proceed.", Stores.MessageTypes.Error);
+                    _messageStore.SetCurrentMessage("Please select at least one category to proceed.", Utils.WPF.Stores.MessageTypes.Error);
                     return;
                 }
 
@@ -107,7 +106,7 @@ namespace PushIt.Commands
                 // if no update is needed, pop message to user and return
                 if (!needUpdate)
                 {
-                    _messageStore.SetCurrentMessage("No changes in category selection detected.", Stores.MessageTypes.Information);
+                    _messageStore.SetCurrentMessage("No changes in category selection detected.", Utils.WPF.Stores.MessageTypes.Information);
                     return;
                 }
 
@@ -116,19 +115,19 @@ namespace PushIt.Commands
 
                 // update the data model with the new category selection
                 _action?.Invoke();
-                _messageStore.SetCurrentMessage("Refreshed data after category update.", Stores.MessageTypes.Information);
+                _messageStore.SetCurrentMessage("Refreshed data after category update.", Utils.WPF.Stores.MessageTypes.Information);
 
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage($"Failed to refresh data after category update: {ex.Message}", Stores.MessageTypes.Error);
+                _messageStore.SetCurrentMessage($"Failed to refresh data after category update: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
             }
         }
 
         public UpdateFromChangedCategoriesCommand(
            ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
            Models.RevitDataModel revitDataModel,
-           Stores.MessageStore messageStore,
+           Utils.WPF.Stores.MessageStore messageStore,
            Action action
            )
         {

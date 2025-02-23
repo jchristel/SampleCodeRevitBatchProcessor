@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace PushIt.Models
+namespace duHast.PushIt.Models
 {
     public class RoomsDataModelContainer
     {

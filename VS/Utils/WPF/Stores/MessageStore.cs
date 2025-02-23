@@ -21,29 +21,54 @@
 //
 //
 
-namespace PushIt.Commands
+using System;
+
+namespace duHast.Utils.WPF.Stores
 {
-    public class ClearMessageCommand : CommandBase
+    public enum MessageTypes
     {
-        private readonly Stores.MessageStore _messageStore;
-        public override bool CanExecute(object parameter)
-        {
-            return true;
+        Error,
+        Information
+    }
+    public class MessageStore
+    {
+        string _currentMessage;
+        public string CurrentMessage { 
+            get =>_currentMessage;
+            private set
+            {
+                _currentMessage = value;
+                CurrentMessageChanged?.Invoke();
+            }
         }
 
-        public override void Execute(object parameter)
+        MessageTypes _currentMessageType;
+        public MessageTypes CurrentMessageType
         {
-            _messageStore.ClearCurrentMessage();
+            get => _currentMessageType;
+            private set
+            {
+                _currentMessageType = value;
+                CurrentMessageTypeChanged?.Invoke();
+            }
+        }
+       
+        public event Action CurrentMessageChanged;
+        public event Action CurrentMessageTypeChanged;
+
+
+        public bool HasCurrentMessage => !string.IsNullOrEmpty(CurrentMessage);
+
+        public void ClearCurrentMessage()
+        {
+            CurrentMessage = string.Empty;
         }
 
-        public void RaiseCanExecuteChanged()
+        public void SetCurrentMessage(string message, MessageTypes messageType)
         {
-            OnCanExecutedChanged();
+            CurrentMessage = message;
+            CurrentMessageType = messageType;
         }
 
-        public ClearMessageCommand(Stores.MessageStore messageStore)
-        {
-            _messageStore = messageStore;
-        }
     }
 }

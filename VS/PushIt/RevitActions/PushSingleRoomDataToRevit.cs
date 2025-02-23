@@ -21,7 +21,7 @@
 //
 //
 
-using PushIt.Models;
+using duHast.PushIt.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +29,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Autodesk.Revit.DB;
 
-namespace PushIt.RevitActions
+namespace duHast.PushIt.RevitActions
 {
     public class PushSingleRoomDataToRevit : IRevitAction
     {

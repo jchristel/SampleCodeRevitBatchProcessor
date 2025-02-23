@@ -22,33 +22,28 @@
 //
 
 
-using System.ComponentModel;
-using PushIt.Utilities;
+using System;
 
-namespace PushIt.ViewModels
+namespace duHast.Utils.WPF.Stores
 {
-    public class ViewModelBase : INotifyPropertyChanged, ICloseable
+    public class NavigationStore
     {
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
+        private ViewModels.ViewModelBase _currentViewModel;
+        public ViewModels.ViewModelBase CurrentViewModel
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get => _currentViewModel;
+            set
+            {
+                _currentViewModel = value;
+                OnCurrentViewModelChanged();
+            }
         }
 
-        public void RaisePropertyChanged(string name)
-        {
-            OnPropertyChanged(name);
-        }
+        public event Action CurrentViewModelChanged;
 
-        public virtual void OnClosing()
+        private void OnCurrentViewModelChanged()
         {
-            // Override this method in derived classes to perform clean-up operations
-        }
-
-        public virtual void Dispose()
-        {
+            CurrentViewModelChanged?.Invoke();
         }
     }
 }

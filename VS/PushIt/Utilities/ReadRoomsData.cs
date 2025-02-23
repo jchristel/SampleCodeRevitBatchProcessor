@@ -22,7 +22,7 @@
 //
 
 
-using PushIt.Models;
+using duHast.PushIt.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,7 +33,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
 
-namespace PushIt.Utilities
+namespace duHast.PushIt.Utilities
 {
     public static class ReadRoomsData
     {

@@ -22,16 +22,33 @@
 //
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
-namespace PushIt.Utilities
+
+namespace duHast.Utils.WPF.ViewModels
 {
-    public interface ICloseable
+    public class ViewModelBase : INotifyPropertyChanged, duHast.Utils.WPF.Interfaces.ICloseable
     {
-        void OnClosing();
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void RaisePropertyChanged(string name)
+        {
+            OnPropertyChanged(name);
+        }
+
+        public virtual void OnClosing()
+        {
+            // Override this method in derived classes to perform clean-up operations
+        }
+
+        public virtual void Dispose()
+        {
+        }
     }
 }

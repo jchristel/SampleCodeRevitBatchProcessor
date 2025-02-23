@@ -25,15 +25,15 @@
 using System;
 using System.ComponentModel;
 
-namespace PushIt.Commands
+namespace duHast.PushIt.Commands
 {
-    public class HighlightRoomsInRevitCommand : CommandBase
+    public class HighlightRoomsInRevitCommand : Utils.WPF.Commands.CommandBase
     {
         private readonly Models.RevitDataModel _revitDataModel;
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
 
-        private readonly Stores.MessageStore _messageStore;
+        private readonly Utils.WPF.Stores.MessageStore _messageStore;
         private readonly Action _action;
 
         public override bool CanExecute(object parameter)
@@ -47,12 +47,12 @@ namespace PushIt.Commands
             try
             {
                 _action?.Invoke();
-                _messageStore.SetCurrentMessage("Highlighted Revit room", Stores.MessageTypes.Information);
+                _messageStore.SetCurrentMessage("Highlighted Revit room", Utils.WPF.Stores.MessageTypes.Information);
 
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage($"Failed to highlight Revit room {ex.Message}", Stores.MessageTypes.Error);
+                _messageStore.SetCurrentMessage($"Failed to highlight Revit room {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
             }
         }
 
@@ -68,7 +68,7 @@ namespace PushIt.Commands
         public HighlightRoomsInRevitCommand(
             ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
             Models.RevitDataModel revitDataModel,
-            Stores.MessageStore messageStore,
+            Utils.WPF.Stores.MessageStore messageStore,
             Action action
             )
         {

@@ -22,32 +22,10 @@
 //
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PushIt.Stores
+namespace duHast.Utils.WPF.Interfaces
 {
-    public class NavigationStore
+    public interface ICloseable
     {
-        private ViewModels.ViewModelBase _currentViewModel;
-        public ViewModels.ViewModelBase CurrentViewModel
-        {
-            get => _currentViewModel;
-            set
-            {
-                _currentViewModel = value;
-                OnCurrentViewModelChanged();
-            }
-        }
-
-        public event Action CurrentViewModelChanged;
-
-        private void OnCurrentViewModelChanged()
-        {
-            CurrentViewModelChanged?.Invoke();
-        }
+        void OnClosing();
     }
 }

@@ -23,7 +23,7 @@
 
 
 using Autodesk.Revit.DB;
-using PushIt.Models;
+using duHast.PushIt.Models;
 using RevitUtils;
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace PushIt.RevitActions
+namespace duHast.PushIt.RevitActions
 {
     public class WipeStaleRoomData : IRevitAction
     {
@@ -99,7 +99,7 @@ namespace PushIt.RevitActions
             List<FamilyInstance> familyInstances = RevitUtils.Families.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
 
             // convert family instances to revit rooms
-            List<PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
+            List<duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
 
             //build a list of family instances that contain stale data ( stale data is a family instance where the room id is not in the rooms data model)
             List<FamilyInstance> staleFamilyInstances = new List<FamilyInstance>();

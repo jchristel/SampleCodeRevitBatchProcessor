@@ -22,24 +22,18 @@
 //
 
 
-using PushIt.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using duHast.PushIt.Utilities;
 
-namespace PushIt.ViewModels
+namespace duHast.PushIt.ViewModels
 {
-    public class MainViewModel:ViewModelBase
+    public class MainViewModel:Utils.WPF.ViewModels.ViewModelBase
     {
 
-        private readonly Stores.NavigationStore _navigationStore;
+        private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
         private readonly RevitExternalEventHandlerManager _eventManager;
-        public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
+        public Utils.WPF.ViewModels.ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
 
-        public MainViewModel(Stores.NavigationStore navigationStore, RevitExternalEventHandlerManager eventManager)
+        public MainViewModel(Utils.WPF.Stores.NavigationStore navigationStore, RevitExternalEventHandlerManager eventManager)
         {
             _navigationStore = navigationStore;
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
@@ -55,6 +49,7 @@ namespace PushIt.ViewModels
         {
             // Custom closing logic for RoomsSelectionViewModel
             _eventManager.DisposeEvents();
+            _navigationStore.CurrentViewModelChanged -= OnCurrentViewModelChanged;
             base.OnClosing();
         }
     }

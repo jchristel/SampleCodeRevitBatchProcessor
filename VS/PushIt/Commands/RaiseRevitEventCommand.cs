@@ -24,22 +24,22 @@
 using System;
 using System.ComponentModel;
 
-namespace PushIt.Commands
+namespace duHast.PushIt.Commands
 {
-    public class RaiseRevitEventCommand : CommandBase
+    public class RaiseRevitEventCommand : Utils.WPF.Commands.CommandBase
     {
         private readonly Models.RevitDataModel _revitDataModel;
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
 
-        private readonly Stores.MessageStore _messageStore;
+        private readonly Utils.WPF.Stores.MessageStore _messageStore;
         private readonly Action _action;
 
 
         public RaiseRevitEventCommand(
             ViewModels.RoomsSelectionViewModel roomsSelectionViewModel, 
             Models.RevitDataModel revitDataModel,
-            Stores.MessageStore messageStore,
+            Utils.WPF.Stores.MessageStore messageStore,
             Action action
             )
         {
@@ -61,12 +61,12 @@ namespace PushIt.Commands
             try
             {
                 _action?.Invoke();
-                _messageStore.SetCurrentMessage("Data refreshed from Revit", Stores.MessageTypes.Information);
+                _messageStore.SetCurrentMessage("Data refreshed from Revit", Utils.WPF.Stores.MessageTypes.Information);
 
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage($"Failed to refresh data {ex.Message}", Stores.MessageTypes.Error);
+                _messageStore.SetCurrentMessage($"Failed to refresh data {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
             }
         }
 

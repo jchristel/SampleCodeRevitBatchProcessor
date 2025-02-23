@@ -37,7 +37,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PushIt.Views
+namespace duHast.PushIt.Views
 {
     /// <summary>
     /// Interaction logic for UserControl1.xaml

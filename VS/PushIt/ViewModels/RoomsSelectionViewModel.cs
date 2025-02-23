@@ -22,7 +22,7 @@
 //
 
 
-using PushIt.Utilities;
+using duHast.PushIt.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,17 +33,17 @@ using System.Runtime.CompilerServices;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace PushIt.ViewModels
+namespace duHast.PushIt.ViewModels
 {
-    public class RoomsSelectionViewModel : ViewModelBase, INotifyDataErrorInfo
+    public class RoomsSelectionViewModel : Utils.WPF.ViewModels.ViewModelBase, INotifyDataErrorInfo
     {
-        private readonly Stores.NavigationStore _navigationStore;
-        private readonly Stores.MessageStore _messageStore;
+        private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
+        private readonly Utils.WPF.Stores.MessageStore _messageStore;
         private readonly Models.RevitDataModel _revitDataModel;
         private readonly RevitExternalEventHandlerManager _eventManager;
-        private readonly ViewModels.ErrorsViewModel _errorsViewModel;
+        private readonly Utils.WPF.ViewModels.ErrorsViewModel _errorsViewModel;
 
-        public GlobalMessageViewModel GlobalMessageViewModel { get; }
+        public Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }
 
         //observable collection of rooms
         private readonly ObservableCollection<RoomViewModel> _rooms;
@@ -423,7 +423,7 @@ namespace PushIt.ViewModels
             }
         }
 
-        public void AddMessage(string message, Stores.MessageTypes messageType)
+        public void AddMessage(string message, Utils.WPF.Stores.MessageTypes messageType)
         {
             
             _messageStore.SetCurrentMessage(message, messageType);
@@ -476,10 +476,10 @@ namespace PushIt.ViewModels
 
         public RoomsSelectionViewModel(
             Models.RevitDataModel revitDataModel,
-            Stores.NavigationStore navigationStore,
-            Stores.MessageStore messageStore,
+            Utils.WPF.Stores.NavigationStore navigationStore,
+            Utils.WPF.Stores.MessageStore messageStore,
             RevitExternalEventHandlerManager eventManager,
-            GlobalMessageViewModel globalMessageViewModel)
+            Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel)
         {
             //store services
             _navigationStore = navigationStore;
@@ -488,7 +488,7 @@ namespace PushIt.ViewModels
             _eventManager = eventManager;
 
             //initialize the errors view model
-            _errorsViewModel = new ErrorsViewModel();
+            _errorsViewModel = new Utils.WPF.ViewModels.ErrorsViewModel();
             //subscribe to errors changed event
             _errorsViewModel.ErrorsChanged += ErrorsViewModel_ErrorsChanged;
 

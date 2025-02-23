@@ -30,12 +30,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.DB;
-using PushIt.RevitActions;
+using duHast.PushIt.RevitActions;
 using System.CodeDom.Compiler;
-using PushIt.ViewModels;
+using duHast.PushIt.ViewModels;
 using System.Runtime.InteropServices;
 
-namespace PushIt.Utilities
+namespace duHast.PushIt.Utilities
 {
     public class RevitExternalEventHandlerManager
     {
@@ -127,7 +127,7 @@ namespace PushIt.Utilities
             }
             catch (Exception ex)
             {
-                _roomsSelectionViewModel.AddMessage($"An exception occurred within the external event handler update all rooms in Revit event: {ex.Message}", Stores.MessageTypes.Error);
+                _roomsSelectionViewModel.AddMessage($"An exception occurred within the external event handler update all rooms in Revit event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
             }
         }
 
@@ -158,7 +158,7 @@ namespace PushIt.Utilities
             {
                 _roomsSelectionViewModel.AddMessage( 
                     $"An exception occurred within the external event handler update after supported category change event: { ex.Message}", 
-                    Stores.MessageTypes.Error
+                    Utils.WPF.Stores.MessageTypes.Error
                 );
             }
         }
@@ -186,7 +186,7 @@ namespace PushIt.Utilities
             {
                 _roomsSelectionViewModel.AddMessage(
                     $"An exception occurred within the external event handler update after wipe stale room data event: {ex.Message}",
-                    Stores.MessageTypes.Error
+                    Utils.WPF.Stores.MessageTypes.Error
                 );
             }
         }
@@ -205,7 +205,7 @@ namespace PushIt.Utilities
                 //check if there is a room to highlight
                 if (_roomsSelectionViewModel.SelectedRoom == null)
                 {
-                    _roomsSelectionViewModel.AddMessage("No room selected in the user interface to highlight in Revit.", Stores.MessageTypes.Error);
+                    _roomsSelectionViewModel.AddMessage("No room selected in the user interface to highlight in Revit.", Utils.WPF.Stores.MessageTypes.Error);
                     return;
                 }
                 // Execute the action to highlight the selected room in the Revit model
@@ -220,7 +220,7 @@ namespace PushIt.Utilities
             {
                 _roomsSelectionViewModel.AddMessage(
                     $"An exception occurred within the external event handler update after highlight selected room event: {ex.Message}",
-                    Stores.MessageTypes.Error
+                    Utils.WPF.Stores.MessageTypes.Error
                 );
             }
         }
@@ -251,7 +251,7 @@ namespace PushIt.Utilities
             }
             catch (Exception ex)
             {
-                _roomsSelectionViewModel.AddMessage($"An exception occurred within the external event handler update after reload data event: {ex.Message}", Stores.MessageTypes.Error);
+                _roomsSelectionViewModel.AddMessage($"An exception occurred within the external event handler update after reload data event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
             }
         }
 
@@ -269,7 +269,7 @@ namespace PushIt.Utilities
                 //check if there is a room to push
                 if (_roomsSelectionViewModel.SelectedRoom == null)
                 {
-                    _roomsSelectionViewModel.AddMessage("No room selected in the user interface to push to Revit.", Stores.MessageTypes.Error);
+                    _roomsSelectionViewModel.AddMessage("No room selected in the user interface to push to Revit.", Utils.WPF.Stores.MessageTypes.Error);
                     return;
                 }
 
@@ -281,12 +281,12 @@ namespace PushIt.Utilities
                 // check quantity of selected elements
                 if (selectedElementIds.Count == 0)
                 {
-                    _roomsSelectionViewModel.AddMessage("No room selected in the Revit model to push to.", Stores.MessageTypes.Error);
+                    _roomsSelectionViewModel.AddMessage("No room selected in the Revit model to push to.", Utils.WPF.Stores.MessageTypes.Error);
                     return;
                 }
                 else if (selectedElementIds.Count > 1)
                 {
-                    _roomsSelectionViewModel.AddMessage("More than one room selected in the Revit model to push to.", Stores.MessageTypes.Error);
+                    _roomsSelectionViewModel.AddMessage("More than one room selected in the Revit model to push to.", Utils.WPF.Stores.MessageTypes.Error);
                     return;
                 }
 
@@ -295,7 +295,7 @@ namespace PushIt.Utilities
                 if (!_revitDataModel.Settings.SupportedCategories.Contains (selectedElement.Category.Name))
                 {
                     string supportedCategories = string.Join(", ", _revitDataModel.Settings.SupportedCategories);
-                    _roomsSelectionViewModel.AddMessage($"The selected element is not of a supported category. Supported categories are: {supportedCategories}.", Stores.MessageTypes.Error);
+                    _roomsSelectionViewModel.AddMessage($"The selected element is not of a supported category. Supported categories are: {supportedCategories}.", Utils.WPF.Stores.MessageTypes.Error);
                     return;
                 }
 
@@ -313,7 +313,7 @@ namespace PushIt.Utilities
             }
             catch (Exception ex)
             {
-                _roomsSelectionViewModel.AddMessage($"An exception occurred within the external event handler update after push single room event: {ex.Message}", Stores.MessageTypes.Error);
+                _roomsSelectionViewModel.AddMessage($"An exception occurred within the external event handler update after push single room event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
             }
         }
 
@@ -340,7 +340,7 @@ namespace PushIt.Utilities
             }
             catch (Exception ex)
             {
-                _roomsSelectionViewModel.AddMessage($"An exception occurred within the external event handler update after refresh UI data event: {ex.Message}", Stores.MessageTypes.Error);
+                _roomsSelectionViewModel.AddMessage($"An exception occurred within the external event handler update after refresh UI data event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
             }
         }
 

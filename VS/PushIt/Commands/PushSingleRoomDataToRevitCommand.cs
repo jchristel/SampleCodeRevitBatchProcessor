@@ -24,15 +24,15 @@
 using System;
 using System.ComponentModel;
 
-namespace PushIt.Commands
+namespace duHast.PushIt.Commands
 {
-    public class PushSingleRoomDataToRevitCommand: CommandBase
+    public class PushSingleRoomDataToRevitCommand: Utils.WPF.Commands.CommandBase
     {
         private readonly Models.RevitDataModel _revitDataModel;
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
 
-        private readonly Stores.MessageStore _messageStore;
+        private readonly Utils.WPF.Stores.MessageStore _messageStore;
         private readonly Action _action;
 
 
@@ -53,12 +53,12 @@ namespace PushIt.Commands
                 // get the selected room id
 
                 var selectedRoomId = _roomsSelectionViewModel.SelectedRoom != null ? _roomsSelectionViewModel.SelectedRoom.Id.Value : "";
-                _messageStore.SetCurrentMessage($"Pushed data for [{selectedRoomId}] into Revit room.", Stores.MessageTypes.Information);
+                _messageStore.SetCurrentMessage($"Pushed data for [{selectedRoomId}] into Revit room.", Utils.WPF.Stores.MessageTypes.Information);
 
             }
             catch (Exception ex)
             {
-                _messageStore.SetCurrentMessage($"Failed to push data into Revit room: {ex.Message}", Stores.MessageTypes.Error);
+                _messageStore.SetCurrentMessage($"Failed to push data into Revit room: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
             }
         }
 
@@ -74,7 +74,7 @@ namespace PushIt.Commands
         public PushSingleRoomDataToRevitCommand(
             ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
             Models.RevitDataModel revitDataModel,
-            Stores.MessageStore messageStore,
+            Utils.WPF.Stores.MessageStore messageStore,
             Action action
             )
         {

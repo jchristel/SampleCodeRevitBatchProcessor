@@ -22,25 +22,33 @@
 //
 
 using System;
-using System.Windows.Input;
 
-namespace PushIt.Commands
+namespace duHast.Utils.WPF.Commands
 {
-    public abstract class CommandBase : ICommand
+    public class RelayCommand : CommandBase
     {
-        public event EventHandler CanExecuteChanged;
+        private readonly Action<object> _execute;
+        private readonly Func<object, bool> _canExecute;
 
-        public virtual bool CanExecute(object parameter)
+        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
         {
-            return true;
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecute = canExecute;
         }
 
-        public abstract void Execute(object parameter);
-
-
-        protected void OnCanExecutedChanged()
+        public override bool CanExecute(object parameter)
         {
-            CanExecuteChanged?.Invoke(this, new EventArgs ());
+            return _canExecute == null || _canExecute(parameter);
+        }
+
+        public override void Execute(object parameter)
+        {
+            _execute(parameter);
+        }
+
+        public void RaiseCanExecuteChanged()
+        {
+            OnCanExecutedChanged();
         }
     }
 }

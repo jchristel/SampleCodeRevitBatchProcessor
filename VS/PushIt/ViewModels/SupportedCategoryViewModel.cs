@@ -21,7 +21,7 @@
 //
 //
 
-namespace PushIt.ViewModels
+namespace duHast.PushIt.ViewModels
 {
     public class SupportedCategoryViewModel
     {

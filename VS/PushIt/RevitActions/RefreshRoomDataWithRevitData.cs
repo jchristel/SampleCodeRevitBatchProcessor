@@ -23,11 +23,11 @@
 
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
-using PushIt.Models;
-using PushIt.ViewModels;
+using duHast.PushIt.Models;
+using duHast.PushIt.ViewModels;
 using RevitUtils;
 
-namespace PushIt.RevitActions
+namespace duHast.PushIt.RevitActions
 {
     public class RefreshRoomDataWithRevitData:IRevitAction
     {
@@ -88,7 +88,7 @@ namespace PushIt.RevitActions
             List<FamilyInstance> familyInstances = RevitUtils.Families.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
 
             // convert family instances to revit rooms
-            List <PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
+            List <duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
 
 
             // get the documents current design set and option

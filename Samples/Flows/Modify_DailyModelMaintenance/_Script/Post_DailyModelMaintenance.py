@@ -313,11 +313,11 @@ def combine_files_json_wrapper(folder_path,file_prefix,file_suffix,file_extensio
     :return: None
     :rtype: None
     """
-    combined_flag = combine_files_json(folder_path=folder_path, file_prefix=file_prefix, file_suffix=file_suffix, file_extension=file_extension, output_file_name=output_file_name)
+    combined_result = combine_files_json(folder_path=folder_path, file_prefix=file_prefix, file_suffix=file_suffix, file_extension=file_extension, output_file_name=output_file_name)
 
     output(
             "...combined {}  to {} with status [{}]".format(
-                file_suffix, output_file_name, combined_flag
+                file_suffix, output_file_name, combined_result.status
             )
         )
 

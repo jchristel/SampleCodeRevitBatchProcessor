@@ -161,7 +161,7 @@ def get_family_type_data_from_library(xml_files_in_libraries, progress_callback=
             progress_callback.update(counter, max_value_xml)
 
         # Sort by file name to ensure consistent order when name is dispalyed in progress
-        sorted_file_paths = sorted(xml_files_in_libraries, key=lambda x: os.path.basename(x))
+        sorted_file_paths = sorted(xml_files_in_libraries, key=lambda x: os.path.basename(x.name))
 
         # get the type data from the library
         for xml_file in sorted_file_paths:

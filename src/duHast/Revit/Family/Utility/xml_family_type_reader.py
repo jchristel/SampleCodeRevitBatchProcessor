@@ -86,19 +86,21 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
     # Select the family node
     family_node = doc_xml.SelectSingleNode("//A:family", name_space_manager)
 
-    # Get the category nodes ( there will be more than one)
-    for cat_node in doc_xml.SelectNodes("//atom:category", name_space_manager):
-        dummy_term = ""
-        dummy_scheme = ""
+    # check if category root path is not set, if so ignore use the one from the xml
+    if root_category_path == "None":
+        # Get the category nodes ( there will be more than one)
+        for cat_node in doc_xml.SelectNodes("//atom:category", name_space_manager):
+            dummy_term = ""
+            dummy_scheme = ""
 
-        for child_node in cat_node.ChildNodes:
-            if child_node.Name == "term":
-                dummy_term = child_node.InnerText
-            if child_node.Name == "scheme":
-                dummy_scheme = child_node.InnerText
-        # check if this is the category name
-        if dummy_scheme == "adsk:revit:grouping":
-            root_category_path = dummy_term
+            for child_node in cat_node.ChildNodes:
+                if child_node.Name == "term":
+                    dummy_term = child_node.InnerText
+                if child_node.Name == "scheme":
+                    dummy_scheme = child_node.InnerText
+            # check if this is the category name
+            if dummy_scheme == "adsk:revit:grouping":
+                root_category_path = dummy_term
 
     # get the date and time of the last update
     last_updated_date = None

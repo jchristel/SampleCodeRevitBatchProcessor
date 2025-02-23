@@ -90,17 +90,33 @@ class FamilyTypeData(IFamData.IFamilyData):
         families = get_name_and_category_to_family_dict(doc)
         
         for family_name, family in families.items():
-            # get the type data and make sure to pass in root category path and root name path
             
-            # add the family processed to the path
-            fam_name = Element.Name.GetValue(family)
-            # strip .rfa of name
-            if fam_name.lower().endswith(".rfa"):
-                fam_name = family_name[:-4]
-            fam_root_path = self.root_path + NESTING_SEPARATOR + fam_name
-            # get the category of the family to be processed
-            fam_cat_name = Element.Name.GetValue(family.Category)
-            fam_root_category_path = self.root_category_path + NESTING_SEPARATOR + fam_cat_name
+            
+            fam_name = self.root_path
+            
+            
+            # get the type data and make sure to pass in root category path and root name path
+            try:
+                # add the family processed to the path
+                fam_name = Element.Name.GetValue(family)
+                # strip .rfa of name
+                if fam_name.lower().endswith(".rfa"):
+                    fam_name = family_name[:-4]
+                fam_root_path = "{}{}{}".format(self.root_path,NESTING_SEPARATOR ,fam_name)
+            except Exception as e:
+                #print("Failed to get family name: {}".format(e))
+                fam_root_path = "{}{}{}".format(self.root_path, NESTING_SEPARATOR, e)
+
+            fam_cat_name = self.root_category_path
+
+
+            try:
+                # get the category of the family to be processed
+                fam_cat_name = Element.Name.GetValue(family.Category)
+                fam_root_category_path = "{}{}{}".format(self.root_category_path , NESTING_SEPARATOR , fam_cat_name)
+            except Exception as e:
+                #print("Failed to get family category: {}".format(e))
+                fam_root_category_path = "{}{}{}".format(self.root_category_path, NESTING_SEPARATOR, e)
 
             type_data_result = get_type_data_via_XML_from_family_object(family, fam_root_path, fam_root_category_path)
             if type_data_result.status and len(type_data_result.result) > 0:

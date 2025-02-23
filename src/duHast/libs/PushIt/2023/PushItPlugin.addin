@@ -2,7 +2,7 @@
 <RevitAddIns>
 <AddIn Type="Command">
  <Name>PushIt</Name>
- <FullClassName>PushIt.Main</FullClassName>
+ <FullClassName>duHast.PushIt.Main</FullClassName>
  <Text>PushIt</Text>
  <Description>Pushes room data into families</Description>
  <VisibilityMode>AlwaysVisible</VisibilityMode>

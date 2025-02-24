@@ -112,7 +112,7 @@ class FamilyTypeData(IFamData.IFamilyData):
 
             try:
                 # get the category of the family to be processed
-                fam_cat_name = Element.Name.GetValue(family.Category)
+                fam_cat_name = family.FamilyCategory.Name
                 fam_root_category_path = "{}{}{}".format(self.root_category_path , NESTING_SEPARATOR , fam_cat_name)
             except Exception as e:
                 #print("Failed to get family category: {}".format(e))

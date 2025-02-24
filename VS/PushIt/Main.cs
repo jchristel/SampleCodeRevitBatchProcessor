@@ -37,6 +37,7 @@ using duHast.PushIt.Views;
 using duHast.PushIt.Utilities;
 using duHast.PushIt.RevitActions;
 using System.IO;
+using System.Reflection;
 
 
 namespace duHast.PushIt
@@ -52,6 +53,10 @@ namespace duHast.PushIt
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+
+            //assembly resolver in order for this plugin to be used form pyRevit invoke.button
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolver.ResolveAssembly);
+
             //set up stores
             _navigationStore = new duHast.Utils.WPF.Stores.NavigationStore();
             _messageStore = new duHast.Utils.WPF.Stores.MessageStore();
@@ -109,6 +114,22 @@ namespace duHast.PushIt
                 _messageStore,
                 _eventManager,
                 _globa);
+        }
+
+        //assembly resolver static method
+        public static class AssemblyResolver
+        {
+            public static System.Reflection.Assembly ResolveAssembly(object sender, ResolveEventArgs args)
+            {
+                string folderPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                string assemblyPath = Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
+                if (!File.Exists(assemblyPath))
+                {
+                    return null;
+                }
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadFrom(assemblyPath);
+                return assembly;
+            }
         }
     }
 }

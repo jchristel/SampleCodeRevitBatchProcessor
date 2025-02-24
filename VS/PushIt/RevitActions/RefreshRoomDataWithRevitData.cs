@@ -22,6 +22,7 @@
 //
 
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Autodesk.Revit.DB;
 using duHast.PushIt.Models;
 using duHast.PushIt.ViewModels;
@@ -39,16 +40,20 @@ namespace duHast.PushIt.RevitActions
 
         public void Execute(Document doc)
         {
+            // refresh the rooms data model with the rooms from the revit model
             List<Models.RoomDataModel> updatedRooms = RefreshRoomData(
                 doc, 
                 _revitModel._roomsContainer.GetAllRooms(),
                 _revitModel.Settings.SupportedCategories
              );
-            
+
+            // clear all rooms in the data model
+            // this will also clear all rooms if shared parameter setup in project file is wrong.
+            _revitModel.ClearRooms();
+
+            // add updated rooms to the data model if there are any
             if (updatedRooms != null)
             {
-                //clear all rooms
-                _revitModel.ClearRooms();
                 // add updated rooms
                 foreach (var rooms in updatedRooms)
                 {
@@ -67,7 +72,11 @@ namespace duHast.PushIt.RevitActions
         public List<Models.RoomDataModel> RefreshRoomData(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName)
         {
             // check if all shared parameters exist and are bound to the correct categories
-            bool parameterCheck = Utilities.Revit.SharedParameters.sharedParametersCheck(doc, roomsDataModel, supportedCategoryName);
+            bool parameterCheck = Utilities.Revit.SharedParameters.sharedParametersCheck(
+                doc, 
+                roomsDataModel, 
+                supportedCategoryName, 
+                (message, messageType) => _roomsSelectionViewModel.AddMessage(message, messageType));
             
             // if not get out
             if (!parameterCheck){
@@ -78,6 +87,16 @@ namespace duHast.PushIt.RevitActions
             List<Category> categories = RevitUtils.CategoryUtils.GetMainCategoriesByName(doc, supportedCategoryName);
             if (categories.Count == 0)
             {
+                if (supportedCategoryName.Count > 0)
+                {
+                    // build a string of supported categories
+                    string supportedCategories = string.Join(", ", supportedCategoryName);
+                    _roomsSelectionViewModel.AddMessage($"Supported categories are invalid: {supportedCategories}", Utils.WPF.Stores.MessageTypes.Error);
+                }
+                else
+                {
+                    _roomsSelectionViewModel.AddMessage("No supported categories provided.", Utils.WPF.Stores.MessageTypes.Error);
+                }
                 return null;
             }
 

@@ -43,9 +43,20 @@ namespace RevitUtils
         }
 
 
+        /// <summary>
+        /// Get the categories a shared parameter is bound to
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="parameterGUID"></param>
+        /// <returns> 
+        /// Null if the parameter was not found, otherwise a list of category names the parameter is bound to. If no categories are bound to the parameter, an empty list is returned.
+        /// </returns>
         public static List<string> ParameterBindingsByGUID(Document doc, string parameterGUID)
         {
             List<string> parameterBindings = new List<string>();
+            
+            // flag if parameter was found to start with
+            bool foundParameter = false;
 
             // get all parameters in the model
             List<SharedParameterElement> parametersInModel = GetSharedParameters(doc);
@@ -53,6 +64,8 @@ namespace RevitUtils
             {
                 if (parameter.GuidValue.ToString() == parameterGUID)
                 {
+                    //set flag parameter was found
+                    foundParameter = true;
                     // get the binding
                     DefinitionBindingMapIterator it = doc.ParameterBindings.ForwardIterator();
                     while (it.MoveNext())
@@ -83,8 +96,7 @@ namespace RevitUtils
                     }
                 }
             }
-
-            return parameterBindings;
+            return foundParameter ? parameterBindings : null;
         }
 
         public static string GetSharedParameterValueFromElementByGUID(Element element, string parameterGUID)

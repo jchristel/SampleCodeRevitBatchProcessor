@@ -609,4 +609,5 @@ FodyWeavers.xsd
 # Include the specific .lib folders
 !Samples/pyRevit/Extensions/duHast.lib
 !Samples/pyRevit/Extensions/duHast.extension/duHast.tab/lib
+!Samples/pyRevit/Extensions/duHast.extension/duHast.tab/PushIt.panel/bin
 /test/adHoc

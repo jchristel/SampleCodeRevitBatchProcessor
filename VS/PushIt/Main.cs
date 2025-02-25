@@ -51,12 +51,15 @@ namespace duHast.PushIt
         duHast.Utils.WPF.Stores.MessageStore _messageStore;
         RevitExternalEventHandlerManager _eventManager;
 
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        static Main()
         {
-
             //assembly resolver in order for this plugin to be used form pyRevit invoke.button
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolver.ResolveAssembly);
+        }
 
+
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
             //set up stores
             _navigationStore = new duHast.Utils.WPF.Stores.NavigationStore();
             _messageStore = new duHast.Utils.WPF.Stores.MessageStore();
@@ -121,14 +124,40 @@ namespace duHast.PushIt
         {
             public static System.Reflection.Assembly ResolveAssembly(object sender, ResolveEventArgs args)
             {
-                string folderPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                string assemblyPath = Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
-                if (!File.Exists(assemblyPath))
+                try
+                {
+                    string folderPath = @"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\pyRevit\Extensions\duHast.extension\duHast.tab\PushIt.panel\bin";
+                    //string folderPath = null;
+                    try
+                    {
+                        //folderPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                    }
+                   
+
+                    string assemblyName = new AssemblyName(args.Name).Name;
+
+                    // Check if the assembly name ends with ".resources"
+                    if (assemblyName.EndsWith(".resources"))
+                    {
+                        // Strip the ".resources" suffix
+                        assemblyName = assemblyName.Substring(0, assemblyName.Length - ".resources".Length);
+                    }
+
+                    string assemblyPath = Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
+                    return File.Exists(assemblyPath) ? System.Reflection.Assembly.LoadFrom(assemblyPath) : null;
+
+                }
+                catch (Exception ex)
                 {
                     return null;
+                    //throw;
                 }
-                System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadFrom(assemblyPath);
-                return assembly;
+                
+
             }
         }
     }

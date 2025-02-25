@@ -4,4 +4,4 @@ author: "Jan Christel"
 highlight: new
 context: zero-doc
 assembly: 'PushIt'
-command_class: 'duHast.PushIt.Main'
+command_class: 'Main'

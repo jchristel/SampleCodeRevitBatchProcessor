@@ -120,23 +120,18 @@ namespace duHast.PushIt
         }
 
         //assembly resolver static method
+        /// <summary>
+        /// attempts to resolve the assembly from the local app data/duhast/bin directory
+        /// </summary>
         public static class AssemblyResolver
         {
             public static System.Reflection.Assembly ResolveAssembly(object sender, ResolveEventArgs args)
             {
                 try
                 {
-                    string folderPath = @"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\pyRevit\Extensions\duHast.extension\duHast.tab\PushIt.panel\bin";
-                    //string folderPath = null;
-                    try
-                    {
-                        //folderPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                    }
-                    catch (Exception ex)
-                    {
-                        return null;
-                    }
-                   
+                    //get the local app data path
+                    string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                    string duHastBinDirectory = Path.Combine(localAppDataPath, "duHast", "bin");
 
                     string assemblyName = new AssemblyName(args.Name).Name;
 
@@ -147,17 +142,14 @@ namespace duHast.PushIt
                         assemblyName = assemblyName.Substring(0, assemblyName.Length - ".resources".Length);
                     }
 
-                    string assemblyPath = Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
+                    string assemblyPath = Path.Combine(duHastBinDirectory, new AssemblyName(args.Name).Name + ".dll");
                     return File.Exists(assemblyPath) ? System.Reflection.Assembly.LoadFrom(assemblyPath) : null;
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return null;
-                    //throw;
                 }
-                
-
             }
         }
     }

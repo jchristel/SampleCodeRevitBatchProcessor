@@ -47,6 +47,7 @@ from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import (
     FamilyTypeDataStorageManager,
 )
 from duHast.Utilities.utility import encode_ascii
+from duHast.Utilities.files_io import get_file_name_without_ext
 
 from duHast.Utilities.string_operations import (
     remove_currency_sign,
@@ -186,10 +187,26 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
                         # remove any trailing units
                         p_value = remove_trailing_characters_from_number_string(p_value)
 
+                    # family_name can either be just the family name or the family root path
+                    # check which one it is:
+                    root_name_path = family_name
+                    family_name_checked = family_name
+
+                    # get the file name without the extension from xml path
+                    file_name = get_file_name_without_ext(family_path)
+                    # check if the family name is the same as the file name
+                    if family_name != file_name:
+                        # if not the same, then the family name is the root path
+                        family_name_checked = file_name
+
                     # Create a parameter object 
                     # make sure all values are encoded to ascii to avoid 
                     # issues with special characters when writing to file
                     parameter = FamilyTypeParameterDataStorage(
+                        root_name_path = encode_ascii(root_name_path),
+                        root_category_path = encode_ascii(root_category_path),
+                        family_name = encode_ascii(family_name_checked),
+                        family_file_path=encode_ascii(family_path),
                         name=encode_ascii(name),
                         type=encode_ascii(type),
                         type_of_parameter=encode_ascii(type_of_parameter),

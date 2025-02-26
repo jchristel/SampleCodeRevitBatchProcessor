@@ -32,9 +32,9 @@ Used to store values of family parameters by family type.
 
 
 from duHast.Utilities.Objects.base import Base
+from duHast.Revit.Family.Data.Objects import ifamily_data_storage as IFamDataStorage
 
-
-class FamilyTypeParameterDataStorage(Base):
+class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
 
     # data type for this class ( used in reports as first entry per row )
     data_type = "FamilyTypeParameter"
@@ -48,12 +48,30 @@ class FamilyTypeParameterDataStorage(Base):
     ]
 
     # number of properties in this class ( used in report reader function )
-    number_of_properties = 5
+    number_of_properties = 9
 
-    def __init__(self, name, type, type_of_parameter, units, value):
+    def __init__(self, 
+            root_name_path,
+            root_category_path,
+            family_name,
+            family_file_path,
+            name, 
+            type, 
+            type_of_parameter, 
+            units, 
+            value
+        ):
         """
         constructor
 
+        :param root_name_path: root name path (i.e. rootFamilyName :: nestedFamilyNameOne :: nestedFamilyTwo)
+        :type root_name_path: str
+        :param root_category_path: root category path (i.e. rootCategoryName :: nestedCategoryNameOne :: nestedCategoryTwo)
+        :type root_category_path: str
+        :param family_name: name of the family
+        :type family_name: str
+        :param family_file_path: file path of the family
+        :type family_file_path: str
         :param name: name of the family parameter
         :param type: type of the parameter ( i.e. shared, system, custom)
         :param type_of_parameter: unit type of the parameter ( i.e. length, area, volume, string, etc.)
@@ -61,7 +79,13 @@ class FamilyTypeParameterDataStorage(Base):
         :param value: value of the parameter
         """
 
-        super(FamilyTypeParameterDataStorage, self).__init__()
+        super(FamilyTypeParameterDataStorage, self).__init__(
+            data_type=FamilyTypeParameterDataStorage.data_type,
+            root_name_path=root_name_path,
+            root_category_path=root_category_path,
+            family_name=family_name,
+            family_file_path=family_file_path,
+        )
 
         self.name = name  # name of the family type
         self.type = type  # type of the parameter ( i.e. shared, system, custom)

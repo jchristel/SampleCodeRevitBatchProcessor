@@ -123,10 +123,13 @@ class FamilyTypeData(IFamData.IFamilyData):
                 
                 # in the moment data contains a list of storage objects rather than a single storage manager object
                 storage_manager = type_data_result.result[0]
-                for storage in storage_manager.family_type_data_storage:
-                    self.add_data(storage)
+                for type_storage in storage_manager.family_type_data_storage:
+                    # we actually want the nested parameter storage here to get a single entry per
+                    # family, family type and parameter
+                    for  parameter_storage in type_storage.parameters:
+                        self.add_data(parameter_storage)
+                    
                 
-
     def get_data(self):
         return self.data
 

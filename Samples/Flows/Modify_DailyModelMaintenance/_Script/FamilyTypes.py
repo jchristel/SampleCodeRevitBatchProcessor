@@ -38,6 +38,7 @@ from duHast.Utilities.console_out import output
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.RBP.Objects.ProgressRBPConsole import ProgressRBPConsole
 from duHast.Revit.Family.Utility.xml_create_atom_exports import create_family_xml_files
+from duHast.Revit.Family.Utility.xml_remove_obsolete_exports import remove_obsolete_part_atom_exports
 
 
 # debug mode revit project file name
@@ -117,7 +118,22 @@ def create_part_atom_exports_in_library_entry(doc , process_directories):
     
     return return_value
 
+def remove_orphaned(process_directories):
+    """
+    Remove any orphaned xml files from the directories.
 
+    :param process_directories: directories to process
+    :type process_directories: [str]
+
+    :return: None
+    """
+    remove_result = remove_obsolete_part_atom_exports(
+        process_directories=process_directories
+    )
+    output("{}".format(remove_result.message), revit_script_util.Output)
 
 # run the script to create family types XML exports from families in library directory
 create_part_atom_exports_in_library_entry(doc, PROCESS_DIRECTORIES)
+
+# remove any orphaned xml files
+remove_orphaned(PROCESS_DIRECTORIES)

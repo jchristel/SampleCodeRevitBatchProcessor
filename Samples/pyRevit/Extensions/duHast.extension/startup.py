@@ -13,7 +13,7 @@ ignore_dlls = [
 
 # Load the DLLs required for the extension
 # build the bin path
-bin_directory_within_extension=r"Albury.tab\PushIt.panel\bin"
+bin_directory_within_extension=r"duHast.tab\PushIt.panel\bin"
 # file path of this file
 startup_file_path = __file__
 # get the directory of the startup file

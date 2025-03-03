@@ -40,7 +40,6 @@ from duHast.Utilities.Objects import result as res
 # import Autodesk Revit DataBase namespace
 from Autodesk.Revit.DB import (
     BuiltInParameterGroup,
-    ParameterType,
     StorageType,
     Transaction,
 )
@@ -214,6 +213,11 @@ def create_family_parameter(
     """
 
     return_value = res.Result()
+
+
+    # import Autodesk Revit DataBase namespace
+    # ParametertType was removed in revit 2024...need workaround
+    from Autodesk.Revit.DB import ParameterType
 
     # do some type checking
     if not isinstance(parameter_name, str):

@@ -400,6 +400,11 @@ def compare_family_files_in_project_against_library(
 
         # store the comparison report as sorted list by family name
         sorted_list = sorted(comparison_report_result.result, key=lambda x: x[0])
+
+        # add the file name the family is in as the first entry
+        for entry in sorted_list:
+            entry.insert(0, os.path.basename(doc.Title))
+
         return_value.result = sorted_list
 
     except Exception as e:

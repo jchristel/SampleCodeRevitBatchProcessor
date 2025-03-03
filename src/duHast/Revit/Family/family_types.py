@@ -88,7 +88,7 @@ def delete_family_type(doc, type_name):
     :param type_name: The name of the family type
     :type type_name: str
     :return: Result object
-    :rtype
+    :rtype:
     """
 
     return_value = Result()
@@ -106,8 +106,7 @@ def delete_family_type(doc, type_name):
         # get all the types in the family
         familyTypes = family_manager.Types
 
-        # flag checking if anything got deleted at all
-        deleted_type = False
+        delete_type_result = None
 
         # iterate over family types
         familyTypesItor = familyTypes.ForwardIterator()
@@ -120,10 +119,11 @@ def delete_family_type(doc, type_name):
                 def action():
                     action_return_value = Result()
                     try:
+                        # set the current type as the current type so it can be deleted!
+                        family_manager.CurrentType = familyType
                         # delete the current type
                         family_manager.DeleteCurrentType()
                         action_return_value.append_message("Deleted family type: {}".format(type_name))
-                        deleted_type = True
                     except Exception as e:
                         action_return_value.update_sep(False, "Failed to delete family type with exception: {}".format(e))
                     return action_return_value
@@ -134,10 +134,53 @@ def delete_family_type(doc, type_name):
 
                 break
        
-        if not deleted_type:
+        if not delete_type_result.status:
             return_value.append_message("No matching type {} in family found.".format(type_name))
 
     except Exception as e:
         return_value.update_sep(False, "Failed to delete family type with exception: {}".format(e))
     
     return return_value
+
+
+def get_all_family_type_names(doc):
+    """
+    return all family type names
+
+    :param doc: The family document
+    :type doc: Document
+    :return: Result object with the list of type names in .result
+    :rtype: 
+    """
+
+    return_value = Result()
+    type_names = []
+    try:
+        # check this is a family document
+        if not doc.IsFamilyDocument:
+            return_value.update_sep(False, "Document is not a family document.")
+            return return_value
+        
+        # Get the FamilyManager
+        family_manager = doc.FamilyManager
+
+        # get all the types in the family
+        familyTypes = family_manager.Types
+
+        # iterate over family types
+        familyTypesItor = familyTypes.ForwardIterator()
+        familyTypesItor.Reset()
+        while (familyTypesItor.MoveNext()):
+        
+            familyType = familyTypesItor.Current
+            type_names.append(familyType.Name)
+        
+        return_value.update_sep(True, "Got all type names.")
+        return_value.result = type_names
+
+    except Exception as e:
+        return_value.update_sep(False, "Failed to get all type names with exception: {}".format(e))
+    
+    return return_value
+
+   

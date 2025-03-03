@@ -46,8 +46,10 @@ from duHast.Revit.Family.Data.Objects.family_type_data_storage import (
 from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import (
     FamilyTypeDataStorageManager,
 )
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    NESTING_SEPARATOR,
+)
 from duHast.Utilities.utility import encode_ascii
-from duHast.Utilities.files_io import get_file_name_without_ext
 
 from duHast.Utilities.string_operations import (
     remove_currency_sign,
@@ -192,12 +194,13 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
                     root_name_path = family_name
                     family_name_checked = family_name
 
-                    # get the file name without the extension from xml path
-                    file_name = get_file_name_without_ext(family_path)
-                    # check if the family name is the same as the file name
-                    if family_name != file_name:
-                        # if not the same, then the family name is the root path
-                        family_name_checked = file_name
+                    # split the file name at nesting separator
+                    family_name_split = family_name.split(NESTING_SEPARATOR)
+                    
+                    # check if the family name contains a nesting separator
+                    if len(family_name_split) > 0:
+                        # yes, so the fam name path is the last part
+                        family_name_checked = family_name_split[-1]
 
                     # Create a parameter object 
                     # make sure all values are encoded to ascii to avoid 

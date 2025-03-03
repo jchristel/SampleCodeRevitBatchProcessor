@@ -32,6 +32,7 @@ Revit families report headers.
 
 # comparison report ( project file vs library)
 LIBRARY_VS_PROJECT_FAMILIES_COMPARISON_HEADER = [
+        "PROJECT FILE NAME",
         "FAMILY NAME",
         "FAMILY CATEGORY",
         "FAMILY EXISTS IN LIBRARY",

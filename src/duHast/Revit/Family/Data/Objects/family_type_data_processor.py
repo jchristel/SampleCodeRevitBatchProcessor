@@ -137,10 +137,13 @@ class FamilyTypeProcessor(IFamilyProcessor):
 
                 # data needs to be of type FamilyTypeData...
                 dummy = rFamData.FamilyTypeData(family_name, family_category)
-                # add the storage to the dummy object
-                for storage in storage_manager.family_type_data_storage:
-                    dummy.add_data(storage)
-                
+                # add the parameter storage to the dummy object
+                for type_storage in storage_manager.family_type_data_storage:
+                    # we actually want the nested parameter storage here to get a single entry per
+                    # family, family type and parameter
+                    for  parameter_storage in type_storage.parameters:
+                        dummy.add_data(parameter_storage)
+                    
                 # add the dummy object to the data property of the processor
                 self.data.append(dummy)
 

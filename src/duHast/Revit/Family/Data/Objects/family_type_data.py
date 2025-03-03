@@ -32,6 +32,7 @@ from duHast.Revit.Family.Data.Objects import ifamily_data as IFamData
 from duHast.Revit.Family.Data.Objects.family_type_data_storage import (
     FamilyTypeDataStorage,
 )
+from duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage import FamilyTypeParameterDataStorage
 from duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults import (
     NESTING_SEPARATOR,
 )
@@ -134,9 +135,9 @@ class FamilyTypeData(IFamData.IFamilyData):
         return self.data
 
     def add_data(self, storage_instance):
-        if isinstance(storage_instance, FamilyTypeDataStorage):
+        if isinstance(storage_instance, FamilyTypeParameterDataStorage):
             self.data.append(storage_instance)
         else:
             raise ValueError(
-                "storage instance must be an instance of FamilyTypeDataStorage"
+                "storage instance must be an instance of FamilyTypeParameterDataStorage got {}".format(type(storage_instance))
             )

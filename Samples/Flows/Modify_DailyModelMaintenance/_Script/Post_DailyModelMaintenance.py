@@ -410,7 +410,7 @@ FILE_DATA_TO_COMBINE = [
         settings.COMBINED_REPORT_NAME_WARNING_TYPES,
         append_files_wrapper,
     ],
-     [
+    [
         settings.REPORT_EXTENSION_FAM_LIB_VS_PROJECT,
         settings.COMBINED_REPORT_NAME_FAM_LIB_VS_PROJECT,
         combine_files_wrapper,

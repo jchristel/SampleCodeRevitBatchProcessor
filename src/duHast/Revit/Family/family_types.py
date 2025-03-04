@@ -134,7 +134,9 @@ def delete_family_type(doc, type_name):
 
                 break
        
-        if not delete_type_result.status:
+        if not delete_type_result:
+            return_value.append_message("No matching type {} in family found.".format(type_name))
+        elif delete_type_result and not delete_type_result.status:
             return_value.append_message("No matching type {} in family found.".format(type_name))
 
     except Exception as e:

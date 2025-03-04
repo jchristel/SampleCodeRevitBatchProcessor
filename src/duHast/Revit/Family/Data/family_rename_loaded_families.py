@@ -35,7 +35,6 @@ This helper function expect a folder containing rename directive files. For form
 # import System
 
 from duHast.Revit.Family import family_rename_files_utils as rFamRenameUtils
-from duHast.Revit.Family import family_utils as rFamUtils
 from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict
 from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities.Objects import result as res

@@ -26,8 +26,7 @@ Functions around Revit BIM360.
 #
 #
 
-import System
-import clr
+import os
 
 from duHast.Utilities.utility import get_local_app_data_path
 from duHast.Utilities.files_get import get_files_from_directory_walker
@@ -118,13 +117,10 @@ def get_model_file_size(doc):
         # full_path = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
         # get user environment
         host_name = get_local_app_data_path()
+
         # build path to local cache files
-        folder = (
-            host_name
-            + "\\Autodesk\\Revit\\Autodesk Revit "
-            + str(doc.Application.VersionNumber)
-            + "\\CollaborationCache"
-        )
+        folder = os.path.join(host_name, "{} {}".format(r"Autodesk\Revit\Autodesk Revit",str(doc.Application.VersionNumber)), "CollaborationCache")
+
         # local cache file name is same as file GUID on BIM360
         revit_file = doc.WorksharingCentralGUID.ToString()
         # get all files in cache folder matching GUID
@@ -146,6 +142,10 @@ def get_model_file_size_from_GUID(revit_version, file_guid):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+    :param revit_version: Revit version number
+    :type revit_version: int
+    :param file_guid: cloud GUID of the file
+    :type file_guid: System.Guid
 
     :return: If file exists the file size in MB, otherwise -1
     :rtype: float
@@ -156,16 +156,14 @@ def get_model_file_size_from_GUID(revit_version, file_guid):
     try:
         # get user environment
         host_name = get_local_app_data_path()
+
         # build path to local cache files
-        folder = (
-            host_name
-            + "\\Autodesk\\Revit\\Autodesk Revit "
-            + revit_version
-            + "\\CollaborationCache"
-        )
+        folder = os.path.join(host_name, "{} {}".format(r"Autodesk\Revit\Autodesk Revit",revit_version), "CollaborationCache")
         
         # get all files in cache folder matching GUID
-        file_list = get_files_from_directory_walker(folder, file_guid)
+        # guid is coming in System.Guid format
+        file_list = get_files_from_directory_walker(folder, "{}".format(file_guid))
+       
         if len(file_list) > 0:
             for file in file_list:
                 # just select one of the file instance..not to sure why this one?

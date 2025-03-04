@@ -48,13 +48,14 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
     ]
 
     # number of properties in this class ( used in report reader function )
-    number_of_properties = 9
+    number_of_properties = 10
 
     def __init__(self, 
             root_name_path,
             root_category_path,
             family_name,
             family_file_path,
+            family_type_name,
             name, 
             type, 
             type_of_parameter, 
@@ -87,6 +88,7 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
             family_file_path=family_file_path,
         )
 
+        self.family_type_name = family_type_name  # name of the family type
         self.name = name  # name of the family type
         self.type = type  # type of the parameter ( i.e. shared, system, custom)
         self.type_of_parameter = type_of_parameter  # unit type of the parameter ( i.e. length, area, volume, string, etc.)

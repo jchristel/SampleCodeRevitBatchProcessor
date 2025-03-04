@@ -209,6 +209,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
                         root_name_path = encode_ascii(root_name_path),
                         root_category_path = encode_ascii(root_category_path),
                         family_name = encode_ascii(family_name_checked),
+                        family_type_name=encode_ascii(family_type_name),
                         family_file_path=encode_ascii(family_path),
                         name=encode_ascii(name),
                         type=encode_ascii(type),

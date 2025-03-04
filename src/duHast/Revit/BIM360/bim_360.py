@@ -138,3 +138,40 @@ def get_model_file_size(doc):
     except Exception as e:
         raise ValueError("Failed to get cloud model file size: {}".format(e))
     return file_size
+
+
+def get_model_file_size_from_GUID(revit_version, file_guid):
+    """
+    Gets BIM360 file size, if file does not exists on local cache it will return -1.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: If file exists the file size in MB, otherwise -1
+    :rtype: float
+    """
+
+    file_size = -1
+
+    try:
+        # get user environment
+        host_name = get_local_app_data_path()
+        # build path to local cache files
+        folder = (
+            host_name
+            + "\\Autodesk\\Revit\\Autodesk Revit "
+            + revit_version
+            + "\\CollaborationCache"
+        )
+        
+        # get all files in cache folder matching GUID
+        file_list = get_files_from_directory_walker(folder, file_guid)
+        if len(file_list) > 0:
+            for file in file_list:
+                # just select one of the file instance..not to sure why this one?
+                if file.Contains("CentralCache") == False:
+                    file_size = get_file_size(file)
+                    break
+    except Exception as e:
+        raise ValueError("Failed to get cloud model file size: {}".format(e))
+    return file_size

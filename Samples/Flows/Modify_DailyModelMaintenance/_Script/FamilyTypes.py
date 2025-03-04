@@ -128,7 +128,7 @@ def remove_orphaned(process_directories):
     :return: None
     """
     remove_result = remove_obsolete_part_atom_exports(
-        process_directories=process_directories
+        process_dirs=process_directories
     )
     output("{}".format(remove_result.message), revit_script_util.Output)
 

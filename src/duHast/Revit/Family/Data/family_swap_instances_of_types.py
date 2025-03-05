@@ -290,7 +290,7 @@ def swap_family_instances_of_types(doc, directory_path):
         families = get_name_and_category_to_family_dict(doc)
         # check if any families are loaded
         if len(families) > 0:
-            # rename files as per directives
+            # swap instances as per directives
             swap_result= _swap_loaded_family_instances(
                 doc=doc, swap_directives=swap_directives, families=families
             )

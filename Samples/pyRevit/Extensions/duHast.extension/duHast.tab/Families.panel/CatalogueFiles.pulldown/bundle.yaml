@@ -2,6 +2,8 @@ layout:
   - DeleteParametersFromCatalogueFile
   - ----------
   - ExportCatalogueFile
+  - -----------
+  - DefaultCatalogueFileType
 
 # bundle tooltip
 tooltip: Some scripts relating to family catalogue files. Need to be run within a family!

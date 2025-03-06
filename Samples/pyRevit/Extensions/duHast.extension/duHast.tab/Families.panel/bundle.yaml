@@ -6,6 +6,8 @@ layout:
   - CatalogueFiles
   - -------
   - Reports
+  - --------
+  - SwapFamilies
 
 # bundle tooltip
 tooltip: It's all in the family.

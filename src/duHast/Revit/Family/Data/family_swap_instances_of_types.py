@@ -39,6 +39,7 @@ Note:
 from duHast.Revit.Family import family_swap_instances_by_type_utils as rFamSwapUtils
 from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict
 from duHast.Revit.Family.family_utils import get_family_instances_by_symbol_type_id
+from duHast.UI.Objects.ProgressBase import ProgressBase
 from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities.Objects import result as res
 
@@ -101,6 +102,13 @@ def get_target_type(doc, families, swap_directive):
 def _get_fam_instances(doc, family, swap_directive):
     """
     Get instances of a family type to be swapped.
+
+    Note:
+    Will return 3 lists: 
+    - instances which can be swapped out.
+    - instances which are nested in other families.
+    - instances which are in groups, where the group is placed more than once.
+
 
     :param doc: The current family document.
     :type doc: Autodesk.Revit.DB.Document
@@ -247,13 +255,16 @@ def _swap_loaded_family_instances(doc, swap_directives, families, progress_callb
         # update progress
         rename_match_counter = rename_match_counter + 1
 
-        # check for progress cancel?
+        # check for progress cancel
+        if progress_callback != None:
+            if progress_callback.is_cancelled():
+                return_value.append_message("User cancelled!")
+                break
     
-
     return return_value
 
 
-def swap_family_instances_of_types(doc, directory_path):
+def swap_family_instances_of_types(doc, directory_path, progress_callback=None):
     """
     Entry point for this module. Will read swap directives files in given directory and attempt to swp out instances of types accordingly.
 
@@ -278,6 +289,15 @@ def swap_family_instances_of_types(doc, directory_path):
     """
 
     return_value = res.Result()
+
+    # check callback class
+    if progress_callback and isinstance(progress_callback, ProgressBase) == False:
+        raise TypeError(
+            "progress_callback needs to be inherited from ProgressBase. Got : {} instead.".format(
+                type(progress_callback)
+            )
+        )
+    
     # get directives from folder
     swap_directives_result = rFamSwapUtils.get_swap_directives(directory_path)
     # check if anything came back
@@ -292,7 +312,7 @@ def swap_family_instances_of_types(doc, directory_path):
         if len(families) > 0:
             # swap instances as per directives
             swap_result= _swap_loaded_family_instances(
-                doc=doc, swap_directives=swap_directives, families=families
+                doc=doc, swap_directives=swap_directives, families=families, progress_callback=progress_callback
             )
             # update return value
             return_value.update(swap_result)

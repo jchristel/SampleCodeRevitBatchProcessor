@@ -95,7 +95,7 @@ def get_target_type(doc, families, swap_directive):
             return_value.result.append(fam_symbol)
             return return_value
             
-    return_value.update_sep("...No target type found for: {}".format(swap_directive.target_family_type_name))
+    return_value.append_message("...No target type found for: {}".format(swap_directive.target_family_type_name))
     return return_value
 
 
@@ -179,7 +179,7 @@ def get_group_id(doc, instance):
     # get the group instance id
     group_id = instance.GroupId
 
-    if group_id == None:
+    if group_id == None or group_id.IntegerValue == -1:
         return_value.update_sep(False, "No group found for: {}".format(instance.Id))
         # return an invalid element id integer
         return_value.result.append(-1)
@@ -261,7 +261,7 @@ def _get_fam_instances(doc, family, swap_directive):
 
                 # check if instance is nested
                 super_component_result = get_super_component_id(doc, instance)
-                return_value.update(super_component_result)
+                #return_value.update(super_component_result)
 
                 # if this family is nested in another family do not swap
                 if super_component_result.status:
@@ -275,7 +275,7 @@ def _get_fam_instances(doc, family, swap_directive):
                 
                 # check if instance is in a group
                 group_result = get_group_id(doc, instance)
-                return_value.update(group_result)
+                #return_value.update(group_result)
 
                 # if this family is in a group do not swap
                 if group_result.status:
@@ -329,7 +329,6 @@ def _swap_loaded_family_instances(doc, swap_directives, families, progress_callb
 
     return_value = res.Result()
     return_value.status = False
-    rename_match_counter = 0
 
     # progress call back
     callback_counter = 1
@@ -348,7 +347,9 @@ def _swap_loaded_family_instances(doc, swap_directives, families, progress_callb
             return_value.update_sep(
                 False, "Family not found: {}".format(family_key)
             )
-            rename_match_counter = rename_match_counter + 1
+            print("Family not found: {}".format(family_key))
+            callback_counter = callback_counter + 1
+            continue
         
         # revit family
         family = families[family_key]
@@ -357,17 +358,20 @@ def _swap_loaded_family_instances(doc, swap_directives, families, progress_callb
         instances_result = _get_fam_instances(doc, family, swap_directive)
         return_value.update(instances_result)
         
+        print(instances_result.result)
         # get instances to swap from returned tuple at index 0
         instances = instances_result.result[0][0]
 
         if len(instances) == 0:
             # nothing to swap found move on
+            callback_counter = callback_counter + 1
             continue
 
         # get the target type
         target_result = get_target_type(doc, families, swap_directive)
         return_value.update(target_result)
         if not target_result.status:
+            callback_counter = callback_counter + 1
             # no target type found
             continue
 
@@ -393,7 +397,7 @@ def _swap_loaded_family_instances(doc, swap_directives, families, progress_callb
         return_value.update(swap_result)
 
         # update progress
-        rename_match_counter = rename_match_counter + 1
+        callback_counter = callback_counter + 1
 
         # check for progress cancel
         if progress_callback != None:
@@ -451,6 +455,7 @@ def swap_family_instances_of_types(doc, directory_path, progress_callback=None):
         # check if any families are loaded
         if len(families) > 0:
             # swap instances as per directives
+            print("Swapping instances of types as per directives...")
             swap_result= _swap_loaded_family_instances(
                 doc=doc, swap_directives=swap_directives, families=families, progress_callback=progress_callback
             )

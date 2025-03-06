@@ -1,7 +1,7 @@
 Samples
 ========
 
-This section contains a collection of sample scripts that demonstrate how to use the pyRevit API to automate tasks in Revit.
+This section contains a collection of sample scripts that demonstrate how to use the Revit API to automate tasks in Revit.
 
 
 Flows

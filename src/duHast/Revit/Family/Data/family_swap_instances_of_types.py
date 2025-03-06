@@ -97,8 +97,108 @@ def get_target_type(doc, families, swap_directive):
             
     return_value.update_sep("...No target type found for: {}".format(swap_directive.target_family_type_name))
     return return_value
+
+
+def get_super_component_id(doc, instance):
+
+    """
+    Get the super component id of a family instance.
+
+    :param doc: The current family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param instance: The family instance.
+    :type instance: Autodesk.Revit.DB.FamilyInstance
+
+    :return:
+        Result class instance.
+
+        - result.status. True if a single super component was found, otherwise False.
+        - result.message will contain each swap message
+        - result.result list of super component ids (single entry)
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain an exception message in format: 'Failed to find super component for: ' + instance.Id
+        - result.result will be empty
     
-   
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+
+    super_component = instance.SuperComponent
+
+    if super_component == None:
+        return_value.update_sep(False, "No super component found for: {}".format(instance.Id))
+        # return an invalid element id integer
+        return_value.result.append(-1)
+        return return_value
+    
+    # get the super component id
+    super_component_id = instance.SuperComponent.Id
+    if super_component_id != None and super_component_id.IntegerValue > 0:
+        return_value.append_message("...Found super component id: {}".format(super_component_id))
+        # get the family of the super component
+        super_fam_Id_int = super_component.Symbol.Family.Id.IntegerValue
+        return_value.result.append(super_fam_Id_int)
+    else:
+        return_value.append_message("Failed to find super component for: {}".format(instance.Id))
+        return_value.result.append(-1)
+
+    return return_value
+
+
+def get_group_id(doc, instance):
+    """
+    Get the group id of a family instance.
+
+    :param doc: The current family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param instance: The family instance.
+    :type instance: Autodesk.Revit.DB.FamilyInstance
+
+    :return:
+        Result class instance.
+
+        - result.status. True if at least one group was found, otherwise False.
+        - result.message will contain each swap message
+        - result.result list of group ids
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain an exception message in format: 'Failed to find group for: ' + instance.Id
+        - result.result will be empty
+    
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+
+    # get the group instance id
+    group_id = instance.GroupId
+
+    if group_id == None:
+        return_value.update_sep(False, "No group found for: {}".format(instance.Id))
+        # return an invalid element id integer
+        return_value.result.append(-1)
+        return return_value
+    
+    # get the group
+    group = doc.GetElement(group_id)
+    # get the group type id
+    group_type_id_int = group.GroupType.Id.IntegerValue
+    if group_type_id_int != None and group_type_id_int > 0:
+        return_value.append_message("...Found group type id: {}".format(group_type_id_int))
+        # get the group
+        return_value.result.append(group_type_id_int)
+    else:
+        return_value.append_message("Failed to find group for: {}".format(instance.Id))
+        return_value.result.append(-1)
+
+    return return_value
+
 def _get_fam_instances(doc, family, swap_directive):
     """
     Get instances of a family type to be swapped.
@@ -138,25 +238,64 @@ def _get_fam_instances(doc, family, swap_directive):
     # instances in model
     instances = []
 
+    # a dictionary to hold count of instances by super component Family id integervalues
+    super_components = {}
+
+    # a dictionary to hold count of instances by group id integervalues
+    groups = {}
+    
+
     # get instances to be swapped
     for fam_symbol_id in family.GetFamilySymbolIds():
         fam_symbol = doc.GetElement(fam_symbol_id)
         fam_symbol_name = Element.Name.GetValue(fam_symbol)
+        
         if fam_symbol_name ==  swap_directive.source_type_name :
             return_value.append_message("...Found symbol: {}".format(fam_symbol_name))
             # get all instances of this type
             instances_collector = get_family_instances_by_symbol_type_id(doc, fam_symbol.Id)
             for instance in instances_collector:
-                instances.append(instance)
+                
+                # set default swap flag
+                swap = True
+
+                # check if instance is nested
+                super_component_result = get_super_component_id(doc, instance)
+                return_value.update(super_component_result)
+
+                # if this family is nested in another family do not swap
+                if super_component_result.status:
+                    # set swap flag to false
+                    swap = False
+                    super_component_id = super_component_result.result[0]
+                    if super_component_id in super_components:
+                        super_components[super_component_id] = super_components[super_component_id] + 1
+                    else:
+                        super_components[super_component_id] = 1
+                
+                # check if instance is in a group
+                group_result = get_group_id(doc, instance)
+                return_value.update(group_result)
+
+                # if this family is in a group do not swap
+                if group_result.status:
+                    # set swap flag to false
+                    swap = False
+                    group_type_id = group_result.result[0]
+                    if group_type_id in groups:
+                        groups[group_type_id] = groups[group_type_id] + 1
+                    else:
+                        groups[group_type_id] = 1
+                
+                # check if that instance can be swapped
+                if swap:
+                    instances.append(instance)
+
             return_value.append_message( "...Found {} instances of type: {}".format(len(instances), fam_symbol_name))
             break
     
-    # update the return value
-    return_value.result = instances
-
-    # check anything was found
-    if len(instances) == 0:
-        return_value.update_sep(False, "No instances found for type: {}".format(swap_directive.source_type_name))
+    # update the return value as a tuple
+    return_value.result.append((instances, super_components, groups))
 
     return return_value
     
@@ -217,12 +356,13 @@ def _swap_loaded_family_instances(doc, swap_directives, families, progress_callb
         # instances in model to be swapped
         instances_result = _get_fam_instances(doc, family, swap_directive)
         return_value.update(instances_result)
-        if not instances_result.status:
+        
+        # get instances to swap from returned tuple at index 0
+        instances = instances_result.result[0][0]
+
+        if len(instances) == 0:
             # nothing to swap found move on
             continue
-        
-        # get instances to swap
-        instances = instances_result.result
 
         # get the target type
         target_result = get_target_type(doc, families, swap_directive)

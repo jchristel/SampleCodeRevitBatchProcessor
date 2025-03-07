@@ -20,12 +20,38 @@
 #
 #
 
-import csv
-
 
 from duHast.Revit.Family.Data.family_swap_instances_of_types import swap_family_instances_of_types
 from duHast.pyRevit.Objects.ProgressPyRevit import ProgressPyRevit
 from duHast.Utilities.Objects.result import Result
+
+from Autodesk.Revit.DB import ElementId
+
+from families.util.print_table import print_result_table
+
+def get_table_data_from_result(doc, result_list):
+    # the result lit is made up of tuples containing three entries
+
+    # 1. the id's of family instances swapped out
+    # 2. a dictioanry in format (Host Family Id:[list of instances not swapped because they are hosted in this family])
+    # 3. a dictionary in format (Group Type Id:[list of instances not swapped because they are hosted in this group])
+
+    host_fams = []
+    host_groups = []
+    for data in result_list:
+        if (isinstance(data, tuple)):
+
+            if len(data) != 3:
+                continue
+
+            for fam_id, instance_count in data[1].items():
+                host_fams.append([doc.GetElement(ElementId(fam_id)).Name, instance_count])
+            
+            for group_id, instance_count in data[2].items():
+                host_groups.append([doc.GetElement(ElementId(group_id)).Name, instance_count])
+    
+    return host_fams, host_groups
+
 
 def swap_instances_by_directives_entry(doc, output, forms):
     """
@@ -43,7 +69,8 @@ def swap_instances_by_directives_entry(doc, output, forms):
 
     # set up a status tracker
     return_value = Result()
-
+    
+    table_data = None
     try:
 
         # select swap directives folder
@@ -58,19 +85,37 @@ def swap_instances_by_directives_entry(doc, output, forms):
         
 
         # set up a progress tracker
+        with forms.ProgressBar(
+            title="Swapping: {value} of {max_value}",
+            cancellable=True,
+        ) as pb:
 
+            # set up a call back for pyRevit progressbar
+            progress_callback = ProgressPyRevit(form=pb)
 
-        # swap away
-        swap_result = swap_family_instances_of_types(doc, swap_directive_path)
+            # swap away
+            swap_result = swap_family_instances_of_types(doc, swap_directive_path, progress_callback)
 
-        print(swap_result.message)
-    
+            # print logs
+            print(swap_result.message)
+
+            # process results to print tables
+            table_data = get_table_data_from_result(doc, swap_result.result)
+
     except Exception as e:
         return_value.update_sep(
-            False, "Failed to report families with exception: {}".format(e)
+            False, "Failed to swap families with exception: {}".format(e)
         )
 
+    # print swap log
     print(return_value.message)
+
+    # print tables
+    if len(table_data[0]) >0:
+        print_result_table(output, table_data[0], ["Host Family", "Instances not swapped"], "Host Families containing instances not swapped")
+    if len(table_data[1]) >0:
+        print_result_table(output, table_data[1], ["Host Group", "Instances not swapped"], "Host Groups containing instances not swapped")
+
     print("Finished")
 
     return return_value

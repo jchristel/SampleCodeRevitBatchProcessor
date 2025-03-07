@@ -13,5 +13,28 @@ namespace WpfSandpit
     /// </summary>
     public partial class App : Application
     {
+        duHast.Utils.WPF.Stores.NavigationStore _navigationStore;
+        
+
+        public App()
+        {
+            _navigationStore = new duHast.Utils.WPF.Stores.NavigationStore();
+            
+
+            //set up the navigation store
+            _navigationStore.CurrentViewModel = CreateTestViewModel();
+
+            MainWindow = new MainWindow()
+            {
+                DataContext = new ViewModels.MainViewModel(_navigationStore)
+            };
+
+        }
+
+        private ViewModels.testViewModel CreateTestViewModel()
+        {
+            return new ViewModels.testViewModel();
+        }
+
     }
 }

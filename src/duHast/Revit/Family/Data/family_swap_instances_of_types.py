@@ -95,7 +95,7 @@ def get_target_type(doc, families, swap_directive):
             return_value.result.append(fam_symbol)
             return return_value
             
-    return_value.append_message("...No target type found for: {}".format(swap_directive.target_family_type_name))
+    return_value.update_sep(False, "...No target type found for: {}".format(swap_directive.target_family_type_name))
     return return_value
 
 
@@ -347,7 +347,6 @@ def _swap_loaded_family_instances(doc, swap_directives, families, progress_callb
             return_value.update_sep(
                 False, "Family not found: {}".format(family_key)
             )
-            print("Family not found: {}".format(family_key))
             callback_counter = callback_counter + 1
             continue
         
@@ -358,7 +357,6 @@ def _swap_loaded_family_instances(doc, swap_directives, families, progress_callb
         instances_result = _get_fam_instances(doc, family, swap_directive)
         return_value.update(instances_result)
         
-        print(instances_result.result)
         # get instances to swap from returned tuple at index 0
         instances = instances_result.result[0][0]
 
@@ -455,7 +453,6 @@ def swap_family_instances_of_types(doc, directory_path, progress_callback=None):
         # check if any families are loaded
         if len(families) > 0:
             # swap instances as per directives
-            print("Swapping instances of types as per directives...")
             swap_result= _swap_loaded_family_instances(
                 doc=doc, swap_directives=swap_directives, families=families, progress_callback=progress_callback
             )

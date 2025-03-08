@@ -37,6 +37,9 @@ namespace WpfSandpit.ViewModels
                 // set the button text
                 _safetyOffButtonText = value ? "Safety off" : "Safety on";
 
+                //set the revit is busy flag
+                IsWaitingForRevitCommandToFinish = value;
+
                 // notify ui of changes
                 OnPropertyChanged(nameof(SafetyOffButtonText));
                 OnPropertyChanged(nameof(SafetyOffMode));

@@ -18,6 +18,7 @@
         <Grid.RowDefinitions>
             <!-- header row -->
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <!-- header row content -->
         <Grid Grid.Row="0">
@@ -40,5 +41,21 @@
                 IsChecked="{Binding SafetyOffMode, Mode=TwoWay}">
             </ToggleButton>
         </Grid>
+
+        <Border Grid.Row="1" CornerRadius="1"  Margin="0 2 0 2">
+            <Grid>
+                <TextBlock
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    FontSize="24"
+                    Text="Updating Revit..."/>
+                <ListView 
+                    Margin="0 25 0 0" 
+                    Visibility="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                    SelectionMode="Single">
+                </ListView>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

@@ -27,6 +27,7 @@ namespace WpfSandpit.ViewModels
     public class MainViewModel: duHast.Utils.WPF.ViewModels.ViewModelBase
     {
 
+        // navigation store
         private readonly duHast.Utils.WPF.Stores.NavigationStore _navigationStore;
         
         public duHast.Utils.WPF.ViewModels.ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;

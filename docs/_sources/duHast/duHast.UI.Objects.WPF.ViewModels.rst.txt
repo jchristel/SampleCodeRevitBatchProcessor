@@ -4,6 +4,14 @@ duHast.UI.Objects.WPF.ViewModels package
 Submodules
 ----------
 
+duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel module
+-------------------------------------------------------
+
+.. automodule:: duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.UI.Objects.WPF.ViewModels.FilterItem module
 --------------------------------------------------
 

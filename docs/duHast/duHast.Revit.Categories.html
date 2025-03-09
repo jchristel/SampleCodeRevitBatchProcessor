@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Categories package &#8212; Sample Code Revit Batch Processor 1.1.11 documentation</title>
+    <title>duHast.Revit.Categories package &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.11 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Categories.Data package" href="duHast.Revit.Categories.Data.html" />
     <link rel="prev" title="duHast.Revit.BuildingPads.Utility package" href="duHast.Revit.BuildingPads.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.11 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Categories package</h1></div>
@@ -59,7 +59,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -445,6 +445,23 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dt class="sig sig-object py" id="duHast.Revit.Categories.categories_model.get_categories_in_model">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories_model.</span></span><span class="sig-name descname"><span class="pre">get_categories_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories_model.get_categories_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all categories and subcategories in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of named tuples of type category_data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[<a class="reference internal" href="#duHast.Revit.Categories.categories_model.category_data" title="duHast.Revit.Categories.categories_model.category_data">category_data</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories_model.get_main_categories_in_model">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Categories.categories_model.</span></span><span class="sig-name descname"><span class="pre">get_main_categories_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories_model.get_main_categories_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all main categories in a model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p>

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.pyRevit.Objects package &#8212; Sample Code Revit Batch Processor 1.1.11 documentation</title>
+    <title>duHast.pyRevit.Objects package &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.11 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../index.html" />
     <link rel="up" title="duHast.pyRevit package" href="duHast.pyRevit.html" />
     <link rel="next" title="duHast.pyRevit.UI package" href="duHast.pyRevit.UI.html" />
     <link rel="prev" title="duHast.pyRevit package" href="duHast.pyRevit.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.11 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.pyRevit.Objects package</h1></div>
@@ -59,7 +59,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -128,6 +128,54 @@ message: The message to display</p>
 <dt>Returns:</dt><dd><p>True if the form has been cancelled</p>
 </dd>
 </dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-duHast.pyRevit.Objects.WPFWindowBasePyRevit">
+<span id="duhast-pyrevit-objects-wpfwindowbasepyrevit-module"></span><h2>duHast.pyRevit.Objects.WPFWindowBasePyRevit module<a class="headerlink" href="#module-duHast.pyRevit.Objects.WPFWindowBasePyRevit" title="Permalink to this heading">¶</a></h2>
+<section id="an-implementation-of-a-custom-wpf-window-base-class-which-can-be-shown-in-the-revit-context">
+<h3>An implementation of a custom wpf window base class which can be shown in the Revit context.<a class="headerlink" href="#an-implementation-of-a-custom-wpf-window-base-class-which-can-be-shown-in-the-revit-context" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.Objects.WPFWindowBasePyRevit.</span></span><span class="sig-name descname"><span class="pre">WPFWindowBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">WPFWindow</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase.on_current_view_model_changed">
+<span class="sig-name descname"><span class="pre">on_current_view_model_changed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase.on_current_view_model_changed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase.update_content_view">
+<span class="sig-name descname"><span class="pre">update_content_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view_model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase.update_content_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dynamically set the content of the main grid control based on the current view model</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>view_model (_type_): The new view model to be applied</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase.on_closed">
+<span class="sig-name descname"><span class="pre">on_closed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase.on_closed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the Closed event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sender</strong> (<em>object</em>) – The sender.</p></li>
+<li><p><strong>event</strong> (<em>object</em>) – The event.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase.action_on_close">
+<span class="sig-name descname"><span class="pre">action_on_close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase.action_on_close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the action on close.</p>
+<p>Can be overwritten by derived classes to handle cleanup tasks.</p>
 </dd></dl>
 
 </dd></dl>

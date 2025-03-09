@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Rooms.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.11 documentation</title>
+    <title>duHast.Revit.Rooms.Geometry package &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.11 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Rooms package" href="duHast.Revit.Rooms.html" />
     <link rel="next" title="duHast.Revit.Rooms.Objects package" href="duHast.Revit.Rooms.Objects.html" />
     <link rel="prev" title="duHast.Revit.Rooms.Export package" href="duHast.Revit.Rooms.Export.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.11 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Rooms.Geometry package</h1></div>
@@ -59,7 +59,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -312,6 +312,18 @@ to filter by the host type
 :type segments: List[List[BoundarySegment]]
 :return: A list of model lines
 :rtype: List[ModelLine]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Geometry.room_spatial_elements.get_rm_segments_centroid">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Geometry.room_spatial_elements.</span></span><span class="sig-name descname"><span class="pre">get_rm_segments_centroid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_rm_segments_centroid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the centroid of the room boundary segments
+:param rvt_doc: The Revit document
+:type rvt_doc: Document
+:param segments: The boundary segments of a room
+:type segments: List[List[BoundarySegment]]
+:return: The centroid of the room boundary segments
+:rtype: XYZ</p>
 </dd></dl>
 
 </section>

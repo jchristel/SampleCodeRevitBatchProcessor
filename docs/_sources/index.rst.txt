@@ -13,7 +13,7 @@ Welcome to duHast's documentation!
    :caption: Contents:
 
    duHast/modules
-   flows/index
+   samples/index
 
 Indices and tables
 ==================

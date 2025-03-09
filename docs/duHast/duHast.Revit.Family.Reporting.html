@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Family.Reporting package &#8212; Sample Code Revit Batch Processor 1.1.11 documentation</title>
+    <title>duHast.Revit.Family.Reporting package &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.11 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Family package" href="duHast.Revit.Family.html" />
     <link rel="next" title="duHast.Revit.Family.Reporting.Objects package" href="duHast.Revit.Family.Reporting.Objects.html" />
     <link rel="prev" title="duHast.Revit.Family.Data.Objects package" href="duHast.Revit.Family.Data.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.11 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Family.Reporting package</h1></div>
@@ -59,7 +59,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -126,6 +126,12 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
+<section id="module-duHast.Revit.Family.Reporting.families_report_header">
+<span id="duhast-revit-family-reporting-families-report-header-module"></span><h2>duHast.Revit.Family.Reporting.families_report_header module<a class="headerlink" href="#module-duHast.Revit.Family.Reporting.families_report_header" title="Permalink to this heading">¶</a></h2>
+<section id="revit-families-report-headers">
+<h3>Revit families report headers.<a class="headerlink" href="#revit-families-report-headers" title="Permalink to this heading">¶</a></h3>
+</section>
+</section>
 <section id="module-duHast.Revit.Family.Reporting.report">
 <span id="duhast-revit-family-reporting-report-module"></span><h2>duHast.Revit.Family.Reporting.report module<a class="headerlink" href="#module-duHast.Revit.Family.Reporting.report" title="Permalink to this heading">¶</a></h2>
 <section id="module-containing-reporting-functions">
@@ -169,6 +175,259 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Reporting.report_differences_in_reports">
+<span id="duhast-revit-family-reporting-report-differences-in-reports-module"></span><h2>duHast.Revit.Family.Reporting.report_differences_in_reports module<a class="headerlink" href="#module-duHast.Revit.Family.Reporting.report_differences_in_reports" title="Permalink to this heading">¶</a></h2>
+<section id="module-containing-comparison-reporting-of-family-reports">
+<h3>Module containing comparison reporting of family reports.<a class="headerlink" href="#module-containing-comparison-reporting-of-family-reports" title="Permalink to this heading">¶</a></h3>
+<p>This mimicks an outer join between any number of reports.</p>
+<p>The reports are compared based on the family name, type name, parameter name:,</p>
+<p>family Name,    Type name,  parmater name,  report 1,   report 2,   report 3,   …
+family 1,       type 1,     parameter 1,    value 1,   N/A,        value 1,     …
+family 2,       type 2,     parameter 2,    N/A,       value 2,    value 3,     …
+family 3,       type 3,     parameter 3,    value 3,       N?A      N/A         …</p>
+<p>N/A = not available in that report</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Reporting.report_differences_in_reports.outer_join_report_a_vs_b">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Reporting.report_differences_in_reports.</span></span><span class="sig-name descname"><span class="pre">outer_join_report_a_vs_b</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Reporting.report_differences_in_reports.outer_join_report_a_vs_b" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Reporting.report_differences_in_reports.compare_outer_join_result_with_report">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Reporting.report_differences_in_reports.</span></span><span class="sig-name descname"><span class="pre">compare_outer_join_result_with_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outer_join_result</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Reporting.report_differences_in_reports.compare_outer_join_result_with_report" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Reporting.report_differences_in_reports.read_report">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Reporting.report_differences_in_reports.</span></span><span class="sig-name descname"><span class="pre">read_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Reporting.report_differences_in_reports.read_report" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Reporting.report_differences_in_reports.compare_family_reports_outer_join">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Reporting.report_differences_in_reports.</span></span><span class="sig-name descname"><span class="pre">compare_family_reports_outer_join</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_paths</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Reporting.report_differences_in_reports.compare_family_reports_outer_join" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Reporting.report_fam_types_differences_from_XML">
+<span id="duhast-revit-family-reporting-report-fam-types-differences-from-xml-module"></span><h2>duHast.Revit.Family.Reporting.report_fam_types_differences_from_XML module<a class="headerlink" href="#module-duHast.Revit.Family.Reporting.report_fam_types_differences_from_XML" title="Permalink to this heading">¶</a></h2>
+<section id="module-containing-comparison-reporting-of-family-types-in-a-project-vs-in-a-library-functions">
+<h3>Module containing comparison reporting of family types in a project vs in a library functions.<a class="headerlink" href="#module-containing-comparison-reporting-of-family-types-in-a-project-vs-in-a-library-functions" title="Permalink to this heading">¶</a></h3>
+<p>Reports:</p>
+<ul class="simple">
+<li><p>if family does not exist in library</p></li>
+<li><p>if type does not exist in library</p></li>
+<li><p>if a parameter value for a given type is different to the parameter value for that type in the library</p></li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Reporting.report_fam_types_differences_from_XML.get_family_type_data_from_project_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Reporting.report_fam_types_differences_from_XML.</span></span><span class="sig-name descname"><span class="pre">get_family_type_data_from_project_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_data_from_library</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Reporting.report_fam_types_differences_from_XML.get_family_type_data_from_project_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the family type data from the families in the project file of families that are in the library only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Revit document</p></li>
+<li><p><strong>type_data_from_library</strong> ([<code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeDataStorageManager</span></code>]) – list of family type data from the library</p></li>
+<li><p><strong>progress_callback</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ProgressBase</span></code>) – progress callback object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: XML conversion status will be returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain which xml file was read and converted into family type data.</p></li>
+<li><p>result.result will be [<code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeDataStorageManager</span></code>]</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+<li><p>Reload.result will be an empty list</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Reporting.report_fam_types_differences_from_XML.build_comparison_report">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Reporting.report_fam_types_differences_from_XML.</span></span><span class="sig-name descname"><span class="pre">build_comparison_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_data_matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_list_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Reporting.report_fam_types_differences_from_XML.build_comparison_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a comparison report of the family type data from the project file against the library.
+Only differences are reported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type_data_matches</strong> ([([<code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeDataStorageManager</span></code>], [<code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeDataStorageManager</span></code>])]) – list of matched family type data</p></li>
+<li><p><strong>ignore_list_path</strong> (<em>str</em>) – path to a csv file containing a list of families to ignore (name, category) in the comparison report.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: Comparison status will be returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message: will be empty.</p></li>
+<li><p>result.result will be [[str]] where each entry is a list of family name, category etc and difference.</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+<li><p>Reload.result will be an empty list</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Reporting.report_fam_types_differences_from_XML.compare_family_files_in_project_against_library">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Reporting.report_fam_types_differences_from_XML.</span></span><span class="sig-name descname"><span class="pre">compare_family_files_in_project_against_library</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_directories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_list_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Reporting.report_fam_types_differences_from_XML.compare_family_files_in_project_against_library" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare the family type data from the project file against the library.
+Only differences are reported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Revit document</p></li>
+<li><p><strong>process_directories</strong> (<em>list</em>) – list of directories to search for xml files</p></li>
+<li><p><strong>ignore_list_path</strong> (<em>str</em>) – path to a csv file containing a list of families to ignore (name, category) in the comparison report.</p></li>
+<li><p><strong>progress_callback</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ProgressBase</span></code>) – progress callback object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: Comparison status will be returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message: Log entries.</p></li>
+<li><p>result.result will be [[str]] where each entry is a list of family name, category etc and difference.</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+<li><p>Reload.result will be an empty list</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Reporting.report_fam_types_from_XML">
+<span id="duhast-revit-family-reporting-report-fam-types-from-xml-module"></span><h2>duHast.Revit.Family.Reporting.report_fam_types_from_XML module<a class="headerlink" href="#module-duHast.Revit.Family.Reporting.report_fam_types_from_XML" title="Permalink to this heading">¶</a></h2>
+<section id="module-containing-reporting-family-type-reporting-functions">
+<h3>Module containing reporting family type reporting functions.<a class="headerlink" href="#module-containing-reporting-family-type-reporting-functions" title="Permalink to this heading">¶</a></h3>
+<p>Reports:</p>
+<ul class="simple">
+<li><p>all family types in the library folder ( based on xml files located in the library folder)</p></li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Reporting.report_fam_types_from_XML.build_report">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Reporting.report_fam_types_from_XML.</span></span><span class="sig-name descname"><span class="pre">build_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_data_storage_manager_instances</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Reporting.report_fam_types_from_XML.build_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a report of the family type data retrieved from the library.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>type_data_storage_manager_instances</strong> ([<code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeDataStorageManager</span></code>]) – list of matched family type data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: Comparison status will be returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message: will be empty.</p></li>
+<li><p>result.result will be [[str]] where each entry is a list of family name, category etc and difference.</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+<li><p>Reload.result will be an empty list</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Reporting.report_fam_types_from_XML.get_family_type_data_from_library_xml">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Reporting.report_fam_types_from_XML.</span></span><span class="sig-name descname"><span class="pre">get_family_type_data_from_library_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_directories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Reporting.report_fam_types_from_XML.get_family_type_data_from_library_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads family xml atom files from library directories and saves them out to a combined csv report.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>process_directories</strong> (<em>list</em>) – list of directories to search for xml files</p></li>
+<li><p><strong>progress_callback</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ProgressBase</span></code>) – progress callback object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: Report status will be returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message: Log entries.</p></li>
+<li><p>result.result will be [[str]] where each entry is a list of family name, category etc and difference.</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+<li><p>Reload.result will be an empty list</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Reporting.report_fam_types_from_project_via_xml">
+<span id="duhast-revit-family-reporting-report-fam-types-from-project-via-xml-module"></span><h2>duHast.Revit.Family.Reporting.report_fam_types_from_project_via_xml module<a class="headerlink" href="#module-duHast.Revit.Family.Reporting.report_fam_types_from_project_via_xml" title="Permalink to this heading">¶</a></h2>
+<section id="module-containing-reporting-of-family-types-in-a-project-functions">
+<h3>Module containing reporting of family types in a project functions.<a class="headerlink" href="#module-containing-reporting-of-family-types-in-a-project-functions" title="Permalink to this heading">¶</a></h3>
+<p>Reports:</p>
+<ul class="simple">
+<li><p>all family types and their type parameters values in a project</p></li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Reporting.report_fam_types_from_project_via_xml.build_type_report">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Reporting.report_fam_types_from_project_via_xml.</span></span><span class="sig-name descname"><span class="pre">build_type_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_list_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Reporting.report_fam_types_from_project_via_xml.build_type_report" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Reporting.report_fam_types_from_project_via_xml.get_all_family_type_data_from_project_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Reporting.report_fam_types_from_project_via_xml.</span></span><span class="sig-name descname"><span class="pre">get_all_family_type_data_from_project_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_list_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Reporting.report_fam_types_from_project_via_xml.get_all_family_type_data_from_project_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all family type data from the project file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The Revit document.</p></li>
+<li><p><strong>ignore_list_path</strong> (<em>str</em>) – The path to the ignore list file. ( 2 columns csv file with family name and category name)</p></li>
+<li><p><strong>progress_callback</strong> (<em>function</em>) – The progress callback function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The family type data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager" title="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager">FamilyTypeDataStorageManager</a>]</p>
 </dd>
 </dl>
 </dd></dl>

@@ -60,18 +60,26 @@ duHast.Utilities.directory\_io module
    :undoc-members:
    :show-inheritance:
 
-duHast.Utilities.files\_base module
------------------------------------
+duHast.Utilities.files\_base\_combine module
+--------------------------------------------
 
-.. automodule:: duHast.Utilities.files_base
+.. automodule:: duHast.Utilities.files_base_combine
    :members:
    :undoc-members:
    :show-inheritance:
 
-duHast.Utilities.files\_combine module
---------------------------------------
+duHast.Utilities.files\_base\_read module
+-----------------------------------------
 
-.. automodule:: duHast.Utilities.files_combine
+.. automodule:: duHast.Utilities.files_base_read
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Utilities.files\_base\_write module
+------------------------------------------
+
+.. automodule:: duHast.Utilities.files_base_write
    :members:
    :undoc-members:
    :show-inheritance:
@@ -112,6 +120,14 @@ duHast.Utilities.files\_tab module
 ----------------------------------
 
 .. automodule:: duHast.Utilities.files_tab
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Utilities.files\_xml module
+----------------------------------
+
+.. automodule:: duHast.Utilities.files_xml
    :members:
    :undoc-members:
    :show-inheritance:
@@ -160,6 +176,14 @@ duHast.Utilities.solibri\_ifc\_optimizer module
 -----------------------------------------------
 
 .. automodule:: duHast.Utilities.solibri_ifc_optimizer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Utilities.string\_operations module
+------------------------------------------
+
+.. automodule:: duHast.Utilities.string_operations
    :members:
    :undoc-members:
    :show-inheritance:

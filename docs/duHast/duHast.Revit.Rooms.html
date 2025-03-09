@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Rooms package &#8212; Sample Code Revit Batch Processor 1.1.11 documentation</title>
+    <title>duHast.Revit.Rooms package &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.11 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Rooms.Export package" href="duHast.Revit.Rooms.Export.html" />
     <link rel="prev" title="duHast.Revit.Roofs.Utility package" href="duHast.Revit.Roofs.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.11 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Rooms package</h1></div>
@@ -59,7 +59,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -97,7 +97,12 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="duHast.Revit.Rooms.Export.html">duHast.Revit.Rooms.Export package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Export.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Export.html#duhast-revit-rooms-export-to-data-room-module">duHast.Revit.Rooms.Export.to_data_room module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Export.html#module-duHast.Revit.Rooms.Export.to_data_room">duHast.Revit.Rooms.Export.to_data_room module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Export.html#this-module-contains-a-revit-rooms-export-to-data-class-functions">This module contains a Revit rooms export to DATA class functions.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Export.html#duHast.Revit.Rooms.Export.to_data_room.populate_data_room_object"><code class="docutils literal notranslate"><span class="pre">populate_data_room_object()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Export.html#duHast.Revit.Rooms.Export.to_data_room.get_all_room_data"><code class="docutils literal notranslate"><span class="pre">get_all_room_data()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Export.html#module-duHast.Revit.Rooms.Export">Module contents</a></li>
 </ul>
 </li>
@@ -124,6 +129,7 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_rm_sep_lines_as_curves"><code class="docutils literal notranslate"><span class="pre">get_only_rm_sep_lines_as_curves()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_wall_segments_as_walls"><code class="docutils literal notranslate"><span class="pre">get_only_wall_segments_as_walls()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_only_rm_sep_lines_as_model_lines"><code class="docutils literal notranslate"><span class="pre">get_only_rm_sep_lines_as_model_lines()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#duHast.Revit.Rooms.Geometry.room_spatial_elements.get_rm_segments_centroid"><code class="docutils literal notranslate"><span class="pre">get_rm_segments_centroid()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Geometry.html#module-duHast.Revit.Rooms.Geometry">Module contents</a></li>
@@ -134,6 +140,15 @@
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#module-duHast.Revit.Rooms.Objects.RoomBaseObject">duHast.Revit.Rooms.Objects.RoomBaseObject module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#revit-room-utility-class">Revit room utility class.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#duHast.Revit.Rooms.Objects.RoomBaseObject.RoomBaseObj"><code class="docutils literal notranslate"><span class="pre">RoomBaseObj</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#module-duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier">duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#a-class-used-to-implement-deleted-element-and-modified-element-count-for-room-separation-lines-in-warnings-solver">A class used to implement deleted element and modified element count for room separation lines in warnings solver.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier.RoomSeparationLinesPurgeModifier"><code class="docutils literal notranslate"><span class="pre">RoomSeparationLinesPurgeModifier</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier.RoomSeparationLinesPurgeModifier.modify_modified"><code class="docutils literal notranslate"><span class="pre">RoomSeparationLinesPurgeModifier.modify_modified()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier.RoomSeparationLinesPurgeModifier.modify_deleted"><code class="docutils literal notranslate"><span class="pre">RoomSeparationLinesPurgeModifier.modify_deleted()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="duHast.Revit.Rooms.Objects.html#module-duHast.Revit.Rooms.Objects.RoomSpatialForViews">duHast.Revit.Rooms.Objects.RoomSpatialForViews module</a><ul>

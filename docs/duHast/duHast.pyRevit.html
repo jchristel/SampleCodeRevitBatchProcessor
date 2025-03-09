@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.pyRevit package &#8212; Sample Code Revit Batch Processor 1.1.11 documentation</title>
+    <title>duHast.pyRevit package &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.11 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../index.html" />
     <link rel="up" title="duHast package" href="duHast.html" />
     <link rel="next" title="duHast.pyRevit.Objects package" href="duHast.pyRevit.Objects.html" />
     <link rel="prev" title="duHast.Utilities.Objects package" href="duHast.Utilities.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.11 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.pyRevit package</h1></div>
@@ -59,7 +59,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -102,6 +102,17 @@
 <li class="toctree-l3"><a class="reference internal" href="duHast.pyRevit.Objects.html#duHast.pyRevit.Objects.ProgressPyRevit.ProgressPyRevit"><code class="docutils literal notranslate"><span class="pre">ProgressPyRevit</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.Objects.html#duHast.pyRevit.Objects.ProgressPyRevit.ProgressPyRevit.update"><code class="docutils literal notranslate"><span class="pre">ProgressPyRevit.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.Objects.html#duHast.pyRevit.Objects.ProgressPyRevit.ProgressPyRevit.is_cancelled"><code class="docutils literal notranslate"><span class="pre">ProgressPyRevit.is_cancelled()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.pyRevit.Objects.html#module-duHast.pyRevit.Objects.WPFWindowBasePyRevit">duHast.pyRevit.Objects.WPFWindowBasePyRevit module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.pyRevit.Objects.html#an-implementation-of-a-custom-wpf-window-base-class-which-can-be-shown-in-the-revit-context">An implementation of a custom wpf window base class which can be shown in the Revit context.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.pyRevit.Objects.html#duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase"><code class="docutils literal notranslate"><span class="pre">WPFWindowBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.Objects.html#duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase.on_current_view_model_changed"><code class="docutils literal notranslate"><span class="pre">WPFWindowBase.on_current_view_model_changed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.Objects.html#duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase.update_content_view"><code class="docutils literal notranslate"><span class="pre">WPFWindowBase.update_content_view()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.Objects.html#duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase.on_closed"><code class="docutils literal notranslate"><span class="pre">WPFWindowBase.on_closed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.pyRevit.Objects.html#duHast.pyRevit.Objects.WPFWindowBasePyRevit.WPFWindowBase.action_on_close"><code class="docutils literal notranslate"><span class="pre">WPFWindowBase.action_on_close()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -156,6 +167,75 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>header</strong> (<em>str</em>) – The header to be printed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.pyRevit.directory_picker">
+<span id="duhast-pyrevit-directory-picker-module"></span><h2>duHast.pyRevit.directory_picker module<a class="headerlink" href="#module-duHast.pyRevit.directory_picker" title="Permalink to this heading">¶</a></h2>
+<section id="a-number-of-helper-functions-relating-to-pyrevit-directory-selection">
+<h3>A number of helper functions relating to pyrevit directory selection.<a class="headerlink" href="#a-number-of-helper-functions-relating-to-pyrevit-directory-selection" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.directory_picker.get_user_options">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.directory_picker.</span></span><span class="sig-name descname"><span class="pre">get_user_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.directory_picker.get_user_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the user options for saving out families</p>
+<p>Options are: save out to single directory, exclude existing families, overwrite existing families</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>forms</strong> (<em>Forms</em>) – the forms object</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the user options</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.directory_picker.get_process_directories">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.directory_picker.</span></span><span class="sig-name descname"><span class="pre">get_process_directories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Select</span> <span class="pre">directory'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.directory_picker.get_process_directories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the directories to process</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>forms</strong> (<em>Forms</em>) – the forms object</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the directories to process</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.pyRevit.file_picker">
+<span id="duhast-pyrevit-file-picker-module"></span><h2>duHast.pyRevit.file_picker module<a class="headerlink" href="#module-duHast.pyRevit.file_picker" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-pyrevit-file-picker-wrapper-function">
+<h3>This module contains a pyRevit file picker wrapper function.<a class="headerlink" href="#this-module-contains-a-pyrevit-file-picker-wrapper-function" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.pyRevit.file_picker.get_file_path_from_user">
+<span class="sig-prename descclassname"><span class="pre">duHast.pyRevit.file_picker.</span></span><span class="sig-name descname"><span class="pre">get_file_path_from_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.pyRevit.file_picker.get_file_path_from_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Very simple wrapper function to get a file path from the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>forms</strong> (<em>pyRevit forms module</em>) – pyRevit forms</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – The title of the file picker dialog.</p></li>
+<li><p><strong>file_extension</strong> (<em>str</em>) – The file extension to filter for. Example: “csv”</p></li>
+<li><p><strong>multi_file</strong> (<em>bool</em><em>, </em><em>optional</em>) – Single vs multi file selection, defaults to False (single file)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The file path(s) selected by the user. None if no file was selected.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str, [str],None</p>
 </dd>
 </dl>
 </dd></dl>

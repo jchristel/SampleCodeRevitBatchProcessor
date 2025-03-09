@@ -94,6 +94,22 @@ duHast.Revit.Family.family\_rename\_files\_utils module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.family\_swap\_instances\_by\_type\_utils module
+-------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_swap_instances_by_type_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.family\_types module
+----------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_types
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.family\_types\_catalogue module
 ---------------------------------------------------
 
@@ -114,6 +130,14 @@ duHast.Revit.Family.family\_types\_get\_data\_from\_xml module
 --------------------------------------------------------------
 
 .. automodule:: duHast.Revit.Family.family_types_get_data_from_xml
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.family\_types\_model\_get\_data\_from\_xml module
+---------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_types_model_get_data_from_xml
    :members:
    :undoc-members:
    :show-inheritance:

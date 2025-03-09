@@ -12,10 +12,50 @@ Subpackages
 Submodules
 ----------
 
+duHast.Revit.Family.Reporting.families\_report\_header module
+-------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Reporting.families_report_header
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.Reporting.report module
 -------------------------------------------
 
 .. automodule:: duHast.Revit.Family.Reporting.report
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Reporting.report\_differences\_in\_reports module
+---------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Reporting.report_differences_in_reports
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Reporting.report\_fam\_types\_differences\_from\_XML module
+-------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Reporting.report_fam_types_differences_from_XML
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Reporting.report\_fam\_types\_from\_XML module
+------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Reporting.report_fam_types_from_XML
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Reporting.report\_fam\_types\_from\_project\_via\_xml module
+--------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Reporting.report_fam_types_from_project_via_xml
    :members:
    :undoc-members:
    :show-inheritance:

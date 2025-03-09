@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Family.Utility package &#8212; Sample Code Revit Batch Processor 1.1.11 documentation</title>
+    <title>duHast.Revit.Family.Utility package &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.11 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Family package" href="duHast.Revit.Family.html" />
     <link rel="next" title="duHast.Revit.Floors package" href="duHast.Revit.Floors.html" />
     <link rel="prev" title="duHast.Revit.Family.Reporting.Objects package" href="duHast.Revit.Family.Reporting.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.11 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Family.Utility package</h1></div>
@@ -59,7 +59,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -127,6 +127,207 @@ i.e. built in revit type settings</p>
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Family.Utility.xml_create_atom_exports">
+<span id="duhast-revit-family-utility-xml-create-atom-exports-module"></span><h2>duHast.Revit.Family.Utility.xml_create_atom_exports module<a class="headerlink" href="#module-duHast.Revit.Family.Utility.xml_create_atom_exports" title="Permalink to this heading">¶</a></h2>
+<section id="module-containing-functions-relating-to-family-type-xml-file-creation">
+<h3>Module containing functions relating to family type xml file creation.<a class="headerlink" href="#module-containing-functions-relating-to-family-type-xml-file-creation" title="Permalink to this heading">¶</a></h3>
+<p>Reports:</p>
+<ul class="simple">
+<li><p>all family located in library folder(s)</p></li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_create_atom_exports.get_families_from_directory">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_create_atom_exports.</span></span><span class="sig-name descname"><span class="pre">get_families_from_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_create_atom_exports.get_families_from_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all family files from a directory. (ignores subdirectories)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>directory</strong> (<em>str</em>) – directory to search for family files</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of family files</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[FileItem]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_create_atom_exports.get_xml_files_from_directory">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_create_atom_exports.</span></span><span class="sig-name descname"><span class="pre">get_xml_files_from_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_create_atom_exports.get_xml_files_from_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all xml files from a directory. (ignores subdirectories)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>directory</strong> (<em>str</em>) – directory to search for xml files</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of xml files</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[FileItem]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_create_atom_exports.check_file_item_exists">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_create_atom_exports.</span></span><span class="sig-name descname"><span class="pre">check_file_item_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_to_check</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_create_atom_exports.check_file_item_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a file item exists in a list of file items based on the name property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instances</strong> (<em>[</em><em>FileItem</em><em>]</em>) – list of file items</p></li>
+<li><p><strong>name_to_check</strong> (<em>str</em>) – name to check</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if a file item with the name exists, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_create_atom_exports.get_families_requiring_update">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_create_atom_exports.</span></span><span class="sig-name descname"><span class="pre">get_families_requiring_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml_files</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_create_atom_exports.get_families_requiring_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if any family files require an xml file update</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>family_files</strong> ([<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>]) – the family files to check</p></li>
+<li><p><strong>xml_files</strong> ([<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>]) – the xml files to check against</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a list of family files that require updating</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_create_atom_exports.write_data_to_xml_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_create_atom_exports.</span></span><span class="sig-name descname"><span class="pre">write_data_to_xml_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">application</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_create_atom_exports.write_data_to_xml_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the family type data to an XML file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>application</strong> (<em>Autodesk.Revit.ApplicationServices.Application</em>) – The Revit application object.</p></li>
+<li><p><strong>family_path</strong> (<em>str</em>) – The path of the family file.</p></li>
+<li><p><strong>xml_path</strong> (<em>str</em>) – The path of the XML file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A result object with .status True if successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_create_atom_exports.create_xml_file">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_create_atom_exports.</span></span><span class="sig-name descname"><span class="pre">create_xml_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_application</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_create_atom_exports.create_xml_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an xml file for a given family file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>revit_application</strong> (<em>Application</em>) – revit application object</p></li>
+<li><p><strong>family_file</strong> (<em>str</em>) – family file to create xml file for</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_create_atom_exports.write_data_to_temp_xml_file_and_read_it_back">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_create_atom_exports.</span></span><span class="sig-name descname"><span class="pre">write_data_to_temp_xml_file_and_read_it_back</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">an_action_to_write_xml_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_create_atom_exports.write_data_to_temp_xml_file_and_read_it_back" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the data to a temp XML file and read it back.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>an_action_to_write_xml_data</strong> (<em>function returning a Result object</em>) – The action to write the XML data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: True if data was written and read back successfully, False otherwise.</p></li>
+<li><p>result.message will contain the log data.</p></li>
+<li><p>result.result will be a XML document object.</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+<li><p>Reload.result will be an empty list.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_create_atom_exports.write_data_to_xml_file_and_read_it_back">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_create_atom_exports.</span></span><span class="sig-name descname"><span class="pre">write_data_to_xml_file_and_read_it_back</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">an_action_to_write_xml_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_create_atom_exports.write_data_to_xml_file_and_read_it_back" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the data to an XML file and read it back.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>an_action_to_write_xml_data</strong> (<em>function</em>) – The action to write the XML data.</p></li>
+<li><p><strong>xml_file_path</strong> (<em>str</em>) – The path of the XML file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: True if data was written and read back successfully, False otherwise.</p></li>
+<li><p>result.message will contain log data</p></li>
+<li><p>result.result will be a XML document object.</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+<li><p>Reload.result will be an empty list.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_create_atom_exports.create_family_xml_files">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_create_atom_exports.</span></span><span class="sig-name descname"><span class="pre">create_family_xml_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_application</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_directories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_create_atom_exports.create_family_xml_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create xml files for all families in a list of directories using Revit API PartAtomExport function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>revit_application</strong> (<em>Application</em>) – revit application object</p></li>
+<li><p><strong>process_directories</strong> (<em>[</em><em>str</em><em>]</em>) – list of directories to process</p></li>
+<li><p><strong>progress_callback</strong> (<a class="reference internal" href="duHast.UI.Objects.html#duHast.UI.Objects.ProgressBase.ProgressBase" title="duHast.UI.Objects.ProgressBase.ProgressBase"><em>ProgressBase</em></a>) – progress callback object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-duHast.Revit.Family.Utility.xml_family_type_reader">
 <span id="duhast-revit-family-utility-xml-family-type-reader-module"></span><h2>duHast.Revit.Family.Utility.xml_family_type_reader module<a class="headerlink" href="#module-duHast.Revit.Family.Utility.xml_family_type_reader" title="Permalink to this heading">¶</a></h2>
 <section id="a-module-with-helper-function-to-read-xml-family-type-data-into-storage-objects">
@@ -134,26 +335,10 @@ i.e. built in revit type settings</p>
 <p>Separate module for ease of testing and maintainability.</p>
 </section>
 <dl class="py function">
-<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_family_type_reader.read_xml_file">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_family_type_reader.</span></span><span class="sig-name descname"><span class="pre">read_xml_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_family_type_reader.read_xml_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read xml data from a file into a XmlDocument object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The path to the file.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The data read back from the XML file.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>XmlDocument or None if an error occurred.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_family_type_reader.read_xml_into_storage">
-<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_family_type_reader.</span></span><span class="sig-name descname"><span class="pre">read_xml_into_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_xml</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_family_type_reader.read_xml_into_storage" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_family_type_reader.</span></span><span class="sig-name descname"><span class="pre">read_xml_into_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_xml</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_family_type_reader.read_xml_into_storage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the XML data into the storage object.</p>
+<p>Note all names and values will be encoded to ascii.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -163,10 +348,30 @@ i.e. built in revit type settings</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of family type data objects.</p>
+<dd class="field-even"><p>A family type data storage manager object.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage" title="duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage">FamilyTypeDataStorage</a>]</p>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager" title="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeDataStorageManager</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Family.Utility.xml_remove_obsolete_exports">
+<span id="duhast-revit-family-utility-xml-remove-obsolete-exports-module"></span><h2>duHast.Revit.Family.Utility.xml_remove_obsolete_exports module<a class="headerlink" href="#module-duHast.Revit.Family.Utility.xml_remove_obsolete_exports" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_remove_obsolete_exports.remove_obsolete_part_atom_exports">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_remove_obsolete_exports.</span></span><span class="sig-name descname"><span class="pre">remove_obsolete_part_atom_exports</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_dirs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_remove_obsolete_exports.remove_obsolete_part_atom_exports" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes all xml files in the process directories with no associated family files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>process_dirs</strong> (<em>list</em>) – List of directories to process.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result object with status and message.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result">Result</a></p>
 </dd>
 </dl>
 </dd></dl>

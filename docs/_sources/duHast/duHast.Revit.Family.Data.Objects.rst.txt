@@ -92,6 +92,14 @@ duHast.Revit.Family.Data.Objects.family\_directive\_rename module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.Data.Objects.family\_directive\_swap\_instances\_of\_type module
+------------------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_directive_swap_instances_of_type
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.Data.Objects.family\_type\_data module
 ----------------------------------------------------------
 
@@ -120,6 +128,14 @@ duHast.Revit.Family.Data.Objects.family\_type\_data\_storage module
 -------------------------------------------------------------------
 
 .. automodule:: duHast.Revit.Family.Data.Objects.family_type_data_storage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.Data.Objects.family\_type\_data\_storage\_manager module
+----------------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.Objects.family_type_data_storage_manager
    :members:
    :undoc-members:
    :show-inheritance:

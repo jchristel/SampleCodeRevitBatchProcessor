@@ -12,6 +12,14 @@ duHast.Revit.Rooms.Objects.RoomBaseObject module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier module
+------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Rooms.Objects.RoomSpatialForViews module
 -----------------------------------------------------
 

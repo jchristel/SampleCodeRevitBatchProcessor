@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.UI.Objects.WPF.ViewModels package &#8212; Sample Code Revit Batch Processor 1.1.11 documentation</title>
+    <title>duHast.UI.Objects.WPF.ViewModels package &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.11 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../index.html" />
     <link rel="up" title="duHast.UI.Objects.WPF package" href="duHast.UI.Objects.WPF.html" />
     <link rel="next" title="duHast.UI.Objects.WPF.Views package" href="duHast.UI.Objects.WPF.Views.html" />
     <link rel="prev" title="duHast.UI.Objects.WPF.Stores package" href="duHast.UI.Objects.WPF.Stores.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.11 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.UI.Objects.WPF.ViewModels package</h1></div>
@@ -59,7 +59,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -93,6 +93,89 @@
 <h1>duHast.UI.Objects.WPF.ViewModels package<a class="headerlink" href="#duhast-ui-objects-wpf-viewmodels-package" title="Permalink to this heading">¶</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel">
+<span id="duhast-ui-objects-wpf-viewmodels-errorsviewmodel-module"></span><h2>duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel module<a class="headerlink" href="#module-duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel" title="Permalink to this heading">¶</a></h2>
+<section id="a-base-class-for-wpf-view-model-error-validation">
+<h3>A base class for WPF view model error validation.<a class="headerlink" href="#a-base-class-for-wpf-view-model-error-validation" title="Permalink to this heading">¶</a></h3>
+<p>Based on:</p>
+<p><a class="reference external" href="https://github.com/SingletonSean/wpf-tutorials/blob/master/ValidationMVVM/ViewModels/ErrorsViewModel.cs">https://github.com/SingletonSean/wpf-tutorials/blob/master/ValidationMVVM/ViewModels/ErrorsViewModel.cs</a></p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.</span></span><span class="sig-name descname"><span class="pre">ErrorsViewModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">INotifyDataErrorInfo</span></code></p>
+<p>A base class for error validation in WPF view models.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.GetErrors">
+<span class="sig-name descname"><span class="pre">GetErrors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">propertyName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.GetErrors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the errors for the specified property.
+Implementation of INotifyDataErrorInfo.GetErrors.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.HasErrors">
+<span class="sig-name descname"><span class="pre">HasErrors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.HasErrors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if there are any errors in the view model.
+Implementation of INotifyDataErrorInfo.HasErrors.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.add_ErrorsChanged">
+<span class="sig-name descname"><span class="pre">add_ErrorsChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.add_ErrorsChanged" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a handler to the ErrorsChanged event.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.remove_ErrorsChanged">
+<span class="sig-name descname"><span class="pre">remove_ErrorsChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.remove_ErrorsChanged" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a handler from the ErrorsChanged event.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.RaiseErrorsChanged">
+<span class="sig-name descname"><span class="pre">RaiseErrorsChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">propertyName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.RaiseErrorsChanged" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises the ErrorsChanged event for the specified property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>propertyName</strong> (<em>str</em>) – The name of the property that has changed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.ClearErrors">
+<span class="sig-name descname"><span class="pre">ClearErrors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">property_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.ClearErrors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the errors for the specified property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>property_name</strong> (<em>str</em>) – The name of the property to clear the errors for.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.ClearAllErrors">
+<span class="sig-name descname"><span class="pre">ClearAllErrors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.ClearAllErrors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears all errors.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.AddError">
+<span class="sig-name descname"><span class="pre">AddError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">property_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.Objects.WPF.ViewModels.ErrorsViewModel.ErrorsViewModel.AddError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an error to the specified property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>property_name</strong> (<em>str</em>) – The name of the property to add the error to.</p></li>
+<li><p><strong>error_message</strong> (<em>str</em>) – The error message.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-duHast.UI.Objects.WPF.ViewModels.FilterItem">
 <span id="duhast-ui-objects-wpf-viewmodels-filteritem-module"></span><h2>duHast.UI.Objects.WPF.ViewModels.FilterItem module<a class="headerlink" href="#module-duHast.UI.Objects.WPF.ViewModels.FilterItem" title="Permalink to this heading">¶</a></h2>

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Views package &#8212; Sample Code Revit Batch Processor 1.1.11 documentation</title>
+    <title>duHast.Revit.Views package &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.11 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Views.Export package" href="duHast.Revit.Views.Export.html" />
     <link rel="prev" title="duHast.Revit.UI.Objects package" href="duHast.Revit.UI.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.11 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Views package</h1></div>
@@ -59,7 +59,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -1057,11 +1057,39 @@ view reference types and view continuation types in the model.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules.get_schedules">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules.</span></span><span class="sig-name descname"><span class="pre">get_schedules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules.get_schedules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all schedules in the current document excluding titleblock revision schedules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of schedules in the current document.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[Autodesk.Revit.DB.ViewSchedule]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Views.schedules_element_filters">
+<span id="duhast-revit-views-schedules-element-filters-module"></span><h2>duHast.Revit.Views.schedules_element_filters module<a class="headerlink" href="#module-duHast.Revit.Views.schedules_element_filters" title="Permalink to this heading">¶</a></h2>
+<section id="id1">
+<h3>This module contains a number of helper functions relating to Revit view schedules.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Views.schedules_element_filters.get_schedule_filters">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Views.schedules_element_filters.</span></span><span class="sig-name descname"><span class="pre">get_schedule_filters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedule</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Views.schedules_element_filters.get_schedule_filters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Views.schedules_revision_filter">
 <span id="duhast-revit-views-schedules-revision-filter-module"></span><h2>duHast.Revit.Views.schedules_revision_filter module<a class="headerlink" href="#module-duHast.Revit.Views.schedules_revision_filter" title="Permalink to this heading">¶</a></h2>
-<section id="id1">
-<h3>This module contains a number of helper functions relating to Revit view schedules.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<section id="id2">
+<h3>This module contains a number of helper functions relating to Revit view schedules.<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Views.schedules_revision_filter.filter_revision_schedules">
@@ -1902,7 +1930,7 @@ view_data (dict): A dictionary where the keys are the names of the views and the
 <dd class="field-even"><p>dictionary of categories</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>{str:category_storage}</p>
+<dd class="field-odd"><p>{str: <a class="reference internal" href="duHast.Revit.Views.Objects.html#duHast.Revit.Views.Objects.category_override_storage.RevitCategoryOverride" title="duHast.Revit.Views.Objects.category_override_storage.RevitCategoryOverride"><code class="xref py py-class docutils literal notranslate"><span class="pre">RevitCategoryOverride</span></code></a>}</p>
 </dd>
 </dl>
 </dd></dl>

@@ -21,6 +21,22 @@ duHast.pyRevit.console\_output module
    :undoc-members:
    :show-inheritance:
 
+duHast.pyRevit.directory\_picker module
+---------------------------------------
+
+.. automodule:: duHast.pyRevit.directory_picker
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.pyRevit.file\_picker module
+----------------------------------
+
+.. automodule:: duHast.pyRevit.file_picker
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.pyRevit.ui\_element\_selection module
 --------------------------------------------
 

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Utilities.Objects package &#8212; Sample Code Revit Batch Processor 1.1.11 documentation</title>
+    <title>duHast.Utilities.Objects package &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.11 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../index.html" />
     <link rel="up" title="duHast.Utilities package" href="duHast.Utilities.html" />
     <link rel="next" title="duHast.pyRevit package" href="duHast.pyRevit.html" />
     <link rel="prev" title="duHast.Utilities package" href="duHast.Utilities.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.11 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Utilities.Objects package</h1></div>
@@ -59,7 +59,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -158,18 +158,17 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="duHast.Utilities.Objects.base.Base.string_to_utf">
-<span class="sig-name descname"><span class="pre">string_to_utf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.base.Base.string_to_utf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Used to convert any properties stored as string to utf-8 in to json conversion of all class properties…</p>
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.base.Base.to_json_ordered">
+<span class="sig-name descname"><span class="pre">to_json_ordered</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.base.Base.to_json_ordered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the instance of this class to JSON, including public attributes and properties.
+Properties and attributes are ordered alphabetically.
+Note: This method takes about double the time of to_json()</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>o</strong> (<em>_type_</em>) – _description_</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A JSON object.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>_description_</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_type_</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -189,6 +188,16 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.base.Base.to_json_utf_ordered">
+<span class="sig-name descname"><span class="pre">to_json_utf_ordered</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.base.Base.to_json_utf_ordered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the instance of this class to json, any string properties are converted to utf-8
+Properties and attributes are ordered alphabetically.
+Note: This method takes about double the time of to_json_utf()
+:return: A Json object.
+:rtype: json</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="duHast.Utilities.Objects.base.Base.class_to_dict">
 <span class="sig-name descname"><span class="pre">class_to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.base.Base.class_to_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all class properties and their values as a dictionary</p>
@@ -198,6 +207,21 @@
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>{str:var,}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.base.Base.class_to_ordered_dict">
+<span class="sig-name descname"><span class="pre">class_to_ordered_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.base.Base.class_to_ordered_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all class properties and their values as an OrderedDict in alphabetical order of the property names.
+(This takes about double the time of class_to_dict)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An OrderedDict of all class properties names and their values</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>OrderedDict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -407,14 +431,23 @@ result: A list to store the result items</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Utilities.Objects.result.Result.append_message">
 <span class="sig-name descname"><span class="pre">append_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.result.Result.append_message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Appends a new line and new message string to the existing message.</p>
-<p>First message appended will replace the default value of -</p>
+<dd><p>Appends a  new message string to the existing messages list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>message</strong> (<em>str</em>) – The new message to be appended.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.result.Result.message">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">message</span></span><a class="headerlink" href="#duHast.Utilities.Objects.result.Result.message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.result.Result.message_as_list">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">message_as_list</span></span><a class="headerlink" href="#duHast.Utilities.Objects.result.Result.message_as_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Utilities.Objects.result.Result.update">

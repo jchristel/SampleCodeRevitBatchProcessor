@@ -12,6 +12,14 @@ duHast.pyRevit.Objects.ProgressPyRevit module
    :undoc-members:
    :show-inheritance:
 
+duHast.pyRevit.Objects.WPFWindowBasePyRevit module
+--------------------------------------------------
+
+.. automodule:: duHast.pyRevit.Objects.WPFWindowBasePyRevit
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

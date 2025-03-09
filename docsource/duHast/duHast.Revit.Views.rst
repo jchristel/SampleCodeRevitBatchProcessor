@@ -81,6 +81,14 @@ duHast.Revit.Views.schedules module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Views.schedules\_element\_filters module
+-----------------------------------------------------
+
+.. automodule:: duHast.Revit.Views.schedules_element_filters
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Views.schedules\_revision\_filter module
 -----------------------------------------------------
 

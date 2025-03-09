@@ -124,6 +124,14 @@ duHast.Revit.Family.Data.family\_report\_utils\_deprecated module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.Data.family\_swap\_instances\_of\_types module
+------------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.Data.family_swap_instances_of_types
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

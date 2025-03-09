@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Rooms.Objects package &#8212; Sample Code Revit Batch Processor 1.1.11 documentation</title>
+    <title>duHast.Revit.Rooms.Objects package &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.11 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Rooms package" href="duHast.Revit.Rooms.html" />
     <link rel="next" title="duHast.Revit.Rooms.Reporting package" href="duHast.Revit.Rooms.Reporting.html" />
     <link rel="prev" title="duHast.Revit.Rooms.Geometry package" href="duHast.Revit.Rooms.Geometry.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.11 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Rooms.Objects package</h1></div>
@@ -59,7 +59,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -111,6 +111,58 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Objects.RoomBaseObject.</span></span><span class="sig-name descname"><span class="pre">RoomBaseObj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvt_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Objects.RoomBaseObject.RoomBaseObj" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
 <p>Class constructor</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier">
+<span id="duhast-revit-rooms-objects-roomseparationlinespurgemodifier-module"></span><h2>duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier module<a class="headerlink" href="#module-duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier" title="Permalink to this heading">¶</a></h2>
+<section id="a-class-used-to-implement-deleted-element-and-modified-element-count-for-room-separation-lines-in-warnings-solver">
+<h3>A class used to implement deleted element and modified element count for room separation lines in warnings solver.<a class="headerlink" href="#a-class-used-to-implement-deleted-element-and-modified-element-count-for-room-separation-lines-in-warnings-solver" title="Permalink to this heading">¶</a></h3>
+<p>Modify delete</p>
+<ul class="simple">
+<li><p>checks whether the deleted element count is a list of 2 entries</p></li>
+<li><p>checks whether any entry is a model line</p></li>
+</ul>
+<p>Modified modifier</p>
+<ul class="simple">
+<li><p>check if any room in that collection has an area of zero after modification</p></li>
+</ul>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier.RoomSeparationLinesPurgeModifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier.</span></span><span class="sig-name descname"><span class="pre">RoomSeparationLinesPurgeModifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier.RoomSeparationLinesPurgeModifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="duHast.Revit.Purge.Objects.html#duHast.Revit.Purge.Objects.ModifierBase.ModifierBase" title="duHast.Revit.Purge.Objects.ModifierBase.ModifierBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModifierBase</span></code></a></p>
+<p>Class constructor.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier.RoomSeparationLinesPurgeModifier.modify_modified">
+<span class="sig-name descname"><span class="pre">modify_modified</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modified</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier.RoomSeparationLinesPurgeModifier.modify_modified" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base implementation override to modify the modified element count.</p>
+<p>Returns modified element list unchanged if:
+- modified is not a c# List[ElementId]</p>
+<p>Returns:
+- modified element list without any room objects</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>modified: The modified element count</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier.RoomSeparationLinesPurgeModifier.modify_deleted">
+<span class="sig-name descname"><span class="pre">modify_deleted</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deleted</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.Objects.RoomSeparationLinesPurgeModifier.RoomSeparationLinesPurgeModifier.modify_deleted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base implementation override to modify the deleted element count.</p>
+<p>Returns deleted element list unchanged if:
+- deleted is not a c# List[ElementId]
+- deleted is not a list of 2 elements</p>
+<p>Returns:
+- deleted element list without any model lines</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>deleted</strong> (<em>List</em><em>[</em><em>ElementId</em><em>]</em>) – The deleted element id list</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>

@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>The Chain &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../../index.html" />
+    <link rel="up" title="Flows" href="index.html" />
+    <link rel="prev" title="Files Out" href="flows.FilesOut.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>The Chain</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="flows.FilesOut.html" title="Files Out" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Samples</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#flows">Flows</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Flows</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="flows.AddRevision.html">AddRevision</a></li>
+<li class="toctree-l4"><a class="reference internal" href="flows.MileStone.html">Milestone</a></li>
+<li class="toctree-l4"><a class="reference internal" href="flows.ModelMaintenance.html">Model Maintenance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="flows.FilesIn.html">Files In</a></li>
+<li class="toctree-l4"><a class="reference internal" href="flows.FilesOut.html">Files Out</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">The Chain</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setting-up-the-chain">Setting Up - The Chain</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#pyrevit">pyRevit</a></li>
+</ul>
+</li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/samples/flows/flows.TheChain.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="the-chain">
+<h1>The Chain<a class="headerlink" href="#the-chain" title="Permalink to this heading">¶</a></h1>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
+<p>The chain consists of a number of main workflows aimed at en mass family updates:</p>
+<ul>
+<li><p>Reporting - of family properties :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="../../_00_ReportFamilyData/_docs/HowTo_ReportFamilies.rst">REPORTING</a></p></li>
+<li><p><a class="reference external" href="../../_00_X_SavingMissingFamilies/_docs/HowTo_SaveOutMissingFamilies.rst">SAVING MISSING FAMILIES</a></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Changing - Specific families with specific actions :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="../../_01_X_RenameFamilies/_docs/HowTo_RenameFamilies.rst">RENAMING</a></p></li>
+<li><p><a class="reference external" href="../../_01_Y_ChangeFamilyCategory/_docs/HowTo_ChangeFamilyCategory.rst">CHANGE FAMILY CATEGORY</a></p></li>
+<li><p><a class="reference external" href="../../_01_Z_ChangeFamilySubCategory/_docs/HowTo_ChangeFamilySubCategory.rst">CHANGE FAMILY SUB CATEGORIES</a></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Changing - All families with a default set of actions :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="../../_01_ModifyFamilyChange/_docs/HowTo_ModifyFamiliesDefault.rst">MODIFY DEFAULT</a></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Reloading - nested families into host families : HowTo_ReloadFamilies.rst</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="../../_02_ModifyFamilyLibraryReloadAdvanced/_docs/HowTo_ReloadFamilies.rst">RELOADING</a></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<img alt="General Flow of the Chain" src="samples/flows/graphViz/TrinityOfTheChain.dot.svg" /></section>
+<section id="putting-it-all-together">
+<h2>Putting it all together<a class="headerlink" href="#putting-it-all-together" title="Permalink to this heading">¶</a></h2>
+<p>The batch script ‘theChain.bat’ executes the 3 workflows in the following order:</p>
+<ol class="arabic simple">
+<li><p>Changing</p></li>
+<li><p>Reloading</p></li>
+<li><p>Reporting</p></li>
+</ol>
+<p>In between executing flows, it will copy the following files from the flow just finished to the one about to be executed:</p>
+<ol class="arabic">
+<li><p>Changing</p>
+<blockquote>
+<div><ul>
+<li><p>Change list ChangedFilesTaskList.csv</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>from folder:  ___01_ModifyFamilyChange_Output</p></li>
+<li><p>to folder: ___02_ModifyFamilyLibraryReloadAdvanced_Input</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Reloading</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>no files copied to next flow</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Reporting</p>
+<blockquote>
+<div><ul>
+<li><p>FamilyBaseDataCombinedReport.csv</p>
+<blockquote>
+<div><ul>
+<li><p>from folder: ___00_ReportFamilyData_OutputuserName</p></li>
+<li><p>to folders:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>___00_ReportFamilyData_AnalysisYYMMDD</p></li>
+<li><p>___00_ReportFamilyData_Analysis_Current</p></li>
+<li><p>___01_ModifyFamilyChange_Input</p></li>
+<li><p>___02_ModifyFamilyLibraryReloadAdvanced_Input</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</section>
+</section>
+<section id="setting-up-the-chain">
+<h1>Setting Up - The Chain<a class="headerlink" href="#setting-up-the-chain" title="Permalink to this heading">¶</a></h1>
+<ul>
+<li><dl class="simple">
+<dt>copy folder structure from:</dt><dd><p>\bvnDatastudioinfotechstandardsScriptsRevit PythonRBPWorkflowsTheChain
+to your project folder location</p>
+</dd>
+</dl>
+</li>
+<li><p>change file path in all settings files in all _default folders per work flow: (use visual studio code: find and replace in files)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“taskScriptFilePath”: “C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_00_ReportFamilyData\_Script\ReportFamilyData.py”,</p></li>
+<li><p>“revitFileListFilePath”: “C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_00_ReportFamilyData\_Users\jchristel\_TaskList\Tasklist_1.txt”,</p></li>
+<li><p>“dataExportFolderPath”: “C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_00_ReportFamilyData\_Users\jchristel\_Users\jchristel\SessionData”,</p></li>
+<li><p>“preProcessingScriptFilePath”: “C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_00_ReportFamilyData\_Script\Pre_MarkerFiles.py”,</p></li>
+<li><p>“PostProcessingScriptFilePath”: “C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\Samples\Flows\TheChain\_00_ReportFamilyData\_Script\Post_KillWSM.py”,</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>check Revit version in _default settings to match your required version</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“singleRevitTaskRevitVersion”: “Revit2020”</p></li>
+<li><p>“batchRevitTaskRevitVersion”: “Revit2022”</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>change file path to Revit library in python util files:</p>
+<blockquote>
+<div><ul>
+<li><p>Report (utilModifyBVN.py), Modify (utilModifyBVN.py) &amp; Reload (utilReloadBVN.py):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>REVIT_LIBRARY_PATH = r’\bvndatastudioSharedAssetsRevitRevitContentCentralHealthLibrary_Kinship’</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>run setupUser.bat located in ___A0_TheChain to create a user specific folder in each flow. Note: without a user specific folder the flow will not work.</p></li>
+</ul>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Samples</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                <a href="index.html" >Flows</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
+                The Chain
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

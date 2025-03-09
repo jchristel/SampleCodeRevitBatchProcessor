@@ -27,6 +27,10 @@ This module contains a number of helper functions relating to Family elements
 #
 #
 
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    NESTING_SEPARATOR,
+)
+
 from Autodesk.Revit.DB import Element, FilteredElementCollector, Family
 
 
@@ -49,6 +53,10 @@ def get_name_to_family_dict(rvt_doc):
 def get_name_and_category_to_family_dict(rvt_doc):
     """
     Create a dictionary of family name and category concatenated and the Family element.
+    
+    Note:
+        - The category is concatenated with the family name using the NESTING_SEPARATOR.
+    
     This is useful when there are multiple families with the same name but different categories.
 
     :param rvt_doc: Revit document
@@ -59,8 +67,10 @@ def get_name_and_category_to_family_dict(rvt_doc):
 
     # Get all the families in the model
     all_families = FilteredElementCollector(rvt_doc).OfClass(Family).ToElements()
+    
     # create a dictionary of family name and family object
-    family_dict = {fam.Name + fam.FamilyCategory.Name: fam for fam in all_families}
+    family_dict = {"{}{}{}".format(fam.Name, NESTING_SEPARATOR, fam.FamilyCategory.Name): fam for fam in all_families}
+    
     return family_dict
 
 

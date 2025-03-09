@@ -64,8 +64,13 @@ def get_element_selection_from_user(doc, forms, element_getter, element_selectio
     element_names = []
     elements_by_name = {}
 
-    # get all view templates
+    # get all elements from the getter
     elements = element_getter(doc=doc)
+    
+    # check if we got any?
+    if elements is None or len(elements) == 0:
+        return None
+
     for element in elements:
         # check if this is an element id rather than an element
         if isinstance(element, ElementId):
@@ -80,6 +85,7 @@ def get_element_selection_from_user(doc, forms, element_getter, element_selectio
 
     # check if we got any?
     if(len(element_names)==0):
+        print("No elements left to display")
         return elements_selected
 
     # get the user to select the source ( returns a string)

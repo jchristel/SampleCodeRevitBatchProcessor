@@ -67,6 +67,17 @@ namespace duHast.PushIt.RevitActions
             //get families of supported built in categories
             List<FamilyInstance> familyInstances = RevitUtils.Families.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
 
+            //check if there are any family instances
+            if (familyInstances.Count == 0)
+            {
+                // no family instances available...nothing to push
+                _roomsSelectionViewModel.AddMessage("No family instances found in the model",duHast.Utils.WPF.Stores.MessageTypes.Information);
+                return;
+            }
+
+            // tell the UI we are busy
+            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
+
             // convert family instances to revit rooms
             List<duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
 
@@ -94,9 +105,6 @@ namespace duHast.PushIt.RevitActions
 
             // keep track of the overall success of the wipe operation
             bool overallUpdateSuccess = true;
-
-            // tell the UI we are busy
-            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
 
             //attempt to update room data in bundles of 20 family instances to speed up the process
             Dictionary<string, (RoomDataModel, List<FamilyInstance>)> updateFamilyInstances = new Dictionary<string, (RoomDataModel, List<FamilyInstance>)>();

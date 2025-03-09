@@ -38,6 +38,12 @@ namespace duHast.PushIt.Commands
 
         public override bool CanExecute(object parameter)
         {
+            // check if IsWaitingForRevitCommandToFinish is true
+            if (_roomsSelectionViewModel.IsWaitingForRevitCommandToFinish)
+            {
+                return false;
+            }
+
             // if safety off mode enabled this command is always available
             if (_roomsSelectionViewModel.SafetyOffMode) { return true; }
 
@@ -65,7 +71,8 @@ namespace duHast.PushIt.Commands
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // check if the property that changed is the one that we are interested in
-            if (e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsMatchingRevitRoomsEmpty))
+            if (e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsMatchingRevitRoomsEmpty) || 
+                e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsWaitingForRevitCommandToFinish))
             {
                 OnCanExecutedChanged();
             }

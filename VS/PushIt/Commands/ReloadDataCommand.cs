@@ -38,6 +38,11 @@ namespace duHast.PushIt.Commands
 
         public override bool CanExecute(object parameter)
         {
+            // check if IsWaitingForRevitCommandToFinish is true
+            if (_roomsSelectionViewModel.IsWaitingForRevitCommandToFinish)
+            {
+                return false;
+            }
             return _roomsSelectionViewModel.DataFilePathValid && base.CanExecute(parameter);
         }
 
@@ -58,7 +63,8 @@ namespace duHast.PushIt.Commands
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // check if the property that changed is the one that we are interested in
-            if (e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.DataFilePath))
+            if (e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.DataFilePath) ||
+                e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsWaitingForRevitCommandToFinish))
             {
                 OnCanExecutedChanged();
             }

@@ -39,7 +39,7 @@ namespace duHast.PushIt.Utilities
     {
         public static List<Models.RoomDataModel> GetRoomsData(string filePath, int rowsToSkip = 2)
         {
-            Console.WriteLine("Reading Rooms Data from file: " + filePath);
+            //Console.WriteLine("Reading Rooms Data from file: " + filePath);
             // read data from comma separated file
             List<Models.RoomDataModel> roomsData = new List<Models.RoomDataModel>();
 

@@ -103,19 +103,27 @@ namespace duHast.PushIt.RevitActions
             // convert revit categories into revit builtIncategories for filtering
             List<BuiltInCategory> familyInstanceFilterCategories = CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
 
-            //get families of supported built in categories
-            List<FamilyInstance> familyInstances = RevitUtils.Families.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
-
-            // convert family instances to revit rooms
-            List <duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
-
-
             // get the documents current design set and option
             (string designSetName, string designOptionName) = Utilities.Revit.DesignSetAndOptionUtils.GetActiveDesignSetAndOptionName(doc);
 
             // update the ui with the current design set and option
             _roomsSelectionViewModel.ActiveDesignOptionName = designOptionName;
             _roomsSelectionViewModel.ActiveDesignSetName = designSetName;
+
+
+            //get families of supported built in categories
+            List<FamilyInstance> familyInstances = RevitUtils.Families.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
+
+            //check if any families in the model
+            if (familyInstances.Count == 0)
+            {
+                // if that is not the case return the rooms data model unchanged after popping a message to the user
+                _roomsSelectionViewModel.AddMessage("No rooms found in the model.", Utils.WPF.Stores.MessageTypes.Information);
+                return roomsDataModel;
+            }
+
+            // convert family instances to revit rooms
+            List <duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
 
             // update rooms data model with revit rooms
             roomsDataModel = Utilities.UpdateRoomDataModelWithRoomsRevitModelUtils.UpdateRoomDataModelWithRoomsRevitModel(

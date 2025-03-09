@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -98,6 +99,18 @@ namespace duHast.PushIt.RevitActions
             //get families of supported built in categories
             List<FamilyInstance> familyInstances = RevitUtils.Families.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
 
+            //check if there are any family instances
+            if (familyInstances.Count == 0)
+            {
+                // no family instances available...nothing to push
+                _roomsSelectionViewModel.AddMessage("No family instances found in the model", duHast.Utils.WPF.Stores.MessageTypes.Information);
+                return;
+            }
+
+
+            // tell the UI we are busy
+            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
+
             // convert family instances to revit rooms
             List<duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
 
@@ -110,12 +123,6 @@ namespace duHast.PushIt.RevitActions
                     staleFamilyInstances.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
                 }
             }
-
-            // tell the UI we are busy
-            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
-
-            // DEBUG
-            Task.Delay(2000);
 
             // keep track of the overall success of the wipe operation
             bool overallWipeSuccess = true;

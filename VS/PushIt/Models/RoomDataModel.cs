@@ -28,14 +28,20 @@ namespace duHast.PushIt.Models
 {
     public class RoomDataModel
     {
+        /// <summary>
+        /// List of matching rooms
+        /// </summary>
         private List<RoomsRevit> _matchingRevitRooms;
 
+        /// <summary>
+        /// Room ID, must be unique
+        /// </summary>
         public RoomDataProperty Id { get; set; }
-        public RoomDataProperty AreaBriefed { get; set; }
-        public RoomDataProperty AreaDesigned { get; set; }
-        public RoomDataProperty NameShort { get; set; }
-        public RoomDataProperty Department { get; set; }
-        public RoomDataProperty SubDepartment { get; set; }
+
+        /// <summary>
+        /// Any other data model properties
+        /// </summary>
+        List<RoomDataProperty> _properties = new List<RoomDataProperty>();
 
         public List<RoomsRevit> MatchingRevitRooms { get => _matchingRevitRooms; set => _matchingRevitRooms = value; }
 
@@ -49,9 +55,21 @@ namespace duHast.PushIt.Models
             _matchingRevitRooms.Add(revitRoom);
         }
 
-        public void UpdateAreaDesigned(string areaDesigned)
+        /// <summary>
+        /// Update a read property
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="value"></param>
+        public void UpdateReadProperty(string propertyName, string value)
         {
-            AreaDesigned = new RoomDataProperty("Area Designed", "", "", areaDesigned);
+            foreach (var property in _properties)
+            {
+                if (property.Name == propertyName && property.IsReadOnly)
+                {
+                    property.Value = value;
+                    break;
+                }
+            }
         }
 
         /// <summary>
@@ -71,6 +89,16 @@ namespace duHast.PushIt.Models
 
         public RoomDataModel()
         {
+            // initialize the list of matching rooms
+            _matchingRevitRooms = new List<RoomsRevit>();
+        }
+
+        public RoomDataModel(RoomDataProperty id, List<RoomDataProperty> otherProperties)
+        {
+            // set the id and other properties
+            Id = id;
+            _properties = otherProperties;
+
             // initialize the list of matching rooms
             _matchingRevitRooms = new List<RoomsRevit>();
         }

@@ -23,12 +23,8 @@
 
 
 using duHast.PushIt.Models;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
@@ -37,7 +33,7 @@ namespace duHast.PushIt.Utilities
 {
     public static class ReadRoomsData
     {
-        public static List<Models.RoomDataModel> GetRoomsData(string filePath, int rowsToSkip = 2)
+        public static List<Models.RoomDataModel> GetRoomsData(string filePath, int rowsToSkip = 4)
         {
             //Console.WriteLine("Reading Rooms Data from file: " + filePath);
             // read data from comma separated file
@@ -60,9 +56,11 @@ namespace duHast.PushIt.Utilities
 
             using (StreamReader sr = new StreamReader(filePath))
             {
-                //Read the first two lines as headers
-                var header1 = sr.ReadLine().Split(',');
-                var header2 = sr.ReadLine().Split(',');
+                //Read the first 4 lines as headers
+                var header1 = sr.ReadLine().Split(','); //name row
+                var header2 = sr.ReadLine().Split(','); //guid row
+                var header3 = sr.ReadLine().Split(','); //isReadOnly row
+                var header4 = sr.ReadLine().Split(','); //showInUI row
 
                 // Reset the stream position to the beginning
                 sr.BaseStream.Seek(0, SeekOrigin.Begin);
@@ -84,15 +82,33 @@ namespace duHast.PushIt.Utilities
                     // read the rest of the file
                     while (csv.Read())
                     {
-                        var record = new RoomDataModel
+                        // read the data to the right of the first column into property objects
+                        var properties = new List<RoomDataProperty>();
+                        for (int i = 1; i < csv.HeaderRecord.Length; i++)
                         {
-                            Id = new RoomDataProperty("Id", header2[0], "", csv.GetField(0)),
-                            AreaBriefed = new RoomDataProperty("AreaBriefed", header2[1], "", csv.GetField(1)),
-                            AreaDesigned = new RoomDataProperty("AreaDesigned", header2[2], "", csv.GetField(2)),
-                            NameShort = new RoomDataProperty("NameShort", header2[3], "", csv.GetField(3)),
-                            Department = new RoomDataProperty("Department", header2[4], "", csv.GetField(4)),
-                            SubDepartment = new RoomDataProperty("SubDepartment", header2[5], "", csv.GetField(5)),
-                        };
+                            var property = new RoomDataProperty(
+                                name: header1[i],
+                                parameterGUID: header2[i],
+                                parameterName: "",
+                                value: csv.GetField(i),
+                                showInUI: bool.Parse(header4[i].ToLower()),
+                                isReadOnly: bool.Parse(header3[i].ToLower())
+                            );
+                            properties.Add(property);
+                        }
+
+
+                        var record = new RoomDataModel(
+                             id: new RoomDataProperty(
+                                name: header1[0],
+                                parameterGUID: header2[0],
+                                parameterName: "",
+                                value: csv.GetField(0),
+                                showInUI: bool.Parse(header4[0].ToLower()),
+                                isReadOnly: bool.Parse(header3[0].ToLower())
+                             ),
+                            otherProperties: properties);
+                        
                         roomsData.Add(record);
                     }
                 }

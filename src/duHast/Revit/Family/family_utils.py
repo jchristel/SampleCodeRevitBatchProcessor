@@ -68,6 +68,7 @@ from Autodesk.Revit.DB import (
     BuiltInCategory,
     BuiltInParameter,
     ElementCategoryFilter,
+    ElementClassFilter,
     ElementMulticategoryFilter,
     ElementId,
     ElementParameterFilter,
@@ -414,6 +415,24 @@ def get_family_instances_by_symbol_type_id(doc, type_id):
     element_filter = ElementParameterFilter(id_filter)
     collector = FilteredElementCollector(doc).WherePasses(element_filter)
     return collector
+
+
+def get_family_instances_by_symbol_type_fast(family_symbol):
+    """
+    Return number of instances in the model ( fast!)
+
+    :param family_symbol: A family type
+    :type family_symbol: Autodesk.Revit.DB.FamilySymbol
+
+    :return: A c# IList of dependent element ids.
+    :rtype: IList<ElementId>
+    """
+
+    filter = ElementClassFilter(FamilyInstance)
+    dependent_element_ids = family_symbol.GetDependentElements(filter)
+
+    # this is an IList
+    return dependent_element_ids
 
 
 def get_all_in_place_type_ids_in_model_of_category(doc, fam_built_in_category):

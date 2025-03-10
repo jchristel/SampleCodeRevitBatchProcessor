@@ -36,7 +36,7 @@ Note:
 #
 
 
-from duHast.Revit.Family import family_swap_instances_by_type_utils as rFamSwapUtils
+from duHast.Revit.Family.Utility import family_swap_instances_by_type_utils as rFamSwapUtils
 from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict
 from duHast.Revit.Family.family_utils import get_family_instances_by_symbol_type_id
 from duHast.UI.Objects.ProgressBase import ProgressBase

@@ -21,7 +21,7 @@
 #
 
 
-from duHast.Revit.Family.Data.family_swap_instances_of_types import swap_family_instances_of_types
+from duHast.Revit.Family.family_swap_instances_of_types import swap_family_instances_of_types
 from duHast.pyRevit.Objects.ProgressPyRevit import ProgressPyRevit
 from duHast.Utilities.Objects.result import Result
 

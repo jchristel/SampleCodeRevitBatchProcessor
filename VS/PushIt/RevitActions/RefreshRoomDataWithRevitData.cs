@@ -72,7 +72,7 @@ namespace duHast.PushIt.RevitActions
         public List<Models.RoomDataModel> RefreshRoomData(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName)
         {
             // check if all shared parameters exist and are bound to the correct categories
-            bool parameterCheck = Utilities.Revit.SharedParameters.sharedParametersCheck(
+            bool parameterCheck = Utilities.Revit.SharedParameters.SharedParametersCheck(
                 doc, 
                 roomsDataModel, 
                 supportedCategoryName, 

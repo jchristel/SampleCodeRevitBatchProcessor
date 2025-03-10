@@ -34,8 +34,6 @@ namespace duHast.PushIt.Utilities.Revit
             // check if bindings is null
             if (bindings == null) { return false; }
 
-
-
             // check if all shared parameters exist and are bound to the correct categories
             foreach (string supportedCategoryName in supportedCategoryNames)
             {
@@ -47,7 +45,7 @@ namespace duHast.PushIt.Utilities.Revit
             return true;
         }
 
-        public static bool sharedParametersCheck(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName, Action<string, duHast.Utils.WPF.Stores.MessageTypes> printMessage)
+        public static bool SharedParametersCheck(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName, Action<string, duHast.Utils.WPF.Stores.MessageTypes> printMessage)
         {
             // check if rooms data model is empty
             if (roomsDataModel.Count == 0){ return false; }
@@ -60,12 +58,14 @@ namespace duHast.PushIt.Utilities.Revit
 
             // get shared parameters of interest bindings to categories
             List<string> bindingsId = RevitUtils.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.Id.ParameterGUID);
-            List<string> bindingsAreaBriefed = RevitUtils.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.AreaBriefed.ParameterGUID);
-            List<string> bindingsAreaDesigned = RevitUtils.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.AreaDesigned.ParameterGUID);
-            List<string> bindingsNameShort = RevitUtils.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.NameShort.ParameterGUID);
-            List<string> bindingsDepartment = RevitUtils.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.Department.ParameterGUID);
-            List<string> bindingsSubDepartment = RevitUtils.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.SubDepartment.ParameterGUID);
 
+            List<Dictionary<(string Name, string GUID), List<string>>> otherPropertiesBindings = new List<Dictionary<(string Name, string GUID), List<string>>>();
+            foreach (var property in firstRoomDataModel.Properties)
+            {
+                // skip if parameterGUID is empty
+                if (property.ParameterGUID == "") { continue; }
+                otherPropertiesBindings.Add(new Dictionary<(string Name,string GUID), List<string>> { { (property.Name, property.ParameterGUID), RevitUtils.SharedParaUtils.ParameterBindingsByGUID(doc, property.ParameterGUID) } });
+            }
 
             // check if all shared parameters exist
             List<string> parameterMessages = new List<string>();
@@ -75,66 +75,39 @@ namespace duHast.PushIt.Utilities.Revit
                 parameterMessages.Add($"Room Id [{firstRoomDataModel.Id.ParameterGUID}] shared parameters is  missing from file");
             }
 
-            if (bindingsAreaBriefed == null)
+            // check if all shared parameters are bound to the correct categories
+            foreach (var var in otherPropertiesBindings)
             {
-                parameterMessages.Add($"Room Area Briefed [{firstRoomDataModel.AreaBriefed.ParameterGUID}] shared parameters is  missing from file");
-            }
-
-            if (bindingsAreaDesigned == null)
-            {
-                parameterMessages.Add($"Room Area Designed [{firstRoomDataModel.AreaDesigned.ParameterGUID}] shared parameters is  missing from file");
-            }
-
-            if (bindingsNameShort == null) {
-                parameterMessages.Add($"Room Name Short [{firstRoomDataModel.NameShort.ParameterGUID}] shared parameters is  missing from file");
-            }
-
-            if (bindingsDepartment == null) {
-                parameterMessages.Add($"Room Department [{firstRoomDataModel.Department.ParameterGUID}] shared parameters is  missing from file");
-            }
-
-            if (bindingsSubDepartment == null) {
-                parameterMessages.Add($"Room Sub Department [{firstRoomDataModel.SubDepartment.ParameterGUID}] shared parameters is  missing from file");
+                if (var.Values == null)
+                {
+                    parameterMessages.Add($"{var.Keys} shared parameters is  missing from file");
+                }
             }
 
 
             bool parameterBindingCheck = true;
+
             //check parameter bindings and give some user feedback if something is wrong
+            // check id parameter
             if (bindingsId ==null || !CheckBindingsList(bindingsId, supportedCategoryName))
             {
                 parameterMessages.Add($"The shared parameter 'Room Id' [{firstRoomDataModel.Id.ParameterGUID}]is not bound to the correct categories.");
                 parameterBindingCheck = false;
             }
 
-            if (bindingsAreaBriefed==null || !CheckBindingsList(bindingsAreaBriefed, supportedCategoryName))
+            //check other parameters
+            foreach (Dictionary<(string Name, string GUID), List<string>> var in otherPropertiesBindings)
             {
-                parameterMessages.Add($"The shared parameter 'Room Area Briefed' [{firstRoomDataModel.AreaBriefed.ParameterGUID}]is not bound to the correct categories.");
-                parameterBindingCheck = false;
+                foreach (var kvp in var)
+                {
+                    if (kvp.Value == null || !CheckBindingsList(kvp.Value, supportedCategoryName))
+                    {
+                        parameterMessages.Add($"The shared parameter '{kvp.Key.Name}' [{kvp.Key.GUID}]is not bound to the correct categories.");
+                        parameterBindingCheck = false;
+                    }
+                }
             }
 
-            if (bindingsAreaDesigned == null || !CheckBindingsList(bindingsAreaDesigned, supportedCategoryName))
-            {
-                parameterMessages.Add($"The shared parameter 'Room Area Designed' [{firstRoomDataModel.AreaDesigned.ParameterGUID}]is not bound to the correct categories.");
-                parameterBindingCheck = false;
-            }
-
-            if (bindingsNameShort == null || !CheckBindingsList(bindingsNameShort, supportedCategoryName))
-            {
-                parameterMessages.Add($"The shared parameter 'Room Name Short' [{firstRoomDataModel.NameShort.ParameterGUID}]is not bound to the correct categories.");
-                parameterBindingCheck = false;
-            }
-
-            if (bindingsDepartment == null || !CheckBindingsList(bindingsDepartment, supportedCategoryName))
-            {
-                parameterMessages.Add($"The shared parameter 'Room Department' [{firstRoomDataModel.Department.ParameterGUID}]is not bound to the correct categories.");
-                parameterBindingCheck = false;
-            }
-
-            if (bindingsSubDepartment == null || !CheckBindingsList(bindingsSubDepartment, supportedCategoryName))
-            {
-                parameterMessages.Add($"The shared parameter 'Room Sub Department' [{firstRoomDataModel.SubDepartment.ParameterGUID}]is not bound to the correct categories.");
-                parameterBindingCheck = false;
-            }
 
             // print messages
             if (parameterMessages.Count>0)
@@ -146,7 +119,6 @@ namespace duHast.PushIt.Utilities.Revit
 
             //return false if any parameter is missing or not bound to the correct categories
             return parameterBindingCheck;
-            
         }
     }
 }

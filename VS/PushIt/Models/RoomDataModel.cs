@@ -43,6 +43,8 @@ namespace duHast.PushIt.Models
         /// </summary>
         List<RoomDataProperty> _properties = new List<RoomDataProperty>();
 
+        public List<RoomDataProperty> Properties { get => _properties;}
+
         public List<RoomsRevit> MatchingRevitRooms { get => _matchingRevitRooms; set => _matchingRevitRooms = value; }
 
         public void ClearMatchingRevitRooms()

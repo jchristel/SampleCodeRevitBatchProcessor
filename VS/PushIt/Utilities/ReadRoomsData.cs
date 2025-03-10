@@ -97,7 +97,7 @@ namespace duHast.PushIt.Utilities
                             properties.Add(property);
                         }
 
-
+                        // create a new RoomDataModel object
                         var record = new RoomDataModel(
                              id: new RoomDataProperty(
                                 name: header1[0],

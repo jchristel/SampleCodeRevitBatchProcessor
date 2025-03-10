@@ -71,6 +71,7 @@
     <Compile Include="DesignSetAndOptionDefaultNames.cs" />
     <Compile Include="DesignSetAndOptionsUtils.cs" />
     <Compile Include="Families.cs" />
+    <Compile Include="ParaUtils.cs" />
     <Compile Include="SharedParaUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransactionUtils.cs" />

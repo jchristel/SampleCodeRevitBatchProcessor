@@ -52,7 +52,7 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Revit.Common.file_io import save_as_family
-from duHast.Revit.Family.Data.family_rename_loaded_families import (
+from duHast.Revit.Family.family_rename_loaded_families import (
     rename_loaded_families,
 )
 from duHast.Utilities.Objects.timer import Timer

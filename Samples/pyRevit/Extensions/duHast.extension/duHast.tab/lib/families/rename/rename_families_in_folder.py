@@ -33,7 +33,7 @@ from duHast.Revit.Family.Data.Objects.family_directive_rename import (
 from duHast.Utilities.files_get import (
     get_files_from_directory_walker_with_filters_simple,
 )
-from duHast.Revit.Family.Data.family_rename_files import _rename_files
+from duHast.Revit.Family.family_rename_files import _rename_files
 from duHast.pyRevit.file_picker import get_file_path_from_user
 
 

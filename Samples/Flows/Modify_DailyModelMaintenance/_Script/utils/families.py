@@ -36,7 +36,7 @@ import settings as settings  # sets up all commonly used variables and path loca
 
 import duHast.Utilities.Objects.result as res
 from duHast.Revit.Family.family_reload import reload_all_families
-from duHast.Revit.Family.Data.family_rename_loaded_families import (
+from duHast.Revit.Family.family_rename_loaded_families import (
     rename_loaded_families,
 )
 

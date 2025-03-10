@@ -53,7 +53,7 @@ from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.Objects.result import Result
 
 from duHast.Revit.Family.family_rename_files_utils import get_rename_directives
-from duHast.Revit.Family.Data.family_rename_files import rename_family_files
+from duHast.Revit.Family.family_rename_files import rename_family_files
 from duHast.Revit.Family.Data.family_rename_find_host_families import (
     find_host_families_with_nested_families_requiring_rename,
 )

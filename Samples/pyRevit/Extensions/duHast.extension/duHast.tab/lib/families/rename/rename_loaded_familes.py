@@ -23,7 +23,7 @@
 from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.Objects.ProgressPyRevit import ProgressPyRevit
 from duHast.Revit.Family.family_rename_files_utils import _read_rename_directives
-from duHast.Revit.Family.Data.family_rename_loaded_families import (
+from duHast.Revit.Family.family_rename_loaded_families import (
     _rename_loaded_families,
 )
 from duHast.Revit.Family import family_utils as rFamUtils

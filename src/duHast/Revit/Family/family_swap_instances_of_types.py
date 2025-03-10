@@ -42,6 +42,9 @@ from duHast.Revit.Family.family_utils import get_family_instances_by_symbol_type
 from duHast.UI.Objects.ProgressBase import ProgressBase
 from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities.Objects import result as res
+from duHast.Revit.Family.Data.Objects.family_base_data_processor_defaults import (
+    NESTING_SEPARATOR,
+)
 
 from Autodesk.Revit.DB import Element, Transaction
 
@@ -76,7 +79,7 @@ def get_target_type(doc, families, swap_directive):
     return_value = res.Result()
 
     # get the family
-    family_key = swap_directive.target_family_name + swap_directive.category
+    family_key = "{}{}{}".format(swap_directive.target_family_name,NESTING_SEPARATOR, swap_directive.category)
 
     # check if family is loaded
     if family_key not in families:
@@ -340,7 +343,7 @@ def _swap_loaded_family_instances(doc, swap_directives, families, progress_callb
             progress_callback.update(callback_counter, len(swap_directives))
 
         # get the family
-        family_key = swap_directive.name + swap_directive.category
+        family_key = "{}{}{}".format(swap_directive.name, NESTING_SEPARATOR, swap_directive.category)
         
         # check if family is loaded
         if family_key not in families:

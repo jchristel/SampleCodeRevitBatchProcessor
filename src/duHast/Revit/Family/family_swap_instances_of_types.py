@@ -194,13 +194,22 @@ def get_group_id(doc, instance):
     group_type_id_int = group.GroupType.Id.IntegerValue
     if group_type_id_int != None and group_type_id_int > 0:
         return_value.append_message("...Found group type id: {}".format(group_type_id_int))
-        # get the group
-        return_value.result.append(group_type_id_int)
+
+        # check if there is more than 1 instance of this group
+        group_sets = group.GroupType.Groups
+        if group_sets.Size > 1:
+            return_value.append_message("...Group is placed more than once.")
+            return_value.result.append(group_type_id_int)
+        else:
+            # revit does allow change of group if only one instance is placed
+            return_value.update_sep(False,"...Group is placed only once.")
+            return_value.result.append(-1)
     else:
         return_value.append_message("Failed to find group for: {}".format(instance.Id))
         return_value.result.append(-1)
 
     return return_value
+
 
 def _get_fam_instances(doc, family, swap_directive):
     """

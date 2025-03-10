@@ -139,36 +139,11 @@ def rename_families_in_folder(doc, output, forms):
 
     # attempt to read rename file
     print("Reading file: {}".format(file_path))
-    data = []
+    rename_directives = []
     try:
-        data = _read_rename_directives([file_path])
+        rename_directives = _read_rename_directives([file_path])
     except Exception as e:
         message = "failed to read rename file with exception: {}".format(e)
-        print(message)
-        return_value.update_sep(False, message=message)
-        return return_value
-
-    # check if any data in file
-    if len(data) == 0:
-        message = "Rename file did not contain any data"
-        return_value.update_sep(False, message=message)
-        return return_value
-
-    directory = forms.pick_folder("Select the root family folder")
-    if directory is None:
-        message = "No folder selected. Exiting."
-        print(message)
-        return_value.update_sep(False, message=message)
-        return return_value
-
-    # the below assumes rename directives contain a fully qualified file path...
-    # get new directives with a file path
-    updated_directives = updated_rename_directives(
-        directory=directory, rename_directives=data
-    )
-
-    if len(updated_directives) == 0:
-        message = "No matching families found. Exiting."
         print(message)
         return_value.update_sep(False, message=message)
         return return_value
@@ -181,7 +156,7 @@ def rename_families_in_folder(doc, output, forms):
         progress_callback = ProgressPyRevit(form=pb)
 
         # rename them
-        rename_status = _rename_files(updated_directives, progress_callback)
+        rename_status = _rename_files(rename_directives, progress_callback)
 
         # update our status object
         return_value.update(rename_status)

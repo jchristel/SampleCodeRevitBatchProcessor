@@ -36,7 +36,7 @@ def print_result_table(output, data, header, table_title):
         return
 
     rows = []
-    print("Data contains {} rows.".format(len(data)))
+    #print("Data contains {} rows.".format(len(data)))
     for row in data:
         if len(row) < len(header):
             # pad row with empty strings

@@ -20,6 +20,7 @@
 #
 #
 
+from Autodesk.Revit.DB import Element, ElementId
 
 def print_result_table(output, data, header, table_title):
 
@@ -59,3 +60,37 @@ def print_result_table(output, data, header, table_title):
         columns=header,
         last_line_style="color:red;",
     )
+
+
+def get_table_data_from_swap_result(doc, result_list):
+    """
+    Extracts data from the result list of the swap family instances function
+    and returns a list of host families and host groups that could not be swapped
+    because they host other instances
+
+    :param doc: Revit Document
+    :param result_list: list of tuples containing swap result data
+    :return: a tuple containing two lists
+    """
+
+    # the result lit is made up of tuples containing three entries
+
+    # 1. the id's of family instances swapped out
+    # 2. a dictioanry in format (Host Family Id:[list of instances not swapped because they are hosted in this family])
+    # 3. a dictionary in format (Group Type Id:[list of instances not swapped because they are hosted in this group])
+
+    host_fams = []
+    host_groups = []
+    for data in result_list:
+        if (isinstance(data, tuple)):
+
+            if len(data) != 3:
+                continue
+
+            for fam_id, instance_count in data[1].items():
+                host_fams.append([Element.Name.GetValue(doc.GetElement(ElementId(fam_id))), instance_count])
+            
+            for group_id, instance_count in data[2].items():
+                host_groups.append([Element.Name.GetValue(doc.GetElement(ElementId(group_id))), instance_count])
+    
+    return host_fams, host_groups

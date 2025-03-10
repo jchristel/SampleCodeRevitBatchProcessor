@@ -108,12 +108,12 @@ def swap_instances_by_directives_entry(doc, output, forms):
         )
 
     # print swap log
-    print(return_value.message)
+    #print(return_value.message)
 
     # print tables
-    if len(table_data[0]) >0:
+    if table_data is not None and len(table_data[0]) >0:
         print_result_table(output, table_data[0], ["Host Family", "Instances not swapped"], "Host Families containing instances not swapped")
-    if len(table_data[1]) >0:
+    if table_data is not None and len(table_data[1]) >0:
         print_result_table(output, table_data[1], ["Host Group", "Instances not swapped"], "Host Groups containing instances not swapped")
 
     print("Finished")

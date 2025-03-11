@@ -63,21 +63,17 @@ namespace duHast.PushIt.Models
             foreach (var room in _rooms)
             {
                 // need to update the area designed value...
-                //check if the room has the placed room
+                // check if the room has the placed room
                 if (room.MatchingRevitRooms.Any(x => x.RevitElementId == revitElementId))
                 {
                     // remove the placed room from the data model
                     room.MatchingRevitRooms.RemoveAll(x => x.RevitElementId == revitElementId);
-                    // update the area designed value depending on number of placed rooms
-                    if (room.MatchingRevitRooms.Count == 1)
-                        room.AreaDesigned.Value = room.MatchingRevitRooms[0].AreaDesigned;
-                    else if(room.MatchingRevitRooms.Count > 1)
-                        room.AreaDesigned.Value = "Multiple";
-                    else
-                        room.AreaDesigned.Value = "0.0";
+
+                    // update rooms read-only properties from revit room
+                    room.UpdateReadProperties();
+
                     break;
                 }
-                room.MatchingRevitRooms.RemoveAll(x => x.RevitElementId == revitElementId);
             }
         }
 
@@ -89,12 +85,8 @@ namespace duHast.PushIt.Models
                 {
                     // add the placed room to the data model
                     room.AddMatchingRevitRoom(revitRoom);
-                    // update the area designed value depending on number of placed rooms
-                    if (room.MatchingRevitRooms.Count == 1)
-                        room.AreaDesigned.Value = revitRoom.AreaDesigned;
-                    else
-                        room.AreaDesigned.Value = "Multiple";
-                    break;
+                    // update rooms read-only properties from revit room
+                    room.UpdateReadProperties();
                 }
             }
         }

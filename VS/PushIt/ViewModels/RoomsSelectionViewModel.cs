@@ -28,6 +28,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -48,6 +49,9 @@ namespace duHast.PushIt.ViewModels
         private readonly ObservableCollection<RoomViewModel> _rooms;
         //default view of the rooms collection
         private ICollectionView _roomsView;
+
+        private DataTable _dt;
+        private DataView _dv;
 
         //flag to indicate if safety off mode is enabled
         private bool _safetyOffMode = false;
@@ -202,12 +206,7 @@ namespace duHast.PushIt.ViewModels
         // Field to return a default list of column names
         private readonly List<string> _columnNameDefaultList = new List<string>
         {
-            "Room Id",
-            "Area Briefed",
-            "Area Designed",
-            "Room Name Short",
-            "Department",
-            "Sub Department",
+            "Id",
             "Count"
         };
 
@@ -255,8 +254,16 @@ namespace duHast.PushIt.ViewModels
         #region user selection
 
         //binding in xaml property to the default view of the rooms collection
-        public ICollectionView Rooms => _roomsView;
+        public DataView DataView { 
+            get => _dv;
+            private set 
+            {
+                _dv = value;
+                OnPropertyChanged(nameof(DataView));
+            }
 
+        }
+        
         //binding in xaml property to the default view of the supported categories collection
         public ICollectionView SupportedCategories => _supportedCategoriesView;
 
@@ -284,14 +291,14 @@ namespace duHast.PushIt.ViewModels
             get
             {
                 // check if a default view exists
-                if (_roomsView == null)
+                if (_dv == null)
                 {
                     return null;
                 }
                 // check if the selected index is within the bounds of the rooms collection
-                if (_selectedIndex >= 0 && _selectedIndex < _roomsView.Cast<RoomViewModel>().Count())
+                if (_selectedIndex >= 0 && _selectedIndex < _dv.Cast<RoomViewModel>().Count())
                 {
-                    var selectedRoomViewModel = _roomsView.Cast<RoomViewModel>().ElementAt(_selectedIndex);
+                    var selectedRoomViewModel = _dv.Cast<RoomViewModel>().ElementAt(_selectedIndex);
                     return _revitDataModel.GetAllRooms().FirstOrDefault(r => r.Id.Value == selectedRoomViewModel.Id);
                 }
                 // return null if the selected index is out of bounds
@@ -337,21 +344,103 @@ namespace duHast.PushIt.ViewModels
         //updates the rooms in the observable collection with rooms from the data model
         private void UpdateRooms()
         {
-            _rooms.Clear();
-            foreach (Models.RoomDataModel room in _revitDataModel.GetAllRooms())
+            //create a data table from the rooms in the data model
+            DataTable dt = CreateRoomsDataTable();
+            if (dt == null)
             {
-                {
-                    ViewModels.RoomViewModel roomViewModel = new RoomViewModel(room);
-                    _rooms.Add(roomViewModel);
-                }
+                return;
             }
 
-            //notify ui of changes
-            _roomsView.Refresh();
+            //store the data table
+            _dt = dt;
 
-            //notify ui of changes
-            OnPropertyChanged(nameof(Rooms));
+            // create a data view from the data table
+            // this will trigger an onproperty chaanged event
+            DataView = new DataView(dt);
+
+            // update the column filter list
+            CreateColumnFilterItems();
+
+            // reset the column filter value?
+
+
         }
+
+
+        public DataTable CreateRoomsDataTable()
+        {
+            // Check if there are any rooms
+            if (_revitDataModel.GetAllRooms().Count == 0)
+            {
+                return null;
+            }
+
+            // Set up the data table
+            DataTable dataTable = new DataTable();
+
+            //add the default id column
+            dataTable.Columns.Add("Id");
+
+            // Add columns to the data table
+            foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
+            {
+                // Add a column per property
+                foreach (var prop in roomModelInstance.Properties)
+                {
+                    dataTable.Columns.Add(prop.Name);
+                }
+                // Get out of the loop
+                break;
+            }
+
+            // Add the count column
+            dataTable.Columns.Add("Count");
+
+            // Add the rows to the data table
+            foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
+            {
+                // Add a row per room
+                DataRow row = dataTable.NewRow();
+
+                // add the id value
+                row["Id"] = roomModelInstance.Id.Value;
+
+                // add the property values
+                foreach (var prop in roomModelInstance.Properties)
+                {
+                    row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : "";
+                }
+                row["Count"] = roomModelInstance.MatchingRevitRooms.Count;
+                dataTable.Rows.Add(row);
+            }
+
+            return dataTable;
+        }
+
+        public void CreateColumnFilterItems()
+        {
+            // Check if the data table is null
+            if (_dt == null)
+            {
+                return;
+            }
+
+            // Get the columns from the data table
+            var columns = _dt.Columns;
+
+            // Clear the old entries
+            _columnNameDefaultList.Clear();
+
+            // Add the column names to the column filter items
+            foreach (DataColumn column in columns)
+            {
+                _columnNameDefaultList.Add(column.ColumnName);
+            }
+
+            // Notify UI of changes
+            OnPropertyChanged(nameof(ColumnNameDefaultList));
+        }
+
 
         public void UpdateCategories()
         {
@@ -382,16 +471,7 @@ namespace duHast.PushIt.ViewModels
                 {
                     case "Room Id":
                         return room.Id.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
-                    case "Area Briefed":
-                        return room.AreaBriefed.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
-                    case "Area Designed":
-                        return room.AreaDesigned.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
-                    case "Room Name Short":
-                        return room.NameShort.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
-                    case "Department":
-                        return room.Department.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
-                    case "Sub Department":
-                        return room.SubDepartment.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
+                    
                     case "Count":
                         return room.Count.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
                     default:

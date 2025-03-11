@@ -147,94 +147,33 @@
                     Visibility="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource BooleanToVisibilityConverter}}"
                     FontSize="24"
                     Text="Updating Revit..."/>
-                <ListView 
-                    Margin="0 25 0 0" 
-                    ItemsSource="{Binding Rooms}"
-                    Visibility="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
-                    SelectionMode="Single"
-                    SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}">
-                    <!-- a style colouring rows depending on the count property  -->
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Background" Value="Red" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Count}" Value="1">
-                                    <Setter Property="Background" Value="LightGray"></Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Count}" Value="0">
-                                    <Setter Property="Background" Value="White"></Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.View>
-                        <GridView>
-                            <!-- room id column -->
-                            <GridViewColumn>
-                                <GridViewColumnHeader Content="Room Id"/>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Padding="0 0 20 0" Text="{Binding Id}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <!-- area briefed column -->
-                            <GridViewColumn>
-                                <GridViewColumnHeader Content="Area Briefed"/>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Padding="0 0 20 0" Text="{Binding  AreaBriefed}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <!-- Area Designed column -->
-                            <GridViewColumn>
-                                <GridViewColumnHeader Content="Area Designed" />
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Padding="0 0 20 0" Text="{Binding  AreaDesigned}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <!-- RoomName Short -->
-                            <GridViewColumn>
-                                <GridViewColumnHeader Content="Room Name Short" />
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Padding="0 0 20 0" Text="{Binding NameShort}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <!-- department -->
-                            <GridViewColumn>
-                                <GridViewColumnHeader Content="Department" />
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock HorizontalAlignment="Center" Padding="0 0 20 0" Text="{Binding Department}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <!-- sub department -->
-                            <GridViewColumn>
-                                <GridViewColumnHeader Content="Subdepartment" />
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock HorizontalAlignment="Center" Padding="0 0 20 0" Text="{Binding SubDepartment}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <!-- count -->
-                            <GridViewColumn>
-                                <GridViewColumnHeader Content="Count" />
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock HorizontalAlignment="Center" Padding="0 0 20 0" Text="{Binding Count}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                <ScrollViewer  Margin="5" HorizontalScrollBarVisibility="Auto">
+                    <Grid MinWidth="400" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}">
+                        <DataGrid x:Name="dataGrid" 
+                            ItemsSource="{Binding DataView}" 
+                            AutoGenerateColumns="True" 
+                            IsReadOnly="True"
+                            CanUserSortColumns="True"
+                            SelectionMode="Single" 
+                            SelectedIndex="{Binding SelectedIndex}"
+                            ColumnWidth="*"
+                            HorizontalAlignment="Stretch">  
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="Background" Value="Red" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Count}" Value="1">
+                                            <Setter Property="Background" Value="LightGray"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Count}" Value="0">
+                                            <Setter Property="Background" Value="White"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                        </DataGrid>
+                    </Grid>
+                </ScrollViewer>
             </Grid>
         </Border>
         <!-- button row content -->

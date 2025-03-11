@@ -62,14 +62,40 @@ namespace duHast.PushIt.Models
         /// </summary>
         /// <param name="propertyName"></param>
         /// <param name="value"></param>
-        public void UpdateReadProperty(string propertyName, string value)
+        public void UpdateReadProperties()
         {
-            foreach (var property in _properties)
+            // if there is only one matching room
+            if (MatchingRevitRooms.Count == 1)
             {
-                if (property.Name == propertyName && property.IsReadOnly)
+                Models.RoomsRevit revitRoom = MatchingRevitRooms[0];
+                foreach (Models.RoomDataProperty property in Properties)
                 {
-                    property.Value = value;
-                    break;
+                    if (property.IsReadOnly)
+                    {
+                        property.Value = revitRoom.Properties.Find(x => x.Name == property.Name).Value;
+                    }
+                }
+            }
+            else if (MatchingRevitRooms.Count == 0)
+            {
+                // if there is no matching room, clear the read only properties
+                foreach (Models.RoomDataProperty property in Properties)
+                {
+                    if (property.IsReadOnly)
+                    {
+                        property.Value = "";
+                    }
+                }
+            }
+            else
+            // if there are multiple matching rooms, put 'varies' into read only properties
+            {
+                foreach (Models.RoomDataProperty property in Properties)
+                {
+                    if (property.IsReadOnly)
+                    {
+                        property.Value = "varies";
+                    }
                 }
             }
         }

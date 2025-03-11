@@ -108,23 +108,11 @@ namespace duHast.PushIt.Utilities
             }
 
 
-            // loop over all rooms in the data model and update the read only properties from Revit to the room
-            // if there is only one matching room
+            // loop over all rooms in the data model and update the read only properties from matched Revit rooms
             foreach (Models.RoomDataModel roomDataModel in roomsDataModel)
             {
-                if (roomDataModel.MatchingRevitRooms.Count == 1)
-                {
-                    Models.RoomsRevit revitRoom = roomDataModel.MatchingRevitRooms[0];
-                    foreach (Models.RoomDataProperty property in roomDataModel.Properties)
-                    {
-                        if (property.IsReadOnly)
-                        {
-                            property.Value = revitRoom.Properties.Find(x => x.Name == property.Name).Value;
-                        }
-                    }
-                }
+                roomDataModel.UpdateReadProperties();
             }
-
 
             // return the updated data model
             return roomsDataModel;

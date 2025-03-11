@@ -86,17 +86,17 @@ namespace duHast.PushIt.RevitActions
             Dictionary<string,(RoomDataModel,List < FamilyInstance>)> currentFamilyInstances = new Dictionary<string, (RoomDataModel, List<FamilyInstance>)>();
             foreach (var revitRoomInstance in revitRooms)
             {
-                if (roomsDataModel.Exists(x => x.Id.Value == revitRoomInstance.Id))
+                if (roomsDataModel.Exists(x => x.Id.Value == revitRoomInstance.Id.Value))
                 {
-                    if (currentFamilyInstances.ContainsKey(revitRoomInstance.Id))
+                    if (currentFamilyInstances.ContainsKey(revitRoomInstance.Id.Value))
                     {
-                        currentFamilyInstances[revitRoomInstance.Id].Item2.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
+                        currentFamilyInstances[revitRoomInstance.Id.Value].Item2.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
 
                     }
                     else
                     {
-                        currentFamilyInstances[revitRoomInstance.Id] = (
-                            roomsDataModel.Find(x => x.Id.Value == revitRoomInstance.Id), 
+                        currentFamilyInstances[revitRoomInstance.Id.Value] = (
+                            roomsDataModel.Find(x => x.Id.Value == revitRoomInstance.Id.Value), 
                             new List<FamilyInstance> { doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance }
                         );
                     }

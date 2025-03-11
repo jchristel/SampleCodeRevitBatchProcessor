@@ -118,7 +118,7 @@ namespace duHast.PushIt.RevitActions
             List<FamilyInstance> staleFamilyInstances = new List<FamilyInstance>();
             foreach (var revitRoomInstance in revitRooms)
             {
-                if (!roomsDataModel.Exists(x => x.Id.Value == revitRoomInstance.Id))
+                if (!roomsDataModel.Exists(x => x.Id.Value == revitRoomInstance.Id.Value))
                 {
                     staleFamilyInstances.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
                 }

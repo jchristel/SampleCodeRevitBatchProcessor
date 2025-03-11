@@ -21,27 +21,25 @@
 //
 //
 
+using System.Collections.Generic;
+using System.Windows.Documents;
+
 namespace duHast.PushIt.Models
 {
     public class RoomsRevit
     {
-        string _id;
-        string _areaBriefed;
-        string _areaDesigned;
-        string _roomNameShort;
-        string _department;
-        string _subDepartment;
+        Models.RoomDataProperty _id;
+        List<Models.RoomDataProperty> _properties;
+
         string _designSet;
         string _designOption;
         bool _designOptionIsPrimary;
         int _revitElementId;
 
-        public string Id { get => _id; set => _id = value; }
-        public string AreaBriefed { get => _areaBriefed; set => _areaBriefed = value; }
-        public string AreaDesigned { get => _areaDesigned; set => _areaDesigned = value; }
-        public string RoomNameShort { get => _roomNameShort; set => _roomNameShort = value; }
-        public string Department { get => _department; set => _department = value; }
-        public string SubDepartment { get => _subDepartment; set => _subDepartment = value; }
+        public Models.RoomDataProperty Id { get => _id; set => _id = value; }
+
+        public List<Models.RoomDataProperty> Properties { get => _properties; set => _properties = value; }
+
         public string DesignSet { get => _designSet; set => _designSet = value; }
         public string DesignOption { get => _designOption; set => _designOption = value; }
         public bool DesignOptionIsPrimary { get => _designOptionIsPrimary; set => _designOptionIsPrimary = value; }
@@ -49,23 +47,10 @@ namespace duHast.PushIt.Models
 
         public RoomsRevit() { }
 
-        public RoomsRevit(string id,
-                          string areaBriefed,
-                          string areaDesigned,
-                          string roomNameShort,
-                          string department,
-                          string subDepartment,
-                          string designSet,
-                            string designOption,
-                            bool designOptionIsPrimary,
-                          int revitElementId)
+        public RoomsRevit(Models.RoomDataProperty id,List<Models.RoomDataProperty> properties, string designSet,string designOption,bool designOptionIsPrimary,int revitElementId)
         {
             _id = id;
-            _areaBriefed = areaBriefed;
-            _areaDesigned = areaDesigned;
-            _roomNameShort = roomNameShort;
-            _department = department;
-            _subDepartment = subDepartment;
+            _properties = properties;
             _designSet = designSet;
             _designOption = designOption;
             _designOptionIsPrimary = designOptionIsPrimary;

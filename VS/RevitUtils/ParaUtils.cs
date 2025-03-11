@@ -24,5 +24,20 @@ namespace RevitUtils
 
             return false;
         }
+
+        public static string GetParameterValueByName(Element el, string parameterName)
+        {
+            // get the value
+            IList<Parameter> parameters = el.GetOrderedParameters();
+            foreach (Parameter parameter in parameters)
+            {
+                if (parameter.Definition.Name == parameterName)
+                {
+                    string value = RevitUtils.SharedParaUtils.GetSharedParameterValueFromElementByElementId(el,parameter.Id);
+                    return value;
+                }
+            }
+            return null;
+        }
     }
 }

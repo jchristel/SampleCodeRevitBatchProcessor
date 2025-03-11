@@ -25,16 +25,17 @@ using Autodesk.Revit.DB;
 using RevitUtils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHast.PushIt.Utilities.Revit
 {
     public static class RevitRoomObjectsConverter
     {
 
-        public static Models.RoomsRevit ConvertSingleFamilyToRevitRoom(FamilyInstance familyInstance, Models.RoomDataModel sampleModelRoom, Dictionary<string, ElementId> sharedParameterIdsByGUIDs)
+        public static Models.RoomsRevit ConvertSingleFamilyToRevitRoom(
+            FamilyInstance familyInstance, 
+            Models.RoomDataModel sampleModelRoom, 
+            Dictionary<string, ElementId> sharedParameterIdsByGUIDs
+            )
         {
             // get the parameters of the family instance
             IList<Parameter> parameters = familyInstance.GetOrderedParameters();
@@ -48,40 +49,52 @@ namespace duHast.PushIt.Utilities.Revit
                 return null;
             }
 
-            // convert area values from square feet to square meters
-            string areaBriefed_value_string = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.AreaBriefed.ParameterGUID]);
-            double areaBriefed_value = 0;
-            if (double.TryParse(areaBriefed_value_string, out double areaBriefed))
+            // setup the id property
+            Models.RoomDataProperty IdProperty = new Models.RoomDataProperty(
+                name: sampleModelRoom.Id.ParameterName,
+                value: id_value,
+                parameterGUID: sampleModelRoom.Id.ParameterGUID,
+                parameterName: sampleModelRoom.Id.ParameterName,
+                showInUI:sampleModelRoom.Id.ShowInUI,
+                isReadOnly: sampleModelRoom.Id.IsReadOnly);
+
+            // get the other properties and store in list
+            List<Models.RoomDataProperty> properties = new List<Models.RoomDataProperty>();
+
+            foreach (Models.RoomDataProperty property in sampleModelRoom.Properties)
             {
-                areaBriefed_value = Math.Round(areaBriefed * 0.092903,2); // Convert square feet to square meters and round to 2 decimal places
+                string value = "";
+                //check if property is retrieved from shared parameter
+                if (property.ParameterGUID != "")
+                {
+                    // get the value of the property
+                    value = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[property.ParameterGUID]);
+                }
+                else
+                {
+                    //standard parameter
+                    value = ParaUtils.GetParameterValueByName(familyInstance, property.ParameterName);
+                }
+
+                // create a new room data property
+                Models.RoomDataProperty roomDataProperty = new Models.RoomDataProperty(
+                    name: property.Name,
+                    parameterGUID: property.ParameterGUID,
+                    parameterName: property.ParameterName,
+                    value: value,
+                    showInUI: property.ShowInUI,
+                    isReadOnly: property.IsReadOnly);
+                // add to the list of properties
+                properties.Add(roomDataProperty);
             }
-            areaBriefed_value_string = areaBriefed_value.ToString();
-
-            // convert area values from square feet to square meters
-            string areaDesigned_value_string = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.AreaDesigned.ParameterGUID]);
-
-            double areaDesigned_value = 0;
-            if (double.TryParse(areaDesigned_value_string, out double areaDesigned))
-            {
-                areaDesigned_value = Math.Round(areaDesigned * 0.092903,2); // Convert square feet to square meters and round to 2 decimal places
-            }
-            areaDesigned_value_string = areaDesigned_value.ToString();
-
-            string nameShort_value = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.NameShort.ParameterGUID]);
-            string department_value = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.Department.ParameterGUID]);
-            string subDepartment_value = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.SubDepartment.ParameterGUID]);
-
+            
             // get the design set and option data
             var designSetAndOptionData = RevitUtils.DesignSetAndOptionsUtils.GetDesignSetOptionInfo(familyInstance.Document, familyInstance);
 
             // create a new revit room
             Models.RoomsRevit revitRoom = new Models.RoomsRevit(
-                id: id_value,
-                areaBriefed: areaBriefed_value_string,
-                areaDesigned: areaDesigned_value_string,
-                roomNameShort: nameShort_value,
-                department: department_value,
-                subDepartment: subDepartment_value,
+                id: IdProperty,
+                properties: properties,
                 designSet: designSetAndOptionData[DesignSetAndOptionDefaultNames.DESIGN_SET_NAME].ToString(),
                 designOption: designSetAndOptionData[DesignSetAndOptionDefaultNames.DESIGN_OPTION_NAME].ToString(),
                 designOptionIsPrimary: (bool)designSetAndOptionData[DesignSetAndOptionDefaultNames.DESIGN_OPTION_IS_PRIMARY],

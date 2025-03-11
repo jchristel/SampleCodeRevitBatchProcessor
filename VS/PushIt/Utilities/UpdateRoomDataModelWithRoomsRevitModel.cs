@@ -22,11 +22,7 @@
 //
 
 using RevitUtils;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHast.PushIt.Utilities
 {
@@ -47,11 +43,11 @@ namespace duHast.PushIt.Utilities
             Dictionary<string, List<Models.RoomsRevit>> roomsRevitById = new Dictionary<string, List<Models.RoomsRevit>>();
             foreach (Models.RoomsRevit revitRoom in roomsRevit)
             {
-                if (!roomsRevitById.ContainsKey(revitRoom.Id))
+                if (!roomsRevitById.ContainsKey(revitRoom.Id.Value))
                 {
-                    roomsRevitById[revitRoom.Id] = new List<Models.RoomsRevit>();
+                    roomsRevitById[revitRoom.Id.Value] = new List<Models.RoomsRevit>();
                 }
-                roomsRevitById[revitRoom.Id].Add(revitRoom);
+                roomsRevitById[revitRoom.Id.Value].Add(revitRoom);
             }
 
             // loop over all rooms in the data model and check if they exist in the revit model
@@ -110,6 +106,25 @@ namespace duHast.PushIt.Utilities
                 }
 
             }
+
+
+            // loop over all rooms in the data model and update the read only properties from Revit to the room
+            // if there is only one matching room
+            foreach (Models.RoomDataModel roomDataModel in roomsDataModel)
+            {
+                if (roomDataModel.MatchingRevitRooms.Count == 1)
+                {
+                    Models.RoomsRevit revitRoom = roomDataModel.MatchingRevitRooms[0];
+                    foreach (Models.RoomDataProperty property in roomDataModel.Properties)
+                    {
+                        if (property.IsReadOnly)
+                        {
+                            property.Value = revitRoom.Properties.Find(x => x.Name == property.Name).Value;
+                        }
+                    }
+                }
+            }
+
 
             // return the updated data model
             return roomsDataModel;

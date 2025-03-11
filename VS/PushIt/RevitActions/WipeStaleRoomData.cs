@@ -53,14 +53,14 @@ namespace duHast.PushIt.RevitActions
 
         public bool wipeIt(Document doc, List<FamilyInstance> familyInstancesToWipe, RoomDataModel sampleRoom)
         {
-            bool wipeSuccess = Utilities.Revit.FamilyUpdate.wipeMultipleFamilyInstances(doc, familyInstancesToWipe, sampleRoom);
+            bool wipeSuccess = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(doc, familyInstancesToWipe, sampleRoom);
             if (!wipeSuccess)
             {
                 // attempt to wipe one by one
                 foreach (var familyInstance in familyInstancesToWipe)
                 {
                     // at least one will fail...but the rest will succeed
-                    bool wipeSuccessSingle = Utilities.Revit.FamilyUpdate.wipeMultipleFamilyInstances(doc, new List<FamilyInstance> { familyInstance }, sampleRoom);
+                    bool wipeSuccessSingle = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(doc, new List<FamilyInstance> { familyInstance }, sampleRoom);
                     if (!wipeSuccessSingle)
                     {
                         // log error

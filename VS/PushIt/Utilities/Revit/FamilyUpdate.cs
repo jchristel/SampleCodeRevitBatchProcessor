@@ -162,7 +162,7 @@ namespace duHast.PushIt.Utilities.Revit
         /// <param name="sampleRoom"></param>
         /// <returns>True if the update was successful, false if not</returns>
         /// <exception cref="Exception"></exception>
-        public static bool wipeMultipleFamilyInstances(Document doc, List<FamilyInstance> familyInstances, Models.RoomDataModel sampleRoom)
+        public static bool WipeMultipleFamilyInstances(Document doc, List<FamilyInstance> familyInstances, Models.RoomDataModel sampleRoom)
         {
             
             //update all room data properties

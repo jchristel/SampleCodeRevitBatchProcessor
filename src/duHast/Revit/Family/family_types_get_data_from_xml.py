@@ -65,7 +65,7 @@ def get_type_data_via_XML_from_family_file(
     :param use_temporary_file: Whether to use a temporary file for the XML data.
     :type use_temporary_file: bool
 
-    :return: A result object with .result containing a single FamilyTypeDataStorageManater object. (or empty if failed)
+    :return: A result object with .result containing a single FamilyTypeDataStorageManager object. (or empty if failed)
     :rtype: Result
     """
 

@@ -124,58 +124,34 @@
             </Expander>
         </Border>
         <!-- grid view -->
-        <Border Grid.Row="3" CornerRadius="1"  Margin="0 2 0 2">
-            <Border.Style>
-                <Style TargetType="Border">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsFilterApplied}" Value="True">
-                            <Setter Property="BorderBrush" Value="Orange"/>
-                            <Setter Property="BorderThickness" Value="4"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding IsFilterApplied}" Value="False">
-                            <Setter Property="BorderBrush" Value="Gray"/>
-                            <Setter Property="BorderThickness" Value="1"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <!-- a loading spinner  -->
-            <Grid>
-                <TextBlock 
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center" 
-                    Visibility="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    FontSize="24"
-                    Text="Updating Revit..."/>
-                <ScrollViewer  Margin="5" HorizontalScrollBarVisibility="Auto">
-                    <Grid MinWidth="400" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}">
-                        <DataGrid x:Name="dataGrid" 
-                            ItemsSource="{Binding DataView}" 
+        <DataGrid Grid.Row="3" x:Name="dataGrid" 
+                            ItemsSource="{Binding DataView}"
+                            EnableRowVirtualization="True" 
+                            EnableColumnVirtualization="True" 
+                            VirtualizingPanel.IsVirtualizing="True" 
+                            VirtualizingPanel.VirtualizationMode="Recycling"
                             AutoGenerateColumns="True" 
                             IsReadOnly="True"
                             CanUserSortColumns="True"
                             SelectionMode="Single" 
                             SelectedIndex="{Binding SelectedIndex}"
                             ColumnWidth="*"
-                            HorizontalAlignment="Stretch">  
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <Setter Property="Background" Value="Red" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Count}" Value="1">
-                                            <Setter Property="Background" Value="LightGray"></Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Count}" Value="0">
-                                            <Setter Property="Background" Value="White"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.RowStyle>
-                        </DataGrid>
-                    </Grid>
-                </ScrollViewer>
-            </Grid>
-        </Border>
+                            RowHeight="23"
+                            HorizontalAlignment="Stretch">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="Red" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Count}" Value="1">
+                            <Setter Property="Background" Value="LightGray"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Count}" Value="0">
+                            <Setter Property="Background" Value="White"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
         <!-- button row content -->
         <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>

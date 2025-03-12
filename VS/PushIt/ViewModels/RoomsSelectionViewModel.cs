@@ -45,12 +45,9 @@ namespace duHast.PushIt.ViewModels
 
         public Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }
 
-        //observable collection of rooms
-        private readonly ObservableCollection<RoomViewModel> _rooms;
-        //default view of the rooms collection
-        private ICollectionView _roomsView;
-
+        // data table containing push it data
         private DataTable _dt;
+        // default view of the data table
         private DataView _dv;
 
         //flag to indicate if safety off mode is enabled
@@ -241,8 +238,6 @@ namespace duHast.PushIt.ViewModels
                 //update is filter applied property
                 OnPropertyChanged(nameof(IsFilterApplied));
 
-                // Refresh the view to apply the filter
-                _roomsView.Refresh(); 
             }
         }
 
@@ -296,10 +291,12 @@ namespace duHast.PushIt.ViewModels
                     return null;
                 }
                 // check if the selected index is within the bounds of the rooms collection
-                if (_selectedIndex >= 0 && _selectedIndex < _dv.Cast<RoomViewModel>().Count())
+                // check if the selected index is within the bounds of the rooms collection
+                if (_selectedIndex >= 0 && _selectedIndex < _dv.Count)
                 {
-                    var selectedRoomViewModel = _dv.Cast<RoomViewModel>().ElementAt(_selectedIndex);
-                    return _revitDataModel.GetAllRooms().FirstOrDefault(r => r.Id.Value == selectedRoomViewModel.Id);
+                    var selectedRow = _dv[_selectedIndex].Row;
+                    var roomId = selectedRow["Id"].ToString();
+                    return _revitDataModel.GetAllRooms().FirstOrDefault(r => r.Id.Value == roomId);
                 }
                 // return null if the selected index is out of bounds
                 return null;
@@ -427,6 +424,35 @@ namespace duHast.PushIt.ViewModels
 
             // Get the columns from the data table
             var columns = _dt.Columns;
+
+            bool filterListNeedsUpdating = false;
+
+            if (_columnNameDefaultList.Count == columns.Count)
+            {
+                //identical length ... make sure its the same values in both lists
+                //only update the filter list if new list is different to existing values
+                foreach (DataColumn column in columns)
+                {
+                    if (!_columnNameDefaultList.Contains(column.ColumnName))
+                    {
+                        filterListNeedsUpdating = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                // got different length...needs updating
+                filterListNeedsUpdating = true;
+            }
+
+            
+            // if the list does not need updating get out
+            if (!filterListNeedsUpdating)
+            {
+                return;
+            }
+
 
             // Clear the old entries
             _columnNameDefaultList.Clear();
@@ -577,19 +603,12 @@ namespace duHast.PushIt.ViewModels
             //store the global message view model
             GlobalMessageViewModel = globalMessageViewModel;
 
-            //initialize properties
-            // rooms collection
-            _rooms = new ObservableCollection<RoomViewModel>();
-            _roomsView = CollectionViewSource.GetDefaultView(_rooms);
             // supported categories collection
             _supportedCategories = new ObservableCollection<SupportedCategoryViewModel>();
             _supportedCategoriesView = CollectionViewSource.GetDefaultView(_supportedCategories);
 
             //set the data file path
             _dataFilePath = _revitDataModel.Settings.DataPath;
-
-            // filter may need to be set after populating the collection...
-            _roomsView.Filter = RoomFilter;
 
             //update supported categories from settings
             UpdateCategories();

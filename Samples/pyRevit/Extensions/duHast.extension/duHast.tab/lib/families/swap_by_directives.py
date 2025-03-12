@@ -27,30 +27,7 @@ from duHast.Utilities.Objects.result import Result
 
 from Autodesk.Revit.DB import ElementId
 
-from families.util.print_table import print_result_table
-
-def get_table_data_from_result(doc, result_list):
-    # the result lit is made up of tuples containing three entries
-
-    # 1. the id's of family instances swapped out
-    # 2. a dictioanry in format (Host Family Id:[list of instances not swapped because they are hosted in this family])
-    # 3. a dictionary in format (Group Type Id:[list of instances not swapped because they are hosted in this group])
-
-    host_fams = []
-    host_groups = []
-    for data in result_list:
-        if (isinstance(data, tuple)):
-
-            if len(data) != 3:
-                continue
-
-            for fam_id, instance_count in data[1].items():
-                host_fams.append([doc.GetElement(ElementId(fam_id)).Name, instance_count])
-            
-            for group_id, instance_count in data[2].items():
-                host_groups.append([doc.GetElement(ElementId(group_id)).Name, instance_count])
-    
-    return host_fams, host_groups
+from families.util.print_table import print_result_table,  get_table_data_from_swap_result
 
 
 def swap_instances_by_directives_entry(doc, output, forms):
@@ -77,7 +54,7 @@ def swap_instances_by_directives_entry(doc, output, forms):
         swap_directive_path = None
         swap_directive_path = forms.pick_folder("Select the folder containing the swap directives")
 
-        # check if anyhting was selected
+        # check if anything was selected
         if swap_directive_path is None:
             return_value.update_sep(False, "No folder selected")
             print("No folder containing swap directive selected. Exiting!")
@@ -100,7 +77,7 @@ def swap_instances_by_directives_entry(doc, output, forms):
             print(swap_result.message)
 
             # process results to print tables
-            table_data = get_table_data_from_result(doc, swap_result.result)
+            table_data = get_table_data_from_swap_result(doc, swap_result.result)
 
     except Exception as e:
         return_value.update_sep(

@@ -121,6 +121,30 @@ class FamilyTypeDataStorageManager(Base):
 
         self._family_type_data_storage.append(family_type_data_storage)
 
+
+    def remove_family_type(self, family_type_name):
+        """
+        Remove a family type from the family type data storage manager
+
+        :param family_type_name: the name of the family type to remove
+        :type family_type_name: str
+        """
+
+        filtered_list = []
+        removed_type= False
+        for family_type_data_storage in self.family_type_data_storage:
+            if family_type_data_storage.family_type_name !=  family_type_name:
+                filtered_list.append(family_type_data_storage)
+            else:
+                # remove the family type data storage instance
+                removed_type = True
+                pass
+
+        # replace the old list with the filtered list
+        self._family_type_data_storage = filtered_list
+        return removed_type
+
+
     def get_report_data(self, project_name=None):
         """
         Get the report data for the family type data storage manager

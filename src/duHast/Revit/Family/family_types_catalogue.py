@@ -37,9 +37,106 @@ from duHast.Revit.Family.family_types_get_data_from_xml import get_type_data_via
 from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
 from duHast.Utilities.Objects.result import Result
 
+def type_name_passes_filters(fam_type, filters):
+
+    """
+    Check if the family type name passes the filters.
+
+    :param fam_type: The family type to check.
+    :type fam_type: FamilyTypeDataStorage
+    :param filters: The filters to apply to the types to be added to the catalogue file. If None, no filters will be applied and all types will be added. If more then one filter is provided, the types must pass all filters
+    :type filters: list(list(function(value1,value2), test_value))
+
+    :return: True if the type name passes all filters, False otherwise.
+    :rtype: bool
+    """
+
+    # check if filters are None
+    if filters is None:
+        return True
+    
+    # go over filters and check if the type passes all filters by type name
+    passes_filter = True
+
+    for filter_instance in filters:
+
+        # do some sanity checks
+        if not isinstance(filter_instance, list):
+            return False
+
+        if len(filter_instance) != 2:
+            return False
+
+        # get the filter function
+        filter_func = filter_instance[0]
+        filter_value = filter_instance[1]
+
+        # check if the filter function is callable
+        if not callable(filter_func):
+            return False
+
+        # check if the type name passes the filter
+        passes_filter = passes_filter and filter_func(fam_type.family_type_name, filter_value)
+
+    return passes_filter
+
+   
+def pass_fam_types_through_filters(fam_type_manager, filters):
+    """
+    Pass family types through filters.
+
+    :param fam_type_manager: The family type manager to pass through the filters.
+    :type fam_type_manager: FamilyTypeDataStorageManager
+    :param filters: The filters to apply to the types to be added to the catalogue file. If None, no filters will be applied and all types will be added. If more then one filter is provided, the types must pass all filters
+    :type filters: list(list(function(value1,value2), test_value))
+    
+    :return: The updated family type manager.
+    :rtype: FamilyTypeDataStorageManager
+    """
+
+    return_value = Result()
+
+    try:
+        # loop over filters
+        for filter_instance in filters:
+
+            # do some sanity checks
+            if not isinstance(filter_instance, list):
+                return_value.update_sep(False, "Filter is not a list: {}".format(filter_instance))
+                continue
+
+            if len(filter_instance) != 2:
+                return_value.update_sep(False, "Filter does not contain two elements: {}".format(filter_instance))
+                continue
+
+            # get the filter function
+            filter_func = filter_instance[0]
+            filter_value = filter_instance[1]
+
+            # check if the filter function is callable
+            if not callable(filter_func):
+                return_value.update_sep(False, "Filter function is not callable: {}".format(filter_func))
+                continue
+        
+            # loop over family types and remove types not passing filters
+            for fam_type_storage in fam_type_manager.family_type_data_storage:
+                if (not type_name_passes_filters( fam_type_storage, filters)):
+                    removed_type_flag = fam_type_manager.remove_family_type( fam_type_storage.family_type_name)
+                    return_value.update_sep( removed_type_flag, "Removed family type: {} with status: {}".format(fam_type_storage.family_type_name, removed_type_flag))
+                else:
+                    return_value.append_message(True, "Family type: {} passed filters.".format(fam_type_storage.family_type_name))
+
+            
+            # return the updated family type manager
+            return_value.result.append(fam_type_manager)
+
+    except Exception as e:
+        return_value.update_sep(False, "Failed to pass family types through filters: {}".format(str(e)))
+
+    return return_value
 
 
-def export_catalogue_file(doc, file_path = None, filters = None):
+def export_catalogue_file(doc, file_path = None, filters = None, override_existing = False):
     """
     Export the family types catalogue file.
 
@@ -52,9 +149,13 @@ def export_catalogue_file(doc, file_path = None, filters = None):
             The filters to apply to the types to be added to the catalogue file. If None, no filters will be applied and all types will be added. If more then one filter is provided, the types must pass all filters to be added.
             Filter format:
 
-                [[ does_not_equal, "my check value"],...]
+                [[func(family_type_name, filter value), "my check value"],...]
+            
+            Example:
+                filters = [[lambda x, y: x.startswith(y), "A"], [lambda x, y: x.endswith(y), "B"]]
 
     :type filters: list(function(value1,value2))
+    :param override_existing: If True, the existing catalogue file will be overwritten. If False, no catalogue file will be exported.
     """
 
     return_value = Result()
@@ -109,35 +210,17 @@ def export_catalogue_file(doc, file_path = None, filters = None):
         # go over filters and remove types that do not pass the filter
         if filters is not None:
 
-            # loop over filters
-            for filter_instance in filters:
+            # attempt to pass family types through filters
+            fam_type_manager_filter_result = pass_fam_types_through_filters(fam_type_manager, filters)
 
-                # do some sanity checks
-                if not isinstance(filter_instance, list):
-                    return_value.update_sep(False, "Filter is not a list: {}".format(filter_instance))
-                    continue
-
-                if len(filter_instance) != 2:
-                    return_value.update_sep(False, "Filter does not contain two elements: {}".format(filter_instance))
-                    continue
-
-                # get the filter function
-                filter_func = filter_instance[0]
-                filter_value = filter_instance[1]
-
-                # check if the filter function is callable
-                if not callable(filter_func):
-                    return_value.update_sep(False, "Filter function is not callable: {}".format(filter_func))
-                    continue
+            # check if the family types passed through the filters
+            if (not fam_type_manager_filter_result.status):
+                # if not get out
+                return_value.update_sep(False, "Failed to pass family types through filters: {}".format(fam_type_manager_filter_result.message))
+                return return_value
             
-                
 
-                # loop over family types
-                for fam_type in fam_type_manager.family_type_data_storage:
-                    pass
-
-
-               
+        # export the catalogue file       
 
 
 

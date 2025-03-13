@@ -338,7 +338,10 @@ namespace duHast.PushIt.ViewModels
 
         #endregion Commands
 
-        //updates the rooms in the observable collection with rooms from the data model
+        /// <summary>
+        /// Update the rooms in the view model by creating a data table from the rooms in the data model, 
+        /// updating the default view of the data table, and updating the column filter list.
+        /// </summary>
         private void UpdateRooms()
         {
             //create a data table from the rooms in the data model
@@ -356,14 +359,17 @@ namespace duHast.PushIt.ViewModels
             DataView = new DataView(dt);
 
             // update the column filter list
-            CreateColumnFilterItems();
+            bool resetFilterValue = CreateColumnFilterItems();
 
             // reset the column filter value?
-
-
+            if (resetFilterValue) { FilterValue = ""; }
         }
 
 
+        /// <summary>
+        /// Creates the data table displayed in the ui
+        /// </summary>
+        /// <returns></returns>
         public DataTable CreateRoomsDataTable()
         {
             // Check if there are any rooms
@@ -384,7 +390,8 @@ namespace duHast.PushIt.ViewModels
                 // Add a column per property
                 foreach (var prop in roomModelInstance.Properties)
                 {
-                    dataTable.Columns.Add(prop.Name);
+                    // check if the column is meant to be displayed in the ui
+                    if (prop.ShowInUI) { dataTable.Columns.Add(prop.Name); }
                 }
                 // Get out of the loop
                 break;
@@ -405,7 +412,8 @@ namespace duHast.PushIt.ViewModels
                 // add the property values
                 foreach (var prop in roomModelInstance.Properties)
                 {
-                    row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : "";
+                    // check if the column is meant to be displayed in the ui
+                    if (prop.ShowInUI) { row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : ""; }
                 }
                 row["Count"] = roomModelInstance.MatchingRevitRooms.Count;
                 dataTable.Rows.Add(row);
@@ -414,12 +422,17 @@ namespace duHast.PushIt.ViewModels
             return dataTable;
         }
 
-        public void CreateColumnFilterItems()
+
+        /// <summary>
+        /// populates the column filter items list the user can chpoose to filter by in the UI
+        /// </summary>
+        /// <returns>true if column filter list changed, otherwise false.</returns>
+        public bool CreateColumnFilterItems()
         {
             // Check if the data table is null
             if (_dt == null)
             {
-                return;
+                return false;
             }
 
             // Get the columns from the data table
@@ -446,13 +459,11 @@ namespace duHast.PushIt.ViewModels
                 filterListNeedsUpdating = true;
             }
 
-            
             // if the list does not need updating get out
             if (!filterListNeedsUpdating)
             {
-                return;
+                return false;
             }
-
 
             // Clear the old entries
             _columnNameDefaultList.Clear();
@@ -465,9 +476,14 @@ namespace duHast.PushIt.ViewModels
 
             // Notify UI of changes
             OnPropertyChanged(nameof(ColumnNameDefaultList));
+
+            return true;
         }
 
 
+        /// <summary>
+        /// Update available and supported categories collection in UI from revit data model.
+        /// </summary>
         public void UpdateCategories()
         {
             //loop over categories supported as per data model and categories used in settings and add to the supported categories collection
@@ -484,32 +500,68 @@ namespace duHast.PushIt.ViewModels
             OnPropertyChanged(nameof(SupportedCategories));
         }
 
-        private bool RoomFilter(object item)
+        /// <summary>
+        /// The row filter applied to the data table default view
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="propertyChangedArgs"></param>
+        private void FilterRoomData(object sender, PropertyChangedEventArgs propertyChangedArgs)
         {
-            if (item is RoomViewModel room)
+            try
             {
-                if (string.IsNullOrEmpty(SelectedColumnFilterItem) || string.IsNullOrEmpty(FilterValue))
+                // Check if either the selected column filter value or the selected column filter item has changed
+                if (propertyChangedArgs.PropertyName == nameof(SelectedColumnFilterItem) ||
+                    propertyChangedArgs.PropertyName == nameof(FilterValue))
                 {
-                    return true; // No filter applied
-                }
+                    // Check if the data view is null, if so get out of the function since there is nothing to filter
+                    if (DataView == null)
+                    {
+                        return;
+                    }
 
-                switch (SelectedColumnFilterItem)
-                {
-                    case "Room Id":
-                        return room.Id.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
-                    
-                    case "Count":
-                        return room.Count.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
-                    default:
-                        return true; // No filter applied
+                    // Check if the filter value is empty
+                    if (string.IsNullOrEmpty(SelectedColumnFilterItem))
+                    {
+                        // Clear the filter on the data view
+                        DataView.RowFilter = string.Empty;
+                        return;
+                    }
+
+                    // Check if the column name contains a space, if so add square brackets to the column name
+                    string columnName = SelectedColumnFilterItem;
+                    if (SelectedColumnFilterItem.Contains(" "))
+                    {
+                        columnName = $"[{SelectedColumnFilterItem}]";
+                    }
+
+                    // Create the filter value for the data view
+                    // Check if the column value contains the filter value
+                    string filterValue = $"{columnName} LIKE '%{FilterValue}%'";
+
+                    // Filter the data view
+                    try
+                    {
+                        // Set the filter on the data view
+                        DataView.RowFilter = filterValue;
+                        // Let the UI know that the data view has changed to force a refresh
+                        OnPropertyChanged(nameof(DataView));
+                    }
+                    catch (Exception e)
+                    {
+                        AddMessage($"Failed to apply filter to data: {e.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                    }
                 }
             }
-            return false;
+            catch (Exception ex)
+            {
+                AddMessage($"Failed to filter data: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+            }
+            return;
         }
 
 
         /// <summary>
-        /// used to catch events from the underlying model in order to update the ui
+        /// used to catch property changed events from the underlying model in order to update the ui
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -531,11 +583,18 @@ namespace duHast.PushIt.ViewModels
             }
         }
 
+
+        /// <summary>
+        /// Adds a message to the global message store which will then be displayed in the UI
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="messageType"></param>
         public void AddMessage(string message, Utils.WPF.Stores.MessageTypes messageType)
         {
             
             _messageStore.SetCurrentMessage(message, messageType);
         }
+
 
         // not sure whether this is actually required or not
         // when on closing, dispose of the event manager
@@ -544,6 +603,7 @@ namespace duHast.PushIt.ViewModels
         {
             base.Dispose();
         }
+
 
         /// <summary>
         /// Custom closing logic for RoomsSelectionViewModel
@@ -564,16 +624,18 @@ namespace duHast.PushIt.ViewModels
             base.OnClosing();
         }
 
+
         /// <summary>
-        /// Data validation
+        /// Data validation for text input fields
         /// </summary>
-        /// <param name="propertyName"></param>
+        /// <param name="propertyName">The name of the property of which to get any errors, if they exist, for.</param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public IEnumerable GetErrors(string propertyName)
         {
             return _errorsViewModel.GetErrors(propertyName);
         }
+
 
         private void ErrorsViewModel_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
@@ -582,6 +644,14 @@ namespace duHast.PushIt.ViewModels
             OnPropertyChanged(nameof(DataFilePathValid));
         }
 
+        /// <summary>
+        /// The rooms selection view model class constructor.
+        /// </summary>
+        /// <param name="revitDataModel">The underlying revit data model</param>
+        /// <param name="navigationStore">A navigation store for the UI</param>
+        /// <param name="messageStore">A message store used to display messages to the user</param>
+        /// <param name="eventManager"></param>
+        /// <param name="globalMessageViewModel">A message view model, the message store uses to display messages to the user.</param>
         public RoomsSelectionViewModel(
             Models.RevitDataModel revitDataModel,
             Utils.WPF.Stores.NavigationStore navigationStore,
@@ -620,6 +690,9 @@ namespace duHast.PushIt.ViewModels
             _eventManager.RoomsSelectionViewModel = this;
             //update rooms data with data from revit through an external event
             _eventManager.RefreshUIDataEventRaise();
+
+            //subscribe to property changed event to allow update of the data table filters
+            this.PropertyChanged += FilterRoomData;
 
             // set up commands
             // refresh gui with data from model

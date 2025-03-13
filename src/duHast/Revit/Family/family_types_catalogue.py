@@ -4,8 +4,11 @@ A module with helper function around family types catalogue files.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Family types can be filtered ( removed from the export ) by providing a list of filters.
-For available filters see the documentation in the module duHast.Utilities.compare
+For available filters see the documentation in the module duHast.Utilities.compare alternatively inline filters can be provided as lambda functions.
 
+ filters = [[lambda x, y: x.startswith(y), "A"], [lambda x, y: x.endswith(y), "B"]]
+
+The filters are applied to the family type names ( x in the above examples ). If the type name passes all filters it will be added to the catalogue file.
 
 
 """

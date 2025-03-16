@@ -57,6 +57,22 @@ namespace duHast.PushIt.Models
             _matchingRevitRooms.Add(revitRoom);
         }
 
+
+        public List<string> GetUniquePropertyValueFromEachMatchingRevitRoom(string propertyName)
+        {
+            List<string> values = new List<string>();
+            foreach (Models.RoomsRevit revitRoom in MatchingRevitRooms)
+            {
+                Models.RoomDataProperty property = revitRoom.Properties.Find(x => x.Name == propertyName);
+                if (property != null)
+                {
+                    if (!values.Contains(property.Value))
+                        values.Add(property.Value);
+                }
+            }
+            return values;
+        }
+
         /// <summary>
         /// Update a read property
         /// </summary>
@@ -88,13 +104,27 @@ namespace duHast.PushIt.Models
                 }
             }
             else
-            // if there are multiple matching rooms, put 'varies' into read only properties
+            // if there are multiple matching rooms, put 'varies' into read only properties iv values are different between matching rooms
             {
                 foreach (Models.RoomDataProperty property in Properties)
                 {
                     if (property.IsReadOnly)
                     {
-                        property.Value = "varies";
+                        // get the value of this property from each matching room...if its the same for each display that value
+                        // otherwise display 'varies'
+
+                        // get the unique values for this property from each matching room
+                        List<string> propertyValues = GetUniquePropertyValueFromEachMatchingRevitRoom(property.Name);
+
+                        //check if more than one value
+                        if (propertyValues.Count == 1)
+                        {
+                            property.Value = propertyValues[0];
+                        }
+                        else
+                        {
+                            property.Value = "varies";
+                        }
                     }
                 }
             }

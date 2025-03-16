@@ -316,6 +316,7 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
 
         return diff
 
+
     def get_report_data(self, file_name=None):
         """
         get the data for the report
@@ -352,4 +353,68 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
             # append the data to the list
             data.append(def_report_data)
         return data
+    
+
+    def get_catalogue_file_data(self, parameter_names=None):
+        """
+        Get the data for the catalogue file
+
+        :param parameter_names: list of parameter names to include in the catalogue file and their order
+        :type parameter_names: [str]
+        :return: list of data for the catalogue file
+        """
+
+        data = []
         
+        if parameter_names is None:
+            for param in self.parameters:
+                # get the report data for the parameter
+                para_report_data = param.get_catalogue_file_data()
+                # append the data to the list
+                data.append(para_report_data)
+        else:
+            for parameter_name in parameter_names:
+                param = self.get_parameter_by_name(parameter_name)
+                if param is not None:
+                    # get the report data for the parameter
+                    para_report_data = param.get_catalogue_file_data()
+                    # append the data to the list
+                    data.append(para_report_data)
+                else:
+                    # add no data for the parameter
+                    pass
+        return data
+    
+    def get_catalogue_file_header_row(self, parameter_names):
+        """
+        Get the header row for the catalogue file
+
+        :param parameter_names: list of parameter names to include in the catalogue file and their order
+        :type parameter_names: [str]
+        :return: list of data for the catalogue file header row
+        """
+
+        # set up a header row with empty entry for the first column
+        header_row = [""]
+
+        # add the header row based on the parameter names
+        if parameter_names is not None:
+            for parameter_name in parameter_names:
+
+                para_storage = self.get_parameter_by_name(parameter_name)
+                if para_storage is not None:
+                    # get the header row for the parameter
+                    para_header_row = para_storage.get_catalogue_file_header_row()
+                    # append the data to the list
+                    header_row.append(para_header_row)
+                else:
+                    # add no data for the parameter
+                    pass
+        else:
+            for param in self.parameters:
+                # get the header row for the parameter
+                para_header_row = param.get_catalogue_file_header_row()
+                # append the data to the list
+                header_row.append(para_header_row)
+
+        return header_row

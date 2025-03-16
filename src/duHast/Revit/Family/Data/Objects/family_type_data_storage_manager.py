@@ -145,6 +145,53 @@ class FamilyTypeDataStorageManager(Base):
         return removed_type
 
 
+    def get_catalogue_file_data(self, parameter_names=None):
+        """
+        Get the catalogue file data for the family type data storage manager
+
+        :param parameter_names: list of parameter names to include in the catalogue file data and the order in which they should be included.
+        If None, all parameters will be included in the order they are stored in the family type data storage instances.
+        :type parameter_names: [str]
+        :return: the catalogue file data for the family type data storage manager
+        :rtype: [[str]]
+        """
+
+        catalogue_file_data = []
+
+        # loop over type data storage instances and get the catalogue file data
+        for family_type_data_storage in self.family_type_data_storage:
+            catalogue_file_data.append(
+                family_type_data_storage.get_catalogue_file_data(parameter_names)
+            )
+
+
+        return catalogue_file_data
+
+
+    def get_catalogue_file_header_row(self, parameter_names=None):
+        """
+        Get the header row for the catalogue file
+
+        :param parameter_names: list of parameter names to include in the catalogue file data and the order in which they should be included.
+        If None, all parameters will be included in the order they are stored in the family type data storage instances.
+        :type parameter_names: [str]
+        :return: the header row for the catalogue file
+        :rtype: [str]
+        """
+
+        header_row = []
+
+        # loop over type data storage instances and get the header row based on the first instance
+        for family_type_data_storage in self.family_type_data_storage:
+            header_row.append(
+                family_type_data_storage.get_catalogue_file_header_row(parameter_names)
+            )
+            break
+
+        return header_row
+
+
+
     def get_report_data(self, project_name=None):
         """
         Get the report data for the family type data storage manager

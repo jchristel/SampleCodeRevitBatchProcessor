@@ -219,3 +219,23 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
             self.units,
             self.value,
         ]
+    
+    def get_catalogue_file_data(self):
+        """
+        Get the catalogue file data for this parameter ( the value of the parameter)
+
+        :return: the catalogue file data
+        :rtype: [str]
+        """
+
+        return self.value
+    
+    def get_catalogue_file_header_row(self):
+        """
+        Get the catalogue file header row for this object sample ParameterName##LENGTH##MILLIMETERS
+
+        :return: the catalogue file header row entry for this parameter
+        :rtype: str
+        """
+
+        return "{}##{}##{}".format(self.name, self.type_of_parameter, self.units)

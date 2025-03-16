@@ -224,11 +224,14 @@ def export_catalogue_file(doc, file_path = None, filters = None, override_existi
             
 
         # export the catalogue file       
+        catalogue_file_data = fam_type_manager.get_catalogue_file_data()
 
+        # check if the catalogue file data is valid
+        if catalogue_file_data is None or len(catalogue_file_data) == 0:
+            return_value.update_sep(False, "Failed to get the catalogue file data.")
+            return return_value
 
-
-
-        # convert type data into catalogue file
+        # write the catalogue file to file
     
     except Exception as e:
         return_value.update_sep(False, str(e))

@@ -363,6 +363,11 @@ namespace duHast.PushIt.ViewModels
 
             // reset the column filter value?
             if (resetFilterValue) { FilterValue = ""; }
+            else
+            {
+                //reapply the filter
+                OnPropertyChanged(nameof(FilterValue));
+            }
         }
 
 

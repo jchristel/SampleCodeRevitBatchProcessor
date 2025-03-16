@@ -22,11 +22,7 @@
 //
 
 using duHast.PushIt.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Autodesk.Revit.DB;
 
 namespace duHast.PushIt.RevitActions
@@ -46,7 +42,7 @@ namespace duHast.PushIt.RevitActions
 
             // get shared parameter data from the model
             // get shared parameter ids by GUID
-            Dictionary<string, ElementId> sharedParameterIdsByGUIDs = RevitUtils.SharedParaUtils.GetSharedParameterIdsByGUID(doc);
+            Dictionary<string, ElementId> sharedParameterIdsByGUIDs = duHast.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterIdsByGUID(doc);
 
             //extract current model data from the element selected
             var modelDataPrevious = Utilities.Revit.RevitRoomObjectsConverter.ConvertSingleFamilyToRevitRoom(
@@ -55,7 +51,7 @@ namespace duHast.PushIt.RevitActions
                 sharedParameterIdsByGUIDs: sharedParameterIdsByGUIDs
             );
 
-            bool updateFamily = Utilities.Revit.FamilyUpdate.updateSingleFamilyInstance(
+            bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateSingleFamilyInstance(
                 doc: doc,
                 familyInstance: _pushTarget as Autodesk.Revit.DB.FamilyInstance,
                 roomData: _roomToPush,

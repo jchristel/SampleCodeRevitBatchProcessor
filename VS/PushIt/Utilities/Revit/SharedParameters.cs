@@ -54,17 +54,17 @@ namespace duHast.PushIt.Utilities.Revit
             Models.RoomDataModel firstRoomDataModel = roomsDataModel[0];
 
             // get all shared parameters in the model
-            var test = RevitUtils.SharedParaUtils.GetSharedParameters(doc);
+            //var test = duHast.RevitUtils.Parameters.SharedParaUtils.GetSharedParameters(doc);
 
             // get shared parameters of interest bindings to categories
-            List<string> bindingsId = RevitUtils.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.Id.ParameterGUID);
+            List<string> bindingsId = duHast.RevitUtils.Parameters.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.Id.ParameterGUID);
 
             List<Dictionary<(string Name, string GUID), List<string>>> otherPropertiesBindings = new List<Dictionary<(string Name, string GUID), List<string>>>();
             foreach (var property in firstRoomDataModel.Properties)
             {
                 // skip if parameterGUID is empty
                 if (property.ParameterGUID == "") { continue; }
-                otherPropertiesBindings.Add(new Dictionary<(string Name,string GUID), List<string>> { { (property.Name, property.ParameterGUID), RevitUtils.SharedParaUtils.ParameterBindingsByGUID(doc, property.ParameterGUID) } });
+                otherPropertiesBindings.Add(new Dictionary<(string Name,string GUID), List<string>> { { (property.Name, property.ParameterGUID), duHast.RevitUtils.Parameters.SharedParaUtils.ParameterBindingsByGUID(doc, property.ParameterGUID) } });
             }
 
             // check if all shared parameters exist

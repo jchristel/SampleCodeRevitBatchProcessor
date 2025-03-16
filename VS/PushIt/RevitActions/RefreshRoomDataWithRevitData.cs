@@ -26,7 +26,6 @@ using System.Windows.Forms;
 using Autodesk.Revit.DB;
 using duHast.PushIt.Models;
 using duHast.PushIt.ViewModels;
-using RevitUtils;
 
 namespace duHast.PushIt.RevitActions
 {
@@ -84,7 +83,7 @@ namespace duHast.PushIt.RevitActions
             }
 
             // get supported categories
-            List<Category> categories = RevitUtils.CategoryUtils.GetMainCategoriesByName(doc, supportedCategoryName);
+            List<Category> categories = duHast.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, supportedCategoryName);
             if (categories.Count == 0)
             {
                 if (supportedCategoryName.Count > 0)
@@ -101,7 +100,7 @@ namespace duHast.PushIt.RevitActions
             }
 
             // convert revit categories into revit builtIncategories for filtering
-            List<BuiltInCategory> familyInstanceFilterCategories = CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
+            List<BuiltInCategory> familyInstanceFilterCategories = duHast.RevitUtils.Categories.CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
 
             // get the documents current design set and option
             (string designSetName, string designOptionName) = Utilities.Revit.DesignSetAndOptionUtils.GetActiveDesignSetAndOptionName(doc);
@@ -112,7 +111,7 @@ namespace duHast.PushIt.RevitActions
 
 
             //get families of supported built in categories
-            List<FamilyInstance> familyInstances = RevitUtils.Families.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
+            List<FamilyInstance> familyInstances = duHast.RevitUtils.Families.FamilyUtils.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
 
             //check if any families in the model
             if (familyInstances.Count == 0)

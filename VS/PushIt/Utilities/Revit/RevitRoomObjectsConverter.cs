@@ -22,8 +22,6 @@
 //
 
 using Autodesk.Revit.DB;
-using RevitUtils;
-using System;
 using System.Collections.Generic;
 
 namespace duHast.PushIt.Utilities.Revit
@@ -41,7 +39,7 @@ namespace duHast.PushIt.Utilities.Revit
             IList<Parameter> parameters = familyInstance.GetOrderedParameters();
 
             // get the id value
-            string id_value = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.Id.ParameterGUID]);
+            string id_value = duHast.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[sampleModelRoom.Id.ParameterGUID]);
 
             // ignore fam instance if id is null or empt
             if (id_value == null || id_value == "")
@@ -68,12 +66,12 @@ namespace duHast.PushIt.Utilities.Revit
                 if (property.ParameterGUID != "")
                 {
                     // get the value of the property
-                    value = SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[property.ParameterGUID]);
+                    value = duHast.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterValueFromElementByElementId(familyInstance, sharedParameterIdsByGUIDs[property.ParameterGUID]);
                 }
                 else
                 {
                     //standard parameter
-                    value = ParaUtils.GetParameterValueByName(familyInstance, property.ParameterName);
+                    value = duHast.RevitUtils.Parameters.ParaUtils.GetParameterValueByName(familyInstance, property.ParameterName);
                 }
 
                 // create a new room data property
@@ -89,15 +87,15 @@ namespace duHast.PushIt.Utilities.Revit
             }
             
             // get the design set and option data
-            var designSetAndOptionData = RevitUtils.DesignSetAndOptionsUtils.GetDesignSetOptionInfo(familyInstance.Document, familyInstance);
+            var designSetAndOptionData = duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionsUtils.GetDesignSetOptionInfo(familyInstance.Document, familyInstance);
 
             // create a new revit room
             Models.RoomsRevit revitRoom = new Models.RoomsRevit(
                 id: IdProperty,
                 properties: properties,
-                designSet: designSetAndOptionData[DesignSetAndOptionDefaultNames.DESIGN_SET_NAME].ToString(),
-                designOption: designSetAndOptionData[DesignSetAndOptionDefaultNames.DESIGN_OPTION_NAME].ToString(),
-                designOptionIsPrimary: (bool)designSetAndOptionData[DesignSetAndOptionDefaultNames.DESIGN_OPTION_IS_PRIMARY],
+                designSet: designSetAndOptionData[duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.DESIGN_SET_NAME].ToString(),
+                designOption: designSetAndOptionData[duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.DESIGN_OPTION_NAME].ToString(),
+                designOptionIsPrimary: (bool)designSetAndOptionData[duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.DESIGN_OPTION_IS_PRIMARY],
                 familyInstance.Id.IntegerValue);
 
             return revitRoom;
@@ -108,7 +106,7 @@ namespace duHast.PushIt.Utilities.Revit
             List<Models.RoomsRevit> revitRooms = new List<duHast.PushIt.Models.RoomsRevit>();
 
             // get shared parameter ids by GUID
-            Dictionary<string, ElementId> sharedParameterIdsByGUIDs = RevitUtils.SharedParaUtils.GetSharedParameterIdsByGUID(familyInstances[0].Document);
+            Dictionary<string, ElementId> sharedParameterIdsByGUIDs = duHast.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterIdsByGUID(familyInstances[0].Document);
 
             foreach (FamilyInstance familyInstance in familyInstances)
             {

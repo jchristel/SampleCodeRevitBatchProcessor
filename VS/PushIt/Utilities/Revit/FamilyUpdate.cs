@@ -38,7 +38,7 @@ namespace duHast.PushIt.Utilities.Revit
         /// <param name="roomData"></param>
         /// <param name="safetyOff"></param>
         /// <returns></returns>
-        public static bool updateProperties(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff)
+        public static bool UpdateProperties(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace duHast.PushIt.Utilities.Revit
                 }
 
                 // set the room id parameter
-                bool flagId = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Id.ParameterGUID, room_id);
+                bool flagId = duHast.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Id.ParameterGUID, room_id);
 
                 //update other properties
 
@@ -63,12 +63,12 @@ namespace duHast.PushIt.Utilities.Revit
                     // update the property depending on whether it has a GUID or not
                     if (property.ParameterGUID != "")
                     {
-                        bool flag = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, property.ParameterGUID, property.Value);
+                        bool flag = duHast.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, property.ParameterGUID, property.Value);
                         flagOtherProperties = flagOtherProperties && flag;
                     }
                     else
                     {
-                        bool flag = RevitUtils.ParaUtils.SetParameterValueByName(familyInstance, property.Name, property.Value);
+                        bool flag = duHast.RevitUtils.Parameters.ParaUtils.SetParameterValueByName(familyInstance, property.Name, property.Value);
                         flagOtherProperties = flagOtherProperties && flag;
                     }
                 }
@@ -90,7 +90,7 @@ namespace duHast.PushIt.Utilities.Revit
         /// <returns> 
         /// True if the update was successful, false if not
         /// </returns>
-        public static bool updateSingleFamilyInstance(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff )
+        public static bool UpdateSingleFamilyInstance(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff )
         {
 
             // set up an action to run inside a Revit transaction
@@ -99,7 +99,7 @@ namespace duHast.PushIt.Utilities.Revit
                 try
                 {
                     //update single family instance
-                    return updateProperties(doc, familyInstance, roomData, safetyOff);
+                    return UpdateProperties(doc, familyInstance, roomData, safetyOff);
                 }
                 catch (Exception)
                 {
@@ -107,7 +107,7 @@ namespace duHast.PushIt.Utilities.Revit
                 }
             };
 
-            bool transactionFlag =  RevitUtils.TransactionUtils.inTransaction(
+            bool transactionFlag =  duHast.RevitUtils.Transactions.TransactionUtils.InTransaction(
                 doc, $"Pushing room {roomData.Id.Value}", actionInTranny);
 
             return transactionFlag;
@@ -121,7 +121,7 @@ namespace duHast.PushIt.Utilities.Revit
         /// <param name="familyData"></param>
         /// <returns>True if the update was successful, false if not</returns>
         /// <exception cref="Exception"></exception>
-        public static bool updateMultipleFamilyInstances(Document doc, Dictionary<string, (duHast.PushIt.Models.RoomDataModel, List<FamilyInstance>)> familyData)
+        public static bool UpdateMultipleFamilyInstances(Document doc, Dictionary<string, (duHast.PushIt.Models.RoomDataModel, List<FamilyInstance>)> familyData)
         {
             // set up an action to run inside a Revit transaction
             Func<bool> actionInTranny = () =>
@@ -134,7 +134,7 @@ namespace duHast.PushIt.Utilities.Revit
                     foreach (var familyInstance in familyInstances)
                     {
                         // update the family instance
-                        bool flag_update = updateProperties(doc, familyInstance, roomData, false);
+                        bool flag_update = UpdateProperties(doc, familyInstance, roomData, false);
                         // if the update fails throw an exception to roll back the transaction and attempt to update one by one
                         if (!flag_update)
                         {
@@ -147,7 +147,7 @@ namespace duHast.PushIt.Utilities.Revit
             };
 
             // run the action in a transaction
-            bool transactionFlag = RevitUtils.TransactionUtils.inTransaction(
+            bool transactionFlag = duHast.RevitUtils.Transactions.TransactionUtils.InTransaction(
                 doc, "Wiping stale room data", actionInTranny);
             return transactionFlag;
         }
@@ -188,7 +188,7 @@ namespace duHast.PushIt.Utilities.Revit
                 foreach (var familyInstance in familyInstances)
                 {
                     // update the family instance
-                    bool flag_update = updateProperties(doc, familyInstance, emptyRoom, false);
+                    bool flag_update = UpdateProperties(doc, familyInstance, emptyRoom, false);
 
                     // if the update fails throw an exception to roll back the transaction and attempt to update one by one
                     if (!flag_update)
@@ -201,7 +201,7 @@ namespace duHast.PushIt.Utilities.Revit
             };
 
             // run the action in a transaction
-            bool transactionFlag = RevitUtils.TransactionUtils.inTransaction(
+            bool transactionFlag = duHast.RevitUtils.Transactions.TransactionUtils.InTransaction(
                 doc, "Wiping stale room data", actionInTranny);
 
             return transactionFlag;

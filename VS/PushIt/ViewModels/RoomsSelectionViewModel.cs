@@ -55,8 +55,8 @@ namespace duHast.PushIt.ViewModels
         //default button text for safety off mode
         private string _safetyOffButtonText = "Safety on";
 
-        private string _activeDesignSetName = RevitUtils.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME;
-        private string _activeDesignOptionName = RevitUtils.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME;
+        private string _activeDesignSetName = duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME;
+        private string _activeDesignOptionName = duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME;
 
         //observable collection of supported categories in Revit to push data into
         private readonly ObservableCollection<SupportedCategoryViewModel> _supportedCategories;

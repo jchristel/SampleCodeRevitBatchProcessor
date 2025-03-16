@@ -180,6 +180,7 @@ namespace duHast.RevitUtils.Parameters
                     {
                         // get parameter value as string. This will also convert imperial units to metric!
                         parameterValue = ParameterGetUtils.GetParameterValueAsString(para: parameter);
+               
                         return parameterValue;
                     }
                 }

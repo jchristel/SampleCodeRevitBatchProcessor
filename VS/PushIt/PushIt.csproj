@@ -163,7 +163,6 @@
     <Compile Include="Utilities\UpdateRoomDataModelWithRoomsRevitModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\RoomsSelectionViewModel.cs" />
-    <Compile Include="ViewModels\RoomViewModel.cs" />
     <Compile Include="ViewModels\SupportedCategoryViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

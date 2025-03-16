@@ -32,10 +32,9 @@ namespace duHast.RevitUtils.Categories
         /// <summary>
         /// Get the built-in categories by name
         /// </summary>
-        /// <param name="doc">The current model document</param>
         /// <param name="categoryNames">A list of names idetnifying the built-in categories to be returned</param>
         /// <returns>A list of built in categories. An empty list of no matchin categories where found.</returns>
-        public static List<BuiltInCategory> GetBuiltInCategoriesByName(Document doc, List<string> categoryNames)
+        public static List<BuiltInCategory> GetBuiltInCategoriesByName(List<string> categoryNames)
         {
             List<BuiltInCategory> builtInCategories = new List<BuiltInCategory>();
             foreach (string categoryName in categoryNames)

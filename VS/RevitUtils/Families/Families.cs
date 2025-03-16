@@ -21,39 +21,33 @@
 //
 //
 
+
+using System.Collections.Generic;
 using Autodesk.Revit.DB;
-using System;
 
-namespace RevitUtils
+namespace RevitUtils.Families
 {
-    public static class TransactionUtils
+    public static class Families
     {
-        public static bool inTransaction(Document doc, string transactionName, Func<bool> actionInTranny)
-        {
-            try
-            {
-                Transaction tranny = new Transaction(doc, transactionName);
 
-                try
-                {
-                    tranny.Start();
-                    bool flagAction = actionInTranny();
-                    tranny.Commit();
-                    return flagAction;
-                }
-                catch (Exception)
-                {
-                    if (tranny != null && tranny.HasStarted())
-                    {
-                        tranny.RollBack();
-                    }
-                    return false;
-                }
-            }
-            catch (Exception)
+        /// <summary>
+        /// Get all family instances in the model.
+        /// </summary>
+        /// <param name="doc">The current model document.</param>
+        /// <param name="categories">A list of built in categories of which to return family instances from.</param>
+        /// <returns>A list of family instances belonging to the supplied categories. An empty list if none are present in the model.</returns>
+        public static List<FamilyInstance> GetFamilyInstancesByBuiltInCategories(Document doc, List<BuiltInCategory> categories)
+        {
+            List<FamilyInstance> familyInstances = new List<FamilyInstance>();
+            ElementMulticategoryFilter filter = new ElementMulticategoryFilter(categories);
+            FilteredElementCollector col = new FilteredElementCollector(doc).OfClass(typeof(FamilyInstance)).WherePasses(filter);
+            
+            foreach (Element instance in col)
             {
-                return false;
+                familyInstances.Add(instance as FamilyInstance);
             }
+
+            return familyInstances;
         }
     }
 }

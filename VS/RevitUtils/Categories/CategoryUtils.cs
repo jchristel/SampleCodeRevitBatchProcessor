@@ -25,11 +25,16 @@ using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
 
-namespace RevitUtils
+namespace RevitUtils.Categories
 {
     public static class CategoryUtils
     {
-
+        /// <summary>
+        /// Get the built-in categories by name
+        /// </summary>
+        /// <param name="doc">The current model document</param>
+        /// <param name="categoryNames">A list of names idetnifying the built-in categories to be returned</param>
+        /// <returns>A list of built in categories. An empty list of no matchin categories where found.</returns>
         public static List<BuiltInCategory> GetBuiltInCategoriesByName(Document doc, List<string> categoryNames)
         {
             List<BuiltInCategory> builtInCategories = new List<BuiltInCategory>();
@@ -41,10 +46,15 @@ namespace RevitUtils
             return builtInCategories;
         }
 
+        /// <summary>
+        /// Get the main built-in categories in the model.
+        /// </summary>
+        /// <param name="doc">The current model document</param>
+        /// <returns>A list containing all main categories.</returns>
         public static List<Category>GetMainCategoriesInModel(Document doc)
         {
             List<Category> categories = new List<Category>();
-            Categories categoriesInModel = doc.Settings.Categories;
+            Autodesk.Revit.DB.Categories categoriesInModel = doc.Settings.Categories;
             foreach (Category category in categoriesInModel)
             {
                 categories.Add(category);
@@ -52,11 +62,17 @@ namespace RevitUtils
             return categories;
         }
 
+        /// <summary>
+        /// Returns all mian categories where the name matches the given list of names.
+        /// </summary>
+        /// <param name="doc">The current model document</param>
+        /// <param name="categoryNames">A list of category names</param>
+        /// <returns>A list of categories. An empty list if no matching categories were found.</returns>
         public static List<Category> GetMainCategoriesByName(Document doc, List<string> categoryNames)
         {
             List<Category> categories = new List<Category>();
             // get all categories from the model
-            Categories categoriesInModel = doc.Settings.Categories;
+            Autodesk.Revit.DB.Categories categoriesInModel = doc.Settings.Categories;
             
             // find matches
             foreach (Category category in categoriesInModel)
@@ -73,6 +89,11 @@ namespace RevitUtils
             return categories;
         }
 
+        /// <summary>
+        /// Returns all built-incategories matching the past in categories.
+        /// </summary>
+        /// <param name="categories">List of categories of which to return the built in categories.</param>
+        /// <returns>A list of built in categoreis.</returns>
         public static List<BuiltInCategory> GetBuiltInCategoriesFromCategories(List<Category> categories)
         {
             List<BuiltInCategory> builtInCategories = new List<BuiltInCategory>();

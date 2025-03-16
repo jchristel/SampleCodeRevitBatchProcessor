@@ -20,17 +20,47 @@
 //
 //
 //
-namespace RevitUtils
-{
-    public static class DesignSetAndOptionDefaultNames
-    {
-        // default key names for design set and design option 
-        public static string DESIGN_SET_NAME = "designSetName";
-        public static string DESIGN_OPTION_NAME = "designOptionName";
-        public static string DESIGN_OPTION_IS_PRIMARY = "designOptionIsPrimary";
 
-        // default names for design set and design option of the mmain model ( no design set or design option is active)
-        public static string MAIN_MODEL_DEFAULT_DESIGN_SET_NAME = "Main Model";
-        public static string MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME = "-";
+using Autodesk.Revit.DB;
+using System;
+
+namespace RevitUtils.Transactions
+{
+    public static class TransactionUtils
+    {
+        /// <summary>
+        /// Excutes an action in a transaction.
+        /// </summary>
+        /// <param name="doc">The document to execute the transaction in.</param>
+        /// <param name="transactionName">The name of the transaction.</param>
+        /// <param name="actionInTranny">The action to execute in the transaction. ( can not accept any args )</param>
+        /// <returns>True if the action was executed successfully, otherwise false. If an excption occurrs during the transaction, it will be rolled back.</returns>
+        public static bool inTransaction(Document doc, string transactionName, Func<bool> actionInTranny)
+        {
+            try
+            {
+                Transaction tranny = new Transaction(doc, transactionName);
+
+                try
+                {
+                    tranny.Start();
+                    bool flagAction = actionInTranny();
+                    tranny.Commit();
+                    return flagAction;
+                }
+                catch (Exception)
+                {
+                    if (tranny != null && tranny.HasStarted())
+                    {
+                        tranny.RollBack();
+                    }
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

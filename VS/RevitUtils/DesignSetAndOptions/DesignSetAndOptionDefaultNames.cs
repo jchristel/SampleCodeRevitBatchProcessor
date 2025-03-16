@@ -20,31 +20,17 @@
 //
 //
 //
-
-
-using System.Collections.Generic;
-using Autodesk.Revit.DB;
-
-namespace RevitUtils
+namespace RevitUtils.DesignSetAndOptions
 {
-    public static class Families
+    public static class DesignSetAndOptionDefaultNames
     {
+        // default key names for design set and design option 
+        public static string DESIGN_SET_NAME = "designSetName";
+        public static string DESIGN_OPTION_NAME = "designOptionName";
+        public static string DESIGN_OPTION_IS_PRIMARY = "designOptionIsPrimary";
 
-        // get all family instances by category
-        public static List<FamilyInstance> GetFamilyInstancesByBuiltInCategories(Document doc, List<BuiltInCategory> categories)
-        {
-            List<FamilyInstance> familyInstances = new List<FamilyInstance>();
-            ElementMulticategoryFilter filter = new ElementMulticategoryFilter(categories);
-            FilteredElementCollector col = new FilteredElementCollector(doc).OfClass(typeof(FamilyInstance)).WherePasses(filter);
-            
-            foreach (Element instance in col)
-            {
-                familyInstances.Add(instance as FamilyInstance);
-            }
-
-            return familyInstances;
-        }
-
-
+        // default names for design set and design option of the mmain model ( no design set or design option is active)
+        public static string MAIN_MODEL_DEFAULT_DESIGN_SET_NAME = "Main Model";
+        public static string MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME = "-";
     }
 }

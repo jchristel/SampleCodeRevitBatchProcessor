@@ -25,16 +25,26 @@ using System;
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
-namespace RevitUtils
+namespace RevitUtils.DesignSetAndOptions
 {
     public static class DesignSetAndOptionsUtils
     {
-       
+
+        /// <summary>
+        /// Returns a FilteredElementCollector containing all design options in the document.
+        /// </summary>
+        /// <param name="doc">The document to get the design options from.</param>
+        /// <returns>A FilteredElementCollector containing all design options in the document.</returns>
         public static FilteredElementCollector GetDesginOptions(Document doc)
         {
             return new FilteredElementCollector(doc).OfClass(typeof(DesignOption));
         }
 
+        /// <summary>
+        /// Returns the active design option in the document.
+        /// </summary>
+        /// <param name="doc">The document to get the active design option from.</param>
+        /// <returns>The active design option in the document. Null, if no active design option is set.</returns>
         public static DesignOption GetActiveDesignOption(Document doc)
         {
             ElementId elementId = DesignOption.GetActiveDesignOptionId(doc);
@@ -45,12 +55,23 @@ namespace RevitUtils
             return doc.GetElement(elementId) as DesignOption;
         }
 
+        /// <summary>
+        /// Returns the design set id of a design option.
+        /// </summary>
+        /// <param name="doc">The document to get the design set from.</param>
+        /// <param name="designOption">The design option to get the design set from.</param>
+        /// <returns>The Element id of the design set</returns>
         public static Element GetDesignSetFromDesignOption(Document doc, DesignOption designOption)
         {
             Element designSet = doc.GetElement(designOption.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId());
             return designSet;
         }
 
+        /// <summary>
+        /// Returns the design set of the active design option in the document.
+        /// </summary>
+        /// <param name="doc">The document to get the design set from.</param>
+        /// <returns>The design set of the active design option in the document. Null, if no active design option is set.</returns>
         public static Element GetDesignSetOfActiveDesignOption(Document doc)
         {
             DesignOption activeDesignOption = GetActiveDesignOption(doc);
@@ -61,6 +82,11 @@ namespace RevitUtils
             return GetDesignSetFromDesignOption(doc, activeDesignOption);
         }
 
+        /// <summary>
+        /// Get all design sets in the document.
+        /// </summary>
+        /// <param name="doc">The document to get the design sets from.</param>
+        /// <returns>A list of all design sets in the document.List is empty if no design sets present.</returns>
         public static List<Element> GetDesignSets(Document doc)
         {
             List<Element> designSets = new List<Element>();
@@ -79,6 +105,11 @@ namespace RevitUtils
             return designSets;
         }
 
+        /// <summary>
+        /// Gets all design options by their design set.
+        /// </summary>
+        /// <param name="doc">The document to get the design sets from.</param>
+        /// <returns>A dictionary with the design set name as key and a list of design options as value.An empty dictionary of no design sets are present.</returns>
         public static Dictionary<string,List<DesignOption>> GetDesignOptionsByDesignSetName(Document doc)
         {
             Dictionary<string, List<DesignOption>> designOptionsByDesignSetName = new Dictionary<string, List<DesignOption>>();
@@ -100,6 +131,13 @@ namespace RevitUtils
             return designOptionsByDesignSetName;
         }
 
+        /// <summary>
+        /// Check if the design option is the primary design option of the design set.
+        /// </summary>
+        /// <param name="doc">The document to get the design set from.</param>
+        /// <param name="designSetName">The name of the design set.</param>
+        /// <param name="designOptionName">The name of the design option.</param>
+        /// <returns>True if the design option is the primary design option of the design set. Otherwise false.</returns>
         public static bool IsDesignOptionPrimary(Document doc, string designSetName, string designOptionName)
         {
             bool isPrimary = false;
@@ -122,6 +160,13 @@ namespace RevitUtils
 
             return isPrimary;
         }
+
+        /// <summary>
+        /// Gets the design set and design option of an element.
+        /// </summary>
+        /// <param name="doc">The current model document.</param>
+        /// <param name="element">The element to get the design set and design option from.</param>
+        /// <returns>A dictionary with the design set name, design option name and if the design option is primary as keys.</returns>
         public static Dictionary<string, object> GetDesignSetOptionInfo(Document doc, Element element)
         {
             // keys match properties in DataDesignSetOption class!!
@@ -156,6 +201,11 @@ namespace RevitUtils
             return dic;
         }
 
+        /// <summary>
+        /// Get the design option ids of the primary design option of all design sets.
+        /// </summary>
+        /// <param name="doc">The current model document.</param>
+        /// <returns>A list of element ids of the primary design options of all design sets. An empty list if no design sets are present in the model.</returns>
         public static List<ElementId> GetDesignOptionIdsOfAllPrimaryOptions(Document doc)
         {
             List<ElementId> designOptionIds = new List<ElementId>();
@@ -170,6 +220,12 @@ namespace RevitUtils
             return designOptionIds;
         }
 
+        /// <summary>
+        /// Get the design option ids of all primary design options but of the design set containing the option id represented by the filter id.
+        /// </summary>
+        /// <param name="doc">The current model document.</param>
+        /// <param name="filterId">The id of the design option belonging to a design set of which not to return the primary options id.</param>
+        /// <returns>A list of element ids of the primary design options of all design sets except the one containing the filter id. An empty list if no design sets are present in the model.</returns>
         public static List<ElementId> GetDesignOptionIdsOfAllPrimaryOptionsButTheOneContainingFilterId(Document doc, ElementId filterId)
         {
             // setup return value

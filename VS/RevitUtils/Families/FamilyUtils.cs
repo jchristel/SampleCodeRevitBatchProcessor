@@ -25,9 +25,9 @@
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
-namespace RevitUtils.Families
+namespace duHast.RevitUtils.Families
 {
-    public static class Families
+    public static class FamilyUtils
     {
 
         /// <summary>

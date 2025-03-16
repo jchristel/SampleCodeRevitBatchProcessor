@@ -24,7 +24,7 @@
 using Autodesk.Revit.DB;
 using System;
 
-namespace RevitUtils.Transactions
+namespace duHast.RevitUtils.Transactions
 {
     public static class TransactionUtils
     {
@@ -35,7 +35,7 @@ namespace RevitUtils.Transactions
         /// <param name="transactionName">The name of the transaction.</param>
         /// <param name="actionInTranny">The action to execute in the transaction. ( can not accept any args )</param>
         /// <returns>True if the action was executed successfully, otherwise false. If an excption occurrs during the transaction, it will be rolled back.</returns>
-        public static bool inTransaction(Document doc, string transactionName, Func<bool> actionInTranny)
+        public static bool InTransaction(Document doc, string transactionName, Func<bool> actionInTranny)
         {
             try
             {

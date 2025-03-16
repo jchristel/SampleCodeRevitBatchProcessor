@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
-namespace RevitUtils.DesignSetAndOptions
+namespace duHast.RevitUtils.DesignSetAndOptions
 {
     public static class DesignSetAndOptionsUtils
     {

@@ -20,7 +20,7 @@
 //
 //
 //
-namespace RevitUtils.DesignSetAndOptions
+namespace duHast.RevitUtils.DesignSetAndOptions
 {
     public static class DesignSetAndOptionDefaultNames
     {

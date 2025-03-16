@@ -25,7 +25,7 @@ using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
 
-namespace RevitUtils.Categories
+namespace duHast.RevitUtils.Categories
 {
     public static class CategoryUtils
     {

@@ -70,7 +70,7 @@
     <Compile Include="Categories\CategoryUtils.cs" />
     <Compile Include="DesignSetAndOptions\DesignSetAndOptionDefaultNames.cs" />
     <Compile Include="DesignSetAndOptions\DesignSetAndOptionsUtils.cs" />
-    <Compile Include="Families\Families.cs" />
+    <Compile Include="Families\FamilyUtils.cs" />
     <Compile Include="Parameters\ParameterGetUtils.cs" />
     <Compile Include="Parameters\ParameterSetUtils.cs" />
     <Compile Include="Parameters\ParaUtils.cs" />

@@ -24,10 +24,9 @@
 using System;
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
-using duHast.RevitUtils;
 using duHast.RevitUtils.Parameters;
 
-namespace RevitUtils
+namespace duHast.RevitUtils
 {
     /// <summary>
     /// A static class providing utility methods for shared parameters.

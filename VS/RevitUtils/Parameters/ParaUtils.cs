@@ -25,7 +25,7 @@ using Autodesk.Revit.DB;
 using duHast.RevitUtils.Parameters;
 using System.Collections.Generic;
 
-namespace RevitUtils.Parameters
+namespace duHast.RevitUtils.Parameters
 {
     public static class ParaUtils
     {

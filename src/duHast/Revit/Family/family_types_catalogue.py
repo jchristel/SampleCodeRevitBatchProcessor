@@ -36,9 +36,18 @@ The filters are applied to the family type names ( x in the above examples ). If
 #
 #
 
+
+import os
+import csv
+
 from duHast.Revit.Family.family_types_get_data_from_xml import get_type_data_via_XML_from_family_file
 from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
 from duHast.Utilities.Objects.result import Result
+
+from duHast.Utilities.files_io import get_file_name_without_ext, get_directory_path_from_file_path,file_exist
+from duHast.Utilities.files_csv import write_report_data_as_csv
+from duHast.Utilities.Objects.file_encoding_bom import BOMValue
+
 
 def type_name_passes_filters(fam_type, filters):
 
@@ -139,6 +148,51 @@ def pass_fam_types_through_filters(fam_type_manager, filters):
     return return_value
 
 
+def write_catalogue_file_to_csv(catalogue_file_data, family_file_path, header, override_existing = False):
+    """
+    Write the catalogue file to disk.
+
+    :param catalogue_file_data: The catalogue file data to write to disk.
+    :type catalogue_file_data: list(list(str))
+    :param family_file_path: The path to the family file.
+    :type family_file_path: str
+    :param override_existing: If True, the existing catalogue file will be overwritten. If False, no catalogue file will be exported.
+    :type override_existing: bool
+
+    :return: The result of the write operation.
+    :rtype: Result
+    """
+
+    return_value = Result()
+
+    try:
+        # build the catalogue file path
+        catalogue_file_directory = get_directory_path_from_file_path( family_file_path)
+        catalogue_file_path_name = "{}.txt".format(get_file_name_without_ext( family_file_path))
+        catalogue_file_full_path = os.path.join(catalogue_file_directory, catalogue_file_path_name)
+
+        # check if the file already exists
+        if file_exist(catalogue_file_full_path) and not override_existing:
+            return_value.update_sep(False, "Catalogue file already exists and override_existing is False.")
+            return return_value
+        
+        # write the catalogue file to disk
+        write_result = write_report_data_as_csv(
+            file_name=catalogue_file_full_path,
+            header=header, 
+            data= catalogue_file_data, 
+            bom=BOMValue.UTF_16_LITTLE_ENDIAN, 
+            quoting=csv.QUOTE_MINIMAL
+        )
+
+        return_value.update(write_result)
+        
+    except Exception as e:
+        return_value.update_sep(False, "An exception occurred when trying to write catalogue file to disk: {}".format(e))
+
+    return return_value
+
+
 def export_catalogue_file(doc, file_path = None, filters = None, override_existing = False):
     """
     Export the family types catalogue file.
@@ -221,7 +275,11 @@ def export_catalogue_file(doc, file_path = None, filters = None, override_existi
                 # if not get out
                 return_value.update_sep(False, "Failed to pass family types through filters: {}".format(fam_type_manager_filter_result.message))
                 return return_value
-            
+        
+
+        # get list of parameters to export ( remove any type driven parameters governed by a formula)
+
+
 
         # export the catalogue file       
         catalogue_file_data = fam_type_manager.get_catalogue_file_data()
@@ -231,8 +289,29 @@ def export_catalogue_file(doc, file_path = None, filters = None, override_existi
             return_value.update_sep(False, "Failed to get the catalogue file data.")
             return return_value
 
+        # build the header
+        catalogue_file_header = fam_type_manager.get_catalogue_file_header_row()
+
+        # check if header is valid
+        if catalogue_file_header is None or len(catalogue_file_header) == 0:
+            return_value.update_sep(False, "Failed to get the catalogue file header.")
+            return return_value
+
         # write the catalogue file to file
-    
+        write_catalogue_file_result = write_catalogue_file_to_csv(
+            catalogue_file_data=catalogue_file_data, 
+            header=catalogue_file_header,
+            family_file_path=file_path, 
+            override_existing=override_existing
+        )
+
+        # check if the write was successful
+        if not write_catalogue_file_result.success:
+            return_value.update_sep(False, "Failed to write the catalogue file to file: {}".format(write_catalogue_file_result.message))
+            return return_value
+
+        return_value.update_sep(True, "Catalogue file successfully exported to: {}".format(write_catalogue_file_result.message))
+
     except Exception as e:
         return_value.update_sep(False, str(e))
 

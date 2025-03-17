@@ -397,3 +397,39 @@ def filter_parameters_by_formula_driven(parameters, keep_if_formulae_driven):
         elif not parameter.IsDeterminedByFormula and not keep_if_formulae_driven:
             return_list.append(parameter)
     return return_list
+
+
+def get_family_type_parameters(doc):
+    """
+    Get the type parameters of the family.
+
+    :param doc: The family document
+    :type doc: Document
+
+    :return:
+       List of type parameters in the family document.
+       if an exception occurred or the document is not a family document, None is returned.
+
+    :rtype: :class:`.Result`
+    """
+
+    type_parameters = []
+
+    # check if this is a family document
+    if not doc.IsFamilyDocument:
+        return None
+    
+    # Assume 'doc' is your current Document object
+    family_manager = doc.FamilyManager
+
+    try:
+        # Iterate over all parameters in the family and get the type parameters
+        for parameter in family_manager.Parameters:
+            # Check if it's a type parameter and has a formula
+            if not parameter.IsInstance:
+                type_parameters.append(parameter)
+        
+    except:
+        return None
+
+    return type_parameters

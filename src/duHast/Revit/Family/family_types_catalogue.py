@@ -41,9 +41,10 @@ import os
 import csv
 
 from duHast.Revit.Family.family_types_get_data_from_xml import get_type_data_via_XML_from_family_file
+from duHast.Revit.Family.family_parameter_utils import  get_family_type_parameters,  filter_parameters_by_formula_driven
 from duHast.Revit.Family.Data.Objects.family_type_data_storage_manager import FamilyTypeDataStorageManager
-from duHast.Utilities.Objects.result import Result
 
+from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.files_io import get_file_name_without_ext, get_directory_path_from_file_path,file_exist
 from duHast.Utilities.files_csv import write_report_data_as_csv
 from duHast.Utilities.Objects.file_encoding_bom import BOMValue
@@ -123,7 +124,6 @@ def pass_fam_types_through_filters(fam_type_manager, filters):
 
             # get the filter function
             filter_func = filter_instance[0]
-            filter_value = filter_instance[1]
 
             # check if the filter function is callable
             if not callable(filter_func):
@@ -144,6 +144,63 @@ def pass_fam_types_through_filters(fam_type_manager, filters):
 
     except Exception as e:
         return_value.update_sep(False, "Failed to pass family types through filters: {}".format(str(e)))
+
+    return return_value
+
+
+def get_type_parameter_order(doc, parameter_order):
+    """
+    Get the type parameter order for the catalogue file.
+    
+    :param doc: The family document to extract the type data from.
+    :type doc: rdb.Family
+    
+    :param parameter_order: The order of the parameters in the catalogue file. If None, the parameters will be ordered alphabetically.
+    :type parameter_order: list(str)
+    
+    :return: The type parameter order for the catalogue file with the result class .result property
+    :rtype: Result
+    """
+
+    return_value = Result()
+    
+    try:
+        # get list of parameters to export ( remove any type driven parameters governed by a formula)
+        # get type parameters
+        type_parameters = get_family_type_parameters(doc)
+
+        # check if the type parameters are valid
+        if type_parameters is None or len(type_parameters) == 0:
+            return_value.update_sep(False, "Failed to get the family type parameters.")
+            return return_value
+        
+        # filter out formula driven parameters
+        type_parameters_filtered = filter_parameters_by_formula_driven(type_parameters, False)
+
+        # check if the filtered type parameters are valid
+        if type_parameters_filtered is None or len(type_parameters_filtered) == 0:
+            return_value.update_sep(False, "Filter formula driven parameters removed all parameters from the set.")
+            return return_value
+        
+        # get the parameter order
+        if parameter_order is None:
+            return_value.result = sorted([param.Definition.Name for param in type_parameters_filtered])
+        else:
+            family_parameter_names_sorted =  sorted([param.Definition.Name for param in type_parameters_filtered])
+            for para_name in parameter_order:
+                if para_name not in family_parameter_names_sorted:
+                    return_value.append_message("Parameter {} not found in type parameters.".format(para_name))
+                else:
+                    return_value.result.append(para_name)
+                    # remove that parameter from the list
+                    family_parameter_names_sorted.remove(para_name)
+            # check if any parameters are left
+            if len(family_parameter_names_sorted) > 0:
+                # add the rest of the parameters
+                return_value.result = return_value.result + family_parameter_names_sorted
+
+    except Exception as e:
+        return_value.update_sep(False, "Failed to setup parameter order: {}".format(str(e)))
 
     return return_value
 
@@ -193,7 +250,7 @@ def write_catalogue_file_to_csv(catalogue_file_data, family_file_path, header, o
     return return_value
 
 
-def export_catalogue_file(doc, file_path = None, filters = None, override_existing = False):
+def export_catalogue_file(doc, file_path = None, filters = None, parameter_order = None, override_existing = False):
     """
     Export the family types catalogue file.
 
@@ -212,6 +269,7 @@ def export_catalogue_file(doc, file_path = None, filters = None, override_existi
                 filters = [[lambda x, y: x.startswith(y), "A"], [lambda x, y: x.endswith(y), "B"]]
 
     :type filters: list(function(value1,value2))
+    :param parameter_order: The order of the parameters in the catalogue file. If None, the parameters will be ordered alphabetically.
     :param override_existing: If True, the existing catalogue file will be overwritten. If False, no catalogue file will be exported.
     """
 
@@ -277,12 +335,19 @@ def export_catalogue_file(doc, file_path = None, filters = None, override_existi
                 return return_value
         
 
-        # get list of parameters to export ( remove any type driven parameters governed by a formula)
-
-
+        # get the parameter order for the catalogue file
+        # this will also remove any type parameters that are formula driven
+        type_parameter_order_result = get_type_parameter_order(doc, parameter_order)
+    
+        if not type_parameter_order_result.status:
+            return_value.update_sep(False, "Failed to get the type parameter order: {}".format(type_parameter_order_result.message))
+            return return_value
+        
+        # get the type parameter order
+        type_parameter_order = type_parameter_order_result.result
 
         # export the catalogue file       
-        catalogue_file_data = fam_type_manager.get_catalogue_file_data()
+        catalogue_file_data = fam_type_manager.get_catalogue_file_data(type_parameter_order)
 
         # check if the catalogue file data is valid
         if catalogue_file_data is None or len(catalogue_file_data) == 0:
@@ -290,7 +355,7 @@ def export_catalogue_file(doc, file_path = None, filters = None, override_existi
             return return_value
 
         # build the header
-        catalogue_file_header = fam_type_manager.get_catalogue_file_header_row()
+        catalogue_file_header = fam_type_manager.get_catalogue_file_header_row(type_parameter_order)
 
         # check if header is valid
         if catalogue_file_header is None or len(catalogue_file_header) == 0:

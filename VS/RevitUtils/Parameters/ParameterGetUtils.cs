@@ -137,6 +137,48 @@ namespace duHast.RevitUtils.Parameters
 
         #region doubles
 
+
+        /// <summary>
+        /// Processes a double value from a string with units and converts it to metric if required
+        /// </summary>
+        /// <param name="paraValueAsStringgWithUnits">The parameter as string value with units/param>
+        /// <param name="Units">the metric units reference list</param>
+        /// <param name="conversionFactor">Conversion factor if not metric</param>
+        /// <returns></returns>
+        private static double? ProcessDoubleValueFromString(string paraValueAsStringgWithUnits, List<string>Units, double conversionFactor)
+        {
+            double? parameterValue = null;
+            //separate the value from the units
+            string[] valueAndUnits = paraValueAsStringgWithUnits.Split(' ');
+            // check if the value has units
+            if (valueAndUnits.Length > 1)
+            {
+                //get the value
+                string value = valueAndUnits[0];
+                //get the units
+                string units = valueAndUnits[1];
+                // check if the units are metric: if not convert them
+                if (Units.Contains(units))
+                {
+                    //convert the value to metric
+                    double valueInMetric = double.Parse(value);
+                    //return the value with the units
+                    parameterValue = valueInMetric;
+                }
+                else
+                {
+                    //if the value is not in metric referecnce list convert it
+                    parameterValue = double.Parse(value)*conversionFactor;
+                }
+            }
+            else
+            {
+                //if the value has no units, return it as is
+                parameterValue = double.Parse(valueAndUnits[0]);
+            }
+            return parameterValue;
+        }
+
         /// <summary>
         /// return the value of a parameter as a double, converted to metric if applicable
         /// </summary>
@@ -151,15 +193,24 @@ namespace duHast.RevitUtils.Parameters
                 var dataType = para.Definition.GetDataType();
                 if (dataType == SpecTypeId.Length)
                 {
-                    parameterValue = UnitConversion.ConvertImperialFeetToMetricMm(para.AsDouble());
+                    //get the value as a string with units
+                    string paraValueAsStringgWithUnits = para.AsValueString();
+                    //convert the value to metric if required
+                    parameterValue = ProcessDoubleValueFromString(paraValueAsStringgWithUnits, new List<string> { "mm", "cm", "dm", "m" }, 304.8);
                 }
                 else if (dataType == SpecTypeId.Area)
                 {
-                    parameterValue = UnitConversion.ConvertImperialSquareFeetToMetricSquareMetre(para.AsDouble());
+                    //get the value as a string with units
+                    string paraValueAsStringgWithUnits = para.AsValueString();
+                    //convert the value to metric if required
+                    parameterValue = ProcessDoubleValueFromString(paraValueAsStringgWithUnits, new List<string> { "mm²", "cm²", "m²","hectare"}, 0.092903);
                 }
                 else if (dataType == SpecTypeId.Volume)
                 {
-                    parameterValue = UnitConversion.ConvertImperialCubicFeetToMetricCubicMetre(para.AsDouble());
+                    //get the value as a string with units
+                    string paraValueAsStringgWithUnits = para.AsValueString();
+                    //convert the value to metric if required
+                    parameterValue = ProcessDoubleValueFromString(paraValueAsStringgWithUnits, new List<string> { "mm³", "cm³", "m³", "L" }, 0.02831685);
                 }
                 else
                 {

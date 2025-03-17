@@ -23,6 +23,7 @@
 
 
 using duHast.PushIt.Utilities;
+using duHast.Utils.WPF.Commands;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,6 +31,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -77,6 +79,8 @@ namespace duHast.PushIt.ViewModels
         private readonly Commands.UpdateFromChangedCategoriesCommand _updateFromChangedCategoriesCommand;
         //command to update all rooms in revit from data model
         private readonly Commands.RaiseRevitEventCommand _updateAllRoomsCommand;
+        //command to update the view model if the column order changes
+        public RelayCommand ColumnOrderChangedCommand { get; private set; }
 
         //property to check if there are any errors
         public bool HasErrors => _errorsViewModel.HasErrors;
@@ -338,6 +342,35 @@ namespace duHast.PushIt.ViewModels
 
         #endregion Commands
 
+        #region column order
+
+        //property to store the column order
+        private IEnumerable<string> _columnOrder;
+
+        //property to expose the column order
+        public IEnumerable<string> ColumnOrder
+        {
+            get => _columnOrder;
+            set
+            {
+                _columnOrder = value;
+            }
+        }
+
+        /// <summary>
+        /// Relay command target for column order changed event
+        /// </summary>
+        private void OnColumnOrderChanged(object parameter)
+        {
+            if (parameter is Tuple<IEnumerable<string>, DataView> data && data.Item2 is DataView dataView)
+            {
+                // update the column order
+                ColumnOrder = data.Item1;
+            }
+        }
+
+        #endregion column order
+
         /// <summary>
         /// Update the rooms in the view model by creating a data table from the rooms in the data model, 
         /// updating the default view of the data table, and updating the column filter list.
@@ -386,24 +419,68 @@ namespace duHast.PushIt.ViewModels
             // Set up the data table
             DataTable dataTable = new DataTable();
 
-            //add the default id column
-            dataTable.Columns.Add("Id");
-
-            // Add columns to the data table
-            foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
+            // Check if the column order is not null and has any elements
+            // if so add columns to the data table in the order specified by the column order
+            if (ColumnOrder != null && ColumnOrder.Any())
             {
-                // Add a column per property
-                foreach (var prop in roomModelInstance.Properties)
+                // Add columns to the data table in the order specified by the column order
+                foreach (var column in ColumnOrder)
                 {
-                    // check if the column is meant to be displayed in the ui
-                    if (prop.ShowInUI) { dataTable.Columns.Add(prop.Name); }
+                    //check for default columns
+                    if (column == "Count")
+                    {
+                        dataTable.Columns.Add("Count");
+                        continue;
+                    }
+                    else if (column == "Id")
+                    {
+                        dataTable.Columns.Add("Id");
+                        continue;
+                    }
+                    else
+                    {
+                        // Add a column per property
+                        foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
+                        {
+                            // Add a column per property
+                            foreach (var prop in roomModelInstance.Properties)
+                            {
+                                // check if the column is meant to be displayed in the ui
+                                if (prop.ShowInUI && prop.Name == column) { 
+                                    dataTable.Columns.Add(prop.Name);
+                                    break;
+                                }
+                            }
+                            // Get out of the loop
+                            break;
+                        }
+                    }
                 }
-                // Get out of the loop
-                break;
+            }
+            else
+            {
+                //othrwise add columns in default order
+                //add the default id column
+                dataTable.Columns.Add("Id");
+
+                // Add columns to the data table
+                foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
+                {
+                    // Add a column per property
+                    foreach (var prop in roomModelInstance.Properties)
+                    {
+                        // check if the column is meant to be displayed in the ui
+                        if (prop.ShowInUI) { dataTable.Columns.Add(prop.Name); }
+                    }
+                    // Get out of the loop
+                    break;
+                }
+
+                // Add the count column
+                dataTable.Columns.Add("Count");
             }
 
-            // Add the count column
-            dataTable.Columns.Add("Count");
+            
 
             // Add the rows to the data table
             foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
@@ -411,17 +488,54 @@ namespace duHast.PushIt.ViewModels
                 // Add a row per room
                 DataRow row = dataTable.NewRow();
 
-                // add the id value
-                row["Id"] = roomModelInstance.Id.Value;
-
-                // add the property values
-                foreach (var prop in roomModelInstance.Properties)
+                //add properties to the row in order specified by the column order
+                if (ColumnOrder != null && ColumnOrder.Any())
                 {
-                    // check if the column is meant to be displayed in the ui
-                    if (prop.ShowInUI) { row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : ""; }
+                    // Add columns to the data table in the order specified by the column order
+                    foreach (var column in ColumnOrder)
+                    {
+                        if (column == "Count")
+                        {
+                            row["Count"] = roomModelInstance.MatchingRevitRooms.Count;
+                            continue;
+                        }
+                        else if (column == "Id")
+                        {
+                            row["Id"] = roomModelInstance.Id.Value;
+                            continue;
+                        }
+                        else
+                        {
+                            // Add the property values
+                            foreach (var prop in roomModelInstance.Properties)
+                            {
+                                // check if the column is meant to be displayed in the ui
+                                if (prop.ShowInUI && prop.Name == column) { 
+                                    row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : "";
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    // Add the row to the data table
+                    dataTable.Rows.Add(row);
                 }
-                row["Count"] = roomModelInstance.MatchingRevitRooms.Count;
-                dataTable.Rows.Add(row);
+                else
+                {
+                    //add data to the row in default order
+                    // add the id value
+                    row["Id"] = roomModelInstance.Id.Value;
+
+                    // add the property values
+                    foreach (var prop in roomModelInstance.Properties)
+                    {
+                        // check if the column is meant to be displayed in the ui
+                        if (prop.ShowInUI) { row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : ""; }
+                    }
+                    row["Count"] = roomModelInstance.MatchingRevitRooms.Count;
+                    // Add the row to the data table
+                    dataTable.Rows.Add(row);
+                }
             }
 
             return dataTable;
@@ -682,6 +796,9 @@ namespace duHast.PushIt.ViewModels
             _supportedCategories = new ObservableCollection<SupportedCategoryViewModel>();
             _supportedCategoriesView = CollectionViewSource.GetDefaultView(_supportedCategories);
 
+            //initialize column order
+            _columnOrder = new List<string>();
+
             //set the data file path
             _dataFilePath = _revitDataModel.Settings.DataPath;
 
@@ -714,6 +831,8 @@ namespace duHast.PushIt.ViewModels
             _updateFromChangedCategoriesCommand = new Commands.UpdateFromChangedCategoriesCommand(this, _revitDataModel, _messageStore, () => { _eventManager.UpdateAfterSupportedCategoryChangeEventRaise(); });
             //update all rooms in revit from data model
             _updateAllRoomsCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.UpdateAllRoomsInRevitEventRaise(); });
+            // create the column order changed command
+            ColumnOrderChangedCommand = new RelayCommand(OnColumnOrderChanged);
         }
     }
 }

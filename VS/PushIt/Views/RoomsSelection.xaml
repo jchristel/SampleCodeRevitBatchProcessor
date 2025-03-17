@@ -42,6 +42,15 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsFilterApplied}" Value="True">
+                    <Setter Property="BorderBrush" Value="Red"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
         <!--boolean visibility converter-->
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -137,7 +146,8 @@
                             SelectedIndex="{Binding SelectedIndex}"
                             ColumnWidth="*"
                             RowHeight="23"
-                            HorizontalAlignment="Stretch">
+                            HorizontalAlignment="Stretch"
+                            ColumnReordered="RoomsDataGrid_ColumnReordered">
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Setter Property="Background" Value="Red" />

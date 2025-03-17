@@ -236,8 +236,11 @@ namespace duHast.PushIt.Utilities
             Autodesk.Revit.DB.Document doc = uiapp.ActiveUIDocument.Document;
             try
             {
-                //clear out all rooms
+                //clear out all rooms from the data model
                 _revitDataModel.ClearRooms();
+
+                // reset the column order in the view model in case it was changed
+                _roomsSelectionViewModel.ColumnOrder = new List<string>();
 
                 // reload data from the file path
                 _revitDataModel.LoadRoomsData();

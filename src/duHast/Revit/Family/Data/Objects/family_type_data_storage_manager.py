@@ -88,6 +88,7 @@ class FamilyTypeDataStorageManager(Base):
 
         return len(self.family_type_data_storage) > 0
 
+
     def add_family_type_data_storage(self, family_type_data_storage):
         """
         add family type data storage to the manager.
@@ -183,13 +184,10 @@ class FamilyTypeDataStorageManager(Base):
 
         # loop over type data storage instances and get the header row based on the first instance
         for family_type_data_storage in self.family_type_data_storage:
-            header_row.append(
-                family_type_data_storage.get_catalogue_file_header_row(parameter_names)
-            )
+            header_row = family_type_data_storage.get_catalogue_file_header_row(parameter_names)
             break
 
         return header_row
-
 
 
     def get_report_data(self, project_name=None):
@@ -209,6 +207,7 @@ class FamilyTypeDataStorageManager(Base):
             # report_data.append(family_type_data_storage.get_report_data())
 
         return report_data
+
 
     def get_difference(self, other):
         """
@@ -278,6 +277,7 @@ class FamilyTypeDataStorageManager(Base):
 
         return difference
 
+
     def get_differences_report_header_row(self):
         """
         get the header row for the differences report
@@ -296,6 +296,7 @@ class FamilyTypeDataStorageManager(Base):
             "Parameter exists in library",
             "Parameter difference (Project -> Library)",
         ]
+
 
     def remove_ghost_types(self, type_names):
         """

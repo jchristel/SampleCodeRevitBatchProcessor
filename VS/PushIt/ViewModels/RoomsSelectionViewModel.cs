@@ -67,8 +67,12 @@ namespace duHast.PushIt.ViewModels
 
         //command to raise an event to refresh the gui
         private readonly Commands.RaiseRevitEventCommand _raiseRefreshGUICommand;
+
         //command to push a single room to revit
-        private readonly Commands.PushSingleRoomDataToRevitCommand _raisePushSingleRoomCommand;
+        //private readonly Commands.PushSingleRoomDataToRevitCommand _raisePushSingleRoomCommand;
+        private readonly Commands.PushSingleRoomInRevitAsyncCommand _raisePushSingleRoomCommand;
+
+
         //command to raise an event to reload data from file path
         private readonly Commands.ReloadDataCommand _raiseReloadDataCommand;
         //command to highlight a room in Revit
@@ -819,8 +823,17 @@ namespace duHast.PushIt.ViewModels
             // set up commands
             // refresh gui with data from model
             _raiseRefreshGUICommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.RefreshUIDataEventRaise(); });
+            
+            
             // push single room to revit
-            _raisePushSingleRoomCommand = new Commands.PushSingleRoomDataToRevitCommand(this, _revitDataModel, _messageStore, () => { _eventManager.PushItSingleEventRaise(); });
+            //_raisePushSingleRoomCommand = new Commands.PushSingleRoomDataToRevitCommand(this, _revitDataModel, _messageStore, () => { _eventManager.PushItSingleEventRaise(); });
+            _raisePushSingleRoomCommand = new Commands.PushSingleRoomInRevitAsyncCommand(
+                roomsSelectionViewModel: this,
+                revitDataModel: _revitDataModel,
+                messageStore: _messageStore
+             );
+            
+            
             //load data from file path
             _raiseReloadDataCommand = new Commands.ReloadDataCommand(this, _revitDataModel, _messageStore, () => { _eventManager.ReloadDataEventRaise(); });
             //highlight room in Revit

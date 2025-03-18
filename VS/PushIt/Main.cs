@@ -38,6 +38,7 @@ using duHast.PushIt.Utilities;
 using duHast.PushIt.RevitActions;
 using System.IO;
 using System.Reflection;
+using Revit.Async;
 
 
 namespace duHast.PushIt
@@ -60,6 +61,10 @@ namespace duHast.PushIt
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+
+            // Revit Async version 2.x.x
+            RevitTask.Initialize(commandData.Application);
+
             //set up stores
             _navigationStore = new duHast.Utils.WPF.Stores.NavigationStore();
             _messageStore = new duHast.Utils.WPF.Stores.MessageStore();

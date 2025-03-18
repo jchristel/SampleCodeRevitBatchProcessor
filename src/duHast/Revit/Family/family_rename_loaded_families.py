@@ -38,6 +38,7 @@ from duHast.Revit.Family import family_rename_files_utils as rFamRenameUtils
 from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict
 from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities.Objects import result as res
+from duHast.Revit.Family.Data.Objects.family_type_data_processor_defaults import NESTING_SEPARATOR
 
 # import Autodesk Revit DataBase namespace
 from Autodesk.Revit.DB import Transaction
@@ -83,8 +84,10 @@ def _rename_loaded_families(doc, rename_directives, families, progress_callback=
         if progress_callback != None:
             progress_callback.update(callback_counter, len(rename_directives))
 
+        fam_key = "{}{}{}".format(rename_directive.name,NESTING_SEPARATOR,rename_directive.category)
+
         # check if match for rename directive
-        if rename_directive.name + rename_directive.category in families:
+        if fam_key in families:
 
             # set counter indicating that at least one family was renamed
             rename_match_counter = rename_match_counter + 1
@@ -93,7 +96,7 @@ def _rename_loaded_families(doc, rename_directives, families, progress_callback=
             def action():
                 action_return_value = res.Result()
                 try:
-                    family = families[rename_directive.name + rename_directive.category]
+                    family = families[fam_key]
                     family.Name = rename_directive.new_name
                     action_return_value.update_sep(
                         True,
@@ -126,8 +129,8 @@ def _rename_loaded_families(doc, rename_directives, families, progress_callback=
         else:
             # flag no match found
             return_value.append_message(
-                "No match for rename directive for of name: {} and category: {} found.".format(
-                    rename_directive.name, rename_directive.category
+                "No match for rename directive for of name: {} and category: {} ({})found.".format(
+                    rename_directive.name, rename_directive.category, rename_directive.name + NESTING_SEPARATOR + rename_directive.category
                 )
             )
 

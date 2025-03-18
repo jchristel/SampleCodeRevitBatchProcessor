@@ -237,7 +237,8 @@ def write_catalogue_file_to_csv(catalogue_file_data, family_file_path, header, o
         write_result = write_report_data_as_csv(
             file_name=catalogue_file_full_path,
             header=header, 
-            data= catalogue_file_data, 
+            data= catalogue_file_data,
+            encoding="utf-16-le",
             bom=BOMValue.UTF_16_LITTLE_ENDIAN, 
             quoting=csv.QUOTE_MINIMAL
         )
@@ -283,7 +284,7 @@ def export_catalogue_file(doc, file_path = None, filters = None, parameter_order
             return return_value
 
         # get the family name
-        family_name = doc.Name
+        family_name = doc.Title
 
         # remove the file extension
         if family_name.lower().endswith(".rfa"):
@@ -292,17 +293,15 @@ def export_catalogue_file(doc, file_path = None, filters = None, parameter_order
         # get the family path
         family_path = doc.PathName
 
-        # get the root path (same as the family name)
-        root_path = doc.Name
-
-        # get the root category path (same as the family category)
-        root_category_path = doc.FamilyCategory.Name
+        # check if the file path is provided
+        if file_path:
+            file_path= family_path
 
         # get the family type data
-        family_type_data_result = get_type_data_via_XML_from_family_file(doc, family_name, family_path, root_path, root_category_path)
+        family_type_data_result = get_type_data_via_XML_from_family_file(doc.Application, family_name, family_path)
 
         # check if the family type data was successfully extracted
-        if not family_type_data_result.success:
+        if not family_type_data_result.status:
             return_value.update_sep(False, "Failed to get the family type data: {}".format(family_type_data_result.message))
             return return_value
         
@@ -362,16 +361,21 @@ def export_catalogue_file(doc, file_path = None, filters = None, parameter_order
             return_value.update_sep(False, "Failed to get the catalogue file header.")
             return return_value
 
+        print("Catalogue file data: {}".format(catalogue_file_data))
+        print("Catalogue file header: {}".format(catalogue_file_header))
+        print("Catalogue file path: {}".format(family_path))
+        print("Override existing: {}".format(override_existing))
+
         # write the catalogue file to file
         write_catalogue_file_result = write_catalogue_file_to_csv(
             catalogue_file_data=catalogue_file_data, 
             header=catalogue_file_header,
-            family_file_path=file_path, 
+            family_file_path= family_path, 
             override_existing=override_existing
         )
 
         # check if the write was successful
-        if not write_catalogue_file_result.success:
+        if not write_catalogue_file_result.status:
             return_value.update_sep(False, "Failed to write the catalogue file to file: {}".format(write_catalogue_file_result.message))
             return return_value
 

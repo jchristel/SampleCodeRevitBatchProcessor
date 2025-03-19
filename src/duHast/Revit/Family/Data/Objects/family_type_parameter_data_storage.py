@@ -238,4 +238,20 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
         :rtype: str
         """
 
-        return "{}##{}##{}".format(self.name, self.type_of_parameter, self.units)
+        type_name_revised_for_file = self.type_of_parameter.upper()
+
+        # some type names change to more generic names for the catalogue file
+        if self.type_of_parameter == "Text" or self.type_of_parameter == "Yes/No" or self.type_of_parameter == "Material" or self.type_of_parameter == "Image" or self.type_of_parameter == "FamilyType":
+            type_name_revised_for_file = "OTHER"
+
+        # some unit names change to more generic names for the catalogue file
+        unit_names_for_catalogue_file = self.units.upper()
+        if self.units == "unitless":
+            unit_names_for_catalogue_file =""
+        elif self.units == "mm":
+            unit_names_for_catalogue_file = "MILLIMETERS"
+        elif self.units == "m":
+            unit_names_for_catalogue_file = "METERS"
+
+
+        return "{}##{}##{}".format(self.name, type_name_revised_for_file, unit_names_for_catalogue_file)

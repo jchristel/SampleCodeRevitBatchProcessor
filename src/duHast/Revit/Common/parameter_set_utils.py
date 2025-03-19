@@ -43,6 +43,44 @@ from duHast.Revit.Common import transaction as rTran
 # ----------------------------------------parameters value setters -----------------------------------------------
 
 
+def set_parameter_value_by_name(
+    element,
+    parameter_name,  # type: str
+    parameter_value_string,
+    in_transaction=rTran.in_transaction,
+):
+    """
+    Sets the parameter value by trying to convert the past in string representing the value into the appropriate value type.
+
+    Changing a parameter value requires this action to run inside a transaction.
+
+    :param element: Element of which the parameter value is to be set.
+    :type element: Autodesk.Revit.DB.Element
+    :param parameter_name: The name of the parameter of which the value is to be set.
+    :type parameter_name: str
+    :param parameter_value_string: The new parameter value.
+    :type parameter_value_string: str
+    :param in_transaction: The transaction wrapper function to be used.
+    :type in_transaction: func(Autodesk.Revit.DB.Transaction, action(), Autodesk.Revit.DB.Document)
+
+    :raise: Any exception will need to be managed by the function caller.
+
+    """
+    return_value = res.Result()
+
+    # get the parameter by name
+    para =  element.LookupParameter(parameter_name)
+
+    # check if parameter exists
+    if para ==None:
+        return_value.update_sep(False, "Parameter not found")
+        return return_value
+    
+    return_value = set_parameter_value(para, parameter_value_string, element.Document, in_transaction)
+
+    return return_value
+
+
 def set_parameter_value(
     para,
     value_as_string,  # type: str

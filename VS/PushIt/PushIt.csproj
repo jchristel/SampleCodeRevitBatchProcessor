@@ -126,12 +126,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\HighlightRoomsInRevitAsyncCommand.cs" />
+    <Compile Include="Commands\PushAllRoomsInRevitAsyncCommand.cs" />
     <Compile Include="Commands\PushSingleRoomInRevitAsyncCommand.cs" />
+    <Compile Include="Commands\RefreshUIFromRevitModelAsyncCommand.cs" />
+    <Compile Include="Commands\ReloadDataFromFileAsyncCommand.cs" />
+    <Compile Include="Commands\UpdateFromChangedCategoriesAsyncCommand.cs" />
     <Compile Include="Commands\UpdateFromChangedCategoriesCommand.cs" />
     <Compile Include="Commands\HighlightRoomsInRevitCommand.cs" />
     <Compile Include="Commands\PushSingleRoomDataToRevitCommand.cs" />
     <Compile Include="Commands\RaiseRevitEventCommand.cs" />
     <Compile Include="Commands\ReloadDataCommand.cs" />
+    <Compile Include="Commands\WipeStaleDataRevitAsyncCommand.cs" />
     <Compile Include="Exceptions\CategoryConflictException.cs" />
     <Compile Include="Exceptions\RoomConflictException.cs" />
     <Compile Include="Main.cs" />

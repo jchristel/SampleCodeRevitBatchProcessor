@@ -22,22 +22,20 @@
 //
 
 
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
 using duHast.PushIt.RevitActions;
 using duHast.PushIt.Utilities;
+using duHast.PushIt.ViewModels;
 using duHast.Utils.WPF.Stores;
 using Revit.Async;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-
 
 namespace duHast.PushIt.Commands
 {
-    public class PushSingleRoomInRevitAsyncCommand: Utils.WPF.Commands.CommandBase
+    public class UpdateFromChangedCategoriesAsyncCommand : Utils.WPF.Commands.CommandBase
     {
+
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitDataModel _revitDataModel;
@@ -57,56 +55,70 @@ namespace duHast.PushIt.Commands
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
-                            //check if there is a room to push
-                            if (_roomsSelectionViewModel.SelectedRoom == null)
+                            // before invoking the action, check if the category selection is changed in compared to the settings stored in the data model
+                            // if so, update the data model and invoke the action
+                            //otherwise pop message to user that no changes were made
+
+                            // get the current category selection from the view model
+                            List<string> supportedCategoryNamesFromViewModel = new List<string>();
+                            var selectedCategories = _roomsSelectionViewModel.SupportedCategories;
+                            foreach (SupportedCategoryViewModel category in selectedCategories)
                             {
-                                return ("No room selected in the user interface to push to Revit.", Utils.WPF.Stores.MessageTypes.Error);
+                                if (category.IsSelected)
+                                {
+                                    supportedCategoryNamesFromViewModel.Add(category.CategoryName);
+                                }
                             }
 
-                            //check what is selected in the UI
-                            UIDocument uidoc = app.ActiveUIDocument;
-
-                            // get the selected element ids
-                            List<ElementId> selectedElementIds = uidoc.Selection.GetElementIds().ToList();
-                            // check quantity of selected elements
-                            if (selectedElementIds.Count == 0)
+                            //check if any categories are selected
+                            if (supportedCategoryNamesFromViewModel.Count == 0)
                             {
-                                return ("No room selected in the Revit model to push to.", Utils.WPF.Stores.MessageTypes.Error);
-                            }
-                            else if (selectedElementIds.Count > 1)
-                            {
-                                return ("More than one room selected in the Revit model to push to.", Utils.WPF.Stores.MessageTypes.Error);
+                                return("Please select at least one category to proceed.", Utils.WPF.Stores.MessageTypes.Error);
                             }
 
-                            //get the selected Element from Revit
-                            Element selectedElement = doc.GetElement(selectedElementIds.First());
-                            // check if the selected element is of a supported category (or has category to start with)
-                            if (selectedElement.Category == null || !_revitDataModel.Settings.SupportedCategories.Contains(selectedElement.Category.Name))
+                            // compare the category selection from the view model with the one stored in the data model
+                            bool needUpdate = false;
+
+                            // if the count of the categories is different, we need to update
+                            if (supportedCategoryNamesFromViewModel.Count != _revitDataModel.Settings.SupportedCategories.Count)
                             {
-                                string supportedCategories = string.Join(", ", _revitDataModel.Settings.SupportedCategories);
-                                return ($"The selected element is not of a supported category. Supported categories are: {supportedCategories}.", Utils.WPF.Stores.MessageTypes.Error);
+                                needUpdate = true;
+                            }
+                            else
+                            {
+                                // if the count is the same, check if the category names are the same
+                                foreach (string categoryName in supportedCategoryNamesFromViewModel)
+                                {
+                                    // if a category name is not in the list of supported categories, we need to update
+                                    if (!_revitDataModel.Settings.SupportedCategories.Contains(categoryName))
+                                    {
+                                        needUpdate = true;
+                                        break;
+                                    }
+                                }
                             }
 
-                            // Execute the action to push a single room to the Revit model
-                            PushSingleRoomDataToRevit action = new PushSingleRoomDataToRevit(
-                                revitModel: _revitDataModel,
-                                roomToPush: _roomsSelectionViewModel.SelectedRoom,
-                                pushTarget: selectedElement,
-                                roomsSelectionViewModel: _roomsSelectionViewModel
-                            );
+                            // if no update is needed, pop message to user and return
+                            if (!needUpdate)
+                            {
+                                return("No changes in category selection detected.", Utils.WPF.Stores.MessageTypes.Information);
+                            }
 
+                            //update the categories in the settings
+                            _revitDataModel.Settings.SupportedCategories = supportedCategoryNamesFromViewModel;
+
+                            // Execute the action to refresh the room data with the Revit data
+                            RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
                             action.Execute(doc);
 
                         }
                         catch (Exception ex)
                         {
-                            return ($"An exception occurred within the external event handler update after push single room event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                            return ($"An exception occurred within the external event handler update after changed categories event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                         }
-                        return ("all good", MessageTypes.Information);
+                        // return success message
+                        return ("Changed categories", Utils.WPF.Stores.MessageTypes.Information);
                     });
-
-                //activate the ui
-                _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = false;
 
                 if (messageType == MessageTypes.Information)
                 {
@@ -128,6 +140,11 @@ namespace duHast.PushIt.Commands
             }
         }
 
+        /// <summary>
+        /// this command is always available
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         public override bool CanExecute(object parameter)
         {
             // check if IsWaitingForRevitCommandToFinish is true
@@ -135,32 +152,25 @@ namespace duHast.PushIt.Commands
             {
                 return false;
             }
-
-            // if safety off mode enabled this command is always available
-            if (_roomsSelectionViewModel.SafetyOffMode) { return true; }
-
-            // check if IsMatchingRevitRoomsEmpty is true and call the base CanExecute method
-            return _roomsSelectionViewModel.IsMatchingRevitRoomsEmpty && base.CanExecute(parameter);
+            return true;
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // check if the property that changed is the one that we are interested in
-            if (e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsMatchingRevitRoomsEmpty) ||
-                e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsWaitingForRevitCommandToFinish))
+            if (e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsWaitingForRevitCommandToFinish))
             {
                 OnCanExecutedChanged();
             }
         }
 
-        public PushSingleRoomInRevitAsyncCommand(
-            ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
-            Models.RevitDataModel revitDataModel
-            )
+        public UpdateFromChangedCategoriesAsyncCommand(
+           ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
+           Models.RevitDataModel revitDataModel
+           )
         {
             _revitDataModel = revitDataModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;
-            _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }
 }

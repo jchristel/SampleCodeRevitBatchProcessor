@@ -69,18 +69,20 @@ namespace duHast.PushIt.ViewModels
         private readonly Commands.RaiseRevitEventCommand _raiseRefreshGUICommand;
 
         //command to push a single room to revit
-        //private readonly Commands.PushSingleRoomDataToRevitCommand _raisePushSingleRoomCommand;
         private readonly Commands.PushSingleRoomInRevitAsyncCommand _raisePushSingleRoomCommand;
 
 
         //command to raise an event to reload data from file path
-        private readonly Commands.ReloadDataCommand _raiseReloadDataCommand;
+        private readonly Commands.ReloadDataFromFileAsyncCommand _raiseReloadDataCommand;
+
+
         //command to highlight a room in Revit
-        private readonly Commands.HighlightRoomsInRevitCommand _highLightRoomCommand;
+        private readonly Commands.HighlightRoomsInRevitAsyncCommand _highLightRoomCommand;
+        
         //command to wipe stale rooms data
         private readonly Commands.RaiseRevitEventCommand _wipeStaleRoomsDataCommand;
         //command to update from changed categories
-        private readonly Commands.UpdateFromChangedCategoriesCommand _updateFromChangedCategoriesCommand;
+        private readonly Commands.UpdateFromChangedCategoriesAsyncCommand _updateFromChangedCategoriesCommand;
         //command to update all rooms in revit from data model
         private readonly Commands.RaiseRevitEventCommand _updateAllRoomsCommand;
         //command to update the view model if the column order changes
@@ -829,19 +831,20 @@ namespace duHast.PushIt.ViewModels
             //_raisePushSingleRoomCommand = new Commands.PushSingleRoomDataToRevitCommand(this, _revitDataModel, _messageStore, () => { _eventManager.PushItSingleEventRaise(); });
             _raisePushSingleRoomCommand = new Commands.PushSingleRoomInRevitAsyncCommand(
                 roomsSelectionViewModel: this,
-                revitDataModel: _revitDataModel,
-                messageStore: _messageStore
+                revitDataModel: _revitDataModel
              );
-            
-            
+
             //load data from file path
-            _raiseReloadDataCommand = new Commands.ReloadDataCommand(this, _revitDataModel, _messageStore, () => { _eventManager.ReloadDataEventRaise(); });
+            //_raiseReloadDataCommand = new Commands.ReloadDataCommand(this, _revitDataModel, _messageStore, () => { _eventManager.ReloadDataEventRaise(); });
+            _raiseReloadDataCommand = new Commands.ReloadDataFromFileAsyncCommand(this, _revitDataModel);
+            
             //highlight room in Revit
-            _highLightRoomCommand = new Commands.HighlightRoomsInRevitCommand(this, _revitDataModel, _messageStore, () => { _eventManager.HighlightSelectedRoomEventRaise(); });
+            _highLightRoomCommand = new Commands.HighlightRoomsInRevitAsyncCommand(this, _revitDataModel);
+            
             //wipe stale rooms data
             _wipeStaleRoomsDataCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.WipeStaleRoomDataEventRaise(); });
             //update from changed categories
-            _updateFromChangedCategoriesCommand = new Commands.UpdateFromChangedCategoriesCommand(this, _revitDataModel, _messageStore, () => { _eventManager.UpdateAfterSupportedCategoryChangeEventRaise(); });
+            _updateFromChangedCategoriesCommand = new Commands.UpdateFromChangedCategoriesAsyncCommand(this, _revitDataModel);
             //update all rooms in revit from data model
             _updateAllRoomsCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.UpdateAllRoomsInRevitEventRaise(); });
             // create the column order changed command

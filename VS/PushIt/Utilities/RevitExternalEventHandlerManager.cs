@@ -248,9 +248,6 @@ namespace duHast.PushIt.Utilities
                 // Execute the action to refresh the room data with the Revit data
                 RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
                 action.Execute(doc);
-                
-                // raise event to notify the view model that the model has been updated
-                _revitDataModel.RaisePropertyChanged(PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED);
             }
             catch (Exception ex)
             {

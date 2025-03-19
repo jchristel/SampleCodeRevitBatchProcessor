@@ -124,6 +124,12 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
     else:
         print("updated_node not found")
 
+    # it turns out that an empty parameter value means that parameter is not listed in the part atom export file for that type
+    # it might be listed for another type though where it has a value...
+
+    # need to loop over types first to ensure that all parameters are read in
+
+
     # Get the family parameters
     for part_node in family_node.SelectNodes("A:part", name_space_manager):
 

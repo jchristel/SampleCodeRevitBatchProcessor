@@ -31,6 +31,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -42,7 +43,6 @@ namespace duHast.PushIt.ViewModels
         private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
         private readonly Utils.WPF.Stores.MessageStore _messageStore;
         private readonly Models.RevitDataModel _revitDataModel;
-        private readonly RevitExternalEventHandlerManager _eventManager;
         private readonly Utils.WPF.ViewModels.ErrorsViewModel _errorsViewModel;
 
         public Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }
@@ -66,25 +66,19 @@ namespace duHast.PushIt.ViewModels
         private ICollectionView _supportedCategoriesView;
 
         //command to raise an event to refresh the gui
-        private readonly Commands.RaiseRevitEventCommand _raiseRefreshGUICommand;
-
+        private readonly Commands.RefreshUIFromRevitModelAsyncCommand _raiseRefreshGUICommand;
         //command to push a single room to revit
         private readonly Commands.PushSingleRoomInRevitAsyncCommand _raisePushSingleRoomCommand;
-
-
         //command to raise an event to reload data from file path
         private readonly Commands.ReloadDataFromFileAsyncCommand _raiseReloadDataCommand;
-
-
         //command to highlight a room in Revit
         private readonly Commands.HighlightRoomsInRevitAsyncCommand _highLightRoomCommand;
-        
         //command to wipe stale rooms data
-        private readonly Commands.RaiseRevitEventCommand _wipeStaleRoomsDataCommand;
+        private readonly Commands.WipeStaleDataRevitAsyncCommand _wipeStaleRoomsDataCommand;
         //command to update from changed categories
         private readonly Commands.UpdateFromChangedCategoriesAsyncCommand _updateFromChangedCategoriesCommand;
         //command to update all rooms in revit from data model
-        private readonly Commands.RaiseRevitEventCommand _updateAllRoomsCommand;
+        private readonly Commands.PushAllRoomsInRevitAsyncCommand _updateAllRoomsCommand;
         //command to update the view model if the column order changes
         public RelayCommand ColumnOrderChangedCommand { get; private set; }
 
@@ -121,7 +115,7 @@ namespace duHast.PushIt.ViewModels
                 if (string.IsNullOrEmpty(value))
                 {
                     // set the data path to invalid
-                    _dataFilePathValid = false;
+                    DataFilePathValid = false;
                     // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(DataFilePathValid))
                     // from the eventhandler ErrorsViewModel_ErrorsChanged
                     _errorsViewModel.AddError(nameof(DataFilePath), "Data file path cannot be empty");
@@ -129,7 +123,7 @@ namespace duHast.PushIt.ViewModels
                 else if (!System.IO.File.Exists(value))
                 {
                     // set the data path to invalid
-                    _dataFilePathValid = false;
+                    DataFilePathValid = false;
                     // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(DataFilePathValid))
                     // from the eventhandler ErrorsViewModel_ErrorsChanged
                     _errorsViewModel.AddError(nameof(DataFilePath), "Data file path does not exist");
@@ -137,7 +131,7 @@ namespace duHast.PushIt.ViewModels
                 else
                 {
                     // set the data path to valid
-                    _dataFilePathValid = true;
+                    DataFilePathValid = true;
                     // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(DataFilePathValid))
                     // from the eventhandler ErrorsViewModel_ErrorsChanged
                     _errorsViewModel.ClearErrors(nameof(DataFilePath));
@@ -156,6 +150,12 @@ namespace duHast.PushIt.ViewModels
         public bool DataFilePathValid
         {
             get => _dataFilePathValid;
+            set
+            { 
+                _dataFilePathValid = value;
+                // call ui update
+                OnPropertyChanged(nameof(DataFilePathValid));
+            }
         }
 
         //is UI in safety off mode ? (rooms can be pushed multiple times)
@@ -625,6 +625,7 @@ namespace duHast.PushIt.ViewModels
             OnPropertyChanged(nameof(SupportedCategories));
         }
 
+
         /// <summary>
         /// The row filter applied to the data table default view
         /// </summary>
@@ -737,7 +738,7 @@ namespace duHast.PushIt.ViewModels
         public override void OnClosing()
         {
             // Custom closing logic for RoomsSelectionViewModel
-            _eventManager.DisposeEvents();
+            //_eventManager.DisposeEvents();
 
             //unbsubscribe from underlying model changes
             _revitDataModel.PropertyChanged -= Model_PropertyChanged;
@@ -775,20 +776,17 @@ namespace duHast.PushIt.ViewModels
         /// <param name="revitDataModel">The underlying revit data model</param>
         /// <param name="navigationStore">A navigation store for the UI</param>
         /// <param name="messageStore">A message store used to display messages to the user</param>
-        /// <param name="eventManager"></param>
         /// <param name="globalMessageViewModel">A message view model, the message store uses to display messages to the user.</param>
         public RoomsSelectionViewModel(
             Models.RevitDataModel revitDataModel,
             Utils.WPF.Stores.NavigationStore navigationStore,
             Utils.WPF.Stores.MessageStore messageStore,
-            RevitExternalEventHandlerManager eventManager,
             Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel)
         {
             //store services
             _navigationStore = navigationStore;
             _messageStore = messageStore;
             _revitDataModel = revitDataModel;
-            _eventManager = eventManager;
 
             //initialize the errors view model
             _errorsViewModel = new Utils.WPF.ViewModels.ErrorsViewModel();
@@ -806,7 +804,7 @@ namespace duHast.PushIt.ViewModels
             _columnOrder = new List<string>();
 
             //set the data file path
-            _dataFilePath = _revitDataModel.Settings.DataPath;
+            DataFilePath = _revitDataModel.Settings.DataPath;
 
             //update supported categories from settings
             UpdateCategories();
@@ -814,41 +812,49 @@ namespace duHast.PushIt.ViewModels
             //subscribe to underlying model changes
             _revitDataModel.PropertyChanged += Model_PropertyChanged;
 
-            // add the view model to the event manager
-            _eventManager.RoomsSelectionViewModel = this;
-            //update rooms data with data from revit through an external event
-            _eventManager.RefreshUIDataEventRaise();
-
             //subscribe to property changed event to allow update of the data table filters
             this.PropertyChanged += FilterRoomData;
 
             // set up commands
             // refresh gui with data from model
-            _raiseRefreshGUICommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.RefreshUIDataEventRaise(); });
-            
-            
+            _raiseRefreshGUICommand = new Commands.RefreshUIFromRevitModelAsyncCommand(
+                roomsSelectionViewModel: this,
+                revitDataModel: _revitDataModel);
             // push single room to revit
-            //_raisePushSingleRoomCommand = new Commands.PushSingleRoomDataToRevitCommand(this, _revitDataModel, _messageStore, () => { _eventManager.PushItSingleEventRaise(); });
             _raisePushSingleRoomCommand = new Commands.PushSingleRoomInRevitAsyncCommand(
                 roomsSelectionViewModel: this,
                 revitDataModel: _revitDataModel
              );
-
             //load data from file path
-            //_raiseReloadDataCommand = new Commands.ReloadDataCommand(this, _revitDataModel, _messageStore, () => { _eventManager.ReloadDataEventRaise(); });
-            _raiseReloadDataCommand = new Commands.ReloadDataFromFileAsyncCommand(this, _revitDataModel);
-            
+            _raiseReloadDataCommand = new Commands.ReloadDataFromFileAsyncCommand(
+                roomsSelectionViewModel: this,
+                revitDataModel: _revitDataModel
+            );
             //highlight room in Revit
-            _highLightRoomCommand = new Commands.HighlightRoomsInRevitAsyncCommand(this, _revitDataModel);
-            
+            _highLightRoomCommand = new Commands.HighlightRoomsInRevitAsyncCommand(
+                roomsSelectionViewModel: this, 
+                revitDataModel: _revitDataModel
+            );
             //wipe stale rooms data
-            _wipeStaleRoomsDataCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.WipeStaleRoomDataEventRaise(); });
+            _wipeStaleRoomsDataCommand = new Commands.WipeStaleDataRevitAsyncCommand(
+                roomsSelectionViewModel: this, 
+                revitDataModel: _revitDataModel
+            );
             //update from changed categories
-            _updateFromChangedCategoriesCommand = new Commands.UpdateFromChangedCategoriesAsyncCommand(this, _revitDataModel);
+            _updateFromChangedCategoriesCommand = new Commands.UpdateFromChangedCategoriesAsyncCommand(
+                roomsSelectionViewModel: this, 
+                revitDataModel: _revitDataModel
+            );
             //update all rooms in revit from data model
-            _updateAllRoomsCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.UpdateAllRoomsInRevitEventRaise(); });
+            _updateAllRoomsCommand = new Commands.PushAllRoomsInRevitAsyncCommand(
+                roomsSelectionViewModel: this, 
+                revitDataModel: _revitDataModel
+            );
             // create the column order changed command
             ColumnOrderChangedCommand = new RelayCommand(OnColumnOrderChanged);
+
+            //update rooms data with data from revit through an external event
+            RefreshGUICommand.Execute(null);
         }
     }
 }

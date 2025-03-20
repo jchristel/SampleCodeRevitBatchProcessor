@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:duHast.PushIt.Views"
-             xmlns:utilsViews ="clr-namespace:duHast.Utils.WPF.Views;assembly=Utils.23.0.0.1"
-             xmlns:converters="clr-namespace:duHast.Utils.WPF.Converters;assembly=Utils.23.0.0.1"
+             xmlns:utilsViews ="clr-namespace:duHast.Utils.WPF.Views;assembly=Utils.23.0.0.2"
+             xmlns:converters="clr-namespace:duHast.Utils.WPF.Converters;assembly=Utils.23.0.0.2"
              xmlns:spinner="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinner"
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="800">
@@ -51,8 +51,9 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <!--boolean visibility converter-->
+        <!--boolean converters-->
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid Margin="10 10 10 10">
@@ -147,7 +148,8 @@
                             ColumnWidth="*"
                             RowHeight="23"
                             HorizontalAlignment="Stretch"
-                            ColumnReordered="RoomsDataGrid_ColumnReordered">
+                            ColumnReordered="RoomsDataGrid_ColumnReordered"
+                            IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}">
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Setter Property="Background" Value="Red" />

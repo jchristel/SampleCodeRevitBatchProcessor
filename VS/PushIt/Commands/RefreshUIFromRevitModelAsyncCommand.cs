@@ -22,6 +22,8 @@
 //
 
 
+using duHast.PushIt.RevitActions;
+using duHast.PushIt.Utilities;
 using duHast.Utils.WPF.Stores;
 using Revit.Async;
 using System;
@@ -55,8 +57,9 @@ namespace duHast.PushIt.Commands
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
-
-
+                            // Execute the action to refresh the room data with the Revit data
+                            RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
+                            action.Execute(doc);
                         }
                         catch (Exception ex)
                         {
@@ -68,6 +71,13 @@ namespace duHast.PushIt.Commands
 
                 //pop message to user
                 _roomsSelectionViewModel.AddMessage(message, messageType);
+
+                //update the view model
+                if (messageType == MessageTypes.Information)
+                {
+                    // raise event to notify the view model that the model has been updated
+                    _revitDataModel.RaisePropertyChanged(PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED);
+                }
             }
             catch (Exception ex)
             {
@@ -111,6 +121,7 @@ namespace duHast.PushIt.Commands
         {
             _revitDataModel = revitDataModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;
+            _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }
 }

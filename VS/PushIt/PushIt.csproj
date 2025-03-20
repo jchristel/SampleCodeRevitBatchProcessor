@@ -132,11 +132,6 @@
     <Compile Include="Commands\RefreshUIFromRevitModelAsyncCommand.cs" />
     <Compile Include="Commands\ReloadDataFromFileAsyncCommand.cs" />
     <Compile Include="Commands\UpdateFromChangedCategoriesAsyncCommand.cs" />
-    <Compile Include="Commands\UpdateFromChangedCategoriesCommand.cs" />
-    <Compile Include="Commands\HighlightRoomsInRevitCommand.cs" />
-    <Compile Include="Commands\PushSingleRoomDataToRevitCommand.cs" />
-    <Compile Include="Commands\RaiseRevitEventCommand.cs" />
-    <Compile Include="Commands\ReloadDataCommand.cs" />
     <Compile Include="Commands\WipeStaleDataRevitAsyncCommand.cs" />
     <Compile Include="Exceptions\CategoryConflictException.cs" />
     <Compile Include="Exceptions\RoomConflictException.cs" />
@@ -159,7 +154,6 @@
     <Compile Include="Utilities\IRoomProperty.cs" />
     <Compile Include="Utilities\PropertyChangedEventNames.cs" />
     <Compile Include="Utilities\ReadRoomsData.cs" />
-    <Compile Include="Utilities\RevitExternalEventHandlerManager.cs" />
     <Compile Include="Utilities\Revit\CustomExternalEvent.cs" />
     <Compile Include="Utilities\Revit\DesignSetAndOption.cs" />
     <Compile Include="Utilities\Revit\FamilyUpdate.cs" />

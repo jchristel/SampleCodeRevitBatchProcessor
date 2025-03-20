@@ -22,6 +22,7 @@
 //
 
 
+using duHast.PushIt.RevitActions;
 using duHast.Utils.WPF.Stores;
 using Revit.Async;
 using System;
@@ -52,8 +53,12 @@ namespace duHast.PushIt.Commands
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
-
-
+                            // Execute the action to wipe stale room data from the Revit model
+                            WipeStaleRoomData action = new WipeStaleRoomData(
+                                revitModel: _revitDataModel,
+                                roomsSelectionViewModel: _roomsSelectionViewModel
+                            );
+                            action.Execute(doc);
                         }
                         catch (Exception ex)
                         {
@@ -65,6 +70,8 @@ namespace duHast.PushIt.Commands
 
                 //pop message to user
                 _roomsSelectionViewModel.AddMessage(message, messageType);
+
+                //no need to refresh the UI
             }
             catch (Exception ex)
             {
@@ -108,6 +115,7 @@ namespace duHast.PushIt.Commands
         {
             _revitDataModel = revitDataModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;
+            _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
     }

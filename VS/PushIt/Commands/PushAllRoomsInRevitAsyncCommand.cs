@@ -22,6 +22,7 @@
 //
 
 
+using duHast.PushIt.RevitActions;
 using duHast.Utils.WPF.Stores;
 using Revit.Async;
 using System;
@@ -55,8 +56,9 @@ namespace duHast.PushIt.Commands
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
-
-
+                            // Execute the action to update all rooms in the Revit model
+                            PushAllRoomDataToRevitIRevitAction action = new PushAllRoomDataToRevitIRevitAction(_revitDataModel, _roomsSelectionViewModel);
+                            action.Execute(doc);
                         }
                         catch (Exception ex)
                         {
@@ -68,6 +70,8 @@ namespace duHast.PushIt.Commands
 
                 //pop message to user
                 _roomsSelectionViewModel.AddMessage(message, messageType);
+
+                //no need to refresh the UI, the message will be displayed
             }
             catch (Exception ex)
             {
@@ -92,7 +96,10 @@ namespace duHast.PushIt.Commands
             {
                 return false;
             }
-            return true;
+            else
+            {
+                return true;
+            }
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -111,6 +118,7 @@ namespace duHast.PushIt.Commands
         {
             _revitDataModel = revitDataModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;
+            _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }
 }

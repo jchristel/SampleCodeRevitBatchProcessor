@@ -97,7 +97,7 @@ namespace duHast.PushIt.Commands
             {
                 return false;
             }
-            return _roomsSelectionViewModel.DataFilePathValid && base.CanExecute(parameter);
+            return !_roomsSelectionViewModel.IsMatchingRevitRoomsEmpty && base.CanExecute(parameter);
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)

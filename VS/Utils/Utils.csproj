@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>duHast.Utils</RootNamespace>
-    <AssemblyName>Utils.23.0.0.1</AssemblyName>
+    <AssemblyName>Utils.23.0.0.2</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -93,6 +93,7 @@
     <Compile Include="WPF\Commands\ClearMessageCommand.cs" />
     <Compile Include="WPF\Commands\CommandBase.cs" />
     <Compile Include="WPF\Commands\RelayCommand.cs" />
+    <Compile Include="WPF\Converters\InverseBooleanConverter.cs" />
     <Compile Include="WPF\Converters\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="WPF\Interfaces\ICloseable.cs" />
     <Compile Include="WPF\Stores\MessageStore.cs" />

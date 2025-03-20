@@ -102,11 +102,11 @@ namespace duHast.PushIt.Commands
                         {
                             return ($"An exception occurred within the external event handler update after push single room event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                         }
-                        return ("all good", MessageTypes.Information);
-                    });
 
-                //activate the ui
-                _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = false;
+                        //get the room id for the message
+                        var selectedRoomId = _roomsSelectionViewModel.SelectedRoom != null ? _roomsSelectionViewModel.SelectedRoom.Id.Value : "";
+                        return ($"Pushed data for [{selectedRoomId}] into Revit room.", MessageTypes.Information);
+                    });
 
                 if (messageType == MessageTypes.Information)
                 {

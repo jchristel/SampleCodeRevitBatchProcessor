@@ -171,6 +171,7 @@ namespace duHast.PushIt.Commands
         {
             _revitDataModel = revitDataModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;
+            _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
     }
 }

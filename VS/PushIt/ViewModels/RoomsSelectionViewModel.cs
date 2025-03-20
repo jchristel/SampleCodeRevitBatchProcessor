@@ -23,14 +23,16 @@
 
 
 using duHast.PushIt.Utilities;
+using duHast.Utils.WPF.Commands;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -41,23 +43,22 @@ namespace duHast.PushIt.ViewModels
         private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
         private readonly Utils.WPF.Stores.MessageStore _messageStore;
         private readonly Models.RevitDataModel _revitDataModel;
-        private readonly RevitExternalEventHandlerManager _eventManager;
         private readonly Utils.WPF.ViewModels.ErrorsViewModel _errorsViewModel;
 
         public Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }
 
-        //observable collection of rooms
-        private readonly ObservableCollection<RoomViewModel> _rooms;
-        //default view of the rooms collection
-        private ICollectionView _roomsView;
+        // data table containing push it data
+        private DataTable _dt;
+        // default view of the data table
+        private DataView _dv;
 
         //flag to indicate if safety off mode is enabled
         private bool _safetyOffMode = false;
         //default button text for safety off mode
         private string _safetyOffButtonText = "Safety on";
 
-        private string _activeDesignSetName = RevitUtils.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME;
-        private string _activeDesignOptionName = RevitUtils.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME;
+        private string _activeDesignSetName = duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME;
+        private string _activeDesignOptionName = duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME;
 
         //observable collection of supported categories in Revit to push data into
         private readonly ObservableCollection<SupportedCategoryViewModel> _supportedCategories;
@@ -65,19 +66,21 @@ namespace duHast.PushIt.ViewModels
         private ICollectionView _supportedCategoriesView;
 
         //command to raise an event to refresh the gui
-        private readonly Commands.RaiseRevitEventCommand _raiseRefreshGUICommand;
+        private readonly Commands.RefreshUIFromRevitModelAsyncCommand _raiseRefreshGUICommand;
         //command to push a single room to revit
-        private readonly Commands.PushSingleRoomDataToRevitCommand _raisePushSingleRoomCommand;
+        private readonly Commands.PushSingleRoomInRevitAsyncCommand _raisePushSingleRoomCommand;
         //command to raise an event to reload data from file path
-        private readonly Commands.ReloadDataCommand _raiseReloadDataCommand;
+        private readonly Commands.ReloadDataFromFileAsyncCommand _raiseReloadDataCommand;
         //command to highlight a room in Revit
-        private readonly Commands.HighlightRoomsInRevitCommand _highLightRoomCommand;
+        private readonly Commands.HighlightRoomsInRevitAsyncCommand _highLightRoomCommand;
         //command to wipe stale rooms data
-        private readonly Commands.RaiseRevitEventCommand _wipeStaleRoomsDataCommand;
+        private readonly Commands.WipeStaleDataRevitAsyncCommand _wipeStaleRoomsDataCommand;
         //command to update from changed categories
-        private readonly Commands.UpdateFromChangedCategoriesCommand _updateFromChangedCategoriesCommand;
+        private readonly Commands.UpdateFromChangedCategoriesAsyncCommand _updateFromChangedCategoriesCommand;
         //command to update all rooms in revit from data model
-        private readonly Commands.RaiseRevitEventCommand _updateAllRoomsCommand;
+        private readonly Commands.PushAllRoomsInRevitAsyncCommand _updateAllRoomsCommand;
+        //command to update the view model if the column order changes
+        public RelayCommand ColumnOrderChangedCommand { get; private set; }
 
         //property to check if there are any errors
         public bool HasErrors => _errorsViewModel.HasErrors;
@@ -112,7 +115,7 @@ namespace duHast.PushIt.ViewModels
                 if (string.IsNullOrEmpty(value))
                 {
                     // set the data path to invalid
-                    _dataFilePathValid = false;
+                    DataFilePathValid = false;
                     // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(DataFilePathValid))
                     // from the eventhandler ErrorsViewModel_ErrorsChanged
                     _errorsViewModel.AddError(nameof(DataFilePath), "Data file path cannot be empty");
@@ -120,7 +123,7 @@ namespace duHast.PushIt.ViewModels
                 else if (!System.IO.File.Exists(value))
                 {
                     // set the data path to invalid
-                    _dataFilePathValid = false;
+                    DataFilePathValid = false;
                     // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(DataFilePathValid))
                     // from the eventhandler ErrorsViewModel_ErrorsChanged
                     _errorsViewModel.AddError(nameof(DataFilePath), "Data file path does not exist");
@@ -128,7 +131,7 @@ namespace duHast.PushIt.ViewModels
                 else
                 {
                     // set the data path to valid
-                    _dataFilePathValid = true;
+                    DataFilePathValid = true;
                     // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(DataFilePathValid))
                     // from the eventhandler ErrorsViewModel_ErrorsChanged
                     _errorsViewModel.ClearErrors(nameof(DataFilePath));
@@ -147,6 +150,12 @@ namespace duHast.PushIt.ViewModels
         public bool DataFilePathValid
         {
             get => _dataFilePathValid;
+            set
+            { 
+                _dataFilePathValid = value;
+                // call ui update
+                OnPropertyChanged(nameof(DataFilePathValid));
+            }
         }
 
         //is UI in safety off mode ? (rooms can be pushed multiple times)
@@ -204,12 +213,7 @@ namespace duHast.PushIt.ViewModels
         // Field to return a default list of column names
         private readonly List<string> _columnNameDefaultList = new List<string>
         {
-            "Room Id",
-            "Area Briefed",
-            "Area Designed",
-            "Room Name Short",
-            "Department",
-            "Sub Department",
+            "Id",
             "Count"
         };
 
@@ -244,8 +248,6 @@ namespace duHast.PushIt.ViewModels
                 //update is filter applied property
                 OnPropertyChanged(nameof(IsFilterApplied));
 
-                // Refresh the view to apply the filter
-                _roomsView.Refresh(); 
             }
         }
 
@@ -257,8 +259,16 @@ namespace duHast.PushIt.ViewModels
         #region user selection
 
         //binding in xaml property to the default view of the rooms collection
-        public ICollectionView Rooms => _roomsView;
+        public DataView DataView { 
+            get => _dv;
+            private set 
+            {
+                _dv = value;
+                OnPropertyChanged(nameof(DataView));
+            }
 
+        }
+        
         //binding in xaml property to the default view of the supported categories collection
         public ICollectionView SupportedCategories => _supportedCategoriesView;
 
@@ -286,15 +296,17 @@ namespace duHast.PushIt.ViewModels
             get
             {
                 // check if a default view exists
-                if (_roomsView == null)
+                if (_dv == null)
                 {
                     return null;
                 }
                 // check if the selected index is within the bounds of the rooms collection
-                if (_selectedIndex >= 0 && _selectedIndex < _roomsView.Cast<RoomViewModel>().Count())
+                // check if the selected index is within the bounds of the rooms collection
+                if (_selectedIndex >= 0 && _selectedIndex < _dv.Count)
                 {
-                    var selectedRoomViewModel = _roomsView.Cast<RoomViewModel>().ElementAt(_selectedIndex);
-                    return _revitDataModel.GetAllRooms().FirstOrDefault(r => r.Id.Value == selectedRoomViewModel.Id);
+                    var selectedRow = _dv[_selectedIndex].Row;
+                    var roomId = selectedRow["Id"].ToString();
+                    return _revitDataModel.GetAllRooms().FirstOrDefault(r => r.Id.Value == roomId);
                 }
                 // return null if the selected index is out of bounds
                 return null;
@@ -336,25 +348,267 @@ namespace duHast.PushIt.ViewModels
 
         #endregion Commands
 
-        //updates the rooms in the observable collection with rooms from the data model
+        #region column order
+
+        //property to store the column order
+        private IEnumerable<string> _columnOrder;
+
+        //property to expose the column order
+        public IEnumerable<string> ColumnOrder
+        {
+            get => _columnOrder;
+            set
+            {
+                _columnOrder = value;
+            }
+        }
+
+        /// <summary>
+        /// Relay command target for column order changed event
+        /// </summary>
+        private void OnColumnOrderChanged(object parameter)
+        {
+            if (parameter is Tuple<IEnumerable<string>, DataView> data && data.Item2 is DataView dataView)
+            {
+                // update the column order
+                ColumnOrder = data.Item1;
+            }
+        }
+
+        #endregion column order
+
+        /// <summary>
+        /// Update the rooms in the view model by creating a data table from the rooms in the data model, 
+        /// updating the default view of the data table, and updating the column filter list.
+        /// </summary>
         private void UpdateRooms()
         {
-            _rooms.Clear();
-            foreach (Models.RoomDataModel room in _revitDataModel.GetAllRooms())
+            //create a data table from the rooms in the data model
+            DataTable dt = CreateRoomsDataTable();
+            if (dt == null)
             {
+                return;
+            }
+
+            //store the data table
+            _dt = dt;
+
+            // create a data view from the data table
+            // this will trigger an onproperty chaanged event
+            DataView = new DataView(dt);
+
+            // update the column filter list
+            bool resetFilterValue = CreateColumnFilterItems();
+
+            // reset the column filter value?
+            if (resetFilterValue) { FilterValue = ""; }
+            else
+            {
+                //reapply the filter
+                OnPropertyChanged(nameof(FilterValue));
+            }
+        }
+
+
+        /// <summary>
+        /// Creates the data table displayed in the ui
+        /// </summary>
+        /// <returns></returns>
+        public DataTable CreateRoomsDataTable()
+        {
+            // Check if there are any rooms
+            if (_revitDataModel.GetAllRooms().Count == 0)
+            {
+                return null;
+            }
+
+            // Set up the data table
+            DataTable dataTable = new DataTable();
+
+            // Check if the column order is not null and has any elements
+            // if so add columns to the data table in the order specified by the column order
+            if (ColumnOrder != null && ColumnOrder.Any())
+            {
+                // Add columns to the data table in the order specified by the column order
+                foreach (var column in ColumnOrder)
                 {
-                    ViewModels.RoomViewModel roomViewModel = new RoomViewModel(room);
-                    _rooms.Add(roomViewModel);
+                    //check for default columns
+                    if (column == "Count")
+                    {
+                        dataTable.Columns.Add("Count");
+                        continue;
+                    }
+                    else if (column == "Id")
+                    {
+                        dataTable.Columns.Add("Id");
+                        continue;
+                    }
+                    else
+                    {
+                        // Add a column per property
+                        foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
+                        {
+                            // Add a column per property
+                            foreach (var prop in roomModelInstance.Properties)
+                            {
+                                // check if the column is meant to be displayed in the ui
+                                if (prop.ShowInUI && prop.Name == column) { 
+                                    dataTable.Columns.Add(prop.Name);
+                                    break;
+                                }
+                            }
+                            // Get out of the loop
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //othrwise add columns in default order
+                //add the default id column
+                dataTable.Columns.Add("Id");
+
+                // Add columns to the data table
+                foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
+                {
+                    // Add a column per property
+                    foreach (var prop in roomModelInstance.Properties)
+                    {
+                        // check if the column is meant to be displayed in the ui
+                        if (prop.ShowInUI) { dataTable.Columns.Add(prop.Name); }
+                    }
+                    // Get out of the loop
+                    break;
+                }
+
+                // Add the count column
+                dataTable.Columns.Add("Count");
+            }
+
+            
+
+            // Add the rows to the data table
+            foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
+            {
+                // Add a row per room
+                DataRow row = dataTable.NewRow();
+
+                //add properties to the row in order specified by the column order
+                if (ColumnOrder != null && ColumnOrder.Any())
+                {
+                    // Add columns to the data table in the order specified by the column order
+                    foreach (var column in ColumnOrder)
+                    {
+                        if (column == "Count")
+                        {
+                            row["Count"] = roomModelInstance.MatchingRevitRooms.Count;
+                            continue;
+                        }
+                        else if (column == "Id")
+                        {
+                            row["Id"] = roomModelInstance.Id.Value;
+                            continue;
+                        }
+                        else
+                        {
+                            // Add the property values
+                            foreach (var prop in roomModelInstance.Properties)
+                            {
+                                // check if the column is meant to be displayed in the ui
+                                if (prop.ShowInUI && prop.Name == column) { 
+                                    row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : "";
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    // Add the row to the data table
+                    dataTable.Rows.Add(row);
+                }
+                else
+                {
+                    //add data to the row in default order
+                    // add the id value
+                    row["Id"] = roomModelInstance.Id.Value;
+
+                    // add the property values
+                    foreach (var prop in roomModelInstance.Properties)
+                    {
+                        // check if the column is meant to be displayed in the ui
+                        if (prop.ShowInUI) { row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : ""; }
+                    }
+                    row["Count"] = roomModelInstance.MatchingRevitRooms.Count;
+                    // Add the row to the data table
+                    dataTable.Rows.Add(row);
                 }
             }
 
-            //notify ui of changes
-            _roomsView.Refresh();
-
-            //notify ui of changes
-            OnPropertyChanged(nameof(Rooms));
+            return dataTable;
         }
 
+
+        /// <summary>
+        /// populates the column filter items list the user can chpoose to filter by in the UI
+        /// </summary>
+        /// <returns>true if column filter list changed, otherwise false.</returns>
+        public bool CreateColumnFilterItems()
+        {
+            // Check if the data table is null
+            if (_dt == null)
+            {
+                return false;
+            }
+
+            // Get the columns from the data table
+            var columns = _dt.Columns;
+
+            bool filterListNeedsUpdating = false;
+
+            if (_columnNameDefaultList.Count == columns.Count)
+            {
+                //identical length ... make sure its the same values in both lists
+                //only update the filter list if new list is different to existing values
+                foreach (DataColumn column in columns)
+                {
+                    if (!_columnNameDefaultList.Contains(column.ColumnName))
+                    {
+                        filterListNeedsUpdating = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                // got different length...needs updating
+                filterListNeedsUpdating = true;
+            }
+
+            // if the list does not need updating get out
+            if (!filterListNeedsUpdating)
+            {
+                return false;
+            }
+
+            // Clear the old entries
+            _columnNameDefaultList.Clear();
+
+            // Add the column names to the column filter items
+            foreach (DataColumn column in columns)
+            {
+                _columnNameDefaultList.Add(column.ColumnName);
+            }
+
+            // Notify UI of changes
+            OnPropertyChanged(nameof(ColumnNameDefaultList));
+
+            return true;
+        }
+
+
+        /// <summary>
+        /// Update available and supported categories collection in UI from revit data model.
+        /// </summary>
         public void UpdateCategories()
         {
             //loop over categories supported as per data model and categories used in settings and add to the supported categories collection
@@ -371,41 +625,69 @@ namespace duHast.PushIt.ViewModels
             OnPropertyChanged(nameof(SupportedCategories));
         }
 
-        private bool RoomFilter(object item)
-        {
-            if (item is RoomViewModel room)
-            {
-                if (string.IsNullOrEmpty(SelectedColumnFilterItem) || string.IsNullOrEmpty(FilterValue))
-                {
-                    return true; // No filter applied
-                }
 
-                switch (SelectedColumnFilterItem)
+        /// <summary>
+        /// The row filter applied to the data table default view
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="propertyChangedArgs"></param>
+        private void FilterRoomData(object sender, PropertyChangedEventArgs propertyChangedArgs)
+        {
+            try
+            {
+                // Check if either the selected column filter value or the selected column filter item has changed
+                if (propertyChangedArgs.PropertyName == nameof(SelectedColumnFilterItem) ||
+                    propertyChangedArgs.PropertyName == nameof(FilterValue))
                 {
-                    case "Room Id":
-                        return room.Id.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
-                    case "Area Briefed":
-                        return room.AreaBriefed.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
-                    case "Area Designed":
-                        return room.AreaDesigned.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
-                    case "Room Name Short":
-                        return room.NameShort.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
-                    case "Department":
-                        return room.Department.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
-                    case "Sub Department":
-                        return room.SubDepartment.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
-                    case "Count":
-                        return room.Count.IndexOf(FilterValue, StringComparison.OrdinalIgnoreCase) >= 0;
-                    default:
-                        return true; // No filter applied
+                    // Check if the data view is null, if so get out of the function since there is nothing to filter
+                    if (DataView == null)
+                    {
+                        return;
+                    }
+
+                    // Check if the filter value is empty
+                    if (string.IsNullOrEmpty(SelectedColumnFilterItem))
+                    {
+                        // Clear the filter on the data view
+                        DataView.RowFilter = string.Empty;
+                        return;
+                    }
+
+                    // Check if the column name contains a space, if so add square brackets to the column name
+                    string columnName = SelectedColumnFilterItem;
+                    if (SelectedColumnFilterItem.Contains(" "))
+                    {
+                        columnName = $"[{SelectedColumnFilterItem}]";
+                    }
+
+                    // Create the filter value for the data view
+                    // Check if the column value contains the filter value
+                    string filterValue = $"{columnName} LIKE '%{FilterValue}%'";
+
+                    // Filter the data view
+                    try
+                    {
+                        // Set the filter on the data view
+                        DataView.RowFilter = filterValue;
+                        // Let the UI know that the data view has changed to force a refresh
+                        OnPropertyChanged(nameof(DataView));
+                    }
+                    catch (Exception e)
+                    {
+                        AddMessage($"Failed to apply filter to data: {e.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                    }
                 }
             }
-            return false;
+            catch (Exception ex)
+            {
+                AddMessage($"Failed to filter data: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+            }
+            return;
         }
 
 
         /// <summary>
-        /// used to catch events from the underlying model in order to update the ui
+        /// used to catch property changed events from the underlying model in order to update the ui
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -427,11 +709,18 @@ namespace duHast.PushIt.ViewModels
             }
         }
 
+
+        /// <summary>
+        /// Adds a message to the global message store which will then be displayed in the UI
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="messageType"></param>
         public void AddMessage(string message, Utils.WPF.Stores.MessageTypes messageType)
         {
             
             _messageStore.SetCurrentMessage(message, messageType);
         }
+
 
         // not sure whether this is actually required or not
         // when on closing, dispose of the event manager
@@ -441,6 +730,7 @@ namespace duHast.PushIt.ViewModels
             base.Dispose();
         }
 
+
         /// <summary>
         /// Custom closing logic for RoomsSelectionViewModel
         /// Disposes all external events from the event manager
@@ -448,7 +738,7 @@ namespace duHast.PushIt.ViewModels
         public override void OnClosing()
         {
             // Custom closing logic for RoomsSelectionViewModel
-            _eventManager.DisposeEvents();
+            //_eventManager.DisposeEvents();
 
             //unbsubscribe from underlying model changes
             _revitDataModel.PropertyChanged -= Model_PropertyChanged;
@@ -460,16 +750,18 @@ namespace duHast.PushIt.ViewModels
             base.OnClosing();
         }
 
+
         /// <summary>
-        /// Data validation
+        /// Data validation for text input fields
         /// </summary>
-        /// <param name="propertyName"></param>
+        /// <param name="propertyName">The name of the property of which to get any errors, if they exist, for.</param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public IEnumerable GetErrors(string propertyName)
         {
             return _errorsViewModel.GetErrors(propertyName);
         }
+
 
         private void ErrorsViewModel_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
@@ -478,18 +770,23 @@ namespace duHast.PushIt.ViewModels
             OnPropertyChanged(nameof(DataFilePathValid));
         }
 
+        /// <summary>
+        /// The rooms selection view model class constructor.
+        /// </summary>
+        /// <param name="revitDataModel">The underlying revit data model</param>
+        /// <param name="navigationStore">A navigation store for the UI</param>
+        /// <param name="messageStore">A message store used to display messages to the user</param>
+        /// <param name="globalMessageViewModel">A message view model, the message store uses to display messages to the user.</param>
         public RoomsSelectionViewModel(
             Models.RevitDataModel revitDataModel,
             Utils.WPF.Stores.NavigationStore navigationStore,
             Utils.WPF.Stores.MessageStore messageStore,
-            RevitExternalEventHandlerManager eventManager,
             Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel)
         {
             //store services
             _navigationStore = navigationStore;
             _messageStore = messageStore;
             _revitDataModel = revitDataModel;
-            _eventManager = eventManager;
 
             //initialize the errors view model
             _errorsViewModel = new Utils.WPF.ViewModels.ErrorsViewModel();
@@ -499,19 +796,15 @@ namespace duHast.PushIt.ViewModels
             //store the global message view model
             GlobalMessageViewModel = globalMessageViewModel;
 
-            //initialize properties
-            // rooms collection
-            _rooms = new ObservableCollection<RoomViewModel>();
-            _roomsView = CollectionViewSource.GetDefaultView(_rooms);
             // supported categories collection
             _supportedCategories = new ObservableCollection<SupportedCategoryViewModel>();
             _supportedCategoriesView = CollectionViewSource.GetDefaultView(_supportedCategories);
 
-            //set the data file path
-            _dataFilePath = _revitDataModel.Settings.DataPath;
+            //initialize column order
+            _columnOrder = new List<string>();
 
-            // filter may need to be set after populating the collection...
-            _roomsView.Filter = RoomFilter;
+            //set the data file path
+            DataFilePath = _revitDataModel.Settings.DataPath;
 
             //update supported categories from settings
             UpdateCategories();
@@ -519,26 +812,49 @@ namespace duHast.PushIt.ViewModels
             //subscribe to underlying model changes
             _revitDataModel.PropertyChanged += Model_PropertyChanged;
 
-            // add the view model to the event manager
-            _eventManager.RoomsSelectionViewModel = this;
-            //update rooms data with data from revit through an external event
-            _eventManager.RefreshUIDataEventRaise();
+            //subscribe to property changed event to allow update of the data table filters
+            this.PropertyChanged += FilterRoomData;
 
             // set up commands
             // refresh gui with data from model
-            _raiseRefreshGUICommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.RefreshUIDataEventRaise(); });
+            _raiseRefreshGUICommand = new Commands.RefreshUIFromRevitModelAsyncCommand(
+                roomsSelectionViewModel: this,
+                revitDataModel: _revitDataModel);
             // push single room to revit
-            _raisePushSingleRoomCommand = new Commands.PushSingleRoomDataToRevitCommand(this, _revitDataModel, _messageStore, () => { _eventManager.PushItSingleEventRaise(); });
+            _raisePushSingleRoomCommand = new Commands.PushSingleRoomInRevitAsyncCommand(
+                roomsSelectionViewModel: this,
+                revitDataModel: _revitDataModel
+             );
             //load data from file path
-            _raiseReloadDataCommand = new Commands.ReloadDataCommand(this, _revitDataModel, _messageStore, () => { _eventManager.ReloadDataEventRaise(); });
+            _raiseReloadDataCommand = new Commands.ReloadDataFromFileAsyncCommand(
+                roomsSelectionViewModel: this,
+                revitDataModel: _revitDataModel
+            );
             //highlight room in Revit
-            _highLightRoomCommand = new Commands.HighlightRoomsInRevitCommand(this, _revitDataModel, _messageStore, () => { _eventManager.HighlightSelectedRoomEventRaise(); });
+            _highLightRoomCommand = new Commands.HighlightRoomsInRevitAsyncCommand(
+                roomsSelectionViewModel: this, 
+                revitDataModel: _revitDataModel
+            );
             //wipe stale rooms data
-            _wipeStaleRoomsDataCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.WipeStaleRoomDataEventRaise(); });
+            _wipeStaleRoomsDataCommand = new Commands.WipeStaleDataRevitAsyncCommand(
+                roomsSelectionViewModel: this, 
+                revitDataModel: _revitDataModel
+            );
             //update from changed categories
-            _updateFromChangedCategoriesCommand = new Commands.UpdateFromChangedCategoriesCommand(this, _revitDataModel, _messageStore, () => { _eventManager.UpdateAfterSupportedCategoryChangeEventRaise(); });
+            _updateFromChangedCategoriesCommand = new Commands.UpdateFromChangedCategoriesAsyncCommand(
+                roomsSelectionViewModel: this, 
+                revitDataModel: _revitDataModel
+            );
             //update all rooms in revit from data model
-            _updateAllRoomsCommand = new Commands.RaiseRevitEventCommand(this, _revitDataModel, _messageStore, () => { _eventManager.UpdateAllRoomsInRevitEventRaise(); });
+            _updateAllRoomsCommand = new Commands.PushAllRoomsInRevitAsyncCommand(
+                roomsSelectionViewModel: this, 
+                revitDataModel: _revitDataModel
+            );
+            // create the column order changed command
+            ColumnOrderChangedCommand = new RelayCommand(OnColumnOrderChanged);
+
+            //update rooms data with data from revit through an external event
+            RefreshGUICommand.Execute(null);
         }
     }
 }

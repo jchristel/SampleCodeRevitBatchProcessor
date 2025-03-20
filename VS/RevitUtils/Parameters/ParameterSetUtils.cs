@@ -22,38 +22,52 @@
 //
 
 using Autodesk.Revit.DB;
-using System;
 
-namespace RevitUtils
+namespace duHast.RevitUtils.Parameters
 {
-    public static class TransactionUtils
-    {
-        public static bool inTransaction(Document doc, string transactionName, Func<bool> actionInTranny)
-        {
-            try
-            {
-                Transaction tranny = new Transaction(doc, transactionName);
 
-                try
-                {
-                    tranny.Start();
-                    bool flagAction = actionInTranny();
-                    tranny.Commit();
-                    return flagAction;
-                }
-                catch (Exception)
-                {
-                    if (tranny != null && tranny.HasStarted())
-                    {
-                        tranny.RollBack();
-                    }
-                    return false;
-                }
-            }
-            catch (Exception)
+    /// <summary>
+    /// A collection of utility functions for setting parameter valuies.
+    /// </summary>
+    public static class ParameterSetUtils
+    {
+        /// <summary>
+        /// Sets a parameter value.
+        /// </summary>
+        /// <param name="parameter">The parameter to set the value for.</param>
+        /// <param name="value">The value to set.</param>
+        /// <returns>True if the value was set, otherwise false.</returns>
+        public static bool SetParameterValue(Parameter parameter, string value)
+        {
+            if (parameter.StorageType == StorageType.String)
             {
-                return false;
+                parameter.Set(value);
             }
+            else if (parameter.StorageType == StorageType.Double)
+            {
+                // THIS IS THE KEY:  Use SetValueString instead of Set.  Set requires your data to be in//
+                //whatever internal units of measure Revit uses. SetValueString expects your value to
+                //be in whatever the current DisplayUnitType (units of measure) the document is set to
+                //for the UnitType associated with the parameter.
+                //
+                //So SetValueString is basically how the Revit GUI works.
+
+                parameter.SetValueString(value);
+            }
+            else if (parameter.StorageType == StorageType.Integer)
+            {
+                int intValue = 0;
+                if (int.TryParse(value, out intValue))
+                {
+                    parameter.Set(intValue);
+                }
+            }
+            else
+            {
+                ElementId elementIdValue = new ElementId(int.Parse(value));
+                parameter.Set(elementIdValue);
+            }
+            return true;
         }
     }
 }

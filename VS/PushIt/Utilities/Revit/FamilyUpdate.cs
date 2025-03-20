@@ -38,7 +38,7 @@ namespace duHast.PushIt.Utilities.Revit
         /// <param name="roomData"></param>
         /// <param name="safetyOff"></param>
         /// <returns></returns>
-        public static bool updateProperties(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff)
+        public static bool UpdateProperties(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff)
         {
             try
             {
@@ -52,17 +52,27 @@ namespace duHast.PushIt.Utilities.Revit
                 }
 
                 // set the room id parameter
-                bool flag_Id = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Id.ParameterGUID, room_id);
+                bool flagId = duHast.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Id.ParameterGUID, room_id);
 
-                // set the room area briefed parameter
-                bool flag_AreaBriefed = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.AreaBriefed.ParameterGUID, roomData.AreaBriefed.Value);
-                // set the room name short parameter
-                bool flag_NameShort = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.NameShort.ParameterGUID, roomData.NameShort.Value);
-                // set the room department and subdepartment parameters
-                bool flag_Department = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Department.ParameterGUID, roomData.Department.Value);
-                bool flag_SubDepartment = RevitUtils.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.SubDepartment.ParameterGUID, roomData.SubDepartment.Value);
+                //update other properties
 
-                return flag_Id && flag_AreaBriefed && flag_NameShort && flag_Department && flag_SubDepartment;
+                bool flagOtherProperties = true;
+
+                foreach (var property in roomData.Properties)
+                {
+                    // update the property depending on whether it has a GUID or not
+                    if (property.ParameterGUID != "")
+                    {
+                        bool flag = duHast.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, property.ParameterGUID, property.Value);
+                        flagOtherProperties = flagOtherProperties && flag;
+                    }
+                    else
+                    {
+                        bool flag = duHast.RevitUtils.Parameters.ParaUtils.SetParameterValueByName(familyInstance, property.Name, property.Value);
+                        flagOtherProperties = flagOtherProperties && flag;
+                    }
+                }
+                return flagId && flagOtherProperties;
             }
             catch (Exception)
             {
@@ -80,7 +90,7 @@ namespace duHast.PushIt.Utilities.Revit
         /// <returns> 
         /// True if the update was successful, false if not
         /// </returns>
-        public static bool updateSingleFamilyInstance(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff )
+        public static bool UpdateSingleFamilyInstance(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff )
         {
 
             // set up an action to run inside a Revit transaction
@@ -89,7 +99,7 @@ namespace duHast.PushIt.Utilities.Revit
                 try
                 {
                     //update single family instance
-                    return updateProperties(doc, familyInstance, roomData, safetyOff);
+                    return UpdateProperties(doc, familyInstance, roomData, safetyOff);
                 }
                 catch (Exception)
                 {
@@ -97,7 +107,7 @@ namespace duHast.PushIt.Utilities.Revit
                 }
             };
 
-            bool transactionFlag =  RevitUtils.TransactionUtils.inTransaction(
+            bool transactionFlag =  duHast.RevitUtils.Transactions.TransactionUtils.InTransaction(
                 doc, $"Pushing room {roomData.Id.Value}", actionInTranny);
 
             return transactionFlag;
@@ -111,7 +121,7 @@ namespace duHast.PushIt.Utilities.Revit
         /// <param name="familyData"></param>
         /// <returns>True if the update was successful, false if not</returns>
         /// <exception cref="Exception"></exception>
-        public static bool updateMultipleFamilyInstances(Document doc, Dictionary<string, (duHast.PushIt.Models.RoomDataModel, List<FamilyInstance>)> familyData)
+        public static bool UpdateMultipleFamilyInstances(Document doc, Dictionary<string, (duHast.PushIt.Models.RoomDataModel, List<FamilyInstance>)> familyData)
         {
             // set up an action to run inside a Revit transaction
             Func<bool> actionInTranny = () =>
@@ -124,7 +134,7 @@ namespace duHast.PushIt.Utilities.Revit
                     foreach (var familyInstance in familyInstances)
                     {
                         // update the family instance
-                        bool flag_update = updateProperties(doc, familyInstance, roomData, false);
+                        bool flag_update = UpdateProperties(doc, familyInstance, roomData, false);
                         // if the update fails throw an exception to roll back the transaction and attempt to update one by one
                         if (!flag_update)
                         {
@@ -137,7 +147,7 @@ namespace duHast.PushIt.Utilities.Revit
             };
 
             // run the action in a transaction
-            bool transactionFlag = RevitUtils.TransactionUtils.inTransaction(
+            bool transactionFlag = duHast.RevitUtils.Transactions.TransactionUtils.InTransaction(
                 doc, "Wiping stale room data", actionInTranny);
             return transactionFlag;
         }
@@ -152,16 +162,22 @@ namespace duHast.PushIt.Utilities.Revit
         /// <param name="sampleRoom"></param>
         /// <returns>True if the update was successful, false if not</returns>
         /// <exception cref="Exception"></exception>
-        public static bool wipeMultipleFamilyInstances(Document doc, List<FamilyInstance> familyInstances, Models.RoomDataModel sampleRoom)
+        public static bool WipeMultipleFamilyInstances(Document doc, List<FamilyInstance> familyInstances, Models.RoomDataModel sampleRoom)
         {
-            // setup an empty room data model
-            Models.RoomDataModel emptyRoom = new Models.RoomDataModel();
+            
             //update all room data properties
-            emptyRoom.Id =  new Models.RoomDataProperty(sampleRoom.Id.Name, sampleRoom.Id.ParameterGUID, sampleRoom.Id.ParameterName,"");
-            emptyRoom.AreaBriefed = new Models.RoomDataProperty(sampleRoom.AreaBriefed.Name, sampleRoom.AreaBriefed.ParameterGUID, sampleRoom.AreaBriefed.ParameterName, "0.0");
-            emptyRoom.NameShort = new Models.RoomDataProperty(sampleRoom.NameShort.Name, sampleRoom.NameShort.ParameterGUID, sampleRoom.NameShort.ParameterName, "");
-            emptyRoom.Department = new Models.RoomDataProperty(sampleRoom.Department.Name, sampleRoom.Department.ParameterGUID, sampleRoom.Department.ParameterName, "");
-            emptyRoom.SubDepartment = new Models.RoomDataProperty(sampleRoom.SubDepartment.Name, sampleRoom.SubDepartment.ParameterGUID, sampleRoom.SubDepartment.ParameterName, "");
+            Models.RoomDataProperty Id =  new Models.RoomDataProperty(sampleRoom.Id.Name, sampleRoom.Id.ParameterGUID, sampleRoom.Id.ParameterName,"", sampleRoom.Id.ShowInUI, sampleRoom.Id.IsReadOnly);
+            
+            List<Models.RoomDataProperty> otherProperties = new List<Models.RoomDataProperty>();
+
+            foreach (var property in sampleRoom.Properties)
+            {
+                Models.RoomDataProperty newProperty = new Models.RoomDataProperty(property.Name, property.ParameterGUID, property.ParameterName, "", property.ShowInUI, property.IsReadOnly);
+                otherProperties.Add(newProperty);
+            }
+
+            // setup an empty room data model
+            Models.RoomDataModel emptyRoom = new Models.RoomDataModel(Id, otherProperties);
 
 
             // set up an action to run inside a Revit transaction
@@ -172,7 +188,7 @@ namespace duHast.PushIt.Utilities.Revit
                 foreach (var familyInstance in familyInstances)
                 {
                     // update the family instance
-                    bool flag_update = updateProperties(doc, familyInstance, emptyRoom, false);
+                    bool flag_update = UpdateProperties(doc, familyInstance, emptyRoom, false);
 
                     // if the update fails throw an exception to roll back the transaction and attempt to update one by one
                     if (!flag_update)
@@ -185,7 +201,7 @@ namespace duHast.PushIt.Utilities.Revit
             };
 
             // run the action in a transaction
-            bool transactionFlag = RevitUtils.TransactionUtils.inTransaction(
+            bool transactionFlag = duHast.RevitUtils.Transactions.TransactionUtils.InTransaction(
                 doc, "Wiping stale room data", actionInTranny);
 
             return transactionFlag;

@@ -21,12 +21,7 @@
 //
 //
 
-using RevitUtils;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHast.PushIt.Utilities
 {
@@ -47,11 +42,11 @@ namespace duHast.PushIt.Utilities
             Dictionary<string, List<Models.RoomsRevit>> roomsRevitById = new Dictionary<string, List<Models.RoomsRevit>>();
             foreach (Models.RoomsRevit revitRoom in roomsRevit)
             {
-                if (!roomsRevitById.ContainsKey(revitRoom.Id))
+                if (!roomsRevitById.ContainsKey(revitRoom.Id.Value))
                 {
-                    roomsRevitById[revitRoom.Id] = new List<Models.RoomsRevit>();
+                    roomsRevitById[revitRoom.Id.Value] = new List<Models.RoomsRevit>();
                 }
-                roomsRevitById[revitRoom.Id].Add(revitRoom);
+                roomsRevitById[revitRoom.Id.Value].Add(revitRoom);
             }
 
             // loop over all rooms in the data model and check if they exist in the revit model
@@ -78,14 +73,14 @@ namespace duHast.PushIt.Utilities
                         addRoom = true;
                     }
                     // check if the family is placed in the main model
-                    else if (revitRoom.DesignOption == DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME 
-                        && revitRoom.DesignSet == DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME)
+                    else if (revitRoom.DesignOption == duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME 
+                        && revitRoom.DesignSet == duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME)
                     {
                         addRoom = true;
                     }
                     // check if the family is placed in another design sets primary design option
                     // and the main model is active
-                    else if (revitModelActiveDesignSetName == DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME 
+                    else if (revitModelActiveDesignSetName == duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME 
                         && revitRoom.DesignOptionIsPrimary)
                     {
                         addRoom = true;
@@ -109,6 +104,13 @@ namespace duHast.PushIt.Utilities
                     roomsRevitById.Remove(roomDataModel.Id.Value);
                 }
 
+            }
+
+
+            // loop over all rooms in the data model and update the read only properties from matched Revit rooms
+            foreach (Models.RoomDataModel roomDataModel in roomsDataModel)
+            {
+                roomDataModel.UpdateReadProperties();
             }
 
             // return the updated data model

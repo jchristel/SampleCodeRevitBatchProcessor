@@ -28,14 +28,22 @@ namespace duHast.PushIt.Models
 {
     public class RoomDataModel
     {
+        /// <summary>
+        /// List of matching rooms
+        /// </summary>
         private List<RoomsRevit> _matchingRevitRooms;
 
+        /// <summary>
+        /// Room ID, must be unique
+        /// </summary>
         public RoomDataProperty Id { get; set; }
-        public RoomDataProperty AreaBriefed { get; set; }
-        public RoomDataProperty AreaDesigned { get; set; }
-        public RoomDataProperty NameShort { get; set; }
-        public RoomDataProperty Department { get; set; }
-        public RoomDataProperty SubDepartment { get; set; }
+
+        /// <summary>
+        /// Any other data model properties
+        /// </summary>
+        List<RoomDataProperty> _properties = new List<RoomDataProperty>();
+
+        public List<RoomDataProperty> Properties { get => _properties;}
 
         public List<RoomsRevit> MatchingRevitRooms { get => _matchingRevitRooms; set => _matchingRevitRooms = value; }
 
@@ -49,9 +57,77 @@ namespace duHast.PushIt.Models
             _matchingRevitRooms.Add(revitRoom);
         }
 
-        public void UpdateAreaDesigned(string areaDesigned)
+
+        public List<string> GetUniquePropertyValueFromEachMatchingRevitRoom(string propertyName)
         {
-            AreaDesigned = new RoomDataProperty("Area Designed", "", "", areaDesigned);
+            List<string> values = new List<string>();
+            foreach (Models.RoomsRevit revitRoom in MatchingRevitRooms)
+            {
+                Models.RoomDataProperty property = revitRoom.Properties.Find(x => x.Name == propertyName);
+                if (property != null)
+                {
+                    if (!values.Contains(property.Value))
+                        values.Add(property.Value);
+                }
+            }
+            return values;
+        }
+
+        /// <summary>
+        /// Update a read property
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="value"></param>
+        public void UpdateReadProperties()
+        {
+            // if there is only one matching room
+            if (MatchingRevitRooms.Count == 1)
+            {
+                Models.RoomsRevit revitRoom = MatchingRevitRooms[0];
+                foreach (Models.RoomDataProperty property in Properties)
+                {
+                    if (property.IsReadOnly)
+                    {
+                        property.Value = revitRoom.Properties.Find(x => x.Name == property.Name).Value;
+                    }
+                }
+            }
+            else if (MatchingRevitRooms.Count == 0)
+            {
+                // if there is no matching room, clear the read only properties
+                foreach (Models.RoomDataProperty property in Properties)
+                {
+                    if (property.IsReadOnly)
+                    {
+                        property.Value = "";
+                    }
+                }
+            }
+            else
+            // if there are multiple matching rooms, put 'varies' into read only properties iv values are different between matching rooms
+            {
+                foreach (Models.RoomDataProperty property in Properties)
+                {
+                    if (property.IsReadOnly)
+                    {
+                        // get the value of this property from each matching room...if its the same for each display that value
+                        // otherwise display 'varies'
+
+                        // get the unique values for this property from each matching room
+                        List<string> propertyValues = GetUniquePropertyValueFromEachMatchingRevitRoom(property.Name);
+
+                        //check if more than one value
+                        if (propertyValues.Count == 1)
+                        {
+                            property.Value = propertyValues[0];
+                        }
+                        else
+                        {
+                            property.Value = "varies";
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -71,6 +147,16 @@ namespace duHast.PushIt.Models
 
         public RoomDataModel()
         {
+            // initialize the list of matching rooms
+            _matchingRevitRooms = new List<RoomsRevit>();
+        }
+
+        public RoomDataModel(RoomDataProperty id, List<RoomDataProperty> otherProperties)
+        {
+            // set the id and other properties
+            Id = id;
+            _properties = otherProperties;
+
             // initialize the list of matching rooms
             _matchingRevitRooms = new List<RoomsRevit>();
         }

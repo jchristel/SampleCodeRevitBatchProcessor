@@ -24,20 +24,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Selection;
-using Autodesk.Revit.DB.Architecture;
 using duHast.PushIt.Views;
 using duHast.PushIt.Utilities;
-using duHast.PushIt.RevitActions;
 using System.IO;
 using System.Reflection;
+using Revit.Async;
 
 
 namespace duHast.PushIt
@@ -49,8 +43,7 @@ namespace duHast.PushIt
         Models.RevitDataModel _revitDataModel;
         duHast.Utils.WPF.Stores.NavigationStore _navigationStore;
         duHast.Utils.WPF.Stores.MessageStore _messageStore;
-        RevitExternalEventHandlerManager _eventManager;
-
+        
         static Main()
         {
             //assembly resolver in order for this plugin to be used form pyRevit invoke.button
@@ -60,11 +53,14 @@ namespace duHast.PushIt
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+
+            // Revit Async version 2.x.x
+            RevitTask.Initialize(commandData.Application);
+
             //set up stores
             _navigationStore = new duHast.Utils.WPF.Stores.NavigationStore();
             _messageStore = new duHast.Utils.WPF.Stores.MessageStore();
-            //set up the event manager
-            _eventManager = new RevitExternalEventHandlerManager();
+           
             // set up th revit data model
             _revitDataModel = new Models.RevitDataModel();
 
@@ -92,13 +88,10 @@ namespace duHast.PushIt
             //set up the navigation store
             _navigationStore.CurrentViewModel = CreateRoomsSelectionViewModel();
 
-            //set up the external event manager
-            _eventManager.RevitDataModel = _revitDataModel;
-
             //show the main window
             MainWindow mainWindow = new MainWindow(settings)
             {
-                DataContext = new ViewModels.MainViewModel(_navigationStore, _eventManager)
+                DataContext = new ViewModels.MainViewModel(_navigationStore)
             };
 
             mainWindow.Show();
@@ -115,7 +108,6 @@ namespace duHast.PushIt
                 _revitDataModel,
                 _navigationStore,
                 _messageStore,
-                _eventManager,
                 _globa);
         }
 

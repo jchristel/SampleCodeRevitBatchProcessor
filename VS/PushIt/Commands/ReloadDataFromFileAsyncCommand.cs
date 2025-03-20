@@ -21,19 +21,80 @@
 //
 //
 
+
+using duHast.PushIt.RevitActions;
+using duHast.PushIt.Utilities;
+using duHast.Utils.WPF.Stores;
+using Revit.Async;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace duHast.PushIt.Commands
 {
-    public class ReloadDataCommand : Utils.WPF.Commands.CommandBase
+    public class ReloadDataFromFileAsyncCommand : Utils.WPF.Commands.CommandBase
     {
-        private readonly Models.RevitDataModel _revitDataModel;
+
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
+        private readonly Models.RevitDataModel _revitDataModel;
 
-        private readonly Utils.WPF.Stores.MessageStore _messageStore;
-        private readonly Action _action;
+
+        public override async void Execute(object parameter)
+        {
+            //deactivate the ui
+            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
+
+            try
+            {
+                (string message, Utils.WPF.Stores.MessageTypes messageType) = await RevitTask.RunAsync(
+                    app =>
+                    {
+                        //Run Revit API code here
+
+                        Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
+                        try
+                        {
+                            //clear out all rooms from the data model
+                            _revitDataModel.ClearRooms();
+
+                            // reset the column order in the view model in case it was changed
+                            _roomsSelectionViewModel.ColumnOrder = new List<string>();
+
+                            // reload data from the file path
+                            _revitDataModel.LoadRoomsData();
+
+                            // Execute the action to refresh the room data with the Revit data
+                            RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
+                            action.Execute(doc);
+                        }
+                        catch (Exception ex)
+                        {
+                            return ($"An exception occurred within the external event handler update after reload data event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                        }
+                        // return success message
+                        return ("Reloaded data", Utils.WPF.Stores.MessageTypes.Information);
+                    });
+
+                if (messageType == MessageTypes.Information)
+                {
+                    // raise event to notify the view model that the model has been updated
+                    _revitDataModel.RaisePropertyChanged(PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED);
+                }
+
+                //pop message to user
+                _roomsSelectionViewModel.AddMessage(message, messageType);
+            }
+            catch (Exception ex)
+            {
+                _roomsSelectionViewModel.AddMessage(ex.Message, MessageTypes.Error);
+            }
+            finally
+            {
+                //activate the ui
+                _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = false;
+            }
+        }
 
 
         public override bool CanExecute(object parameter)
@@ -46,19 +107,6 @@ namespace duHast.PushIt.Commands
             return _roomsSelectionViewModel.DataFilePathValid && base.CanExecute(parameter);
         }
 
-        public override void Execute(object parameter)
-        {
-            try
-            {
-                _action?.Invoke();
-                _messageStore.SetCurrentMessage("Reloaded data", Utils.WPF. Stores.MessageTypes.Information);
-
-            }
-            catch (Exception ex)
-            {
-                _messageStore.SetCurrentMessage($"Failed to reload data {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
-            }
-        }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -70,18 +118,16 @@ namespace duHast.PushIt.Commands
             }
         }
 
-        public ReloadDataCommand(
+
+        public ReloadDataFromFileAsyncCommand(
             ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
-            Models.RevitDataModel revitDataModel,
-            Utils.WPF.Stores.MessageStore messageStore,
-            Action action
+            Models.RevitDataModel revitDataModel
             )
         {
             _revitDataModel = revitDataModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;
-            _messageStore = messageStore;
-            _action = action;
             _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
+
     }
 }

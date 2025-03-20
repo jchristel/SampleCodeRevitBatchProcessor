@@ -20,17 +20,34 @@
 //
 //
 //
-namespace RevitUtils
-{
-    public static class DesignSetAndOptionDefaultNames
-    {
-        // default key names for design set and design option 
-        public static string DESIGN_SET_NAME = "designSetName";
-        public static string DESIGN_OPTION_NAME = "designOptionName";
-        public static string DESIGN_OPTION_IS_PRIMARY = "designOptionIsPrimary";
 
-        // default names for design set and design option of the mmain model ( no design set or design option is active)
-        public static string MAIN_MODEL_DEFAULT_DESIGN_SET_NAME = "Main Model";
-        public static string MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME = "-";
+
+using System.Collections.Generic;
+using Autodesk.Revit.DB;
+
+namespace duHast.RevitUtils.Families
+{
+    public static class FamilyUtils
+    {
+
+        /// <summary>
+        /// Get all family instances in the model.
+        /// </summary>
+        /// <param name="doc">The current model document.</param>
+        /// <param name="categories">A list of built in categories of which to return family instances from.</param>
+        /// <returns>A list of family instances belonging to the supplied categories. An empty list if none are present in the model.</returns>
+        public static List<FamilyInstance> GetFamilyInstancesByBuiltInCategories(Document doc, List<BuiltInCategory> categories)
+        {
+            List<FamilyInstance> familyInstances = new List<FamilyInstance>();
+            ElementMulticategoryFilter filter = new ElementMulticategoryFilter(categories);
+            FilteredElementCollector col = new FilteredElementCollector(doc).OfClass(typeof(FamilyInstance)).WherePasses(filter);
+            
+            foreach (Element instance in col)
+            {
+                familyInstances.Add(instance as FamilyInstance);
+            }
+
+            return familyInstances;
+        }
     }
 }

@@ -22,13 +22,8 @@
 //
 
 using duHast.PushIt.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Autodesk.Revit.DB;
-using RevitUtils;
 
 namespace duHast.PushIt.RevitActions
 {
@@ -52,20 +47,20 @@ namespace duHast.PushIt.RevitActions
 
             // get shared parameter data from the model
             // get shared parameter ids by GUID
-            Dictionary<string, ElementId> sharedParameterIdsByGUIDs = RevitUtils.SharedParaUtils.GetSharedParameterIdsByGUID(doc);
+            Dictionary<string, ElementId> sharedParameterIdsByGUIDs = duHast.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterIdsByGUID(doc);
 
             // get supported categories
-            List<Category> categories = RevitUtils.CategoryUtils.GetMainCategoriesByName(doc, _revitModel.Settings.SupportedCategories);
+            List<Category> categories = duHast.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, _revitModel.Settings.SupportedCategories);
             if (categories.Count == 0)
             {
                 return;
             }
 
             // convert revit categories into revit builtIncategories for filtering
-            List<BuiltInCategory> familyInstanceFilterCategories = CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
+            List<BuiltInCategory> familyInstanceFilterCategories = duHast.RevitUtils.Categories.CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
 
             //get families of supported built in categories
-            List<FamilyInstance> familyInstances = RevitUtils.Families.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
+            List<FamilyInstance> familyInstances = duHast.RevitUtils.Families.FamilyUtils.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
 
             //check if there are any family instances
             if (familyInstances.Count == 0)
@@ -86,17 +81,17 @@ namespace duHast.PushIt.RevitActions
             Dictionary<string,(RoomDataModel,List < FamilyInstance>)> currentFamilyInstances = new Dictionary<string, (RoomDataModel, List<FamilyInstance>)>();
             foreach (var revitRoomInstance in revitRooms)
             {
-                if (roomsDataModel.Exists(x => x.Id.Value == revitRoomInstance.Id))
+                if (roomsDataModel.Exists(x => x.Id.Value == revitRoomInstance.Id.Value))
                 {
-                    if (currentFamilyInstances.ContainsKey(revitRoomInstance.Id))
+                    if (currentFamilyInstances.ContainsKey(revitRoomInstance.Id.Value))
                     {
-                        currentFamilyInstances[revitRoomInstance.Id].Item2.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
+                        currentFamilyInstances[revitRoomInstance.Id.Value].Item2.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
 
                     }
                     else
                     {
-                        currentFamilyInstances[revitRoomInstance.Id] = (
-                            roomsDataModel.Find(x => x.Id.Value == revitRoomInstance.Id), 
+                        currentFamilyInstances[revitRoomInstance.Id.Value] = (
+                            roomsDataModel.Find(x => x.Id.Value == revitRoomInstance.Id.Value), 
                             new List<FamilyInstance> { doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance }
                         );
                     }
@@ -117,7 +112,7 @@ namespace duHast.PushIt.RevitActions
                 if (updateFamilyInstances.Count == 20)
                 {
                     // update the family instances
-                    bool updateFamily = Utilities.Revit.FamilyUpdate.updateMultipleFamilyInstances(
+                    bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateMultipleFamilyInstances(
                         doc: doc,
                         familyData: updateFamilyInstances
                     );
@@ -130,7 +125,7 @@ namespace duHast.PushIt.RevitActions
             //update the remaining family instances if any
             if (updateFamilyInstances.Count>0)
             {
-                bool updateFamily = Utilities.Revit.FamilyUpdate.updateMultipleFamilyInstances(
+                bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateMultipleFamilyInstances(
                     doc: doc,
                     familyData: updateFamilyInstances
                 );

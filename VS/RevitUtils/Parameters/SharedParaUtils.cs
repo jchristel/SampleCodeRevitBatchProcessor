@@ -25,11 +25,20 @@ using System;
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
-namespace RevitUtils
+namespace duHast.RevitUtils.Parameters
 {
+    /// <summary>
+    /// A static class providing utility methods for shared parameters.
+    /// </summary>
     public static class SharedParaUtils
     {
+        #region all shared parameter getters
 
+        /// <summary>
+        /// Returns all shared parameters in a document.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns>A list of all shared paramters presetn or an empty list if none are in the model.</returns>
         public static List<SharedParameterElement> GetSharedParameters(Document doc)
         {
             List<SharedParameterElement> parameters = new List<SharedParameterElement>();
@@ -42,6 +51,26 @@ namespace RevitUtils
             return parameters;
         }
 
+        /// <summary>
+        /// Returns all shared parameters in a document as aa dictionary where key is the shared parameter GUID and value is the ElementId of the shared parameter.
+        /// </summary>
+        /// <param name="doc">The document to get the shared parameters from.</param>
+        /// <returns>A dictionary where key is the shared parameter GUID and value is the ElementId of the shared parameter.</returns>
+        public static Dictionary<string, ElementId> GetSharedParameterIdsByGUID(Document doc)
+        {
+            Dictionary<string, ElementId> sharedParameterIds = new Dictionary<string, ElementId>();
+            List<SharedParameterElement> sharedParameters = GetSharedParameters(doc);
+            foreach (SharedParameterElement sharedParameter in sharedParameters)
+            {
+                sharedParameterIds.Add(sharedParameter.GuidValue.ToString(), sharedParameter.Id);
+            }
+            return sharedParameterIds;
+        }
+
+        #endregion all shared parameter getters
+
+
+        #region misc shared parameter utils
 
         /// <summary>
         /// Get the categories a shared parameter is bound to
@@ -99,6 +128,17 @@ namespace RevitUtils
             return foundParameter ? parameterBindings : null;
         }
 
+        #endregion
+
+        #region shared parameter value getters
+
+        /// <summary>
+        /// Returns the value of a shared parameter as a string. 
+        /// Imperial unit values are converted to metric.
+        /// </summary>
+        /// <param name="element">The element of which to retieve the parameter value from.</param>
+        /// <param name="parameterGUID">The guid of the hared parameter of which to retrieve the value from.</param>
+        /// <returns>A string if the parameter was found on the element. Otherwise null</returns>
         public static string GetSharedParameterValueFromElementByGUID(Element element, string parameterGUID)
         {
             string parameterValue = null;
@@ -109,7 +149,8 @@ namespace RevitUtils
                 {
                     if (parameter.GUID.ToString() == parameterGUID)
                     {
-                        parameterValue = parameter.AsString();
+                        // get parameter value as string. This will also convert imperial units to metric!
+                        parameterValue = ParameterGetUtils.GetParameterValueAsString(para:parameter);
                     }
                 }
                 catch (Exception)
@@ -120,6 +161,12 @@ namespace RevitUtils
             return parameterValue;
         }
 
+        /// <summary>
+        /// Return the value of a shared parameter as a string. The parameter is identified by its ElementId.
+        /// </summary> 
+        /// <param name="element">The element of which to retieve the parameter value from.</param>
+        /// <param name="parameterId">The ElementId of the shared parameter of which to retrieve the value from.</param>
+        /// <returns>A string if the parameter was found on the element. Otherwise null</returns>
         public static string GetSharedParameterValueFromElementByElementId(Element element, ElementId parameterId)
         {
             string parameterValue = null;
@@ -131,22 +178,10 @@ namespace RevitUtils
                 {
                     if (parameter.Id == parameterId)
                     {
-                        if (parameter.StorageType == StorageType.String)
-                        {
-                            parameterValue = parameter.AsString();
-                        }
-                        else if (parameter.StorageType == StorageType.Double)
-                        {
-                            parameterValue = parameter.AsDouble().ToString();
-                        }
-                        else if (parameter.StorageType == StorageType.Integer)
-                        {
-                            parameterValue = parameter.AsInteger().ToString();
-                        }
-                        else
-                        {
-                            parameterValue = parameter.AsElementId().ToString();
-                        }
+                        // get parameter value as string. This will also convert imperial units to metric!
+                        parameterValue = ParameterGetUtils.GetParameterValueAsString(para: parameter);
+               
+                        return parameterValue;
                     }
                 }
                 catch (Exception)
@@ -157,51 +192,18 @@ namespace RevitUtils
             return parameterValue;
         }
 
-        public static Dictionary<string, ElementId> GetSharedParameterIdsByGUID(Document doc)
-        {
-            Dictionary<string, ElementId> sharedParameterIds = new Dictionary<string, ElementId>();
-            List<SharedParameterElement> sharedParameters = GetSharedParameters(doc);
-            foreach (SharedParameterElement sharedParameter in sharedParameters)
-            {
-                sharedParameterIds.Add(sharedParameter.GuidValue.ToString(), sharedParameter.Id);
-            }
-            return sharedParameterIds;
-        }
+        #endregion shared parameter value getters
 
+        #region shared parameter value setters
 
-        public static bool SetParameterValue(Parameter parameter, string value)
-        {
-            if (parameter.StorageType == StorageType.String)
-            {
-                parameter.Set(value);
-            }
-            else if (parameter.StorageType == StorageType.Double)
-            {
-                // THIS IS THE KEY:  Use SetValueString instead of Set.  Set requires your data to be in//
-                //whatever internal units of measure Revit uses. SetValueString expects your value to
-                //be in whatever the current DisplayUnitType (units of measure) the document is set to
-                //for the UnitType associated with the parameter.
-                //
-                //So SetValueString is basically how the Revit GUI works.
-
-                parameter.SetValueString(value);
-            }
-            else if (parameter.StorageType == StorageType.Integer)
-            {
-                int intValue = 0;
-                if (int.TryParse(value, out intValue))
-                {
-                    parameter.Set(intValue);
-                }
-            }
-            else
-            {
-                ElementId elementIdValue = new ElementId(int.Parse(value));
-                parameter.Set(elementIdValue);
-            }
-            return true;
-        }
-
+        /// <summary>
+        /// Sets the value of a shared parameter identified by its GUID on an element .
+        /// </summary>
+        /// <param name="doc">The current model document</param>
+        /// <param name="el">The Revit element</param>
+        /// <param name="GUID">The guid identifying the parameter</param>
+        /// <param name="value">The value to set the parameter to.</param>
+        /// <returns>True if the parameter value was set. Otherwise false (i.e. parameter was not set successfully or the parameter does not exist on the element)</returns>
         public static bool SetSharedParameterValueByGUID(Document doc, Element el, string GUID, string value)
         {
             // get the shared parameter id
@@ -222,11 +224,13 @@ namespace RevitUtils
             {
                 if (parameter.Id == sharedParameterId)
                 {
-                    bool setResult = SetParameterValue(parameter, value);
+                    bool setResult = ParameterSetUtils.SetParameterValue(parameter, value);
                     return setResult;
                 }
             }
             return false;
         }
+
+        #endregion shared parameter value setters
     }
 }

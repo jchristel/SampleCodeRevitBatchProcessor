@@ -24,14 +24,7 @@
 
 using Autodesk.Revit.DB;
 using duHast.PushIt.Models;
-using RevitUtils;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace duHast.PushIt.RevitActions
 {
@@ -51,16 +44,16 @@ namespace duHast.PushIt.RevitActions
         }
 
 
-        public bool wipeIt(Document doc, List<FamilyInstance> familyInstancesToWipe, RoomDataModel sampleRoom)
+        public bool WipeIt(Document doc, List<FamilyInstance> familyInstancesToWipe, RoomDataModel sampleRoom)
         {
-            bool wipeSuccess = Utilities.Revit.FamilyUpdate.wipeMultipleFamilyInstances(doc, familyInstancesToWipe, sampleRoom);
+            bool wipeSuccess = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(doc, familyInstancesToWipe, sampleRoom);
             if (!wipeSuccess)
             {
                 // attempt to wipe one by one
                 foreach (var familyInstance in familyInstancesToWipe)
                 {
                     // at least one will fail...but the rest will succeed
-                    bool wipeSuccessSingle = Utilities.Revit.FamilyUpdate.wipeMultipleFamilyInstances(doc, new List<FamilyInstance> { familyInstance }, sampleRoom);
+                    bool wipeSuccessSingle = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(doc, new List<FamilyInstance> { familyInstance }, sampleRoom);
                     if (!wipeSuccessSingle)
                     {
                         // log error
@@ -85,7 +78,7 @@ namespace duHast.PushIt.RevitActions
             }
 
             // get supported categories
-            List<Category> categories = RevitUtils.CategoryUtils.GetMainCategoriesByName(doc, supportedCategoryName);
+            List<Category> categories = duHast.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, supportedCategoryName);
             if (categories.Count == 0)
             {
                 // no supported categories found
@@ -94,10 +87,10 @@ namespace duHast.PushIt.RevitActions
             }
 
             // convert revit categories into revit builtIncategories for filtering
-            List<BuiltInCategory> familyInstanceFilterCategories = CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
+            List<BuiltInCategory> familyInstanceFilterCategories = duHast.RevitUtils.Categories.CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
 
             //get families of supported built in categories
-            List<FamilyInstance> familyInstances = RevitUtils.Families.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
+            List<FamilyInstance> familyInstances = duHast.RevitUtils.Families.FamilyUtils.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
 
             //check if there are any family instances
             if (familyInstances.Count == 0)
@@ -118,7 +111,7 @@ namespace duHast.PushIt.RevitActions
             List<FamilyInstance> staleFamilyInstances = new List<FamilyInstance>();
             foreach (var revitRoomInstance in revitRooms)
             {
-                if (!roomsDataModel.Exists(x => x.Id.Value == revitRoomInstance.Id))
+                if (!roomsDataModel.Exists(x => x.Id.Value == revitRoomInstance.Id.Value))
                 {
                     staleFamilyInstances.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
                 }
@@ -138,7 +131,7 @@ namespace duHast.PushIt.RevitActions
                 if (familyInstancesToWipe.Count == 20)
                 {
                     // update the family instances
-                    bool wipeSuccess = wipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
+                    bool wipeSuccess = WipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
                     overallWipeSuccess = overallWipeSuccess && wipeSuccess;
                     // clear the update family instances
                     familyInstancesToWipe.Clear();
@@ -149,7 +142,7 @@ namespace duHast.PushIt.RevitActions
             //wipe the remaining family instances
             if (familyInstancesToWipe.Count > 0)
             {
-                bool wipeSuccess = wipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
+                bool wipeSuccess = WipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
                 overallWipeSuccess = overallWipeSuccess && wipeSuccess;
             }
 

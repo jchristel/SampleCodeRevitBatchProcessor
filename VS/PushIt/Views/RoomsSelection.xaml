@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:duHast.PushIt.Views"
-             xmlns:utilsViews ="clr-namespace:duHast.Utils.WPF.Views;assembly=Utils.23.0.0.1"
-             xmlns:converters="clr-namespace:duHast.Utils.WPF.Converters;assembly=Utils.23.0.0.1"
+             xmlns:utilsViews ="clr-namespace:duHast.Utils.WPF.Views;assembly=Utils.23.0.0.2"
+             xmlns:converters="clr-namespace:duHast.Utils.WPF.Converters;assembly=Utils.23.0.0.2"
              xmlns:spinner="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinner"
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="800">
@@ -42,8 +42,18 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <!--boolean visibility converter-->
+        <Style TargetType="DataGrid">
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsFilterApplied}" Value="True">
+                    <Setter Property="BorderBrush" Value="Red"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <!--boolean converters-->
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid Margin="10 10 10 10">
@@ -124,119 +134,36 @@
             </Expander>
         </Border>
         <!-- grid view -->
-        <Border Grid.Row="3" CornerRadius="1"  Margin="0 2 0 2">
-            <Border.Style>
-                <Style TargetType="Border">
+        <DataGrid Grid.Row="3" x:Name="dataGrid" 
+                            ItemsSource="{Binding DataView}"
+                            EnableRowVirtualization="True" 
+                            EnableColumnVirtualization="True" 
+                            VirtualizingPanel.IsVirtualizing="True" 
+                            VirtualizingPanel.VirtualizationMode="Recycling"
+                            AutoGenerateColumns="True" 
+                            IsReadOnly="True"
+                            CanUserSortColumns="True"
+                            SelectionMode="Single" 
+                            SelectedIndex="{Binding SelectedIndex}"
+                            ColumnWidth="*"
+                            RowHeight="23"
+                            HorizontalAlignment="Stretch"
+                            ColumnReordered="RoomsDataGrid_ColumnReordered"
+                            IsEnabled="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanConverter}}">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="Red" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsFilterApplied}" Value="True">
-                            <Setter Property="BorderBrush" Value="Orange"/>
-                            <Setter Property="BorderThickness" Value="4"/>
+                        <DataTrigger Binding="{Binding Count}" Value="1">
+                            <Setter Property="Background" Value="LightGray"></Setter>
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding IsFilterApplied}" Value="False">
-                            <Setter Property="BorderBrush" Value="Gray"/>
-                            <Setter Property="BorderThickness" Value="1"/>
+                        <DataTrigger Binding="{Binding Count}" Value="0">
+                            <Setter Property="Background" Value="White"></Setter>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </Border.Style>
-            <!-- a loading spinner  -->
-            <Grid>
-                <TextBlock 
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center" 
-                    Visibility="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    FontSize="24"
-                    Text="Updating Revit..."/>
-                <ListView 
-                    Margin="0 25 0 0" 
-                    ItemsSource="{Binding Rooms}"
-                    Visibility="{Binding IsWaitingForRevitCommandToFinish, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
-                    SelectionMode="Single"
-                    SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}">
-                    <!-- a style colouring rows depending on the count property  -->
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Background" Value="Red" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Count}" Value="1">
-                                    <Setter Property="Background" Value="LightGray"></Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Count}" Value="0">
-                                    <Setter Property="Background" Value="White"></Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.View>
-                        <GridView>
-                            <!-- room id column -->
-                            <GridViewColumn>
-                                <GridViewColumnHeader Content="Room Id"/>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Padding="0 0 20 0" Text="{Binding Id}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <!-- area briefed column -->
-                            <GridViewColumn>
-                                <GridViewColumnHeader Content="Area Briefed"/>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Padding="0 0 20 0" Text="{Binding  AreaBriefed}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <!-- Area Designed column -->
-                            <GridViewColumn>
-                                <GridViewColumnHeader Content="Area Designed" />
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Padding="0 0 20 0" Text="{Binding  AreaDesigned}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <!-- RoomName Short -->
-                            <GridViewColumn>
-                                <GridViewColumnHeader Content="Room Name Short" />
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Padding="0 0 20 0" Text="{Binding NameShort}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <!-- department -->
-                            <GridViewColumn>
-                                <GridViewColumnHeader Content="Department" />
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock HorizontalAlignment="Center" Padding="0 0 20 0" Text="{Binding Department}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <!-- sub department -->
-                            <GridViewColumn>
-                                <GridViewColumnHeader Content="Subdepartment" />
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock HorizontalAlignment="Center" Padding="0 0 20 0" Text="{Binding SubDepartment}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <!-- count -->
-                            <GridViewColumn>
-                                <GridViewColumnHeader Content="Count" />
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock HorizontalAlignment="Center" Padding="0 0 20 0" Text="{Binding Count}"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </Grid>
-        </Border>
+            </DataGrid.RowStyle>
+        </DataGrid>
         <!-- button row content -->
         <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>

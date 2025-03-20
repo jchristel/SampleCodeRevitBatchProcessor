@@ -24,18 +24,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace duHast.PushIt.Views
 {
@@ -63,6 +55,26 @@ namespace duHast.PushIt.Views
                 this.FilePathTextBox
                   .GetBindingExpression(TextBox.TextProperty)
                   .UpdateSource();
+            }
+        }
+
+        private void RoomsDataGrid_ColumnReordered(object sender, EventArgs e)
+        {
+            // check the view model
+            if (DataContext is ViewModels.RoomsSelectionViewModel vm)
+            {
+
+                var dataGrid = sender as DataGrid;
+                if (dataGrid != null && dataGrid.ItemsSource is DataView dataView)
+                {
+                    var reorderedColumns = dataGrid.Columns
+                                                   .OrderBy(c => c.DisplayIndex)
+                                                   .Select(c => c.Header.ToString())
+                                                   .ToList();
+
+                    // Pass the new column order and the DataView to the ViewModel
+                    vm.ColumnOrderChangedCommand.Execute(new Tuple<IEnumerable<string>, DataView>(reorderedColumns, dataView));
+                }
             }
         }
     }

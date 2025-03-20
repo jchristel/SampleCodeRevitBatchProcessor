@@ -31,19 +31,25 @@ namespace duHast.PushIt.Models
         private string _parameterGUID;
         private string _parameterName;
         private string _value;
+        private bool _showInUI;
+        private bool _isReadOnly;
 
         public string Value { get => _value; set => _value = value; }
         public string Name { get => _name; }
         public string ParameterGUID { get => _parameterGUID; }
         public string ParameterName { get => _parameterName; }
+        public bool ShowInUI { get => _showInUI; }
+        public bool IsReadOnly { get => _isReadOnly; }
 
 
-        public RoomDataProperty(string name, string parameterGUID, string parameterName, string value)
+        public RoomDataProperty(string name, string parameterGUID, string parameterName, string value, bool showInUI, bool isReadOnly)
         {
             _name = name;
             _parameterGUID = parameterGUID;
             _parameterName = parameterName;
             _value = value;
+            _showInUI = showInUI;
+            _isReadOnly = isReadOnly;
         }
 
     }

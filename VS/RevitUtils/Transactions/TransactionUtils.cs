@@ -21,24 +21,46 @@
 //
 //
 
-namespace duHast.PushIt.ViewModels
+using Autodesk.Revit.DB;
+using System;
+
+namespace duHast.RevitUtils.Transactions
 {
-    public class RoomViewModel
+    public static class TransactionUtils
     {
-        public Models.RoomDataModel _room;
-        public string Id => _room.Id.Value;
-
-        public string AreaBriefed => _room.AreaBriefed.Value;
-        public string AreaDesigned => _room.AreaDesigned.Value;
-        public string NameShort => _room.NameShort.Value;
-        public string Department => _room.Department.Value;
-        public string SubDepartment => _room.SubDepartment.Value;
-
-        public string Count => _room.MatchingRevitRooms.Count.ToString();
-
-        public RoomViewModel(Models.RoomDataModel room)
+        /// <summary>
+        /// Excutes an action in a transaction.
+        /// </summary>
+        /// <param name="doc">The document to execute the transaction in.</param>
+        /// <param name="transactionName">The name of the transaction.</param>
+        /// <param name="actionInTranny">The action to execute in the transaction. ( can not accept any args )</param>
+        /// <returns>True if the action was executed successfully, otherwise false. If an excption occurrs during the transaction, it will be rolled back.</returns>
+        public static bool InTransaction(Document doc, string transactionName, Func<bool> actionInTranny)
         {
-            _room = room;
+            try
+            {
+                Transaction tranny = new Transaction(doc, transactionName);
+
+                try
+                {
+                    tranny.Start();
+                    bool flagAction = actionInTranny();
+                    tranny.Commit();
+                    return flagAction;
+                }
+                catch (Exception)
+                {
+                    if (tranny != null && tranny.HasStarted())
+                    {
+                        tranny.RollBack();
+                    }
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

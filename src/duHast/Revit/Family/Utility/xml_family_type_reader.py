@@ -57,6 +57,183 @@ from duHast.Utilities.string_operations import (
     remove_trailing_characters_from_number_string,
 )
 
+# Constants
+# place holder for unitless parameters
+UNITLESS = "unitless"
+NAME_UNKNOWN = "unknown name"
+TYPE_UNKNOWN = "unknown type" # type of parameter is unknown (options are custom, shared, system)
+VALUE_UNKNOWN = "unknown value"
+PARAMETER_STORAGE_TYPE_UNKNOWN = "unknown storage type"
+FAMILY_TYPE_NAME_UNKNOWN = "unknown family type name"
+
+
+
+def get_parameter(xml_node, family_name, root_category_path, family_path, family_type_name = FAMILY_TYPE_NAME_UNKNOWN, default_value=VALUE_UNKNOWN):
+    """
+    Get a parameter from the XML node.
+
+    :param xml_node: The XML node.
+    :type xml_node: XmlNode
+    :param family_name: The name of the family.
+    :type family_name: str
+    :param root_category_path: The root category path.
+    :type root_category_path: str
+    :param family_path: The path of the family file.
+    :type family_path: str
+    :param family_type_name: The name of the family type.
+    :type family_type_name: str
+    :param default_value: The default value to use if the parameter value is not set.
+    :type default_value: str
+
+    :return: A family type parameter data storage object.
+    :rtype: :class:`.FamilyTypeParameterDataStorage`
+    """
+
+    try:
+        # attempt to read out values
+        name = NAME_UNKNOWN
+        try:
+            name = xml_node.Name
+        except Exception as e:
+            name = "{}".format(name, e)
+
+        type = TYPE_UNKNOWN
+        try:
+            type = xml_node.Attributes["type"].Value
+        except Exception as e:
+            type = "{}".format(type, e)
+
+        type_of_parameter = PARAMETER_STORAGE_TYPE_UNKNOWN
+        try:
+            type_of_parameter = xml_node.Attributes[
+                "typeOfParameter"
+            ].Value
+        except Exception as e:
+            type_of_parameter = "{}".format(type_of_parameter, e)
+
+        # there are parameters without units (i.e. text parameters)
+        units = UNITLESS
+        try:
+            units = xml_node.Attributes["units"].Value
+        except Exception as e:
+            pass
+
+        # set the parameter value to the default value
+        p_value = default_value
+
+        # attempt to read out values if required
+        if p_value == VALUE_UNKNOWN:
+        
+            try:
+                # replace any new row characters with space and remove trailing spaces
+                p_value = replace_new_lines(xml_node.InnerText)
+            except Exception as e:
+                pass
+
+            # check if the value is a number and contains thousands separators
+            if (
+                type_of_parameter
+                in FamilyTypeParameterDataStorage.unit_type_compare_values_as_floats
+            ):
+                # remove any thousands separators
+                p_value = p_value.replace(",", "")
+                # remove any currency signs
+                p_value = remove_currency_sign(p_value)
+                # remove any trailing units
+                p_value = remove_trailing_characters_from_number_string(p_value)
+        else:
+            # go with the default value
+            pass
+
+        # family_name can either be just the family name or the family root path
+        # check which one it is:
+        root_name_path = family_name
+        family_name_checked = family_name
+
+        # split the file name at nesting separator
+        family_name_split = family_name.split(NESTING_SEPARATOR)
+        
+        # check if the family name contains a nesting separator
+        if len(family_name_split) > 0:
+            # yes, so the fam name path is the last part
+            family_name_checked = family_name_split[-1]
+
+        # Create a parameter object 
+        # make sure all values are encoded to ascii to avoid 
+        # issues with special characters when writing to file
+        parameter = FamilyTypeParameterDataStorage(
+            root_name_path = encode_ascii(root_name_path),
+            root_category_path = encode_ascii(root_category_path),
+            family_name = encode_ascii(family_name_checked),
+            family_type_name=encode_ascii(family_type_name),
+            family_file_path=encode_ascii(family_path),
+            name=encode_ascii(name),
+            type=encode_ascii(type),
+            type_of_parameter=encode_ascii(type_of_parameter),
+            units=encode_ascii(units),
+            value=encode_ascii(p_value),
+        )
+
+        return parameter
+    except Exception:
+
+        return None
+
+
+
+def get_unique_parameters_from_family_xml(doc_xml, family_name, root_category_path, family_path):
+    """
+    Get all unique parameters from the family type XML document by inspecting every part node representing a family type.
+    
+    Note:
+    The part atom export will only contain parameters for a family type if they have a value set.
+
+    :param doc_xml: The XML document.
+    :type doc_xml: XmlDocument
+
+    :return: A list of family type parameter data storage objects.
+    :rtype: [:class:`.FamilyTypeParameterDataStorage`]
+    """
+
+    if isinstance(doc_xml, XmlDocument) is False:
+        raise TypeError(
+            "doc_xml must be an instance of XmlDocument. Got: {}".format(doc_xml)
+        )
+
+    parameters = []
+
+    # Add an XML namespace manager
+    name_space_manager = XmlNamespaceManager(doc_xml.NameTable)
+    name_space_manager.AddNamespace("atom", "http://www.w3.org/2005/Atom")
+    name_space_manager.AddNamespace("A", "urn:schemas-autodesk-com:partatom")
+
+    # Get the family parameters
+    for part_node in doc_xml.SelectNodes("//A:part", name_space_manager):
+
+        # Get the family type name
+        family_type_name = ""
+       
+        # If we got a type name, add the parameters, their values and units, parameter type and type of parameter
+        if family_type_name:
+
+            for child_node in part_node.ChildNodes:
+                if child_node.Name != "title":
+
+                    parameter = get_parameter(
+                        xml_node=child_node, 
+                        family_name=family_name,
+                        root_category_path= root_category_path, 
+                        family_path=family_path,
+                        family_type_name="",
+                        default_value=""
+                    )
+                    
+                    # Add parameter to list if not in there already
+                    if parameter is not None and parameter not in parameters:
+                        parameters.append(parameter)
+
+    return parameters
+                   
 
 def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path = "None"):
     """
@@ -128,6 +305,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
     # it might be listed for another type though where it has a value...
 
     # need to loop over types first to ensure that all parameters are read in
+    all_parameters_in_atom_export = get_unique_parameters_from_family_xml(doc_xml, family_name, root_category_path, family_path)
 
 
     # Get the family parameters
@@ -147,85 +325,23 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
             for child_node in part_node.ChildNodes:
                 if child_node.Name != "title":
 
-                    # attempt to read out values
-                    name = "unknown name"
-                    try:
-                        name = child_node.Name
-                    except Exception as e:
-                        name = "{}".format(name, e)
-
-                    type = "unknown type"
-                    try:
-                        type = child_node.Attributes["type"].Value
-                    except Exception as e:
-                        type = "{}".format(type, e)
-
-                    type_of_parameter = "unknown type of parameter"
-                    try:
-                        type_of_parameter = child_node.Attributes[
-                            "typeOfParameter"
-                        ].Value
-                    except Exception as e:
-                        type_of_parameter = "{}".format(type_of_parameter, e)
-
-                    # there are parameters without units (i.e. text parameters)
-                    units = "unitless"
-                    try:
-                        units = child_node.Attributes["units"].Value
-                    except Exception as e:
-                        pass
-
-                    # attempt to read out values
-                    p_value = "unknown value"
-                    try:
-                        # replace any new row characters with space and remove trailing spaces
-                        p_value = replace_new_lines(child_node.InnerText)
-                    except Exception as e:
-                        pass
-
-                    # check if the value is a number and contains thousands separators
-                    if (
-                        type_of_parameter
-                        in FamilyTypeParameterDataStorage.unit_type_compare_values_as_floats
-                    ):
-                        # remove any thousands separators
-                        p_value = p_value.replace(",", "")
-                        # remove any currency signs
-                        p_value = remove_currency_sign(p_value)
-                        # remove any trailing units
-                        p_value = remove_trailing_characters_from_number_string(p_value)
-
-                    # family_name can either be just the family name or the family root path
-                    # check which one it is:
-                    root_name_path = family_name
-                    family_name_checked = family_name
-
-                    # split the file name at nesting separator
-                    family_name_split = family_name.split(NESTING_SEPARATOR)
-                    
-                    # check if the family name contains a nesting separator
-                    if len(family_name_split) > 0:
-                        # yes, so the fam name path is the last part
-                        family_name_checked = family_name_split[-1]
-
-                    # Create a parameter object 
-                    # make sure all values are encoded to ascii to avoid 
-                    # issues with special characters when writing to file
-                    parameter = FamilyTypeParameterDataStorage(
-                        root_name_path = encode_ascii(root_name_path),
-                        root_category_path = encode_ascii(root_category_path),
-                        family_name = encode_ascii(family_name_checked),
-                        family_type_name=encode_ascii(family_type_name),
-                        family_file_path=encode_ascii(family_path),
-                        name=encode_ascii(name),
-                        type=encode_ascii(type),
-                        type_of_parameter=encode_ascii(type_of_parameter),
-                        units=encode_ascii(units),
-                        value=encode_ascii(p_value),
+                    # get the parameter
+                    parameter = get_parameter(
+                        xml_node=child_node, 
+                        family_name=family_name,
+                        root_category_path=root_category_path, 
+                        family_path=family_path,
+                        family_type_name=family_type_name,
+                        default_value=VALUE_UNKNOWN, # enforce parameter value to be read in
                     )
 
-                    # Add type to family
-                    parameters.append(parameter)
+                    # Add parameter to list if valid
+                    if parameter is not None:
+                        # Add type to family
+                        parameters.append(parameter)
+            
+            # check if there are parameters in the atom export that are not in the parameters list for this type since they have no value for this family type set
+            
 
             # Set up a family type data storage object
             # make sure all values are encoded to ascii to avoid 

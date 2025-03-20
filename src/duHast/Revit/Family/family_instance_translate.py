@@ -40,7 +40,6 @@ RADIAN_ANGLE_45DEGREES = pi / 4
 RADIAN_ANGLE_90DEGREES = pi / 2
 
 
-
 def get_family_location_point(pFam):
     if pFam is not None and pFam.Location is not None:
         location_point = pFam.Location
@@ -149,5 +148,43 @@ def rotate_around_origin(element, angle, transaction_manager =None):
     except Exception as e:
         return_value.update_sep(False, "Failed to rotate element around origin. {}".format(e))
 
+
+    return return_value
+
+
+def move_from_point_to_point(element, start_point, end_point, transaction_manager =None):
+    """
+    Moves an element from a start point to an end point. (assume same Z value)
+
+    :param element: The element to move.
+    :type element: Autodesk.Revit.DB.Element
+    :param start_point: The start point of the move.
+    :type start_point: Autodesk.Revit.DB.XYZ
+    :param end_point: The end point of the move.
+    :type end_point: Autodesk.Revit.DB.XYZ
+    """
+
+    return_value = res.Result()
+
+    try:
+        def action():
+            try:
+                action_return_value = res.Result()
+                ElementTransformUtils.MoveElement(element.Document, element.Id, end_point - start_point)
+                return_value.append_message( "Element moved from point to point.") 
+            except Exception as e:
+                action_return_value.update_sep(False, "Failed to move element from point to point. {}".format(e))
+            return action_return_value
+       
+        if transaction_manager is None:
+            # assume there is an transaction already going on
+            return_value = action()
+        else:
+            # create a transaction
+            transaction = Transaction(element.Document, "moved element from point to point: {}".format(Element.Name.GetValue(element)))
+            return_value = transaction_manager(transaction, action)
+
+    except Exception as e:
+        return_value.update_sep(False, "Failed to move element from point to point. {}".format(e))
 
     return return_value

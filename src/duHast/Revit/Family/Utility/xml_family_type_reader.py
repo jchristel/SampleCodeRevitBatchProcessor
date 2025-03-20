@@ -67,6 +67,24 @@ PARAMETER_STORAGE_TYPE_UNKNOWN = "unknown storage type"
 FAMILY_TYPE_NAME_UNKNOWN = "unknown family type name"
 
 
+# XML node attribute names translation of parameter properties
+# the parameter name
+PARAMETER_NAME = "Parameter Name"
+# the parameter type (options are custom, shared, system)
+PARAMETER_INTERNAL_TYPE = "Parameter Internal Type"
+# the storage type of a parameter (string, yes /no,etc)
+PARAMETER_STORAGE_TYPE = "Parameter Storage Type"
+# the units of a parameter
+PARAMETER_UNITS = "Parameter Units"
+
+# XML node name mapper of properties for parameters
+# the translated properties of a parameter and the xml attribute name
+PARAMETER_NODE_PROPERTIES = {
+    PARAMETER_NAME: "name",
+    PARAMETER_INTERNAL_TYPE:"type",
+    PARAMETER_STORAGE_TYPE: "typeOfParameter",
+    PARAMETER_UNITS: "units",
+}
 
 def get_parameter(xml_node, family_name, root_category_path, family_path, family_type_name = FAMILY_TYPE_NAME_UNKNOWN, default_value=VALUE_UNKNOWN):
     """
@@ -99,22 +117,20 @@ def get_parameter(xml_node, family_name, root_category_path, family_path, family
 
         type = TYPE_UNKNOWN
         try:
-            type = xml_node.Attributes["type"].Value
+            type = xml_node.Attributes[PARAMETER_NODE_PROPERTIES[PARAMETER_INTERNAL_TYPE]].Value
         except Exception as e:
             type = "{}".format(type, e)
 
         type_of_parameter = PARAMETER_STORAGE_TYPE_UNKNOWN
         try:
-            type_of_parameter = xml_node.Attributes[
-                "typeOfParameter"
-            ].Value
+            type_of_parameter = xml_node.Attributes[PARAMETER_NODE_PROPERTIES[PARAMETER_STORAGE_TYPE]].Value
         except Exception as e:
             type_of_parameter = "{}".format(type_of_parameter, e)
 
         # there are parameters without units (i.e. text parameters)
         units = UNITLESS
         try:
-            units = xml_node.Attributes["units"].Value
+            units = xml_node.Attributes[PARAMETER_NODE_PROPERTIES[PARAMETER_UNITS]].Value
         except Exception as e:
             pass
 

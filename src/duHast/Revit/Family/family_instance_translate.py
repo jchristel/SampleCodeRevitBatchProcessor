@@ -33,13 +33,41 @@ from math import pi
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common.transaction import in_transaction
 
-from Autodesk.Revit.DB import Element, ElementTransformUtils, Line, Transaction
+from Autodesk.Revit.DB import Element, ElementTransformUtils, Line,  LocationPoint, Transaction, XYZ
 
 # Constants
 RADIAN_ANGLE_45DEGREES = pi / 4
 RADIAN_ANGLE_90DEGREES = pi / 2
 
-def rotate_around_origin(element, angle, transaction_manager =None):
+
+
+def get_family_location_point(pFam):
+    if pFam is not None and pFam.Location is not None:
+        location_point = pFam.Location
+        if isinstance(location_point, LocationPoint):
+            return location_point.Point
+    return None
+
+
+def get_element_location_curve(element):
+    """
+    Returns the location curve of the element.
+
+    :param element: The element to get the location curve of.
+    :type element: Autodesk.Revit.DB.Element
+    :return: The location curve of the element.
+    :rtype: Autodesk.Revit.DB.Curve
+    """
+
+    location_curve = None
+
+    if element.Location is not None:
+        location_curve = element.Location.Curve
+
+    return location_curve
+
+
+def rotate_around_transform_origin(element, angle, transaction_manager =None):
     """
     Rotates an element around its origin.
 
@@ -74,6 +102,49 @@ def rotate_around_origin(element, angle, transaction_manager =None):
             # create a transaction
             transaction = Transaction(element.Document, "rotated element around origin: {}".format(Element.Name.GetValue(element)))
             return_value = in_transaction(transaction, action)
+
+    except Exception as e:
+        return_value.update_sep(False, "Failed to rotate element around origin. {}".format(e))
+
+
+    return return_value
+
+
+def rotate_around_origin(element, angle, transaction_manager =None):
+    """
+    Rotates an element around its origin.
+
+    :param element: The element to rotate.
+    :type element: Autodesk.Revit.DB.Element
+    :param angle: The angle to rotate the element by in radians.
+    :type angle: float
+    """
+
+    return_value = res.Result()
+
+    # get the family location point
+    location_point = get_family_location_point(element)
+
+    # Create a line from the transform's origin and basis Z
+    line = Line.CreateBound(location_point, XYZ(location_point.X, location_point.Y,  location_point.Z +1000))
+
+    try:
+        def action():
+            try:
+                action_return_value = res.Result()
+                ElementTransformUtils.RotateElement(element.Document, element.Id, line, angle)
+                return_value.append_message( "Element rotated around origin.") 
+            except Exception as e:
+                action_return_value.update_sep(False, "Failed to rotate element around origin. {}".format(e))
+            return action_return_value
+       
+        if transaction_manager is None:
+            # assume there is an transaction already going on
+            return_value = action()
+        else:
+            # create a transaction
+            transaction = Transaction(element.Document, "rotated element around origin: {}".format(Element.Name.GetValue(element)))
+            return_value = transaction_manager(transaction, action)
 
     except Exception as e:
         return_value.update_sep(False, "Failed to rotate element around origin. {}".format(e))

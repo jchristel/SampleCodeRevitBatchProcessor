@@ -33,13 +33,13 @@ from math import pi
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common.transaction import in_transaction
 
-from Autodesk.Revit.DB import ElementTransformUtils, Line
+from Autodesk.Revit.DB import Element, ElementTransformUtils, Line, Transaction
 
 # Constants
 RADIAN_ANGLE_45DEGREES = pi / 4
 RADIAN_ANGLE_90DEGREES = pi / 2
 
-def rotate_around_origin(element, angle):
+def rotate_around_origin(element, angle, transaction_manager =None):
     """
     Rotates an element around its origin.
 
@@ -58,9 +58,23 @@ def rotate_around_origin(element, angle):
     line = Line.CreateUnbound(transform.Origin, transform.BasisZ)
 
     try:
-        # Rotate the element around the line by the specified angle
-        ElementTransformUtils.RotateElement(element.Document, element.Id, line, angle)
-        return_value.append_message( "Element rotated around origin.")
+        def action():
+            try:
+                action_return_value = res.Result()
+                ElementTransformUtils.RotateElement(element.Document, element.Id, line, angle)
+                return_value.append_message( "Element rotated around origin.") 
+            except Exception as e:
+                action_return_value.update_sep(False, "Failed to rotate element around origin. {}".format(e))
+            return action_return_value
+       
+        if transaction_manager is None:
+            # assume there is an transaction already going on
+            return_value = action()
+        else:
+            # create a transaction
+            transaction = Transaction(element.Document, "rotated element around origin: {}".format(Element.Name.GetValue(element)))
+            return_value = in_transaction(transaction, action)
+
     except Exception as e:
         return_value.update_sep(False, "Failed to rotate element around origin. {}".format(e))
 

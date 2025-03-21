@@ -40,9 +40,18 @@ RADIAN_ANGLE_45DEGREES = pi / 4
 RADIAN_ANGLE_90DEGREES = pi / 2
 
 
-def get_family_location_point(pFam):
-    if pFam is not None and pFam.Location is not None:
-        location_point = pFam.Location
+def get_family_location_point(element):
+    """
+    Returns the location point of the family instance.
+
+    :param element: The family instance to get the location point of.
+    :type element: Autodesk.Revit.DB.FamilyInstance
+    :return: The location point of the family instance.
+    :rtype: Autodesk.Revit.DB.XYZ
+    """
+
+    if element is not None and element.Location is not None:
+        location_point = element.Location
         if isinstance(location_point, LocationPoint):
             return location_point.Point
     return None

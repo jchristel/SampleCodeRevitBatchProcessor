@@ -86,6 +86,44 @@ PARAMETER_NODE_PROPERTIES = {
     PARAMETER_UNITS: "units",
 }
 
+# XML node name containing the family type name
+CHILD_NODE_NAME_CONTAINING_FAMILY_TYPE_NAME = "title"
+
+# XML node name containing the family types
+CHILD_NODE_NAME_CONTAINING_FAMILY_TYPES = "//A:part"
+# XML node name containing the family data
+CHILD_NODE_NAME_CONTAINING_FAMILY_DATA = "//A:family"
+# XML node name containing the latest update information (date and time)
+CHILD_NODE_NAME_CONTAINING_UPDATE_DATA = "//atom:updated"
+# XML node name containing the family category data
+CHILD_NODE_NAME_CONTAINING_FAMILY_CATEGORY = "//atom:category"
+
+#XML namespace for the atom feed
+NAME_SPACES = {
+    "atom":"http://www.w3.org/2005/Atom",
+    "A": "urn:schemas-autodesk-com:partatom"
+}
+
+
+def get_name_space_manager(doc_xml):
+    """
+    Get the XML namespace manager for the XML document. Also adds the required namespaces.
+
+    :param doc_xml: The XML document.
+    :type doc_xml: XmlDocument
+
+    :return: An XML namespace manager.
+    :rtype: XmlNamespaceManager
+    """
+
+    name_space_manager = XmlNamespaceManager(doc_xml.NameTable)
+
+    for name_space in NAME_SPACES:
+        name_space_manager.AddNamespace(name_space, NAME_SPACES[name_space])
+
+    return name_space_manager
+
+
 def get_parameter(xml_node, family_name, root_category_path, family_path, family_type_name = FAMILY_TYPE_NAME_UNKNOWN, default_value=VALUE_UNKNOWN):
     """
     Get a parameter from the XML node.
@@ -192,7 +230,6 @@ def get_parameter(xml_node, family_name, root_category_path, family_path, family
 
         return parameter
     except Exception:
-
         return None
 
 
@@ -219,37 +256,80 @@ def get_unique_parameters_from_family_xml(doc_xml, family_name, root_category_pa
     parameters = []
 
     # Add an XML namespace manager
-    name_space_manager = XmlNamespaceManager(doc_xml.NameTable)
-    name_space_manager.AddNamespace("atom", "http://www.w3.org/2005/Atom")
-    name_space_manager.AddNamespace("A", "urn:schemas-autodesk-com:partatom")
+    name_space_manager = get_name_space_manager(doc_xml)
 
     # Get the family parameters
-    for part_node in doc_xml.SelectNodes("//A:part", name_space_manager):
-
-        # Get the family type name
-        family_type_name = ""
-       
-        # If we got a type name, add the parameters, their values and units, parameter type and type of parameter
-        if family_type_name:
-
-            for child_node in part_node.ChildNodes:
-                if child_node.Name != "title":
-
-                    parameter = get_parameter(
-                        xml_node=child_node, 
-                        family_name=family_name,
-                        root_category_path= root_category_path, 
-                        family_path=family_path,
-                        family_type_name="",
-                        default_value=""
-                    )
-                    
-                    # Add parameter to list if not in there already
-                    if parameter is not None and parameter not in parameters:
-                        parameters.append(parameter)
+    for part_node in doc_xml.SelectNodes(CHILD_NODE_NAME_CONTAINING_FAMILY_TYPES, name_space_manager):
+        for child_node in part_node.ChildNodes:
+            # check for family type nodes
+            if child_node.Name != CHILD_NODE_NAME_CONTAINING_FAMILY_TYPE_NAME:
+                # get the parameter
+                parameter = get_parameter(
+                    xml_node=child_node, 
+                    family_name=family_name,
+                    root_category_path= root_category_path, 
+                    family_path=family_path,
+                    family_type_name="",
+                    default_value=""
+                )
+                
+                # Add parameter to list if not in there already
+                if parameter is not None and parameter not in parameters:
+                    parameters.append(parameter)
 
     return parameters
                    
+def add_missing_empty_parameters(all_parameters_in_atom_export, parameters_in_type, root_name_path, root_category_path, family_name, family_path, family_type_name):
+    """
+    Add missing empty parameters to the list of parameters for a family type.
+
+    :param all_parameters_in_atom_export: The list of all parameters in the atom export.
+    :type all_parameters_in_atom_export: [:class:`.FamilyTypeParameterDataStorage`]
+    :param parameters_in_type: The list of parameters for the family type.
+    :type parameters_in_type: [:class:`.FamilyTypeParameterDataStorage`]
+    :param root_name_path: The root name path.
+    :type root_name_path: str
+    :param root_category_path: The root category path.
+    :type root_category_path: str
+    :param family_name: The name of the family.
+    :type family_name: str
+    :param family_path: The path of the family file.
+    :type family_path: str
+    :param family_type_name: The name of the family type.
+    :type family_type_name: str
+
+    :return: The list of parameters for the family type.
+    :rtype: [:class:`.FamilyTypeParameterDataStorage`]
+    """
+    # loop over all parameters in the atom export and check whether they are in the parameters list for this type
+    for parameter_in_export in all_parameters_in_atom_export:
+        # check if the parameter is in the list of parameters for this type
+        parameter_found = False
+        for parameter_in_type in parameters_in_type:
+            if parameter_in_export.name == parameter_in_type.name:
+                parameter_found = True
+                break
+        
+        # if the parameter is not in the list of parameters for this type add it with an empty value
+        if parameter_found == False:
+            parameter_missing = FamilyTypeParameterDataStorage(
+                root_name_path = root_name_path,
+                root_category_path = root_category_path,
+                family_name = family_name,
+                family_type_name=family_type_name,
+                family_file_path=family_path,
+                name=parameter_in_export.name,
+                type=parameter_in_export.type,
+                type_of_parameter=parameter_in_export.type_of_parameter,
+                units=parameter_in_export.units,
+                value="",
+            )
+            parameters_in_type.append(parameter_missing)
+            # reset the parameter found flag
+            parameter_found = False
+    
+    return parameters_in_type
+
 
 def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path = "None"):
     """
@@ -275,17 +355,15 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
 
     type_data_storage_manager = FamilyTypeDataStorageManager()
     # Add an XML namespace manager
-    name_space_manager = XmlNamespaceManager(doc_xml.NameTable)
-    name_space_manager.AddNamespace("atom", "http://www.w3.org/2005/Atom")
-    name_space_manager.AddNamespace("A", "urn:schemas-autodesk-com:partatom")
+    name_space_manager = get_name_space_manager(doc_xml)
 
     # Select the family node
-    family_node = doc_xml.SelectSingleNode("//A:family", name_space_manager)
+    family_node = doc_xml.SelectSingleNode(CHILD_NODE_NAME_CONTAINING_FAMILY_DATA , name_space_manager)
 
     # check if category root path is not set, if so ignore use the one from the xml
     if root_category_path == "None":
         # Get the category nodes ( there will be more than one)
-        for cat_node in doc_xml.SelectNodes("//atom:category", name_space_manager):
+        for cat_node in doc_xml.SelectNodes(CHILD_NODE_NAME_CONTAINING_FAMILY_CATEGORY, name_space_manager):
             dummy_term = ""
             dummy_scheme = ""
 
@@ -303,7 +381,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
     last_updated_time = None
 
     # Select the <updated> node directly under the <entry> node
-    updated_node = doc_xml.SelectSingleNode("//atom:updated", name_space_manager)
+    updated_node = doc_xml.SelectSingleNode(CHILD_NODE_NAME_CONTAINING_UPDATE_DATA, name_space_manager)
     if updated_node is not None:
         last_updated_datetime = updated_node.InnerText
 
@@ -323,14 +401,16 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
     # need to loop over types first to ensure that all parameters are read in
     all_parameters_in_atom_export = get_unique_parameters_from_family_xml(doc_xml, family_name, root_category_path, family_path)
 
+    for p in all_parameters_in_atom_export:
+        print("Parameter: {}".format(p.name))
 
     # Get the family parameters
-    for part_node in family_node.SelectNodes("A:part", name_space_manager):
+    for part_node in family_node.SelectNodes(CHILD_NODE_NAME_CONTAINING_FAMILY_TYPES, name_space_manager):
 
         # Get the family type name
         family_type_name = None
         for child_node in part_node.ChildNodes:
-            if child_node.Name == "title":
+            if child_node.Name == CHILD_NODE_NAME_CONTAINING_FAMILY_TYPE_NAME:
                 family_type_name = child_node.InnerText
                 break
 
@@ -339,7 +419,7 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
 
             parameters = []
             for child_node in part_node.ChildNodes:
-                if child_node.Name != "title":
+                if child_node.Name != CHILD_NODE_NAME_CONTAINING_FAMILY_TYPE_NAME:
 
                     # get the parameter
                     parameter = get_parameter(
@@ -357,7 +437,15 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
                         parameters.append(parameter)
             
             # check if there are parameters in the atom export that are not in the parameters list for this type since they have no value for this family type set
-            
+            parameters = add_missing_empty_parameters(
+                all_parameters_in_atom_export=all_parameters_in_atom_export, 
+                parameters_in_type=parameters,
+                root_name_path=encode_ascii(family_name),
+                root_category_path=encode_ascii(root_category_path),
+                family_name=encode_ascii(family_name),
+                family_path=encode_ascii(family_path),
+                family_type_name=encode_ascii(family_type_name),
+            )
 
             # Set up a family type data storage object
             # make sure all values are encoded to ascii to avoid 

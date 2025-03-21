@@ -383,6 +383,10 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
                 else:
                     # add no data for the parameter
                     pass
+                
+        # add the type name to the front
+        data.insert(0, self.family_type_name)
+
         return data
     
     def get_catalogue_file_header_row(self, parameter_names):

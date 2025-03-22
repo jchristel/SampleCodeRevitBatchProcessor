@@ -46,6 +46,14 @@ duHast.Revit.Family.family\_instance\_create module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.family\_instance\_translate module
+------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_instance_translate
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.family\_load\_option module
 -----------------------------------------------
 
@@ -86,6 +94,14 @@ duHast.Revit.Family.family\_reload\_single module
    :undoc-members:
    :show-inheritance:
 
+duHast.Revit.Family.family\_rename\_files module
+------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_rename_files
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Revit.Family.family\_rename\_files\_utils module
 -------------------------------------------------------
 
@@ -94,10 +110,18 @@ duHast.Revit.Family.family\_rename\_files\_utils module
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Family.family\_swap\_instances\_by\_type\_utils module
--------------------------------------------------------------------
+duHast.Revit.Family.family\_rename\_loaded\_families module
+-----------------------------------------------------------
 
-.. automodule:: duHast.Revit.Family.family_swap_instances_by_type_utils
+.. automodule:: duHast.Revit.Family.family_rename_loaded_families
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Revit.Family.family\_swap\_instances\_of\_types module
+-------------------------------------------------------------
+
+.. automodule:: duHast.Revit.Family.family_swap_instances_of_types
    :members:
    :undoc-members:
    :show-inheritance:

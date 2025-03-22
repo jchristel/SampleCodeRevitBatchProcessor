@@ -68,26 +68,10 @@ duHast.Revit.Family.Data.family\_reload\_advanced\_utils module
    :undoc-members:
    :show-inheritance:
 
-duHast.Revit.Family.Data.family\_rename\_files module
------------------------------------------------------
-
-.. automodule:: duHast.Revit.Family.Data.family_rename_files
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 duHast.Revit.Family.Data.family\_rename\_find\_host\_families module
 --------------------------------------------------------------------
 
 .. automodule:: duHast.Revit.Family.Data.family_rename_find_host_families
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.Family.Data.family\_rename\_loaded\_families module
-----------------------------------------------------------------
-
-.. automodule:: duHast.Revit.Family.Data.family_rename_loaded_families
    :members:
    :undoc-members:
    :show-inheritance:
@@ -120,14 +104,6 @@ duHast.Revit.Family.Data.family\_report\_utils\_deprecated module
 -----------------------------------------------------------------
 
 .. automodule:: duHast.Revit.Family.Data.family_report_utils_deprecated
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-duHast.Revit.Family.Data.family\_swap\_instances\_of\_types module
-------------------------------------------------------------------
-
-.. automodule:: duHast.Revit.Family.Data.family_swap_instances_of_types
    :members:
    :undoc-members:
    :show-inheritance:

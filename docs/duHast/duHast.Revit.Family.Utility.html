@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Family.Utility package &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
+    <title>duHast.Revit.Family.Utility package &#8212; Sample Code Revit Batch Processor 1.1.13 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.13 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Family package" href="duHast.Revit.Family.html" />
     <link rel="next" title="duHast.Revit.Floors package" href="duHast.Revit.Floors.html" />
     <link rel="prev" title="duHast.Revit.Family.Reporting.Objects package" href="duHast.Revit.Family.Reporting.Objects.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.13 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Family.Utility package</h1></div>
@@ -93,6 +93,53 @@
 <h1>duHast.Revit.Family.Utility package<a class="headerlink" href="#duhast-revit-family-utility-package" title="Permalink to this heading">¶</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Family.Utility.family_swap_instances_by_type_utils">
+<span id="duhast-revit-family-utility-family-swap-instances-by-type-utils-module"></span><h2>duHast.Revit.Family.Utility.family_swap_instances_by_type_utils module<a class="headerlink" href="#module-duHast.Revit.Family.Utility.family_swap_instances_by_type_utils" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-to-read-swap-instances-by-type-directives-file-s-and-return-them-as-a-tuple-to-the-caller">
+<h3>Helper functions to read swap instances by type  directives file(s) and return them as a tuple to the caller<a class="headerlink" href="#helper-functions-to-read-swap-instances-by-type-directives-file-s-and-return-them-as-a-tuple-to-the-caller" title="Permalink to this heading">¶</a></h3>
+<p>These helper function expect a text file in csv format with 5 columns:</p>
+<ul class="simple">
+<li><p>SOURCE_FAMILY_NAME = 0</p></li>
+<li><p>SOURCE_FAMILY_CATEGORY_NAME = 1</p></li>
+<li><p>SOURCE_FAMILY_TYPE_NAME = 2</p></li>
+<li><p>TARGET_FAMILY_NAME = 3</p></li>
+<li><p>TARGET_FAMILY_TYPE = 4</p></li>
+</ul>
+<p>Note:</p>
+<ul class="simple">
+<li><p>First row is treated as a header row and its content is ignored.</p></li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.family_swap_instances_by_type_utils.get_swap_directives">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.family_swap_instances_by_type_utils.</span></span><span class="sig-name descname"><span class="pre">get_swap_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.family_swap_instances_by_type_utils.get_swap_directives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves file swap directives from a given folder location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>directory_path</strong> (<em>str</em>) – Fully qualified folder path to folder containing directives.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if rename directives where found and loaded successfully, otherwise False.</p></li>
+<li><p>result.message will contain number of directives found in format:’Found rename directives: ‘ + number</p></li>
+<li><p>result.result list of directives</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain an exception message.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-duHast.Revit.Family.Utility.loadable_family_categories">
 <span id="duhast-revit-family-utility-loadable-family-categories-module"></span><h2>duHast.Revit.Family.Utility.loadable_family_categories module<a class="headerlink" href="#module-duHast.Revit.Family.Utility.loadable_family_categories" title="Permalink to this heading">¶</a></h2>
@@ -328,12 +375,103 @@ i.e. built in revit type settings</p>
 </dd></dl>
 
 </section>
+<section id="module-duHast.Revit.Family.Utility.xml_family_defaults">
+<span id="duhast-revit-family-utility-xml-family-defaults-module"></span><h2>duHast.Revit.Family.Utility.xml_family_defaults module<a class="headerlink" href="#module-duHast.Revit.Family.Utility.xml_family_defaults" title="Permalink to this heading">¶</a></h2>
+<section id="family-type-xml-defaults">
+<h3>Family type xml defaults.<a class="headerlink" href="#family-type-xml-defaults" title="Permalink to this heading">¶</a></h3>
+</section>
+</section>
 <section id="module-duHast.Revit.Family.Utility.xml_family_type_reader">
 <span id="duhast-revit-family-utility-xml-family-type-reader-module"></span><h2>duHast.Revit.Family.Utility.xml_family_type_reader module<a class="headerlink" href="#module-duHast.Revit.Family.Utility.xml_family_type_reader" title="Permalink to this heading">¶</a></h2>
 <section id="a-module-with-helper-function-to-read-xml-family-type-data-into-storage-objects">
 <h3>A module with helper function to read xml family type data into storage objects.<a class="headerlink" href="#a-module-with-helper-function-to-read-xml-family-type-data-into-storage-objects" title="Permalink to this heading">¶</a></h3>
 <p>Separate module for ease of testing and maintainability.</p>
 </section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_family_type_reader.get_name_space_manager">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_family_type_reader.</span></span><span class="sig-name descname"><span class="pre">get_name_space_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_xml</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_family_type_reader.get_name_space_manager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the XML namespace manager for the XML document. Also adds the required namespaces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc_xml</strong> (<em>XmlDocument</em>) – The XML document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An XML namespace manager.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XmlNamespaceManager</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_family_type_reader.get_parameter">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_family_type_reader.</span></span><span class="sig-name descname"><span class="pre">get_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_type_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unknown</span> <span class="pre">family</span> <span class="pre">type</span> <span class="pre">name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unknown</span> <span class="pre">value'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_family_type_reader.get_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a parameter from the XML node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xml_node</strong> (<em>XmlNode</em>) – The XML node.</p></li>
+<li><p><strong>family_name</strong> (<em>str</em>) – The name of the family.</p></li>
+<li><p><strong>root_category_path</strong> (<em>str</em>) – The root category path.</p></li>
+<li><p><strong>family_path</strong> (<em>str</em>) – The path of the family file.</p></li>
+<li><p><strong>family_type_name</strong> (<em>str</em>) – The name of the family type.</p></li>
+<li><p><strong>default_value</strong> (<em>str</em>) – The default value to use if the parameter value is not set.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A family type parameter data storage object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage" title="duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeParameterDataStorage</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_family_type_reader.get_unique_parameters_from_family_xml">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_family_type_reader.</span></span><span class="sig-name descname"><span class="pre">get_unique_parameters_from_family_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_xml</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_family_type_reader.get_unique_parameters_from_family_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all unique parameters from the family type XML document by inspecting every part node representing a family type.</p>
+<p>Note:
+The part atom export will only contain parameters for a family type if they have a value set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc_xml</strong> (<em>XmlDocument</em>) – The XML document.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of family type parameter data storage objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage" title="duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeParameterDataStorage</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_family_type_reader.add_missing_empty_parameters">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_family_type_reader.</span></span><span class="sig-name descname"><span class="pre">add_missing_empty_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_parameters_in_atom_export</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters_in_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_name_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_type_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_family_type_reader.add_missing_empty_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add missing empty parameters to the list of parameters for a family type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all_parameters_in_atom_export</strong> ([<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage" title="duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeParameterDataStorage</span></code></a>]) – The list of all parameters in the atom export.</p></li>
+<li><p><strong>parameters_in_type</strong> ([<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage" title="duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeParameterDataStorage</span></code></a>]) – The list of parameters for the family type.</p></li>
+<li><p><strong>root_name_path</strong> (<em>str</em>) – The root name path.</p></li>
+<li><p><strong>root_category_path</strong> (<em>str</em>) – The root category path.</p></li>
+<li><p><strong>family_name</strong> (<em>str</em>) – The name of the family.</p></li>
+<li><p><strong>family_path</strong> (<em>str</em>) – The path of the family file.</p></li>
+<li><p><strong>family_type_name</strong> (<em>str</em>) – The name of the family type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The list of parameters for the family type.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[<a class="reference internal" href="duHast.Revit.Family.Data.Objects.html#duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage" title="duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">FamilyTypeParameterDataStorage</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.Utility.xml_family_type_reader.read_xml_into_storage">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.Utility.xml_family_type_reader.</span></span><span class="sig-name descname"><span class="pre">read_xml_into_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_xml</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Utility.xml_family_type_reader.read_xml_into_storage" title="Permalink to this definition">¶</a></dt>

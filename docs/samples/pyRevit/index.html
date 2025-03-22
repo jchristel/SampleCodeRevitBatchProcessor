@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pyRevit &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
+    <title>pyRevit &#8212; Sample Code Revit Batch Processor 1.1.13 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -15,11 +15,13 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.13 documentation" href="../../index.html" />
+    <link rel="up" title="Samples" href="../index.html" />
+    <link rel="prev" title="The Chain" href="../flows/flows.TheChain.html" />
     <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.13 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>pyRevit</h1></div>
@@ -28,6 +30,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="../flows/flows.TheChain.html" title="The Chain" accesskey="P">previous</a></div>
         </li>
     </ul>
 </div>
@@ -36,9 +39,17 @@
   <div class="sphinxsidebarwrapper">
         <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
         <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../duHast/modules.html">duHast</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">Samples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Samples</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#flows">Flows</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../flows/index.html">Flows</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pyRevit</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#pyrevit">pyRevit</a></li>
+</ul>
+</li>
 </ul>
 
       <h3>This Page</h3>
@@ -73,9 +84,32 @@
 <p>This is an extension which showcases how to use the pyRevit API together wih duHast.</p>
 <p>This extension covers the following topics:</p>
 <ul class="simple">
-<li><p>Families</p></li>
-<li><p>Levels and Grids</p></li>
-<li><p>Purge unused elements</p></li>
+<li><p>Families
+- Catalogue files
+- Batch import and export
+- Batch reload families
+- Batch rename / copy families
+- Report family properties
+- Swap family types</p></li>
+<li><dl class="simple">
+<dt>Levels and Grids</dt><dd><ul>
+<li><p>Conversion to 2D</p></li>
+<li><p>Toggle head visibility</p></li>
+<li><p>Apply grids visibility and extend to many views</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Purge unused element</dt><dd><ul>
+<li><p>Shared parameters</p></li>
+<li><p>Views and legends</p></li>
+<li><p>fill patterns</p></li>
+<li><p>Line patternss and styles</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 <li><p>View templates</p></li>
 <li><p>Warnings</p></li>
 </ul>
@@ -95,6 +129,7 @@
       <div class="clearer"></div>
     </div>
         <div id="breadcrumbs">
+                <a href="../index.html" accesskey="U">Samples</a><img src="../../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
                 pyRevit
         </div>
         <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>

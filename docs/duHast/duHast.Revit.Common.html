@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Common package &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
+    <title>duHast.Revit.Common package &#8212; Sample Code Revit Batch Processor 1.1.13 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.13 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit package" href="duHast.Revit.html" />
     <link rel="next" title="duHast.Revit.Common.Geometry package" href="duHast.Revit.Common.Geometry.html" />
     <link rel="prev" title="duHast.Revit.Ceilings.Utility package" href="duHast.Revit.Ceilings.Utility.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.13 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Common package</h1></div>
@@ -2141,6 +2141,26 @@ Otherwise the actual parameter value as per value getter method.</p>
 <section id="revit-api-utility-functions-to-set-parameter-values">
 <h3>Revit API utility functions to set parameter values.<a class="headerlink" href="#revit-api-utility-functions-to-set-parameter-values" title="Permalink to this heading">¶</a></h3>
 </section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.parameter_set_utils.set_parameter_value_by_name">
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_set_utils.</span></span><span class="sig-name descname"><span class="pre">set_parameter_value_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_transaction=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_set_utils.set_parameter_value_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the parameter value by trying to convert the past in string representing the value into the appropriate value type.</p>
+<p>Changing a parameter value requires this action to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – Element of which the parameter value is to be set.</p></li>
+<li><p><strong>parameter_name</strong> (<em>str</em>) – The name of the parameter of which the value is to be set.</p></li>
+<li><p><strong>parameter_value_string</strong> (<em>str</em>) – The new parameter value.</p></li>
+<li><p><strong>in_transaction</strong> (<em>func</em><em>(</em><em>Autodesk.Revit.DB.Transaction</em><em>, </em><em>action</em><em>(</em><em>)</em><em>, </em><em>Autodesk.Revit.DB.Document</em><em>)</em>) – The transaction wrapper function to be used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Common.parameter_set_utils.set_parameter_value">
 <span class="sig-prename descclassname"><span class="pre">duHast.Revit.Common.parameter_set_utils.</span></span><span class="sig-name descname"><span class="pre">set_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_as_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_transaction=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.parameter_set_utils.set_parameter_value" title="Permalink to this definition">¶</a></dt>

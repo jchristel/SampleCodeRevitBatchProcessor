@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>duHast.Revit.Family.Data.Objects package &#8212; Sample Code Revit Batch Processor 1.1.12 documentation</title>
+    <title>duHast.Revit.Family.Data.Objects package &#8212; Sample Code Revit Batch Processor 1.1.13 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -15,14 +15,14 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.1.12 documentation" href="../index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.1.13 documentation" href="../index.html" />
     <link rel="up" title="duHast.Revit.Family.Data package" href="duHast.Revit.Family.Data.html" />
     <link rel="next" title="duHast.Revit.Family.Reporting package" href="duHast.Revit.Family.Reporting.html" />
     <link rel="prev" title="duHast.Revit.Family.Data package" href="duHast.Revit.Family.Data.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.1.12 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.1.13 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>duHast.Revit.Family.Data.Objects package</h1></div>
@@ -1103,6 +1103,34 @@ Assumes that the objects are equal in terms of family name, family type name, ro
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage.get_catalogue_file_data">
+<span class="sig-name descname"><span class="pre">get_catalogue_file_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage.get_catalogue_file_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the data for the catalogue file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameter_names</strong> (<em>[</em><em>str</em><em>]</em>) – list of parameter names to include in the catalogue file and their order</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of data for the catalogue file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage.get_catalogue_file_header_row">
+<span class="sig-name descname"><span class="pre">get_catalogue_file_header_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage.get_catalogue_file_header_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the header row for the catalogue file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameter_names</strong> (<em>[</em><em>str</em><em>]</em>) – list of parameter names to include in the catalogue file and their order</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of data for the catalogue file header row</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -1157,6 +1185,47 @@ Assumes that the objects are equal in terms of family name, family type name, ro
 <dd class="field-odd"><p><strong>family_type_data_storage</strong> (<a class="reference internal" href="#duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage" title="duHast.Revit.Family.Data.Objects.family_type_data_storage.FamilyTypeDataStorage"><em>FamilyTypeDataStorage</em></a>) – family type data storage instance</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager.remove_family_type">
+<span class="sig-name descname"><span class="pre">remove_family_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family_type_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager.remove_family_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a family type from the family type data storage manager</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>family_type_name</strong> (<em>str</em>) – the name of the family type to remove</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager.get_catalogue_file_data">
+<span class="sig-name descname"><span class="pre">get_catalogue_file_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager.get_catalogue_file_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the catalogue file data for the family type data storage manager</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameter_names</strong> – list of parameter names to include in the catalogue file data and the order in which they should be included.</p>
+</dd>
+</dl>
+<p>If None, all parameters will be included in the order they are stored in the family type data storage instances.
+:type parameter_names: [str]
+:return: the catalogue file data for the family type data storage manager
+:rtype: [[str]]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager.get_catalogue_file_header_row">
+<span class="sig-name descname"><span class="pre">get_catalogue_file_header_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_data_storage_manager.FamilyTypeDataStorageManager.get_catalogue_file_header_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the header row for the catalogue file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameter_names</strong> – list of parameter names to include in the catalogue file data and the order in which they should be included.</p>
+</dd>
+</dl>
+<p>If None, all parameters will be included in the order they are stored in the family type data storage instances.
+:type parameter_names: [str]
+:return: the header row for the catalogue file
+:rtype: [str]</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1298,6 +1367,34 @@ Ghost types are types that are not present in the family file but listed in the 
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.get_catalogue_file_data">
+<span class="sig-name descname"><span class="pre">get_catalogue_file_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.get_catalogue_file_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the catalogue file data for this parameter ( the value of the parameter)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the catalogue file data</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.get_catalogue_file_header_row">
+<span class="sig-name descname"><span class="pre">get_catalogue_file_header_row</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.Objects.family_type_parameter_data_storage.FamilyTypeParameterDataStorage.get_catalogue_file_header_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the catalogue file header row for this object sample ParameterName##LENGTH##MILLIMETERS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the catalogue file header row entry for this parameter</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>

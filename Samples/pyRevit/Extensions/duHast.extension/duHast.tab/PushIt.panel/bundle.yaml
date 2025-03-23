@@ -1,8 +1,10 @@
 layout:
   - PushIt
+  - SwapWidthAndDepth
 
 # bundle tooltip
-tooltip: Rapid layout prototyping with PushIt
+tooltip: Pushit - A fast layout tool
+
 
 # bundle author
 author: 

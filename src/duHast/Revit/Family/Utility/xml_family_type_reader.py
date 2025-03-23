@@ -401,9 +401,6 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
     # need to loop over types first to ensure that all parameters are read in
     all_parameters_in_atom_export = get_unique_parameters_from_family_xml(doc_xml, family_name, root_category_path, family_path)
 
-    for p in all_parameters_in_atom_export:
-        print("Parameter: {}".format(p.name))
-
     # Get the family parameters
     for part_node in family_node.SelectNodes(CHILD_NODE_NAME_CONTAINING_FAMILY_TYPES, name_space_manager):
 

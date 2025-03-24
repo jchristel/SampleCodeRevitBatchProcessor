@@ -288,20 +288,38 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
         :rtype: str
         """
 
-        type_name_revised_for_file = self.type_of_parameter.upper()
 
-        # some type names change to more generic names for the catalogue file
-        if self.type_of_parameter == "Text" or self.type_of_parameter == "Yes/No" or self.type_of_parameter == "Material" or self.type_of_parameter == "Image" or self.type_of_parameter == "FamilyType":
-            type_name_revised_for_file = "OTHER"
-
-        # some unit names change to more generic names for the catalogue file
-        unit_names_for_catalogue_file = self.units.upper()
-        if self.units == "unitless":
-            unit_names_for_catalogue_file =""
-        elif self.units == "mm":
-            unit_names_for_catalogue_file = "MILLIMETERS"
-        elif self.units == "m":
-            unit_names_for_catalogue_file = "METERS"
+        # check if the type of parameter is in the mapper
+        if self.type_of_parameter not in PARAMETER_STORAGE_TYPE_MAPPER:
+            raise ValueError("Unknown parameter type: {}".format(self.type_of_parameter))
+        
+        # get the mapper name for the type of parameter
+        type_name_revised_for_file = PARAMETER_STORAGE_TYPE_MAPPER[self.type_of_parameter]
 
 
+        # check if the units are in the mapper
+        if self.units not in PARAMETER_UNITS_MAPPER:
+            raise ValueError("Unknown parameter unit: {}".format(self.units))
+        
+        # get the mapper name for the units
+        unit_names_lists_for_catalogue_file = PARAMETER_UNITS_MAPPER[self.units]
+
+        found_unit_match = False
+        unit_names_for_catalogue_file=""
+        # get the unit name depending on the storage type of parameter
+        if len(unit_names_lists_for_catalogue_file) == 1:
+            unit_names_for_catalogue_file = unit_names_lists_for_catalogue_file[0][1]
+            found_unit_match = True
+        else:
+            for unit_name_list in unit_names_lists_for_catalogue_file:
+                if unit_name_list[0] == self.type_of_parameter:
+                    unit_names_for_catalogue_file = unit_name_list[1]
+                    found_unit_match = True
+                    break
+
+        # check if the unit name was found
+        if not found_unit_match:
+            raise ValueError("Unknown parameter unit: {}".format(self.units))
+
+        # return the catalogue file header row entry for this parameter
         return "{}##{}##{}".format(self.name, type_name_revised_for_file, unit_names_for_catalogue_file)

@@ -30,9 +30,60 @@ Used to store values of family parameters by family type.
 #
 #
 
+# note this module is not utf-8 encoded as it contains special characters representing units of measurement that are not utf-8 encoded 
+
 
 from duHast.Utilities.Objects.base import Base
 from duHast.Revit.Family.Data.Objects import ifamily_data_storage as IFamDataStorage
+
+
+# map the storage type as reported in the part atom export to the storage type used in the catalogue file header row
+PARAMETER_STORAGE_TYPE_MAPPER = {
+    "Angle":"ANGLE",
+    "Area":"AREA",
+    "Cost per Area":"COST_PER_AREA",
+    "Currency":"CURRENCY",
+    "Distance":"DISTANCE",
+    "Fill Pattern":"OTHER",
+    "Image":"OTHER",
+    "Length":"LENGTH",
+    "Material":"OTHER",
+    "Multiline Text":"OTHER",
+    "Number":"OTHER",
+    "Rotation Angle":"ROTATION_ANGLE",
+    "Slope":"SLOPE",
+    "Speed":"SPEED",
+    "Time":"TIMEINTERVAL",
+    "URL":"OTHER",
+    "Volume":"VOLUME",
+    "Yes/No":"OTHER",
+}
+
+# map the units as reported in the part atom export to the units used in the catalogue file header row (depending on the storage type)
+PARAMETER_UNITS_MAPPER = {
+    "mm":[["Length","MILLIMETERS"], ["Distance","MILLIMETERS"]],
+    "cm":[["Length","CENTIMETERS"], ["Distance","CENTIMETERS"]],
+    "m":[["Length","METERS"], ["Distance","METERS"]],
+    "mm²":[["Area","SQUARE_MILLIMETERS"]],
+    "cm²":[["Area","SQUARE_CENTIMETERS"]],
+    "m²":[["Area","SQUARE_METERS"]],
+    "mm³":[["Volume","CUBIC_MILLIMETERS"]],
+    "cm³":[["Volume","CUBIC_CENTIMETERS"]],
+    "m³":[["Volume","CUBIC_METERS"]],
+    "m/s":[["Speed","METERS_PER_SECOND"]],
+    "cm/m":[["Speed","CENTIMETERS_PER_MINUTE"]],
+    "km/h":[["Speed","KILOMETERS_PER_HOUR"]],
+    "ms":[["Time","MILLISECONDS"]],
+    "s":[["Time","SECONDS"]],
+    "min":[["Time","MINUTES"]],
+    "h":[["Time","HOURS"]],
+    "grad":[["Rotation Angle","GRADIANS"],["Angle","GRADIANS"]],
+    "rad":[["Angle","RADIANS"],["Rotation Angle","RADIANS"]],
+    "°":[["Slope","SLOPE_DEGREES"],["Rotation Angle","DEGREES"],["Angle","DEGREES"]],
+    "$":[["Currency","CURRENCY"]],
+    "$/m²":[["Cost per Area", "COST_PER_SQUARE_METER"]]
+}
+
 
 class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
 

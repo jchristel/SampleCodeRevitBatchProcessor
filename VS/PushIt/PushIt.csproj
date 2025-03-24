@@ -132,6 +132,7 @@
     <Compile Include="Commands\RefreshUIFromRevitModelAsyncCommand.cs" />
     <Compile Include="Commands\ReloadDataFromFileAsyncCommand.cs" />
     <Compile Include="Commands\UpdateFromChangedCategoriesAsyncCommand.cs" />
+    <Compile Include="Commands\WipeSelectedRevitRoomInstancesCommand.cs" />
     <Compile Include="Commands\WipeStaleDataRevitAsyncCommand.cs" />
     <Compile Include="Exceptions\CategoryConflictException.cs" />
     <Compile Include="Exceptions\RoomConflictException.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="RevitActions\PushAllRoomDataToRevit.cs" />
     <Compile Include="RevitActions\PushSingleRoomDataToRevit.cs" />
     <Compile Include="RevitActions\RefreshRoomDataWithRevitData.cs" />
+    <Compile Include="RevitActions\WipeSelectedRevitRoomsData.cs" />
     <Compile Include="RevitActions\WipeStaleRoomData.cs" />
     <Compile Include="Utilities\IRoomProperty.cs" />
     <Compile Include="Utilities\PropertyChangedEventNames.cs" />

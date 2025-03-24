@@ -81,6 +81,8 @@ namespace duHast.PushIt.ViewModels
         private readonly Commands.PushAllRoomsInRevitAsyncCommand _updateAllRoomsCommand;
         //command to update the view model if the column order changes
         public RelayCommand ColumnOrderChangedCommand { get; private set; }
+        //command to wipe selected rooms in revit
+        private readonly Commands.WipeSelectedRevitRoomInstancesCommand _wipeSelectedRoomDataCommand;
 
         //property to check if there are any errors
         public bool HasErrors => _errorsViewModel.HasErrors;
@@ -345,6 +347,7 @@ namespace duHast.PushIt.ViewModels
         public ICommand WipeStaleRoomsDataCommand { get { return _wipeStaleRoomsDataCommand; } }
         public ICommand UpdateFromChangedCategoriesCommand { get { return _updateFromChangedCategoriesCommand; } }
         public ICommand UpdateAllRoomsCommand { get { return _updateAllRoomsCommand; } }
+        public ICommand WipeSelectedRoomDataCommand { get { return _wipeSelectedRoomDataCommand; } }
 
         #endregion Commands
 
@@ -852,6 +855,11 @@ namespace duHast.PushIt.ViewModels
             );
             // create the column order changed command
             ColumnOrderChangedCommand = new RelayCommand(OnColumnOrderChanged);
+            //wipe selected rooms in revit
+            _wipeSelectedRoomDataCommand = new Commands.WipeSelectedRevitRoomInstancesCommand(
+                roomsSelectionViewModel: this,
+                revitDataModel: _revitDataModel
+            );
 
             //update rooms data with data from revit through an external event
             RefreshGUICommand.Execute(null);

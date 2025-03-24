@@ -100,10 +100,6 @@ namespace duHast.PushIt.RevitActions
                 return;
             }
 
-
-            // tell the UI we are busy
-            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
-
             // convert family instances to revit rooms
             List<duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
 
@@ -145,10 +141,6 @@ namespace duHast.PushIt.RevitActions
                 bool wipeSuccess = WipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
                 overallWipeSuccess = overallWipeSuccess && wipeSuccess;
             }
-
-            // tell the UI we are done
-            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = false;
-
         }
         public WipeStaleRoomData(Models.RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
         {

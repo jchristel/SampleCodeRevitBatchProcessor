@@ -1,0 +1,106 @@
+﻿
+//
+//License:
+//
+//
+// Revit Batch Processor Sample Code
+//
+// BSD License
+// Copyright 2025, Jan Christel
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+// - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+// - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+// - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+//
+// This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+// In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+// or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+//
+//
+//
+
+using Autodesk.Revit.DB;
+using duHast.PushIt.Models;
+using System.Collections.Generic;
+
+namespace duHast.PushIt.RevitActions
+{
+    public class WipeSelectedRevitRoomsData:IRevitAction
+    {
+        private readonly RevitDataModel _revitModel;
+        private readonly List<FamilyInstance> _pushTargets;
+        private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
+
+        public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
+        public Models.RevitDataModel RevitModel => _revitModel;
+
+        public void Execute(Document doc)
+        {
+            // wipe the data from the selected rooms
+            WipeData(
+               doc,
+               _revitModel._roomsContainer.GetAllRooms(),
+               _revitModel.Settings.SupportedCategories
+            );
+        }
+
+        public void WipeData(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName)
+        {
+            if (roomsDataModel.Count == 0)
+            {
+                // no sample room available...means no parameter mapping available
+                // todo log error
+                return;
+            }
+
+            // convert family instances to revit rooms
+            List<duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(_pushTargets, roomsDataModel[0]);
+
+            List<FamilyInstance> staleFamilyInstances = new List<FamilyInstance>();
+            foreach (var revitRoomInstance in revitRooms)
+            {
+                staleFamilyInstances.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
+            }
+
+            bool wipeSuccess = WipeIt(doc, staleFamilyInstances, roomsDataModel[0]);
+
+        }
+
+        public bool WipeIt(Document doc, List<FamilyInstance> familyInstancesToWipe, RoomDataModel sampleRoom)
+        {
+            bool wipeSuccess = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(doc, familyInstancesToWipe, sampleRoom);
+            if (!wipeSuccess)
+            {
+                // attempt to wipe one by one
+                foreach (var familyInstance in familyInstancesToWipe)
+                {
+                    // at least one will fail...but the rest will succeed
+                    bool wipeSuccessSingle = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(doc, new List<FamilyInstance> { familyInstance }, sampleRoom);
+                    if (!wipeSuccessSingle)
+                    {
+                        // log error
+                    }
+
+                }
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        
+        public WipeSelectedRevitRoomsData(RevitDataModel revitModel, List<FamilyInstance> pushTargets, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
+        {
+            _revitModel = revitModel;
+            _pushTargets = pushTargets;
+            _roomsSelectionViewModel = roomsSelectionViewModel;
+
+        }
+
+    }
+}

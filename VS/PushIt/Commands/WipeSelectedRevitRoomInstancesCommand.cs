@@ -1,0 +1,161 @@
+﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using duHast.PushIt.RevitActions;
+using duHast.PushIt.Utilities;
+using duHast.Utils.WPF.Stores;
+using Revit.Async;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+
+namespace duHast.PushIt.Commands
+{
+    public class WipeSelectedRevitRoomInstancesCommand: Utils.WPF.Commands.CommandBase
+    {
+
+        private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
+        //private readonly Services.NavigationService _reservationViewNavigationService;
+        private readonly Models.RevitDataModel _revitDataModel;
+
+
+        public override async void Execute(object parameter)
+        {
+            //deactivate the ui
+            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
+
+            try
+            {
+                (string message, Utils.WPF.Stores.MessageTypes messageType) = await RevitTask.RunAsync(
+                    app =>
+                    {
+
+                        int wipeCounter = 0;
+                        //Run Revit API code here
+                        Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
+                        try
+                        {
+                            //check what is selected in the UI
+                            UIDocument uidoc = app.ActiveUIDocument;
+
+                            // get the selected element ids
+                            List<ElementId> selectedElementIds = uidoc.Selection.GetElementIds().ToList();
+                            // check quantity of selected elements
+                            if (selectedElementIds.Count == 0)
+                            {
+                                return ("No room selected in the Revit model to wipe.", Utils.WPF.Stores.MessageTypes.Error);
+                            }
+
+                            // filter selected elements by supported categories
+                            List<FamilyInstance> validElements = new List<FamilyInstance>();
+                            string return_message = "";
+                            foreach (ElementId elementId in selectedElementIds) {
+                                Element selectedElement = doc.GetElement(elementId);
+                                // check if the selected element is of a supported category (or has category to start with)
+                                if (selectedElement.Category == null || !_revitDataModel.Settings.SupportedCategories.Contains(selectedElement.Category.Name))
+                                {
+                                    string supportedCategories = string.Join(", ", _revitDataModel.Settings.SupportedCategories);
+                                    return_message = return_message + ($"\nThe selected element {elementId.IntegerValue} is not of a supported category. Supported categories are: {supportedCategories}.", Utils.WPF.Stores.MessageTypes.Error);
+                                }
+                                else
+                                {
+                                    // convert element to family instance
+                                    try
+                                    {
+                                        validElements.Add(selectedElement as FamilyInstance);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        return_message = return_message + ($"\nAn exception occurred while converting the selected element {elementId.IntegerValue} to a family instance: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                                    }
+                                }
+                            }
+
+                            //check if any elements are valid
+                            if (validElements.Count == 0)
+                            {
+                                return (return_message, Utils.WPF.Stores.MessageTypes.Error);
+                            }
+                            else
+                            {
+                                wipeCounter = validElements.Count;
+                            }
+                            
+                            // Execute the action to wipe selected rooms in the Revit model
+                            WipeSelectedRevitRoomsData action = new WipeSelectedRevitRoomsData(
+                                revitModel: _revitDataModel,
+                                pushTargets: validElements,
+                                roomsSelectionViewModel: _roomsSelectionViewModel
+                            );
+                            // execute the wipe action
+                            action.Execute(doc);
+
+                            //set up an action refreshing the data model
+                            // refresh the rooms data model with the rooms from the revit model
+                            RevitActions.RefreshRoomDataWithRevitData refreshRoomDataWithRevitData = new RevitActions.RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
+                            //execute the refresh action
+                            refreshRoomDataWithRevitData.Execute(doc);
+                        }
+                        catch (Exception ex)
+                        {
+                            return ($"An exception occurred within the external event handler update after wipe selected rooms event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                        }
+
+                        //set a return message
+                        return ($"Wiped {wipeCounter} elements.", MessageTypes.Information);
+                    });
+
+                if (messageType == MessageTypes.Information)
+                {
+                    // raise event to notify the view model that the model has been updated
+                    _revitDataModel.RaisePropertyChanged(PropertyChangedEventNames.DATA_MODEL_ROOMS_UPDATED);
+                }
+
+                //pop message to user
+                _roomsSelectionViewModel.AddMessage(message, messageType);
+            }
+            catch (Exception ex)
+            {
+                _roomsSelectionViewModel.AddMessage(ex.Message, MessageTypes.Error);
+            }
+            finally
+            {
+                //activate the ui
+                _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = false;
+            }
+        }
+
+        public override bool CanExecute(object parameter)
+        {
+            // check if IsWaitingForRevitCommandToFinish is true
+            if (_roomsSelectionViewModel.IsWaitingForRevitCommandToFinish)
+            {
+                //button is not available
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // check if the property that changed is the one that we are interested in
+            if (e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsWaitingForRevitCommandToFinish))
+            {
+                OnCanExecutedChanged();
+            }
+        }
+
+        public WipeSelectedRevitRoomInstancesCommand(
+            ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
+            Models.RevitDataModel revitDataModel
+            )
+        {
+            _revitDataModel = revitDataModel;
+            _roomsSelectionViewModel = roomsSelectionViewModel;
+            _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        }
+    }
+}

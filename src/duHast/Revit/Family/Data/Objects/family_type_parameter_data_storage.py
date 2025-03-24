@@ -308,9 +308,11 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
         unit_names_for_catalogue_file=""
         # get the unit name depending on the storage type of parameter
         if len(unit_names_lists_for_catalogue_file) == 1:
+            # if there is only one unit name for the storage type
             unit_names_for_catalogue_file = unit_names_lists_for_catalogue_file[0][1]
             found_unit_match = True
         else:
+            # if there are multiple unit names depending on the storage type
             for unit_name_list in unit_names_lists_for_catalogue_file:
                 if unit_name_list[0] == self.type_of_parameter:
                     unit_names_for_catalogue_file = unit_name_list[1]

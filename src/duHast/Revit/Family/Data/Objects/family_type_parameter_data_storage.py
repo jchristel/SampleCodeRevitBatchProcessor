@@ -84,7 +84,6 @@ PARAMETER_UNITS_MAPPER = {
     "$/m²":[["Cost per Area", "COST_PER_SQUARE_METER"]]
 }
 
-
 class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
 
     # data type for this class ( used in reports as first entry per row )

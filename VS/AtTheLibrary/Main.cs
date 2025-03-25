@@ -64,6 +64,12 @@ namespace duHast.AtTheLibrary
 
             // load settings from file
             Models.Settings settings = Utilities.SettingsUtils.LoadSettings();
+
+            // debug for now
+            // set the settings
+            settings.DataPath = @"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\test\Data\XML_Reports_Comp_01\LibraryFamilies_01.csv";
+
+            //store settings in data model
             _revitDataModel.Settings = settings;
 
             //load room data into model

@@ -8,5 +8,13 @@ namespace duHast.AtTheLibrary.Models
 {
     public class FamilyDataProperty
     {
+        private string _name;
+        private string _value;
+
+        public FamilyDataProperty(string name,  string value)
+        {
+            _name = name;
+            _value = value;
+        }
     }
 }

@@ -86,7 +86,7 @@ namespace duHast.AtTheLibrary.Utilities
                 }
 
                 // Serialize the settings object to JSON
-                string jsonString = JsonConvert.SerializeObject(settings, Formatting.None);
+                string jsonString = JsonConvert.SerializeObject(settings, Newtonsoft.Json.Formatting.None);
 
                 // Write the JSON string to the settings file
                 File.WriteAllText(settingsFilePath, jsonString);

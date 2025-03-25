@@ -15,7 +15,7 @@ namespace duHast.AtTheLibrary.Utilities
         public static List<Models.FamilyDataModel> GetFamiliesData(string filePath, int rowsToSkip = 1)
         {
             // read data from comma separated file
-            List<Models.FamilyDataModel> roomsData = new List<Models.FamilyDataModel>();
+            List<Models.FamilyDataModel> familiesData = new List<Models.FamilyDataModel>();
 
             //check if valid path
             if (!File.Exists(filePath))
@@ -78,13 +78,33 @@ namespace duHast.AtTheLibrary.Utilities
                         // - "PARAMETER UNIT",
                         // - "PARAMETER VALUE",
 
+                        // read the data to the right of the first column into property objects
+                        var properties = new List<Models.FamilyDataProperty>();
 
+                        for (int i = 3; i < csv.HeaderRecord.Length; i++)
+                        {
+                            var property = new Models.FamilyDataProperty(
+                                name: header1[i],
+                                value: csv.GetField(i)
+                            );
+                            properties.Add(property);
+                        }
+
+                        // create a new FamilyDataModel object
+                        var record = new Models.FamilyDataModel(
+                             id: new Models.FamilyDataProperty(
+                                name: header1[1] + "::" + header1[2],
+                                value: csv.GetField(1) + "::" + csv.GetField(2)
+                             ),
+                            otherProperties: properties);
+
+                        familiesData.Add(record);
                     }
                 }
             }
 
             // return list of RoomsDataModel
-            return roomsData;
+            return familiesData;
         }
     }
 }

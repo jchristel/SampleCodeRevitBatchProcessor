@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Class for family parameter data storage class.
@@ -54,6 +55,7 @@ PARAMETER_STORAGE_TYPE_MAPPER = {
     "Slope":"SLOPE",
     "Speed":"SPEED",
     "Time":"TIMEINTERVAL",
+    "Text":"OTHER",
     "URL":"OTHER",
     "Volume":"VOLUME",
     "Yes/No":"OTHER",
@@ -61,27 +63,28 @@ PARAMETER_STORAGE_TYPE_MAPPER = {
 
 # map the units as reported in the part atom export to the units used in the catalogue file header row (depending on the storage type)
 PARAMETER_UNITS_MAPPER = {
-    "mm":[["Length","MILLIMETERS"], ["Distance","MILLIMETERS"]],
-    "cm":[["Length","CENTIMETERS"], ["Distance","CENTIMETERS"]],
-    "m":[["Length","METERS"], ["Distance","METERS"]],
-    "mm²":[["Area","SQUARE_MILLIMETERS"]],
-    "cm²":[["Area","SQUARE_CENTIMETERS"]],
-    "m²":[["Area","SQUARE_METERS"]],
-    "mm³":[["Volume","CUBIC_MILLIMETERS"]],
-    "cm³":[["Volume","CUBIC_CENTIMETERS"]],
-    "m³":[["Volume","CUBIC_METERS"]],
-    "m/s":[["Speed","METERS_PER_SECOND"]],
-    "cm/m":[["Speed","CENTIMETERS_PER_MINUTE"]],
-    "km/h":[["Speed","KILOMETERS_PER_HOUR"]],
-    "ms":[["Time","MILLISECONDS"]],
-    "s":[["Time","SECONDS"]],
-    "min":[["Time","MINUTES"]],
-    "h":[["Time","HOURS"]],
-    "grad":[["Rotation Angle","GRADIANS"],["Angle","GRADIANS"]],
-    "rad":[["Angle","RADIANS"],["Rotation Angle","RADIANS"]],
-    "°":[["Slope","SLOPE_DEGREES"],["Rotation Angle","DEGREES"],["Angle","DEGREES"]],
-    "$":[["Currency","CURRENCY"]],
-    "$/m²":[["Cost per Area", "COST_PER_SQUARE_METER"]]
+    b"mm":[["Length","MILLIMETERS"], ["Distance","MILLIMETERS"]],
+    b"cm":[["Length","CENTIMETERS"], ["Distance","CENTIMETERS"]],
+    b"m":[["Length","METERS"], ["Distance","METERS"]],
+    b"mm\xc2\xb2":[["Area","SQUARE_MILLIMETERS"]],
+    b"cm\xc2\xb2":[["Area","SQUARE_CENTIMETERS"]],
+    b"m\xc2\xb2":[["Area","SQUARE_METERS"]],
+    b"mm\xc2\xb3":[["Volume","CUBIC_MILLIMETERS"]],
+    b"cm\xc2\xb3":[["Volume","CUBIC_CENTIMETERS"]],
+    b"m\xc2\xb3":[["Volume","CUBIC_METERS"]],
+    b"m/s":[["Speed","METERS_PER_SECOND"]],
+    b"cm/m":[["Speed","CENTIMETERS_PER_MINUTE"]],
+    b"km/h":[["Speed","KILOMETERS_PER_HOUR"]],
+    b"ms":[["Time","MILLISECONDS"]],
+    b"s":[["Time","SECONDS"]],
+    b"min":[["Time","MINUTES"]],
+    b"h":[["Time","HOURS"]],
+    b"grad":[["Rotation Angle","GRADIANS"],["Angle","GRADIANS"]],
+    b"rad":[["Angle","RADIANS"],["Rotation Angle","RADIANS"]],
+    b"\xc2\xb0":[["Slope","SLOPE_DEGREES"],["Rotation Angle","DEGREES"],["Angle","DEGREES"]],
+    b"$":[["Currency","CURRENCY"]],
+    b"$/m\xc2\xb2":[["Cost per Area", "COST_PER_SQUARE_METER"]],
+    b"unitless":[["",""]],
 }
 
 class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
@@ -270,6 +273,7 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
             self.value,
         ]
     
+
     def get_catalogue_file_data(self):
         """
         Get the catalogue file data for this parameter ( the value of the parameter)
@@ -280,6 +284,7 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
 
         return self.value
     
+
     def get_catalogue_file_header_row(self):
         """
         Get the catalogue file header row for this object sample ParameterName##LENGTH##MILLIMETERS
@@ -288,18 +293,18 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
         :rtype: str
         """
 
-
+        
         # check if the type of parameter is in the mapper
         if self.type_of_parameter not in PARAMETER_STORAGE_TYPE_MAPPER:
-            raise ValueError("Unknown parameter type: {}".format(self.type_of_parameter))
+            raise ValueError("Unknown parameter type: {} for parameter: {}".format(self.type_of_parameter, self.name))
         
         # get the mapper name for the type of parameter
         type_name_revised_for_file = PARAMETER_STORAGE_TYPE_MAPPER[self.type_of_parameter]
 
-
         # check if the units are in the mapper
+        # dictionary uses as keys byte strings due to non unicode characters!
         if self.units not in PARAMETER_UNITS_MAPPER:
-            raise ValueError("Unknown parameter unit: {}".format(self.units))
+            raise ValueError("Unknown parameter unit: {} for parameter: {}".format( self.units, self.name))
         
         # get the mapper name for the units
         unit_names_lists_for_catalogue_file = PARAMETER_UNITS_MAPPER[self.units]
@@ -321,7 +326,9 @@ class FamilyTypeParameterDataStorage(IFamDataStorage.IFamilyDataStorage):
 
         # check if the unit name was found
         if not found_unit_match:
-            raise ValueError("Unknown parameter unit: {}".format(self.units))
+            raise ValueError("Unknown parameter unit: {} for parameter: {}".format(self.units, self.name))
+
 
         # return the catalogue file header row entry for this parameter
         return "{}##{}##{}".format(self.name, type_name_revised_for_file, unit_names_for_catalogue_file)
+       

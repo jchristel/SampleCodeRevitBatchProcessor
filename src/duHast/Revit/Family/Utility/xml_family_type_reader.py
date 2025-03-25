@@ -224,7 +224,7 @@ def get_parameter(xml_node, family_name, root_category_path, family_path, family
             name=encode_ascii(name),
             type=encode_ascii(type),
             type_of_parameter=encode_ascii(type_of_parameter),
-            units=encode_ascii(units),
+            units=units, # not encoding because some units are not ascii
             value=encode_ascii(p_value),
         )
 

@@ -34,7 +34,7 @@ namespace duHast.PushIt.RevitActions
 
         public Models.RevitDataModel RevitModel => _revitModel;
 
-        public void Execute(Document doc)
+        public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
             List<Models.RoomDataModel> roomsDataModel = _revitModel.GetAllRooms();
 
@@ -42,7 +42,7 @@ namespace duHast.PushIt.RevitActions
             {
                 // no rooms available...nothing to push
                 // todo log error
-                return;
+                return ("Data model contains no rooms to push to Revit.", duHast.Utils.WPF.Stores.MessageTypes.Information);
             }
 
             // get shared parameter data from the model
@@ -53,7 +53,7 @@ namespace duHast.PushIt.RevitActions
             List<Category> categories = duHast.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, _revitModel.Settings.SupportedCategories);
             if (categories.Count == 0)
             {
-                return;
+                return("No supported Revit categories selected in settings.", duHast.Utils.WPF.Stores.MessageTypes.Error);
             }
 
             // convert revit categories into revit builtIncategories for filtering
@@ -67,11 +67,8 @@ namespace duHast.PushIt.RevitActions
             {
                 // no family instances available...nothing to push
                 _roomsSelectionViewModel.AddMessage("No family instances found in the model",duHast.Utils.WPF.Stores.MessageTypes.Information);
-                return;
+                return("Na family instances of supported Revit categories found.", Utils.WPF.Stores.MessageTypes.Information);
             }
-
-            // tell the UI we are busy
-            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = true;
 
             // convert family instances to revit rooms
             List<duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
@@ -134,8 +131,7 @@ namespace duHast.PushIt.RevitActions
                 updateFamilyInstances.Clear();
             }
 
-            // tell the UI we are done
-            _roomsSelectionViewModel.IsWaitingForRevitCommandToFinish = false;
+            return ($"Updated all rooms in the model with status {overallUpdateSuccess}", Utils.WPF.Stores.MessageTypes.Information);
         }
 
         public PushAllRoomDataToRevitIRevitAction(RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)

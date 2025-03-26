@@ -606,8 +606,10 @@ FodyWeavers.xsd
 
 # inlcude pyRevit sample directory
 
-# Include the specific .lib folders
+# Include the specific .lib folders and bin folders
 !Samples/pyRevit/Extensions/duHast.lib
 !Samples/pyRevit/Extensions/duHast.extension/duHast.tab/lib
 !Samples/pyRevit/Extensions/duHast.extension/duHast.tab/PushIt.panel/bin
+!Samples/pyRevit/Extensions/uHast.extension/duHast.tab/Families.panel/bin
+!Samples/pyRevit/Extensions/duHast.extension/bin
 /test/adHoc

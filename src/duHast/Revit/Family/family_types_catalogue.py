@@ -294,7 +294,7 @@ def export_catalogue_file(doc, file_path = None, filters = None, parameter_order
         family_path = doc.PathName
 
         # check if the file path is provided
-        if file_path:
+        if file_path is None:
             file_path= family_path
 
         # get the family type data

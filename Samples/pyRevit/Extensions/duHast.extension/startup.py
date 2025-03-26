@@ -8,12 +8,11 @@ import traceback
 
 # do not load these, since they are the external command and dont need to be laoded
 ignore_dlls = [
-    "PushIt.dll",
 ]
 
 # Load the DLLs required for the extension
 # build the bin path
-bin_directory_within_extension=r"duHast.tab\PushIt.panel\bin"
+bin_directory_within_extension=r"bin"
 # file path of this file
 startup_file_path = __file__
 # get the directory of the startup file
@@ -35,10 +34,10 @@ for dll in dlls_to_load:
         
         # check if the dll should be ignored
         if dll_name_only in ignore_dlls:
-            print("Ignoring: {dll}".format(dll=dll_name_only))
+            # print("Ignoring: {dll}".format(dll=dll_name_only))
             continue
 
-        print("Attempting to load: {dll}".format(dll=dll_name_only))
+        #print("Attempting to load: {dll}".format(dll=dll_name_only))
         
         # Check if the file exists
         if not File.Exists(dll):
@@ -55,7 +54,7 @@ for dll in dlls_to_load:
 
         # Ensure it's registered for other add-ins
         System.AppDomain.CurrentDomain.Load(assembly.GetName())
-        print("loaded successfully: {dll}".format(dll=dll_name_only))
+        #print("loaded successfully: {dll}".format(dll=dll_name_only))
     except Exception as e:
         print("Failed to load {dll} with exception: {e}".format(dll=dll, e=e))
         print(traceback.format_exc())

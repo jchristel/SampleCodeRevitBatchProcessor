@@ -361,10 +361,10 @@ def export_catalogue_file(doc, file_path = None, filters = None, parameter_order
             return_value.update_sep(False, "Failed to get the catalogue file header.")
             return return_value
 
-        print("Catalogue file data: {}".format(catalogue_file_data))
-        print("Catalogue file header: {}".format(catalogue_file_header))
-        print("Catalogue file path: {}".format(family_path))
-        print("Override existing: {}".format(override_existing))
+        #print("Catalogue file data: {}".format(catalogue_file_data))
+        #print("Catalogue file header: {}".format(catalogue_file_header))
+        #print("Catalogue file path: {}".format(family_path))
+        #print("Override existing: {}".format(override_existing))
 
         # write the catalogue file to file
         write_catalogue_file_result = write_catalogue_file_to_csv(
@@ -379,7 +379,7 @@ def export_catalogue_file(doc, file_path = None, filters = None, parameter_order
             return_value.update_sep(False, "Failed to write the catalogue file to file: {}".format(write_catalogue_file_result.message))
             return return_value
 
-        return_value.update_sep(True, "Catalogue file successfully exported to: {}".format(write_catalogue_file_result.message))
+        return_value.update_sep(True, "Catalogue file successfully exported to: {}".format(family_path))
 
     except Exception as e:
         return_value.update_sep(False, str(e))

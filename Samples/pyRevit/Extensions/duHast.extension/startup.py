@@ -8,13 +8,11 @@ import traceback
 
 # do not load these, since they are the external command and dont need to be laoded
 ignore_dlls = [
-    "PushIt.dll",
-    "AtTheLibrary.dll",
 ]
 
 # Load the DLLs required for the extension
 # build the bin path
-bin_directory_within_extension=r"duHast.tab\PushIt.panel\bin"
+bin_directory_within_extension=r"bin"
 # file path of this file
 startup_file_path = __file__
 # get the directory of the startup file

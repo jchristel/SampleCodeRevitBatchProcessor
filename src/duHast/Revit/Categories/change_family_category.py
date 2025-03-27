@@ -47,7 +47,8 @@ def change_family_category(doc, new_category_name):
     """
     Changes the current family category to the new one specified.
 
-    Revit's default behavior when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories to the new family category. This function will also re-create any user-created subcategories under the new category and assign elements to them to match the subcategory they were on before the category change.
+    Revit's default behavior when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories to the new family category. 
+    This function will also re-create any user-created subcategories under the new category and assign elements to them to match the subcategory they were on before the category change.
 
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document

@@ -76,6 +76,56 @@ def get_main_sub_categories(doc):
     return cat_data
 
 
+def get_available_categories_depending_on_category_type_owner(doc):
+    """
+    Gets all available categories from the document and filters it by the category type of the document.
+    If the family category type is Model, then only model categories will be returned.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of categories filtered by the category type.
+    :rtype: List[Category]
+    """
+
+    # get all available categories from the document
+    categories = doc.Settings.Categories
+
+    # use the categoryType of the current category to determine the category type to select from
+    current_category_type = doc.OwnerFamily.FamilyCategory.CategoryType
+
+    # filter the categories by the category type
+    available_categories = [category for category in categories if category.CategoryType == current_category_type]
+
+    return available_categories
+
+
+def get_category_by_id(doc, category_id):
+    """
+    Gets the category from the document by its id. This includes any nested sub categories.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param category_id: Id of the category to get.
+    :type category_id: ElementId
+
+    :return: Category with the given id, or None if no category with the given id was found.
+    :rtype: Category
+    """
+
+    # get the category from the document by its id
+    categories = doc.Settings.Categories
+    for cat in categories:
+        if cat.Id == category_id:
+            return cat
+        # check any sub categories
+        for sub_cat in cat.SubCategories:
+            if sub_cat.Id == category_id:
+                return sub_cat
+           
+    return None
+
+
 def does_main_sub_category_exists(doc, sub_cat_name):
     """
     Checks whether a given subcategory exists in the family.

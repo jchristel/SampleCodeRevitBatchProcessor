@@ -752,6 +752,7 @@ def negate_vector(vector):
 def merge_bounding_box_xyz(bounding_box_xyz_0, bounding_box_xyz_1):
     """
     Merges two bounding boxes into one.
+
     :param bounding_box_xyz_0: The first bounding box
     :type bounding_box_xyz_0: BoundingBoxXYZ
     :param bounding_box_xyz_1: The second bounding box
@@ -760,6 +761,11 @@ def merge_bounding_box_xyz(bounding_box_xyz_0, bounding_box_xyz_1):
     :return: The merged bounding box
     :rtype: BoundingBoxXYZ
     """
+
+    if bounding_box_xyz_0 is None:
+        return bounding_box_xyz_1
+    if bounding_box_xyz_1 is None:
+        return bounding_box_xyz_0
 
     merged_result = BoundingBoxXYZ()
     merged_result.Min = XYZ(

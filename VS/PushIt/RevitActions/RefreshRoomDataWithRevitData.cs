@@ -140,7 +140,15 @@ namespace duHast.PushIt.RevitActions
             if (familyInstances.Count == 0)
             {
                 // if that is not the case return the rooms data model unchanged after popping a message to the user
-                AddMessage("No rooms found in the model.", Utils.WPF.Stores.MessageTypes.Error);
+                AddMessage("No rooms found in the model.", Utils.WPF.Stores.MessageTypes.Information);
+
+                // need to remove any family instances from the rooms data model from previous runs
+                foreach (var room in roomsDataModel)
+                {
+                    room.ClearMatchingRevitRooms();
+                }
+                
+                //return the updated model
                 return roomsDataModel;
             }
 

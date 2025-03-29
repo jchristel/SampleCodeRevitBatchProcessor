@@ -28,19 +28,38 @@ using System.Collections.Generic;
 
 namespace duHast.PushIt.RevitActions
 {
-    public class WipeStaleRoomData : IRevitAction
+    public class WipeStaleRoomData : RevitActionBase, IRevitAction
     {
-        private readonly RevitDataModel _revitModel;
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
-        public Models.RevitDataModel RevitModel => _revitModel;
+        private int _wipeCounter = 0;
 
-        public void Execute(Document doc)
+        public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
-            WipeData(
-                doc,
-                _revitModel._roomsContainer.GetAllRooms(),
-                _revitModel.Settings.SupportedCategories
-             );
+            try
+            {
+                WipeData(
+                    doc,
+                    RevitModel._roomsContainer.GetAllRooms(),
+                    RevitModel.Settings.SupportedCategories
+                 );
+            }
+            catch (System.Exception ex)
+            {
+                //log the exception
+                AddMessage($"Error wiping stale room(s) data in Revit: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+            }
+
+            // check if any error messages were added
+            if (GetErrorMessages().Count > 0)
+            {
+                // return the message
+                return (string.Join("\n", GetErrorMessages()), Utils.WPF.Stores.MessageTypes.Error);
+            }
+            else
+            {
+                // return the message
+                return ($"Wiped {_wipeCounter} stale room(s) data in Revit", Utils.WPF.Stores.MessageTypes.Information);
+            }
         }
 
 
@@ -49,6 +68,9 @@ namespace duHast.PushIt.RevitActions
             bool wipeSuccess = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(doc, familyInstancesToWipe, sampleRoom);
             if (!wipeSuccess)
             {
+                AddMessage("Error wiping multiple family instances. Attempting wiping one at the time.", Utils.WPF.Stores.MessageTypes.Error);
+
+                int wipeSuccessCounter = 0;
                 // attempt to wipe one by one
                 foreach (var familyInstance in familyInstancesToWipe)
                 {
@@ -57,8 +79,17 @@ namespace duHast.PushIt.RevitActions
                     if (!wipeSuccessSingle)
                     {
                         // log error
+                        AddMessage($"Error wiping family instance: {familyInstance.Id.IntegerValue}", Utils.WPF.Stores.MessageTypes.Error);
+                    }
+                    else
+                    {
+                        wipeSuccessCounter++;
                     }
 
+                }
+                if (wipeSuccessCounter > 0)
+                {
+                    AddMessage($"Wiped {wipeSuccessCounter} family instances.", Utils.WPF.Stores.MessageTypes.Information);
                 }
                 return false;
             }
@@ -73,7 +104,7 @@ namespace duHast.PushIt.RevitActions
             if (roomsDataModel.Count == 0)
             {
                 // no sample room available...means no parameter mapping available
-                // todo log error
+                AddMessage("Data model contains no rooms to push to Revit.", duHast.Utils.WPF.Stores.MessageTypes.Error);
                 return;
             }
 
@@ -82,7 +113,7 @@ namespace duHast.PushIt.RevitActions
             if (categories.Count == 0)
             {
                 // no supported categories found
-                // todo log error
+                AddMessage("Data model contains no supported Revit categories.", duHast.Utils.WPF.Stores.MessageTypes.Error);
                 return;
             }
 
@@ -101,7 +132,8 @@ namespace duHast.PushIt.RevitActions
             }
 
             // convert family instances to revit rooms
-            List<duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
+            List<duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
+                familyInstances, roomsDataModel[0], AddMessage);
 
             //build a list of family instances that contain stale data ( stale data is a family instance where the room id is not in the rooms data model)
             List<FamilyInstance> staleFamilyInstances = new List<FamilyInstance>();
@@ -122,12 +154,14 @@ namespace duHast.PushIt.RevitActions
             {
                 //fill the task bucket
                 familyInstancesToWipe.Add(staleFamilyInstance);
-                
+                _wipeCounter++;
+
                 //reached bucket limit?
                 if (familyInstancesToWipe.Count == 20)
                 {
                     // update the family instances
                     bool wipeSuccess = WipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
+                    AddMessage($"Wiping {familyInstancesToWipe.Count} family instances. {wipeSuccess}", Utils.WPF.Stores.MessageTypes.Log);
                     overallWipeSuccess = overallWipeSuccess && wipeSuccess;
                     // clear the update family instances
                     familyInstancesToWipe.Clear();
@@ -139,12 +173,13 @@ namespace duHast.PushIt.RevitActions
             if (familyInstancesToWipe.Count > 0)
             {
                 bool wipeSuccess = WipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
+                AddMessage($"Wiping {familyInstancesToWipe.Count} family instances. {wipeSuccess}", Utils.WPF.Stores.MessageTypes.Log);
                 overallWipeSuccess = overallWipeSuccess && wipeSuccess;
             }
         }
         public WipeStaleRoomData(Models.RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
         {
-            _revitModel = revitModel;
+            RevitModel = revitModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;
         }
     }

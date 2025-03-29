@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace duHast.PushIt.Commands
 {
-    public class WipeSelectedRevitRoomInstancesCommand: Utils.WPF.Commands.CommandBase
+    public class WipeSelectedRevitRoomInstancesAsyncCommand: Utils.WPF.Commands.CommandBase
     {
 
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
@@ -87,22 +87,32 @@ namespace duHast.PushIt.Commands
                                 pushTargets: validElements,
                                 roomsSelectionViewModel: _roomsSelectionViewModel
                             );
+
                             // execute the wipe action
-                            action.Execute(doc);
+                            (string messageActionWipe, Utils.WPF.Stores.MessageTypes messageActionTypeWipe) = action.Execute(doc);
 
                             //set up an action refreshing the data model
                             // refresh the rooms data model with the rooms from the revit model
                             RevitActions.RefreshRoomDataWithRevitData refreshRoomDataWithRevitData = new RevitActions.RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
                             //execute the refresh action
-                            refreshRoomDataWithRevitData.Execute(doc);
+                            (string messageActionRefresh, Utils.WPF.Stores.MessageTypes messageActionTypeRefresh)  = refreshRoomDataWithRevitData.Execute(doc);
+
+                            //TODO write messages to log...
+
+                            //combine messages from both actions
+                            if (messageActionTypeWipe == Utils.WPF.Stores.MessageTypes.Information && messageActionTypeRefresh == MessageTypes.Information)
+                            {
+                                return ($"{messageActionWipe}\n{messageActionRefresh}", messageActionTypeWipe);
+                            }
+                            else
+                            {
+                                return ($"{messageActionWipe}\n{messageActionRefresh}", MessageTypes.Error);
+                            }
                         }
                         catch (Exception ex)
                         {
                             return ($"An exception occurred within the external event handler update after wipe selected rooms event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                         }
-
-                        //set a return message
-                        return ($"Wiped {wipeCounter} elements.", MessageTypes.Information);
                     });
 
                 if (messageType == MessageTypes.Information)
@@ -148,7 +158,7 @@ namespace duHast.PushIt.Commands
             }
         }
 
-        public WipeSelectedRevitRoomInstancesCommand(
+        public WipeSelectedRevitRoomInstancesAsyncCommand(
             ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
             Models.RevitDataModel revitDataModel
             )

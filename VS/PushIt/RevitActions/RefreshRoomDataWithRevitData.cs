@@ -22,42 +22,59 @@
 //
 
 using System.Collections.Generic;
-using System.Windows.Forms;
 using Autodesk.Revit.DB;
 using duHast.PushIt.Models;
-using duHast.PushIt.ViewModels;
 
 namespace duHast.PushIt.RevitActions
 {
-    public class RefreshRoomDataWithRevitData:IRevitAction
+    public class RefreshRoomDataWithRevitData: RevitActionBase, IRevitAction
     {
-        private readonly RevitDataModel _revitModel;
+       
         private ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
-        public Models.RevitDataModel RevitModel => _revitModel;
         public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
 
-
-        public void Execute(Document doc)
+        public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
-            // refresh the rooms data model with the rooms from the revit model
-            List<Models.RoomDataModel> updatedRooms = RefreshRoomData(
-                doc, 
-                _revitModel._roomsContainer.GetAllRooms(),
-                _revitModel.Settings.SupportedCategories
-             );
-
-            // clear all rooms in the data model
-            // this will also clear all rooms if shared parameter setup in project file is wrong.
-            _revitModel.ClearRooms();
-
-            // add updated rooms to the data model if there are any
-            if (updatedRooms != null)
+            try
             {
-                // add updated rooms
-                foreach (var rooms in updatedRooms)
+                // refresh the rooms data model with the rooms from the revit model
+                List<Models.RoomDataModel> updatedRooms = RefreshRoomData(
+                    doc,
+                    RevitModel._roomsContainer.GetAllRooms(),
+                    RevitModel.Settings.SupportedCategories
+                 );
+
+                // clear all rooms in the data model
+                // this will also clear all rooms if shared parameter setup in project file is wrong.
+                RevitModel.ClearRooms();
+
+                // add updated rooms to the data model if there are any
+                if (updatedRooms != null)
                 {
-                    _revitModel.AddRoom(rooms);
+                    // add updated rooms
+                    foreach (var rooms in updatedRooms)
+                    {
+                        RevitModel.AddRoom(rooms);
+                    }
+                    return ($"{updatedRooms.Count} Rooms in data model updated with rooms from the Revit model.", Utils.WPF.Stores.MessageTypes.Information);
                 }
+            }
+            catch (System.Exception ex)
+            {
+                //log the exception
+                AddMessage($"Error refreshing room data from Revit: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+            }
+
+            // check if any error messages were added
+            if (GetErrorMessages().Count > 0)
+            {
+                // return the message
+                return (string.Join("\n", GetErrorMessages()), Utils.WPF.Stores.MessageTypes.Error);
+            }
+            else
+            {
+                // return the message
+                return ("Highlighted rooms in Revit", Utils.WPF.Stores.MessageTypes.Information);
             }
         }
 
@@ -70,16 +87,22 @@ namespace duHast.PushIt.RevitActions
         /// <returns></returns>
         public List<Models.RoomDataModel> RefreshRoomData(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName)
         {
+            string refreshMessage = "";
             // check if all shared parameters exist and are bound to the correct categories
             bool parameterCheck = Utilities.Revit.SharedParameters.SharedParametersCheck(
                 doc, 
                 roomsDataModel, 
                 supportedCategoryName, 
-                (message, messageType) => _roomsSelectionViewModel.AddMessage(message, messageType));
+                out refreshMessage);
             
             // if not get out
             if (!parameterCheck){
+                AddMessage(refreshMessage, Utils.WPF.Stores.MessageTypes.Error);
                 return null;
+            }
+            else
+            {
+                AddMessage("Successfully checked shared parameter mapping in file.", Utils.WPF.Stores.MessageTypes.Log);
             }
 
             // get supported categories
@@ -90,11 +113,11 @@ namespace duHast.PushIt.RevitActions
                 {
                     // build a string of supported categories
                     string supportedCategories = string.Join(", ", supportedCategoryName);
-                    _roomsSelectionViewModel.AddMessage($"Supported categories are invalid: {supportedCategories}", Utils.WPF.Stores.MessageTypes.Error);
+                    AddMessage($"Supported categories are invalid: {supportedCategories}", Utils.WPF.Stores.MessageTypes.Error);
                 }
                 else
                 {
-                    _roomsSelectionViewModel.AddMessage("No supported categories provided.", Utils.WPF.Stores.MessageTypes.Error);
+                    AddMessage("No supported categories provided.", Utils.WPF.Stores.MessageTypes.Error);
                 }
                 return null;
             }
@@ -117,12 +140,16 @@ namespace duHast.PushIt.RevitActions
             if (familyInstances.Count == 0)
             {
                 // if that is not the case return the rooms data model unchanged after popping a message to the user
-                _roomsSelectionViewModel.AddMessage("No rooms found in the model.", Utils.WPF.Stores.MessageTypes.Information);
+                AddMessage("No rooms found in the model.", Utils.WPF.Stores.MessageTypes.Error);
                 return roomsDataModel;
             }
 
             // convert family instances to revit rooms
-            List <duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
+            List <duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
+                familyInstances, 
+                roomsDataModel[0],
+                AddMessage
+            );
 
             // update rooms data model with revit rooms
             roomsDataModel = Utilities.UpdateRoomDataModelWithRoomsRevitModelUtils.UpdateRoomDataModelWithRoomsRevitModel(
@@ -137,7 +164,7 @@ namespace duHast.PushIt.RevitActions
 
         public RefreshRoomDataWithRevitData(RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
         {
-            _revitModel = revitModel;
+            RevitModel = revitModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;
         }
     }

@@ -21,16 +21,13 @@
 //
 //
 
-
+using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
 namespace duHast.PushIt.RevitActions
 {
     public interface IRevitAction
     {
-        Models.RevitDataModel RevitModel { get; }
-       
-        void Execute(Document doc);
-
+        (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc);
     }
 }

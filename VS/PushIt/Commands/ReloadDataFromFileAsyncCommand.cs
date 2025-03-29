@@ -66,14 +66,17 @@ namespace duHast.PushIt.Commands
 
                             // Execute the action to refresh the room data with the Revit data
                             RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
-                            action.Execute(doc);
+                            (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
+
+                            //TODO write messages to log...
+
+                            // return status message for UI
+                            return (messageAction, messageActionType);
                         }
                         catch (Exception ex)
                         {
                             return ($"An exception occurred within the external event handler update after reload data event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                         }
-                        // return success message
-                        return ("Reloaded data", Utils.WPF.Stores.MessageTypes.Information);
                     });
 
                 if (messageType == MessageTypes.Information)

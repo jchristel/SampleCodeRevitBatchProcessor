@@ -27,70 +27,91 @@ using Autodesk.Revit.DB;
 
 namespace duHast.PushIt.RevitActions
 {
-    public class PushSingleRoomDataToRevit : IRevitAction
+    public class PushSingleRoomDataToRevit : RevitActionBase, IRevitAction
     {
-        private readonly RevitDataModel _revitModel;
+        
         private readonly RoomDataModel _roomToPush;
         private readonly Element _pushTarget;
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
 
-        public Models.RevitDataModel RevitModel => _revitModel;
+        
         public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
 
-        public void Execute(Document doc)
+        public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
-
-            // get shared parameter data from the model
-            // get shared parameter ids by GUID
-            Dictionary<string, ElementId> sharedParameterIdsByGUIDs = duHast.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterIdsByGUID(doc);
-
-            //extract current model data from the element selected
-            var modelDataPrevious = Utilities.Revit.RevitRoomObjectsConverter.ConvertSingleFamilyToRevitRoom(
-                familyInstance: _pushTarget as Autodesk.Revit.DB.FamilyInstance,
-                sampleModelRoom: _roomToPush,
-                sharedParameterIdsByGUIDs: sharedParameterIdsByGUIDs
-            );
-
-            bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateSingleFamilyInstance(
-                doc: doc,
-                familyInstance: _pushTarget as Autodesk.Revit.DB.FamilyInstance,
-                roomData: _roomToPush,
-                safetyOff: _roomsSelectionViewModel.SafetyOffMode
-            );
-
-            if (!updateFamily)
+            try
             {
-                // log error
-                return;
-            }
-           
-            // get updated model data from the element selected
-            var modelDataUpdated = Utilities.Revit.RevitRoomObjectsConverter.ConvertSingleFamilyToRevitRoom(
-                familyInstance: _pushTarget as Autodesk.Revit.DB.FamilyInstance,
-                sampleModelRoom: _roomToPush,
-                sharedParameterIdsByGUIDs: sharedParameterIdsByGUIDs
-            );
+                // get shared parameter data from the model
+                // get shared parameter ids by GUID
+                Dictionary<string, ElementId> sharedParameterIdsByGUIDs = duHast.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterIdsByGUID(doc);
 
-            //only remove previous data if there is a valid room
-            if (modelDataPrevious != null)
+                //extract current model data from the element selected
+                var modelDataPrevious = Utilities.Revit.RevitRoomObjectsConverter.ConvertSingleFamilyToRevitRoom(
+                    familyInstance: _pushTarget as Autodesk.Revit.DB.FamilyInstance,
+                    sampleModelRoom: _roomToPush,
+                    sharedParameterIdsByGUIDs: sharedParameterIdsByGUIDs
+                );
+
+                bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateSingleFamilyInstance(
+                    doc: doc,
+                    familyInstance: _pushTarget as Autodesk.Revit.DB.FamilyInstance,
+                    roomData: _roomToPush,
+                    safetyOff: _roomsSelectionViewModel.SafetyOffMode
+                );
+
+                if (!updateFamily)
+                {
+                    // log error
+                    AddMessage($"Failed to update family instance(s): {_pushTarget.Id.IntegerValue}", Utils.WPF.Stores.MessageTypes.Error);
+                }
+                else
+                {
+                    // log success
+                    AddMessage($"Updated family instance(s): {_pushTarget.Id.IntegerValue}", Utils.WPF.Stores.MessageTypes.Information);
+                }
+
+                // get updated model data from the element selected
+                var modelDataUpdated = Utilities.Revit.RevitRoomObjectsConverter.ConvertSingleFamilyToRevitRoom(
+                    familyInstance: _pushTarget as Autodesk.Revit.DB.FamilyInstance,
+                    sampleModelRoom: _roomToPush,
+                    sharedParameterIdsByGUIDs: sharedParameterIdsByGUIDs
+                );
+
+                //only remove previous data if there is a valid room
+                if (modelDataPrevious != null)
+                {
+                    // remove the previous Revit room from the data model before adding it back in with new data
+                    RevitModel.RemovePlacedRevitRoom(modelDataPrevious.RevitElementId);
+                }
+
+                // add the updated Revit room to the data model
+                RevitModel.AddPlacedRevitRoom(_roomToPush.Id.Value, modelDataUpdated);
+            }
+            catch (System.Exception ex)
             {
-                // remove the previous Revit room from the data model before adding it back in with new data
-                _revitModel.RemovePlacedRevitRoom(modelDataPrevious.RevitElementId);
+                //log the exception
+                AddMessage($"Error updating single room in Revit: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
             }
-            
 
-            // add the updated Revit room to the data model
-            _revitModel.AddPlacedRevitRoom(_roomToPush.Id.Value, modelDataUpdated);
-
+            // check if any error messages were added
+            if (GetErrorMessages().Count > 0)
+            {
+                // return the message
+                return (string.Join("\n", GetErrorMessages()), Utils.WPF.Stores.MessageTypes.Error);
+            }
+            else
+            {
+                // return the message
+                return ($"Updated room {_roomToPush.Id.Value} in the model.", Utils.WPF.Stores.MessageTypes.Information);
+            }
         }
 
         public PushSingleRoomDataToRevit(RevitDataModel revitModel, Models.RoomDataModel roomToPush, Element pushTarget, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
         {
-            _revitModel = revitModel;
+            RevitModel = revitModel;
             _roomToPush = roomToPush;
             _pushTarget = pushTarget;
             _roomsSelectionViewModel = roomsSelectionViewModel;
-
         }
     }
 }

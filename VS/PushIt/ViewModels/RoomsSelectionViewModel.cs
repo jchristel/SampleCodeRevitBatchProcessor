@@ -82,7 +82,7 @@ namespace duHast.PushIt.ViewModels
         //command to update the view model if the column order changes
         public RelayCommand ColumnOrderChangedCommand { get; private set; }
         //command to wipe selected rooms in revit
-        private readonly Commands.WipeSelectedRevitRoomInstancesCommand _wipeSelectedRoomDataCommand;
+        private readonly Commands.WipeSelectedRevitRoomInstancesAsyncCommand _wipeSelectedRoomDataCommand;
 
         //property to check if there are any errors
         public bool HasErrors => _errorsViewModel.HasErrors;
@@ -856,7 +856,7 @@ namespace duHast.PushIt.ViewModels
             // create the column order changed command
             ColumnOrderChangedCommand = new RelayCommand(OnColumnOrderChanged);
             //wipe selected rooms in revit
-            _wipeSelectedRoomDataCommand = new Commands.WipeSelectedRevitRoomInstancesCommand(
+            _wipeSelectedRoomDataCommand = new Commands.WipeSelectedRevitRoomInstancesAsyncCommand(
                 roomsSelectionViewModel: this,
                 revitDataModel: _revitDataModel
             );

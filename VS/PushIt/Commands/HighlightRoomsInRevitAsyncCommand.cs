@@ -65,15 +65,17 @@ namespace duHast.PushIt.Commands
                                 roomToPush: _roomsSelectionViewModel.SelectedRoom,
                                 uiDoc: app.ActiveUIDocument
                             );
-                            action.Execute(doc);
+                            (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
 
+                            //TODO write messages to log...
+
+                            // return status message for UI
+                            return (messageAction, messageActionType);
                         }
                         catch (Exception ex)
                         {
                             return ($"An exception occurred within the external event handler highlight rooms in model event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                         }
-                        // return success message
-                        return ("Highlighted room(s)", Utils.WPF.Stores.MessageTypes.Information);
                     });
 
                 //pop message to user

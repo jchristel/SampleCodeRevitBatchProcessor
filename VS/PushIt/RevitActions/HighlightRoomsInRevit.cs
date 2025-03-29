@@ -29,46 +29,67 @@ using System.Collections.Generic;
 
 namespace duHast.PushIt.RevitActions
 {
-    public class HighlightRoomsInRevit : IRevitAction
+    public class HighlightRoomsInRevit : RevitActionBase, IRevitAction
     {
         private readonly RoomDataModel _roomToPush;
         private readonly UIDocument _uiDoc;
-        private readonly RevitDataModel _revitModel;
-
-        public Models.RevitDataModel RevitModel => _revitModel;
-
-        public void Execute(Document doc)
+       
+        public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
             List<ElementId> elementIds = new List<ElementId>();
 
-            // get the selected elements
-            foreach (var room in _roomToPush.MatchingRevitRooms)
-            {
-                elementIds.Add(new ElementId(room.RevitElementId));
-            }
-
-            // attempt to highlight and zoom to selected elements
             try
             {
-                // highlight the elements
-                _uiDoc.Selection.SetElementIds(elementIds);
+                // get the selected elements
+                foreach (var room in _roomToPush.MatchingRevitRooms)
+                {
+                    elementIds.Add(new ElementId(room.RevitElementId));
+                }
 
-                // zoom to the elements
-                _uiDoc.ShowElements(elementIds);
+                // log the action
+                AddMessage($"Highlighting {elementIds.Count} rooms in Revit", Utils.WPF.Stores.MessageTypes.Log);
 
-                // regenerate the view
-                _uiDoc.RefreshActiveView();
+                // attempt to highlight and zoom to selected elements
+                try
+                {
+                    // highlight the elements
+                    _uiDoc.Selection.SetElementIds(elementIds);
+
+                    // zoom to the elements
+                    _uiDoc.ShowElements(elementIds);
+
+                    // regenerate the view
+                    _uiDoc.RefreshActiveView();
+                }
+                catch (Exception ex)
+                {
+                    //log the exception
+                    AddMessage($"Error highlighting rooms in Revit: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+
+                }
             }
             catch (Exception ex)
             {
-                // TODO: log the exception
-                
+                //log the exception
+                AddMessage($"Error highlighting rooms in Revit: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+            }
+
+            // check if any error messages were added
+            if (GetErrorMessages().Count > 0)
+            {
+                // return the message
+                return (string.Join("\n", GetErrorMessages()), Utils.WPF.Stores.MessageTypes.Error);
+            }
+            else
+            {
+                // return the message
+                return ("Highlighted rooms in Revit", Utils.WPF.Stores.MessageTypes.Information);
             }
         }
 
         public HighlightRoomsInRevit(Models.RevitDataModel revitModel, Models.RoomDataModel roomToPush, UIDocument uiDoc)
         {
-            _revitModel = revitModel;
+            RevitModel = revitModel;
             _roomToPush = roomToPush;
             _uiDoc = uiDoc;
         }

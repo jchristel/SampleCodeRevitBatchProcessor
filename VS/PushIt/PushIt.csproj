@@ -132,7 +132,7 @@
     <Compile Include="Commands\RefreshUIFromRevitModelAsyncCommand.cs" />
     <Compile Include="Commands\ReloadDataFromFileAsyncCommand.cs" />
     <Compile Include="Commands\UpdateFromChangedCategoriesAsyncCommand.cs" />
-    <Compile Include="Commands\WipeSelectedRevitRoomInstancesCommand.cs" />
+    <Compile Include="Commands\WipeSelectedRevitRoomInstancesAsyncCommand.cs" />
     <Compile Include="Commands\WipeStaleDataRevitAsyncCommand.cs" />
     <Compile Include="Exceptions\CategoryConflictException.cs" />
     <Compile Include="Exceptions\RoomConflictException.cs" />
@@ -151,6 +151,7 @@
     <Compile Include="RevitActions\PushAllRoomDataToRevit.cs" />
     <Compile Include="RevitActions\PushSingleRoomDataToRevit.cs" />
     <Compile Include="RevitActions\RefreshRoomDataWithRevitData.cs" />
+    <Compile Include="RevitActions\RevitActionBase.cs" />
     <Compile Include="RevitActions\WipeSelectedRevitRoomsData.cs" />
     <Compile Include="RevitActions\WipeStaleRoomData.cs" />
     <Compile Include="Utilities\IRoomProperty.cs" />
@@ -180,6 +181,7 @@
     <None Include="packages.config" />
     <None Include="PushItPlugin.addin" />
     <None Include="Testdata\20250205_CSB.csv" />
+    <None Include="Testdata\20250205_ExtendedCSB.csv" />
     <None Include="Testdata\20250205_Short_CSB.csv" />
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +204,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="duHast.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

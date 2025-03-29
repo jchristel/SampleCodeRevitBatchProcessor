@@ -27,22 +27,22 @@ using Autodesk.Revit.DB;
 
 namespace duHast.PushIt.RevitActions
 {
-    public class PushAllRoomDataToRevitIRevitAction
+    public class PushAllRoomDataToRevit: RevitActionBase, IRevitAction
     {
-        private readonly RevitDataModel _revitModel;
-        private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
-
-        public Models.RevitDataModel RevitModel => _revitModel;
-
+        /// <summary>
+        /// Execute the action
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
-            List<Models.RoomDataModel> roomsDataModel = _revitModel.GetAllRooms();
+            List<Models.RoomDataModel> roomsDataModel = RevitModel.GetAllRooms();
 
             if (roomsDataModel.Count == 0)
             {
                 // no rooms available...nothing to push
                 // todo log error
-                return ("Data model contains no rooms to push to Revit.", duHast.Utils.WPF.Stores.MessageTypes.Information);
+                return ("Data model contains no rooms to push to Revit.", duHast.Utils.WPF.Stores.MessageTypes.Error);
             }
 
             // get shared parameter data from the model
@@ -50,7 +50,7 @@ namespace duHast.PushIt.RevitActions
             Dictionary<string, ElementId> sharedParameterIdsByGUIDs = duHast.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterIdsByGUID(doc);
 
             // get supported categories
-            List<Category> categories = duHast.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, _revitModel.Settings.SupportedCategories);
+            List<Category> categories = duHast.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, RevitModel.Settings.SupportedCategories);
             if (categories.Count == 0)
             {
                 return("No supported Revit categories selected in settings.", duHast.Utils.WPF.Stores.MessageTypes.Error);
@@ -66,11 +66,15 @@ namespace duHast.PushIt.RevitActions
             if (familyInstances.Count == 0)
             {
                 // no family instances available...nothing to push
-                return("Na family instances of supported Revit categories found.", Utils.WPF.Stores.MessageTypes.Information);
+                return("No family instances of supported Revit categories found.", Utils.WPF.Stores.MessageTypes.Information);
             }
 
             // convert family instances to revit rooms
-            List<duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(familyInstances, roomsDataModel[0]);
+            List<duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
+                familyInstances, 
+                roomsDataModel[0], 
+                AddMessage
+             );
 
             // build a dictioanry of family instances that contain valid data ( valid data is a family instance where the room id has a match in the rooms data model)
             // the dictionary key is the room id and the value is a tuple of the room data model and a list of revit family instances
@@ -120,6 +124,15 @@ namespace duHast.PushIt.RevitActions
                         doc: doc,
                         familyData: updateFamilyInstances
                     );
+
+                    if (!updateFamily) {
+                        // get all keys in the update family instances
+                        string keys = string.Join(", ", updateFamilyInstances.Keys);
+                        // log the error
+                        AddMessage($"Failed to update room(s): {keys}", Utils.WPF.Stores.MessageTypes.Error); 
+                    }
+
+                    // update the overall success
                     overallUpdateSuccess = overallUpdateSuccess && updateFamily;
                     
                     // clear the update family instances
@@ -137,18 +150,37 @@ namespace duHast.PushIt.RevitActions
                     doc: doc,
                     familyData: updateFamilyInstances
                 );
+
+                // log the error if the update failed
+                if (!updateFamily)
+                {
+                    // get all keys in the update family instances
+                    string keys = string.Join(", ", updateFamilyInstances.Keys);
+                    // log the error
+                    AddMessage($"Failed to update room(s): {keys}", Utils.WPF.Stores.MessageTypes.Error);
+                }
+
+                // update the overall success
                 overallUpdateSuccess = overallUpdateSuccess && updateFamily;
                 // clear the update family instances
                 updateFamilyInstances.Clear();
             }
 
-            return ($"Updated {updateCounter} rooms in the model with status: {overallUpdateSuccess}", Utils.WPF.Stores.MessageTypes.Information);
+            // check if any error messages were added
+            if (GetErrorMessages().Count > 0)
+            {
+                // return the message
+                return (string.Join("\n", GetErrorMessages()), Utils.WPF.Stores.MessageTypes.Error);
+            }
+            else { 
+                // return the message
+                return ($"Updated {updateCounter} rooms in the model with status: {overallUpdateSuccess}", Utils.WPF.Stores.MessageTypes.Information);
+            }
         }
 
-        public PushAllRoomDataToRevitIRevitAction(RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
+        public PushAllRoomDataToRevit(RevitDataModel revitModel)
         {
-            _revitModel = revitModel;
-            _roomsSelectionViewModel = roomsSelectionViewModel;
+            RevitModel = revitModel;
         }
     }
 }

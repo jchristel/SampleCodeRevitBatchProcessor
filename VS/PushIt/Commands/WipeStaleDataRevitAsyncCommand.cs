@@ -58,14 +58,17 @@ namespace duHast.PushIt.Commands
                                 revitModel: _revitDataModel,
                                 roomsSelectionViewModel: _roomsSelectionViewModel
                             );
-                            action.Execute(doc);
+                            (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
+
+                            //TODO write messages to log...
+
+                            // return the message
+                            return (messageAction, messageActionType);
                         }
                         catch (Exception ex)
                         {
                             return ($"An exception occurred within the external event handler wipe stale data from rooms in model event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                         }
-                        // return success message
-                        return ("Wiped stale data from room(s)", Utils.WPF.Stores.MessageTypes.Information);
                     });
 
                 //pop message to user

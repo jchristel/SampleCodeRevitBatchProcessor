@@ -95,17 +95,17 @@ namespace duHast.PushIt.Commands
                                 roomsSelectionViewModel: _roomsSelectionViewModel
                             );
 
-                            action.Execute(doc);
+                            (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
+                            
+                            //TODO write messages to log...
 
+                            // return status message for UI
+                            return (messageAction, messageActionType);
                         }
                         catch (Exception ex)
                         {
                             return ($"An exception occurred within the external event handler update after push single room event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                         }
-
-                        //get the room id for the message
-                        var selectedRoomId = _roomsSelectionViewModel.SelectedRoom != null ? _roomsSelectionViewModel.SelectedRoom.Id.Value : "";
-                        return ($"Pushed data for [{selectedRoomId}] into Revit room.", MessageTypes.Information);
                     });
 
                 if (messageType == MessageTypes.Information)

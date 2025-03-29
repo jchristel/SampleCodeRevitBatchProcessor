@@ -21,7 +21,6 @@
 //
 //
 
-using System;
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
@@ -45,10 +44,17 @@ namespace duHast.PushIt.Utilities.Revit
             return true;
         }
 
-        public static bool SharedParametersCheck(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName, Action<string, duHast.Utils.WPF.Stores.MessageTypes> printMessage)
+        public static bool SharedParametersCheck(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName, out string message)
         {
+
+            // assign default value to message
+            message = "";
+
+            // check if all shared parameters exist
+            List<string> parameterMessages = new List<string>();
+
             // check if rooms data model is empty
-            if (roomsDataModel.Count == 0){ return false; }
+            if (roomsDataModel.Count == 0){ message = "No rooms in data model"; return false; }
            
             //get the first room data model to check if all shared parameters exist
             Models.RoomDataModel firstRoomDataModel = roomsDataModel[0];
@@ -67,8 +73,6 @@ namespace duHast.PushIt.Utilities.Revit
                 otherPropertiesBindings.Add(new Dictionary<(string Name,string GUID), List<string>> { { (property.Name, property.ParameterGUID), duHast.RevitUtils.Parameters.SharedParaUtils.ParameterBindingsByGUID(doc, property.ParameterGUID) } });
             }
 
-            // check if all shared parameters exist
-            List<string> parameterMessages = new List<string>();
 
             if (bindingsId== null)
             {
@@ -113,8 +117,7 @@ namespace duHast.PushIt.Utilities.Revit
             if (parameterMessages.Count>0)
             {
                 // one long message
-                string message = string.Join("\n", parameterMessages);
-                printMessage(message, duHast.Utils.WPF.Stores.MessageTypes.Error);
+                message = string.Join("\n", parameterMessages);
             }
 
             //return false if any parameter is missing or not bound to the correct categories

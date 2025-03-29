@@ -73,7 +73,7 @@ namespace duHast.PushIt.Commands
                             //check if any categories are selected
                             if (supportedCategoryNamesFromViewModel.Count == 0)
                             {
-                                return("Please select at least one category to proceed.", Utils.WPF.Stores.MessageTypes.Error);
+                                return ("Please select at least one category to proceed.", Utils.WPF.Stores.MessageTypes.Error);
                             }
 
                             // compare the category selection from the view model with the one stored in the data model
@@ -101,7 +101,7 @@ namespace duHast.PushIt.Commands
                             // if no update is needed, pop message to user and return
                             if (!needUpdate)
                             {
-                                return("No changes in category selection detected.", Utils.WPF.Stores.MessageTypes.Information);
+                                return ("No changes in category selection detected.", Utils.WPF.Stores.MessageTypes.Information);
                             }
 
                             //update the categories in the settings
@@ -109,15 +109,18 @@ namespace duHast.PushIt.Commands
 
                             // Execute the action to refresh the room data with the Revit data
                             RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
-                            action.Execute(doc);
+                            (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
+
+                            //TODO write messages to log...
+
+                            // return status message for UI
+                            return (messageAction, messageActionType);
 
                         }
                         catch (Exception ex)
                         {
                             return ($"An exception occurred within the external event handler update after changed categories event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                         }
-                        // return success message
-                        return ("Changed categories", Utils.WPF.Stores.MessageTypes.Information);
                     });
 
                 if (messageType == MessageTypes.Information)

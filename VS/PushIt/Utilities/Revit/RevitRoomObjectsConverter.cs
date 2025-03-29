@@ -22,6 +22,7 @@
 //
 
 using Autodesk.Revit.DB;
+using System;
 using System.Collections.Generic;
 
 namespace duHast.PushIt.Utilities.Revit
@@ -100,7 +101,10 @@ namespace duHast.PushIt.Utilities.Revit
 
             return revitRoom;
         }
-        public static List<duHast.PushIt.Models.RoomsRevit> ConvertFamiliesToRevitRooms(List<FamilyInstance> familyInstances, Models.RoomDataModel sampleModelRoom)
+        public static List<duHast.PushIt.Models.RoomsRevit> ConvertFamiliesToRevitRooms(
+            List<FamilyInstance> familyInstances, 
+            Models.RoomDataModel sampleModelRoom,
+            Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
         {
             // create a list of revit rooms
             List<Models.RoomsRevit> revitRooms = new List<duHast.PushIt.Models.RoomsRevit>();
@@ -110,18 +114,27 @@ namespace duHast.PushIt.Utilities.Revit
 
             foreach (FamilyInstance familyInstance in familyInstances)
             {
-                // create a new revit room
-                Models.RoomsRevit revitRoom = ConvertSingleFamilyToRevitRoom(familyInstance, sampleModelRoom, sharedParameterIdsByGUIDs);
-
-                // ignore if revit room is null
-                if (revitRoom == null)
+                try
                 {
-                    continue;
-                }
+                    // create a new revit room
+                    Models.RoomsRevit revitRoom = ConvertSingleFamilyToRevitRoom(familyInstance, sampleModelRoom, sharedParameterIdsByGUIDs);
 
-                // add to list to be returned
-                revitRooms.Add(revitRoom);
+                    // ignore if revit room is null
+                    if (revitRoom == null)
+                    {
+                        continue;
+                    }
+
+                    // add to list to be returned
+                    revitRooms.Add(revitRoom);
+                }
+                catch (Exception ex)
+                {
+                    AddMessage($"Error converting family instance to revit room: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                }
+                
             }
+            AddMessage($"Converted {revitRooms.Count} family instances to revit rooms.", Utils.WPF.Stores.MessageTypes.Log);
             return revitRooms;
         }
     }

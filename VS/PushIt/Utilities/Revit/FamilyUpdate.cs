@@ -126,6 +126,9 @@ namespace duHast.PushIt.Utilities.Revit
             // set up an action to run inside a Revit transaction
             Func<bool> actionInTranny = () =>
             {
+                // keep track of the overall success of the wipe operation
+                bool overallUpdateSuccess = true;
+
                 //run this outside of a try catch so the transaction can be rolled back if update fails
                 // loop over instances and update with room data
                 foreach (var (roomData, familyInstances) in familyData.Values)
@@ -135,7 +138,10 @@ namespace duHast.PushIt.Utilities.Revit
                     {
                         // update the family instance
                         bool flag_update = UpdateProperties(doc, familyInstance, roomData, false);
-                        // if the update fails throw an exception to roll back the transaction and attempt to update one by one
+                        //log the overall success of the update
+                        overallUpdateSuccess = overallUpdateSuccess && flag_update;
+
+                        // if the update fails throw an exception to roll back the transaction
                         if (!flag_update)
                         {
                             throw new Exception("Failed to update family instance");
@@ -143,7 +149,7 @@ namespace duHast.PushIt.Utilities.Revit
                     }
                 }
                 // if all updates are successful return true
-                return true;
+                return overallUpdateSuccess;
             };
 
             // run the action in a transaction

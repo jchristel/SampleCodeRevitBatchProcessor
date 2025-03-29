@@ -26,11 +26,7 @@ using duHast.PushIt.RevitActions;
 using duHast.Utils.WPF.Stores;
 using Revit.Async;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHast.PushIt.Commands
 {
@@ -51,30 +47,31 @@ namespace duHast.PushIt.Commands
                 (string message, Utils.WPF.Stores.MessageTypes messageType) = await RevitTask.RunAsync(
                     app =>
                     {
-                        //Run Revit API code here
-
+                        //get the document
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
+
                         try
                         {
                             // Execute the action to update all rooms in the Revit model
                             PushAllRoomDataToRevitIRevitAction action = new PushAllRoomDataToRevitIRevitAction(_revitDataModel, _roomsSelectionViewModel);
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType)  = action.Execute(doc);
+                            
+                            // return status message for UI
+                            return (messageAction, messageActionType);
                         }
                         catch (Exception ex)
                         {
                             return ($"An exception occurred within the external event handler push all data to rooms in model event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                         }
-                        // return success message
-                        return ("Pushed all data to room(s)", Utils.WPF.Stores.MessageTypes.Information);
                     });
 
                 //pop message to user
                 _roomsSelectionViewModel.AddMessage(message, messageType);
 
-                //no need to refresh the UI, the message will be displayed
             }
             catch (Exception ex)
             {
+                //pop message to user
                 _roomsSelectionViewModel.AddMessage(ex.Message, MessageTypes.Error);
             }
             finally

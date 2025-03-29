@@ -66,7 +66,6 @@ namespace duHast.PushIt.RevitActions
             if (familyInstances.Count == 0)
             {
                 // no family instances available...nothing to push
-                _roomsSelectionViewModel.AddMessage("No family instances found in the model",duHast.Utils.WPF.Stores.MessageTypes.Information);
                 return("Na family instances of supported Revit categories found.", Utils.WPF.Stores.MessageTypes.Information);
             }
 
@@ -82,8 +81,8 @@ namespace duHast.PushIt.RevitActions
                 {
                     if (currentFamilyInstances.ContainsKey(revitRoomInstance.Id.Value))
                     {
+                        //add to existing key
                         currentFamilyInstances[revitRoomInstance.Id.Value].Item2.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
-
                     }
                     else
                     {
@@ -97,6 +96,8 @@ namespace duHast.PushIt.RevitActions
 
             // keep track of the overall success of the wipe operation
             bool overallUpdateSuccess = true;
+            int updateCounter = 0;
+            int taskBucketFamilyInstancesCounter = 0;
 
             //attempt to update room data in bundles of 20 family instances to speed up the process
             Dictionary<string, (RoomDataModel, List<FamilyInstance>)> updateFamilyInstances = new Dictionary<string, (RoomDataModel, List<FamilyInstance>)>();
@@ -105,8 +106,14 @@ namespace duHast.PushIt.RevitActions
                 //fill the task bucket
                 updateFamilyInstances.Add(currentFamilyInstance.Key, currentFamilyInstance.Value);
 
+                //update the running count of number of family instances per room id
+                taskBucketFamilyInstancesCounter = taskBucketFamilyInstancesCounter + currentFamilyInstance.Value.Item2.Count;
+
+                //update the overall counter
+                updateCounter = updateCounter + taskBucketFamilyInstancesCounter;
+
                 // check if max number of family instances to update for the task bucket has been reached
-                if (updateFamilyInstances.Count == 20)
+                if (taskBucketFamilyInstancesCounter >= 20)
                 {
                     // update the family instances
                     bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateMultipleFamilyInstances(
@@ -114,8 +121,12 @@ namespace duHast.PushIt.RevitActions
                         familyData: updateFamilyInstances
                     );
                     overallUpdateSuccess = overallUpdateSuccess && updateFamily;
+                    
                     // clear the update family instances
                     updateFamilyInstances.Clear();
+
+                    // reset the task bucket family instances counter
+                    taskBucketFamilyInstancesCounter = 0;
                 }
             }
 
@@ -131,7 +142,7 @@ namespace duHast.PushIt.RevitActions
                 updateFamilyInstances.Clear();
             }
 
-            return ($"Updated all rooms in the model with status {overallUpdateSuccess}", Utils.WPF.Stores.MessageTypes.Information);
+            return ($"Updated {updateCounter} rooms in the model with status: {overallUpdateSuccess}", Utils.WPF.Stores.MessageTypes.Information);
         }
 
         public PushAllRoomDataToRevitIRevitAction(RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)

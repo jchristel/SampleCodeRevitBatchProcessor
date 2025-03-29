@@ -28,7 +28,8 @@ namespace duHast.Utils.WPF.Stores
     public enum MessageTypes
     {
         Error,
-        Information
+        Information,
+        Log,
     }
     public class MessageStore
     {

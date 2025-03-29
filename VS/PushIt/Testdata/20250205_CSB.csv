@@ -1,7 +1,7 @@
-Id,AreaBriefed,AreaDesigned,NameShort,Department,SubDepartment
-ceb8cb23-2ef1-43a6-87f8-e1efcd683ad8,7b81b3fa-2468-45d8-a7f2-bff7ea87143f,71513b6f-4db9-4da9-9af4-270d43196d26,bfc6b0e6-d47b-4f2f-8477-b2408e277eac,f2cc1953-5a97-416b-9d8f-156d2cf12914,369ef9d6-b9d6-4bb6-94d9-571d2eefbbc9
-false,false,true,false,false,false
-true,true,true,true,true,true
+room id,area briefed,area designed,room name short,department,sub department
+f0ce22f0-e851-4ff7-8043-c650c20df01c,f01ce856-2701-4910-ba49-8590c84bca04,f4999eaa-7321-4000-98e1-a6904618debf,bf9aa8e9-e556-4bda-83ac-aacc316e3bf6,9cbea027-7ae1-4023-ad19-d0e6b5b42a0c,1b46bc99-c1de-4dc7-917b-8e853299a009
+FALSE,FALSE,TRUE,FALSE,FALSE,FALSE
+TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 CS.AMC.01.001,10,24.29,AIRLOCK,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
 CS.AMC.01.002,20,25.28,REC CLERICAL,Ambulatory Care (20 bay),"Entry, Reception, Waiting"
 CS.AMC.01.003,10,35.19,WAIT,Ambulatory Care (20 bay),"Entry, Reception, Waiting"

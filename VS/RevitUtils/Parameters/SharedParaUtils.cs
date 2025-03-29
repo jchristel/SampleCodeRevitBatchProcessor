@@ -91,7 +91,7 @@ namespace duHast.RevitUtils.Parameters
             List<SharedParameterElement> parametersInModel = GetSharedParameters(doc);
             foreach (SharedParameterElement parameter in parametersInModel)
             {
-                if (parameter.GuidValue.ToString() == parameterGUID)
+                if (parameter.GuidValue.Equals(new Guid(parameterGUID)))
                 {
                     //set flag parameter was found
                     foundParameter = true;

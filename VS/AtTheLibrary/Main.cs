@@ -1,0 +1,139 @@
+﻿//
+//License:
+//
+//
+// Revit Batch Processor Sample Code
+//
+// BSD License
+// Copyright 2025, Jan Christel
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+// - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+// - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+// - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+//
+// This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+// In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+// or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+//
+//
+//
+
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using Autodesk.Revit.Attributes;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using Revit.Async;
+
+namespace duHast.AtTheLibrary
+{
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class Main : IExternalCommand
+    {
+        Models.RevitFamiliesDataModel _revitDataModel;
+        duHast.Utils.WPF.Stores.NavigationStore _navigationStore;
+        duHast.Utils.WPF.Stores.MessageStore _messageStore;
+
+        static Main()
+        {
+            //assembly resolver in order for this plugin to be used form pyRevit invoke.button
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolver.ResolveAssembly);
+        }
+
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            // Revit Async version 2.x.x
+            RevitTask.Initialize(commandData.Application);
+
+            //set up stores
+            _navigationStore = new duHast.Utils.WPF.Stores.NavigationStore();
+            _messageStore = new duHast.Utils.WPF.Stores.MessageStore();
+
+            // set up th revit data model
+            _revitDataModel = new Models.RevitFamiliesDataModel();
+
+            // load settings from file
+            Models.Settings settings = Utilities.SettingsUtils.LoadSettings();
+
+            // debug for now
+            // set the settings
+            settings.DataPath = @"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\test\Data\XML_Reports_Comp_01\LibraryFamilies_01.csv";
+            settings.SupportedTypeParameterNames = new List<string> { "HSL_AHFG_CODE", "HSL_AHFG_DESCRIPTION", "HSL_BUDGET_GROUP" };
+
+            //store settings in data model
+            _revitDataModel.Settings = settings;
+
+            //load room data into model
+            _revitDataModel.LoadFamiliesData();
+
+            // set up the navigation store
+            _navigationStore.CurrentViewModel = CreateFamiliesSelectionViewModel();
+
+            //show the main window
+            Views.MainWindow mainWindow = new Views.MainWindow(settings)
+            {
+                DataContext = new ViewModels.MainViewModel(_navigationStore)
+            };
+
+            mainWindow.Show();
+
+            return Result.Succeeded;
+        }
+
+
+        private ViewModels.FamiliesSelectionViewModel CreateFamiliesSelectionViewModel()
+        {
+            duHast.Utils.WPF.ViewModels.GlobalMessageViewModel _globa = new duHast.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
+
+            return new ViewModels.FamiliesSelectionViewModel(
+                _revitDataModel,
+                _navigationStore,
+                _messageStore,
+                _globa);
+        }
+
+        //assembly resolver static method
+        /// <summary>
+        /// attempts to resolve the assembly from the local app data/duhast/bin directory
+        /// </summary>
+        public static class AssemblyResolver
+        {
+            public static System.Reflection.Assembly ResolveAssembly(object sender, ResolveEventArgs args)
+            {
+                try
+                {
+                    //get the local app data path
+                    string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                    string duHastBinDirectory = Path.Combine(localAppDataPath, "duHast", "bin");
+
+                    string assemblyName = new AssemblyName(args.Name).Name;
+
+                    // Check if the assembly name ends with ".resources"
+                    if (assemblyName.EndsWith(".resources"))
+                    {
+                        // Strip the ".resources" suffix
+                        assemblyName = assemblyName.Substring(0, assemblyName.Length - ".resources".Length);
+                    }
+
+                    string assemblyPath = Path.Combine(duHastBinDirectory, new AssemblyName(args.Name).Name + ".dll");
+                    return File.Exists(assemblyPath) ? System.Reflection.Assembly.LoadFrom(assemblyPath) : null;
+
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+        }
+    }
+}

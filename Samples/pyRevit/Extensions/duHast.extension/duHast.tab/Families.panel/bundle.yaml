@@ -10,6 +10,8 @@ layout:
   - Reports
   - --------
   - SwapFamilies
+  - --------
+  - AtTheLibrary
 
 # bundle tooltip
 tooltip: It's all in the family.

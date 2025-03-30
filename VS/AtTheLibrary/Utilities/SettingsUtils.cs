@@ -26,12 +26,14 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-namespace duHast.PushIt.Utilities
+using System.Xml;
+
+namespace duHast.AtTheLibrary.Utilities
 {
     public static class SettingsUtils
     {
         private static string settingsDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "duHast");
-        private static string settingsFilePath = Path.Combine(settingsDirectory, "pushIt_settings.json");
+        private static string settingsFilePath = Path.Combine(settingsDirectory, "atTheLibrary_settings.json");
 
         // Load settings from the settings file
         public static Models.Settings LoadSettings()
@@ -45,7 +47,6 @@ namespace duHast.PushIt.Utilities
                     //initialize settings default
                     Models.Settings settingsDefault = new Models.Settings();
                     settingsDefault.DataPath = string.Empty;
-                    settingsDefault.SupportedCategories = new List<string> { "Walls" };
                     return settingsDefault;
                 }
 
@@ -77,15 +78,15 @@ namespace duHast.PushIt.Utilities
                     catch (Exception ex)
                     {
                         System.Windows.Forms.MessageBox.Show(
-                            $"failed to save settings with exception {ex.Message}", 
-                            "Exception at save", 
+                            $"failed to save settings with exception {ex.Message}",
+                            "Exception at save",
                             System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                         return;
                     }
                 }
 
                 // Serialize the settings object to JSON
-                string jsonString = JsonConvert.SerializeObject(settings, Formatting.None);
+                string jsonString = JsonConvert.SerializeObject(settings, Newtonsoft.Json.Formatting.None);
 
                 // Write the JSON string to the settings file
                 File.WriteAllText(settingsFilePath, jsonString);
@@ -99,5 +100,6 @@ namespace duHast.PushIt.Utilities
                             System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
+
     }
 }

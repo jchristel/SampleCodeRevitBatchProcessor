@@ -1,0 +1,7 @@
+title: At The Library
+tooltip: A family library
+author: "Jan Christel"
+highlight: new
+context: zero-doc
+assembly: 'AtTheLibrary'
+command_class: 'Main'

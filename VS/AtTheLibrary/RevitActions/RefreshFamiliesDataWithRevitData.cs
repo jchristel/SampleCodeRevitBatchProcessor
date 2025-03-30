@@ -22,43 +22,58 @@
 //
 
 using System.Collections.Generic;
-using System.Windows.Forms;
 using Autodesk.Revit.DB;
 using duHast.AtTheLibrary.Models;
-using duHast.AtTheLibrary.ViewModels;
 
 namespace duHast.AtTheLibrary.RevitActions
 {
-    public class RefreshFamiliesDataWithRevitData:IRevitAction
+    public class RefreshFamiliesDataWithRevitData: RevitActionBase, IRevitAction
     {
-        private readonly RevitFamiliesDataModel _revitModel;
-        public Models.RevitFamiliesDataModel RevitModel => _revitModel;
 
         private ViewModels.FamiliesSelectionViewModel _roomsSelectionViewModel;
         public ViewModels.FamiliesSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
 
 
-        public void Execute(Document doc)
+        public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
-            // refresh the rooms data model with the rooms from the revit model
-            List<Models.FamilyDataModel> updatedRooms = RefreshRoomData(
-                doc, 
-                _revitModel.GetAllFamilies(),
-                _revitModel.Settings.SupportedTypeParameterNames
-             );
+            try { 
+                // refresh the rooms data model with the rooms from the revit model
+                List<Models.FamilyDataModel> updatedFamilies = RefreshFamiliesData(
+                    doc, 
+                    RevitModel.GetAllFamilies(),
+                    RevitModel.Settings.SupportedTypeParameterNames
+                 );
 
-            // clear all rooms in the data model
-            // this will also clear all rooms if shared parameter setup in project file is wrong.
-            _revitModel.ClearFamilies();
+                // clear all rooms in the data model
+                // this will also clear all rooms if shared parameter setup in project file is wrong.
+                RevitModel.ClearFamilies();
 
-            // add updated rooms to the data model if there are any
-            if (updatedRooms != null)
-            {
-                // add updated rooms
-                foreach (var rooms in updatedRooms)
+                // add updated rooms to the data model if there are any
+                if (updatedFamilies != null)
                 {
-                    _revitModel.AddFamily(rooms);
+                    // add updated rooms
+                    foreach (var updatedFamily in updatedFamilies)
+                    {
+                        RevitModel.AddFamily(updatedFamily);
+                    }
                 }
+            }
+            catch (System.Exception ex)
+            {
+                //log the exception
+                AddMessage($"Error refreshing family data from Revit: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+            }
+
+            // check if any error messages were added
+            if (GetErrorMessages().Count > 0)
+            {
+                // return the message
+                return (string.Join("\n", GetErrorMessages()), Utils.WPF.Stores.MessageTypes.Error);
+            }
+            else
+            {
+                // return the message
+                return ("Refreshed families from Revit", Utils.WPF.Stores.MessageTypes.Information);
             }
         }
 
@@ -69,7 +84,7 @@ namespace duHast.AtTheLibrary.RevitActions
         /// <param name="roomsDataModel"></param>
         /// <param name="supportedCategoryName"></param>
         /// <returns></returns>
-        public List<Models.FamilyDataModel> RefreshRoomData(Document doc, List<Models.FamilyDataModel> roomsDataModel, List<string> supportedCategoryName)
+        public List<Models.FamilyDataModel> RefreshFamiliesData(Document doc, List<Models.FamilyDataModel> roomsDataModel, List<string> supportedCategoryName)
         {
             return roomsDataModel;
         }
@@ -77,7 +92,7 @@ namespace duHast.AtTheLibrary.RevitActions
 
         public RefreshFamiliesDataWithRevitData(RevitFamiliesDataModel revitModel, ViewModels.FamiliesSelectionViewModel roomsSelectionViewModel)
         {
-            _revitModel = revitModel;
+            RevitModel = revitModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;
         }
     }

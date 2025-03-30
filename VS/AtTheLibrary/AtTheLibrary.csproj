@@ -112,7 +112,9 @@
     <Compile Include="Models\RevitFamiliesDataModel.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RevitActions\IRevitAction.cs" />
     <Compile Include="RevitActions\RefreshFamiliesDataWithRevitData.cs" />
+    <Compile Include="RevitActions\RevitActionBase.cs" />
     <Compile Include="Utilities\PropertyChangedEventNames.cs" />
     <Compile Include="Utilities\ReadFamilyData.cs" />
     <Compile Include="Utilities\SettingsUtils.cs" />

@@ -47,6 +47,9 @@ namespace duHast.AtTheLibrary.Models
             {
                 _properties = otherProperties;
             }
+
+            // initialize the list of matching familiesq
+            _matchingRevitFamilies = new List<FamiliesRevit>();
         }
     }
 }

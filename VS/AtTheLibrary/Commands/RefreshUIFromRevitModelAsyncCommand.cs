@@ -56,14 +56,17 @@ namespace duHast.AtTheLibrary.Commands
                         {
                             // Execute the action to refresh the room data with the Revit data
                             RefreshFamiliesDataWithRevitData action = new RefreshFamiliesDataWithRevitData(_revitFamiliesDataModel, _familiesSelectionViewModel);
-                            action.Execute(doc);
+                            (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
+
+                            //TODO write messages to log...
+
+                            // return the message to the caller
+                            return (messageAction, messageActionType);
                         }
                         catch (Exception ex)
                         {
                             return ($"An exception occurred within the external event handler refresh UI from rooms in model event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                         }
-                        // return success message
-                        return ("Refreshed UI with model data.", Utils.WPF.Stores.MessageTypes.Information);
                     });
 
                 //pop message to user

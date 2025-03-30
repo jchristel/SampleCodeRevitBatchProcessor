@@ -49,5 +49,30 @@ namespace duHast.RevitUtils.Families
 
             return familyInstances;
         }
+
+        /// <summary>
+        /// Returns all families in the model.
+        /// </summary>
+        /// <param name="doc">The current model document.</param>
+        /// <returns>A list of all families in the model. An empty list if none are present in the model.</returns>
+        public static IList<Element> GetAllFamilies(Document doc)
+        {
+            return new FilteredElementCollector(doc).OfClass(typeof(Family)).ToElements();
+        }
+
+        /// <summary>
+        /// Returns the family types of a family.
+        /// </summary>
+        /// <param name="doc">The current model document.</param>
+        /// <param name="family">The family to get the types from.</param>
+        /// <returns>A list of family types of the supplied family. An empty list if none are present in the model.</returns>
+        public static List<FamilySymbol> GetFamilyTypes(Document doc, Family family)
+        {
+            List<FamilySymbol> familyTypes = new List<FamilySymbol>();
+            foreach (ElementId familySybmolId in family.GetFamilySymbolIds()){ 
+                familyTypes.Add(doc.GetElement(familySybmolId) as FamilySymbol);
+            }
+            return familyTypes;
+        }
     }
 }

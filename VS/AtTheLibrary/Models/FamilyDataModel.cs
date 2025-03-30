@@ -27,12 +27,17 @@ namespace duHast.AtTheLibrary.Models
         /// <summary>
         /// List of matching families in the file
         /// </summary>
-        private List<FamiliesRevit> _matchingRevitFamilies;
-        public List<FamiliesRevit> MatchingRevitFamilies { get => _matchingRevitFamilies; set => _matchingRevitFamilies = value; }
+        private List<FamilyRevit> _matchingRevitFamilies;
+        public List<FamilyRevit> MatchingRevitFamilies { get => _matchingRevitFamilies; private set => _matchingRevitFamilies = value; }
 
         public void AddProperty(FamilyDataProperty property)
         {
             _properties.Add(property);
+        }
+
+        public void AddMatchingFamily(FamilyRevit family)
+        {
+            _matchingRevitFamilies.Add(family);
         }
 
         public FamilyDataModel(FamilyDataProperty id, FamilyDataProperty familyName, FamilyDataProperty familyCategory, FamilyDataProperty familyTypeName,  List<FamilyDataProperty> otherProperties)
@@ -49,7 +54,7 @@ namespace duHast.AtTheLibrary.Models
             }
 
             // initialize the list of matching familiesq
-            _matchingRevitFamilies = new List<FamiliesRevit>();
+            _matchingRevitFamilies = new List<FamilyRevit>();
         }
     }
 }

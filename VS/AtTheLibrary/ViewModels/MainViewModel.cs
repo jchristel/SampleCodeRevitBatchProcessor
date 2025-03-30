@@ -22,20 +22,30 @@
 //
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace duHast.AtTheLibrary.Models
+namespace duHast.AtTheLibrary.ViewModels
 {
-    public class Settings
+    public class MainViewModel:Utils.WPF.ViewModels.ViewModelBase
     {
-        // path to the data file containing the family in library data
-        public string DataPath { get; set; }
 
-        // list of supported Revit type parameter names
-        public List<string> SupportedTypeParameterNames { get; set; }
+        private readonly Utils.WPF.Stores.NavigationStore _navigationStore;
+        public Utils.WPF.ViewModels.ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
+
+        public MainViewModel(Utils.WPF.Stores.NavigationStore navigationStore)
+        {
+            _navigationStore = navigationStore;
+            _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
+        }
+
+        private void OnCurrentViewModelChanged()
+        {
+            OnPropertyChanged(nameof(CurrentViewModel));
+        }
+
+        public override void OnClosing()
+        {
+            // Custom closing logic for RoomsSelectionViewModel
+            _navigationStore.CurrentViewModelChanged -= OnCurrentViewModelChanged;
+            base.OnClosing();
+        }
     }
 }

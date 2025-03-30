@@ -9,9 +9,13 @@ namespace duHast.AtTheLibrary.Models
     public class FamilyDataModel
     {
         /// <summary>
-        /// Family ID, must be unique
+        /// Family ID ,ade up from family name and category
         /// </summary>
-        public FamilyDataProperty Id { get; set; }
+        public FamilyDataProperty Id { get; private set; }
+
+        public FamilyDataProperty FamilyName { get; private set; }
+        public FamilyDataProperty FamilyCategory { get; private set; }
+        public FamilyDataProperty FamilyTypeName { get; private set; }
 
         /// <summary>
         /// Any other data model properties
@@ -20,11 +24,29 @@ namespace duHast.AtTheLibrary.Models
 
         public List<FamilyDataProperty> Properties { get => _properties; }
 
-        public FamilyDataModel(FamilyDataProperty id, List<FamilyDataProperty> otherProperties)
+        /// <summary>
+        /// List of matching families in the file
+        /// </summary>
+        private List<FamiliesRevit> _matchingRevitFamilies;
+        public List<FamiliesRevit> MatchingRevitFamilies { get => _matchingRevitFamilies; set => _matchingRevitFamilies = value; }
+
+        public void AddProperty(FamilyDataProperty property)
+        {
+            _properties.Add(property);
+        }
+
+        public FamilyDataModel(FamilyDataProperty id, FamilyDataProperty familyName, FamilyDataProperty familyCategory, FamilyDataProperty familyTypeName,  List<FamilyDataProperty> otherProperties)
         {
             // set the id and other properties
             Id = id;
-            _properties = otherProperties;
+            FamilyName = familyName;
+            FamilyCategory = familyCategory;
+            FamilyTypeName = familyTypeName;
+
+            if (otherProperties != null)
+            {
+                _properties = otherProperties;
+            }
         }
     }
 }

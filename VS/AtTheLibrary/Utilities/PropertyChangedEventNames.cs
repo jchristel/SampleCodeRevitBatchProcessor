@@ -21,21 +21,17 @@
 //
 //
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace duHast.AtTheLibrary.Models
+namespace duHast.AtTheLibrary.Utilities
 {
-    public class Settings
+    public static class PropertyChangedEventNames
     {
-        // path to the data file containing the family in library data
-        public string DataPath { get; set; }
-
-        // list of supported Revit type parameter names
-        public List<string> SupportedTypeParameterNames { get; set; }
+        // default name for families in model change
+        public const string DATA_MODEL_FAMILIES_UPDATED = "model families updated";
     }
 }

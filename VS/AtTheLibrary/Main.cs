@@ -68,6 +68,7 @@ namespace duHast.AtTheLibrary
             // debug for now
             // set the settings
             settings.DataPath = @"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\test\Data\XML_Reports_Comp_01\LibraryFamilies_01.csv";
+            settings.SupportedTypeParameterNames = new List<string> { "HSL_AHFG_CODE", "HSL_AHFG_DESCRIPTION", "HSL_BUDGET_GROUP" };
 
             //store settings in data model
             _revitDataModel.Settings = settings;
@@ -75,7 +76,30 @@ namespace duHast.AtTheLibrary
             //load room data into model
             _revitDataModel.LoadFamiliesData();
 
+            // set up the navigation store
+            _navigationStore.CurrentViewModel = CreateFamiliesSelectionViewModel();
+
+            //show the main window
+            Views.MainWindow mainWindow = new Views.MainWindow(settings)
+            {
+                DataContext = new ViewModels.MainViewModel(_navigationStore)
+            };
+
+            mainWindow.Show();
+
             return Result.Succeeded;
+        }
+
+
+        private ViewModels.FamiliesSelectionViewModel CreateFamiliesSelectionViewModel()
+        {
+            duHast.Utils.WPF.ViewModels.GlobalMessageViewModel _globa = new duHast.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
+
+            return new ViewModels.FamiliesSelectionViewModel(
+                _revitDataModel,
+                _navigationStore,
+                _messageStore,
+                _globa);
         }
 
         //assembly resolver static method

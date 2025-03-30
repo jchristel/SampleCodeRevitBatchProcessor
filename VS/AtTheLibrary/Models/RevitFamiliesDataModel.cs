@@ -71,7 +71,7 @@ namespace duHast.AtTheLibrary.Models
         public void LoadFamiliesData()
         {
             // add rooms to RevitDataModel
-            List<Models.FamilyDataModel> families = Utilities.ReadFamilyData.GetFamiliesData(_settings.DataPath);
+            List<Models.FamilyDataModel> families = Utilities.ReadFamilyData.GetFamiliesData(filePath: Settings.DataPath, supportedParameterNames: Settings.SupportedTypeParameterNames);
 
             // TODO: if no families return (need to pop message to user...)
             if (families == null) return;

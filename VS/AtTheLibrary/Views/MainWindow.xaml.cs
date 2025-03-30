@@ -21,21 +21,47 @@
 //
 //
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
-namespace duHast.AtTheLibrary.Models
+namespace duHast.AtTheLibrary.Views
 {
-    public class Settings
+    /// <summary>
+    /// Interaction logic for UserControl1.xaml
+    /// </summary>
+    public partial class MainWindow : Window
     {
-        // path to the data file containing the family in library data
-        public string DataPath { get; set; }
+        Models.Settings _settings;
+        public MainWindow(Models.Settings settings)
+        {
+            InitializeComponent();
 
-        // list of supported Revit type parameter names
-        public List<string> SupportedTypeParameterNames { get; set; }
+            this.Closing += MainWindow_Closing;
+
+            _settings = settings;
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (DataContext is Utils.WPF.Interfaces.ICloseable closeable)
+            {
+                closeable.OnClosing();
+            }
+
+            // store settings
+            Utilities.SettingsUtils.SaveSettings(_settings);
+        }
     }
 }

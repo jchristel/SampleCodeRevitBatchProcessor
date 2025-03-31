@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\RefreshUIFromRevitModelAsyncCommand.cs" />
+    <Compile Include="Commands\ReloadDataFromFileAsyncCommand.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Models\FamiliesDataModelContainer.cs" />
     <Compile Include="Models\FamilyRevit.cs" />

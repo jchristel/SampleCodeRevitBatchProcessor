@@ -68,18 +68,20 @@ namespace duHast.AtTheLibrary.Models
             _familiesContainer.ClearFamilies();
         }
 
-        public void LoadFamiliesData()
+        public bool LoadFamiliesData()
         {
             // add rooms to RevitDataModel
             List<Models.FamilyDataModel> families = Utilities.ReadFamilyData.GetFamiliesData(filePath: Settings.DataPath, supportedParameterNames: Settings.SupportedTypeParameterNames);
 
             // TODO: if no families return (need to pop message to user...)
-            if (families == null) return;
+            if (families == null) return false;
 
             foreach (Models.FamilyDataModel family in families)
             {
                 AddFamily(family);
             }
+
+            return true;
         }
 
 

@@ -50,9 +50,11 @@ namespace duHast.AtTheLibrary.ViewModels
 
         //command to raise an event to refresh the gui
         private readonly Commands.RefreshUIFromRevitModelAsyncCommand _raiseRefreshGUICommand;
+        //command to raise an event to reload data from file path
+        private readonly Commands.ReloadDataFromFileAsyncCommand _raiseReloadDataCommand;
         //command to push a single room to revit
         //private readonly Commands.PushSingleRoomInRevitAsyncCommand _raisePushSingleRoomCommand;
-        
+
         //command to update the view model if the column order changes
         public RelayCommand ColumnOrderChangedCommand { get; private set; }
 
@@ -262,8 +264,9 @@ namespace duHast.AtTheLibrary.ViewModels
 
         //commands
         public ICommand RefreshGUICommand { get { return _raiseRefreshGUICommand; } }
+        public ICommand ReloadDataCommand { get { return _raiseReloadDataCommand; } }
         //public ICommand PushSingleRoomCommand { get { return _raisePushSingleRoomCommand; } }
-       
+
 
         #endregion Commands
 
@@ -756,12 +759,18 @@ namespace duHast.AtTheLibrary.ViewModels
                familiesSelectionViewModel: this,
                revitFamiliesDataModel: _revitDataModel);
 
+            //load data from file path
+            _raiseReloadDataCommand = new Commands.ReloadDataFromFileAsyncCommand(
+                roomsSelectionViewModel: this,
+                revitDataModel: _revitDataModel
+            );
+
             // push single room to revit
             //_raisePushSingleRoomCommand = new Commands.PushSingleRoomInRevitAsyncCommand(
-             //   roomsSelectionViewModel: this,
-             //   revitDataModel: _revitDataModel
-             //);
-            
+            //   roomsSelectionViewModel: this,
+            //   revitDataModel: _revitDataModel
+            //);
+
 
             //update rooms data with data from revit through an external event
             RefreshGUICommand.Execute(null);

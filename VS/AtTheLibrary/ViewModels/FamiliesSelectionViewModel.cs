@@ -26,7 +26,6 @@ using duHast.Utils.WPF.Commands;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
@@ -50,10 +49,12 @@ namespace duHast.AtTheLibrary.ViewModels
         private DataView _dv;
 
         //command to raise an event to refresh the gui
-        //private readonly Commands.RefreshUIFromRevitModelAsyncCommand _raiseRefreshGUICommand;
+        private readonly Commands.RefreshUIFromRevitModelAsyncCommand _raiseRefreshGUICommand;
+        //command to raise an event to reload data from file path
+        private readonly Commands.ReloadDataFromFileAsyncCommand _raiseReloadDataCommand;
         //command to push a single room to revit
         //private readonly Commands.PushSingleRoomInRevitAsyncCommand _raisePushSingleRoomCommand;
-        
+
         //command to update the view model if the column order changes
         public RelayCommand ColumnOrderChangedCommand { get; private set; }
 
@@ -262,9 +263,10 @@ namespace duHast.AtTheLibrary.ViewModels
         #region Commands
 
         //commands
-        //public ICommand RefreshGUICommand { get { return _raiseRefreshGUICommand; } }
+        public ICommand RefreshGUICommand { get { return _raiseRefreshGUICommand; } }
+        public ICommand ReloadDataCommand { get { return _raiseReloadDataCommand; } }
         //public ICommand PushSingleRoomCommand { get { return _raisePushSingleRoomCommand; } }
-       
+
 
         #endregion Commands
 
@@ -363,6 +365,21 @@ namespace duHast.AtTheLibrary.ViewModels
                         dataTable.Columns.Add("Id");
                         continue;
                     }
+                    else if (column == "Family Name")
+                    {
+                        dataTable.Columns.Add("Family Name");
+                        continue;
+                    }
+                    else if (column == "Family Category")
+                    {
+                        dataTable.Columns.Add("Family Category");
+                        continue;
+                    }
+                    else if (column == "Family Type Name")
+                    {
+                        dataTable.Columns.Add("Family Type Name");
+                        continue;
+                    }
                     else
                     {
                         // Add a column per property
@@ -388,6 +405,12 @@ namespace duHast.AtTheLibrary.ViewModels
                 //othrwise add columns in default order
                 //add the default id column
                 dataTable.Columns.Add("Id");
+                // add default family name
+                dataTable.Columns.Add("Family Name");
+                // add default family category
+                dataTable.Columns.Add("Family Category");
+                // add default family type name
+                dataTable.Columns.Add("Family Type Name");
 
                 // Add columns to the data table
                 foreach (var roomModelInstance in _revitDataModel.GetAllFamilies())
@@ -409,7 +432,7 @@ namespace duHast.AtTheLibrary.ViewModels
             
 
             // Add the rows to the data table
-            foreach (var roomModelInstance in _revitDataModel.GetAllFamilies())
+            foreach (var familyModelInstance in _revitDataModel.GetAllFamilies())
             {
                 // Add a row per room
                 DataRow row = dataTable.NewRow();
@@ -422,18 +445,33 @@ namespace duHast.AtTheLibrary.ViewModels
                     {
                         if (column == "Count")
                         {
-                            row["Count"] = roomModelInstance.MatchingRevitFamilies.Count;
+                            row["Count"] = familyModelInstance.MatchingRevitFamilies.Count;
                             continue;
                         }
                         else if (column == "Id")
                         {
-                            row["Id"] = roomModelInstance.Id.Value;
+                            row["Id"] = familyModelInstance.Id.Value;
+                            continue;
+                        }
+                        else if(column == "Family Name")
+                        {
+                            row["Family Name"] = familyModelInstance.FamilyName.Value;
+                            continue;
+                        }
+                        else if (column == "Family Category")
+                        {
+                            row["Family Category"] = familyModelInstance.FamilyCategory.Value;
+                            continue;
+                        }
+                        else if (column == "Family Type Name")
+                        {
+                            row["Family Type Name"] = familyModelInstance.FamilyTypeName.Value;
                             continue;
                         }
                         else
                         {
                             // Add the property values
-                            foreach (var prop in roomModelInstance.Properties)
+                            foreach (var prop in familyModelInstance.Properties)
                             {
                                 // check if the column is meant to be displayed in the ui
                                 if (prop.ShowInUI && prop.Name == column) { 
@@ -450,15 +488,22 @@ namespace duHast.AtTheLibrary.ViewModels
                 {
                     //add data to the row in default order
                     // add the id value
-                    row["Id"] = roomModelInstance.Id.Value;
+                    row["Id"] = familyModelInstance.Id.Value;
+                    // add the family name
+                    row["Family Name"] = familyModelInstance.FamilyName.Value;
+                    // add the family category
+                    row["Family Category"] = familyModelInstance.FamilyCategory.Value;
+                    // add the family type name
+                    row["Family Type Name"] = familyModelInstance.FamilyTypeName.Value;
+
 
                     // add the property values
-                    foreach (var prop in roomModelInstance.Properties)
+                    foreach (var prop in familyModelInstance.Properties)
                     {
                         // check if the column is meant to be displayed in the ui
                         if (prop.ShowInUI) { row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : ""; }
                     }
-                    row["Count"] = roomModelInstance.MatchingRevitFamilies.Count;
+                    row["Count"] = familyModelInstance.MatchingRevitFamilies.Count;
                     // Add the row to the data table
                     dataTable.Rows.Add(row);
                 }
@@ -710,15 +755,22 @@ namespace duHast.AtTheLibrary.ViewModels
 
             // set up commands
             // refresh gui with data from model
-            //_raiseRefreshGUICommand = new Commands.RefreshUIFromRevitModelAsyncCommand(
-             //   roomsSelectionViewModel: this,
-            //    revitDataModel: _revitDataModel);
+            _raiseRefreshGUICommand = new Commands.RefreshUIFromRevitModelAsyncCommand(
+               familiesSelectionViewModel: this,
+               revitFamiliesDataModel: _revitDataModel);
+
+            //load data from file path
+            _raiseReloadDataCommand = new Commands.ReloadDataFromFileAsyncCommand(
+                roomsSelectionViewModel: this,
+                revitDataModel: _revitDataModel
+            );
+
             // push single room to revit
             //_raisePushSingleRoomCommand = new Commands.PushSingleRoomInRevitAsyncCommand(
-             //   roomsSelectionViewModel: this,
-             //   revitDataModel: _revitDataModel
-             //);
-            
+            //   roomsSelectionViewModel: this,
+            //   revitDataModel: _revitDataModel
+            //);
+
 
             //update rooms data with data from revit through an external event
             RefreshGUICommand.Execute(null);

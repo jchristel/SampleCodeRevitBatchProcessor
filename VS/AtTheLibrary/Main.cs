@@ -67,15 +67,22 @@ namespace duHast.AtTheLibrary
 
             // debug for now
             // set the settings
-            settings.DataPath = @"C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\test\Data\XML_Reports_Comp_01\LibraryFamilies_01.csv";
-            settings.SupportedTypeParameterNames = new List<string> { "HSL_AHFG_CODE", "HSL_AHFG_DESCRIPTION", "HSL_BUDGET_GROUP" };
+            if(settings.SupportedTypeParameterNames == null || settings.SupportedTypeParameterNames.Count == 0)
+                settings.SupportedTypeParameterNames = new List<string> { "HSL_AHFG_CODE", "HSL_AHFG_DESCRIPTION", "HSL_BUDGET_GROUP" };
 
             //store settings in data model
             _revitDataModel.Settings = settings;
 
             //load room data into model
-            _revitDataModel.LoadFamiliesData();
+            bool loadFlag = _revitDataModel.LoadFamiliesData();
 
+            //let the user now that the data was loaded
+            // if the data path is empty, the user will be prompted to set the data path
+            if (settings.DataPath != string.Empty && !loadFlag)
+            {
+                _messageStore.SetCurrentMessage("Invalid data in file. Please set the data file path and reload.", duHast.Utils.WPF.Stores.MessageTypes.Error);
+            }
+            
             // set up the navigation store
             _navigationStore.CurrentViewModel = CreateFamiliesSelectionViewModel();
 

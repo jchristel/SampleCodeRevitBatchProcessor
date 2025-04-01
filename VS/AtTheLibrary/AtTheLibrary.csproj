@@ -104,17 +104,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\RefreshUIFromRevitModelAsyncCommand.cs" />
+    <Compile Include="Commands\ReloadDataFromFileAsyncCommand.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Models\FamiliesDataModelContainer.cs" />
-    <Compile Include="Models\FamiliesRevit.cs" />
+    <Compile Include="Models\FamilyRevit.cs" />
     <Compile Include="Models\FamilyDataModel.cs" />
     <Compile Include="Models\FamilyDataProperty.cs" />
     <Compile Include="Models\RevitFamiliesDataModel.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RevitActions\IRevitAction.cs" />
     <Compile Include="RevitActions\RefreshFamiliesDataWithRevitData.cs" />
+    <Compile Include="RevitActions\RevitActionBase.cs" />
     <Compile Include="Utilities\PropertyChangedEventNames.cs" />
     <Compile Include="Utilities\ReadFamilyData.cs" />
+    <Compile Include="Utilities\Revit\RevitFamilyObjectsConverter.cs" />
     <Compile Include="Utilities\SettingsUtils.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\FamiliesSelectionViewModel.cs" />
@@ -129,7 +133,7 @@
     <ProjectReference Include="..\RevitUtils\RevitUtils.csproj">
       <Project>{06b86732-e929-4467-8ce5-e98e637bf5e8}</Project>
       <Name>RevitUtils</Name>
-      <Private>False</Private>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Utils\Utils.csproj">
       <Project>{d0ee5cd0-bc5e-44c8-901d-520b96291080}</Project>

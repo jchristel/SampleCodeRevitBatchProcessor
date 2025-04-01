@@ -22,8 +22,6 @@
 //
 
 
-using duHast.AtTheLibrary.RevitActions;
-using duHast.AtTheLibrary.Utilities;
 using duHast.Utils.WPF.Stores;
 using Revit.Async;
 using System;
@@ -32,8 +30,9 @@ using System.ComponentModel;
 
 namespace duHast.AtTheLibrary.Commands
 {
-    public class RefreshUIFromRevitModelAsyncCommand : Utils.WPF.Commands.CommandBase
+    public class ReloadDataFromFileAsyncCommand : Utils.WPF.Commands.CommandBase
     {
+
         private readonly ViewModels.FamiliesSelectionViewModel _familiesSelectionViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
         private readonly Models.RevitFamiliesDataModel _revitFamiliesDataModel;
@@ -54,30 +53,44 @@ namespace duHast.AtTheLibrary.Commands
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
+                            //clear out all rooms from the data model
+                            _revitFamiliesDataModel.ClearFamilies();
+
+                            // reset the column order in the view model in case it was changed
+                            _familiesSelectionViewModel.ColumnOrder = new List<string>();
+
+                            // reload data from the file path
+                            bool loadFlag = _revitFamiliesDataModel.LoadFamiliesData();
+
+                            // check if the data was loaded successfully
+                            if (!loadFlag)
+                            {
+                                return ("Failed to load data from file.", Utils.WPF.Stores.MessageTypes.Error);
+                            }
+
                             // Execute the action to refresh the room data with the Revit data
-                            RefreshFamiliesDataWithRevitData action = new RefreshFamiliesDataWithRevitData(_revitFamiliesDataModel, _familiesSelectionViewModel);
+                            RevitActions.RefreshFamiliesDataWithRevitData action = new RevitActions.RefreshFamiliesDataWithRevitData(_revitFamiliesDataModel, _familiesSelectionViewModel);
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
 
                             //TODO write messages to log...
 
-                            // return the message to the caller
+                            // return status message for UI
                             return (messageAction, messageActionType);
                         }
                         catch (Exception ex)
                         {
-                            return ($"An exception occurred within the external event handler refresh UI from rooms in model event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                            return ($"An exception occurred within the external event handler update after reload data event: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                         }
                     });
 
-                //pop message to user
-                _familiesSelectionViewModel.AddMessage(message, messageType);
-
-                //update the view model
                 if (messageType == MessageTypes.Information)
                 {
                     // raise event to notify the view model that the model has been updated
                     _revitFamiliesDataModel.RaisePropertyChanged(Utilities.PropertyChangedEventNames.DATA_MODEL_FAMILIES_UPDATED);
                 }
+
+                //pop message to user
+                _familiesSelectionViewModel.AddMessage(message, messageType);
             }
             catch (Exception ex)
             {
@@ -90,11 +103,7 @@ namespace duHast.AtTheLibrary.Commands
             }
         }
 
-        /// <summary>
-        /// this command is always available
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
+
         public override bool CanExecute(object parameter)
         {
             // check if IsWaitingForRevitCommandToFinish is true
@@ -102,26 +111,30 @@ namespace duHast.AtTheLibrary.Commands
             {
                 return false;
             }
-            return true;
+            return _familiesSelectionViewModel.DataFilePathValid && base.CanExecute(parameter);
         }
+
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // check if the property that changed is the one that we are interested in
-            if (e.PropertyName == nameof(ViewModels.FamiliesSelectionViewModel.IsWaitingForRevitCommandToFinish))
+            if (e.PropertyName == nameof(ViewModels.FamiliesSelectionViewModel.DataFilePath) ||
+                e.PropertyName == nameof(ViewModels.FamiliesSelectionViewModel.IsWaitingForRevitCommandToFinish))
             {
                 OnCanExecutedChanged();
             }
         }
 
-        public RefreshUIFromRevitModelAsyncCommand(
-           ViewModels.FamiliesSelectionViewModel familiesSelectionViewModel,
-           Models.RevitFamiliesDataModel revitFamiliesDataModel
-           )
+
+        public ReloadDataFromFileAsyncCommand(
+            ViewModels.FamiliesSelectionViewModel roomsSelectionViewModel,
+            Models.RevitFamiliesDataModel revitDataModel
+            )
         {
-            _revitFamiliesDataModel = revitFamiliesDataModel;
-            _familiesSelectionViewModel = familiesSelectionViewModel;
+            _revitFamiliesDataModel = revitDataModel;
+            _familiesSelectionViewModel = roomsSelectionViewModel;
             _familiesSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
+
     }
 }

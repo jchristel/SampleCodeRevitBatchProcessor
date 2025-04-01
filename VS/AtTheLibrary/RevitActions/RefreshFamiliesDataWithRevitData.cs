@@ -22,43 +22,66 @@
 //
 
 using System.Collections.Generic;
-using System.Windows.Forms;
+using System.Linq;
 using Autodesk.Revit.DB;
 using duHast.AtTheLibrary.Models;
-using duHast.AtTheLibrary.ViewModels;
 
 namespace duHast.AtTheLibrary.RevitActions
 {
-    public class RefreshFamiliesDataWithRevitData:IRevitAction
+    public class RefreshFamiliesDataWithRevitData: RevitActionBase, IRevitAction
     {
-        private readonly RevitFamiliesDataModel _revitModel;
-        public Models.RevitFamiliesDataModel RevitModel => _revitModel;
 
         private ViewModels.FamiliesSelectionViewModel _roomsSelectionViewModel;
         public ViewModels.FamiliesSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
 
 
-        public void Execute(Document doc)
+        /// <summary>
+        /// Execute the refresh data from revit model action.
+        /// This actions adds matching family types from the revit model to the data model.
+        /// It will not add any types with no match in the data model!!
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
-            // refresh the rooms data model with the rooms from the revit model
-            List<Models.FamilyDataModel> updatedRooms = RefreshRoomData(
-                doc, 
-                _revitModel.GetAllFamilies(),
-                _revitModel.Settings.SupportedTypeParameterNames
-             );
+            try { 
+                // refresh the rooms data model with the rooms from the revit model
+                List<Models.FamilyDataModel> updatedFamilies = RefreshFamiliesData(
+                    doc, 
+                    RevitModel.GetAllFamilies(),
+                    RevitModel.Settings.SupportedTypeParameterNames
+                 );
 
-            // clear all rooms in the data model
-            // this will also clear all rooms if shared parameter setup in project file is wrong.
-            _revitModel.ClearFamilies();
+                // clear all rooms in the data model
+                // this will also clear all rooms if shared parameter setup in project file is wrong.
+                RevitModel.ClearFamilies();
 
-            // add updated rooms to the data model if there are any
-            if (updatedRooms != null)
-            {
-                // add updated rooms
-                foreach (var rooms in updatedRooms)
+                // add updated rooms to the data model if there are any
+                if (updatedFamilies != null)
                 {
-                    _revitModel.AddFamily(rooms);
+                    // add updated rooms
+                    foreach (var updatedFamily in updatedFamilies)
+                    {
+                        RevitModel.AddFamily(updatedFamily);
+                    }
                 }
+            }
+            catch (System.Exception ex)
+            {
+                //log the exception
+                AddMessage($"Error refreshing family data from Revit: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+            }
+
+            // check if any error messages were added
+            if (GetErrorMessages().Count > 0)
+            {
+                // return the message
+                return (string.Join("\n", GetErrorMessages()), Utils.WPF.Stores.MessageTypes.Error);
+            }
+            else
+            {
+                // return the message
+                return ("Refreshed families from Revit", Utils.WPF.Stores.MessageTypes.Information);
             }
         }
 
@@ -66,18 +89,84 @@ namespace duHast.AtTheLibrary.RevitActions
         /// Refresh the rooms data model with the rooms from the revit model
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="roomsDataModel"></param>
-        /// <param name="supportedCategoryName"></param>
+        /// <param name="familiesDataModel"></param>
+        /// <param name="supportedParameterName"></param>
         /// <returns></returns>
-        public List<Models.FamilyDataModel> RefreshRoomData(Document doc, List<Models.FamilyDataModel> roomsDataModel, List<string> supportedCategoryName)
+        public List<Models.FamilyDataModel> RefreshFamiliesData(Document doc, List<Models.FamilyDataModel> familiesDataModel, List<string> supportedParameterName)
         {
-            return roomsDataModel;
+            // get all families from the Revit model
+            List<Models.FamilyRevit> familiesInRevitModel = GetFamiliesFromModel(doc);
+
+            //update the families data model with the families from the revit model
+            familiesDataModel = UpdateFamiliesDataModel(familiesDataModel, familiesInRevitModel);
+
+            //update the parameter visibility for the families in the data model based on the supported parameter names
+            familiesDataModel = UpdateUIVisbility(familiesDataModel, supportedParameterName);
+
+            // return the updated families data model
+            return familiesDataModel;
         }
 
+        /// <summary>
+        /// Get all families from the revit model
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public List<Models.FamilyRevit> GetFamiliesFromModel(Document doc)
+        {
+            List<Models.FamilyRevit> families = new List<Models.FamilyRevit>();
+            // get all families from the revit model
+            var familiesInModel = RevitUtils.Families.FamilyUtils.GetAllFamilies(doc);
+
+            // convert the families to revit families
+            families = Utilities.Revit.RevitFamilyObjectsConverter.ConvertFamiliesToRevitFamilies(
+                families: familiesInModel.ToList(), 
+                AddMessage: AddMessage
+            );
+
+            // add them to the list
+            return families;
+        }
+
+        /// <summary>
+        /// Update the families data model with the families from the revit model
+        /// </summary>
+        /// <param name="familiesDataModel"></param>
+        /// <param name="familiesInRevitModel"></param>
+        /// <returns></returns>
+        public List<Models.FamilyDataModel> UpdateFamiliesDataModel(List<Models.FamilyDataModel> familiesDataModel, List<Models.FamilyRevit> familiesInRevitModel)
+        {
+            // loop over families and update the data model
+            foreach(FamilyDataModel familyDataModel in familiesDataModel)
+            {
+                // get the family revit object
+                FamilyRevit familyRevit = familiesInRevitModel.FirstOrDefault(f => f.Id.Value == familyDataModel.Id.Value);
+                // if the family revit object is not null
+                if (familyRevit != null)
+                {
+                    // update the family data model with the family revit object
+                    familyDataModel.AddMatchingFamily(familyRevit);
+                }
+            }
+            // update the families data model with the families from the revit model
+            return familiesDataModel;
+        }
+
+        /// <summary>
+        /// Update the parameter visibility for the families in the data model based on the supported parameter names
+        /// </summary>
+        /// <param name="familiesDataModel"></param>
+        /// <param name="supportedParameterName"></param>
+        /// <returns></returns>
+        public List<FamilyDataModel> UpdateUIVisbility(List<FamilyDataModel> familiesDataModel, List<string> supportedParameterName)
+        {
+            //update the parameter visibility for the families in the data model based on the supported parameter names
+            return familiesDataModel;
+        }
 
         public RefreshFamiliesDataWithRevitData(RevitFamiliesDataModel revitModel, ViewModels.FamiliesSelectionViewModel roomsSelectionViewModel)
         {
-            _revitModel = revitModel;
+            RevitModel = revitModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;
         }
     }

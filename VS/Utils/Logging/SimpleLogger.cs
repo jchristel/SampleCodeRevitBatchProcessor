@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
 
@@ -35,13 +36,16 @@ namespace duHast.Utils.Logging
     public class SimpleLogger
     {
         private readonly string _filePath;
+        private readonly List<string> _errorMessages = new List<string>(); // Stores exception messages
 
         public SimpleLogger(string filePath)
         {
             _filePath = filePath;
         }
 
-        public void LogMessages(List<(string, Utils.WPF.Stores.MessageTypes)> messages)
+        public IReadOnlyList<string> ErrorMessages => _errorMessages.AsReadOnly(); // Expose errors safely
+
+        public void LogMessages(List<(string message, WPF.Stores.MessageTypes type)> messages)
         {
             var records = new List<LogEntry>();
             foreach (var (message, type) in messages)
@@ -62,17 +66,57 @@ namespace duHast.Utils.Logging
                 csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture));
                 csv.WriteRecords(records);
             }
+            catch (Exception ex)
+            {
+                _errorMessages.Add($"Error writing logs: {ex.Message}"); // Store errors in the list
+            }
             finally
             {
-                if (csv != null)
+                csv?.Dispose();
+                writer?.Dispose();
+            }
+        }
+
+        public async Task LogMessagesAsync(List<(string message, Utils.WPF.Stores.MessageTypes type)> messages)
+        {
+            var records = new List<LogEntry>();
+            foreach (var (message, type) in messages)
+            {
+                records.Add(new LogEntry
                 {
-                    csv.Dispose();
-                }
-                if (writer != null)
+                    Message = message,
+                    Type = type,
+                    Timestamp = DateTime.Now
+                });
+            }
+
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(_filePath, true))
+                using (CsvWriter csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)))
                 {
-                    writer.Dispose();
+                    await csv.WriteRecordsAsync(records);
                 }
             }
+            catch (Exception ex)
+            {
+                _errorMessages.Add($"Error writing logs: {ex.Message}"); // Store errors
+            }
+        }
+
+        public void LogMessagesFireAndForget(List<(string message, Utils.WPF.Stores.MessageTypes type)> messages)
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await LogMessagesAsync(messages);
+                }
+                catch (Exception ex)
+                {
+                    _errorMessages.Add($"Logging error: {ex.Message}"); // Store errors
+                }
+            });
         }
     }
 }

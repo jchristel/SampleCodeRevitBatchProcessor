@@ -83,6 +83,8 @@ def delete_family_type(doc, type_name):
     """
     Deletes a family type from the family document.
 
+    Note: the type will not be deleted if it is the last type in the family!
+
     :param doc: The family document
     :type doc: Document
     :param type_name: The name of the family type
@@ -105,6 +107,11 @@ def delete_family_type(doc, type_name):
 
         # get all the types in the family
         familyTypes = family_manager.Types
+
+        # check the number of types in the family
+        if familyTypes.Size == 1:
+            return_value.append_message("Cannot delete the last type in the family.")
+            return return_value
 
         delete_type_result = None
 

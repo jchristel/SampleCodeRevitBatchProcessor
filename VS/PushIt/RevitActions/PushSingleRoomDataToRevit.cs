@@ -56,7 +56,8 @@ namespace duHast.PushIt.RevitActions
                     doc: doc,
                     familyInstance: _pushTarget as Autodesk.Revit.DB.FamilyInstance,
                     roomData: _roomToPush,
-                    safetyOff: _roomsSelectionViewModel.SafetyOffMode
+                    safetyOff: _roomsSelectionViewModel.SafetyOffMode,
+                    AddMessage: AddMessage
                 );
 
                 if (!updateFamily)

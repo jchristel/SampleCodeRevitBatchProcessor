@@ -28,6 +28,10 @@ namespace duHast.PushIt.RevitActions
             return Messages.Where(m => m.Item2 == Utils.WPF.Stores.MessageTypes.Log).Select(m => m.Item1).ToList();
         }
 
+        public List<(string, Utils.WPF.Stores.MessageTypes)> GetLogMessagesAndLogTypes()
+        {
+            return Messages;
+        }
 
         public void AddMessage(string message, Utils.WPF.Stores.MessageTypes messageType)
         {

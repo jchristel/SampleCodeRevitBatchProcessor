@@ -65,7 +65,13 @@ namespace duHast.PushIt.RevitActions
 
         public bool WipeIt(Document doc, List<FamilyInstance> familyInstancesToWipe, RoomDataModel sampleRoom)
         {
-            bool wipeSuccess = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(doc, familyInstancesToWipe, sampleRoom);
+            bool wipeSuccess = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(
+                doc: doc,
+                familyInstances: familyInstancesToWipe,
+                sampleRoom: sampleRoom, 
+                AddMessage: AddMessage
+            );
+
             if (!wipeSuccess)
             {
                 AddMessage("Error wiping multiple family instances. Attempting wiping one at the time.", Utils.WPF.Stores.MessageTypes.Error);
@@ -75,7 +81,13 @@ namespace duHast.PushIt.RevitActions
                 foreach (var familyInstance in familyInstancesToWipe)
                 {
                     // at least one will fail...but the rest will succeed
-                    bool wipeSuccessSingle = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(doc, new List<FamilyInstance> { familyInstance }, sampleRoom);
+                    bool wipeSuccessSingle = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(
+                        doc: doc,
+                        familyInstances: new List<FamilyInstance> { familyInstance },
+                        sampleRoom: sampleRoom, 
+                        AddMessage: AddMessage
+                    );
+
                     if (!wipeSuccessSingle)
                     {
                         // log error

@@ -122,7 +122,8 @@ namespace duHast.PushIt.RevitActions
                     // update the family instances
                     bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateMultipleFamilyInstances(
                         doc: doc,
-                        familyData: updateFamilyInstances
+                        familyData: updateFamilyInstances,
+                        AddMessage: AddMessage
                     );
 
                     if (!updateFamily) {
@@ -148,7 +149,8 @@ namespace duHast.PushIt.RevitActions
             {
                 bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateMultipleFamilyInstances(
                     doc: doc,
-                    familyData: updateFamilyInstances
+                    familyData: updateFamilyInstances,
+                    AddMessage: AddMessage
                 );
 
                 // log the error if the update failed

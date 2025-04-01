@@ -111,7 +111,8 @@ namespace duHast.PushIt.Commands
                             RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
 
-                            //TODO write messages to log...
+                            //write messages to log...
+                            _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
 
                             // return status message for UI
                             return (messageAction, messageActionType);

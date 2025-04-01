@@ -34,6 +34,8 @@ namespace duHast.PushIt.Models
         public Models.CategoryDataModelContainer _categoriesContainer;
         private Models.Settings _settings;
 
+        private Utils.Logging.SimpleLogger _logger;
+
         public Settings Settings { get => _settings; set => _settings = value; }
 
         //event handlers for property changed
@@ -112,6 +114,22 @@ namespace duHast.PushIt.Models
                 AddCategory(category);
             }
         }
+
+        public void InitialiseLogger(string filePath)
+        {
+            _logger = new Utils.Logging.SimpleLogger(filePath);
+        }
+
+        public void LogMessages(List<(string, Utils.WPF.Stores.MessageTypes)> messages)
+        {
+            if(_logger == null)
+            {
+                return;
+            }
+
+            _logger.LogMessages(messages);
+        }
+
 
         public RevitDataModel()
         {

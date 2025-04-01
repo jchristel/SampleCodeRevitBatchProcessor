@@ -65,10 +65,12 @@ namespace duHast.PushIt
             _revitDataModel = new Models.RevitDataModel();
 
             //set up the logger
-            //Utils.LoggerUtility.setupLogger();
+            // build a file path for the log file using the settings directory and the current date
+            string logFilePath = Path.Combine(Utilities.SettingsUtils.settingsDirectory, "log_pushit_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
+            _revitDataModel.InitialiseLogger(logFilePath);
 
             // Example log entry
-            //Log.Information("Starting duHast.PushIt.");
+            _revitDataModel.LogMessages(new List<(string, duHast.Utils.WPF.Stores.MessageTypes)> { ("Starting duHast.PushIt.", duHast.Utils.WPF.Stores.MessageTypes.Log) });
 
             //Get application and document objects
             UIApplication uiapp = commandData.Application;

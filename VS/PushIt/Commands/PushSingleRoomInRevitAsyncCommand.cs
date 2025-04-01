@@ -96,8 +96,9 @@ namespace duHast.PushIt.Commands
                             );
 
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
-                            
-                            //TODO write messages to log...
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
 
                             // return status message for UI
                             return (messageAction, messageActionType);

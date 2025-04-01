@@ -97,7 +97,8 @@ namespace duHast.PushIt.Commands
                             //execute the refresh action
                             (string messageActionRefresh, Utils.WPF.Stores.MessageTypes messageActionTypeRefresh)  = refreshRoomDataWithRevitData.Execute(doc);
 
-                            //TODO write messages to log...
+                            //write messages to log...
+                            _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
 
                             //combine messages from both actions
                             if (messageActionTypeWipe == Utils.WPF.Stores.MessageTypes.Information && messageActionTypeRefresh == MessageTypes.Information)

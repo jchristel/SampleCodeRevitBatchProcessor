@@ -60,6 +60,13 @@ namespace duHast.PushIt.Utilities.Revit
 
                 foreach (var property in roomData.Properties)
                 {
+                    // skip read only properties
+                    if (property.IsReadOnly)
+                    {
+                        AddMessage($"Skipping read only property {property.Name} for family instance {familyInstance.Id}", Utils.WPF.Stores.MessageTypes.Log);
+                        continue;
+                    }
+                    
                     // update the property depending on whether it has a GUID or not
                     if (property.ParameterGUID != "")
                     {

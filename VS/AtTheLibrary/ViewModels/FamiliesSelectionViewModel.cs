@@ -383,10 +383,10 @@ namespace duHast.AtTheLibrary.ViewModels
                     else
                     {
                         // Add a column per property
-                        foreach (var roomModelInstance in _revitDataModel.GetAllFamilies())
+                        foreach (var familyModelInstance in _revitDataModel.GetAllFamilies())
                         {
                             // Add a column per property
-                            foreach (var prop in roomModelInstance.Properties)
+                            foreach (var prop in familyModelInstance.Properties)
                             {
                                 // check if the column is meant to be displayed in the ui
                                 if (prop.ShowInUI && prop.Name == column) { 
@@ -424,12 +424,13 @@ namespace duHast.AtTheLibrary.ViewModels
                     // Get out of the loop
                     break;
                 }
-
                 // Add the count column
                 dataTable.Columns.Add("Count");
             }
 
-            
+            // get the column order as strings from the data table
+            var columnOrder = dataTable.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList();
+
 
             // Add the rows to the data table
             foreach (var familyModelInstance in _revitDataModel.GetAllFamilies())
@@ -437,76 +438,60 @@ namespace duHast.AtTheLibrary.ViewModels
                 // Add a row per room
                 DataRow row = dataTable.NewRow();
 
-                //add properties to the row in order specified by the column order
-                if (ColumnOrder != null && ColumnOrder.Any())
+               
+                // Add columns to the data table in the order specified by the column order
+                foreach (var column in columnOrder)
                 {
-                    // Add columns to the data table in the order specified by the column order
-                    foreach (var column in ColumnOrder)
+                    if (column == "Count")
                     {
-                        if (column == "Count")
+                        row["Count"] = familyModelInstance.MatchingRevitFamilies.Count;
+                        continue;
+                    }
+                    else if (column == "Id")
+                    {
+                        row["Id"] = familyModelInstance.Id.Value;
+                        continue;
+                    }
+                    else if(column == "Family Name")
+                    {
+                        row["Family Name"] = familyModelInstance.FamilyName.Value;
+                        continue;
+                    }
+                    else if (column == "Family Category")
+                    {
+                        row["Family Category"] = familyModelInstance.FamilyCategory.Value;
+                        continue;
+                    }
+                    else if (column == "Family Type Name")
+                    {
+                        row["Family Type Name"] = familyModelInstance.FamilyTypeName.Value;
+                        continue;
+                    }
+                    else
+                    {
+                        bool columnValueFound = false;
+                        // Add the property values
+                        foreach (var prop in familyModelInstance.Properties)
                         {
-                            row["Count"] = familyModelInstance.MatchingRevitFamilies.Count;
-                            continue;
-                        }
-                        else if (column == "Id")
-                        {
-                            row["Id"] = familyModelInstance.Id.Value;
-                            continue;
-                        }
-                        else if(column == "Family Name")
-                        {
-                            row["Family Name"] = familyModelInstance.FamilyName.Value;
-                            continue;
-                        }
-                        else if (column == "Family Category")
-                        {
-                            row["Family Category"] = familyModelInstance.FamilyCategory.Value;
-                            continue;
-                        }
-                        else if (column == "Family Type Name")
-                        {
-                            row["Family Type Name"] = familyModelInstance.FamilyTypeName.Value;
-                            continue;
-                        }
-                        else
-                        {
-                            // Add the property values
-                            foreach (var prop in familyModelInstance.Properties)
-                            {
-                                // check if the column is meant to be displayed in the ui
-                                if (prop.ShowInUI && prop.Name == column) { 
-                                    row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : "";
-                                    break;
-                                }
+                            // check if the column is meant to be displayed in the ui
+                            if (prop.ShowInUI && prop.Name == column) { 
+                                row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : "";
+                                columnValueFound = true;
+                                break;
                             }
                         }
-                    }
-                    // Add the row to the data table
-                    dataTable.Rows.Add(row);
-                }
-                else
-                {
-                    //add data to the row in default order
-                    // add the id value
-                    row["Id"] = familyModelInstance.Id.Value;
-                    // add the family name
-                    row["Family Name"] = familyModelInstance.FamilyName.Value;
-                    // add the family category
-                    row["Family Category"] = familyModelInstance.FamilyCategory.Value;
-                    // add the family type name
-                    row["Family Type Name"] = familyModelInstance.FamilyTypeName.Value;
 
-
-                    // add the property values
-                    foreach (var prop in familyModelInstance.Properties)
-                    {
-                        // check if the column is meant to be displayed in the ui
-                        if (prop.ShowInUI) { row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : ""; }
+                        // check if the column value was found
+                        if (!columnValueFound)
+                        {
+                            row[column] = "N/A";
+                        }
                     }
-                    row["Count"] = familyModelInstance.MatchingRevitFamilies.Count;
-                    // Add the row to the data table
-                    dataTable.Rows.Add(row);
                 }
+
+                // Add the row to the data table
+                dataTable.Rows.Add(row);
+                
             }
 
             return dataTable;

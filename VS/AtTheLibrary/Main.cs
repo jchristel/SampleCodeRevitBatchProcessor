@@ -62,6 +62,14 @@ namespace duHast.AtTheLibrary
             // set up th revit data model
             _revitDataModel = new Models.RevitFamiliesDataModel();
 
+            //set up the logger
+            // build a file path for the log file using the settings directory and the current date
+            string logFilePath = Path.Combine(Utilities.SettingsUtils.settingsDirectory, "log_atTheLib_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
+            _revitDataModel.InitialiseLogger(logFilePath);
+
+            // Example log entry
+            _revitDataModel.LogMessages(new List<(string, duHast.Utils.WPF.Stores.MessageTypes)> { ("Starting duHast.AtTheLirbary.", duHast.Utils.WPF.Stores.MessageTypes.Log) });
+
             // load settings from file
             Models.Settings settings = Utilities.SettingsUtils.LoadSettings();
 

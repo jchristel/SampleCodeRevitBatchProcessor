@@ -32,7 +32,7 @@ namespace duHast.AtTheLibrary.Utilities
 {
     public static class SettingsUtils
     {
-        private static string settingsDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "duHast");
+        public static string settingsDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "duHast");
         private static string settingsFilePath = Path.Combine(settingsDirectory, "atTheLibrary_settings.json");
 
         // Load settings from the settings file

@@ -36,6 +36,7 @@ namespace duHast.AtTheLibrary.Models
         private Models.Settings _settings;
         public Settings Settings { get => _settings; set => _settings = value; }
 
+        private Utils.Logging.SimpleLogger _logger;
 
         public Models.FamiliesDataModelContainer _familiesContainer;
 
@@ -84,6 +85,20 @@ namespace duHast.AtTheLibrary.Models
             return true;
         }
 
+        public void InitialiseLogger(string filePath)
+        {
+            _logger = new Utils.Logging.SimpleLogger(filePath);
+        }
+
+        public void LogMessages(List<(string, Utils.WPF.Stores.MessageTypes)> messages)
+        {
+            if (_logger == null)
+            {
+                return;
+            }
+
+            _logger.LogMessagesFireAndForget(messages);
+        }
 
         public RevitFamiliesDataModel()
         {

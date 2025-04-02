@@ -40,6 +40,10 @@ namespace duHast.PushIt.Utilities.Revit
         /// <returns></returns>
         public static bool UpdateProperties(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff, Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
         {
+
+            // set up a variable to store the name of the property that is being updated in case of an exception
+            string propertyName = "";
+
             try
             {
                 string room_id = roomData.Id.Value;
@@ -53,13 +57,10 @@ namespace duHast.PushIt.Utilities.Revit
 
                 // set the room id parameter
                 bool flagId = duHast.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Id.ParameterGUID, room_id);
-                AddMessage($"Updated room id with value {room_id} for family instance {familyInstance.Id} with status: {flagId}", Utils.WPF.Stores.MessageTypes.Log);
+                AddMessage($"Updated room id with value [{room_id}] for family instance [{familyInstance.Id}] with status: [{flagId}]", Utils.WPF.Stores.MessageTypes.Log);
                 
                 //update other properties
                 bool flagOtherProperties = true;
-
-                // set up a variable to store the name of the property that is being updated in case of an exception
-                string propertyName = "";
 
                 // loop over the properties and update them
                 foreach (var property in roomData.Properties)
@@ -68,7 +69,7 @@ namespace duHast.PushIt.Utilities.Revit
                     // skip read only properties
                     if (property.IsReadOnly)
                     {
-                        AddMessage($"Skipping read only property {property.Name} for family instance {familyInstance.Id}", Utils.WPF.Stores.MessageTypes.Log);
+                        AddMessage($"Skipping read only property [{property.Name}] for family instance [{familyInstance.Id}]", Utils.WPF.Stores.MessageTypes.Log);
                         continue;
                     }
                     
@@ -76,13 +77,13 @@ namespace duHast.PushIt.Utilities.Revit
                     if (property.ParameterGUID != "")
                     {
                         bool flag = duHast.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, property.ParameterGUID, property.Value);
-                        AddMessage($"Updated shared parameter property {property.Name} with value {property.Value} for family instance {familyInstance.Id} with status: {flag}", Utils.WPF.Stores.MessageTypes.Log);
+                        AddMessage($"Updated shared parameter property [{property.Name}] with value [{property.Value}] for family instance [{familyInstance.Id}] with status: {flag}", Utils.WPF.Stores.MessageTypes.Log);
                         flagOtherProperties = flagOtherProperties && flag;
                     }
                     else
                     {
                         bool flag = duHast.RevitUtils.Parameters.ParaUtils.SetParameterValueByName(familyInstance, property.Name, property.Value);
-                        AddMessage($"Updated non shared parameter property {property.Name} with value {property.Value} for family instance {familyInstance.Id} with status: {flag}", Utils.WPF.Stores.MessageTypes.Log);
+                        AddMessage($"Updated non shared parameter property [{property.Name}] with value [{property.Value}] for family instance [{familyInstance.Id}] with status: {flag}", Utils.WPF.Stores.MessageTypes.Log);
                         flagOtherProperties = flagOtherProperties && flag;
                     }
                 }
@@ -90,7 +91,7 @@ namespace duHast.PushIt.Utilities.Revit
             }
             catch (Exception ex)
             {
-                AddMessage($"Failed to update property {propertyName} on family instance {familyInstance.Id} with room data {roomData.Id.Value}. {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                AddMessage($"Failed to update property [{propertyName}] on family instance [{familyInstance.Id}] with room data [{roomData.Id.Value}]: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                 return false;
             }
         }

@@ -127,7 +127,7 @@ namespace duHast.PushIt.Models
                 return;
             }
 
-            _logger.LogMessages(messages);
+            _logger.LogMessagesFireAndForget(messages);
         }
 
 

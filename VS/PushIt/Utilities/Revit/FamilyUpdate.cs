@@ -58,8 +58,13 @@ namespace duHast.PushIt.Utilities.Revit
                 //update other properties
                 bool flagOtherProperties = true;
 
+                // set up a variable to store the name of the property that is being updated in case of an exception
+                string propertyName = "";
+
+                // loop over the properties and update them
                 foreach (var property in roomData.Properties)
                 {
+                    propertyName = property.Name;
                     // skip read only properties
                     if (property.IsReadOnly)
                     {
@@ -85,7 +90,7 @@ namespace duHast.PushIt.Utilities.Revit
             }
             catch (Exception ex)
             {
-                AddMessage($"Failed to update family instance {familyInstance.Id} with room data {roomData.Id.Value}. {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
+                AddMessage($"Failed to update property {propertyName} on family instance {familyInstance.Id} with room data {roomData.Id.Value}. {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                 return false;
             }
         }

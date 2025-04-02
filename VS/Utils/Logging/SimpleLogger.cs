@@ -64,7 +64,15 @@ namespace duHast.Utils.Logging
             {
                 writer = new StreamWriter(_filePath, true);
                 csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture));
-                csv.WriteRecords(records);
+                
+                // Write records in custom order
+                foreach (var record in records)
+                {
+                    csv.WriteField(record.Timestamp);
+                    csv.WriteField(record.Type);
+                    csv.WriteField(record.Message);
+                }
+                
             }
             catch (Exception ex)
             {
@@ -95,7 +103,15 @@ namespace duHast.Utils.Logging
                 using (StreamWriter writer = new StreamWriter(_filePath, true))
                 using (CsvWriter csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)))
                 {
-                    await csv.WriteRecordsAsync(records);
+                    // Write records field-by-field in the desired order
+                    foreach (var record in records)
+                    {
+                        csv.WriteField(record.Timestamp);
+                        csv.WriteField(record.Type);
+                        csv.WriteField(record.Message);
+                        await csv.NextRecordAsync();
+                    }
+
                 }
             }
             catch (Exception ex)

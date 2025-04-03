@@ -1,9 +1,10 @@
 layout:
   - PushIt
   - SwapWidthAndDepth
+  - Stats
 
 # bundle tooltip
-tooltip: Pushit - A fast layout tool
+tooltip: Hassell
 
 
 # bundle author

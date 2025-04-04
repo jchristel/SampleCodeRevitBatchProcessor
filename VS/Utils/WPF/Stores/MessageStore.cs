@@ -67,6 +67,17 @@ namespace duHast.Utils.WPF.Stores
 
         public void SetCurrentMessage(string message, MessageTypes messageType)
         {
+
+            //allow a maximum of 10 rows in the message. Check for new line characters
+            if (message.Contains("\n"))
+            {
+                string[] lines = message.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                if (lines.Length > 10)
+                {
+                    message = string.Join("\n", lines, 0, 10);
+                }
+            }
+
             CurrentMessage = message;
             CurrentMessageType = messageType;
         }

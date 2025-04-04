@@ -43,6 +43,24 @@ namespace duHast.PushIt.RevitActions
             Messages.Clear();
         }
 
+        public (string message, Utils.WPF.Stores.MessageTypes messageType) GetReturnValue(string allOKMessage)
+        {
+            // get the ovearll error count
+            int erroCount = GetErrorMessages().Count;
+
+            // check if any error messages were added
+            if (erroCount > 0)
+            {
+                // return the message
+                return (string.Join("\n", GetErrorMessages()), Utils.WPF.Stores.MessageTypes.Error);
+            }
+            else
+            {
+                // return the message
+                return (allOKMessage, Utils.WPF.Stores.MessageTypes.Information);
+            }
+        }
+        
         public RevitActionBase()
         {
             Messages = new List<(string, Utils.WPF.Stores.MessageTypes)>();

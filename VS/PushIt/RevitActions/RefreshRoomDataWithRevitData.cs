@@ -65,28 +65,8 @@ namespace duHast.PushIt.RevitActions
                 AddMessage($"Error refreshing room data from Revit: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
             }
 
-            // get the ovearll error count
-            int erroCount = GetErrorMessages().Count;
-
-            // check if any error messages were added
-            if (erroCount > 0)
-            {
-                if (erroCount > 3)
-                {
-                    //return abridged message
-                    return ($"{erroCount} Errors occured. Refer to log file for details.", Utils.WPF.Stores.MessageTypes.Error);
-                }
-                else
-                {
-                    // return the message
-                    return (string.Join("\n", GetErrorMessages()), Utils.WPF.Stores.MessageTypes.Error);
-                }
-            }
-            else
-            {
-                // return the message
-                return ("Highlighted rooms in Revit", Utils.WPF.Stores.MessageTypes.Information);
-            }
+            // build the return message depending on error count
+            return GetReturnValue("Refreeshed pushed room count from Revit.");
         }
 
         /// <summary>

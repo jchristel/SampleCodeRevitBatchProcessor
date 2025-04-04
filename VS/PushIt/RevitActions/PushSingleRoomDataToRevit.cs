@@ -94,28 +94,8 @@ namespace duHast.PushIt.RevitActions
                 AddMessage($"Error updating single room in Revit: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
             }
 
-            // get the ovearll error count
-            int erroCount = GetErrorMessages().Count;
-
-            // check if any error messages were added
-            if (erroCount > 0)
-            {
-                if (erroCount > 3)
-                {
-                    //return abridged message
-                    return ($"{erroCount} Errors occured. Refer to log file for details.", Utils.WPF.Stores.MessageTypes.Error);
-                }
-                else
-                {
-                    // return the message
-                    return (string.Join("\n", GetErrorMessages()), Utils.WPF.Stores.MessageTypes.Error);
-                }
-            }
-            else
-            {
-                // return the message
-                return ($"Updated room {_roomToPush.Id.Value} in the model.", Utils.WPF.Stores.MessageTypes.Information);
-            }
+            // build the return message depending on error count
+            return GetReturnValue($"Updated room {_roomToPush.Id.Value} in the model.");
         }
 
         public PushSingleRoomDataToRevit(RevitDataModel revitModel, Models.RoomDataModel roomToPush, Element pushTarget, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)

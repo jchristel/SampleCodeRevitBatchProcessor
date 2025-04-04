@@ -49,28 +49,8 @@ namespace duHast.PushIt.RevitActions
                 AddMessage($"Error wiping stale room(s) data in Revit: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
             }
 
-            // get the ovearll error count
-            int erroCount = GetErrorMessages().Count;
-
-            // check if any error messages were added
-            if (erroCount > 0)
-            {
-                if (erroCount > 3)
-                {
-                    //return abridged message
-                    return ($"{erroCount} Errors occured. Refer to log file for details.", Utils.WPF.Stores.MessageTypes.Error);
-                }
-                else
-                {
-                    // return the message
-                    return (string.Join("\n", GetErrorMessages()), Utils.WPF.Stores.MessageTypes.Error);
-                }
-            }
-            else
-            {
-                // return the message
-                return ($"Wiped {_wipeCounter} stale room(s) data in Revit", Utils.WPF.Stores.MessageTypes.Information);
-            }
+            // build the return message depending on error count
+            return GetReturnValue($"Wiped {_wipeCounter} stale room(s) data in Revit");
         }
 
 

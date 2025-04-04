@@ -113,12 +113,12 @@ namespace duHast.PushIt.RevitActions
                 //update the running count of number of family instances per room id
                 taskBucketFamilyInstancesCounter = taskBucketFamilyInstancesCounter + currentFamilyInstance.Value.Item2.Count;
 
-                //update the overall counter
-                updateCounter = updateCounter + taskBucketFamilyInstancesCounter;
-
                 // check if max number of family instances to update for the task bucket has been reached
                 if (taskBucketFamilyInstancesCounter >= 20)
                 {
+                    //update the overall counter when then task bucket is full
+                    updateCounter = updateCounter + taskBucketFamilyInstancesCounter;
+
                     // update the family instances
                     bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateMultipleFamilyInstances(
                         doc: doc,
@@ -147,6 +147,9 @@ namespace duHast.PushIt.RevitActions
             //update the remaining family instances if any
             if (updateFamilyInstances.Count>0)
             {
+                // update the overall counter
+                updateCounter = updateCounter + taskBucketFamilyInstancesCounter;
+
                 bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateMultipleFamilyInstances(
                     doc: doc,
                     familyData: updateFamilyInstances,

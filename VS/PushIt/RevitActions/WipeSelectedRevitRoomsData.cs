@@ -127,7 +127,8 @@ namespace duHast.PushIt.RevitActions
                 return false;
             }
             else
-            {
+            {   
+                AddMessage($"Wiped {familyInstancesToWipe.Count} family instances.", Utils.WPF.Stores.MessageTypes.Log);
                 return true;
             }
         }

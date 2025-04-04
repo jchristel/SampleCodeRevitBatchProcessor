@@ -118,8 +118,10 @@ namespace duHast.PushIt.Utilities.Revit
                     //update single family instance
                     return UpdateProperties(doc, familyInstance, roomData, safetyOff, AddMessage);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    //log the exception
+                    AddMessage($"Error updating family instance [{familyInstance.Id}] with room data [{roomData.Id.Value}]: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                     return false;
                 }
             };

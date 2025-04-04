@@ -53,7 +53,6 @@ namespace duHast.PushIt.RevitActions
             return GetReturnValue($"Wiped {_wipeCounter} stale room(s) data in Revit");
         }
 
-
         public bool WipeIt(Document doc, List<FamilyInstance> familyInstancesToWipe, RoomDataModel sampleRoom)
         {
             bool wipeSuccess = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(
@@ -98,6 +97,7 @@ namespace duHast.PushIt.RevitActions
             }
             else
             {
+                AddMessage($"Wiped {familyInstancesToWipe.Count} family instances.", Utils.WPF.Stores.MessageTypes.Log);
                 return true;
             }
         }

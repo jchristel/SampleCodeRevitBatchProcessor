@@ -28,6 +28,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 
 using System.Windows.Input;
@@ -299,6 +300,26 @@ namespace duHast.AtTheLibrary.ViewModels
 
         #endregion column order
 
+
+        private List<string> GetUniqeColumHeaderNames()
+        {
+            List<string> propertyNamesSetToVisible = new List<string>();
+            // Add a column per property
+            foreach (var familyModelInstance in _revitDataModel.GetAllFamilies())
+            {
+                // Add a column per property
+                foreach (var prop in familyModelInstance.Properties)
+                {
+                    // check if the column is meant to be displayed in the ui and not already in the list
+                    if (prop.ShowInUI && !propertyNamesSetToVisible.Contains(prop.Name))
+                    {
+                        propertyNamesSetToVisible.Add(prop.Name);
+                    }
+                }
+            }
+            return propertyNamesSetToVisible;
+        }
+
         /// <summary>
         /// Update the rooms in the view model by creating a data table from the rooms in the data model, 
         /// updating the default view of the data table, and updating the column filter list.
@@ -347,6 +368,12 @@ namespace duHast.AtTheLibrary.ViewModels
             // Set up the data table
             DataTable dataTable = new DataTable();
 
+
+            // get ll unique properties which have set the ShowInUI property to true
+            // and add them to the data table as columns
+            List<string> propertyNamesSetToVisible = GetUniqeColumHeaderNames();
+
+
             // Check if the column order is not null and has any elements
             // if so add columns to the data table in the order specified by the column order
             if (ColumnOrder != null && ColumnOrder.Any())
@@ -382,20 +409,25 @@ namespace duHast.AtTheLibrary.ViewModels
                     }
                     else
                     {
-                        // Add a column per property
-                        foreach (var familyModelInstance in _revitDataModel.GetAllFamilies())
+                        // Add a column per property if it exists in the data model
+                        foreach (string columnNamme in ColumnOrder)
                         {
-                            // Add a column per property
-                            foreach (var prop in familyModelInstance.Properties)
+                            // check if the column is meant to be displayed in the ui
+                            if (propertyNamesSetToVisible.Contains(columnNamme))
                             {
-                                // check if the column is meant to be displayed in the ui
-                                if (prop.ShowInUI && prop.Name == column) { 
-                                    dataTable.Columns.Add(prop.Name);
-                                    break;
-                                }
+                                dataTable.Columns.Add(columnNamme);
                             }
-                            // Get out of the loop
-                            break;
+                        }
+
+                        // add all other column from unique list which are not yet added to the data table
+                        foreach (var prop in propertyNamesSetToVisible)
+                        {
+                            // check if the column name is not in the column order
+                            if (!ColumnOrder.Contains(prop))
+                            {
+                                // add the columnn to the data table
+                                dataTable.Columns.Add(prop);
+                            }
                         }
                     }
                 }
@@ -413,18 +445,14 @@ namespace duHast.AtTheLibrary.ViewModels
                 dataTable.Columns.Add("Family Type Name");
 
                 // Add columns to the data table
-                foreach (var roomModelInstance in _revitDataModel.GetAllFamilies())
+                // add all other column from unique list which are not yet added to the data table
+                foreach (var prop in propertyNamesSetToVisible)
                 {
-                    // Add a column per property
-                    foreach (var prop in roomModelInstance.Properties)
-                    {
-                        // check if the column is meant to be displayed in the ui
-                        if (prop.ShowInUI) { dataTable.Columns.Add(prop.Name); }
-                    }
-                    // Get out of the loop
-                    break;
+                    // add the columnn to the data table
+                    dataTable.Columns.Add(prop);
                 }
-                // Add the count column
+
+                // Add the count column at the very end
                 dataTable.Columns.Add("Count");
             }
 
@@ -750,12 +778,8 @@ namespace duHast.AtTheLibrary.ViewModels
                 revitDataModel: _revitDataModel
             );
 
-            // push single room to revit
-            //_raisePushSingleRoomCommand = new Commands.PushSingleRoomInRevitAsyncCommand(
-            //   roomsSelectionViewModel: this,
-            //   revitDataModel: _revitDataModel
-            //);
-
+            // create the column order changed command
+            ColumnOrderChangedCommand = new RelayCommand(OnColumnOrderChanged);
 
             //update rooms data with data from revit through an external event
             RefreshGUICommand.Execute(null);

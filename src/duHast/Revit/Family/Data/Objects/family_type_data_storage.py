@@ -323,6 +323,7 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
 
         :param file_name: name of the file the data was retrieved from
         :type file_name: str
+
         :return: list of data for the report
         """
 
@@ -334,7 +335,8 @@ class FamilyTypeDataStorage(IFamDataStorage.IFamilyDataStorage):
             
             # add the file name if available
             if file_name is None:
-                file_name = "N/A"
+                # if no file name is provided, use the family file path as this part atom most likely was created from a family file and not a project file
+                file_name = self.family_file_path if self.family_file_path else "N/A"
             
             # build the default type information repeated for each parameter
             def_report_data = [

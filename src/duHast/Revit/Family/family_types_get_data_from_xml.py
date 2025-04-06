@@ -160,7 +160,7 @@ def get_family_type_data_from_library(xml_files_in_libraries, progress_callback=
         if progress_callback:
             progress_callback.update(counter, max_value_xml)
 
-        # Sort by file name to ensure consistent order when name is dispalyed in progress
+        # Sort by file name to ensure consistent order when name is displayed in progress
         sorted_file_paths = sorted(xml_files_in_libraries, key=lambda x: os.path.basename(x.name))
 
         # get the type data from the library
@@ -200,6 +200,7 @@ def get_family_type_data_from_library(xml_files_in_libraries, progress_callback=
                 return_value.append_message("Retrieved xml document object")
 
             # build the family path (required for xml data)
+            # assume the xml file is in the same directory as the family file
             fam_name = get_file_name_without_ext(xml_file.name)
             fam_directory = get_directory_path_from_file_path(xml_file.name)
             fam_path = os.path.join(fam_directory, fam_name + ".rfa")

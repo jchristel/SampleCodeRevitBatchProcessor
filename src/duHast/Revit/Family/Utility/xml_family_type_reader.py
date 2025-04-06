@@ -343,6 +343,8 @@ def read_xml_into_storage(doc_xml, family_name, family_path, root_category_path 
     :type family_name: str
     :param family_path: The path of the family file.
     :type family_path: str
+    :param root_category_path: The root category path.
+    :type root_category_path: str
 
     :return: A family type data storage manager object.
     :rtype: :class:`.FamilyTypeDataStorageManager`

@@ -108,6 +108,7 @@
     <Compile Include="WPF\Converters\InverseBooleanConverter.cs" />
     <Compile Include="WPF\Converters\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="WPF\Interfaces\ICloseable.cs" />
+    <Compile Include="WPF\Models\DataModelBase.cs" />
     <Compile Include="WPF\Stores\MessageStore.cs" />
     <Compile Include="WPF\Stores\NavigationStore.cs" />
     <Compile Include="WPF\ViewModels\ErrorsViewModel.cs" />

@@ -28,7 +28,7 @@ using duHast.AtTheLibrary.Models;
 
 namespace duHast.AtTheLibrary.RevitActions
 {
-    public class RefreshFamiliesDataWithRevitData: RevitActionBase, IRevitAction
+    public class RefreshFamiliesDataWithRevitData: RevitActionBase, duHast.RevitUtils.RevitActions.IRevitAction
     {
 
         private ViewModels.FamiliesSelectionViewModel _roomsSelectionViewModel;

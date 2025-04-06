@@ -204,7 +204,7 @@ class FamilyTypeDataStorageManager(Base):
             type_data = family_type_data_storage.get_report_data()
             for fam in type_data:
                 report_data.append(fam)
-            # report_data.append(family_type_data_storage.get_report_data())
+
 
         return report_data
 

@@ -50,7 +50,7 @@ def write_to_csv(file_path, data):
     :return: True if successful, otherwise False.
     """
     try:
-        result =  WriteToFile.WriteToCsv("test.csv", [{"Name": "Alice", "Age": 30}])
+        result =  WriteToFile.WriteToCsv(file_path, ["header", "header 2"] , [["Name", "Alice"], ["Age","30"]])
         return result
     except Exception as e:
         print("Error writing to CSV: {}".format(e))

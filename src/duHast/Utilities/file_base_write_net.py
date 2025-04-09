@@ -89,7 +89,14 @@ def write_to_delimited_text_file(file_path, header, data, write_type="w", bom=No
             raise ValueError("header must be a list of strings")
         if not isinstance(data, list) or not all(isinstance(row, list) and all(isinstance(item, str) for item in row) for row in data):
             raise ValueError("data must be a list of lists of strings")
-        
+        if not isinstance(write_type, str):
+            raise ValueError("write_type must be a string")
+        if write_type not in ["w", "a"]:
+            raise ValueError("write_type must be either 'w' (write) or 'a' (append)")
+        if not isinstance(delimiter, str):
+            raise ValueError("delimiter must be a string")
+        if bom is not None and not isinstance(bom, bom_value):
+            raise ValueError("bom must be of type BOMValue or None")
         
         # map bom values to the BOMValue enum
         if bom is not None:

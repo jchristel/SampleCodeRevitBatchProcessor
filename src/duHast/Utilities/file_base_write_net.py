@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Helper functions attempting to use .net library ro write to file to avoid encoding errors. 
+Helper functions attempting to use .net library to write to file to avoid encoding errors. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -11,7 +11,7 @@ Helper functions attempting to use .net library ro write to file to avoid encodi
 # Revit Batch Processor Sample Code
 #
 # BSD License
-# Copyright 2024, Jan Christel
+# Copyright 2025, Jan Christel
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -46,9 +46,9 @@ clr.AddReference(dll_path)
 from CSVHelperWrapper import WriteToFile
 from CSVHelperWrapper import BOMValue
 
-def write_to_csv(file_path, header, data, write_type="w", bom=None, delimiter=","):
+def write_to_delimited_text_file(file_path, header, data, write_type="w", bom=None, delimiter=","):
     """
-    Write data to a CSV file using the CSVHelperWrapper library.
+    Write data to a text file using the CSVHelperWrapper library.
     
     :param file_path: Path to the CSV file.
     :type file_path: str
@@ -56,15 +56,33 @@ def write_to_csv(file_path, header, data, write_type="w", bom=None, delimiter=",
     :type header: List[str]
     :param data: List of list of strings representing the data to write to file.
     :type data: List[List[str]]
-    :param data: List of list of string representing the data to write to file.
-    :return: True if successful, otherwise False.
+    :param write_type: Type of write operation. Default is "w" (write).
+    :type write_type: str
+    :param bom: BOM value. Default is None.
+    :type bom: BOMValue or None
+    :param delimiter: Delimiter used in the text file. Default is ",".
+    :type delimiter: str
+    
+    :return:
+        Result class instance.
+
+        - result.status (bool) True if file was written without an exception, otherwise False.
+        - result.message contains log messages.
+        - result.result will be an empty list.
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
+         result.result be an empty list
+    :rtype: :class:`.Result`
     """
     
     return_value = Result()
     
     try:
         
-        # do so me type checking to ensure the inputs are valid
+        # do some type checking to ensure the inputs are valid
         if not isinstance(file_path, str):
             raise ValueError("file_path must be a string")
         if not isinstance(header, list) or not all(isinstance(item, str) for item in header):
@@ -90,24 +108,31 @@ def write_to_csv(file_path, header, data, write_type="w", bom=None, delimiter=",
         
         
         # convert the header and data to .NET List types
-        header_net = List[str]()  # Convert to List[str]
+        # Convert to List[str]
+        header_net = List[str]()  
         for item in header:
-            header_net.Add(item)  # Add each item to the List[str]
+            # Add each item to the List[str]
+            header_net.Add(item)  
         
-        data_net = List[List[str]]()  # Convert to List[List[str]]
+        # Convert to List[List[str]]
+        data_net = List[List[str]]() 
         for row in data:
-            row_net = List[str]()  # Create a new List[str] for each row
+            # Create a new List[str] for each row
+            row_net = List[str]()  
             for item in row:
-                row_net.Add(item)  # Add each item to the List[str]
-            data_net.Add(row_net)  # Add the row to the List[List[str]]
+                # Add each item to the List[str]
+                row_net.Add(item) 
+                # Add the row to the List[List[str]]
+            data_net.Add(row_net)  
         
-        # Write to CSV using the WriteToFile class from the CSVHelperWrapper library
-        result = WriteToFile.WriteToCsv(
+        # Write to file using the WriteToFile class from the CSVHelperWrapper library
+        result = WriteToFile.WriteToTextFile(
             file_path, 
             header_net, 
             data_net, 
             writeType=write_type, 
-            bom=bom, delimiter=delimiter
+            bom=bom, 
+            delimiter=delimiter,
         )
         
         # get all error messages from the WriteToFile class
@@ -119,10 +144,12 @@ def write_to_csv(file_path, header, data, write_type="w", bom=None, delimiter=",
             # and get out
             return return_value
         
-        return_value.update_sep(result, "CSV file written to {} with status: {}".format(file_path, result))
+        # all went well, so set the status to True and append a message
+        return_value.update_sep(result, "Text file written to {} with status: {}".format(file_path, result))
         return return_value
 
     except Exception as e:
-        return_value.update_sep(False, "Error writing to CSV: {}".format(e))
+        # handle any exceptions that occur during the writing process
+        return_value.update_sep(False, "Error writing to text file: {}".format(e))
         return return_value
 

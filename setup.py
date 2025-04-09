@@ -11,5 +11,7 @@ setup(
     package_dir={"": "./src"},
     packages=find_packages('./src'),
     long_description=long_description,
-    long_description_content_type='text/markdown'
+    long_description_content_type='text/markdown',
+    include_package_data=True,
+    package_data={"duHast": ["lib/*.dll"]},
 )

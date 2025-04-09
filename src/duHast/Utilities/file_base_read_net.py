@@ -74,7 +74,7 @@ def read_from_delimited_text_file(file_path, delimiter=","):
         if not isinstance(file_path, str):
             raise ValueError("file_path must be a string")
         if not isinstance(delimiter, str):
-            raise ValueError("delimniter must be a string")
+            raise ValueError("delimiter must be a string")
         
         # read the text file using the ReadFromFile class from the CSVHelperWrapper library
         result_list = ReadFromFile.ReadFromTextFile(

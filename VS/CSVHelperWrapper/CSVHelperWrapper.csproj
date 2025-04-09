@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BOMValue.cs" />
+    <Compile Include="ReadFromFile.cs" />
     <Compile Include="WriteToFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

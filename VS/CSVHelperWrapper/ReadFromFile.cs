@@ -1,0 +1,88 @@
+﻿//
+//License:
+//
+//
+// Revit Batch Processor Sample Code
+//
+// BSD License
+// Copyright 2025, Jan Christel
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+// - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+// - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+// - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+//
+// This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+// In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+// or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+//
+//
+//
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using CsvHelper;
+using CsvHelper.Configuration;
+using System.Globalization;
+
+namespace CSVHelperWrapper
+{
+    public class ReadFromFile
+    {
+        // Stores a list of error messages
+        public static List<string> ErrorHistory { get; private set; } = new List<string>();
+
+        public static List<string> GetErrorHistory()
+        {
+            return new List<string>(ErrorHistory);
+        }
+
+        public static void ClearErrorHistory()
+        {
+            ErrorHistory.Clear();
+        }
+
+        /// <summary>
+        /// Reads a column based text file with the specified delimiter.
+        /// </summary>
+        /// <param name="filePath">The fully qualified file path of the file to be read.</param>
+        /// <param name="delimiter">The delimiter to be used. Default is ','</param>
+        /// <returns>A list of nested lists representing each row in the file read.</returns>
+        public static List<List<string>> ReadFromTextFile(string filePath, string delimiter= ",")
+        {
+            var records = new List<List<string>>();
+
+            try
+            {
+                using (var reader = new StreamReader(filePath))
+                using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    Delimiter = delimiter
+                }))
+                {
+                    while (csv.Read())
+                    {
+                        var row = new List<string>();
+                        for (int i = 0; i < csv.Parser.Count; i++)
+                        {
+                            row.Add(csv.GetField(i));
+                        }
+                        records.Add(row);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorHistory.Add($"Error reading file: {ex.Message}");
+
+                //if an error occured while reading the file, return an empty list
+                return new List<List<string>>();
+            }
+
+            return records;
+        }
+    }
+}

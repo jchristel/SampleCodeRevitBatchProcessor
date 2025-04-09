@@ -37,7 +37,30 @@ namespace CSVHelperWrapper
         // Stores a list of error messages
         public static List<string> ErrorHistory { get; private set; } = new List<string>();
 
-        public static bool WriteToCsv(string filePath, List<string> header, List<List<string>> data, string writeType = "w", byte[] bom = null, string delimiter = ",")
+        // Method to retrieve all stored errors
+        public static List<string> GetErrorHistory()
+        {
+            // Return a copy to avoid direct modification
+            return new List<string>(ErrorHistory);
+        }
+
+        // Method to clear errors if needed
+        public static void ClearErrorHistory()
+        {
+            ErrorHistory.Clear();
+        }
+
+        /// <summary>
+        /// Writes a column based text file with the specified header and dataand delimiter.
+        /// </summary>
+        /// <param name="filePath">The fully qualified file path of the file to be written. </param>
+        /// <param name="header">The header row. Can be an empty list or null if no header is to be written.</param>
+        /// <param name="data">The data to be written to file. Can be an empty list or null if no data is to be written.</param>
+        /// <param name="writeType">W for overwriting any existing data. A for appending data to existing file.</param>
+        /// <param name="bom">Byte order mark. Default is null.</param>
+        /// <param name="delimiter">The delimiter to be used. Default is ','</param>
+        /// <returns>True if file was written without an exception. Otherwise False.</returns>
+        public static bool WriteToTextFile(string filePath, List<string> header, List<List<string>> data, string writeType = "w", byte[] bom = null, string delimiter = ",")
         {
             try
             {
@@ -75,37 +98,31 @@ namespace CSVHelperWrapper
                                 csv.NextRecord();
                             }
 
-                            // Write data rows
-                            foreach (var row in data)
+                            // Write data rows if there are any
+                            if (data != null && data.Count > 0)
                             {
-                                foreach (var field in row)
+                                foreach (var row in data)
                                 {
-                                    csv.WriteField(field);
+                                    foreach (var field in row)
+                                    {
+                                        csv.WriteField(field);
+                                    }
+                                    csv.NextRecord();
                                 }
-                                csv.NextRecord();
                             }
                         }
                     }
                 }
-                return true; // Success
+                // Success
+                return true; 
             }
             catch (Exception ex)
             {
                 ErrorHistory.Add($"Error at {DateTime.Now}: {ex.Message}");
-                return false; // Failure
+
+                // Failure
+                return false; 
             }
-        }
-
-        // Method to retrieve all stored errors
-        public static List<string> GetErrorHistory()
-        {
-            return new List<string>(ErrorHistory); // Return a copy to avoid direct modification
-        }
-
-        // Method to clear errors if needed
-        public static void ClearErrorHistory()
-        {
-            ErrorHistory.Clear();
         }
     }
 }

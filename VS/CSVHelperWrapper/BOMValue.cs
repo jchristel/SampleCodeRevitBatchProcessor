@@ -24,6 +24,9 @@
 
 namespace CSVHelperWrapper
 {
+    /// <summary>
+    /// This class contains the byte order marks (BOM) for different encodings.
+    /// </summary>
     public class BOMValue
     {
         public static readonly byte[] UTF_8 = { 0xEF, 0xBB, 0xBF };

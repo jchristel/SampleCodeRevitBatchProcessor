@@ -49,10 +49,10 @@ namespace duHastNet.FileIOWrapper
         /// Reads a specified number of rows from a column based text file with the specified delimiter.
         /// </summary>
         /// <param name="filePath">The fully qualified file path of the file to be read.</param>
-        /// <param name="rowCount">The number of rows to read from the file.</param>
         /// <param name="delimiter">The delimiter to be used. Default is ','</param>
+        /// /// <param name="rowCount">The number of rows to read from the file.</param>
         /// <returns>A list of nested lists representing each row read from the file.</returns>
-        public  List<List<string>> ReadRowsFromTextFile(string filePath, int rowCount, string delimiter = ",")
+        public List<List<string>> ReadRowsFromTextFile(string filePath, string delimiter = ",", int rowCount = 1)
         {
             return ReadFromTextFileInternal(filePath, rowCount, delimiter);
         }

@@ -24,7 +24,7 @@
 using Autodesk.Revit.DB;
 using System;
 
-namespace duHast.RevitUtils.Transactions
+namespace duHastNet.RevitUtils.Transactions
 {
     public static class TransactionUtils
     {

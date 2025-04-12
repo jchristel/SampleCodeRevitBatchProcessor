@@ -25,7 +25,7 @@ using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
 
-namespace duHast.RevitUtils.Categories
+namespace duHastNet.RevitUtils.Categories
 {
     public static class CategoryUtils
     {

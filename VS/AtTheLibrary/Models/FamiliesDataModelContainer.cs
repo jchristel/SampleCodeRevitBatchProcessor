@@ -28,7 +28,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace duHast.AtTheLibrary.Models
+namespace duHastNet.AtTheLibrary.Models
 {
     public class FamiliesDataModelContainer
     {

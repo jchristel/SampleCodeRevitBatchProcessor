@@ -1,15 +1,15 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using duHast.PushIt.RevitActions;
-using duHast.PushIt.Utilities;
-using duHast.Utils.WPF.Stores;
+using duHastNet.PushIt.RevitActions;
+using duHastNet.PushIt.Utilities;
+using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace duHast.PushIt.Commands
+namespace duHastNet.PushIt.Commands
 {
     public class WipeSelectedRevitRoomInstancesAsyncCommand: Utils.WPF.Commands.CommandBase
     {

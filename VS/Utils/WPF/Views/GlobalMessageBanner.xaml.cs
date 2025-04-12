@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace duHast.Utils.WPF.Views
+namespace duHastNet.Utils.WPF.Views
 {
     /// <summary>
     /// Interaction logic for GlobalMessageBanner.xaml

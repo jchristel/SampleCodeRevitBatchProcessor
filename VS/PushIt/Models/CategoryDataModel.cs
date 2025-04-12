@@ -21,7 +21,7 @@
 //
 //
 
-namespace duHast.PushIt.Models
+namespace duHastNet.PushIt.Models
 {
     public class CategoryDataModel
     {

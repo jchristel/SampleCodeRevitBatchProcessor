@@ -22,7 +22,7 @@
 //
 
 
-namespace duHast.AtTheLibrary.ViewModels
+namespace duHastNet.AtTheLibrary.ViewModels
 {
     public class MainViewModel:Utils.WPF.ViewModels.ViewModelBase
     {

@@ -20,7 +20,7 @@
 //
 //
 //
-namespace duHast.RevitUtils.DesignSetAndOptions
+namespace duHastNet.RevitUtils.DesignSetAndOptions
 {
     public static class DesignSetAndOptionDefaultNames
     {

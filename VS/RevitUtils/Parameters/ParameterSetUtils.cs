@@ -23,7 +23,7 @@
 
 using Autodesk.Revit.DB;
 
-namespace duHast.RevitUtils.Parameters
+namespace duHastNet.RevitUtils.Parameters
 {
 
     /// <summary>

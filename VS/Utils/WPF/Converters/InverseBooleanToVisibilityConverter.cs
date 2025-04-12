@@ -25,7 +25,7 @@ using System;
 using System.Windows;
 using System.Windows.Data;
 
-namespace duHast.Utils.WPF.Converters
+namespace duHastNet.Utils.WPF.Converters
 {
     public class InverseBooleanToVisibilityConverter: IValueConverter
     {

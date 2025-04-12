@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace duHast.Utils.WPF.Converters
+namespace duHastNet.Utils.WPF.Converters
 {
     public class InverseBooleanConverter : IValueConverter
     {

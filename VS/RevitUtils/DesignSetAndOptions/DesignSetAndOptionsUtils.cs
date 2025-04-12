@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
-namespace duHast.RevitUtils.DesignSetAndOptions
+namespace duHastNet.RevitUtils.DesignSetAndOptions
 {
     public static class DesignSetAndOptionsUtils
     {

@@ -24,7 +24,7 @@
 
 using System;
 
-namespace duHast.Utils.Logging
+namespace duHastNet.Utils.Logging
 {
     public class LogEntry
     {

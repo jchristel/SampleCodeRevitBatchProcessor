@@ -22,9 +22,9 @@
 //
 
 
-using duHast.PushIt.Utilities;
+using duHastNet.PushIt.Utilities;
 
-namespace duHast.PushIt.ViewModels
+namespace duHastNet.PushIt.ViewModels
 {
     public class MainViewModel:Utils.WPF.ViewModels.ViewModelBase
     {

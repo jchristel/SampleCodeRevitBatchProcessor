@@ -22,7 +22,7 @@
 //
 
 
-using duHast.Utils.WPF.Commands;
+using duHastNet.Utils.WPF.Commands;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,7 +33,7 @@ using System.Linq;
 
 using System.Windows.Input;
 
-namespace duHast.AtTheLibrary.ViewModels
+namespace duHastNet.AtTheLibrary.ViewModels
 {
     public class FamiliesSelectionViewModel : Utils.WPF.ViewModels.ViewModelBase, INotifyDataErrorInfo
     {

@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
 
-namespace duHast.PushIt.Utilities.Revit
+namespace duHastNet.PushIt.Utilities.Revit
 {
     public static class FamilyUpdate
     {
@@ -56,7 +56,7 @@ namespace duHast.PushIt.Utilities.Revit
                 }
 
                 // set the room id parameter
-                bool flagId = duHast.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Id.ParameterGUID, room_id);
+                bool flagId = duHastNet.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Id.ParameterGUID, room_id);
                 AddMessage($"Updated room id with value [{room_id}] for family instance [{familyInstance.Id}] with status: [{flagId}]", Utils.WPF.Stores.MessageTypes.Log);
                 
                 //update other properties
@@ -76,13 +76,13 @@ namespace duHast.PushIt.Utilities.Revit
                     // update the property depending on whether it has a GUID or not
                     if (property.ParameterGUID != "")
                     {
-                        bool flag = duHast.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, property.ParameterGUID, property.Value);
+                        bool flag = duHastNet.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, property.ParameterGUID, property.Value);
                         AddMessage($"Updated shared parameter property [{property.Name}] with value [{property.Value}] for family instance [{familyInstance.Id}] with status: {flag}", Utils.WPF.Stores.MessageTypes.Log);
                         flagOtherProperties = flagOtherProperties && flag;
                     }
                     else
                     {
-                        bool flag = duHast.RevitUtils.Parameters.ParaUtils.SetParameterValueByName(familyInstance, property.Name, property.Value);
+                        bool flag = duHastNet.RevitUtils.Parameters.ParaUtils.SetParameterValueByName(familyInstance, property.Name, property.Value);
                         AddMessage($"Updated non shared parameter property [{property.Name}] with value [{property.Value}] for family instance [{familyInstance.Id}] with status: {flag}", Utils.WPF.Stores.MessageTypes.Log);
                         flagOtherProperties = flagOtherProperties && flag;
                     }
@@ -126,7 +126,7 @@ namespace duHast.PushIt.Utilities.Revit
                 }
             };
 
-            bool transactionFlag =  duHast.RevitUtils.Transactions.TransactionUtils.InTransaction(
+            bool transactionFlag =  duHastNet.RevitUtils.Transactions.TransactionUtils.InTransaction(
                 doc, $"Pushing room {roomData.Id.Value}", actionInTranny);
 
             return transactionFlag;
@@ -141,7 +141,7 @@ namespace duHast.PushIt.Utilities.Revit
         /// <param name="familyData"></param>
         /// <returns>True if the update was successful, false if not</returns>
         /// <exception cref="Exception"></exception>
-        public static bool UpdateMultipleFamilyInstances(Document doc, Dictionary<string, (duHast.PushIt.Models.RoomDataModel, List<FamilyInstance>)> familyData, Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
+        public static bool UpdateMultipleFamilyInstances(Document doc, Dictionary<string, (duHastNet.PushIt.Models.RoomDataModel, List<FamilyInstance>)> familyData, Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
         {
             // set up an action to run inside a Revit transaction
             Func<bool> actionInTranny = () =>
@@ -173,7 +173,7 @@ namespace duHast.PushIt.Utilities.Revit
             };
 
             // run the action in a transaction
-            bool transactionFlag = duHast.RevitUtils.Transactions.TransactionUtils.InTransaction(
+            bool transactionFlag = duHastNet.RevitUtils.Transactions.TransactionUtils.InTransaction(
                 doc, "Updating room data", actionInTranny);
             return transactionFlag;
         }
@@ -226,7 +226,7 @@ namespace duHast.PushIt.Utilities.Revit
             };
 
             // run the action in a transaction
-            bool transactionFlag = duHast.RevitUtils.Transactions.TransactionUtils.InTransaction(
+            bool transactionFlag = duHastNet.RevitUtils.Transactions.TransactionUtils.InTransaction(
                 doc, "Wiping stale room data", actionInTranny);
 
             return transactionFlag;

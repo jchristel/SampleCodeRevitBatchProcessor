@@ -27,7 +27,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace duHast.AtTheLibrary.Utilities
+namespace duHastNet.AtTheLibrary.Utilities
 {
     public static class PropertyChangedEventNames
     {

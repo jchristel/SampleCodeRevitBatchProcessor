@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
-namespace duHast.RevitUtils.Parameters
+namespace duHastNet.RevitUtils.Parameters
 {
     /// <summary>
     /// A static class providing utility methods for shared parameters.

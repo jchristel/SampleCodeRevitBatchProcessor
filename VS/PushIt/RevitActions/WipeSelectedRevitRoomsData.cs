@@ -23,10 +23,10 @@
 //
 
 using Autodesk.Revit.DB;
-using duHast.PushIt.Models;
+using duHastNet.PushIt.Models;
 using System.Collections.Generic;
 
-namespace duHast.PushIt.RevitActions
+namespace duHastNet.PushIt.RevitActions
 {
     public class WipeSelectedRevitRoomsData: RevitActionBase, IRevitAction
     {
@@ -62,12 +62,12 @@ namespace duHast.PushIt.RevitActions
             if (roomsDataModel.Count == 0)
             {
                 // no sample room available...means no parameter mapping available
-                AddMessage ("Data model contains no rooms to push to Revit.", duHast.Utils.WPF.Stores.MessageTypes.Error);
+                AddMessage ("Data model contains no rooms to push to Revit.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
                 return;
             }
 
             // convert family instances to revit rooms
-            List<duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
+            List<duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
                 _pushTargets, 
                 roomsDataModel[0], 
                 AddMessage

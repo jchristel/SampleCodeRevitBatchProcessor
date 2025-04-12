@@ -24,7 +24,7 @@
 
 using Autodesk.Revit.DB;
 
-namespace duHast.PushIt.Utilities.Revit
+namespace duHastNet.PushIt.Utilities.Revit
 {
     public static class DesignSetAndOptionUtils
     {
@@ -35,11 +35,11 @@ namespace duHast.PushIt.Utilities.Revit
         public static (string designSetName, string designOptionName) GetActiveDesignSetAndOptionName(Document doc)
         {
             // get the documents current design set and option
-            var activeDesignOption = duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionsUtils.GetActiveDesignOption(doc);
-            var activeDesignSet = duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionsUtils.GetDesignSetOfActiveDesignOption(doc);
+            var activeDesignOption = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionsUtils.GetActiveDesignOption(doc);
+            var activeDesignSet = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionsUtils.GetDesignSetOfActiveDesignOption(doc);
             
-            string designSetName = activeDesignSet == null ? duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME : activeDesignSet.Name;
-            string designOptionName = activeDesignOption == null ? duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME : activeDesignOption.Name;
+            string designSetName = activeDesignSet == null ? duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME : activeDesignSet.Name;
+            string designOptionName = activeDesignOption == null ? duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME : activeDesignOption.Name;
 
             return (designSetName, designOptionName);
         }

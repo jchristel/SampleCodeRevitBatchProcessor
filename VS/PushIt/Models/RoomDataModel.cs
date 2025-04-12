@@ -24,7 +24,7 @@
 
 using System.Collections.Generic;
 
-namespace duHast.PushIt.Models
+namespace duHastNet.PushIt.Models
 {
     public class RoomDataModel
     {

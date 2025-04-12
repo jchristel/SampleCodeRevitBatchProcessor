@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
 
-namespace duHast.AtTheLibrary.Utilities
+namespace duHastNet.AtTheLibrary.Utilities
 {
     public static class ReadFamilyData
     {

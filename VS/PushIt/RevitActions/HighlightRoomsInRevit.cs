@@ -23,11 +23,11 @@
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using duHast.PushIt.Models;
+using duHastNet.PushIt.Models;
 using System;
 using System.Collections.Generic;
 
-namespace duHast.PushIt.RevitActions
+namespace duHastNet.PushIt.RevitActions
 {
     public class HighlightRoomsInRevit : RevitActionBase, IRevitAction
     {

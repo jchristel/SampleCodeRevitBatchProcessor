@@ -23,7 +23,7 @@
 
 using System.Collections.Generic;
 
-namespace duHast.PushIt.Utilities
+namespace duHastNet.PushIt.Utilities
 {
     public static class UpdateRoomDataModelWithRoomsRevitModelUtils
     {
@@ -73,14 +73,14 @@ namespace duHast.PushIt.Utilities
                         addRoom = true;
                     }
                     // check if the family is placed in the main model
-                    else if (revitRoom.DesignOption == duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME 
-                        && revitRoom.DesignSet == duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME)
+                    else if (revitRoom.DesignOption == duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME 
+                        && revitRoom.DesignSet == duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME)
                     {
                         addRoom = true;
                     }
                     // check if the family is placed in another design sets primary design option
                     // and the main model is active
-                    else if (revitModelActiveDesignSetName == duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME 
+                    else if (revitModelActiveDesignSetName == duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME 
                         && revitRoom.DesignOptionIsPrimary)
                     {
                         addRoom = true;

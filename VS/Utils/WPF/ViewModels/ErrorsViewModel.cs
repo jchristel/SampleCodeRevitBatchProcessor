@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace duHast.Utils.WPF.ViewModels
+namespace duHastNet.Utils.WPF.ViewModels
 {
     public class ErrorsViewModel : INotifyDataErrorInfo
     {

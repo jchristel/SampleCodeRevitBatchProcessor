@@ -26,7 +26,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-namespace duHast.PushIt.Utilities
+namespace duHastNet.PushIt.Utilities
 {
     public static class SettingsUtils
     {

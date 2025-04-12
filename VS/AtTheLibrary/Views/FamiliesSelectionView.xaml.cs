@@ -27,7 +27,7 @@ using System.Data;
 using System.Linq;
 using System.Windows.Controls;
 
-namespace duHast.AtTheLibrary.Views
+namespace duHastNet.AtTheLibrary.Views
 {
     /// <summary>
     /// Interaction logic for FamiliesSelectionView.xaml

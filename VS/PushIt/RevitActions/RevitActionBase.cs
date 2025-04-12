@@ -1,11 +1,11 @@
-﻿using duHast.PushIt.Models;
+﻿using duHastNet.PushIt.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace duHast.PushIt.RevitActions
+namespace duHastNet.PushIt.RevitActions
 {
     public class RevitActionBase
     {

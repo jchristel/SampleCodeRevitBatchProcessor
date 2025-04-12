@@ -24,11 +24,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
-using duHast.AtTheLibrary.Models;
+using duHastNet.AtTheLibrary.Models;
 
-namespace duHast.AtTheLibrary.RevitActions
+namespace duHastNet.AtTheLibrary.RevitActions
 {
-    public class RefreshFamiliesDataWithRevitData: RevitActionBase, duHast.RevitUtils.RevitActions.IRevitAction
+    public class RefreshFamiliesDataWithRevitData: RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
 
         private ViewModels.FamiliesSelectionViewModel _roomsSelectionViewModel;

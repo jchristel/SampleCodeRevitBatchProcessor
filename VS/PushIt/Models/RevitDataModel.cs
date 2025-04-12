@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 
 
-namespace duHast.PushIt.Models
+namespace duHastNet.PushIt.Models
 {
     public class RevitDataModel:INotifyPropertyChanged
     {

@@ -27,22 +27,22 @@ using System.Collections.Generic;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using duHast.PushIt.Views;
-using duHast.PushIt.Utilities;
+using duHastNet.PushIt.Views;
+using duHastNet.PushIt.Utilities;
 using System.IO;
 using System.Reflection;
 using Revit.Async;
 
 
-namespace duHast.PushIt
+namespace duHastNet.PushIt
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     public class Main : IExternalCommand
     {
         Models.RevitDataModel _revitDataModel;
-        duHast.Utils.WPF.Stores.NavigationStore _navigationStore;
-        duHast.Utils.WPF.Stores.MessageStore _messageStore;
+        duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
+        duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
         
         static Main()
         {
@@ -58,8 +58,8 @@ namespace duHast.PushIt
             RevitTask.Initialize(commandData.Application);
 
             //set up stores
-            _navigationStore = new duHast.Utils.WPF.Stores.NavigationStore();
-            _messageStore = new duHast.Utils.WPF.Stores.MessageStore();
+            _navigationStore = new duHastNet.Utils.WPF.Stores.NavigationStore();
+            _messageStore = new duHastNet.Utils.WPF.Stores.MessageStore();
            
             // set up th revit data model
             _revitDataModel = new Models.RevitDataModel();
@@ -70,7 +70,7 @@ namespace duHast.PushIt
             _revitDataModel.InitialiseLogger(logFilePath);
 
             // Example log entry
-            _revitDataModel.LogMessages(new List<(string, duHast.Utils.WPF.Stores.MessageTypes)> { ("Starting duHast.PushIt.", duHast.Utils.WPF.Stores.MessageTypes.Log) });
+            _revitDataModel.LogMessages(new List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> { ("Starting duHastNet.PushIt.", duHastNet.Utils.WPF.Stores.MessageTypes.Log) });
 
             //Get application and document objects
             UIApplication uiapp = commandData.Application;
@@ -104,7 +104,7 @@ namespace duHast.PushIt
 
         private ViewModels.RoomsSelectionViewModel CreateRoomsSelectionViewModel()
         {
-            duHast.Utils.WPF.ViewModels.GlobalMessageViewModel _globa = new duHast.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
+            duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globa = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
 
             return new ViewModels.RoomsSelectionViewModel(
                 _revitDataModel,

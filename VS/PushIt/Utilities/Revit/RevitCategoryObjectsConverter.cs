@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
-namespace duHast.PushIt.Utilities.Revit
+namespace duHastNet.PushIt.Utilities.Revit
 {
     public static class RevitCategoryObjectsConverter
     {
@@ -39,7 +39,7 @@ namespace duHast.PushIt.Utilities.Revit
         public static List<Models.CategoryDataModel> ConvertToRevitCategoryObjects(Document doc)
         {
             List<Models.CategoryDataModel> revitCategoryObjects = new List<Models.CategoryDataModel>();
-            List<Category> revitCategories = duHast.RevitUtils.Categories.CategoryUtils.GetMainCategoriesInModel(doc);
+            List<Category> revitCategories = duHastNet.RevitUtils.Categories.CategoryUtils.GetMainCategoriesInModel(doc);
             
             foreach (var revitCategory in revitCategories)
             {

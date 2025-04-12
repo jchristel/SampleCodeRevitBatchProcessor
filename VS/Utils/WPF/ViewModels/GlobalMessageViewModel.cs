@@ -24,7 +24,7 @@
 
 using System.Windows.Input;
 
-namespace duHast.Utils.WPF.ViewModels
+namespace duHastNet.Utils.WPF.ViewModels
 {
     public class GlobalMessageViewModel : ViewModelBase
     {

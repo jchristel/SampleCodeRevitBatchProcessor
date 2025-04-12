@@ -22,13 +22,13 @@
 //
 
 
-using duHast.Utils.WPF.Stores;
+using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace duHast.AtTheLibrary.Commands
+namespace duHastNet.AtTheLibrary.Commands
 {
     public class ReloadDataFromFileAsyncCommand : Utils.WPF.Commands.CommandBase
     {

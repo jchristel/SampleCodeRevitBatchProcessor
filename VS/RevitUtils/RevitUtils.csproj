@@ -7,7 +7,7 @@
     <ProjectGuid>{06B86732-E929-4467-8CE5-E98E637BF5E8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>duHast.RevitUtils</RootNamespace>
+    <RootNamespace>duHastNet.RevitUtils</RootNamespace>
     <AssemblyName>RevitUtils.23.0.0.3</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

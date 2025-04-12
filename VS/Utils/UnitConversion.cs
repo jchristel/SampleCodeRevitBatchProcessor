@@ -1,6 +1,6 @@
 ﻿
 
-namespace duHast.Utils
+namespace duHastNet.Utils
 {
     public static class UnitConversion
     {

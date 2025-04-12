@@ -25,9 +25,9 @@
 using System.ComponentModel;
 
 
-namespace duHast.Utils.WPF.ViewModels
+namespace duHastNet.Utils.WPF.ViewModels
 {
-    public class ViewModelBase : INotifyPropertyChanged, duHast.Utils.WPF.Interfaces.ICloseable
+    public class ViewModelBase : INotifyPropertyChanged, duHastNet.Utils.WPF.Interfaces.ICloseable
     {
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
-namespace duHast.PushIt.Utilities.Revit
+namespace duHastNet.PushIt.Utilities.Revit
 {
     public static class SharedParameters
     {
@@ -60,17 +60,17 @@ namespace duHast.PushIt.Utilities.Revit
             Models.RoomDataModel firstRoomDataModel = roomsDataModel[0];
 
             // get all shared parameters in the model
-            //var test = duHast.RevitUtils.Parameters.SharedParaUtils.GetSharedParameters(doc);
+            //var test = duHastNet.RevitUtils.Parameters.SharedParaUtils.GetSharedParameters(doc);
 
             // get shared parameters of interest bindings to categories
-            List<string> bindingsId = duHast.RevitUtils.Parameters.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.Id.ParameterGUID);
+            List<string> bindingsId = duHastNet.RevitUtils.Parameters.SharedParaUtils.ParameterBindingsByGUID(doc, firstRoomDataModel.Id.ParameterGUID);
 
             List<Dictionary<(string Name, string GUID), List<string>>> otherPropertiesBindings = new List<Dictionary<(string Name, string GUID), List<string>>>();
             foreach (var property in firstRoomDataModel.Properties)
             {
                 // skip if parameterGUID is empty
                 if (property.ParameterGUID == "") { continue; }
-                otherPropertiesBindings.Add(new Dictionary<(string Name,string GUID), List<string>> { { (property.Name, property.ParameterGUID), duHast.RevitUtils.Parameters.SharedParaUtils.ParameterBindingsByGUID(doc, property.ParameterGUID) } });
+                otherPropertiesBindings.Add(new Dictionary<(string Name,string GUID), List<string>> { { (property.Name, property.ParameterGUID), duHastNet.RevitUtils.Parameters.SharedParaUtils.ParameterBindingsByGUID(doc, property.ParameterGUID) } });
             }
 
 

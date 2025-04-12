@@ -22,9 +22,9 @@
 //
 
 using System;
-using duHast.PushIt.Models;
+using duHastNet.PushIt.Models;
 
-namespace duHast.PushIt.Exceptions
+namespace duHastNet.PushIt.Exceptions
 {
     public class RoomConflictException:Exception
     {

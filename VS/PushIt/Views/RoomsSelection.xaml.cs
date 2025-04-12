@@ -29,7 +29,7 @@ using System.Linq;
 using System.Windows.Controls;
 
 
-namespace duHast.PushIt.Views
+namespace duHastNet.PushIt.Views
 {
     /// <summary>
     /// Interaction logic for UserControl1.xaml

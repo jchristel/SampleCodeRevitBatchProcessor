@@ -13,12 +13,12 @@ namespace WpfSandpit
     /// </summary>
     public partial class App : Application
     {
-        private readonly duHast.Utils.WPF.Stores.NavigationStore _navigationStore;
+        private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
 
         public App()
         {
             //set up the navigation store
-            _navigationStore = new duHast.Utils.WPF.Stores.NavigationStore();
+            _navigationStore = new duHastNet.Utils.WPF.Stores.NavigationStore();
         }
 
         protected override void OnStartup(StartupEventArgs e)

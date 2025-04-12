@@ -22,7 +22,7 @@
 //
 
 
-namespace duHast.Utils.WPF.Interfaces
+namespace duHastNet.Utils.WPF.Interfaces
 {
     public interface ICloseable
     {

@@ -22,8 +22,8 @@
 //
 
 
-using duHast.PushIt.Utilities;
-using duHast.Utils.WPF.Commands;
+using duHastNet.PushIt.Utilities;
+using duHastNet.Utils.WPF.Commands;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,7 +36,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace duHast.PushIt.ViewModels
+namespace duHastNet.PushIt.ViewModels
 {
     public class RoomsSelectionViewModel : Utils.WPF.ViewModels.ViewModelBase, INotifyDataErrorInfo
     {
@@ -57,8 +57,8 @@ namespace duHast.PushIt.ViewModels
         //default button text for safety off mode
         private string _safetyOffButtonText = "Safety on";
 
-        private string _activeDesignSetName = duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME;
-        private string _activeDesignOptionName = duHast.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME;
+        private string _activeDesignSetName = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME;
+        private string _activeDesignOptionName = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME;
 
         //observable collection of supported categories in Revit to push data into
         private readonly ObservableCollection<SupportedCategoryViewModel> _supportedCategories;

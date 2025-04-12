@@ -22,7 +22,7 @@
 //
 
 
-namespace duHast.Utils.WPF.Models
+namespace duHastNet.Utils.WPF.Models
 {
     /// <summary>
     /// a class to inherit data models from

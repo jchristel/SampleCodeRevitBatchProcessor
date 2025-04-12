@@ -23,10 +23,10 @@
 
 
 using Autodesk.Revit.DB;
-using duHast.PushIt.Models;
+using duHastNet.PushIt.Models;
 using System.Collections.Generic;
 
-namespace duHast.PushIt.RevitActions
+namespace duHastNet.PushIt.RevitActions
 {
     public class WipeStaleRoomData : RevitActionBase, IRevitAction
     {
@@ -107,35 +107,35 @@ namespace duHast.PushIt.RevitActions
             if (roomsDataModel.Count == 0)
             {
                 // no sample room available...means no parameter mapping available
-                AddMessage("Data model contains no rooms to push to Revit.", duHast.Utils.WPF.Stores.MessageTypes.Error);
+                AddMessage("Data model contains no rooms to push to Revit.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
                 return;
             }
 
             // get supported categories
-            List<Category> categories = duHast.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, supportedCategoryName);
+            List<Category> categories = duHastNet.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, supportedCategoryName);
             if (categories.Count == 0)
             {
                 // no supported categories found
-                AddMessage("Data model contains no supported Revit categories.", duHast.Utils.WPF.Stores.MessageTypes.Error);
+                AddMessage("Data model contains no supported Revit categories.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
                 return;
             }
 
             // convert revit categories into revit builtIncategories for filtering
-            List<BuiltInCategory> familyInstanceFilterCategories = duHast.RevitUtils.Categories.CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
+            List<BuiltInCategory> familyInstanceFilterCategories = duHastNet.RevitUtils.Categories.CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
 
             //get families of supported built in categories
-            List<FamilyInstance> familyInstances = duHast.RevitUtils.Families.FamilyUtils.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
+            List<FamilyInstance> familyInstances = duHastNet.RevitUtils.Families.FamilyUtils.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
 
             //check if there are any family instances
             if (familyInstances.Count == 0)
             {
                 // no family instances available...nothing to push
-                _roomsSelectionViewModel.AddMessage("No family instances found in the model", duHast.Utils.WPF.Stores.MessageTypes.Information);
+                _roomsSelectionViewModel.AddMessage("No family instances found in the model", duHastNet.Utils.WPF.Stores.MessageTypes.Information);
                 return;
             }
 
             // convert family instances to revit rooms
-            List<duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
+            List<duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
                 familyInstances, roomsDataModel[0], AddMessage);
 
             //build a list of family instances that contain stale data ( stale data is a family instance where the room id is not in the rooms data model)

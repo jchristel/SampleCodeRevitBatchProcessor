@@ -1,11 +1,11 @@
-﻿using duHast.AtTheLibrary.Models;
+﻿using duHastNet.AtTheLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace duHast.AtTheLibrary.RevitActions
+namespace duHastNet.AtTheLibrary.RevitActions
 {
     public class RevitActionBase
     {

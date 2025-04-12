@@ -23,9 +23,9 @@
 
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
-using duHast.PushIt.Models;
+using duHastNet.PushIt.Models;
 
-namespace duHast.PushIt.RevitActions
+namespace duHastNet.PushIt.RevitActions
 {
     public class RefreshRoomDataWithRevitData: RevitActionBase, IRevitAction
     {
@@ -97,7 +97,7 @@ namespace duHast.PushIt.RevitActions
             }
 
             // get supported categories
-            List<Category> categories = duHast.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, supportedCategoryName);
+            List<Category> categories = duHastNet.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, supportedCategoryName);
             if (categories.Count == 0)
             {
                 if (supportedCategoryName.Count > 0)
@@ -114,7 +114,7 @@ namespace duHast.PushIt.RevitActions
             }
 
             // convert revit categories into revit builtIncategories for filtering
-            List<BuiltInCategory> familyInstanceFilterCategories = duHast.RevitUtils.Categories.CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
+            List<BuiltInCategory> familyInstanceFilterCategories = duHastNet.RevitUtils.Categories.CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
 
             // get the documents current design set and option
             (string designSetName, string designOptionName) = Utilities.Revit.DesignSetAndOptionUtils.GetActiveDesignSetAndOptionName(doc);
@@ -125,7 +125,7 @@ namespace duHast.PushIt.RevitActions
 
 
             //get families of supported built in categories
-            List<FamilyInstance> familyInstances = duHast.RevitUtils.Families.FamilyUtils.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
+            List<FamilyInstance> familyInstances = duHastNet.RevitUtils.Families.FamilyUtils.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
 
             //check if any families in the model
             if (familyInstances.Count == 0)
@@ -144,7 +144,7 @@ namespace duHast.PushIt.RevitActions
             }
 
             // convert family instances to revit rooms
-            List <duHast.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
+            List <duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
                 familyInstances, 
                 roomsDataModel[0],
                 AddMessage

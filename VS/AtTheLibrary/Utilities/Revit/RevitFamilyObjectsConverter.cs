@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace duHast.AtTheLibrary.Utilities.Revit
+namespace duHastNet.AtTheLibrary.Utilities.Revit
 {
     public static class RevitFamilyObjectsConverter
     {
@@ -19,7 +19,7 @@ namespace duHast.AtTheLibrary.Utilities.Revit
             )
         {
             // get the family types
-            List<FamilySymbol> familyTypes = duHast.RevitUtils.Families.FamilyUtils.GetFamilyTypes(family.Document, family);
+            List<FamilySymbol> familyTypes = duHastNet.RevitUtils.Families.FamilyUtils.GetFamilyTypes(family.Document, family);
             
             if (familyTypes.Count == 0)
             {
@@ -31,7 +31,7 @@ namespace duHast.AtTheLibrary.Utilities.Revit
             foreach (FamilySymbol familyType in familyTypes)
             {
                 // create a unique id for the family
-                string famId = duHast.Utils.Hash.ComputeHashUtils.ComputeShortSHA256Hash(new string[] { family.Name, family.FamilyCategory.Name, familyType.Name });
+                string famId = duHastNet.Utils.Hash.ComputeHashUtils.ComputeShortSHA256Hash(new string[] { family.Name, family.FamilyCategory.Name, familyType.Name });
 
                 // create a new family revit object
                 Models.FamilyRevit familyRevit = new Models.FamilyRevit(

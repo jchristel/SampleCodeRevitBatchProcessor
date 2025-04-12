@@ -24,7 +24,7 @@
 
 using System;
 
-namespace duHast.Utils.WPF.Stores
+namespace duHastNet.Utils.WPF.Stores
 {
     public class NavigationStore
     {

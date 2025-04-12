@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
-namespace duHast.PushIt.RevitActions
+namespace duHastNet.PushIt.RevitActions
 {
     public interface IRevitAction
     {

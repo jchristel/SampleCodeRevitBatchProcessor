@@ -21,7 +21,7 @@
 //
 //
 
-namespace duHast.Utils.WPF.Commands
+namespace duHastNet.Utils.WPF.Commands
 {
     public class ClearMessageCommand : CommandBase
     {

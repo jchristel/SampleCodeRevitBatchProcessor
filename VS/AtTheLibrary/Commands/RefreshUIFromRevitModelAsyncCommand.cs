@@ -22,15 +22,15 @@
 //
 
 
-using duHast.AtTheLibrary.RevitActions;
-using duHast.AtTheLibrary.Utilities;
-using duHast.Utils.WPF.Stores;
+using duHastNet.AtTheLibrary.RevitActions;
+using duHastNet.AtTheLibrary.Utilities;
+using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace duHast.AtTheLibrary.Commands
+namespace duHastNet.AtTheLibrary.Commands
 {
     public class RefreshUIFromRevitModelAsyncCommand : Utils.WPF.Commands.CommandBase
     {

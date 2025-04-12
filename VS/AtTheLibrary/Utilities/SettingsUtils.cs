@@ -28,7 +28,7 @@ using System.Collections.Generic;
 
 using System.Xml;
 
-namespace duHast.AtTheLibrary.Utilities
+namespace duHastNet.AtTheLibrary.Utilities
 {
     public static class SettingsUtils
     {

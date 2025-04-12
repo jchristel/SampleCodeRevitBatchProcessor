@@ -7,7 +7,7 @@
     <ProjectGuid>{D0EE5CD0-BC5E-44C8-901D-520B96291080}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>duHast.Utils</RootNamespace>
+    <RootNamespace>duHastNet.Utils</RootNamespace>
     <AssemblyName>Utils.23.0.0.3</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

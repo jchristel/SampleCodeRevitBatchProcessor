@@ -22,10 +22,10 @@
 //
 
 using Autodesk.Revit.DB;
-using duHast.RevitUtils.Parameters;
+using duHastNet.RevitUtils.Parameters;
 using System.Collections.Generic;
 
-namespace duHast.RevitUtils.Parameters
+namespace duHastNet.RevitUtils.Parameters
 {
     public static class ParaUtils
     {

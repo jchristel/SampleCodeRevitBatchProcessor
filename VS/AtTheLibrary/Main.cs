@@ -34,15 +34,15 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Revit.Async;
 
-namespace duHast.AtTheLibrary
+namespace duHastNet.AtTheLibrary
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     public class Main : IExternalCommand
     {
         Models.RevitFamiliesDataModel _revitDataModel;
-        duHast.Utils.WPF.Stores.NavigationStore _navigationStore;
-        duHast.Utils.WPF.Stores.MessageStore _messageStore;
+        duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
+        duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
 
         static Main()
         {
@@ -56,8 +56,8 @@ namespace duHast.AtTheLibrary
             RevitTask.Initialize(commandData.Application);
 
             //set up stores
-            _navigationStore = new duHast.Utils.WPF.Stores.NavigationStore();
-            _messageStore = new duHast.Utils.WPF.Stores.MessageStore();
+            _navigationStore = new duHastNet.Utils.WPF.Stores.NavigationStore();
+            _messageStore = new duHastNet.Utils.WPF.Stores.MessageStore();
 
             // set up th revit data model
             _revitDataModel = new Models.RevitFamiliesDataModel();
@@ -68,7 +68,7 @@ namespace duHast.AtTheLibrary
             _revitDataModel.InitialiseLogger(logFilePath);
 
             // Example log entry
-            _revitDataModel.LogMessages(new List<(string, duHast.Utils.WPF.Stores.MessageTypes)> { ("Starting duHast.AtTheLirbary.", duHast.Utils.WPF.Stores.MessageTypes.Log) });
+            _revitDataModel.LogMessages(new List<(string, duHastNet.Utils.WPF.Stores.MessageTypes)> { ("Starting duHastNet.AtTheLirbary.", duHastNet.Utils.WPF.Stores.MessageTypes.Log) });
 
             // load settings from file
             Models.Settings settings = Utilities.SettingsUtils.LoadSettings();
@@ -88,7 +88,7 @@ namespace duHast.AtTheLibrary
             // if the data path is empty, the user will be prompted to set the data path
             if (settings.DataPath != string.Empty && !loadFlag)
             {
-                _messageStore.SetCurrentMessage("Invalid data in file. Please set the data file path and reload.", duHast.Utils.WPF.Stores.MessageTypes.Error);
+                _messageStore.SetCurrentMessage("Invalid data in file. Please set the data file path and reload.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
             }
             
             // set up the navigation store
@@ -108,7 +108,7 @@ namespace duHast.AtTheLibrary
 
         private ViewModels.FamiliesSelectionViewModel CreateFamiliesSelectionViewModel()
         {
-            duHast.Utils.WPF.ViewModels.GlobalMessageViewModel _globa = new duHast.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
+            duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globa = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
 
             return new ViewModels.FamiliesSelectionViewModel(
                 _revitDataModel,

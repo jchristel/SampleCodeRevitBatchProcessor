@@ -25,7 +25,7 @@
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
-namespace duHast.RevitUtils.Families
+namespace duHastNet.RevitUtils.Families
 {
     public static class FamilyUtils
     {

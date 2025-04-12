@@ -29,7 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace duHast.PushIt.Models
+namespace duHastNet.PushIt.Models
 {
     public class CategoryDataModelContainer
     {

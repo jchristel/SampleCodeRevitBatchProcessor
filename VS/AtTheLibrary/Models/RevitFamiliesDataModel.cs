@@ -29,9 +29,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace duHast.AtTheLibrary.Models
+namespace duHastNet.AtTheLibrary.Models
 {
-    public class RevitFamiliesDataModel : duHast.Utils.WPF.Models.DataModelBase, INotifyPropertyChanged
+    public class RevitFamiliesDataModel : duHastNet.Utils.WPF.Models.DataModelBase, INotifyPropertyChanged
     {
         private Models.Settings _settings;
         public Settings Settings { get => _settings; set => _settings = value; }

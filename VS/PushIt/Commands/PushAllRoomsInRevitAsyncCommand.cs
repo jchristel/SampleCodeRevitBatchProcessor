@@ -22,13 +22,13 @@
 //
 
 
-using duHast.PushIt.RevitActions;
-using duHast.Utils.WPF.Stores;
+using duHastNet.PushIt.RevitActions;
+using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
 using System.ComponentModel;
 
-namespace duHast.PushIt.Commands
+namespace duHastNet.PushIt.Commands
 {
     public class PushAllRoomsInRevitAsyncCommand : Utils.WPF.Commands.CommandBase
     {

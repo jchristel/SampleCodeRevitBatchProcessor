@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using System.Windows.Documents;
 
-namespace duHast.PushIt.Models
+namespace duHastNet.PushIt.Models
 {
     public class RoomsRevit
     {

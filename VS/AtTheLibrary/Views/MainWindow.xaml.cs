@@ -36,7 +36,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace duHast.AtTheLibrary.Views
+namespace duHastNet.AtTheLibrary.Views
 {
     /// <summary>
     /// Interaction logic for UserControl1.xaml

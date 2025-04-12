@@ -24,7 +24,7 @@
 using System;
 using System.Windows.Input;
 
-namespace duHast.Utils.WPF.Commands
+namespace duHastNet.Utils.WPF.Commands
 {
     public abstract class CommandBase : ICommand
     {

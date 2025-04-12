@@ -22,14 +22,14 @@
 //
 
 
-using duHast.PushIt.Models;
+using duHastNet.PushIt.Models;
 using System.Collections.Generic;
 using System.IO;
 using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
 
-namespace duHast.PushIt.Utilities
+namespace duHastNet.PushIt.Utilities
 {
     public static class ReadRoomsData
     {

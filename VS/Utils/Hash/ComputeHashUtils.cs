@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 
-namespace duHast.Utils.Hash
+namespace duHastNet.Utils.Hash
 {
     public static class ComputeHashUtils
     {

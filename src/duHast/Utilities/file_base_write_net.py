@@ -39,12 +39,12 @@ from duHast.Utilities.Objects.file_encoding_bom import BOMValue as bom_value
 # the dll is located in the libs folder of the extension, which is one level up from the current file's directory
 current_directory = os.path.dirname(__file__)
 parent_directory = os.path.dirname(current_directory)
-dll_path = os.path.join(parent_directory, "libs", "CSVHelperWrapper.dll")
+dll_path = os.path.join(parent_directory, "libs", "FileIOWrapper.dll")
 clr.AddReference(dll_path)
 
 # import the WriteToFile class from the CSVHelperWrapper namespace
-from CSVHelperWrapper import WriteToFile
-from CSVHelperWrapper import BOMValue
+from duHastNet.FileIOWrapper import WriteToColumnBasedTextFile
+from duHastNet.FileIOWrapper import BOMValue
 
 def write_to_delimited_text_file(file_path, header, data, write_type="w", bom=None, delimiter=","):
     """
@@ -89,14 +89,7 @@ def write_to_delimited_text_file(file_path, header, data, write_type="w", bom=No
             raise ValueError("header must be a list of strings")
         if not isinstance(data, list) or not all(isinstance(row, list) and all(isinstance(item, str) for item in row) for row in data):
             raise ValueError("data must be a list of lists of strings")
-        if not isinstance(write_type, str):
-            raise ValueError("write_type must be a string")
-        if write_type not in ["w", "a"]:
-            raise ValueError("write_type must be either 'w' (write) or 'a' (append)")
-        if not isinstance(delimiter, str):
-            raise ValueError("delimiter must be a string")
-        if bom is not None and not isinstance(bom, bom_value):
-            raise ValueError("bom must be of type BOMValue or None")
+        
         
         # map bom values to the BOMValue enum
         if bom is not None:
@@ -132,8 +125,11 @@ def write_to_delimited_text_file(file_path, header, data, write_type="w", bom=No
                 # Add the row to the List[List[str]]
             data_net.Add(row_net)  
         
+        
+        writer_net = WriteToColumnBasedTextFile()
+        
         # Write to file using the WriteToFile class from the CSVHelperWrapper library
-        result = WriteToFile.WriteToTextFile(
+        result = writer_net.WriteToTextFile(
             file_path, 
             header_net, 
             data_net, 
@@ -144,7 +140,7 @@ def write_to_delimited_text_file(file_path, header, data, write_type="w", bom=No
         
         # get all error messages from the WriteToFile class
         if not result:
-            for message in WriteToFile.ErrorHistory:
+            for message in writer_net.ErrorHistory:
                 return_value.append_message(message)
             # set the overall status to False
             return_value.status = False

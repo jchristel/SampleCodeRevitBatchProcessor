@@ -60,6 +60,22 @@ duHast.Utilities.directory\_io module
    :undoc-members:
    :show-inheritance:
 
+duHast.Utilities.file\_base\_read\_net module
+---------------------------------------------
+
+.. automodule:: duHast.Utilities.file_base_read_net
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+duHast.Utilities.file\_base\_write\_net module
+----------------------------------------------
+
+.. automodule:: duHast.Utilities.file_base_write_net
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 duHast.Utilities.files\_base\_combine module
 --------------------------------------------
 

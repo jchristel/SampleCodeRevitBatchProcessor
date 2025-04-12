@@ -22,17 +22,30 @@
 //
 
 
+using System.Collections.Generic;
+
+
 namespace duHastNet.FileIOWrapper
 {
     /// <summary>
-    /// This class contains the byte order marks (BOM) for different encodings.
+    /// Base class for wrappers that handle error history.
     /// </summary>
-    public class BOMValue
+    public class WrapperBase
     {
-        public static readonly byte[] UTF_8 = { 0xEF, 0xBB, 0xBF };
-        public static readonly byte[] UTF_16_LITTLE_ENDIAN = { 0xFF, 0xFE };
-        public static readonly byte[] UTF_16_BIG_ENDIAN = { 0xFE, 0xFF };
-        public static readonly byte[] UTF_32_LITTLE_ENDIAN = { 0xFF, 0xFE, 0x00, 0x00 };
-        public static readonly byte[] UTF_32_BIG_ENDIAN = { 0x00, 0x00, 0xFE, 0xFF };
+        // Stores a list of error messages
+        public List<string> ErrorHistory { get; private set; } = new List<string>();
+
+        // Method to retrieve all stored errors
+        public List<string> GetErrorHistory()
+        {
+            // Return a copy to avoid direct modification
+            return new List<string>(ErrorHistory);
+        }
+
+        // Method to clear errors if needed
+        public void ClearErrorHistory()
+        {
+            ErrorHistory.Clear();
+        }
     }
 }

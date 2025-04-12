@@ -21,6 +21,7 @@
 //
 //
 
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,22 +29,10 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
 
-namespace CSVHelperWrapper
+namespace duHastNet.FileIOWrapper
 {
-    public class ReadFromFile
+    public class ReadFromColumnBasedTextFile:WrapperBase
     {
-        // Stores a list of error messages
-        public static List<string> ErrorHistory { get; private set; } = new List<string>();
-
-        public static List<string> GetErrorHistory()
-        {
-            return new List<string>(ErrorHistory);
-        }
-
-        public static void ClearErrorHistory()
-        {
-            ErrorHistory.Clear();
-        }
 
         /// <summary>
         /// Reads a column based text file with the specified delimiter.
@@ -51,7 +40,31 @@ namespace CSVHelperWrapper
         /// <param name="filePath">The fully qualified file path of the file to be read.</param>
         /// <param name="delimiter">The delimiter to be used. Default is ','</param>
         /// <returns>A list of nested lists representing each row in the file read.</returns>
-        public static List<List<string>> ReadFromTextFile(string filePath, string delimiter= ",")
+        public List<List<string>> ReadFromTextFile(string filePath, string delimiter = ",")
+        {
+            return ReadFromTextFileInternal(filePath, int.MaxValue, delimiter);
+        }
+
+        /// <summary>
+        /// Reads a specified number of rows from a column based text file with the specified delimiter.
+        /// </summary>
+        /// <param name="filePath">The fully qualified file path of the file to be read.</param>
+        /// <param name="rowCount">The number of rows to read from the file.</param>
+        /// <param name="delimiter">The delimiter to be used. Default is ','</param>
+        /// <returns>A list of nested lists representing each row read from the file.</returns>
+        public  List<List<string>> ReadRowsFromTextFile(string filePath, int rowCount, string delimiter = ",")
+        {
+            return ReadFromTextFileInternal(filePath, rowCount, delimiter);
+        }
+
+        /// <summary>
+        /// Internal method to read rows from a column based text file with the specified delimiter.
+        /// </summary>
+        /// <param name="filePath">The fully qualified file path of the file to be read.</param>
+        /// <param name="rowCount">The number of rows to read from the file. Use int.MaxValue to read all rows.</param>
+        /// <param name="delimiter">The delimiter to be used. Default is ','</param>
+        /// <returns>A list of nested lists representing each row read from the file.</returns>
+        private List<List<string>> ReadFromTextFileInternal(string filePath, int rowCount, string delimiter)
         {
             var records = new List<List<string>>();
 
@@ -63,7 +76,8 @@ namespace CSVHelperWrapper
                     Delimiter = delimiter
                 }))
                 {
-                    while (csv.Read())
+                    int currentRow = 0;
+                    while (csv.Read() && currentRow < rowCount)
                     {
                         var row = new List<string>();
                         for (int i = 0; i < csv.Parser.Count; i++)
@@ -71,6 +85,7 @@ namespace CSVHelperWrapper
                             row.Add(csv.GetField(i));
                         }
                         records.Add(row);
+                        currentRow++;
                     }
                 }
             }

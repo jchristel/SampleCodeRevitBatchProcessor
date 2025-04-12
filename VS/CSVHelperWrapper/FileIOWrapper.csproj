@@ -7,8 +7,8 @@
     <ProjectGuid>{E0A9C49B-A70F-4E0F-BF95-25DB822F8276}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSVHelperWrapper</RootNamespace>
-    <AssemblyName>CSVHelperWrapper</AssemblyName>
+    <RootNamespace>duHastNet.FileIOWrapper</RootNamespace>
+    <AssemblyName>FileIOWrapper</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -85,9 +85,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BOMValue.cs" />
-    <Compile Include="ReadFromFile.cs" />
-    <Compile Include="WriteToFile.cs" />
+    <Compile Include="ReadFromColumnBasedTextFile.cs" />
+    <Compile Include="ReadFromTextFile.cs" />
+    <Compile Include="WrapperBase.cs" />
+    <Compile Include="WriteToColumnBasedTextFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WriteToTextFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

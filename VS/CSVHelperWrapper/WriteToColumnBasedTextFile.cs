@@ -30,25 +30,10 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
 
-namespace CSVHelperWrapper
+namespace duHastNet.FileIOWrapper
 {
-    public class WriteToFile
+    public class WriteToColumnBasedTextFile:WrapperBase
     {
-        // Stores a list of error messages
-        public static List<string> ErrorHistory { get; private set; } = new List<string>();
-
-        // Method to retrieve all stored errors
-        public static List<string> GetErrorHistory()
-        {
-            // Return a copy to avoid direct modification
-            return new List<string>(ErrorHistory);
-        }
-
-        // Method to clear errors if needed
-        public static void ClearErrorHistory()
-        {
-            ErrorHistory.Clear();
-        }
 
         /// <summary>
         /// Writes a column based text file with the specified header and dataand delimiter.
@@ -60,7 +45,7 @@ namespace CSVHelperWrapper
         /// <param name="bom">Byte order mark. Default is null.</param>
         /// <param name="delimiter">The delimiter to be used. Default is ','</param>
         /// <returns>True if file was written without an exception. Otherwise False.</returns>
-        public static bool WriteToTextFile(string filePath, List<string> header, List<List<string>> data, string writeType = "w", byte[] bom = null, string delimiter = ",")
+        public bool WriteToTextFile(string filePath, List<string> header, List<List<string>> data, string writeType = "w", byte[] bom = null, string delimiter = ",")
         {
             try
             {

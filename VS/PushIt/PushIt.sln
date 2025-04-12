@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Scripts\DeployPlugin.bat = ..\Scripts\DeployPlugin.bat
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSVHelperWrapper", "..\CSVHelperWrapper\CSVHelperWrapper.csproj", "{E0A9C49B-A70F-4E0F-BF95-25DB822F8276}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileIOWrapper", "..\CSVHelperWrapper\FileIOWrapper.csproj", "{E0A9C49B-A70F-4E0F-BF95-25DB822F8276}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

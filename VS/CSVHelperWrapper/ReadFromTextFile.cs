@@ -22,17 +22,43 @@
 //
 
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+
 namespace duHastNet.FileIOWrapper
 {
-    /// <summary>
-    /// This class contains the byte order marks (BOM) for different encodings.
-    /// </summary>
-    public class BOMValue
+    public class ReadFromTextFile:WrapperBase
     {
-        public static readonly byte[] UTF_8 = { 0xEF, 0xBB, 0xBF };
-        public static readonly byte[] UTF_16_LITTLE_ENDIAN = { 0xFF, 0xFE };
-        public static readonly byte[] UTF_16_BIG_ENDIAN = { 0xFE, 0xFF };
-        public static readonly byte[] UTF_32_LITTLE_ENDIAN = { 0xFF, 0xFE, 0x00, 0x00 };
-        public static readonly byte[] UTF_32_BIG_ENDIAN = { 0x00, 0x00, 0xFE, 0xFF };
+        /// <summary>
+        /// Reads a non-column based text file.
+        /// </summary>
+        /// <param name="filePath">The fully qualified file path of the file to be read.</param>
+        /// <returns>A list of strings representing each line in the file read.</returns>
+        public  List<string> ReadNonColumnBasedTextFile(string filePath)
+        {
+            var lines = new List<string>();
+
+            try
+            {
+                using (var reader = new StreamReader(filePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        lines.Add(line);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorHistory.Add($"Error reading file: {ex.Message}");
+
+                //if an error occurred while reading the file, return an empty list
+                return new List<string>();
+            }
+
+            return lines;
+        }
     }
 }

@@ -22,17 +22,29 @@
 //
 
 
+using System;
+using System.IO;
+
 namespace duHastNet.FileIOWrapper
 {
-    /// <summary>
-    /// This class contains the byte order marks (BOM) for different encodings.
-    /// </summary>
-    public class BOMValue
+    public class WriteToTextFile:WrapperBase
     {
-        public static readonly byte[] UTF_8 = { 0xEF, 0xBB, 0xBF };
-        public static readonly byte[] UTF_16_LITTLE_ENDIAN = { 0xFF, 0xFE };
-        public static readonly byte[] UTF_16_BIG_ENDIAN = { 0xFE, 0xFF };
-        public static readonly byte[] UTF_32_LITTLE_ENDIAN = { 0xFF, 0xFE, 0x00, 0x00 };
-        public static readonly byte[] UTF_32_BIG_ENDIAN = { 0x00, 0x00, 0xFE, 0xFF };
+        
+        /// <summary>
+        /// Writes JSON formatted text to a file.
+        /// </summary>
+        /// <param name="filePath">The fully qualified file path of the file to be written.</param>
+        /// <param name="jsonContent">The JSON formatted text to be written to the file.</param>
+        public void WriteNonColumnBasedTextFile(string filePath, string jsonContent)
+        {
+            try
+            {
+                File.WriteAllText(filePath, jsonContent);
+            }
+            catch (Exception ex)
+            {
+                ErrorHistory.Add($"Error writing text to file: {ex.Message}");
+            }
+        }
     }
 }

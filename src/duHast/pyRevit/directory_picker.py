@@ -106,3 +106,37 @@ def get_process_directories(forms, form_title="Select directory"):
         )
 
     return return_value
+
+
+def get_process_directory(forms, form_title="Select directory"):
+    """
+    Gets the directories to process
+
+    :param forms: the forms object
+    :type forms: Forms
+    :return: the directories to process
+    :rtype: list
+    """
+
+    # set up a status tracker
+    return_value = Result()
+    try:
+
+        # get the library directory path
+        library_path = forms.pick_folder(title=form_title)
+        if not library_path:
+            message = "No directory selected."
+            print(message)
+            return_value.update_sep(False, message)
+            return return_value
+        
+       
+        # get the library directory path
+        return_value.result.append (library_path)
+        
+    except Exception as e:
+        return_value.update_sep(
+            False, "Failed to get directories: {}".format(e)
+        )
+
+    return return_value

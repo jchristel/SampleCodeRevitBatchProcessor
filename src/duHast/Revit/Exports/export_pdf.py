@@ -22,41 +22,12 @@
 
 from System.Collections.Generic import List
 
-from Autodesk.Revit.DB import  ColorDepthType, ElementId, ExportPaperFormat, PDFExportOptions, PDFExportQualityType, TableCellCombinedParameterData
+from Autodesk.Revit.DB import  Document, ElementId, TableCellCombinedParameterData, ViewSheet
 
-def set_pdf_export_option(naming_rule):
-    pdf_export_option = PDFExportOptions()
-
-    # Set the naming rule if valid
-    if (PDFExportOptions.IsValidNamingRule(naming_rule)):
-        # Set the naming rule for the PDF export options
-        pdf_export_option.SetNamingRule(naming_rule)
-    else:
-        # If the naming rule is not valid, set it to None
-        pdf_export_option.SetNamingRule(None)
-        print("Invalid naming rule provided. Using default naming rule.")
-
-    #disable export in background
-    #pdf_export_option.SetExportInBackground(False)
-
-    pdf_export_option.AlwaysUseRaster = False
-    pdf_export_option.ColorDepth =  ColorDepthType.Color
-    pdf_export_option.Combine = False
-    pdf_export_option.PaperFormat =  ExportPaperFormat.Default # use sheet size
-    pdf_export_option.ExportQuality = PDFExportQualityType.DPI600
-
-    #pdf_export_option.FileName = file_name
-
-    pdf_export_option.HideCropBoundaries = True
-    #pdf_export_option.HideReferencePlanes = True
-    pdf_export_option.HideScopeBoxes = True
-    pdf_export_option.HideUnreferencedViewTags = True
-    pdf_export_option.MaskCoincidentLines = True
-    pdf_export_option.ReplaceHalftoneWithThinLines = False
-    pdf_export_option.StopOnError = False
-    pdf_export_option.ViewLinksInBlue = False
-
-    return pdf_export_option
+from duHast.Utilities.Objects import result as res
+from duHast.UI.Objects.ProgressBase import ProgressBase
+from duHast.Utilities.directory_io import directory_exists
+from duHast.Revit.Exports.Utility.export_options_pdf_2024 import set_pdf_export_option_2024
 
 
 def create_naming_rule(sheet_name_string, sample_sheet):
@@ -139,21 +110,56 @@ def export_sheet_to_pdf (doc, view_sheet, sheet_name_string, output_directory):
     :param output_directory: The directory to save the PDF file.
     :type output_directory: str
     """
+
+    return_value = res.Result()
+
+    try:
+
+        # Check if we got a document
+        if not isinstance(doc, Document):
+            raise TypeError("doc must be an instance of Autodesk.Revit.DB.Document")
     
-    # Create the naming rule for the PDF export
-    naming_rule = create_naming_rule(sheet_name_string, view_sheet)
+        # Check if we got a list of sheets
+        if not isinstance(view_sheet,  ViewSheet):
+            raise TypeError("view_sheet must be an Autodesk.Revit.DB.ViewSheet instances")
+        
+        # Check if the output directory exists
+        if not directory_exists(output_directory):
+            return_value.update_sep(False, "Output directory does not exist.")
+            return return_value
 
-    # Create the PDF export options
-    pdf_export_option = set_pdf_export_option(naming_rule)
+        # Check if the sheet name string is a string or None
+        if not isinstance(sheet_name_string, str) and sheet_name_string is not None:
+            raise TypeError("sheet_name_string must be a string or None")
+        
+        # Create the naming rule for the PDF export
+        naming_rule = create_naming_rule(sheet_name_string, view_sheet)
 
-    sheets = List[ElementId]()
-    sheets.Add(view_sheet.Id)
-    # Export the sheet to PDF
-    export_result = doc.Export(output_directory, sheets,pdf_export_option)
-    return export_result
+        # Create the PDF export options
+        pdf_export_option = set_pdf_export_option_2024(naming_rule)
+
+        sheets = List[ElementId]()
+        sheets.Add(view_sheet.Id)
+        # Export the sheet to PDF
+        export_result = doc.Export(output_directory, sheets,pdf_export_option)
+
+        # reporting..
+        sheet_identifier = "{} {}".format(view_sheet.SheetNumber, view_sheet.Name)
+
+        if export_result:
+            return_value.append_message("Sheet {} exported to PDF successfully.".format(sheet_identifier))
+        else:
+            return_value.update_sep(False, "Failed to export sheet {} to PDF.".format(sheet_identifier))
+
+        return return_value
+    
+    except Exception as e:
+            # handle the exception
+            return_value.update_sep(False, "Error exporting sheets to PDF: {}".format(str(e)))
+            return return_value
 
 
-def export_sheets_to_pdf(doc, sheets, sheet_name_string, output_directory):
+def export_sheets_to_pdf(doc, sheets, sheet_name_string, output_directory, callback=None):
     """
     Exports multiple Revit sheets to PDF using the provided naming rule and output directory.
 
@@ -167,17 +173,76 @@ def export_sheets_to_pdf(doc, sheets, sheet_name_string, output_directory):
     :type output_directory: str
     """
     
-    # Create the naming rule for the PDF export
-    naming_rule = create_naming_rule(sheet_name_string, sheets[0])
+    return_value = res.Result()
 
-    # Create the PDF export options
-    pdf_export_option = set_pdf_export_option(naming_rule)
+    try:
 
-    # convert to .net list
-    sheets_net = List[ElementId]()
-    for sheet in sheets:
-        sheets_net.Add(sheet.Id)
+        # Check if we got a document
+        if not isinstance(doc, Document):
+            raise TypeError("doc must be an instance of Autodesk.Revit.DB.Document")
+    
+        # Check if we got a list of sheets
+        if not isinstance(sheets, list) or not all(isinstance(sheet, ViewSheet) for sheet in sheets):
+            raise TypeError("sheets must be a list of Autodesk.Revit.DB.ViewSheet instances")
+        
+        # Check if the output directory exists
+        if not directory_exists(output_directory):
+            return_value.update_sep(False, "Output directory does not exist.")
+            return return_value
 
-    # Export the sheets to PDF
-    export_result = doc.Export(output_directory, sheets_net, pdf_export_option)
-    return export_result
+        # Check if the sheet name string is a string or None
+        if not isinstance(sheet_name_string, str) and sheet_name_string is not None:
+            raise TypeError("sheet_name_string must be a string or None")
+
+        # check if the callback is of progressBase
+        if callback is not None and not isinstance(callback, ProgressBase):
+            raise TypeError("callback must be an instance of ProgressBase or None")
+
+
+        # Check if the callback is None, if so export all in one go
+        if callback is None:
+
+            # Create the naming rule for the PDF export
+            naming_rule = create_naming_rule(sheet_name_string, sheets[0])
+
+            # Create the PDF export options
+            pdf_export_option = set_pdf_export_option_2024(naming_rule=naming_rule)
+
+            # convert to .net list
+            sheets_net = List[ElementId]()
+            for sheet in sheets:
+                sheets_net.Add(sheet.Id)
+
+            # Export the sheets to PDF
+            export_result = doc.Export(output_directory, sheets_net, pdf_export_option)
+
+            if export_result:
+                return_value.update_sep(True, "Sheets exported to PDF successfully.")
+            else:
+                return_value.update_sep(False, "Failed to export sheets to PDF.")
+        else:
+            # export one sheet at the time and update the progress
+            total_sheets = len(sheets)
+            callback.update(0,  total_sheets)
+
+            # loop over sheet at the time and export to pdf
+            for i, sheet in enumerate(sheets):
+
+                # update the progress
+                callback.update(i, total_sheets)
+
+                # Export the sheet to PDF
+                export_result = export_sheet_to_pdf(doc, sheet, sheet_name_string, output_directory)
+                return_value.update(export_result)
+
+                # check if user cancel the export
+                if callback.is_cancelled():
+                    return_value.append_message("User cancelled!")
+                    break
+        
+        return return_value
+    except Exception as e:
+        # handle the exception
+        return_value.update_sep(False, "Error exporting sheets to PDF: {}".format(str(e)))
+        return return_value
+   

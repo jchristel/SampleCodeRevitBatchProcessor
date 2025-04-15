@@ -44,7 +44,6 @@ from Autodesk.Revit.DB import (
     BuiltInCategory,
     BuiltInParameter,
     ElementId,
-    FilledRegion,
     FilteredElementCollector,
 )
 
@@ -58,48 +57,7 @@ FAMILY_SYMBOL = "Autodesk.Revit.DB.FamilySymbol"
 #: List of class names which can be detailed components
 DETAIL_COMPONENT_TYPES = [ELEMENT_TYPE, FILLED_REGION_TYPE, FAMILY_SYMBOL]
 
-# --------------------------------------------- filled region ------------------
 
-
-def get_filled_regions_in_model(doc):
-    """
-    Gets all filled region instances in a model.
-
-    Filters by class.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: A list containing floor instances.
-    :rtype: list Autodesk.Revit.DB.FilledRegion
-    """
-
-    return FilteredElementCollector(doc).OfClass(FilledRegion).ToList()
-
-
-def get_all_filled_region_type_ids_available(doc):
-    """
-    Gets all filled region types ids in model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: A list of element ids representing filled region types.
-    :rtype: list Autodesk.Revit.DB.ElementIds
-    """
-
-    dic = rDetailItemTypeSort.build_detail_type_ids_dictionary(
-        get_all_detail_types_by_category(doc)
-    )
-    if FILLED_REGION_TYPE in dic:
-        return dic[FILLED_REGION_TYPE]
-    else:
-        return []
-
-
-"""
-TODO: check for actual class...
-"""
 
 # -------------------------------- detail components -------------------------------------------------------
 

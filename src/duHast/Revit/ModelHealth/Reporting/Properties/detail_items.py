@@ -44,7 +44,7 @@ from duHast.Revit.ModelHealth.Reporting.Properties.constants import (
     FAILED_TO_RETRIEVE_VALUE,
 )
 
-from duHast.Revit.DetailItems.detail_items import get_filled_regions_in_model
+from duHast.Revit.DetailItems.filled_regions import get_filled_regions_in_model
 
 # ---------------------------------------------  Detail Items  ---------------------------------------------
 

@@ -72,3 +72,15 @@ def print_header(header):
     output = script.get_output()
     if header != None:
         output.print_md("### {}".format(header))
+
+
+def print_error(message):
+    """
+    Prints an error message to the pyRevit console.
+
+    :param message: The error message to be printed.
+    :type message: str
+    """
+
+    output = script.get_output()
+    output.print_html('<div class="errorentry">{}</div>'.format(message))

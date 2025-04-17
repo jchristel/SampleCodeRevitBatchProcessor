@@ -780,3 +780,16 @@ def merge_bounding_box_xyz(bounding_box_xyz_0, bounding_box_xyz_1):
         Math.Max(bounding_box_xyz_0.Max.Z, bounding_box_xyz_1.Max.Z),
     )
     return merged_result
+
+
+def get_bounding_box_centre(bounding_box):
+    """
+    Get the center of a bounding box.
+    :param bounding_box: The bounding box
+    :type bounding_box: Autodesk.Revit.DB.BoundingBoxXYZ
+    :return: The center point of the bounding box
+    :rtype: Autodesk.Revit.DB.XYZ
+    """
+
+    # get the bounding box center
+    return bounding_box.Min + (bounding_box.Max - bounding_box.Min) / 2

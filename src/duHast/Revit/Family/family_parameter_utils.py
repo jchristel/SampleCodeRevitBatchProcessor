@@ -221,14 +221,14 @@ def create_family_parameter(
 
     # do some type checking
     if not isinstance(parameter_name, str):
-        return_value.UpdateSep(
+        return_value.update_sep(
             False,
             "Parameter name must be a string. Got: {}".format(type(parameter_name)),
         )
         return return_value
 
     if not isinstance(parameter_group, BuiltInParameterGroup):
-        return_value.UpdateSep(
+        return_value.update_sep(
             False,
             "Parameter group must be a BuiltInParameterGroup. Got: {}".format(
                 type(parameter_group)
@@ -237,7 +237,7 @@ def create_family_parameter(
         return return_value
 
     if not isinstance(parameter_type, ParameterType):
-        return_value.UpdateSep(
+        return_value.update_sep(
             False,
             "Parameter type must be a ParameterType. Got: {}".format(
                 type(parameter_type)
@@ -246,7 +246,7 @@ def create_family_parameter(
         return return_value
 
     if not isinstance(is_instance, bool):
-        return_value.UpdateSep(
+        return_value.update_sep(
             False, "Is instance must be a bool. Got: {}".format(type(is_instance))
         )
         return return_value
@@ -262,12 +262,12 @@ def create_family_parameter(
                 parameter_name, parameter_group, parameter_type, is_instance
             )
 
-            action_return_value.UpdateSep(
+            action_return_value.update_sep(
                 True, "Added parameter: {} to family.".format(parameter_name)
             )
             action_return_value.result.append(parameter_new)
         except Exception as e:
-            action_return_value.UpdateSep(
+            action_return_value.update_sep(
                 False,
                 "Failed to add parameter: {} with exception: {}".format(
                     parameter_name, e
@@ -335,14 +335,14 @@ def associate_parameter_with_other_parameter_on_nested_family_instance(
                             manager.AssociateElementParameterToFamilyParameter(
                                 target_parameter, source_parameter
                             )
-                            action_return_value.UpdateSep(
+                            action_return_value.update_sep(
                                 True,
                                 "Associated parameter: {} with parameter: {}".format(
                                     target_parameter_name, source_parameter_name
                                 ),
                             )
                         except Exception as e:
-                            action_return_value.UpdateSep(
+                            action_return_value.update_sep(
                                 False,
                                 "Failed to associate parameter: {} with parameter: {} with exception: {}".format(
                                     target_parameter_name, source_parameter_name, e
@@ -364,7 +364,7 @@ def associate_parameter_with_other_parameter_on_nested_family_instance(
                 break
             else:
                 # give user feedback if source parameter not found
-                return_value.UpdateSep(
+                return_value.update_sep(
                     False,
                     "Failed to find source parameter: {}".format(source_parameter_name),
                 )
@@ -372,7 +372,7 @@ def associate_parameter_with_other_parameter_on_nested_family_instance(
 
     # check if target parameter found
     if not found_target_parameter:
-        return_value.UpdateSep(
+        return_value.update_sep(
             False, "Failed to find target parameter: {}".format(target_parameter_name)
         )
 

@@ -27,9 +27,11 @@ Revit curve helper functions
 #
 #
 
+from System.Collections.Generic import List
+
 import math
 
-from Autodesk.Revit.DB import Arc, ElementId, Line, ModelCurve, Transform, XYZ
+from Autodesk.Revit.DB import Arc, CurveLoop, ElementId, Line, ModelCurve, Transform, XYZ
 
 from duHast.Utilities.compare import is_close
 from duHast.Utilities.Objects import result as res
@@ -553,3 +555,36 @@ def are_lines_perpendicular(line_one, line_two):
 
     # check if the perpendicular vector is parallel to the second line
     return perpendicular_vector_to_one.IsAlmostEqualTo(dir_two) or perpendicular_vector_to_one.IsAlmostEqualTo(dir_two.Negate())
+
+
+def create_curve_loops_through_transform(curve_loops, transform, convert_net_list=False):
+    """
+    Creates a new curve loop by transforming the existing curve loops using the provided transform.
+
+    :param curve_loops: The curve loops to be transformed.
+    :type curve_loops: list of Autodesk.Revit.DB.CurveLoop
+    :param transform: The transform to be applied to the curve loops.
+    :type transform: Autodesk.Revit.DB.Transform
+    :param convert_net_list: Flag to indicate whether to convert the curve loops to a .net List of curves (true) or python list (false).
+    :type convert_net_list: bool
+
+    :return: A list of transformed curve loops.
+    :rtype: .net List of Autodesk.Revit.DB.CurveLoop or python list of Autodesk.Revit.DB.CurveLoop
+    """
+
+    if convert_net_list:
+        # convert the curve loops to a list of curves
+        new_curve_loops = List[CurveLoop]()
+        for curve_loop in curve_loops:
+            # create a new curve loop
+            new_curve_loop = CurveLoop.CreateViaTransform(curve_loop, transform)
+            # add the new curve loop to the list
+            new_curve_loops.Add(new_curve_loop)
+        return new_curve_loops
+    else:
+        new_curve_loops = []
+        for curve_loop in curve_loops:
+            transformed_curve_loop = CurveLoop.CreateViaTransform(curve_loop,  transform)
+            new_curve_loops.append(transformed_curve_loop)
+        
+        return new_curve_loops

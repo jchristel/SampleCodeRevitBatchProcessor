@@ -126,9 +126,11 @@ def create_filled_region_by_view(doc, view, curve_loops, filled_region_type):
         try:
             # create the filled region
             filled_region = FilledRegion.Create(doc, filled_region_type, view.Id, curve_loops)
+            # store the filled region in the return value
+            action_return_value.result.append(filled_region)
             action_return_value.append_message("Filled region created successfully.")
         except Exception as e:
-            action_return_value.update_sep(False, "Failed to create filled region with error: ".format(e))
+            action_return_value.update_sep(False, "Failed to create filled region with error: {}".format(e))
         return action_return_value
 
 

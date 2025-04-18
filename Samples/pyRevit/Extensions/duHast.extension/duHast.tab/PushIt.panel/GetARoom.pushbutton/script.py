@@ -19,13 +19,7 @@ doc = revit.doc
 uiapp = __revit__
 
 # create default catalogue type in family
-from pushIt_associated.get_a_room import get_a_room_entry
+from pushIt_associated.get_a_room.get_a_room import get_a_room_entry
 
 print("oh, hi there!")
-
-# duHast dev
-DU_HAST_DEV = r"C:\Users\chrjx\Documents\github\SampleCodeRevitBatchProcessor\src"
-sys.path.insert(0, DU_HAST_DEV)
-
-
 get_a_room_entry(doc=doc, uiapp = uiapp, output=output, forms=forms)

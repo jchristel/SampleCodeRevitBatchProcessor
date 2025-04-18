@@ -89,6 +89,57 @@ def in_transaction(tranny, action, *args, **kwargs):
     return return_value
 
 
+def in_temp_transaction(tranny, action, *args, **kwargs):
+    """
+    Revit transaction wrapper for temporary transactions.
+
+    This function is used to execute any actions requiring a transaction in the Revit api. 
+    The action will be executed within the transaction but the transaction itself will be rolled back at the end.
+
+    :param tranny: The transaction to be executed.
+    :type tranny: Autodesk.Revit.DB.Transaction
+    :param doc: The current model document. (not used in this function)
+    :type doc: Autodesk.Revit.DB.Document
+    :param action: The action to be nested within the transaction. This needs to return a Result class instance!
+    :type action: action().
+    :param *args: is just a placeholder in case this function is called with the same args than in_transaction_with_failure_handling
+    :param **kwargs: is just a placeholder in case this function is called with the same args than in_transaction_with_failure_handling
+
+    :return:
+        Result class instance.
+
+        - .status True if successfully executed transaction, otherwise False.
+
+    :rtype: :class:`.Result`
+    """
+
+    if not isinstance(tranny, Transaction):
+        raise ValueError(
+            "The transaction parameter must be an instance of Autodesk.Revit.DB.Transaction."
+        )
+    if not callable(action):
+        raise ValueError("The action parameter must be a callable function.")
+
+    return_value = res.Result()
+    try:
+        tranny.Start()
+        try:
+            tranny_result = action()
+            
+            # check what came back
+            if tranny_result != None:
+                # store false value
+                return_value = tranny_result
+            # roll the transaction back
+            tranny.RollBack()
+        except Exception as e:
+            tranny.RollBack()
+            return_value.update_sep(False, "Failed with exception: {}".format(e))
+    except Exception as e:
+        return_value.update_sep(False, "Failed with exception: {}".format(e))
+
+    return return_value
+
 def in_transaction_with_failure_handling(
     transaction,
     action,

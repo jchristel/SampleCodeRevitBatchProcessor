@@ -310,3 +310,37 @@ def enable_worksharing(
     except Exception as e:
         return_value.update_sep(False, "Failed with exception: {}".format(e))
     return return_value
+
+
+def get_family_from_template(doc, family_template_path):
+    """
+    Create a family document from a template
+    :param doc: The Revit document
+    :type doc: Autodesk.Revit.DB.Document
+    :param family_template_path: The path to the family template
+    :type family_template_path: str
+
+    :return:
+            Result class instance.
+            - .status True if family was created from template. Otherwise False.
+            - .message: 'Family document created from template:'
+            - .result: family document as first entry in the result list.
+            On exception:
+            - result.status (bool) will be False.
+            - result.message will contain exception message.
+    :rtype: :class:`.Result`
+    """
+
+    # set up a status tracker
+    return_value = res.Result()
+    
+    try:
+        # get the application
+        app = doc.Application
+        family_doc = app.NewFamilyDocument(family_template_path)
+        return_value.append_message("Family document created from template: {}".format(family_template_path))
+        return_value.result.append(family_doc)
+    except Exception as e:
+        message = "Failed to create family document from template: {}".format(e)
+        return_value.update_sep(False, message)
+    return return_value

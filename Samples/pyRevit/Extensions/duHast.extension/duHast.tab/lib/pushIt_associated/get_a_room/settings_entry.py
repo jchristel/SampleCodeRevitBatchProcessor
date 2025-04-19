@@ -45,13 +45,14 @@ def schema_builder(schema_builder):
     
     # add a field for the family output directory
     textField = schema_builder.AddSimpleField("FAMILY_OUT_DIRECTORY", clr.GetClrType(str))
+    textField.SetDocumentation("The family output directory for the Get A Room add-in.")
     return schema_builder
 
 
 def setup_schema():
-    
+    print("Setting up schema.")
     schema = create_schema(
-        "Get A Room Settings",
+        "Get_A_Room_Settings",
         None,
         settings.GET_A_ROOM_GUID_ADD_IN_GUID,
         field_builder=schema_builder,
@@ -76,7 +77,6 @@ def get_a_room_settings_entry(doc, uiapp,output, forms):
             print("Schema does not exists in the file.")
             # set up the schema in the file
             schema = setup_schema()
-            
             # setup the data storage in the file
             data_storage_result = create_project_data_storage(doc, schema)
             if data_storage_result==False:
@@ -96,7 +96,18 @@ def get_a_room_settings_entry(doc, uiapp,output, forms):
             if data_storage == None:
                 message = "Failed to find data storage element in the file."
                 return_value.update_sep(False, message)
+                print("Data storage element not found in the file.")
+                
+                data_storage_result = create_project_data_storage(doc, schema)
+                print("Data storage result: {}".format(data_storage_result))
+                if data_storage_result==False:
+                    message = "Failed to create data storage: {}".format(data_storage_result.error_message)
+                    return_value.update_sep(False, message)
+                    return return_value
                 return return_value
+                
+            else:
+                print("Data storage element found in the file.")
             
         # get the current directory of the family output directory
         # set up an entity

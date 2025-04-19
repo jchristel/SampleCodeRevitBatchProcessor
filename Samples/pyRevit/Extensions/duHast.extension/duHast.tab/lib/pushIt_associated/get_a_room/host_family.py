@@ -21,17 +21,18 @@
 #
 
 from duHast.Utilities.Objects.result import Result
+from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
 from duHast.Revit.Family.family_rename_loaded_families import  _rename_loaded_families
 from duHast.Revit.Family.Data.Objects.family_directive_rename import FamilyDirectiveRename
 from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict
-from duHast.Revit.Family.family_parameter_utils import associate_parameter_with_other_parameter_on_nested_family_instance
+from duHast.Revit.Family.family_parameter_utils import associate_parameter_with_other_parameter_on_nested_family_instance, set_parameter_formula
 from duHast.Revit.Family.family_utils import get_family_instances_of_built_in_category
-
-from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
 from duHast.Revit.SharedParameters.shared_parameters import get_all_shared_parameters
 
+from pushIt_associated.get_a_room import settings
+from pushIt_associated.get_a_room.utilities import get_filled_region_area
 
 from Autodesk.Revit.DB import BuiltInCategory, Element
 
@@ -147,7 +148,7 @@ def update_overall_dimension_parameter_values(doc, bounding_box, filled_region):
         # loop over family parameters
         for host_family_parameter in host_family_parameters:
 
-            if host_family_parameter.Definition.Name == WIDTH_PARAMETER_NAME:
+            if host_family_parameter.Definition.Name == settings.WIDTH_PARAMETER_NAME:
                 # set width
                 set_parameter_formula_result = set_parameter_formula(
                     doc=doc, 
@@ -156,7 +157,7 @@ def update_overall_dimension_parameter_values(doc, bounding_box, filled_region):
                     formula=str(width_bbox),
                 )
                 return_value.update(set_parameter_formula_result)
-            elif host_family_parameter.Definition.Name == DEPTH_PARAMETER_NAME:
+            elif host_family_parameter.Definition.Name == settings.DEPTH_PARAMETER_NAME:
                 # set depth
                 set_parameter_formula_result = set_parameter_formula(
                     doc=doc, 
@@ -165,7 +166,7 @@ def update_overall_dimension_parameter_values(doc, bounding_box, filled_region):
                     formula=str(depth_bbox),
                 )
                 return_value.update(set_parameter_formula_result)
-            elif host_family_parameter.Definition.Name == HEIGHT_PARAMETER_NAME:
+            elif host_family_parameter.Definition.Name == settings.HEIGHT_PARAMETER_NAME:
                 # set height
                 set_parameter_formula_result = set_parameter_formula(
                     doc=doc, 
@@ -174,7 +175,7 @@ def update_overall_dimension_parameter_values(doc, bounding_box, filled_region):
                     formula="2700", #2.7m height
                 )
                 return_value.update(set_parameter_formula_result)
-            elif host_family_parameter.Definition.Name == AREA_PARAMETER_NAME:
+            elif host_family_parameter.Definition.Name == settings.AREA_PARAMETER_NAME:
                 # set area
                 set_parameter_formula_result = set_parameter_formula(
                     doc=doc, 

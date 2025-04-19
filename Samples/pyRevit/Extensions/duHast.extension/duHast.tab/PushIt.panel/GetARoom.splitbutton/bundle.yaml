@@ -1,0 +1,11 @@
+layout:
+  - GetARoom
+  - Settings
+  
+# bundle tooltip
+tooltip: Hassell
+
+
+# bundle author
+author: 
+  - Jan Christel

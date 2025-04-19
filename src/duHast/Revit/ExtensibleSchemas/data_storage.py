@@ -5,6 +5,7 @@ This module contains a number of functions around data storage in Revit.
 
 Data storage can be used to project wide settings not associated with a specific element. 
 
+Obsolete in Revit 2025 ... 
 """
 
 #
@@ -36,7 +37,7 @@ from duHast.Revit.ExtensibleSchemas.extensible_schemas import get_schema
 
 
 from Autodesk.Revit.DB import FilteredElementCollector, Transaction
-from Autodesk.Revit.DB.ExtensibleStorage import DataStorage
+from Autodesk.Revit.DB.ExtensibleStorage import DataStorage, Entity
 
 
 def create_project_data_storage(doc, schema):
@@ -61,8 +62,9 @@ def create_project_data_storage(doc, schema):
         try:
             # Create a new DataStorage element
             data_storage = DataStorage.Create(doc)
+            entity = Entity(schema)
             # Set the schema to the DataStorage element
-            data_storage.SetSchema(schema)
+            data_storage.SetEntity(entity)
             action_return_value.append_message(
                 "DataStorage element created successfully."
             )

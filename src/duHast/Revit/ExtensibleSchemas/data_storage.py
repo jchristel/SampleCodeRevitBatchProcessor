@@ -111,3 +111,47 @@ def find_data_storage(doc, schema_guid):
             return data_storage
 
     return None
+
+
+def update_entity_on_data_storage(doc, data_storage, entity):
+    """
+    Update the entity of a DataStorage element with new data.
+    
+    :param doc: The Revit document to update the DataStorage element in.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :param data_storage: The DataStorage element to update.
+    :type data_storage: Autodesk.Revit.DB.DataStorage
+    
+    :param entity: The new entity to set on the DataStorage element.
+    :type entity: Autodesk.Revit.DB.ExtensibleStorage.Entity
+
+    :return: A Result object containing the updated DataStorage element in its result list or an error message.
+    :rtype: duHast.Utilities.Objects.result.Result
+    """
+    
+    return_value = res.Result()
+    
+    # build an action to update the DataStorage element
+    def action():
+        action_return_value = res.Result()
+        try:
+            # Update the DataStorage element with the new Entity
+            data_storage.SetEntity(entity)
+            action_return_value.append_message(
+                "DataStorage element updated successfully."
+            )
+            action_return_value.result.append(data_storage)
+        except Exception as e:
+                action_return_value.update_sep(
+                    False,
+                    "Failed to update data storage: {}".format(e),
+                )
+        return action_return_value
+    
+    # attempt to update the DataStorage element in a transaction
+    transaction = Transaction(doc, "Updating data storage")
+    data_storage_update_result = in_transaction(transaction, action)
+    return_value.update(data_storage_update_result)
+
+    return return_value

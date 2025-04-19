@@ -60,6 +60,10 @@ def create_schema(
     :rtype: Autodesk.Revit.DB.ExtensibleStorage.Schema
     """
 
+    # check if the schema name contains any spaces or not
+    if " " in schema_name:
+        raise ValueError("Schema name cannot contain spaces.")
+    
     # Look for schema in memory
     schema = Schema.Lookup(Guid(string_guid))
     # Check if schema exists in the memory or not

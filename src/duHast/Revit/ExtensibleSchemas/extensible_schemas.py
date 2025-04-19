@@ -37,6 +37,7 @@ def create_schema(
     string_guid,
     access_level_read=AccessLevel.Public,
     access_level_write=AccessLevel.Public,
+    field_builder=None,
 ):
     """
     Basic schema creation sample (excludes any fields).
@@ -72,6 +73,42 @@ def create_schema(
         # Set name to this schema builder
         builder.SetSchemaName(schema_name)
         builder.SetDocumentation(schema_documentation)
-        # TODO: Create fields
+        
+        # run the field builder
+        if field_builder:
+            field_builder(builder)
+            
         schema = builder.Finish()
+    return schema
+
+
+def does_schema_exist(schema_guid):
+    """
+    Check if a schema exists in the memory.
+
+    :param schema_guid: The guid of the schema to check
+    :type schema_guid: str
+
+    :return: True if the schema exists, False otherwise
+    :rtype: bool
+    """
+    # Look for schema in memory
+    schema = Schema.Lookup(Guid(schema_guid))
+    # Check if schema exists in the memory or not
+    return schema != None
+
+
+def get_schema(schema_guid):
+    """
+    Get a schema by its guid.
+
+    :param schema_guid: The guid of the schema to get
+    :type schema_guid: str
+
+    :return: The schema if it exists, None otherwise
+    :rtype: Autodesk.Revit.DB.ExtensibleStorage.Schema
+    """
+    
+    # Look for schema in memory
+    schema = Schema.Lookup(Guid(schema_guid))
     return schema

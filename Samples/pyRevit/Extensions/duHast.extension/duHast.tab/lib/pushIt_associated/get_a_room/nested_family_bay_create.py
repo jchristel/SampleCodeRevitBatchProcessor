@@ -33,7 +33,7 @@ from pushIt_associated.get_a_room import settings
 from pushIt_associated.get_a_room.nested_families import update_extrusion_outline, add_2D_outline
 from pushIt_associated.get_a_room.host_family import rename_nested_families, hook_up_shared_parameters, update_overall_dimension_parameter_values
 
-def create_bay_family(doc, filled_region, bounding_box):
+def create_bay_family(doc, filled_region, bounding_box, output_directory):
     
     # set up a status tracker
     return_value = Result()
@@ -70,7 +70,7 @@ def create_bay_family(doc, filled_region, bounding_box):
         nested_bay_family_name = "GEN_Inner_Nested_Bay_{}_{}".format(get_current_user_name(), get_file_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC))
         save_nested_bay_family_result = save_as_family(
             doc=bay_nested_family_doc, 
-            target_directory_path=settings.FAMILY_OUT_DIRECTORY, 
+            target_directory_path=output_directory, 
             current_full_file_name= nested_bay_family_name, 
             name_data=[[ nested_bay_family_name, nested_bay_family_name]], 
             file_extension=".rfa",
@@ -82,7 +82,7 @@ def create_bay_family(doc, filled_region, bounding_box):
             return_value.update_sep(False, message)
             return return_value
 
-        return_value.append_message("Nested Bay family saved to: {}".format(settings.FAMILY_OUT_DIRECTORY))
+        return_value.append_message("Nested Bay family saved to: {}".format(output_directory))
         # close the family document
         bay_nested_family_doc.Close(False)
 
@@ -121,7 +121,7 @@ def create_bay_family(doc, filled_region, bounding_box):
         nested_bay_coarse_family_name = "GEN_Inner_Nested_Bay_Coarse_{}_{}".format(get_current_user_name(), get_file_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC))
         save_nested_bay_coarse_family_result = save_as_family(
             doc=bay_nested_coarse_family_doc, 
-            target_directory_path=settings.FAMILY_OUT_DIRECTORY, 
+            target_directory_path=output_directory, 
             current_full_file_name= nested_bay_coarse_family_name, 
             name_data=[[ nested_bay_coarse_family_name, nested_bay_coarse_family_name]], 
             file_extension=".rfa",
@@ -133,7 +133,7 @@ def create_bay_family(doc, filled_region, bounding_box):
             return_value.update_sep(False, message)
             return return_value
 
-        return_value.append_message("Nested Bay coarse family saved to: {}".format(settings.FAMILY_OUT_DIRECTORY))
+        return_value.append_message("Nested Bay coarse family saved to: {}".format(output_directory))
         # close the family document
         bay_nested_coarse_family_doc.Close(False)
 
@@ -166,7 +166,7 @@ def create_bay_family(doc, filled_region, bounding_box):
         # reload the nested families
         reload_result = reload_all_families(
             doc=bay_wall_family_doc,
-            library_location=settings.FAMILY_OUT_DIRECTORY,
+            library_location=output_directory,
             include_sub_folders=False,
         )
 
@@ -195,7 +195,7 @@ def create_bay_family(doc, filled_region, bounding_box):
         wall_bay_family_name = "WLL_Bay_{}_{}".format(get_current_user_name(), get_file_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC))
         save_wall_bay_family_result = save_as_family(
             doc=bay_wall_family_doc, 
-            target_directory_path=settings.FAMILY_OUT_DIRECTORY, 
+            target_directory_path=output_directory, 
             current_full_file_name= wall_bay_family_name, 
             name_data=[[ wall_bay_family_name,wall_bay_family_name]], 
             file_extension=".rfa",
@@ -211,7 +211,7 @@ def create_bay_family(doc, filled_region, bounding_box):
         bay_wall_family_doc.Close(False)
 
         # add the family path to the result object and return it
-        return_value.append_message("Bay wall family saved to: {}".format(settings.FAMILY_OUT_DIRECTORY))
+        return_value.append_message("Bay wall family saved to: {}".format(output_directory))
         return_value.result.append("{}{}.rfa".format(settings.FAMILY_OUT_DIRECTORY, wall_bay_family_name))
 
     except Exception as e:

@@ -20,17 +20,27 @@
 #
 #
 
+from duHast.Revit.ExtensibleSchemas.extensible_schemas import get_schema
 
-from duHast.Utilities.Objects.result import Result
+from pushIt_associated.get_a_room import settings
+from Autodesk.Revit.DB.ExtensibleStorage import Entity
 
-
-
-
-def create_room_family(doc, filled_region, output_directory):
-    return_value = Result()
+def get_output_path_from_schema():
+    """
+    Get the output path from the schema in the document.
+    
+    :return: The output path as a string.
+    :rtype: str
+    """
+    
     try:
-        pass
+        schema = get_schema(settings.GET_A_ROOM_ADD_IN_GUID)
+        # set up an entity
+        entity = Entity(schema)
+        # Retrieve it to verify
+        family_output_directory = entity.Get[str](settings.DU_HAST_GET_A_ROOM_FAMILY_OUT_DIRECTORY_FIELD_NAME)
+        return family_output_directory
     except Exception as e:
-        message = "Failed to create bay family: {}".format(e)
-        return_value.update_sep(False, message)
-    return return_value
+        family_output_directory = None
+        print("Error retrieving family output directory from schema: {}".format(e))
+    return family_output_directory

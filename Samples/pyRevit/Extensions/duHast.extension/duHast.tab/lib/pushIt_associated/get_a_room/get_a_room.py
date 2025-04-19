@@ -34,18 +34,22 @@ from duHast.Revit.Common.Geometry.transforms import move_xyz_to_zero
 from duHast.Revit.Common.Geometry.geometry import get_bounding_box_centre
 from duHast.Revit.Common.Geometry.curve_loops import create_curve_loops_through_transform
 
+from duHast.Revit.ExtensibleSchemas.extensible_schemas import does_schema_exist
+
 from duHast.pyRevit.console_output import print_header, print_error
+from duHast.pyRevit.directory_picker import get_process_directory
 
 from pushIt_associated.get_a_room import settings
 from pushIt_associated.get_a_room.nested_family_bay_create import create_bay_family
 from pushIt_associated.get_a_room.nested_family_room_create import create_room_family
+from pushIt_associated.get_a_room.settings_utils import get_output_path_from_schema
 
 
-from Autodesk.Revit.DB import BuiltInCategory, CurveLoop, Element, FilteredElementCollector, Family, ViewType, SaveAsOptions, Transform, UnitUtils, XYZ
+from Autodesk.Revit.DB import Element, ViewType
 
 
 
-def create_family_from_filled_region(doc, filled_region, bounding_box):
+def create_family_from_filled_region(doc, filled_region, bounding_box, output_directory):
 
     """
     Create a family from a filled region
@@ -67,7 +71,7 @@ def create_family_from_filled_region(doc, filled_region, bounding_box):
     # check which family to create
     if len (filled_region_curve_loops) == 1:
         # create a bay family
-        bay_result = create_bay_family(doc=doc, filled_region=filled_region, bounding_box=bounding_box)
+        bay_result = create_bay_family(doc=doc, filled_region=filled_region, bounding_box=bounding_box, output_directory=output_directory)
         return_value.update(bay_result)
     elif len (filled_region_curve_loops) == 2:
         # create a room family
@@ -103,24 +107,46 @@ def get_a_room_entry(doc, uiapp,output, forms):
     # set up a status tracker
     return_value = Result()
 
+    print_header("Get A Room Entry")
+    
+    # check ig extensible schema exists
+    if not does_schema_exist(settings.GET_A_ROOM_ADD_IN_GUID):
+        message = "Extensible schema does not exist. Please run the setup add-in first."
+        return_value.update_sep(False, message)
+        print_error(message)
+        return return_value
+    
+    # get the output directory from the schema
+    output_directory = get_output_path_from_schema()
+    if output_directory is None or output_directory == "":
+        # get the user to select one ...for now
+        selection_result = get_process_directory(forms=forms, form_title="Select output directory")
+        if selection_result.status == False:
+            message = "Failed to select output directory: {}".format(selection_result.message)
+            return_value.update_sep(False, message)
+            print_error(message)
+            return return_value
+        else:
+            output_directory = selection_result.result[0]
+        
     # get the selection filter for grids
-    selection_filter_grids = selection_filter_filled_regions
+    selection_filter_filled_regions = selection_filter_filled_regions
     # get user to select grids
-    grids_selected_result = get_user_selection(
+    filled_regions_selected_result = get_user_selection(
         doc=doc,
         uidoc=uiapp.ActiveUIDocument,
         ui_text="Select filled regions",
-        selection_filter=selection_filter_grids,
+        selection_filter=selection_filter_filled_regions,
     )
 
     # check if mock rooms where selected
-    if grids_selected_result.status == False:
-        return_value.update(grids_selected_result)
-        print("Failed to select filled regions: {}".format(grids_selected_result.message))
+    if filled_regions_selected_result.status == False:
+        return_value.update(filled_regions_selected_result)
+        print_error("Failed to select filled regions: {}".format(filled_regions_selected_result.message))
         return return_value
 
     # get the actual push it mock rooms selected
-    filled_regions_selected = grids_selected_result.result[0]
+    filled_regions_selected = filled_regions_selected_result.result[0]
     if len(filled_regions_selected) == 0:
         message = "No filled regions where selected."
         return_value.update_sep(False, message)
@@ -202,7 +228,7 @@ def get_a_room_entry(doc, uiapp,output, forms):
         # draw the transformed bounding box
         result_draw = draw_2D_lines_on_bounding_box(doc, bounding_box_new , active_view)
 
-        create_family_result = create_family_from_filled_region(doc, f, bounding_box=bounding_box_new)
+        create_family_result = create_family_from_filled_region(doc, f, bounding_box=bounding_box_new, output_directory=output_directory)
         if( create_family_result.status == False):
             message = "Failed to create family from filled region: \n{}".format(create_family_result.message)
             return_value.update_sep(False, message)
@@ -210,3 +236,6 @@ def get_a_room_entry(doc, uiapp,output, forms):
             continue
         else:
             print("Created family: {}".format(create_family_result.message))
+    
+    
+    print("Finished.")

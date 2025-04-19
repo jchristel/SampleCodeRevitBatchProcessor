@@ -32,9 +32,6 @@ SCRIPT_DIRECTORY = get_directory_path_from_file_path(__file__)
 # location of family templates
 FAMILY_TEMPLATE_DIRECTORY = os.path.join(get_directory_path_from_file_path(__file__),"templates")
 
-# guid of the add-in
-GET_A_ROOM_GUID_ADD_IN_GUID= "d17b7416-53d7-46dc-8df7-b6624743a6b8"
-
 # template name for a room with walls
 FAMILY_TEMPLATE_WALL_ROOM_NAME = "WLL_room_template"
 FAMILY_TEMPLATE_WALL_ROOM_PATH = os.path.join(FAMILY_TEMPLATE_DIRECTORY, FAMILY_TEMPLATE_WALL_ROOM_NAME+".rft")
@@ -58,6 +55,11 @@ FAMILY_TEMPLATE_GENERIC_NESTED_BAY_COARSE_PATH = os.path.join(FAMILY_TEMPLATE_DI
 
 # location to safe families to
 FAMILY_OUT_DIRECTORY = r"\\proj01\SYD\016713-61A-P\2_Work\2-1_Models\2_Revit\3_Resources\1_Families\Rooms"
+
+# guid of the schema to use for the Get A Room add-in
+GET_A_ROOM_ADD_IN_GUID= "d17b7416-53d7-46dc-8df7-b6624743a6b8"
+# schema field names
+DU_HAST_GET_A_ROOM_FAMILY_OUT_DIRECTORY_FIELD_NAME = "DU_HAST_GET_A_ROOM_FAMILY_OUT_DIRECTORY"
 
 # overall dimension parameter names
 WIDTH_PARAMETER_NAME = "HSL_WIDTH"

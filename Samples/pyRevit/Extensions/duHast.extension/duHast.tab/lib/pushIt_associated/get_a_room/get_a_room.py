@@ -130,7 +130,7 @@ def get_a_room_entry(doc, uiapp,output, forms):
             output_directory = selection_result.result[0]
         
     # get the selection filter for grids
-    selection_filter_filled_regions = selection_filter_filled_regions
+    #selection_filter_filled_regions_func = selection_filter_filled_regions
     # get user to select grids
     filled_regions_selected_result = get_user_selection(
         doc=doc,

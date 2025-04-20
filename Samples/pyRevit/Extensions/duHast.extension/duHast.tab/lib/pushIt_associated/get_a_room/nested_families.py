@@ -20,13 +20,72 @@
 #
 #
 
+from duHast.Revit.Family.family_element_utils import get_all_curve_based_elements_in_family,get_all_generic_forms_in_family
 from duHast.Utilities.Objects.result import Result
+from duHast.Revit.Common.delete import delete_by_element_ids
 
-def update_extrusion_outline(family_doc, curve_loop):
+from Autodesk.Revit.DB import Extrusion, ModelLine ,CurveLoop, Line, XYZ, ReferencePlane, CurveElement, ModelText, ElementId
+
+def update_extrusion_outline(family_doc, curve_loops):
     # set up a status tracker
     return_value = Result()
     try:
-        pass
+        
+        print("Updating extrusion outline in family")
+        # get all (should be 1) extrusions in the family
+        elements_col = get_all_generic_forms_in_family(doc=family_doc)
+        
+        # loop over elements and update outlines
+        for el in elements_col:
+            if isinstance(el, Extrusion):
+                # store all existing curves in the extrusion
+                extrusion_model_curve_ids = []
+                
+                # get the sketch
+                sketch_extrusion = el.Sketch
+                
+                # get the sketch plane of the extrusion
+                sketch_plane = sketch_extrusion.SketchPlane
+                
+                # get the element ids of elements in the sketch
+                sketch_element_ids = sketch_extrusion.GetAllElements()
+               
+                # get the curves of the sketch elements
+                for sketch_element_id in sketch_element_ids:
+                    sketch_element = family_doc.GetElement(sketch_element_id)
+                    if isinstance(sketch_element, ModelLine):
+                        print("Found model line: {}".format(sketch_element.Id))
+                        # get the curve of the sketch element
+                        extrusion_model_curve_ids.append(sketch_element_id)
+                
+                # delete old curves and add new ones
+                # delete old sketch elements
+                result_delete = delete_by_element_ids(
+                    doc=family_doc, 
+                    ids=extrusion_model_curve_ids, 
+                    transaction_name="Delete old sketch elements",
+                    element_name= "model lines"
+                )
+                
+                print("Deleted old sketch elements: {}".format(result_delete))
+                
+                # add new curves to the sketch
+                for curve_loop in curve_loops:
+                    # loop over the curves in the loop
+                    for curve in curve_loop:
+                        # create a new model line in the sketch plane
+                        new_model_line = family_doc.NewModelCurve(curve, sketch_plane)
+                        # set the model line to be part of the extrusion sketch
+                        sketch_extrusion.AddElement(new_model_line)
+                
+            else:
+                # ignore this element
+                pass
+                
+            # get out of loop
+            break
+                
+                
     except Exception as e:
         message = "Failed to update extrusion in family: {}".format(e)
         return_value.update_sep(False, message)

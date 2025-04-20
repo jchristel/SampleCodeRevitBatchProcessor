@@ -151,9 +151,11 @@ def get_elements_by_category(doc, cat):
     # get all elements in family
     # format is category graphic style id: list of element ids
     dic = _sort_all_elements_by_category(doc)
+    
     # get id and graphic style id of category to be filtered by
     # contains the ids of the graphic styles for the values '3D', 'Projection', 'Cut'
     category_graphic_style_ids = get_category_graphic_style_ids(cat)
+    
     # check whether category past in is same as owner family category
     if doc.OwnerFamily.FamilyCategory.Name == cat.Name:
         # 3d elements within family which have subcategory set to 'none' belong to owner family
@@ -162,6 +164,7 @@ def get_elements_by_category(doc, cat):
         category_graphic_style_ids[
             CATEGORY_GRAPHIC_STYLE_3D
         ] = ElementId.InvalidElementId
+        
     dic_filtered = {}
     # filter elements by category ids
     for key, value in category_graphic_style_ids.items():

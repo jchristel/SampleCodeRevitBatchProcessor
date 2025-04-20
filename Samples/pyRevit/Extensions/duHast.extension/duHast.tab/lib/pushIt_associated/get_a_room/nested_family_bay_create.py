@@ -30,7 +30,7 @@ from duHast.Revit.DetailItems.filled_regions import  get_filled_region_curve_loo
 from duHast.Revit.Family.family_reload import reload_all_families
 
 from pushIt_associated.get_a_room import settings
-from pushIt_associated.get_a_room.nested_families import update_extrusion_outline, add_2D_outline
+from pushIt_associated.get_a_room.nested_families import create_new_extrusion_from_outlines, add_2D_outline
 from pushIt_associated.get_a_room.host_family import rename_nested_families, hook_up_shared_parameters, update_overall_dimension_parameter_values
 
 def create_bay_family(doc, filled_region, bounding_box, output_directory):
@@ -58,7 +58,13 @@ def create_bay_family(doc, filled_region, bounding_box, output_directory):
         # update the extrusion outline
         # get the filled region curve loops
         filled_region_curve_loops = get_filled_region_curve_loops(filled_region)
-        update_extrusion_result = update_extrusion_outline(bay_nested_family_doc,  filled_region_curve_loops[0])
+        
+        # create a new extrusion in the family
+        update_extrusion_result = create_new_extrusion_from_outlines(
+            bay_nested_family_doc,  
+            filled_region_curve_loops[0],
+            settings.HEIGHT_PARAMETER_NAME,
+        )
         # check if the update extrusion was successful
         if update_extrusion_result.status == False:
             message = "Failed to update extrusion outline: {}".format(update_extrusion_result.message)
@@ -98,7 +104,12 @@ def create_bay_family(doc, filled_region, bounding_box, output_directory):
         bay_nested_coarse_family_doc = fam_result_bay_coarse.result[0]
 
         # update the extrusion outline
-        update_extrusion_result = update_extrusion_outline(bay_nested_coarse_family_doc,  filled_region_curve_loops[0])
+        update_extrusion_result = create_new_extrusion_from_outlines(
+            bay_nested_coarse_family_doc,  
+            filled_region_curve_loops[0],
+            settings.HEIGHT_PARAMETER_NAME,
+        )
+        
         # check if the update extrusion was successful
         if update_extrusion_result.status == False:
             message = "Failed to update extrusion outline: {}".format(update_extrusion_result.message)

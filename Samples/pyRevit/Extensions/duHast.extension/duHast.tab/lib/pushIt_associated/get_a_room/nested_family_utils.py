@@ -23,7 +23,8 @@
 from duHast.Revit.Family.family_element_utils import get_all_curve_based_elements_in_family,get_all_generic_forms_in_family, set_element_visibility_by_detail_level
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Common.delete import delete_by_element_ids
-from duHast.Revit.Common.Geometry.extrusion_create import create_extrusion_on_level, associate_extrusion_height_with_parameter, set_extrusion_sub_category
+from duHast.Revit.Family.Geometry.extrusion_create import create_extrusion_on_level, associate_extrusion_height_with_parameter, set_extrusion_sub_category
+from duHast.Revit.Family.Geometry.symbolic_curve_create import create_symbolic_curves_on_level, set_symbolic_curve_sub_category
 
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 from duHast.Revit.Categories.Utility.category_properties_get_utils import (
@@ -69,14 +70,14 @@ def get_family_element_sub_category_id_name(doc, extrusion):
     return extrusion_sub_category,extrusion_sub_category_id, extrusion_sub_category_name
 
 
-def set_extrusion_visibility_by_detail_level(doc, extrusion, is_visible_coarse_detail):
+def set_family_element_visibility_by_detail_level(doc, element, is_visible_coarse_detail):
     """
-    Set the visibility of an extrusion by detail level.
+    Set the visibility of an family element by detail level.
     
     :param doc: The family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param extrusion: The extrusion element.
-    :type extrusion: Autodesk.Revit.DB.Extrusion
+    :param element: The family element.
+    :type element: Autodesk.Revit.DB.Element
     :param is_visible_coarse_detail: Set visibility for coarse detail level.
     :type is_visible_coarse_detail: bool
     :return: Result class instance.
@@ -102,7 +103,7 @@ def set_extrusion_visibility_by_detail_level(doc, extrusion, is_visible_coarse_d
         # set the visibility of the extrusion by detail level
         return_value = set_element_visibility_by_detail_level(
             doc=doc,
-            element=extrusion,
+            element=element,
             detail_level_coarse=is_visible_coarse_detail,
             detail_level_medium=is_visible_medium_detail,
             detail_level_fine=is_visible_fine_detail,
@@ -148,7 +149,7 @@ def create_extrusion(doc, curve_loops, detail_level, height_parameter_name, sour
             level_plane =level
             break
         
-        # set the visibility by detail level
+        # set the visibility by detail level, subcategory and associate the extrusion height with the parameter
         def action(doc, extrusion):
             action_return_value = Result()
             try:
@@ -163,7 +164,7 @@ def create_extrusion(doc, curve_loops, detail_level, height_parameter_name, sour
                 action_return_value.update(set_sub_cat_result)
                 
                 # set the visibility of the extrusion by detail level
-                set_result = set_extrusion_visibility_by_detail_level(doc=doc, extrusion=extrusion, is_visible_coarse_detail=detail_level)
+                set_result = set_family_element_visibility_by_detail_level(doc=doc, element=extrusion, is_visible_coarse_detail=detail_level)
                 action_return_value.update(set_result)
                 
                 # associate the extrusion height with the parameter
@@ -273,14 +274,14 @@ def create_new_extrusion_from_outlines(family_doc, curve_loops, height_parameter
 
 
 
-def create_curves(doc, curve_loops, detail_level,  source_graphic_style):
+def create_curves(doc, curve_loop, detail_level,  source_graphic_style):
     """
     Create a new curves in the family document using the provided curve loops.
     
     :param doc: The family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param curve_loops: The curve loops to use for the new extrusion.
-    :type curve_loops: list of Autodesk.Revit.DB.CurveLoop
+    :param curve_loop: The curve loop to use for the new extrusion.
+    :type curve_loop: Autodesk.Revit.DB.CurveLoop
     :param detail_level: Set visibility for coarse detail level.
     :type detail_level: bool
     :return: Result class instance.
@@ -296,7 +297,40 @@ def create_curves(doc, curve_loops, detail_level,  source_graphic_style):
     
     return_value = Result()
     try:
-        pass
+        # get the level in the family document   
+        level_col = get_levels_in_model(doc)
+        
+        level_plane = None
+        for level in level_col:
+            level_plane =level
+            break
+        
+        # set the visibility by detail level, subcategory
+        def action(doc, curve):
+            action_return_value = Result()
+            try:
+                
+                # set the subcategory of the symbolic curve to the source curve' sub category
+                set_sub_cat_result = set_symbolic_curve_sub_category(
+                    doc=doc, 
+                    curve=curve, 
+                    source_graphic_style=source_graphic_style,
+                    transaction_manager=None # already in a transaction,
+                )
+                action_return_value.update(set_sub_cat_result)
+                
+                # set the visibility of the curve by detail level
+                set_result = set_family_element_visibility_by_detail_level(doc=doc, element=curve, is_visible_coarse_detail=detail_level)
+                action_return_value.update(set_result)
+                
+            except Exception as e:
+                action_return_value.update_sep(False, "Failed to create new curves in family: {}".format(e))
+            return action_return_value
+        
+        # create new curves in the family document and set its visibility by detail level
+        create_result = create_symbolic_curves_on_level(doc=doc,level=level_plane, curve_loop=curve_loop, func = action)
+        return_value.update(create_result)
+        
     except Exception as e:
         message = "Failed to create new curves in family: {}".format(e)
         return_value.update_sep(False, message)
@@ -361,16 +395,16 @@ def add_2D_outline(family_doc, curve_loop, is_visible_coarse_detail):
         )
         return_value.update(create_curves_result)
         
-        # get out if no extrusion was created
+        # get out if no curves where created
         if not return_value.status:
             return return_value
         
-        # get the new extrusion
+        # get the new curves
         elements = create_curves_result.result
         # make sure only the element is returned in the result
         return_value.result = elements
         
-        # delete the old extrusion
+        # delete the old curves
         if source_curves_id != None and len(source_curves_id) > 0:
             delete_result = delete_by_element_ids(family_doc, source_curves_id, "Delete source curves", "Curve")
             return_value.update(delete_result)

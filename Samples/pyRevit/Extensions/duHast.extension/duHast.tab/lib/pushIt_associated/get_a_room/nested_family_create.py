@@ -130,8 +130,11 @@ def create_get_a_room_family(doc, family_config):
         
         return_value.append_message("Nested {} coarse detail family extrusion created".format(family_config.room_type))
        
-        # update add 2D lines
-        add_2d_lines_result = add_2D_outline(nested_coarse_detail_family_doc,  filled_region_curve_loops, True)
+        # add 2D lines
+        # use the inner loop if two loops are present, otherwise use the first loop
+        curve_loop = filled_region_curve_loops[0] if len(filled_region_curve_loops) == 1 else filled_region_curve_loops[1]
+        # add 2D lines to the family
+        add_2d_lines_result = add_2D_outline(nested_coarse_detail_family_doc,  curve_loop, True)
         # check if the lines where added successful
         if add_2d_lines_result.status == False:
             message = "Failed to add 2D outline: {} to {} coarse detail family".format(family_config.room_type, add_2d_lines_result.message)

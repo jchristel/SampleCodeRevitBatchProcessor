@@ -41,7 +41,8 @@ from Autodesk.Revit.DB import (
     CurveArray,
     CurveArrArray,
     CurveLoop,
-    Transaction
+    Transaction,
+    XYZ,
 )
 
 def create_curve_loops_through_transform(curve_loops, transform, convert_net_list=False):
@@ -196,3 +197,29 @@ def convert_curve_loops_to_curve_arr_array(curve_loops):
         curve_arr_array.Append(curve_array)
 
     return curve_arr_array
+
+
+def get_curve_loop_centroid(curve_loop):
+    """
+    Finds an approximate centroid inside the given CurveLoop. The curve loop is assumed to be closed and planar.
+    
+    :param original_loop: The CurveLoop to find the centroid of.
+    :type original_loop: Autodesk.Revit.DB.CurveLoop
+    :return: The centroid point of the CurveLoop.
+    :rtype: Autodesk.Revit.DB.XYZ
+    """
+    
+    # check if the curve loop is closed
+    if curve_loop.IsOpen():
+        raise ValueError("Curve loop is not closed.")
+        
+    sum_point = XYZ.Zero
+    count = 0
+
+    for curve in curve_loop:
+        sum_point += curve.GetEndPoint(0)
+        sum_point += curve.GetEndPoint(1)
+        count += 2
+
+    centroid = sum_point / count
+    return centroid  # Likely inside the original loop

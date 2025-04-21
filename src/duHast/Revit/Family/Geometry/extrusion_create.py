@@ -2,6 +2,10 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit extrusion create helper functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These functions work within a Revit family document to create and manipulate extrusions.
+
+
 """
 #
 # License:
@@ -30,17 +34,15 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Common.Geometry.curve_loops import convert_curve_loops_to_curve_arr_array
 from duHast.Revit.Common.transaction import in_transaction
 
-from duHast.Revit.Categories.Utility.category_properties_get_utils import get_category_graphic_style_ids
 from duHast.Revit.Categories.Utility.category_property_names import CATEGORY_GRAPHIC_STYLE_3D
 from duHast.Revit.Categories.categories import (
-    ELEMENTS_PARAS_SUB,
-    get_category_by_id,
+    ELEMENTS_PARAS_SUB
 )
 
-from duHast.Revit.Common import parameter_set_utils as rParaSet
 from duHast.Revit.Common.parameter_set_utils import set_parameter_value
 
 from duHast.Revit.Family.family_parameter_utils import associate_parameter_with_other_parameter_on_nested_family_instance
+from duHast.Revit.Family.Geometry.utils import set_element_sub_category
 
 from Autodesk.Revit.DB import BuiltInParameter,Transaction, SketchPlane
 
@@ -258,7 +260,7 @@ def set_extrusion_sub_category(doc, extrusion, source_graphic_style, transaction
 
         - `result.status` (bool): True if the extrusion subcategory was set successfully, otherwise False.
         - `result.message` (str): Confirmation of successful setting of the extrusion subcategory.
-        - `result.result` (list): The new extrusion element.
+        - `result.result` (list): Empty.
     
     
     On exception:
@@ -271,32 +273,13 @@ def set_extrusion_sub_category(doc, extrusion, source_graphic_style, transaction
         
     return_value = Result()
     try:
-        # assign the graphic style
-        paras = extrusion.GetOrderedParameters()
-        
-        # flag to indicate if the value has been attempted to be set
-        value_has_been_set = False
-        
-        # find the parameter driving the subcategory
-        for p in paras:
-            if p.Definition.BuiltInParameter in ELEMENTS_PARAS_SUB:
-                # get the subcategory style id
-                target_id = source_graphic_style[CATEGORY_GRAPHIC_STYLE_3D]
-                # set the subcategory id
-                updated_para = set_parameter_value(
-                    p, 
-                    str(target_id), 
-                    doc,
-                    transaction_manager
-                )
-                return_value.update(updated_para)
-                
-                # set flag to true to indicate that the value has been set, or at least attempted to be set
-                value_has_been_set = True
-                
-                break
-        if not value_has_been_set:
-            return_value.update_sep(False, "Failed to set sub category in family. No parameter match found.")
+        return_value = set_element_sub_category(
+            doc=doc,
+            element=extrusion,
+            source_graphic_style=source_graphic_style,
+            source_graphic_style_key=CATEGORY_GRAPHIC_STYLE_3D,
+            transaction_manager=transaction_manager,
+        )
     except Exception as e:
         message = "Failed to set sub category in family: {}".format(e)
         return_value.update_sep(False, message)

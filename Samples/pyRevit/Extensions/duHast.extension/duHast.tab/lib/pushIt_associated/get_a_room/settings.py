@@ -20,8 +20,6 @@
 #
 #
 
-
-
 import os
 
 from duHast.Utilities.files_io import get_directory_path_from_file_path
@@ -52,9 +50,6 @@ FAMILY_TEMPLATE_GENERIC_NESTED_ROOM_COARSE_PATH = os.path.join(FAMILY_TEMPLATE_D
 # template name for nested generic family when in a coarse view for a bay
 FAMILY_TEMPLATE_GENERIC_NESTED_BAY_COARSE = "GEN_Inner_Nested_Coarse_Bay_template"
 FAMILY_TEMPLATE_GENERIC_NESTED_BAY_COARSE_PATH = os.path.join(FAMILY_TEMPLATE_DIRECTORY, FAMILY_TEMPLATE_GENERIC_NESTED_BAY_COARSE+".rft")
-
-# location to safe families to
-FAMILY_OUT_DIRECTORY = r"\\proj01\SYD\016713-61A-P\2_Work\2-1_Models\2_Revit\3_Resources\1_Families\Rooms"
 
 # guid of the schema to use for the Get A Room add-in
 GET_A_ROOM_ADD_IN_GUID= "d17b7416-53d7-46dc-8df7-b6624743a6b8"

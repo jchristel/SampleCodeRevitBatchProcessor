@@ -242,7 +242,7 @@ def create_get_a_room_family(doc, family_config):
         wall_host_family_doc.Close(False)
 
         # add the full host family path to the return value
-        return_value.result = ["{}{}.rfa".format(settings.FAMILY_OUT_DIRECTORY, wall_host_family_name)]
+        return_value.result = ["{}{}.rfa".format(family_config.output_directory, wall_host_family_name)]
 
     except Exception as e:
         message = "Failed to create {} family: {}".format(family_config.room_type, e)

@@ -28,11 +28,11 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Revit.UI.custom_selection_user import get_user_selection
 from duHast.Revit.DetailItems.filled_regions import  get_filled_region_curve_loops
 from duHast.Revit.DetailItems.filled_regions_create import create_filled_region_by_view
-from duHast.Revit.DetailItems.curve_create import draw_2D_lines_on_bounding_box
+from duHast.Revit.DetailItems.curve_create import draw_2D_lines_on_bounding_box, draw_2D_lines_on_bounding_box_and_separate_point
 
 from duHast.Revit.Common.Geometry.transforms import move_xyz_to_zero
 from duHast.Revit.Common.Geometry.geometry import get_bounding_box_centre
-from duHast.Revit.Common.Geometry.curve_loops import create_curve_loops_through_transform
+from duHast.Revit.Common.Geometry.curve_loops import create_curve_loops_through_transform, get_curve_loop_centroid
 
 from duHast.Revit.ExtensibleSchemas.extensible_schemas import does_schema_exist
 
@@ -284,9 +284,10 @@ def get_a_room_entry(doc, uiapp,output, forms):
             return_value.update_sep(False, message)
             print(message)
             continue
+        
         bounding_box_new = filled_region_new_result.result[0].get_BoundingBox(active_view)
         # draw the transformed bounding box
-        result_draw = draw_2D_lines_on_bounding_box(doc, bounding_box_new , active_view)
+        result_draw = draw_2D_lines_on_bounding_box_and_separate_point(doc, bounding_box_new, get_curve_loop_centroid(transformed_curve_loops[0]), active_view)
 
         create_family_result = create_family_from_filled_region(doc, f, bounding_box=bounding_box_new, output_directory=output_directory)
         if( create_family_result.status == False):

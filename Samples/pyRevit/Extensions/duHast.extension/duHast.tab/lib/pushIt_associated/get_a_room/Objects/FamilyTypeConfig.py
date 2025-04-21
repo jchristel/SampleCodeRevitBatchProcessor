@@ -33,8 +33,7 @@ class FamilyTypeConfig(Base):
         generic_nested_coarse_name,
         generic_nested_coarse_path,
         wall_host_path,
-        filled_region,
-        bounding_box,
+        curve_loops,
         output_directory,
         **kwargs
     ):
@@ -50,10 +49,8 @@ class FamilyTypeConfig(Base):
         :type generic_nested_coarse_path: str
         :param wall_host_path: Path to the wall host family.
         :type wall_host_path: str
-        :param filled_region: The filled region for the family.
-        :type filled_region: Autodesk.Revit.DB.FilledRegion
-        :param bounding_box: The bounding box for the family.
-        :type bounding_box: Autodesk.Revit.DB.BoundingBoxXYZ
+        :param curve_loops: The curve loops for the family.
+        :type curve_loops: list of Autodesk.Revit.DB.CurveLoop
         :param output_directory: The directory for output files.
         :type output_directory: str
         :param kwargs: Additional keyword arguments.
@@ -67,6 +64,5 @@ class FamilyTypeConfig(Base):
         self.generic_nested_coarse_name = generic_nested_coarse_name
         self.generic_nested_coarse_path=generic_nested_coarse_path
         self.wall_host_path =wall_host_path
-        self.filled_region= filled_region
-        self.bounding_box=bounding_box
+        self.fcurve_loops = curve_loops
         self.output_directory=output_directory

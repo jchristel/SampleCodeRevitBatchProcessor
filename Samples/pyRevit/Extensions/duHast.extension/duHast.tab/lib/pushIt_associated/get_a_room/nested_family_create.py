@@ -66,7 +66,7 @@ def create_get_a_room_family(doc, family_config):
 
         # update the extrusion outline
         # get the filled region curve loops
-        filled_region_curve_loops = get_filled_region_curve_loops(family_config.filled_region)
+        filled_region_curve_loops = family_config.curve_loops
         
         # create a new extrusion in the family
         create_extrusion_result = create_new_extrusion_from_outlines(
@@ -103,8 +103,8 @@ def create_get_a_room_family(doc, family_config):
         # close the family document
         nested_medium_and_fine_family_doc.Close(False)
 
-        # open the bay nested family coarse template
-        fam_result_coarse = get_family_from_template(doc, family_template_path=settings.FAMILY_TEMPLATE_GENERIC_NESTED_BAY_COARSE_PATH )
+        # open the nested family coarse template
+        fam_result_coarse = get_family_from_template(doc, family_template_path=family_config.generic_nested_coarse_path)
         if fam_result_coarse.status == False:
             message =  "Failed to create nested {} coarse detail family: {}".format(family_config.room_type,fam_result_coarse.message)
             return_value.update_sep(False, message)

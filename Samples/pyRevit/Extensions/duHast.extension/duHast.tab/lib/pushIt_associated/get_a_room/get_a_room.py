@@ -44,10 +44,14 @@ from pushIt_associated.get_a_room.nested_family_create import create_get_a_room_
 from pushIt_associated.get_a_room.settings_utils import get_output_path_from_schema
 from pushIt_associated.get_a_room.Objects.FamilyTypeConfig import FamilyTypeConfig
 
+from pushIt_associated.get_a_room import debug as debug
+
 from Autodesk.Revit.DB import Element, ViewType
 
 
-def create_family_from_filled_region(doc, filled_region, bounding_box, output_directory):
+DEBUG = True
+
+def create_family_from_filled_region(doc, filled_region_curve_loops, output_directory):
 
     """
     Create a family from a filled region
@@ -71,9 +75,6 @@ def create_family_from_filled_region(doc, filled_region, bounding_box, output_di
     # set up a status tracker
     return_value = Result()
 
-    # check how many curves are in the filled region
-    filled_region_curve_loops = get_filled_region_curve_loops(filled_region)
-
     # set up a place holder for the family config
     fam_config = None
     
@@ -88,8 +89,7 @@ def create_family_from_filled_region(doc, filled_region, bounding_box, output_di
             generic_nested_coarse_name=settings.FAMILY_TEMPLATE_GENERIC_NESTED_BAY_COARSE,
             generic_nested_coarse_path=settings.FAMILY_TEMPLATE_GENERIC_NESTED_BAY_COARSE_PATH,
             wall_host_path=settings.FAMILY_TEMPLATE_WALL_BAY_PATH,
-            filled_region=filled_region,
-            bounding_box=bounding_box,
+            curve_loops=filled_region_curve_loops,
             output_directory=output_directory,
         )
     elif len (filled_region_curve_loops) == 2:
@@ -102,8 +102,7 @@ def create_family_from_filled_region(doc, filled_region, bounding_box, output_di
             generic_nested_coarse_name=settings.FAMILY_TEMPLATE_GENERIC_NESTED_ROOM_COARSE,
             generic_nested_coarse_path=settings.FAMILY_TEMPLATE_GENERIC_NESTED_ROOM_COARSE_PATH,
             wall_host_path=settings.FAMILY_TEMPLATE_WALL_ROOM_PATH,
-            filled_region=filled_region,
-            bounding_box=bounding_box,
+            curve_loops=filled_region_curve_loops,
             output_directory=output_directory,
         )
     else:
@@ -254,10 +253,11 @@ def get_a_room_entry(doc, uiapp,output, forms):
     
     # loop over the filtered regions
     for f in filtered_regions:
-        # get the bounding box of the filled region
+        
+        if DEBUG :
+            debug.draw_bounding_box_around_filled_region(doc, active_view, f)# get the bounding box of the filled region
+       
         bounding_box = f.get_BoundingBox(active_view)
-        result_draw = draw_2D_lines_on_bounding_box(doc, bounding_box, active_view)
-
         # attempt to move the bounding box to centre to zero
         # get the bounding box center
         bounding_box_center = get_bounding_box_centre(bounding_box)
@@ -271,25 +271,27 @@ def get_a_room_entry(doc, uiapp,output, forms):
             convert_net_list=True
         )
         
-        # create a new filled region by view
-        filled_region_new_result = create_filled_region_by_view(
-            doc=doc, 
-            view=active_view, 
-            curve_loops=transformed_curve_loops,
-            filled_region_type=f.GetTypeId(),
-        )
+        if DEBUG:
+            # create a new filled region by view
+            filled_region_new_result = create_filled_region_by_view(
+                doc=doc, 
+                view=active_view, 
+                curve_loops=transformed_curve_loops,
+                filled_region_type=f.GetTypeId(),
+            )
 
-        if filled_region_new_result.status == False:
-            message = "Failed to create new filled region: {}".format(filled_region_new_result.message)
-            return_value.update_sep(False, message)
-            print(message)
-            continue
+            if filled_region_new_result.status == False:
+                message = "Failed to create new filled region: {}".format(filled_region_new_result.message)
+                return_value.update_sep(False, message)
+                print(message)
+                continue
+            
+            bounding_box_new = filled_region_new_result.result[0].get_BoundingBox(active_view)
+            # draw the transformed bounding box
+            result_draw = draw_2D_lines_on_bounding_box_and_separate_point(doc, bounding_box_new, get_curve_loop_centroid(transformed_curve_loops[0]), active_view)
+
+        create_family_result = create_family_from_filled_region(doc, transformed_curve_loops, output_directory=output_directory)
         
-        bounding_box_new = filled_region_new_result.result[0].get_BoundingBox(active_view)
-        # draw the transformed bounding box
-        result_draw = draw_2D_lines_on_bounding_box_and_separate_point(doc, bounding_box_new, get_curve_loop_centroid(transformed_curve_loops[0]), active_view)
-
-        create_family_result = create_family_from_filled_region(doc, f, bounding_box=bounding_box_new, output_directory=output_directory)
         if( create_family_result.status == False):
             message = "Failed to create family from filled region: \n{}".format(create_family_result.message)
             return_value.update_sep(False, message)

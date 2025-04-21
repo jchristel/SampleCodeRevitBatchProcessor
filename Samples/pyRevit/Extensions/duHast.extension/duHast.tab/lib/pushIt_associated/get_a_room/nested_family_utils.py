@@ -306,6 +306,29 @@ def create_curves(doc, curve_loops, detail_level,  source_graphic_style):
         
 
 def add_2D_outline(family_doc, curve_loop, is_visible_coarse_detail):
+    """
+    Create a new curves the family document using the provided curve loops.
+    The new curves will be created with the same subcategory as the existing curves.
+    
+    :param family_doc: The family document.
+    :type family_doc: Autodesk.Revit.DB.Document
+    :param curve_loops: The curve loops to use for the new extrusion.
+    :type curve_loops: list of Autodesk.Revit.DB.CurveLoop
+    :return: Result class instance.
+
+        - `result.status` (bool): True if the curves where created successfully, otherwise False.
+        - `result.message` (str): Confirmation of successful creation of all curves.
+        - `result.result` (list): The new curve elements.
+        
+        
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Generic exception message.
+        - `result.result` (list): Empty.
+        
+    :rtype: :class:`.Result`
+    """
+    
     # set up a status tracker
     return_value = Result()
     try:

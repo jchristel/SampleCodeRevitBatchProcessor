@@ -37,6 +37,9 @@ from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value
 # import Autodesk
 from Autodesk.Revit.DB import (
     BuiltInParameter,
+    Curve,
+    CurveArray,
+    CurveArrArray,
     CurveLoop,
     Transaction
 )
@@ -144,3 +147,52 @@ def get_area_from_closed_curve_loop(doc, view, curve_loop, filled_region_type_id
         return_value.update_sep(False, "Failed to get filled region loop area with error: {}".format(e))
         
     return return_value
+
+
+def convert_loop_to_curve_array(curve_loop):
+    """
+    Convert a curve loop to a CurveArray object.
+    Curve loop can not contain nested loops.
+    
+    :param curve_loop: The curve loop to convert.
+    :type curve_loop: Autodesk.Revit.DB.CurveLoop
+    :return: CurveArray object
+    """
+    
+    curve_array = CurveArray()
+    if (isinstance(curve_loop, CurveLoop)):
+        for curve in curve_loop:
+            if (isinstance(curve, Curve)):
+                curve_array.Append(curve)
+                
+    return curve_array
+
+
+def convert_curve_loops_to_curve_arr_array(curve_loops):
+    """
+    Convert a list of curve loops to a CurveArrArray object.
+    This is used to create a new extrusion in the family document.
+    
+    :param curve_loops: list of curve loops
+    :return: CurveArrArray object
+    """
+    
+    # create a new curve array array
+    curve_arr_array = CurveArrArray()
+
+    curve_array = CurveArray()
+    for loop in curve_loops:
+        
+        if (isinstance(loop, CurveLoop)):
+            # a loop of curves, convert to curve array
+            c_ar = convert_loop_to_curve_array(loop)
+            curve_arr_array.Append(c_ar)
+        elif (isinstance(loop, Curve)):
+            # just a curve, not a loop
+            curve_array.Append(loop)
+            
+    # only append the curve array if it is not empty
+    if (curve_array.Size > 0):
+        curve_arr_array.Append(curve_array)
+
+    return curve_arr_array

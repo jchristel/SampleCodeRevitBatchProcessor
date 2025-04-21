@@ -282,7 +282,11 @@ def create_family_parameter(
     return return_value
 
 def associate_parameter_with_other_parameter_on_nested_family_instance(
-    doc, nested_family_instance, target_parameter_name, source_parameter_name
+    doc, 
+    nested_family_instance, 
+    target_parameter_name, 
+    source_parameter_name,
+    transaction_manager = rTran.in_transaction,
 ):
     """
     Associate a nested family instance parameter ( can be type or instance) with a host family parameter.
@@ -349,14 +353,21 @@ def associate_parameter_with_other_parameter_on_nested_family_instance(
                                 ),
                             )
                         return action_return_value
-
-                    transaction = Transaction(
-                        doc,
-                        "Associate parameter: {} with {}".format(
-                            target_parameter_name, source_parameter_name
-                        ),
-                    )
-                    return_value = rTran.in_transaction(transaction, action)
+                    
+                    # execute the action
+                    if transaction_manager:
+                        # if in transaction, execute the action in the transaction
+                        transaction_manager = rTran.in_transaction
+                        transaction = Transaction(
+                            doc,
+                            "Associate parameter: {} with {}".format(
+                                target_parameter_name, source_parameter_name
+                            ),
+                        )
+                        return_value = rTran.in_transaction(transaction, action)
+                    else:
+                        # if not in transaction, execute the action without a transaction
+                        return_value = action()
                     break
 
             # break out of the loop if source parameter found

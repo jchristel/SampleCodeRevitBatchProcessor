@@ -27,14 +27,19 @@ Revit families helper functions retrieving elements from a family.
 #
 #
 
+from duHast.Utilities.Objects.result import Result
+from duHast.Revit.Common.transaction import in_transaction
 
 from Autodesk.Revit.DB import (
     CurveElement,
     Element,
+    FamilyElementVisibility,
+    FamilyElementVisibilityType,
     FilteredElementCollector,
     GenericForm,
     ModelText,
     ReferencePlane,
+    Transaction,
 )
 
 LINE_NAMES = [
@@ -100,3 +105,70 @@ def get_all_reference_planes_in_family(doc):
 
     col = FilteredElementCollector(doc).OfClass(ReferencePlane)
     return col
+
+
+def set_element_visibility_by_detail_level(doc, element, detail_level_coarse = True,  detail_level_medium = True, detail_level_fine = True, transaction_manager= in_transaction):
+    
+    """
+    Set the visibility of an element by detail level.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param element: The element to set the visibility for.
+    :type element: Autodesk.Revit.DB.Element
+    :param detail_level_coarse: Set visibility for coarse detail level.
+    :type detail_level_coarse: bool
+    :param detail_level_fine: Set visibility for fine detail level.
+    :type detail_level_fine: bool
+    :param detail_level_medium: Set visibility for medium detail level.
+    :type detail_level_medium: bool
+    
+    :return: Result class instance.
+
+        - `result.status` (bool): True if the visibility was updated successfully, otherwise False.
+        - `result.message` (str): Confirmation of successful application of visibility settings.
+        - `result.result` (list): Empty.
+        
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Generic exception message.
+        - `result.result` (list): Empty.
+        
+    :rtype: :class:`.Result`
+    """
+    
+    return_value = Result()
+    
+    try:
+        
+        def action():
+            action_return_value = Result()
+            try:
+                fam_element_visibility = FamilyElementVisibility(FamilyElementVisibilityType.Model)
+
+                # Set visibility options
+                fam_element_visibility.IsShownInCoarse = detail_level_coarse
+                fam_element_visibility.IsShownInMedium = detail_level_medium   
+                fam_element_visibility.IsShownInFine = detail_level_fine
+
+                # Apply visibility settings to the extrusion
+                element.SetVisibility(fam_element_visibility)
+
+                action_return_value.append_message("Visibility set by detail level fine: {} medium: {} coarse: {}".format(detail_level_fine, detail_level_medium, detail_level_coarse))
+            except Exception as e:
+                action_return_value.update_sep(False, "Error setting visibility by detail level: {}".format(e))
+            return action_return_value
+        
+        # check if this need to be run inside a transaction
+        if transaction_manager:
+            # If a transaction manager is provided, create a new transaction
+            transaction = Transaction(doc, "Setting detail level visibility")
+            return_value = transaction_manager(transaction,action )
+        else:
+            # If no transaction manager is provided, run the action without a transaction
+            # assuming there is one already in place
+            return_value = action()
+        
+    except Exception as e:
+        return_value.update_sep(False, "Error setting visibility by detail level: {}".format(e))
+    
+    return return_value

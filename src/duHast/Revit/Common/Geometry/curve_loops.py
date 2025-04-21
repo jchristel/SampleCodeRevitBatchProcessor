@@ -76,6 +76,27 @@ def create_curve_loops_through_transform(curve_loops, transform, convert_net_lis
             new_curve_loops.append(transformed_curve_loop)
         
         return new_curve_loops
+    
+    
+def create_curve_loop_through_offset(curve_loop, offset_distance, offset_normal):
+    """
+    Creates a new curve loop by transforming the existing curve loops using the provided transform.
+
+    :param curve_loop: The curve loop to be transformed.
+    :type curve_loop: Autodesk.Revit.DB.CurveLoop
+    :param offset_distance: The distance to offset the curve loop.
+    :type offset_distance: float
+    :param offset_normal: The normal vector to offset the curve loop.
+    :type offset_normal: Autodesk.Revit.DB.XYZ
+
+    :return: A transformed curve loops.
+    :rtype: Autodesk.Revit.DB.CurveLoop
+    """
+
+    # create a new curve loop via offset
+    new_curve_loop = CurveLoop.CreateViaOffset(curve_loop, offset_distance, offset_normal)
+    
+    return new_curve_loop
 
 
 def get_area_from_closed_curve_loop(doc, view, curve_loop, filled_region_type_id):

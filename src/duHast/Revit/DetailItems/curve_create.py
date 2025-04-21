@@ -129,3 +129,65 @@ def draw_2D_lines_on_bounding_box(doc, bounding_box, view,  transaction_manager=
     return_value = transaction_manager(transaction, action)
 
     return return_value
+
+
+def draw_2D_lines_on_bounding_box_and_separate_point(doc, bounding_box, additional_point, view,  transaction_manager=rTran.in_transaction):
+    """
+    Draw 2D lines on the bounding box of an element in view provided and in addition lines from each corner of the bounding box to the additional point.
+    
+    :param doc: The Revit document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param bounding_box: The bounding box of the element.
+    :type bounding_box: Autodesk.Revit.DB.BoundingBoxXYZ
+    :param additional_point: The additional point to draw lines to.
+    :type additional_point: Autodesk.Revit.DB.XYZ
+    :param view: The view in which to draw the lines.
+    :type view: Autodesk.Revit.DB.View
+    :param transaction_manager: The transaction manager to use.
+    :type transaction_manager: function
+    
+    :return: Result object containing the status of the operation.
+    :rtype: Result
+    """
+
+    return_value = Result()
+
+    # get the corners of the bounding box
+    min_x = bounding_box.Min.X
+    min_y = bounding_box.Min.Y
+    max_x = bounding_box.Max.X
+    max_y = bounding_box.Max.Y
+
+    # create a list of points for the lines
+    points_bbox = [
+        XYZ(min_x, min_y, 0),
+        XYZ(max_x, min_y, 0),
+        XYZ(max_x, max_y, 0),
+        XYZ(min_x, max_y, 0),
+        XYZ(min_x, min_y, 0),
+    ]
+    
+    # flatten the additional point to 2D
+    additional_point = XYZ(additional_point.X, additional_point.Y, 0)
+
+    def action():
+        action_return_value = Result()
+        try:
+            # draw the lines on the view
+            for i in range(len(points_bbox) - 1):
+                create_line_result = draw_line_between_points(doc, view, start_point=points_bbox[i], end_point=points_bbox[i + 1],  transaction_manager=None)
+                action_return_value.update(create_line_result)
+            # draw lines from each corner of the bounding box to the additional point
+            for point in points_bbox[:-1]:
+                create_line_result = draw_line_between_points(doc, view, start_point=point, end_point=additional_point,  transaction_manager=None)
+                action_return_value.update(create_line_result)
+        except Exception as e:
+            action_return_value.update_sep(False, "Failed to draw lines: {}".format(e))
+
+        return action_return_value
+
+    # use the provided transaction manager to draw the bounding box
+    transaction = Transaction(doc, "Drawing bounding box")
+    return_value = transaction_manager(transaction, action)
+
+    return return_value

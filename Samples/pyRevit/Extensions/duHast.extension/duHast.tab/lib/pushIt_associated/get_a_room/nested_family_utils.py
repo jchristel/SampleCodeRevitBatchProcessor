@@ -39,9 +39,9 @@ from duHast.Revit.Categories.categories import (
 #from Autodesk.Revit.DB import BuiltInParameter, CurveArrArray, CurveArray, CurveLoop, Curve, Extrusion, ModelLine ,Transaction, SketchPlane
 
 
-def get_extrusion_sub_category_id_name(doc, extrusion):
+def get_family_element_sub_category_id_name(doc, extrusion):
     """
-    Get the sub category, sub category id and subcategory name of an extrusion in a family document.
+    Get the sub category, sub category id and subcategory name of elements in a family document.
     
     :param doc: The family document.
     :type doc: Autodesk.Revit.DB.Document
@@ -231,7 +231,7 @@ def create_new_extrusion_from_outlines(family_doc, curve_loops, height_parameter
         # loop over generic forms to get the first extrusion (there should only be one)
         for el in generic_forms:
             source_extrusion_id = el.Id
-            source_extrusion_sub_category,source_extrusion_sub_category_id, source_extrusion_sub_category_name = get_extrusion_sub_category_id_name(family_doc, el)
+            source_extrusion_sub_category,source_extrusion_sub_category_id, source_extrusion_sub_category_name = get_family_element_sub_category_id_name(family_doc, el)
             break
         
         return_value.append_message("Source extrusion sub category id: {} and name : {}".format(
@@ -272,11 +272,87 @@ def create_new_extrusion_from_outlines(family_doc, curve_loops, height_parameter
     return return_value
 
 
-def add_2D_outline(family_doc, curve_loop):
+
+def create_curves(doc, curve_loops, detail_level,  source_graphic_style):
+    """
+    Create a new curves in the family document using the provided curve loops.
+    
+    :param doc: The family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param curve_loops: The curve loops to use for the new extrusion.
+    :type curve_loops: list of Autodesk.Revit.DB.CurveLoop
+    :param detail_level: Set visibility for coarse detail level.
+    :type detail_level: bool
+    :return: Result class instance.
+        - `result.status` (bool): True if the extrusion was created successfully, otherwise False.
+        - `result.message` (str): Confirmation of successful creation of the extrusion.
+        - `result.result` (list): The new extrusion element.
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Generic exception message.
+        - `result.result` (list): Empty.
+    :rtype: :class:`.Result`
+    """
+    
+    return_value = Result()
+    try:
+        pass
+    except Exception as e:
+        message = "Failed to create new curves in family: {}".format(e)
+        return_value.update_sep(False, message)
+        
+    print("Return value: {}".format(return_value.message))
+    return return_value
+        
+
+def add_2D_outline(family_doc, curve_loop, is_visible_coarse_detail):
     # set up a status tracker
     return_value = Result()
     try:
-        return_value.append_message("Adding 2D outline to family")
+        # get the existing curves
+        curves = get_all_curve_based_elements_in_family(doc=family_doc)
+        
+        source_curves_sub_category_id = None
+        source_curves_sub_category_name = None
+        source_curves_sub_category = None
+        source_curves_id = []
+        
+        # loop over curves 
+        for el in curves:
+            # store ids for later deletion
+            source_curves_id.append(el.Id)
+            source_curves_sub_category,source_curves_sub_category_id, source_curves_sub_category_name = get_family_element_sub_category_id_name(family_doc, el)
+        
+        return_value.append_message("Source curves sub category id: {} and name : {}".format(
+            source_curves_sub_category_id, source_curves_sub_category_name))
+        
+        # get the graphic style of the source curves sub category
+        source_graphic_style = get_category_graphic_style_ids(source_curves_sub_category)
+        
+        # create  new curves in the family document
+        create_curves_result = create_curves(
+            family_doc, 
+            curve_loop, 
+            is_visible_coarse_detail, 
+            source_graphic_style=source_graphic_style,
+        )
+        return_value.update(create_curves_result)
+        
+        # get out if no extrusion was created
+        if not return_value.status:
+            return return_value
+        
+        # get the new extrusion
+        elements = create_curves_result.result
+        # make sure only the element is returned in the result
+        return_value.result = elements
+        
+        # delete the old extrusion
+        if source_curves_id != None and len(source_curves_id) > 0:
+            delete_result = delete_by_element_ids(family_doc, source_curves_id, "Delete source curves", "Curve")
+            return_value.update(delete_result)
+        
+        return_value.append_message("Added 2D outlines to family")
     except Exception as e:
         message = "Failed to add 2D lines in family: {}".format(e)
         return_value.update_sep(False, message)

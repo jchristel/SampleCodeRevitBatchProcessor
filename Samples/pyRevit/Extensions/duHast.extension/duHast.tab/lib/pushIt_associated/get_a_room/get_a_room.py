@@ -40,13 +40,11 @@ from duHast.pyRevit.console_output import print_header, print_error
 from duHast.pyRevit.directory_picker import get_process_directory
 
 from pushIt_associated.get_a_room import settings
-from pushIt_associated.get_a_room.nested_family_bay_create import create_bay_family
-from pushIt_associated.get_a_room.nested_family_room_create import create_room_family
+from pushIt_associated.get_a_room.nested_family_create import create_get_a_room_family
 from pushIt_associated.get_a_room.settings_utils import get_output_path_from_schema
-
+from pushIt_associated.get_a_room.Objects.FamilyTypeConfig import FamilyTypeConfig
 
 from Autodesk.Revit.DB import Element, ViewType
-
 
 
 def create_family_from_filled_region(doc, filled_region, bounding_box, output_directory):
@@ -58,8 +56,16 @@ def create_family_from_filled_region(doc, filled_region, bounding_box, output_di
     :param filled_region: The filled region to create the family from
     :type filled_region: Autodesk.Revit.DB.FilledRegion
 
-    :return: A result object with the family document if no exception occurred.
-    :rtype: Autodesk.Revit.DB.Document
+    :return: Result class instance.
+
+        - `result.status` (bool): True if the families where created successfully, otherwise False.
+        - `result.message` (str): Confirmation of successful creation.
+        - `result.result` (list): File path to wall host family.
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Generic exception message.
+        - `result.result` (list): Empty.
+    :rtype: :class:`.Result`
     """
 
     # set up a status tracker
@@ -68,19 +74,47 @@ def create_family_from_filled_region(doc, filled_region, bounding_box, output_di
     # check how many curves are in the filled region
     filled_region_curve_loops = get_filled_region_curve_loops(filled_region)
 
+    # set up a place holder for the family config
+    fam_config = None
+    
     # check which family to create
     if len (filled_region_curve_loops) == 1:
-        # create a bay family
-        bay_result = create_bay_family(doc=doc, filled_region=filled_region, bounding_box=bounding_box, output_directory=output_directory)
-        return_value.update(bay_result)
+        
+        # single loop filled region, create a bay family
+        fam_config = FamilyTypeConfig(
+            room_type="Bay",
+            generic_nested_name=settings.FAMILY_TEMPLATE_GENERIC_BAY_NESTED,
+            generic_nested_path=settings.FAMILY_TEMPLATE_GENERIC_BAY_NESTED_PATH,
+            generic_nested_coarse_name=settings.FAMILY_TEMPLATE_GENERIC_NESTED_BAY_COARSE,
+            generic_nested_coarse_path=settings.FAMILY_TEMPLATE_GENERIC_NESTED_BAY_COARSE_PATH,
+            wall_host_path=settings.FAMILY_TEMPLATE_WALL_BAY_PATH,
+            filled_region=filled_region,
+            bounding_box=bounding_box,
+            output_directory=output_directory,
+        )
     elif len (filled_region_curve_loops) == 2:
-        # create a room family
-        room_result = create_room_family(doc=doc, filled_region=filled_region)
-        return_value.update(room_result)
-
+        
+        # two loop filled region, create a room family
+        fam_config = FamilyTypeConfig(
+            room_type="Room",
+            generic_nested_name=settings.FAMILY_TEMPLATE_GENERIC_ROOM_NESTED,
+            generic_nested_path=settings.FAMILY_TEMPLATE_GENERIC_ROOM_NESTED_PATH,
+            generic_nested_coarse_name=settings.FAMILY_TEMPLATE_GENERIC_NESTED_ROOM_COARSE,
+            generic_nested_coarse_path=settings.FAMILY_TEMPLATE_GENERIC_NESTED_ROOM_COARSE_PATH,
+            wall_host_path=settings.FAMILY_TEMPLATE_WALL_ROOM_PATH,
+            filled_region=filled_region,
+            bounding_box=bounding_box,
+            output_directory=output_directory,
+        )
     else:
         message = "Filled region has more than 2 curves"
         return_value.update_sep(False, message)
+        return return_value
+    
+    # create the family
+    fam_result = create_get_a_room_family(doc=doc, family_config=fam_config)
+    return_value.update(fam_result)
+        
     return return_value
 
 
@@ -102,8 +136,34 @@ def selection_filter_filled_regions(elem):
     
 def get_a_room_entry(doc, uiapp,output, forms):
     """
-    Test function to select filled regions in Revit
+    This function creates a family from a filled region in the active view to work with the push it add-in.
+    It creates a family from a filled region in the active view. The family is created in the output directory specified in the schema.
+    The Family created consists of 3 families:
+    
+    - A wall hosted family with two nested generic model families.
+    - a generic model family for detail level coarse.
+    - a generic model family for detail level medium and fine.
+    
+    :param doc: The Revit document
+    :type doc: Autodesk.Revit.DB.Document
+    :param uiapp: The Revit UI application
+    :type uiapp: Autodesk.Revit.UI.UIApplication
+    :param output: The pyRevit output window
+    :type output: pyRevit.output
+    :param forms: The pyRevit forms module
+    :type forms: pyRevit.forms
+    :return: Result class instance.
+
+        - `result.status` (bool): True if the families where created successfully, otherwise False.
+        - `result.message` (str): Confirmation of successful creation.
+        - `result.result` (list): File path to wall host family.
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Generic exception message.
+        - `result.result` (list): Empty.
+    :rtype: :class:`.Result`
     """
+    
     # set up a status tracker
     return_value = Result()
 
@@ -235,7 +295,7 @@ def get_a_room_entry(doc, uiapp,output, forms):
             print_error(message)
             continue
         else:
-            print("Created family: {}".format(create_family_result.message))
+            print("Created family: {}".format(create_family_result.result[0]))
     
     
     print("Finished.")

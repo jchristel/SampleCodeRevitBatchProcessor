@@ -23,8 +23,8 @@
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
-from duHast.Revit.Family.family_rename_loaded_families import  _rename_loaded_families
 from duHast.Revit.Family.Data.Objects.family_directive_rename import FamilyDirectiveRename
+from duHast.Revit.Family.family_rename_loaded_families import  _rename_loaded_families
 from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict
 from duHast.Revit.Family.family_parameter_utils import associate_parameter_with_other_parameter_on_nested_family_instance, set_parameter_formula
 from duHast.Revit.Family.family_utils import get_family_instances_of_built_in_category
@@ -39,12 +39,22 @@ from Autodesk.Revit.DB import BuiltInCategory, Element
 def rename_nested_families(doc, family_name_mapper):
     """
     Rename nested families in the current document to match the saved family names
+    
     :param doc: The Revit document
     :type doc: Autodesk.Revit.DB.Document
     :param family_name_mapper: A dictionary of family names to rename
     :type family_name_mapper: dict
-    :return: A result object with the family document if no exception occurred.
-    :rtype: Autodesk.Revit.DB.Document
+    
+    :return: Result class instance.
+
+        - `result.status` (bool): True if the nested families where renamed successfully, otherwise False.
+        - `result.message` (str): Confirmation of successful rename.
+        - `result.result` (list): Empty.
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Generic exception message.
+        - `result.result` (list): Empty.
+    :rtype: :class:`.Result`
     """
 
     # set up a status tracker
@@ -88,8 +98,16 @@ def hook_up_shared_parameters(doc):
     :param doc: The Revit family document containing nested families
     :type doc: Autodesk.Revit.DB.Document
     
-    :return: A result object.
-    :rtype: Autodesk.Revit.DB.Document
+    :return: Result class instance.
+
+        - `result.status` (bool): True if the shared parameters where hooked up successfully, otherwise False.
+        - `result.message` (str): Confirmation of successful creation.
+        - `result.result` (list): Empty
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Generic exception message.
+        - `result.result` (list): Empty.
+    :rtype: :class:`.Result`
     """
 
     # set up a status tracker
@@ -123,6 +141,29 @@ def hook_up_shared_parameters(doc):
 
 
 def update_overall_dimension_parameter_values(doc, bounding_box, filled_region):
+    """
+    Update overall dimension parameter values in the family document.
+    This includes width, depth, height, and area parameters.
+    
+    :param doc: The Revit family document
+    :type doc: Autodesk.Revit.DB.Document
+    :param bounding_box: The bounding box of the family
+    :type bounding_box: Autodesk.Revit.DB.BoundingBoxXYZ
+    :param filled_region: The filled region of the family
+    :type filled_region: Autodesk.Revit.DB.FilledRegion
+    
+    :return: Result class instance.
+
+        - `result.status` (bool): True if the overall dimension parameters where updated successfully, otherwise False.
+        - `result.message` (str): Confirmation of successful update.
+        - `result.result` (list): Empty.
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Generic exception message.
+        - `result.result` (list): Empty.
+    :rtype: :class:`.Result`
+    """
+    
     # set up a status tracker
     return_value = Result()
     try:

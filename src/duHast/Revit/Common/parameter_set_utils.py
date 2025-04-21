@@ -143,9 +143,13 @@ def set_parameter_value(
                     False, "Failed with exception: {}".format(e)
                 )
             return action_return_value
-
-        transaction = rdb.Transaction(doc, transaction_name)
-        return_value = in_transaction(transaction, action)
+        
+        # check if a transaction wrapper is required
+        if in_transaction:
+            transaction = rdb.Transaction(doc, transaction_name)
+            return_value = in_transaction(transaction, action)
+        else:
+            return_value = action() # no transaction wrapper used
     elif para.StorageType == rdb.StorageType.Double:
         # THIS IS THE KEY:  Use SetValueString instead of Set.  Set requires your data to be in
         # whatever internal units of measure Revit uses. SetValueString expects your value to
@@ -165,9 +169,14 @@ def set_parameter_value(
                     False, "Failed with exception: {}".format(e)
                 )
             return action_return_value
-
-        transaction = rdb.Transaction(doc, transaction_name)
-        return_value = in_transaction(transaction, action)
+        
+        # check if a transaction wrapper is required
+        if in_transaction:
+            transaction = rdb.Transaction(doc, transaction_name)
+            return_value = in_transaction(transaction, action)
+        else:
+            return_value = action() # no transaction wrapper used
+        
     elif para.StorageType == rdb.StorageType.Integer:
 
         def action():
@@ -182,9 +191,13 @@ def set_parameter_value(
                     False, "Failed with exception: {}".format(e)
                 )
             return action_return_value
-
-        transaction = rdb.Transaction(doc, transaction_name)
-        return_value = in_transaction(transaction, action)
+        
+        # check if a transaction wrapper is required
+        if in_transaction:
+            transaction = rdb.Transaction(doc, transaction_name)
+            return_value = in_transaction(transaction, action)
+        else:
+            return_value = action() # no transaction wrapper used
     elif para.StorageType == rdb.StorageType.String:
 
         def action():
@@ -199,9 +212,13 @@ def set_parameter_value(
                     False, "Failed with exception: {}".format(e)
                 )
             return action_return_value
-
-        transaction = rdb.Transaction(doc, transaction_name)
-        return_value = in_transaction(transaction, action)
+        
+        # check if a transaction wrapper is required
+        if in_transaction:
+            transaction = rdb.Transaction(doc, transaction_name)
+            return_value = in_transaction(transaction, action)
+        else:
+            return_value = action() # no transaction wrapper used
     else:
         # dead end
         return_value.update_sep(

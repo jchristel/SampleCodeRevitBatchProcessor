@@ -64,6 +64,7 @@ def create_bay_family(doc, filled_region, bounding_box, output_directory):
             bay_nested_family_doc,  
             filled_region_curve_loops[0],
             settings.HEIGHT_PARAMETER_NAME,
+            is_visible_coarse_detail = False,
         )
         # check if the update extrusion was successful
         if update_extrusion_result.status == False:
@@ -108,6 +109,7 @@ def create_bay_family(doc, filled_region, bounding_box, output_directory):
             bay_nested_coarse_family_doc,  
             filled_region_curve_loops[0],
             settings.HEIGHT_PARAMETER_NAME,
+            is_visible_coarse_detail=True,
         )
         
         # check if the update extrusion was successful

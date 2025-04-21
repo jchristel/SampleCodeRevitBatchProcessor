@@ -20,19 +20,14 @@
 #
 #
 
-from duHast.Revit.Family.family_element_utils import get_all_curve_based_elements_in_family,get_all_generic_forms_in_family
-from duHast.Revit.Family.family_parameter_utils import associate_parameter_with_other_parameter_on_nested_family_instance
+from duHast.Revit.Family.family_element_utils import get_all_curve_based_elements_in_family,get_all_generic_forms_in_family, set_element_visibility_by_detail_level
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Common.delete import delete_by_element_ids
-from duHast.Revit.Common.transaction import in_transaction
+from duHast.Revit.Common.Geometry.extrusion_create import create_extrusion_on_level, associate_extrusion_height_with_parameter, set_extrusion_sub_category
+
 from duHast.Revit.Common import parameter_get_utils as rParaGet
-from duHast.Revit.Common import parameter_set_utils as rParaSet
 from duHast.Revit.Categories.Utility.category_properties_get_utils import (
     get_category_graphic_style_ids,
-)
-
-from duHast.Revit.Categories.Utility.category_property_names import (
-    CATEGORY_GRAPHIC_STYLE_3D,
 )
 
 from duHast.Revit.Levels.levels import get_levels_in_model
@@ -41,7 +36,7 @@ from duHast.Revit.Categories.categories import (
     get_category_by_id,
 )
 
-from Autodesk.Revit.DB import BuiltInParameter, CurveArrArray, CurveArray, CurveLoop, Curve, Extrusion, ModelLine ,Transaction, SketchPlane
+#from Autodesk.Revit.DB import BuiltInParameter, CurveArrArray, CurveArray, CurveLoop, Curve, Extrusion, ModelLine ,Transaction, SketchPlane
 
 
 def get_extrusion_sub_category_id_name(doc, extrusion):
@@ -72,188 +67,79 @@ def get_extrusion_sub_category_id_name(doc, extrusion):
             break
     
     return extrusion_sub_category,extrusion_sub_category_id, extrusion_sub_category_name
-    
 
-def set_extrusion_sub_category(doc, extrusion, source_graphic_style):
+
+def set_extrusion_visibility_by_detail_level(doc, extrusion, is_visible_coarse_detail):
     """
-    Set the subcategory of an extrusion in a family document.
-    The subcategory is set to the subcategory of the source 3D graphic style.
+    Set the visibility of an extrusion by detail level.
     
     :param doc: The family document.
     :type doc: Autodesk.Revit.DB.Document
     :param extrusion: The extrusion element.
     :type extrusion: Autodesk.Revit.DB.Extrusion
-    :param source_graphic_style: The graphic style of the source extrusion.
-    :type source_graphic_style: Autodesk.Revit.DB.GraphicStyle
+    :param is_visible_coarse_detail: Set visibility for coarse detail level.
+    :type is_visible_coarse_detail: bool
     :return: Result class instance.
 
-        - `result.status` (bool): True if the extrusion subcategory was set successfully, otherwise False.
-        - `result.message` (str): Confirmation of successful setting of the extrusion subcategory.
-        - `result.result` (list): The new extrusion element.
-    
-    
+        - `result.status` (bool): True if the visibility was set successfully, otherwise False.
+        - `result.message` (str): Confirmation of successful setting of the visibility.
+        - `result.result` (list): Empty
     On exception:
         - `result.status` (bool): False.
         - `result.message` (str): Generic exception message.
         - `result.result` (list): Empty.
-        
-    :rtype: :class:`.Result`
-    """
-        
-    return_value = Result()
-    try:
-        # assign the graphic style
-        paras = extrusion.GetOrderedParameters()
-        
-        # flag to indicate if the value has been attempted to be set
-        value_has_been_set = False
-        
-        # find the parameter driving the subcategory
-        for p in paras:
-            if p.Definition.BuiltInParameter in ELEMENTS_PARAS_SUB:
-                # get the subcategory style id
-                target_id = source_graphic_style[CATEGORY_GRAPHIC_STYLE_3D]
-                # set the subcategory id
-                updated_para = rParaSet.set_parameter_value(
-                    p, str(target_id), doc
-                )
-                return_value.update(updated_para)
-                
-                # set flag to true to indicate that the value has been set, or at least attempted to be set
-                value_has_been_set = True
-                
-                break
-        if not value_has_been_set:
-            return_value.update_sep(False, "Failed to set sub category in family. No parameter match found.")
-    except Exception as e:
-        message = "Failed to set sub category in family: {}".format(e)
-        return_value.update_sep(False, message)
-    return return_value
-
-
-def set_extrusion_height_parameter(doc, extrusion, height_parameter_name):
-    """
-    Set the height parameter of an extrusion to a parameter in the family.
-    
-    :param doc: The family document.
-    :type doc: Autodesk.Revit.DB.Document
-    :param extrusion: The extrusion element.
-    :type extrusion: Autodesk.Revit.DB.Extrusion
-    :param height_parameter_name: The name of the height parameter in the family.
-    
-    :type height_parameter_name: str
-    :return: Result class instance.
-
-        - `result.status` (bool): True if the extrusion height parameter was set successfully, otherwise False.
-        - `result.message` (str): Confirmation of successful setting of the extrusion height parameter.
-        - `result.result` (list): The new extrusion element.
-        
-    
-    On exception:
-        - `result.status` (bool): False.
-        - `result.message` (str): Generic exception message.
-        - `result.result` (list): Empty.
-        
     :rtype: :class:`.Result`
     """
     
     return_value = Result()
     try:
-        # get the localised name of the height parameter
-        param_extrusion_height = extrusion.get_Parameter(BuiltInParameter.EXTRUSION_END_PARAM)
-        param_extrusion_height_name = param_extrusion_height.Definition.Name
         
-        # set the height of the new extrusion to a parameter in the family
-        attach_height_parameter_result = associate_parameter_with_other_parameter_on_nested_family_instance(
-            doc=doc, 
-            nested_family_instance=extrusion, 
-            target_parameter_name=param_extrusion_height_name, 
-            source_parameter_name=height_parameter_name,
+        # if an element is visible in coarse detail it is not visible in fine or medium detail
+        # and vise versa
+        is_visible_medium_detail = not is_visible_coarse_detail
+        is_visible_fine_detail = not is_visible_coarse_detail
+        
+        # set the visibility of the extrusion by detail level
+        return_value = set_element_visibility_by_detail_level(
+            doc=doc,
+            element=extrusion,
+            detail_level_coarse=is_visible_coarse_detail,
+            detail_level_medium=is_visible_medium_detail,
+            detail_level_fine=is_visible_fine_detail,
+            transaction_manager=None, # already in a transaction
         )
-        return attach_height_parameter_result
+        
     except Exception as e:
-        message = "Failed to set extrusion height parameter in family: {}".format(e)
+        message = "Failed to set extrusion visibility in family: {}".format(e)
         return_value.update_sep(False, message)
     return return_value
 
 
-def convert_loop_to_curve_array(curve_loop):
-    """
-    Convert a curve loop to a CurveArray object.
-    This is used to create a new extrusion in the family document.
-    
-    :param curve_loop: The curve loop to convert.
-    :type curve_loop: Autodesk.Revit.DB.CurveLoop
-    :return: CurveArray object
-    """
-    
-    curve_array = CurveArray()
-    if (isinstance(curve_loop, CurveLoop)):
-        for curve in curve_loop:
-            if (isinstance(curve, Curve)):
-                print("Curve: {}".format(curve))
-                curve_array.Append(curve)
-                
-    return curve_array
 
-
-def convert_curve_loops_to_curve_arr_array(curve_loops):
-    """
-    Convert a list of curve loops to a CurveArrArray object.
-    This is used to create a new extrusion in the family document.
-    
-    :param curve_loops: list of curve loops
-    :return: CurveArrArray object
-    """
-    
-    # create a new curve array array
-    curve_arr_array = CurveArrArray()
-
-    curve_array = CurveArray()
-    for loop in curve_loops:
-        
-        if (isinstance(loop, CurveLoop)):
-            # a loop of curves, convert to curve array
-            c_ar = convert_loop_to_curve_array(loop)
-            curve_arr_array.Append(c_ar)
-        elif (isinstance(loop, Curve)):
-            # just a curve, not a loop
-            curve_array.Append(loop)
-            
-    # only append the curve array if it is not empty
-    if (curve_array.Size > 0):
-        curve_arr_array.Append(curve_array)
-
-    return curve_arr_array
-
-
-def create_extrusion(doc, curve_loops):
+def create_extrusion(doc, curve_loops, detail_level, height_parameter_name, source_graphic_style):
     """
     Create a new extrusion in the family document using the provided curve loops.
-    
     
     :param doc: The family document.
     :type doc: Autodesk.Revit.DB.Document
     :param curve_loops: The curve loops to use for the new extrusion.
     :type curve_loops: list of Autodesk.Revit.DB.CurveLoop
+    :param detail_level: Set visibility for coarse detail level.
+    :type detail_level: bool
     :return: Result class instance.
-
         - `result.status` (bool): True if the extrusion was created successfully, otherwise False.
         - `result.message` (str): Confirmation of successful creation of the extrusion.
         - `result.result` (list): The new extrusion element.
-        
-        
     On exception:
         - `result.status` (bool): False.
         - `result.message` (str): Generic exception message.
         - `result.result` (list): Empty.
-        
     :rtype: :class:`.Result`
     """
     
     return_value = Result()
     try:
-        # create a new extrusion
+        
         # get the level in the family document   
         level_col = get_levels_in_model(doc)
         
@@ -261,37 +147,49 @@ def create_extrusion(doc, curve_loops):
         for level in level_col:
             level_plane =level
             break
-            
-        # convert filled region curve loops to curve array array
-        new_profile = convert_curve_loops_to_curve_arr_array(curve_loops)
         
-        # create a new extrusion in the family document
-        def action():
-       
+        # set the visibility by detail level
+        def action(doc, extrusion):
             action_return_value = Result()
             try:
-                level_reference = level_plane.GetPlaneReference()
-                sketch_plane = SketchPlane.Create(doc, level_reference)
                 
-                # Create new extrusion
-                new_extrusion = doc.FamilyCreate.NewExtrusion(True, new_profile, sketch_plane, 10.00)
+                # set the subcategory of the extrusion to the source extrusion sub category
+                set_sub_cat_result = set_extrusion_sub_category(
+                    doc=doc, 
+                    extrusion=extrusion, 
+                    source_graphic_style=source_graphic_style,
+                    transaction_manager=None # already in a transaction,
+                )
+                action_return_value.update(set_sub_cat_result)
                 
-                action_return_value.append_message("Created new extrusion in family")
-                action_return_value.result.append(new_extrusion)
+                # set the visibility of the extrusion by detail level
+                set_result = set_extrusion_visibility_by_detail_level(doc=doc, extrusion=extrusion, is_visible_coarse_detail=detail_level)
+                action_return_value.update(set_result)
+                
+                # associate the extrusion height with the parameter
+                height_parameter_result = associate_extrusion_height_with_parameter(
+                    doc=doc, 
+                    extrusion=extrusion, 
+                    height_parameter_name=height_parameter_name,
+                    transaction_manager=None # already in a transaction
+                )
+                action_return_value.update(height_parameter_result)
                 
             except Exception as e:
                 action_return_value.update_sep(False, "Failed to create new extrusion in family: {}".format(e))
             return action_return_value
-
-        transaction = Transaction(doc, "Creating extrusion")
-        return_value = in_transaction(transaction,action )
+        
+        # create a new extrusion in the family document and set its visibility by detail level
+        create_result = create_extrusion_on_level(doc=doc,level=level_plane, curve_loops=curve_loops, func = action)
+        return_value.update(create_result)
+        
     except Exception as e: 
         message = "Failed to create extrusion in family: {}".format(e)
         return_value.update_sep(False, message)
     return return_value
 
 
-def create_new_extrusion_from_outlines(family_doc, curve_loops, height_parameter_name):
+def create_new_extrusion_from_outlines(family_doc, curve_loops, height_parameter_name, is_visible_coarse_detail):
     """
     Create a new extrusion in the family document using the provided curve loops.
     The new extrusion will be created with the same subcategory as the existing extrusion.
@@ -343,7 +241,13 @@ def create_new_extrusion_from_outlines(family_doc, curve_loops, height_parameter
         source_graphic_style = get_category_graphic_style_ids(source_extrusion_sub_category)
         
         # create a new extrusion in the family document
-        create_extrusion_result = create_extrusion(family_doc, curve_loops)
+        create_extrusion_result = create_extrusion(
+            family_doc, 
+            curve_loops, 
+            is_visible_coarse_detail, 
+            height_parameter_name=height_parameter_name,
+            source_graphic_style=source_graphic_style,
+        )
         return_value.update(create_extrusion_result)
         
         # get out if no extrusion was created
@@ -352,14 +256,8 @@ def create_new_extrusion_from_outlines(family_doc, curve_loops, height_parameter
         
         # get the new extrusion
         element = create_extrusion_result.result[0]
-        
-        # set the sub category of the new extrusion to the source extrusion sub category
-        set_sub_category_result = set_extrusion_sub_category(family_doc, element, source_graphic_style)
-        return_value.update(set_sub_category_result)
-        
-        # set the height of the new extrusion to a parameter in the family
-        attach_height_parameter_result = set_extrusion_height_parameter(family_doc, element, height_parameter_name)
-        return_value.update(attach_height_parameter_result)
+        # make sure only the element is returned in the result
+        return_value.result = [element]
         
         # delete the old extrusion
         if source_extrusion_id != None:

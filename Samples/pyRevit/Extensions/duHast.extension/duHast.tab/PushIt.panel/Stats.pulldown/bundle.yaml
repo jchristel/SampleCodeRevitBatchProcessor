@@ -1,0 +1,11 @@
+layout:
+  - StatsSimple
+  - IdsByDesignSetAndOption
+
+
+# bundle tooltip
+tooltip: It's all in the family.
+
+# bundle author
+author: 
+  - Jan Christel

@@ -57,9 +57,11 @@ def create_family_from_filled_region(doc, filled_region_curve_loops, output_dire
     Create a family from a filled region
     :param doc: The Revit document
     :type doc: Autodesk.Revit.DB.Document
-    :param filled_region: The filled region to create the family from
-    :type filled_region: Autodesk.Revit.DB.FilledRegion
-
+    :param filled_region_curve_loops: The filled region curve loops
+    :type filled_region_curve_loops: list of Autodesk.Revit.DB.CurveLoop
+    :param output_directory: The output directory
+    :type output_directory: str
+    
     :return: Result class instance.
 
         - `result.status` (bool): True if the families where created successfully, otherwise False.
@@ -211,9 +213,6 @@ def get_a_room_entry(doc, uiapp,output, forms):
         return_value.update_sep(False, message)
         print(message)
         return return_value
-    
-    # set up a progress counter
-    counter = 1
 
     filtered_regions = []
 

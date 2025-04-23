@@ -29,10 +29,11 @@ Revit curve loops helper functions
 
 from System.Collections.Generic import List
 
-from duHast.Revit.Common.transaction import in_temp_transaction
+from duHast.Revit.Common.transaction import in_transaction
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.DetailItems.filled_regions_create import create_filled_region_by_view
 from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value, getter_double_as_double_converted_to_metric
+from duHast.Revit.Common.delete import delete_by_element_ids
 
 # import Autodesk
 from Autodesk.Revit.DB import (
@@ -134,36 +135,43 @@ def get_area_from_closed_curve_loop(doc, view, curve_loop, filled_region_type_id
             action_return_value = Result()
             try:
                 # create the filled region using the loop
-                filled_region_result = create_filled_region_by_view(
+                action_return_value = create_filled_region_by_view(
                     doc=doc, 
                     view=view, 
                     curve_loops=List[CurveLoop](curve_loop), 
                     filled_region_type=filled_region_type_id,
+                    transaction_manager=None,
                 )
                 
-                if filled_region_result.status == False:
-                    action_return_value.update_sep(False, "Failed to create filled region.")
-                    return action_return_value
-                
-                # get the actual filled region instance
-                filled_region = filled_region_result.result[0]
-                
-                # get the area of the filled region
-                area = get_built_in_parameter_value(
-                    element=filled_region,
-                    built_in_parameter_def=BuiltInParameter.HOST_AREA_COMPUTED,
-                    parameter_value_getter=getter_double_as_double_converted_to_metric,
-                )
-                
-                # store the area in the return value
-                action_return_value.result.append(area)
-                action_return_value.append_message("Filled region area retrieved successfully.")
             except Exception as e:
                 action_return_value.update_sep(False, "Failed to get filled region area with error: {}".format(e))
             return action_return_value
     
         transaction = Transaction(doc, "Getting area of curve loop")
-        return_value = in_temp_transaction(transaction, action)
+        return_value = in_transaction(transaction, action)
+
+        if return_value.status == False:
+            return return_value
+        
+        # get the actual filled region instance
+        filled_region = return_value.result.result[0]
+        
+        # get the area of the filled region
+        area = get_built_in_parameter_value(
+            element=filled_region,
+            built_in_parameter_def=BuiltInParameter.HOST_AREA_COMPUTED,
+            parameter_value_getter=getter_double_as_double_converted_to_metric,
+        )
+
+        # store the area in the return value
+        return_value.result=[area]
+
+        # delete the filled region
+        delete_result = delete_by_element_ids(doc, filled_region.Id)
+
+        if delete_result.status == False:
+            return_value.update_sep(False, "Failed to delete filled region with error: {}".format(delete_result.message))
+            return return_value
         
     except Exception as e:
         return_value.update_sep(False, "Failed to get filled region loop area with error: {}".format(e))

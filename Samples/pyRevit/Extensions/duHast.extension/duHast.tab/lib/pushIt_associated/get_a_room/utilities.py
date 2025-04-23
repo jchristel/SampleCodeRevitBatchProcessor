@@ -23,12 +23,16 @@
 
 from duHast.Utilities.Objects.result import Result
 
-from duHast.Revit.DetailItems.filled_regions import  get_filled_region_curve_loops
+from duHast.Revit.DetailItems.filled_regions import  get_filled_region_curve_loops , get_filled_region_area
 from duHast.Revit.Common.Geometry.curve_loops import get_area_from_closed_curve_loop
 
-def get_filled_region_area(doc, filled_region):
+def get_filled_region_with_two_loops_area(doc, filled_region):
     """
-    Get the area of a filled region
+    Get the area of a filled region if there are 2 curve loops.
+    The area is calculated by getting the area of the inner loop and adding to it the difference of area of outer loop minus the area of the inner loop.
+
+    This needs to run in its own transaction since it creates a new filled region to get the area.
+    Revit only calculates the area of the filled region when the transaction the filled region is created with is committed.
     
     :param doc: The Revit document
     :type doc: Autodesk.Revit.DB.Document
@@ -48,13 +52,7 @@ def get_filled_region_area(doc, filled_region):
         filled_region_curve_loops = get_filled_region_curve_loops(filled_region)
         
         # get the outer area of the filled region
-        area_outer_result = get_area_from_closed_curve_loop(
-            doc= doc, 
-            view = doc.ActiveView, 
-            curve_loop = filled_region_curve_loops[0],
-            filled_region_type_id = filled_region.GetTypeId(),
-        )
-        # check if the area was found
+        area_outer_result = get_filled_region_area(filled_region)
         if area_outer_result.status == False:
             message = "Failed to get outer area: {}".format(area_outer_result.message)
             return_value.update_sep(False, message)
@@ -66,34 +64,37 @@ def get_filled_region_area(doc, filled_region):
         area_outer = area_outer_result.result[0]
         
         # assume the second loop is the inner loop
-        if len(filled_region_curve_loops) == 2:
-            # get the area of the filled region
-            area_inner_result = get_area_from_closed_curve_loop(
-                doc= doc, 
-                view = doc.ActiveView, 
-                curve_loop = filled_region_curve_loops[1],
-                filled_region_type_id = filled_region.GetTypeId(),
-            )
-            
-            # check if the area was found
-            if area_inner_result.status == False:
-                message = "Failed to get inner area: {}".format(area_inner_result.message)
-                return_value.update_sep(False, message)
-                # return -1 as area
-                return_value.result.append(area)
-                return return_value
-            
-            # get the area of the inner and outer loops
-            area_inner = area_inner_result.result[0]
-            
-            # calculate the area of the filled region
-            area_wall_half = (area_outer - area_inner)/2
-            area = area + area_wall_half
-            
-        else:
-            # single loop filled region
-            return_value.append_message("Filled region has only one loop.")
+        if len(filled_region_curve_loops) != 2:
+            return_value.append_message("Filled region has not 2 loops.")
             return_value.result.append(area_outer)
+            return return_value
+        
+        # get the area of the filled region
+        area_inner_result = get_area_from_closed_curve_loop(
+            doc= doc, 
+            view = doc.ActiveView, 
+            curve_loop = filled_region_curve_loops[1],
+            filled_region_type_id = filled_region.GetTypeId(),
+        )
+        
+        # check if the area was found
+        if area_inner_result.status == False:
+            message = "Failed to get inner area: {}".format(area_inner_result.message)
+            return_value.update_sep(False, message)
+            # return -1 as area
+            return_value.result.append(area)
+            return return_value
+        
+        # get the area of the inner and outer loops
+        area_inner = area_inner_result.result[0]
+        
+        # calculate the area of the filled region
+        area_wall_half = (area_outer - area_inner)/2
+        area = area + area_wall_half
+        
+        # update the return value with the area
+        return_value.append_message("Area of filled region: {}".format(area))
+        return_value.result.append(area)
         
     except Exception as e:
         message = "Failed to get area: {}".format(e)

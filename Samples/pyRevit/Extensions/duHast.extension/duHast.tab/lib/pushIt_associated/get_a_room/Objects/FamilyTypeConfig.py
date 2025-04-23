@@ -20,7 +20,7 @@
 #
 #
 
-from duHast.Utilities.console_out import output
+
 from duHast.Utilities.Objects.base import Base
 
 
@@ -34,7 +34,10 @@ class FamilyTypeConfig(Base):
         generic_nested_coarse_path,
         wall_host_path,
         curve_loops,
+        bounding_box,
+        filled_region,
         output_directory,
+        area,
         **kwargs
     ):
 
@@ -53,6 +56,8 @@ class FamilyTypeConfig(Base):
         :type curve_loops: list of Autodesk.Revit.DB.CurveLoop
         :param output_directory: The directory for output files.
         :type output_directory: str
+        :param area: The area of the filled region.
+        :type area: float
         :param kwargs: Additional keyword arguments.
         """
 
@@ -64,5 +69,8 @@ class FamilyTypeConfig(Base):
         self.generic_nested_coarse_name = generic_nested_coarse_name
         self.generic_nested_coarse_path=generic_nested_coarse_path
         self.wall_host_path =wall_host_path
-        self.fcurve_loops = curve_loops
+        self.curve_loops = curve_loops
+        self.bounding_box = bounding_box
+        self.filled_region = filled_region
         self.output_directory=output_directory
+        self.area = area

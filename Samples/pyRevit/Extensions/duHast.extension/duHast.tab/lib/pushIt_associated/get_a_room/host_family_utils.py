@@ -140,24 +140,24 @@ def hook_up_shared_parameters(doc):
     return return_value
 
 
-def update_overall_dimension_parameter_values(doc, bounding_box, filled_region):
+def update_overall_dimension_parameter_values(family_doc, family_config):
     """
     Update overall dimension parameter values in the family document.
     This includes width, depth, height, and area parameters.
     
     :param doc: The Revit family document
     :type doc: Autodesk.Revit.DB.Document
-    :param bounding_box: The bounding box of the family
-    :type bounding_box: Autodesk.Revit.DB.BoundingBoxXYZ
-    :param filled_region: The filled region of the family
-    :type filled_region: Autodesk.Revit.DB.FilledRegion
+    :param family_config: The family configuration object containing bounding box and area information
+    :type family_config: FamilyTypeConfig
     
     :return: Result class instance.
 
         - `result.status` (bool): True if the overall dimension parameters where updated successfully, otherwise False.
         - `result.message` (str): Confirmation of successful update.
         - `result.result` (list): Empty.
+
     On exception:
+
         - `result.status` (bool): False.
         - `result.message` (str): Generic exception message.
         - `result.result` (list): Empty.
@@ -171,18 +171,15 @@ def update_overall_dimension_parameter_values(doc, bounding_box, filled_region):
         # get the overall dimension parameters
        
         # Calculate width (X dimension)
-        width_bbox =  convert_imperial_feet_to_metric_mm(bounding_box.Max.X -bounding_box.Min.X)
+        width_bbox =  convert_imperial_feet_to_metric_mm(family_config.bounding_box.Max.X - family_config.bounding_box.Min.X)
         # Calculate depth (Y dimension)
-        depth_bbox =  convert_imperial_feet_to_metric_mm(bounding_box.Max.Y -bounding_box.Min.Y)
+        depth_bbox =  convert_imperial_feet_to_metric_mm(family_config.bounding_box.Max.Y - family_config.bounding_box.Min.Y)
 
-        # get the area of the filled region depending on the number of curve loops
-        area_of_interest_result =  get_filled_region_area(doc=doc, filled_region=filled_region)
-        print(area_of_interest_result)
-        # check if the area of interest was found
-        area_of_interest = area_of_interest_result.result[0]
+        # get the area of the filled region
+        area_of_interest = family_config.area
 
         # get the family manager
-        fam_manager = doc.FamilyManager
+        fam_manager = family_doc.FamilyManager
         # get all family parameters
         host_family_parameters = fam_manager.GetParameters()
 
@@ -192,8 +189,8 @@ def update_overall_dimension_parameter_values(doc, bounding_box, filled_region):
             if host_family_parameter.Definition.Name == settings.WIDTH_PARAMETER_NAME:
                 # set width
                 set_parameter_formula_result = set_parameter_formula(
-                    doc=doc, 
-                    manager = doc.FamilyManager,
+                    doc=family_doc, 
+                    manager =fam_manager,
                     fam_para = host_family_parameter, 
                     formula=str(width_bbox),
                 )
@@ -201,8 +198,8 @@ def update_overall_dimension_parameter_values(doc, bounding_box, filled_region):
             elif host_family_parameter.Definition.Name == settings.DEPTH_PARAMETER_NAME:
                 # set depth
                 set_parameter_formula_result = set_parameter_formula(
-                    doc=doc, 
-                    manager = doc.FamilyManager,
+                    doc=family_doc, 
+                    manager = fam_manager,
                     fam_para = host_family_parameter, 
                     formula=str(depth_bbox),
                 )
@@ -210,8 +207,8 @@ def update_overall_dimension_parameter_values(doc, bounding_box, filled_region):
             elif host_family_parameter.Definition.Name == settings.HEIGHT_PARAMETER_NAME:
                 # set height
                 set_parameter_formula_result = set_parameter_formula(
-                    doc=doc, 
-                    manager = doc.FamilyManager,
+                    doc=family_doc, 
+                    manager = fam_manager,
                     fam_para = host_family_parameter, 
                     formula="2700", #2.7m height
                 )
@@ -219,8 +216,8 @@ def update_overall_dimension_parameter_values(doc, bounding_box, filled_region):
             elif host_family_parameter.Definition.Name == settings.AREA_PARAMETER_NAME:
                 # set area
                 set_parameter_formula_result = set_parameter_formula(
-                    doc=doc, 
-                    manager = doc.FamilyManager,
+                    doc=family_doc, 
+                    manager = fam_manager,
                     fam_para = host_family_parameter, 
                     formula=str(area_of_interest),
                 )

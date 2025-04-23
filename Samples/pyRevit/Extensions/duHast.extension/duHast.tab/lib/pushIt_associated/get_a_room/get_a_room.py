@@ -20,15 +20,13 @@
 #
 #
 
-from System.Collections.Generic import List
-
 
 from duHast.Utilities.Objects.result import Result
 
 from duHast.Revit.UI.custom_selection_user import get_user_selection
-from duHast.Revit.DetailItems.filled_regions import  get_filled_region_curve_loops
+from duHast.Revit.DetailItems.filled_regions import  get_filled_region_curve_loops, get_filled_region_area
 from duHast.Revit.DetailItems.filled_regions_create import create_filled_region_by_view
-from duHast.Revit.DetailItems.curve_create import draw_2D_lines_on_bounding_box, draw_2D_lines_on_bounding_box_and_separate_point
+from duHast.Revit.DetailItems.curve_create import draw_2D_lines_on_bounding_box_and_separate_point
 
 from duHast.Revit.Common.Geometry.transforms import move_xyz_to_zero
 from duHast.Revit.Common.Geometry.geometry import get_bounding_box_centre
@@ -44,21 +42,34 @@ from pushIt_associated.get_a_room.nested_family_create import create_get_a_room_
 from pushIt_associated.get_a_room.settings_utils import get_output_path_from_schema
 from pushIt_associated.get_a_room.Objects.FamilyTypeConfig import FamilyTypeConfig
 
+from pushIt_associated.get_a_room.utilities import get_filled_region_with_two_loops_area
+
 from pushIt_associated.get_a_room import debug as debug
 
 from Autodesk.Revit.DB import Element, ViewType
 
+from Autodesk.Revit.DB import (
+    BuiltInParameter,
+   
+)
 
-DEBUG = True
+from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value, getter_double_as_double_converted_to_metric
 
-def create_family_from_filled_region(doc, filled_region_curve_loops, output_directory):
+
+DEBUG = False
+
+def create_family_from_filled_region(doc, filled_region_curve_loops, bounding_box_original, filled_region_original, output_directory):
 
     """
     Create a family from a filled region
     :param doc: The Revit document
     :type doc: Autodesk.Revit.DB.Document
-    :param filled_region_curve_loops: The filled region curve loops
+    :param filled_region_curve_loops: The filled region curve loops transformed to the origin
     :type filled_region_curve_loops: list of Autodesk.Revit.DB.CurveLoop
+    :param bounding_box_original: The original bounding box of the filled region (not transformed) since it is used for over all dimensions only
+    :type bounding_box_original: Autodesk.Revit.DB.BoundingBoxXYZ
+    :param filled_region_original: The original filled region (not transformed) since it is used for the filled region type
+    :type filled_region_original: Autodesk.Revit.DB.FilledRegion
     :param output_directory: The output directory
     :type output_directory: str
     
@@ -83,6 +94,13 @@ def create_family_from_filled_region(doc, filled_region_curve_loops, output_dire
     # check which family to create
     if len (filled_region_curve_loops) == 1:
         
+        # get the outer area only
+        area_result = get_filled_region_area(filled_region_original)
+        if area_result.status == False:
+            message = "Failed to get filled region area: {}".format(area_result.message)
+            return_value.update_sep(False, message)
+            return return_value
+
         # single loop filled region, create a bay family
         fam_config = FamilyTypeConfig(
             room_type="Bay",
@@ -92,10 +110,20 @@ def create_family_from_filled_region(doc, filled_region_curve_loops, output_dire
             generic_nested_coarse_path=settings.FAMILY_TEMPLATE_GENERIC_NESTED_BAY_COARSE_PATH,
             wall_host_path=settings.FAMILY_TEMPLATE_WALL_BAY_PATH,
             curve_loops=filled_region_curve_loops,
+            bounding_box=bounding_box_original,
+            filled_region=filled_region_original,
             output_directory=output_directory,
+            area = area_result.result[0],
         )
     elif len (filled_region_curve_loops) == 2:
         
+        # get the inner area
+        area_result = get_filled_region_with_two_loops_area(doc, filled_region_original)
+        if area_result.status == False:
+            message = "Failed to get filled region area: {}".format(area_result.message)
+            return_value.update_sep(False, message)
+            return return_value
+
         # two loop filled region, create a room family
         fam_config = FamilyTypeConfig(
             room_type="Room",
@@ -105,10 +133,13 @@ def create_family_from_filled_region(doc, filled_region_curve_loops, output_dire
             generic_nested_coarse_path=settings.FAMILY_TEMPLATE_GENERIC_NESTED_ROOM_COARSE_PATH,
             wall_host_path=settings.FAMILY_TEMPLATE_WALL_ROOM_PATH,
             curve_loops=filled_region_curve_loops,
+            bounding_box=bounding_box_original,
+            filled_region=filled_region_original,
             output_directory=output_directory,
+            area=area_result.result[0],
         )
     else:
-        message = "Filled region has more than 2 curves"
+        message = "Filled region with more than 2 curves are not supported."
         return_value.update_sep(False, message)
         return return_value
     
@@ -172,27 +203,26 @@ def get_a_room_entry(doc, uiapp,output, forms):
     
     # check ig extensible schema exists
     if not does_schema_exist(settings.GET_A_ROOM_ADD_IN_GUID):
-        message = "Extensible schema does not exist. Please run the setup add-in first."
-        return_value.update_sep(False, message)
-        print_error(message)
-        return return_value
+         message = "Extensible schema does not exist. Please run the setup add-in first."
+         return_value.update_sep(False, message)
+         print_error(message)
+         return return_value
     
-    # get the output directory from the schema
+    # # get the output directory from the schema
     output_directory = get_output_path_from_schema()
     if output_directory is None or output_directory == "":
-        # get the user to select one ...for now
+        #get the user to select one ...for now
         selection_result = get_process_directory(forms=forms, form_title="Select output directory")
         if selection_result.status == False:
-            message = "Failed to select output directory: {}".format(selection_result.message)
-            return_value.update_sep(False, message)
-            print_error(message)
-            return return_value
+             message = "Failed to select output directory: {}".format(selection_result.message)
+             return_value.update_sep(False, message)
+             print_error(message)
+             return return_value
         else:
             output_directory = selection_result.result[0]
         
-    # get the selection filter for grids
-    #selection_filter_filled_regions_func = selection_filter_filled_regions
-    # get user to select grids
+    
+    # get user to select filled regions
     filled_regions_selected_result = get_user_selection(
         doc=doc,
         uidoc=uiapp.ActiveUIDocument,
@@ -217,6 +247,7 @@ def get_a_room_entry(doc, uiapp,output, forms):
     filtered_regions = []
 
     for f in filled_regions_selected:
+        
         # get the filled region curve loops
         filled_region_curve_loops = get_filled_region_curve_loops(f)
         # check if the filled region has curves
@@ -225,9 +256,6 @@ def get_a_room_entry(doc, uiapp,output, forms):
             return_value.update_sep(False, message)
             print(message)
             return return_value
-
-        # print the filled region curve loops
-        print("Filled region {} has {} curves".format(f.Name, len(filled_region_curve_loops)))
         
         # reject any filled region with a curve loop count greater than 2
         if len(filled_region_curve_loops) > 2:
@@ -237,9 +265,7 @@ def get_a_room_entry(doc, uiapp,output, forms):
         else:
             # add the filled region to the filtered regions
             filtered_regions.append(f)
-            print("Filled region {} is valid".format(f.Name))
             
-
     # get the active view
     active_view = doc.ActiveView
 
@@ -255,6 +281,13 @@ def get_a_room_entry(doc, uiapp,output, forms):
         
         if DEBUG :
             debug.draw_bounding_box_around_filled_region(doc, active_view, f)# get the bounding box of the filled region
+            area = get_built_in_parameter_value(
+                    element=f,
+                    built_in_parameter_def=BuiltInParameter.HOST_AREA_COMPUTED,
+                    parameter_value_getter=getter_double_as_double_converted_to_metric,
+                )
+                
+            print("area: [{}]".format(area))
        
         bounding_box = f.get_BoundingBox(active_view)
         # attempt to move the bounding box to centre to zero
@@ -289,7 +322,13 @@ def get_a_room_entry(doc, uiapp,output, forms):
             # draw the transformed bounding box
             result_draw = draw_2D_lines_on_bounding_box_and_separate_point(doc, bounding_box_new, get_curve_loop_centroid(transformed_curve_loops[0]), active_view)
 
-        create_family_result = create_family_from_filled_region(doc, transformed_curve_loops, output_directory=output_directory)
+        create_family_result = create_family_from_filled_region(
+            doc=doc, 
+            filled_region_curve_loops=transformed_curve_loops,
+            bounding_box_original=bounding_box,
+            filled_region_original=f,
+            output_directory=output_directory
+        )
         
         if( create_family_result.status == False):
             message = "Failed to create family from filled region: \n{}".format(create_family_result.message)

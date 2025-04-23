@@ -37,7 +37,7 @@ from duHast.Revit.Categories.categories import (
     get_category_by_id,
 )
 
-#from Autodesk.Revit.DB import BuiltInParameter, CurveArrArray, CurveArray, CurveLoop, Curve, Extrusion, ModelLine ,Transaction, SketchPlane
+from Autodesk.Revit.DB import FamilyElementVisibilityType
 
 
 def get_family_element_sub_category_id_name(doc, extrusion):
@@ -59,6 +59,7 @@ def get_family_element_sub_category_id_name(doc, extrusion):
         value = rParaGet.get_built_in_parameter_value(
             extrusion, builtin_def, rParaGet.get_parameter_value_as_element_id
         )
+
         if value != None:
             extrusion_sub_category_id = value
             extrusion_sub_category = get_category_by_id(doc, extrusion_sub_category_id)
@@ -70,7 +71,7 @@ def get_family_element_sub_category_id_name(doc, extrusion):
     return extrusion_sub_category,extrusion_sub_category_id, extrusion_sub_category_name
 
 
-def set_family_element_visibility_by_detail_level(doc, element, is_visible_coarse_detail):
+def set_family_element_visibility_by_detail_level(doc, element, is_visible_coarse_detail, family_element_visibility_type =  FamilyElementVisibilityType.Model, ):
     """
     Set the visibility of an family element by detail level.
     
@@ -107,6 +108,7 @@ def set_family_element_visibility_by_detail_level(doc, element, is_visible_coars
             detail_level_coarse=is_visible_coarse_detail,
             detail_level_medium=is_visible_medium_detail,
             detail_level_fine=is_visible_fine_detail,
+            family_element_visibility_type=family_element_visibility_type,
             transaction_manager=None, # already in a transaction
         )
         
@@ -269,7 +271,6 @@ def create_new_extrusion_from_outlines(family_doc, curve_loops, height_parameter
         message = "Failed to update extrusion in family: {}".format(e)
         return_value.update_sep(False, message)
         
-    print("Return value: {}".format(return_value.message))
     return return_value
 
 
@@ -320,7 +321,12 @@ def create_curves(doc, curve_loop, detail_level,  source_graphic_style):
                 action_return_value.update(set_sub_cat_result)
                 
                 # set the visibility of the curve by detail level
-                set_result = set_family_element_visibility_by_detail_level(doc=doc, element=curve, is_visible_coarse_detail=detail_level)
+                set_result = set_family_element_visibility_by_detail_level(
+                    doc=doc, 
+                    element=curve,
+                    is_visible_coarse_detail=detail_level,
+                    family_element_visibility_type=FamilyElementVisibilityType.ViewSpecific,
+                )
                 action_return_value.update(set_result)
                 
             except Exception as e:
@@ -335,7 +341,6 @@ def create_curves(doc, curve_loop, detail_level,  source_graphic_style):
         message = "Failed to create new curves in family: {}".format(e)
         return_value.update_sep(False, message)
         
-    print("Return value: {}".format(return_value.message))
     return return_value
         
 
@@ -366,9 +371,15 @@ def add_2D_outline(family_doc, curve_loop, is_visible_coarse_detail):
     # set up a status tracker
     return_value = Result()
     try:
-        # get the existing curves
-        curves = get_all_curve_based_elements_in_family(doc=family_doc)
+        # get the existing curves ( this returns symbolic lines as well a Model Lines! )
+        curves_all = get_all_curve_based_elements_in_family(doc=family_doc)
         
+        # filter symbolic curves
+        curves = []
+        for el in curves_all:
+            if el.GetType().Name == "SymbolicCurve":
+                curves.append(el)
+
         source_curves_sub_category_id = None
         source_curves_sub_category_name = None
         source_curves_sub_category = None
@@ -384,7 +395,8 @@ def add_2D_outline(family_doc, curve_loop, is_visible_coarse_detail):
             source_curves_sub_category_id, source_curves_sub_category_name))
         
         # get the graphic style of the source curves sub category
-        source_graphic_style = get_category_graphic_style_ids(source_curves_sub_category)
+        #source_graphic_style = get_category_graphic_style_ids(source_curves_sub_category)
+        source_graphic_style = curves[0].LineStyle
         
         # create  new curves in the family document
         create_curves_result = create_curves(

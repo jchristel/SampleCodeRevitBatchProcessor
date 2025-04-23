@@ -26,16 +26,16 @@ This module contains a number of functions around Revit filled regions.
 #
 #
 
-# import common library modules
-from duHast.Revit.DetailItems.Utility import (
-    detail_items_type_sorting as rDetailItemTypeSort,
-)
-from duHast.Revit.DetailItems.detail_items import get_all_detail_types_by_category, FILLED_REGION_TYPE
 from duHast.Utilities.Objects.result import Result
+
+from duHast.Revit.DetailItems.Utility import detail_items_type_sorting as rDetailItemTypeSort
+from duHast.Revit.DetailItems.detail_items import get_all_detail_types_by_category, FILLED_REGION_TYPE
+from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value, getter_double_as_double_converted_to_metric
 from duHast.Revit.Common.Geometry.curve_loops import get_area_from_closed_curve_loop
 
 # import Autodesk
 from Autodesk.Revit.DB import (
+    BuiltInParameter,
     FilledRegion,
     FilteredElementCollector,
 )
@@ -133,4 +133,35 @@ def get_filled_region_loop_area(doc, view, filled_region, loop_index=0):
     except Exception as e:
         return_value.update_sep(False, "Failed to get filled region loop area with error: {}".format(e))
     
+    return return_value
+
+def get_filled_region_area(filled_region):
+    """
+    Gets the area of a filled region using the built-in parameter.
+   
+    :param filled_region: A filled region instance.
+    :type filled_region: Autodesk.Revit.DB.FilledRegion
+
+    :return: The area of the filled region.
+    :rtype: float
+    """
+
+    # set up a status tracker
+    return_value = Result()
+
+    try:
+       
+        # get the area of the filled region
+        area = get_built_in_parameter_value(
+            element=filled_region,
+            built_in_parameter_def=BuiltInParameter.HOST_AREA_COMPUTED,
+            parameter_value_getter=getter_double_as_double_converted_to_metric,
+        )
+        
+        # update the return value with the area
+        return_value.result.append(area)
+        return_value.append_message("Filled region area retrieved successfully.")
+    except Exception as e:
+        return_value.update_sep(False, "Failed to get filled region area with error: {}".format(e))
+
     return return_value

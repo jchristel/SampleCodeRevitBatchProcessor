@@ -107,7 +107,15 @@ def get_all_reference_planes_in_family(doc):
     return col
 
 
-def set_element_visibility_by_detail_level(doc, element, detail_level_coarse = True,  detail_level_medium = True, detail_level_fine = True, transaction_manager= in_transaction):
+def set_element_visibility_by_detail_level(
+        doc, 
+        element, 
+        detail_level_coarse = True,  
+        detail_level_medium = True, 
+        detail_level_fine = True, 
+        family_element_visibility_type =  FamilyElementVisibilityType.Model, 
+        transaction_manager= in_transaction
+    ):
     
     """
     Set the visibility of an element by detail level.
@@ -121,6 +129,8 @@ def set_element_visibility_by_detail_level(doc, element, detail_level_coarse = T
     :type detail_level_fine: bool
     :param detail_level_medium: Set visibility for medium detail level.
     :type detail_level_medium: bool
+    :param family_element_visibility_type: The type of visibility to set. (Model vs View specific)
+    :type family_element_visibility_type: Autodesk.Revit.DB.FamilyElementVisibilityType
     
     :return: Result class instance.
 
@@ -143,7 +153,7 @@ def set_element_visibility_by_detail_level(doc, element, detail_level_coarse = T
         def action():
             action_return_value = Result()
             try:
-                fam_element_visibility = FamilyElementVisibility(FamilyElementVisibilityType.Model)
+                fam_element_visibility = FamilyElementVisibility(family_element_visibility_type)
 
                 # Set visibility options
                 fam_element_visibility.IsShownInCoarse = detail_level_coarse

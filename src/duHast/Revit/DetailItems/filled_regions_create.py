@@ -71,8 +71,10 @@ def create_filled_region_by_view(doc, view, curve_loops, filled_region_type, tra
             action_return_value.update_sep(False, "Failed to create filled region with error: {}".format(e))
         return action_return_value
 
-
-    transaction = Transaction(doc, "Drawing filled region")
-    return_value = transaction_manager(transaction, action)
+    if transaction_manager:
+        transaction = Transaction(doc, "Drawing filled region")
+        return_value = transaction_manager(transaction, action)
+    else:
+        return_value = action()
 
     return return_value

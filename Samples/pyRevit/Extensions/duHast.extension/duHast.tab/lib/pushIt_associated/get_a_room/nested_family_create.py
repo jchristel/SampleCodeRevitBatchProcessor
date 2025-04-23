@@ -20,6 +20,7 @@
 #
 #
 
+import os
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.utility import get_current_user_name
@@ -344,7 +345,7 @@ def create_wall_host_family(doc, family_config, nested_medium_and_fine_detail_fa
             return return_value
         
          # add the full host family path to the return value
-        return_value.result = ["{}{}.rfa".format(family_config.output_directory, wall_host_family_name)]
+        return_value.result = [os.path.join(family_config.output_directory, wall_host_family_name+".rfa")]
 
     except Exception as e:
         message = "Failed to create wall host {} family: {}".format(family_config.room_type, e)
@@ -382,7 +383,7 @@ def create_get_a_room_family(doc, family_config):
     return_value = Result()
 
     # setup family place holders
-    wall_host_family_name = None
+    wall_host_family_file_path = None
 
     try:
         
@@ -422,10 +423,10 @@ def create_get_a_room_family(doc, family_config):
             return_value.update_sep(False, message)
             return return_value
         return_value.append_message("Wall host family {} created successfully.".format(family_config.room_type))
-        wall_host_family_name = create_wall_host_family_result.result[0]
+        wall_host_family_file_path = create_wall_host_family_result.result[0]
 
         # add the full host family path to the return value
-        return_value.result = ["{}{}.rfa".format(family_config.output_directory, wall_host_family_name)]
+        return_value.result = [wall_host_family_file_path]
 
     except Exception as e:
         message = "Failed to create push it {} family: {}".format(family_config.room_type, e)

@@ -24,10 +24,11 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
 from duHast.Revit.Family.Data.Objects.family_directive_rename import FamilyDirectiveRename
+from duHast.Revit.Family.family_instance_create import place_a_family_instance_by_level
 from duHast.Revit.Family.family_rename_loaded_families import  _rename_loaded_families
 from duHast.Revit.Family.family_functions import get_name_and_category_to_family_dict
 from duHast.Revit.Family.family_parameter_utils import associate_parameter_with_other_parameter_on_nested_family_instance, set_parameter_formula
-from duHast.Revit.Family.family_utils import get_family_instances_of_built_in_category
+from duHast.Revit.Family.family_utils import get_family_instances_of_built_in_category, load_family
 
 from duHast.Revit.SharedParameters.shared_parameters import get_all_shared_parameters
 
@@ -226,5 +227,100 @@ def update_overall_dimension_parameter_values(family_doc, family_config):
         return_value.append_message("Updated overall dimension parameters")
     except Exception as e:
         message = "Failed to update overall dimension parameters in family: {}".format(e)
+        return_value.update_sep(False, message)
+    return return_value
+
+
+def load_push_it_family(doc, file_path):
+    """
+    Load the PushIt family into the Revit document.
+    
+    :param doc: The Revit document
+    :type doc: Autodesk.Revit.DB.Document
+    :param file_path: The file path of the PushIt family
+    :type file_path: str
+    
+    :return: Result class instance.
+
+        - `result.status` (bool): True if the family was loaded successfully, otherwise False.
+        - `result.message` (str): Confirmation of successful load.
+        - `result.result` (list): Empty.
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Generic exception message.
+        - `result.result` (list): Empty.
+    :rtype: :class:`.Result`
+    """
+
+    # set up a status tracker
+    return_value = Result()
+    try:
+        # load the family
+        load_family_result = load_family(
+            doc=doc, 
+            family_file_path=file_path, 
+        )
+       
+        return_value.update(load_family_result)
+
+    except Exception as e:
+        message = "Failed to load PushIt family with error: {}".format(e)
+        return_value.update_sep(False, message)
+    return return_value
+
+
+def create_push_it_family_instance (doc, push_it_family, location_point, active_view):
+    """
+    Create a PushIt family instance in the Revit document.
+    
+    :param doc: The Revit document
+    :type doc: Autodesk.Revit.DB.Document
+    :param push_it_family: The PushIt family to create an instance of
+    :type push_it_family: Autodesk.Revit.DB.FamilySymbol
+    :param filled_region: The filled region to place the PushIt family instance in
+    :type filled_region: Autodesk.Revit.DB.FilledRegion
+    :param active_view: The view of which the associated level is to be used to place the instance on.
+    :type active_view: Autodesk.Revit.DB.View
+    
+    :return: Result class instance.
+
+        - `result.status` (bool): True if the family instance was created successfully, otherwise False.
+        - `result.message` (str): Confirmation of successful creation.
+        - `result.result` (list): Empty.
+    On exception:
+        - `result.status` (bool): False.
+        - `result.message` (str): Generic exception message.
+        - `result.result` (list): Empty.
+    :rtype: :class:`.Result`
+    """
+
+    # set up a status tracker
+    return_value = Result()
+    try:
+        # get the level of the active view
+        level = active_view.GenLevel
+       
+        # get the family symbol
+        family_symbol_ids = push_it_family.GetFamilySymbolIds()
+
+        family_symbol = None
+
+        for symbol_is in family_symbol_ids:
+            family_symbol = doc.GetElement(symbol_is)
+            break
+
+
+        # place an instance of the family symbol
+        place_result = place_a_family_instance_by_level(
+            doc,
+            location_point,
+            family_symbol=family_symbol,
+            target_placement_level= level,
+        )
+
+        return_value.update(place_result)
+       
+    except Exception as e:
+        message = "Failed to place PushIt family with error: {}".format(e)
         return_value.update_sep(False, message)
     return return_value

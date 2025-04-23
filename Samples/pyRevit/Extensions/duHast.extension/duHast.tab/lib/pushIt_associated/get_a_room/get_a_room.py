@@ -39,12 +39,12 @@ from duHast.pyRevit.directory_picker import get_process_directory
 
 from pushIt_associated.get_a_room import settings
 from pushIt_associated.get_a_room.nested_family_create import create_get_a_room_family
+from pushIt_associated.get_a_room.host_family_utils import load_push_it_family, create_push_it_family_instance
 from pushIt_associated.get_a_room.settings_utils import get_output_path_from_schema
 from pushIt_associated.get_a_room.Objects.FamilyTypeConfig import FamilyTypeConfig
-
 from pushIt_associated.get_a_room.utilities import get_filled_region_with_two_loops_area
-
 from pushIt_associated.get_a_room import debug as debug
+from pushIt_associated.get_a_room.post_processing import post_processing_filled_region
 
 from Autodesk.Revit.DB import Element, ViewType
 
@@ -203,10 +203,10 @@ def get_a_room_entry(doc, uiapp,output, forms):
     
     # check ig extensible schema exists
     if not does_schema_exist(settings.GET_A_ROOM_ADD_IN_GUID):
-         message = "Extensible schema does not exist. Please run the setup add-in first."
-         return_value.update_sep(False, message)
-         print_error(message)
-         return return_value
+        message = "Extensible schema does not exist. Please run the setup add-in first."
+        return_value.update_sep(False, message)
+        print_error(message)
+        return return_value
     
     # # get the output directory from the schema
     output_directory = get_output_path_from_schema()
@@ -214,10 +214,10 @@ def get_a_room_entry(doc, uiapp,output, forms):
         #get the user to select one ...for now
         selection_result = get_process_directory(forms=forms, form_title="Select output directory")
         if selection_result.status == False:
-             message = "Failed to select output directory: {}".format(selection_result.message)
-             return_value.update_sep(False, message)
-             print_error(message)
-             return return_value
+            message = "Failed to select output directory: {}".format(selection_result.message)
+            return_value.update_sep(False, message)
+            print_error(message)
+            return return_value
         else:
             output_directory = selection_result.result[0]
         
@@ -335,8 +335,56 @@ def get_a_room_entry(doc, uiapp,output, forms):
             return_value.update_sep(False, message)
             print_error(message)
             continue
-        else:
-            print("Created family: {}".format(create_family_result.result[0]))
-    
+       
+        print("Created family: {}".format(create_family_result.result[0]))
+
+        # loading family
+        # get the file path
+        push_It_fam_file_path = create_family_result.result[0]
+
+        # load the family
+        load_result = load_push_it_family(doc, push_It_fam_file_path)
+
+        if load_result.status == False:
+            message = "Failed to load family: {}".format(load_result.message)
+            return_value.update_sep(False, message)
+            print_error(message)
+            continue
+
+        # get the family instance
+        family = load_result.result[0]
+        print("Loaded family: {}".format(family.Name))
+
+        # attempt to place an instance
+        place_result = create_push_it_family_instance(
+            doc=doc,
+            push_it_family=family,
+            location_point=bounding_box_center,
+            active_view=active_view,
+        )
+
+        if place_result.status == False:
+            message = "Failed to place family: {}".format(place_result.message)
+            return_value.update_sep(False, message)
+            print_error(message)
+            continue
+       
+        print("Placed instance of family: {}".format(family.Name))
+       
+        # check if the filled region is meant to be deleted...
+        post_process_filled_region_result = post_processing_filled_region(
+            doc=doc,
+            forms=forms,
+            filled_region=f
+        )
+
+        if post_process_filled_region_result.status == False:
+            message = "Failed to post process filled region: {}".format(post_process_filled_region_result.message)
+            return_value.update_sep(False, message)
+            print_error(message)
+            continue
+
+        print("Post processed filled region")
+
     
     print("Finished.")

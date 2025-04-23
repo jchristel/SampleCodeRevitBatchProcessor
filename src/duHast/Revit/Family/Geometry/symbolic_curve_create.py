@@ -32,13 +32,11 @@ These functions work within a Revit family document to create and manipulate sym
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Common.transaction import in_transaction
-from duHast.Revit.Categories.Utility.category_property_names import CATEGORY_GRAPHIC_STYLE_PROJECTION
 from duHast.Revit.Categories.categories import (
     ELEMENTS_PARAS_SUB
 )
 
-from duHast.Revit.Common.parameter_set_utils import set_parameter_value
-from duHast.Revit.Family.Geometry.utils import set_element_sub_category
+from duHast.Revit.Family.Geometry.utils import set_curve_sub_category
 
 from Autodesk.Revit.DB import Curve, Transaction, SketchPlane
 
@@ -232,14 +230,13 @@ def set_symbolic_curve_sub_category(doc, curve, source_graphic_style, transactio
         
     return_value = Result()
     try:
-        return_value = set_element_sub_category(
+        return_value = set_curve_sub_category(
             doc=doc, 
             element=curve, 
             source_graphic_style=source_graphic_style, 
-            source_graphic_style_key=CATEGORY_GRAPHIC_STYLE_PROJECTION, 
             transaction_manager=transaction_manager,
         )
     except Exception as e:
-        message = "Failed to set sub category in family: {}".format(e)
+        message = "Failed to set curve sub category in family: {}".format(e)
         return_value.update_sep(False, message)
     return return_value

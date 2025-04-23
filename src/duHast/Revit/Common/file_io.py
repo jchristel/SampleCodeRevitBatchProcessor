@@ -325,9 +325,11 @@ def get_family_from_template(doc, family_template_path):
             - .status True if family was created from template. Otherwise False.
             - .message: 'Family document created from template:'
             - .result: family document as first entry in the result list.
+
             On exception:
             - result.status (bool) will be False.
             - result.message will contain exception message.
+            
     :rtype: :class:`.Result`
     """
 
@@ -342,5 +344,41 @@ def get_family_from_template(doc, family_template_path):
         return_value.result.append(family_doc)
     except Exception as e:
         message = "Failed to create family document from template: {}".format(e)
+        return_value.update_sep(False, message)
+    return return_value
+
+
+def open_family(doc, family_path):
+    """
+    Open a family document
+
+    :param doc: The Revit document
+    :type doc: Autodesk.Revit.DB.Document
+    :param family_path: The path to the family
+    :type family_path: str
+    :return:
+            Result class instance.
+            - .status True if family was opened. Otherwise False.
+            - .message: 'Family document opened:'
+            - .result: family document as first entry in the result list.
+
+            On exception:
+            - result.status (bool) will be False.
+            - result.message will contain exception message.
+
+    :rtype: :class:`.Result`
+    """
+
+    # set up a status tracker
+    return_value = res.Result()
+    
+    try:
+        # get the application
+        app = doc.Application
+        family_doc = app.OpenDocumentFile(family_path)
+        return_value.append_message("Family document opened: {}".format(family_path))
+        return_value.result.append(family_doc)
+    except Exception as e:
+        message = "Failed to open family document: {}".format(e)
         return_value.update_sep(False, message)
     return return_value

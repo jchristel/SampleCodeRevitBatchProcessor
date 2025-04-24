@@ -556,3 +556,30 @@ def are_lines_perpendicular(line_one, line_two):
     # check if the perpendicular vector is parallel to the second line
     return perpendicular_vector_to_one.IsAlmostEqualTo(dir_two) or perpendicular_vector_to_one.IsAlmostEqualTo(dir_two.Negate())
 
+
+def offset_curve(curve, normal_vector, offset_distance):
+    """
+    Offsets a curve in the direction of the normal vector by a specified distance.
+
+    :param curve: The curve to be offset.
+    :type curve: Autodesk.Revit.DB.Curve
+    :param normal_vector: The normal vector indicating the offset direction.
+    :type normal_vector: Autodesk.Revit.DB.XYZ
+    :param offset_distance: The distance to offset the curve.
+    :type offset_distance: float
+    
+    :return: The offset curve.
+    :rtype: Autodesk.Revit.DB.Curve
+    """
+    
+    # Make sure the normal vector is pointing towards offset direction
+    if normal_vector.DotProduct(XYZ(0, 0, 1)) < 0:
+        normal_vector = normal_vector.Negate()
+    
+    # Create offset vector
+    offset_vector = XYZ(normal_vector.X, normal_vector.Y, 0).Normalize().Multiply(offset_distance)
+    
+    # Transform curve
+    transform = Transform.CreateTranslation(offset_vector)
+    return curve.CreateTransformed(transform)
+

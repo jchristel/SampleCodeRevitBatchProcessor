@@ -20,11 +20,15 @@
 #
 #
 
+from System.Collections.Generic import List
+
+
 from duHast.Revit.Family.family_element_utils import get_all_curve_based_elements_in_family,get_all_generic_forms_in_family, set_element_visibility_by_detail_level
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Common.delete import delete_by_element_ids
 from duHast.Revit.Family.Geometry.extrusion_create import create_extrusion_on_level, associate_extrusion_height_with_parameter, set_extrusion_sub_category
 from duHast.Revit.Family.Geometry.symbolic_curve_create import create_symbolic_curves_on_level, set_symbolic_curve_sub_category
+from duHast.Revit.Common.Geometry.curve_loops import create_curve_loop_through_offset
 
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 from duHast.Revit.Categories.Utility.category_properties_get_utils import (
@@ -37,7 +41,10 @@ from duHast.Revit.Categories.categories import (
     get_category_by_id,
 )
 
-from Autodesk.Revit.DB import FamilyElementVisibilityType
+from pushIt_associated.get_a_room.settings import HEIGHT_PARAMETER_NAME
+
+
+from Autodesk.Revit.DB import CurveLoop, FamilyElementVisibilityType
 
 
 def get_family_element_sub_category_id_name(doc, extrusion):
@@ -156,34 +163,45 @@ def create_extrusion(doc, curve_loops, detail_level, height_parameter_name, sour
             action_return_value = Result()
             try:
                 
-                # set the subcategory of the extrusion to the source extrusion sub category
-                set_sub_cat_result = set_extrusion_sub_category(
-                    doc=doc, 
-                    extrusion=extrusion, 
-                    source_graphic_style=source_graphic_style,
-                    transaction_manager=None # already in a transaction,
-                )
-                action_return_value.update(set_sub_cat_result)
+                if (source_graphic_style):
+                    # set the subcategory of the extrusion to the source extrusion sub category
+                    set_sub_cat_result = set_extrusion_sub_category(
+                        doc=doc, 
+                        extrusion=extrusion, 
+                        source_graphic_style=source_graphic_style,
+                        transaction_manager=None # already in a transaction,
+                    )
+                    action_return_value.update(set_sub_cat_result)
+                else:
+                    action_return_value.append_message("No source graphic style provided, extrusion will not be set to a subcategory")
                 
                 # set the visibility of the extrusion by detail level
                 set_result = set_family_element_visibility_by_detail_level(doc=doc, element=extrusion, is_visible_coarse_detail=detail_level)
                 action_return_value.update(set_result)
                 
-                # associate the extrusion height with the parameter
-                height_parameter_result = associate_extrusion_height_with_parameter(
-                    doc=doc, 
-                    extrusion=extrusion, 
-                    height_parameter_name=height_parameter_name,
-                    transaction_manager=None # already in a transaction
-                )
-                action_return_value.update(height_parameter_result)
+                if height_parameter_name:
+                    # associate the extrusion height with the parameter
+                    height_parameter_result = associate_extrusion_height_with_parameter(
+                        doc=doc, 
+                        extrusion=extrusion, 
+                        height_parameter_name=height_parameter_name,
+                        transaction_manager=None # already in a transaction
+                    )
+                    action_return_value.update(height_parameter_result)
+                else:
+                    action_return_value.append_message("No height parameter provided, extrusion will not be associated with a parameter")
                 
             except Exception as e:
                 action_return_value.update_sep(False, "Failed to create new extrusion in family: {}".format(e))
             return action_return_value
         
+        # set a shallow height if no height parameter is provided (nested gen families)
+        extrusion_height = 100
+        if height_parameter_name == None:
+            extrusion_height = 10
+
         # create a new extrusion in the family document and set its visibility by detail level
-        create_result = create_extrusion_on_level(doc=doc,level=level_plane, curve_loops=curve_loops, func = action)
+        create_result = create_extrusion_on_level(doc=doc,level=level_plane, curve_loops=curve_loops, func = action, height=extrusion_height)
         return_value.update(create_result)
         
     except Exception as e: 
@@ -424,5 +442,61 @@ def add_2D_outline(family_doc, curve_loop, is_visible_coarse_detail):
         return_value.append_message("Added 2D outlines to family")
     except Exception as e:
         message = "Failed to add 2D lines in family: {}".format(e)
+        return_value.update_sep(False, message)
+    return return_value
+
+
+def test_offset_curve_loop (doc, curve_loop, offset_distance):
+    """
+    Test function to offset a curve loop 
+    
+    :param doc: The family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param filled_region: The filled region element.
+    :type filled_region: Autodesk.Revit.DB.FilledRegion
+    :return: Result class instance.
+        - `result.status` (bool): True if the operation was successful, otherwise False.
+        - `result.message` (str): Confirmation of successful operation.
+        - `result.result` (list): Empty
+    On exception:
+
+        - `result.status` (bool): False.
+        - `result.message` (str): Generic exception message.
+        - `result.result` (list): Empty.
+    :rtype: :class:`.Result`
+
+    """
+     # set up a status tracker
+    return_value = Result()
+    try:
+        # attempt to offset the curve loop to create a new filled region
+        offset_loop = create_curve_loop_through_offset( curve_loop, offset_distance= offset_distance)
+
+        # convert to .net list
+        curve_loops_net = List[CurveLoop]()
+        curve_loops_net.Add(offset_loop)
+
+        create_result = create_extrusion(
+            doc=doc, 
+            curve_loops = curve_loops_net,
+            detail_level = True,
+            height_parameter_name = None,
+            source_graphic_style= None,
+        )
+
+        if create_result.status:
+            
+            # get the new extrusion
+            element = create_result.result[0]
+            # delete the extrusion
+            delete_result = delete_by_element_ids(doc, [element.Id], "Delete new extrusion", "Extrusion")
+            return_value.append_message("Created new extrusion from offset curve loop")
+            return_value.result.append(offset_loop)
+        else:
+            return_value.update_sep(False, "Failed to create new extrusion from offset curve loop")
+            return_value.result = []
+
+    except Exception as e:
+        message = "Test with offset loop failed: {}".format(e)
         return_value.update_sep(False, message)
     return return_value

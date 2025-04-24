@@ -120,7 +120,7 @@ def verify_schema(doc):
             # setup the data storage in the file
             data_storage_result = create_project_data_storage(doc, schema)
             if data_storage_result==False:
-                message = "Failed to create data storage: {}".format(data_storage_result.error_message)
+                message = "Failed to create data storage: {}".format(data_storage_result.message)
                 return_value.update_sep(False, message)
                 return return_value
             else:
@@ -133,12 +133,12 @@ def verify_schema(doc):
             # get the data storage element from the file
             data_storage = find_data_storage(doc, settings.GET_A_ROOM_ADD_IN_GUID)
             if data_storage == None:
-                return_value.append_message("Data storage element not found in the file.Attempting to create it.")
+                return_value.append_message("Data storage element not found in the file. Attempting to create it.")
                 
                 # attempt to create the data storage element
                 data_storage_result = create_project_data_storage(doc, schema)
                 if data_storage_result==False:
-                    message = "Failed to create data storage: {}".format(data_storage_result.error_message)
+                    message = "Failed to create data storage: {}".format(data_storage_result.message)
                     return_value.update_sep(False, message)
                     return return_value
                 else:
@@ -193,12 +193,12 @@ def get_a_room_settings_entry(doc, uiapp, output, forms):
         schema = schema_tuple[0]
         data_storage = schema_tuple[1]
         
-        # get the current directory of the family output directory
-        # set up an entity
-        entity = Entity(schema)
-        family_output_directory = entity.Get[str](settings.DU_HAST_GET_A_ROOM_FAMILY_OUT_DIRECTORY_FIELD_NAME)
-        
-        print("...Current family output directory: [{}]".format(family_output_directory))
+        stored_entity = data_storage.GetEntity(schema)
+        if stored_entity.IsValid():
+            family_output_directory = stored_entity.Get[str](settings.DU_HAST_GET_A_ROOM_FAMILY_OUT_DIRECTORY_FIELD_NAME)
+            print("...Family output directory: [{}]".format(family_output_directory))
+        else:
+            print("...invalid Entity: [{}]".format(stored_entity))
         
         if family_output_directory == None or family_output_directory == "":
             print("...No family output directory set.")
@@ -220,7 +220,7 @@ def get_a_room_settings_entry(doc, uiapp, output, forms):
         
         # check if the user selected a directory
         if directory_result.status==False:
-            message = "Failed to get family output directory: {}".format(directory_result.error_message)
+            message = "Failed to get family output directory: {}".format(directory_result.message)
             print_error(message)
             return_value.update_sep(False, message)
             return return_value
@@ -229,22 +229,22 @@ def get_a_room_settings_entry(doc, uiapp, output, forms):
         new_directory = directory_result.result[0]
         
         # Set the FAMILY_OUT_DIRECTORY value on the entity
-        entity.Set(settings.DU_HAST_GET_A_ROOM_FAMILY_OUT_DIRECTORY_FIELD_NAME, new_directory)
-        
-        # update the data storage with the new entity
-        update_entity_result = update_entity_on_data_storage(doc, data_storage, entity)
+        stored_entity.Set(settings.DU_HAST_GET_A_ROOM_FAMILY_OUT_DIRECTORY_FIELD_NAME, new_directory)
+
+        # update the data storage with the new entity and save it to the project information object
+        update_entity_result = update_entity_on_data_storage(doc, data_storage, stored_entity)
         
         # check if the user selected a directory
         if update_entity_result.status==False:
-            message = "Failed to update data storage: {}".format(directory_result.error_message)
+            message = "Failed to update data storage: {}".format(update_entity_result.message)
             print_error(message)
             return_value.update_sep(False, message)
             return return_value
         
-        print("...Family output directory updated to: [{}]".format(update_entity_result))
+        print("...Family output directory updated to: [{}]".format(update_entity_result.message))
         
         # Retrieve it to verify
-        family_output_directory_updated = entity.Get[str](settings.DU_HAST_GET_A_ROOM_FAMILY_OUT_DIRECTORY_FIELD_NAME)
+        family_output_directory_updated = stored_entity.Get[str](settings.DU_HAST_GET_A_ROOM_FAMILY_OUT_DIRECTORY_FIELD_NAME)
         
         # check if update was successful
         if family_output_directory_updated == new_directory:

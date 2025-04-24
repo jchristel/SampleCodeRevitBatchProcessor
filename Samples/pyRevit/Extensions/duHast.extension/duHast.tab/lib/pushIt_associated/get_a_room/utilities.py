@@ -26,6 +26,13 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Revit.DetailItems.filled_regions import  get_filled_region_curve_loops , get_filled_region_area
 from duHast.Revit.Common.Geometry.curve_loops import get_area_from_closed_curve_loop
 
+
+# types of families
+FAMILY_TYPE_NAME_ROOM = "Room"
+FAMILY_TYPE_NAME_BAY = "Bay"
+
+
+
 def get_filled_region_with_two_loops_area(doc, filled_region):
     """
     Get the area of a filled region if there are 2 curve loops.
@@ -52,7 +59,13 @@ def get_filled_region_with_two_loops_area(doc, filled_region):
         filled_region_curve_loops = get_filled_region_curve_loops(filled_region)
         
         # get the outer area of the filled region
-        area_outer_result = get_filled_region_area(filled_region)
+        area_outer_result = get_area_from_closed_curve_loop(
+            doc= doc, 
+            view = doc.ActiveView, 
+            curve_loop = filled_region_curve_loops[0],
+            filled_region_type_id = filled_region.GetTypeId(),
+        )
+
         if area_outer_result.status == False:
             message = "Failed to get outer area: {}".format(area_outer_result.message)
             return_value.update_sep(False, message)
@@ -68,7 +81,7 @@ def get_filled_region_with_two_loops_area(doc, filled_region):
             return_value.append_message("Filled region has not 2 loops.")
             return_value.result.append(area_outer)
             return return_value
-        
+
         # get the area of the filled region
         area_inner_result = get_area_from_closed_curve_loop(
             doc= doc, 
@@ -90,7 +103,7 @@ def get_filled_region_with_two_loops_area(doc, filled_region):
         
         # calculate the area of the filled region
         area_wall_half = (area_outer - area_inner)/2
-        area = area + area_wall_half
+        area = area_inner + area_wall_half
         
         # update the return value with the area
         return_value.append_message("Area of filled region: {}".format(area))

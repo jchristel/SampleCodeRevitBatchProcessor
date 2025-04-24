@@ -93,8 +93,7 @@ def post_processing_filled_region(doc, forms, filled_region):
 
         # check if user selection is valid
         if user_selection == None or user_selection == NO_GET_ME_OUT_OF_HERE:
-            return_value.update_sep(False, "User cancelled operation")
-            print_error("User cancelled operation")
+            return_value.append_message("User cancelled operation, no filled region deleted.")
             return return_value
     
         # delete the filled region

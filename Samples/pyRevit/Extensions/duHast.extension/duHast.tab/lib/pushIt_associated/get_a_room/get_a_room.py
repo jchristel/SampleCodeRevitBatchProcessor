@@ -38,11 +38,11 @@ from duHast.pyRevit.console_output import print_header, print_error
 from duHast.pyRevit.directory_picker import get_process_directory
 
 from pushIt_associated.get_a_room import settings
-from pushIt_associated.get_a_room.nested_family_create import create_get_a_room_family
+from pushIt_associated.get_a_room.host_family_create import create_get_a_room_family
 from pushIt_associated.get_a_room.host_family_utils import load_push_it_family, create_push_it_family_instance
 from pushIt_associated.get_a_room.settings_utils import get_output_path_from_schema
 from pushIt_associated.get_a_room.Objects.FamilyTypeConfig import FamilyTypeConfig
-from pushIt_associated.get_a_room.utilities import get_filled_region_with_two_loops_area
+from pushIt_associated.get_a_room.utilities import get_filled_region_with_two_loops_area, FAMILY_TYPE_NAME_BAY, FAMILY_TYPE_NAME_ROOM
 from pushIt_associated.get_a_room import debug as debug
 from pushIt_associated.get_a_room.post_processing import post_processing_filled_region
 
@@ -54,7 +54,6 @@ from Autodesk.Revit.DB import (
 )
 
 from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value, getter_double_as_double_converted_to_metric
-
 
 DEBUG = False
 
@@ -103,7 +102,7 @@ def create_family_from_filled_region(doc, filled_region_curve_loops, bounding_bo
 
         # single loop filled region, create a bay family
         fam_config = FamilyTypeConfig(
-            room_type="Bay",
+            room_type=FAMILY_TYPE_NAME_BAY,
             generic_nested_name=settings.FAMILY_TEMPLATE_GENERIC_BAY_NESTED,
             generic_nested_path=settings.FAMILY_TEMPLATE_GENERIC_BAY_NESTED_PATH,
             generic_nested_coarse_name=settings.FAMILY_TEMPLATE_GENERIC_NESTED_BAY_COARSE,
@@ -126,7 +125,7 @@ def create_family_from_filled_region(doc, filled_region_curve_loops, bounding_bo
 
         # two loop filled region, create a room family
         fam_config = FamilyTypeConfig(
-            room_type="Room",
+            room_type=FAMILY_TYPE_NAME_ROOM,
             generic_nested_name=settings.FAMILY_TEMPLATE_GENERIC_ROOM_NESTED,
             generic_nested_path=settings.FAMILY_TEMPLATE_GENERIC_ROOM_NESTED_PATH,
             generic_nested_coarse_name=settings.FAMILY_TEMPLATE_GENERIC_NESTED_ROOM_COARSE,
@@ -288,6 +287,9 @@ def get_a_room_entry(doc, uiapp,output, forms):
                 )
                 
             print("area: [{}]".format(area))
+
+            # attempt to offset the filled region
+            debug.offset_curve_loop_and_draw_bounding_box_around_filled_region(doc, f)
        
         bounding_box = f.get_BoundingBox(active_view)
         # attempt to move the bounding box to centre to zero
@@ -321,6 +323,7 @@ def get_a_room_entry(doc, uiapp,output, forms):
             bounding_box_new = filled_region_new_result.result[0].get_BoundingBox(active_view)
             # draw the transformed bounding box
             result_draw = draw_2D_lines_on_bounding_box_and_separate_point(doc, bounding_box_new, get_curve_loop_centroid(transformed_curve_loops[0]), active_view)
+            #result_draw = draw_2D_lines_on_bounding_box_and_separate_point(doc, bounding_box_new, get_bounding_box_centre(bounding_box_new), active_view)
 
         create_family_result = create_family_from_filled_region(
             doc=doc, 

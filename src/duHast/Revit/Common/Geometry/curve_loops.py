@@ -31,18 +31,21 @@ from System.Collections.Generic import List
 
 from duHast.Revit.Common.transaction import in_transaction
 from duHast.Utilities.Objects.result import Result
+from duHast.Utilities.unit_conversion import  convert_mm_to_imperial_feet
 from duHast.Revit.DetailItems.filled_regions_create import create_filled_region_by_view
 from duHast.Revit.Common.parameter_get_utils import get_built_in_parameter_value, getter_double_as_double_converted_to_metric
 from duHast.Revit.Common.delete import delete_by_element_ids
 
 # import Autodesk
 from Autodesk.Revit.DB import (
+    Arc,
     BuiltInParameter,
     Curve,
     CurveArray,
     CurveArrArray,
     CurveLoop,
     Transaction,
+    Transform,
     XYZ,
 )
 
@@ -79,9 +82,11 @@ def create_curve_loops_through_transform(curve_loops, transform, convert_net_lis
         return new_curve_loops
     
     
-def create_curve_loop_through_offset(curve_loop, offset_distance, offset_normal):
+def create_curve_loop_through_offset(curve_loop, offset_distance, offset_to_inside = True):
     """
-    Creates a new curve loop by transforming the existing curve loops using the provided transform.
+    Creates a new curve loop by offsetting it a given distance.
+
+    Some 
 
     :param curve_loop: The curve loop to be transformed.
     :type curve_loop: Autodesk.Revit.DB.CurveLoop
@@ -94,9 +99,48 @@ def create_curve_loop_through_offset(curve_loop, offset_distance, offset_normal)
     :rtype: Autodesk.Revit.DB.CurveLoop
     """
 
-    # create a new curve loop via offset
-    new_curve_loop = CurveLoop.CreateViaOffset(curve_loop, offset_distance, offset_normal)
+    # Function to determine if a CurveLoop is an outer loop or an inner loop
+    def is_outer_loop(curve_loop):
+        # Calculate the area of the CurveLoop
+        area = 0.0
+        for curve in curve_loop:
+            start = curve.GetEndPoint(0)
+            end = curve.GetEndPoint(1)
+            area += (start.X * end.Y - end.X * start.Y)
+        return area > 0
+
     
+    # Determine the offset direction for the outer loop
+    if is_outer_loop(curve_loop):
+        # If the loop is an outer loop, offset towards the inside
+        if  offset_to_inside:
+            offset_distance = -abs(offset_distance)
+        else:
+            offset_distance = abs(offset_distance)
+    else:
+        if offset_to_inside:
+            offset_distance = abs(offset_distance)
+        else:
+            offset_distance = -abs(offset_distance)
+
+    # Check if the curve loop is a circle
+    curve_loop_is_circle = True
+    # Check if the curve is arc and adjust the offset direction if necessary
+    for curve in curve_loop:
+        if not type(curve) == Arc:
+            curve_loop_is_circle = curve_loop_is_circle and False
+            break
+
+    # If the curve loop is a circle, offset in the opposite direction
+    if curve_loop_is_circle:
+        offset_distance = -1 * offset_distance
+
+    # convert to imperial feet
+    offset_distance = convert_mm_to_imperial_feet(offset_distance)
+
+    # create a new curve loop via offset
+    new_curve_loop = CurveLoop.CreateViaOffset(curve_loop, offset_distance, XYZ.BasisZ)
+
     return new_curve_loop
 
 
@@ -129,6 +173,9 @@ def get_area_from_closed_curve_loop(doc, view, curve_loop, filled_region_type_id
             return_value.result.append(area)
             return return_value
         
+        curve_loop_net_list = List[CurveLoop]()
+        curve_loop_net_list.Add(curve_loop)
+
         # set up an action creating a filled region using the loop
         def action():
             # set up a status tracker
@@ -138,7 +185,7 @@ def get_area_from_closed_curve_loop(doc, view, curve_loop, filled_region_type_id
                 action_return_value = create_filled_region_by_view(
                     doc=doc, 
                     view=view, 
-                    curve_loops=List[CurveLoop](curve_loop), 
+                    curve_loops=curve_loop_net_list, 
                     filled_region_type=filled_region_type_id,
                     transaction_manager=None,
                 )
@@ -154,7 +201,7 @@ def get_area_from_closed_curve_loop(doc, view, curve_loop, filled_region_type_id
             return return_value
         
         # get the actual filled region instance
-        filled_region = return_value.result.result[0]
+        filled_region = return_value.result[0]
         
         # get the area of the filled region
         area = get_built_in_parameter_value(
@@ -167,7 +214,12 @@ def get_area_from_closed_curve_loop(doc, view, curve_loop, filled_region_type_id
         return_value.result=[area]
 
         # delete the filled region
-        delete_result = delete_by_element_ids(doc, filled_region.Id)
+        delete_result = delete_by_element_ids(
+            doc=doc, 
+            ids=[filled_region.Id],
+            transaction_name="Deleting temp filled region",
+            element_name="filled region",
+        )
 
         if delete_result.status == False:
             return_value.update_sep(False, "Failed to delete filled region with error: {}".format(delete_result.message))
@@ -252,3 +304,44 @@ def get_curve_loop_centroid(curve_loop):
 
     centroid = sum_point / count
     return centroid  # Likely inside the original loop
+
+
+def get_curve_loop_by_offset_towards_centroid( curve_loop, offset_distance):
+    """
+    Creates a new curve loop by offsetting the original curve loop towards its centroid.
+    This is not a size change but a position change!
+    
+    :param curve_loop: The original CurveLoop to be offset.
+    :type curve_loop: Autodesk.Revit.DB.CurveLoop
+    :param offset_distance: The distance to offset the curve loop.
+    :type offset_distance: float
+
+    :return: A new CurveLoop that is offset from the original.
+    :rtype: Autodesk.Revit.DB.CurveLoop
+    """
+    
+    # get the centroid of the curve loop
+    centroid = get_curve_loop_centroid(curve_loop)
+    
+    vector_to_centroid = None
+
+    for curve in curve_loop:
+        # check if the curve is a line
+        if not isinstance(curve, Curve):
+            raise ValueError("Curve loop contains non-linear curves.")
+        
+        # create a vector from the centroid to the first point of the curve loop
+        vector_to_centroid = centroid - curve.GetEndPoint(0)
+
+        break
+
+    # normalize the vector and multiply by the offset distance
+    offset_vector = vector_to_centroid.Normalize() * offset_distance
+    
+    # create a transform using the offset vector
+    transform = Transform.CreateTranslation(offset_vector)
+    
+    # create a new curve loop by transforming the original curve loop
+    new_curve_loop = create_curve_loops_through_transform([curve_loop], transform, convert_net_list=False)[0]
+    
+    return new_curve_loop

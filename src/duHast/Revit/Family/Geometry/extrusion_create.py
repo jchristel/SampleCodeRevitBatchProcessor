@@ -43,11 +43,12 @@ from duHast.Revit.Common.parameter_set_utils import set_parameter_value
 
 from duHast.Revit.Family.family_parameter_utils import associate_parameter_with_other_parameter_on_nested_family_instance
 from duHast.Revit.Family.Geometry.utils import set_element_sub_category
+from duHast.Utilities.unit_conversion import convert_mm_to_imperial_feet
 
 from Autodesk.Revit.DB import BuiltInParameter,Transaction, SketchPlane
 
 
-def create_extrusion(doc, sketch_plane, curve_loops, func, transaction_manager=in_transaction):
+def create_extrusion(doc, sketch_plane, curve_loops, func, height=100, transaction_manager=in_transaction):
     """
     Create a new extrusion in the family document using the provided curve loops.
     
@@ -89,7 +90,7 @@ def create_extrusion(doc, sketch_plane, curve_loops, func, transaction_manager=i
             action_return_value = Result()
             try:
                 # Create new extrusion
-                new_extrusion = doc.FamilyCreate.NewExtrusion(True, new_profile, sketch_plane, 10.00)
+                new_extrusion = doc.FamilyCreate.NewExtrusion(True, new_profile, sketch_plane, convert_mm_to_imperial_feet(height))
                 
                 # check if the extrusion was created successfully
                 if new_extrusion is None:
@@ -121,7 +122,7 @@ def create_extrusion(doc, sketch_plane, curve_loops, func, transaction_manager=i
     return return_value
 
 
-def create_extrusion_on_level (doc, level, curve_loops, func, transaction_manager=in_transaction):
+def create_extrusion_on_level (doc, level, curve_loops, func, height=100, transaction_manager=in_transaction):
     """
     Create a new extrusion in the family document on the level provided using the provided curve loops.
 
@@ -166,7 +167,7 @@ def create_extrusion_on_level (doc, level, curve_loops, func, transaction_manage
                 sketch_plane = SketchPlane.Create(doc, level_reference)
                  
                 # Create new extrusion
-                new_extrusion = doc.FamilyCreate.NewExtrusion(True, new_profile, sketch_plane, 10.00)
+                new_extrusion = doc.FamilyCreate.NewExtrusion(True, new_profile, sketch_plane, convert_mm_to_imperial_feet(height))
                 
                 # check if the extrusion was created successfully
                 if new_extrusion is None:

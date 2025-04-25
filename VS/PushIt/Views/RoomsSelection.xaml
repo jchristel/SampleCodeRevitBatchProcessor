@@ -84,7 +84,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="duHastNet.PushIt..Real Good(tm)" FontSize="24"/>
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="PushIt..Real Good(tm)" FontSize="24"/>
             <ToggleButton
                 Grid.Column="1" Grid.Row="0"
                 x:Name = "toggleSafety" 

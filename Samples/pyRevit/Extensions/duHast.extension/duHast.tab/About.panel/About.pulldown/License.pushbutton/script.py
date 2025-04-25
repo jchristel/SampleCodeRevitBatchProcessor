@@ -1,3 +1,3 @@
 import webbrowser
 
-webbrowser.open('https://github.com/jchristel/SampleCodeRevitBatchProcessor/wiki')  # Go to github repo
+webbrowser.open('https://github.com/jchristel/SampleCodeRevitBatchProcessor?tab=License-1-ov-file#readme')  # Go to github repo

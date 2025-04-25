@@ -18,8 +18,7 @@ output = script.get_output()
 doc = revit.doc
 uiapp = __revit__
 
-# create default catalogue type in family
+# save settings to model file using extended storage
 from pushIt_associated.get_a_room.settings_entry import get_a_room_settings_entry
 
-print("oh, hi there!")
 get_a_room_settings_entry(doc=doc, uiapp = uiapp, output=output, forms=forms)

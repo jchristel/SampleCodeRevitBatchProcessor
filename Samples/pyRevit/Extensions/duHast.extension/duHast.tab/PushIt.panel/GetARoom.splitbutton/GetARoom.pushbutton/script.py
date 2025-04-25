@@ -18,8 +18,7 @@ output = script.get_output()
 doc = revit.doc
 uiapp = __revit__
 
-# create default catalogue type in family
+#  convert filled regions to push iut rooms
 from pushIt_associated.get_a_room.get_a_room import get_a_room_entry
 
-print("oh, hi there!")
 get_a_room_entry(doc=doc, uiapp = uiapp, output=output, forms=forms)

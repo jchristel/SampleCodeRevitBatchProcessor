@@ -20,8 +20,6 @@
 #
 #
 
-import clr
-
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.ExtensibleSchemas.extensible_schemas import create_schema, get_schema, does_schema_exist
 from duHast.Revit.ExtensibleSchemas.data_storage import create_project_data_storage, find_data_storage, update_entity_on_data_storage
@@ -29,9 +27,6 @@ from duHast.pyRevit.directory_picker import get_process_directory
 from duHast.pyRevit.console_output import print_error, print_header
 
 from pushIt_associated.get_a_room import settings
-
-from Autodesk.Revit.DB.ExtensibleStorage import Entity
-
 
 
 # set up some options for the user to select
@@ -53,6 +48,7 @@ def schema_builder(schema_builder):
     textField = schema_builder.AddSimpleField(settings.DU_HAST_GET_A_ROOM_FAMILY_OUT_DIRECTORY_FIELD_NAME, clr.GetClrType(str))
     textField.SetDocumentation("The family output directory for the Get A Room add-in.")
     return schema_builder
+
 
 def get_user_options(forms):
     """
@@ -195,10 +191,11 @@ def get_a_room_settings_entry(doc, uiapp, output, forms):
         
         stored_entity = data_storage.GetEntity(schema)
         if stored_entity.IsValid():
+            # get the output directory from the entity
             family_output_directory = stored_entity.Get[str](settings.DU_HAST_GET_A_ROOM_FAMILY_OUT_DIRECTORY_FIELD_NAME)
             print("...Family output directory: [{}]".format(family_output_directory))
         else:
-            print("...invalid Entity: [{}]".format(stored_entity))
+            print_error("...invalid Entity: [{}]".format(stored_entity))
         
         if family_output_directory == None or family_output_directory == "":
             print("...No family output directory set.")
@@ -248,7 +245,7 @@ def get_a_room_settings_entry(doc, uiapp, output, forms):
         
         # check if update was successful
         if family_output_directory_updated == new_directory:
-            print("...Family output directory updated to: [{}]".format(family_output_directory_updated))
+            print("...Confirmed: family output directory updated to: [{}]".format(family_output_directory_updated))
             return_value.update_sep(True, "Family output directory updated to: [{}]".format(family_output_directory_updated))
         else:
             message = "Failed to update family output directory"
@@ -260,4 +257,8 @@ def get_a_room_settings_entry(doc, uiapp, output, forms):
         return_value.update_sep(False, message)
         print_error(message)
     
+    
+    print("Get A Room settings entry completed.")
+    # close the output window after 5 seconds
+    output.self_destruct(5)
     return return_value

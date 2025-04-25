@@ -1,4 +1,4 @@
-//
+﻿//
 //License:
 //
 //
@@ -22,11 +22,32 @@
 //
 
 
-namespace duHastNet.UI.PDFDWGExporterUI
-{
-    public class Main
-    {
-        
-    }
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using duHastNet.Utils.WPF.ViewModels;
 
+namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
+{
+    public class SettingsViewModel : ViewModelBase
+    {
+        public Utils.WPF.ViewModels.GlobalMessageViewModel? GlobalMessageViewModel { get; }
+
+        public override void OnClosing()
+        {
+            
+            GlobalMessageViewModel.Dispose();
+
+            base.OnClosing();
+        }
+
+        public SettingsViewModel(Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel)
+        {
+            //store the global message view model
+            GlobalMessageViewModel = globalMessageViewModel;
+        }
+
+    }
 }

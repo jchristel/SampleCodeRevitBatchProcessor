@@ -1,0 +1,184 @@
+﻿<UserControl x:Class="duHastNet.UI.PDFDWGExporterUI.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:duHastNet.UI.PDFDWGExporterUI.Views"
+             xmlns:utilsViews="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.23.0.0.3"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Margin="10 10 10 10">
+        <Grid.RowDefinitions>
+            <!-- Header row -->
+            <RowDefinition Height="Auto"/>
+            <!-- message banner -->
+            <RowDefinition Height="Auto"/>
+            <!-- document type selector -->
+            <RowDefinition Height="auto"/>
+            <!-- data -->
+            <RowDefinition Height="*"/>
+            <!-- buttons -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!-- header row content -->
+        <Grid Grid.Row="0" Margin="0 0 0 10">
+            <Grid.RowDefinitions>
+                <!-- header row -->
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="PDF and DWG Exporter Settings" FontSize="24"/>
+        </Grid>
+        <!-- message banner -->
+        <Grid Grid.Row="1">
+            <utilsViews:GlobalMessageBanner DataContext="{Binding GlobalMessageViewModel}"/>
+        </Grid>
+        <!-- filter -->
+        <Border Grid.Row="2" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="5 5 5 5"
+                    Text="Select Document Type" />
+                <ComboBox Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="5 5 5 5" 
+                    ItemsSource="{Binding ColumnNameDefaultList}"
+                    SelectedValue="{Binding Path=SelectedColumnFilterItem,Mode=TwoWay}"/>
+            </Grid>
+        </Border>
+
+        <!-- grid view -->
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <!-- parameter grid -->
+            <DataGrid Grid.Row="0" Grid.Column="0" x:Name="dataGridParameters" 
+                ItemsSource="{Binding DataView}"
+                EnableRowVirtualization="True" 
+                EnableColumnVirtualization="True" 
+                VirtualizingPanel.IsVirtualizing="True" 
+                VirtualizingPanel.VirtualizationMode="Recycling"
+                AutoGenerateColumns="True" 
+                IsReadOnly="True"
+                CanUserSortColumns="True"
+                SelectionMode="Single" 
+                SelectedIndex="{Binding SelectedIndex}"
+                ColumnWidth="*"
+                RowHeight="23"
+                HorizontalAlignment="Stretch"
+                ColumnReordered="RoomsDataGrid_ColumnReordered">
+            </DataGrid>
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="100" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <!-- sheet name grid -->
+                <DataGrid Grid.Row="0" Grid.Column="0" x:Name="dataGridSheetName" 
+                    ItemsSource="{Binding DataView}"
+                    EnableRowVirtualization="True" 
+                    EnableColumnVirtualization="True" 
+                    VirtualizingPanel.IsVirtualizing="True" 
+                    VirtualizingPanel.VirtualizationMode="Recycling"
+                    AutoGenerateColumns="True" 
+                    IsReadOnly="True"
+                    CanUserSortColumns="True"
+                    SelectionMode="Single" 
+                    SelectedIndex="{Binding SelectedIndex}"
+                    ColumnWidth="*"
+                    RowHeight="23"
+                    HorizontalAlignment="Stretch"
+                    ColumnReordered="RoomsDataGrid_ColumnReordered">
+                </DataGrid>
+                <!-- up and down button under document name grid -->
+                <Grid Grid.Column="0" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Grid.Row="0"
+                        Margin="5 5 5 5" 
+                        Command="{Binding RefreshGUICommand}" 
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">       
+                        <TextBlock Text="Up" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </Button>
+                    <Button Grid.Column="1" Grid.Row="0"
+                        Margin="5 5 5 5" 
+                        Command="{Binding RefreshGUICommand}" 
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                        <TextBlock Text="Down" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </Button>
+                </Grid>
+            </Grid>
+            <!-- buttons add and remove -->
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Button Grid.Column="0" Grid.Row="1"
+                    Margin="5 5 5 5" 
+                    Command="{Binding RefreshGUICommand}" 
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                    <TextBlock Text="Add Parameter" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button Grid.Column="0" Grid.Row="2"
+                    Margin="5 5 5 5" 
+                    Command="{Binding RefreshGUICommand}" 
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                    <TextBlock Text="Remnove Parameter" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+            </Grid>
+        </Grid>
+
+        <!-- save and cancel row content -->
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                Margin="10 10 10 10" 
+                Content="Save" 
+                FontSize="24"
+                Command="{Binding PushSingleRoomCommand}" 
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <Button Grid.Column="1"
+                Margin="10 10 10 10" 
+                Content="Cancel" 
+                FontSize="24"
+                Command="{Binding PushSingleRoomCommand}" 
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+        </Grid>
+    </Grid>
+</UserControl>

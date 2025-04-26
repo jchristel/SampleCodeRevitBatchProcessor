@@ -22,57 +22,46 @@
 //
 
 
+using duHastNet.UI.PDFDWGExporterUI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
-namespace duHastNet.UI.PDFDWGExporterUI.Views
+namespace duHastNet.UI.PDFDWGExporterUI.Models
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public class ExportDataModel : duHastNet.Utils.WPF.Models.DataModelBase
     {
-        /// <summary>
-        /// settings object to created by the UI
-        /// </summary>
-        Utils.Settings? _settings;
+        private Utils.Settings? _settings;
+        public Settings? Settings { get => _settings; set => _settings = value; }
 
-        public Utils.Settings? Settings
+        /// <summary>
+        /// properties ( parameters ) available for renaming
+        /// </summary>
+        List<string>? ParameterNames { get;}
+
+
+        /// <summary>
+        /// Add a parameter name to the list of available parameters
+        /// </summary>
+        /// <param name="parameterName"> name of the parameter to add</param>
+        public void AddParameterName(string parameterName)
         {
-            get { return _settings; }
+            
+            if (!ParameterNames.Contains(parameterName))
+                ParameterNames.Add(parameterName);
         }
 
         /// <summary>
-        /// Class constructor
+        /// Constructor for the export data model
         /// </summary>
-        public MainWindow(Utils.Settings? settings)
+        public ExportDataModel()
         {
-            InitializeComponent();
-            _settings = settings;
-        }
+            // Initialize the settings object
+            _settings = new Utils.Settings();
 
-        /// <summary>
-        /// closing event handler
-        /// </summary>  
-        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (DataContext is duHastNet.Utils.WPF.Interfaces.ICloseable closeable)
-            {
-                closeable.OnClosing();
-            }
-
-            // may need to do something with settings here??
+            ParameterNames = new List<string>();
         }
     }
 }

@@ -53,8 +53,8 @@
                 <ComboBox Grid.Row="1"
                     Grid.Column="0"
                     Margin="5 5 5 5" 
-                    ItemsSource="{Binding ColumnNameDefaultList}"
-                    SelectedValue="{Binding Path=SelectedColumnFilterItem,Mode=TwoWay}"/>
+                    ItemsSource="{Binding DocumentTypeNameDefaultList}"
+                    SelectedValue="{Binding Path=SelectedDocumentType,Mode=TwoWay}"/>
             </Grid>
         </Border>
 
@@ -70,7 +70,7 @@
             </Grid.ColumnDefinitions>
             <!-- parameter grid -->
             <DataGrid Grid.Row="0" Grid.Column="0" x:Name="dataGridParameters" 
-                ItemsSource="{Binding DataView}"
+                ItemsSource="{Binding DataViewAvailableParameters}"
                 EnableRowVirtualization="True" 
                 EnableColumnVirtualization="True" 
                 VirtualizingPanel.IsVirtualizing="True" 
@@ -79,11 +79,10 @@
                 IsReadOnly="True"
                 CanUserSortColumns="True"
                 SelectionMode="Single" 
-                SelectedIndex="{Binding SelectedIndex}"
+                SelectedIndex="{Binding SelectedIndexAvailableParameters}"
                 ColumnWidth="*"
                 RowHeight="23"
-                HorizontalAlignment="Stretch"
-                ColumnReordered="RoomsDataGrid_ColumnReordered">
+                HorizontalAlignment="Stretch">
             </DataGrid>
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
@@ -95,7 +94,7 @@
                 </Grid.ColumnDefinitions>
                 <!-- sheet name grid -->
                 <DataGrid Grid.Row="0" Grid.Column="0" x:Name="dataGridSheetName" 
-                    ItemsSource="{Binding DataView}"
+                    ItemsSource="{Binding DataViewDocumentTypeSettings}"
                     EnableRowVirtualization="True" 
                     EnableColumnVirtualization="True" 
                     VirtualizingPanel.IsVirtualizing="True" 
@@ -104,11 +103,10 @@
                     IsReadOnly="True"
                     CanUserSortColumns="True"
                     SelectionMode="Single" 
-                    SelectedIndex="{Binding SelectedIndex}"
+                    SelectedIndex="{Binding SelectedIndexDocumentNameSetting}"
                     ColumnWidth="*"
                     RowHeight="23"
-                    HorizontalAlignment="Stretch"
-                    ColumnReordered="RoomsDataGrid_ColumnReordered">
+                    HorizontalAlignment="Stretch">
                 </DataGrid>
                 <!-- up and down button under document name grid -->
                 <Grid Grid.Column="0" Grid.Row="1">

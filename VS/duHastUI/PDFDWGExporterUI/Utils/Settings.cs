@@ -27,52 +27,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
-namespace duHastNet.UI.PDFDWGExporterUI.Views
+namespace duHastNet.UI.PDFDWGExporterUI.Utils
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public class Settings
     {
-        /// <summary>
-        /// settings object to created by the UI
-        /// </summary>
-        Utils.Settings? _settings;
+        
+        public string? PDFRenameString { get; set; }
+        public string? DWGRenameString { get; set; }
 
-        public Utils.Settings? Settings
+
+        public Settings()
         {
-            get { return _settings; }
+            
         }
 
-        /// <summary>
-        /// Class constructor
-        /// </summary>
-        public MainWindow(Utils.Settings? settings)
-        {
-            InitializeComponent();
-            _settings = settings;
-        }
 
-        /// <summary>
-        /// closing event handler
-        /// </summary>  
-        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        public Settings(string? pdfRenameString, string? dwgRenameString)
         {
-            if (DataContext is duHastNet.Utils.WPF.Interfaces.ICloseable closeable)
-            {
-                closeable.OnClosing();
-            }
-
-            // may need to do something with settings here??
+            PDFRenameString = pdfRenameString;
+            DWGRenameString = dwgRenameString;
         }
     }
 }

@@ -21,12 +21,89 @@
 //
 //
 
+using System;
+using System.Windows;
+using System.Security.Principal;
+using duHastNet.UI.PDFDWGExporterUI.Views;
+using duHastNet.Utils.WPF.Stores;
 
 namespace duHastNet.UI.PDFDWGExporterUI
 {
     public class Main
     {
-        
-    }
+        duHastNet.Utils.WPF.Stores.MessageStore? _messageStore;
+        duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
+        Models.ExportDataModel? _exportDataModel;
+        Utils.Settings? _settings;
 
+        /// <summary>
+        /// Constructor for the Main class.
+        /// </summary>
+        /// <param name="currentDWGExportString">Current DWG export string</param>
+        /// <param name="currentPDFExportString">Current PDF export string</param>
+        /// <param name="parameterNames">List of parameter names associated to sheets</param>
+        public Main(string? currentPDFExportString, string? currentDWGExportString, List<string> parameterNames)
+        {
+            //set up stores
+            _navigationStore = new NavigationStore();
+            _messageStore = new MessageStore();
+
+            //set up a setting object
+            _settings = new Utils.Settings(
+                pdfRenameString: currentPDFExportString, 
+                dwgRenameString: currentDWGExportString
+            );
+
+            //set up the export data model
+            _exportDataModel = new Models.ExportDataModel();
+
+            //set the settings object to the data model
+            _exportDataModel.Settings = _settings;
+
+            // add the parameter names to the data model
+            foreach (var parameterName in parameterNames)
+            {
+                _exportDataModel.AddParameterName(parameterName);
+            }
+        }
+
+        /// <summary>
+        /// Function which will display the settings window and return the pdf and dwg export settings to the caller
+        /// </summary>
+        public Utils.Settings? Execute()
+        {
+
+            //create the settings view model
+            var settingsViewModel = CreateSettingsViewModel();
+            
+            //set the current view model to the settings view model
+            _navigationStore.CurrentViewModel = settingsViewModel;
+
+            //show the main window
+            MainWindow mainWindow = new MainWindow(_settings)
+            {
+                DataContext = new ViewModels.MainWindowViewModel(_navigationStore)
+            };
+
+            mainWindow.ShowDialog();
+
+            // return the settings object
+            return mainWindow.Settings;
+        }
+
+        /// <summary>
+        /// Creates the settings view model.
+        /// </summary>
+        /// <returns></returns>
+        private ViewModels.SettingsViewModel CreateSettingsViewModel()
+        {
+            duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel _globalMessageViewModel = new duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel(_messageStore);
+
+            return new ViewModels.SettingsViewModel(
+                _exportDataModel,
+                //_navigationStore,
+                _globalMessageViewModel,
+                _messageStore);
+        }
+    }
 }

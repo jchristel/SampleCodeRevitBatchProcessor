@@ -254,6 +254,8 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
 
             // Set up the data table
             DataTable dataTable = new DataTable();
+            //add the default column
+            dataTable.Columns.Add(_columnNameAvailableProperties);
 
             //add the values
             foreach (var propname in _exportDataModel.ParameterNames)

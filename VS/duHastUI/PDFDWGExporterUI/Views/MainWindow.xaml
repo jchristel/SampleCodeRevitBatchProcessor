@@ -13,5 +13,6 @@
                 <local:SettingsView />
             </DataTemplate>
         </Grid.Resources>
+        <ContentControl Content="{Binding CurrentViewModel}"/>
     </Grid>
 </Window>

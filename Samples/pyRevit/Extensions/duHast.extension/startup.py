@@ -54,7 +54,7 @@ for dll in dlls_to_load:
 
         # Ensure it's registered for other add-ins
         System.AppDomain.CurrentDomain.Load(assembly.GetName())
-        print("loaded successfully: {dll}".format(dll=dll_name_only))
+        #print("loaded successfully: {dll}".format(dll=dll_name_only))
     except Exception as e:
         print("Failed to load {dll} with exception: {e}".format(dll=dll, e=e))
         print(traceback.format_exc())

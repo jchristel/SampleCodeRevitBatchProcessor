@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace duHastNet.UI.PDFDWGExporterUI.Utils
 {
@@ -37,9 +38,9 @@ namespace duHastNet.UI.PDFDWGExporterUI.Utils
         /// parse the settings string for PDF export
         /// <paramref name="settingsString"/> is the settings string to parse 
         /// </summary>
-        public static List<DocumentSetting> ParsePdfSettingsString(string settingsString)
+        public static ObservableCollection<DocumentSetting> ParsePdfSettingsString(string settingsString, List<string> availableParameters)
         {
-            List<DocumentSetting> settings = new List<DocumentSetting>();
+            ObservableCollection<DocumentSetting> settings = new ObservableCollection<DocumentSetting>();
 
             return settings;
 
@@ -50,9 +51,9 @@ namespace duHastNet.UI.PDFDWGExporterUI.Utils
         /// </summary>
         /// <param name="settingsString"></param>
         /// <returns></returns>
-        public static List<DocumentSetting> ParseDwgSettingsString(string settingsString)
+        public static ObservableCollection<DocumentSetting> ParseDwgSettingsString(string settingsString, List<string> availableParameters)
         {
-            List<DocumentSetting> settings = new List<DocumentSetting>();
+            ObservableCollection<DocumentSetting> settings = new ObservableCollection<DocumentSetting>();
             return settings;
         }
     }

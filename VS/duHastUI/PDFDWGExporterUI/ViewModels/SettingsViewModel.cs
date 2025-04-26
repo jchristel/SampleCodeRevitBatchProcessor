@@ -24,10 +24,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Input;
+using duHastNet.Utils.WPF.Commands;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
 
@@ -69,21 +74,42 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         /// </summary>
         private DataView _dvAvailableParameters;
 
-        /// <summary>
-        /// default view of the data table containing PDF naming settings
-        /// </summary>
-        private DataTable _dtDocumentSettingsPDF;
 
-        /// <summary>
-        /// default view of the data table containing DWG naming settings
-        /// </summary>
-        private DataTable _dtDocumentSettingsDWG;
+        private Dictionary<string, DataTable> _documentSettingsTables;
 
         /// <summary>
         ///  default view of the data table containing document settings
         /// </summary>
         private DataView _dvDocumentSettings;
 
+        /// <summary>
+        /// Dictionary containing the document naming settings per document type
+        /// </summary>
+        private Dictionary<string, ObservableCollection <Utils.DocumentSetting>> _documentSettingsDictionary;
+
+        /// <summary>
+        /// Command to add a parameter to the document name table
+        /// </summary>
+        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _moveParameterToDocumentNameTableCommand;
+        public ICommand MoveParameterToDocumentNameTableCommand { get { return _moveParameterToDocumentNameTableCommand; } }
+
+        /// <summary>
+        /// Command to remove a parameter from the document name table
+        /// </summary>
+        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _removeParameterFromDocumentNameTableCommand;
+        public ICommand RemoveParameterFromDocumentNameTableCommand { get { return _removeParameterFromDocumentNameTableCommand; } }
+
+        /// <summary>
+        /// move selected parameter up in the document name table
+        /// </summary>
+        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _moveUpCommand;
+        public ICommand MoveUpCommand { get { return _moveUpCommand; } }
+
+        /// <summary>
+        /// move selected parameter down in the document name table
+        /// </summary>
+        private readonly duHastNet.Utils.WPF.Commands.RelayCommand _moveDownCommand;
+        public ICommand MoveDownCommand { get { return _moveDownCommand; } }
 
         #region column names
 
@@ -143,6 +169,14 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             set
             {
                 _selectedDocumentType = value;
+
+                //set the data view to the pdf settings table
+                DataViewDocumentTypeSettings = new DataView(_documentSettingsTables[_selectedDocumentType]);
+
+                //reset the selected item in the naming table
+                SelectedIndexDocumentNameSetting = -1;
+
+                //update UI
                 OnPropertyChanged(nameof(SelectedDocumentType));
             }
         }
@@ -165,9 +199,37 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
                 {
                     _selectedIndexAvailableParameters = value;
                     OnPropertyChanged(nameof(SelectedIndexAvailableParameters));
+                    OnPropertyChanged(nameof(SelectedParameter));
                 }
             }
         }
+
+
+        /// <summary>
+        /// property to get the selected parameter from the UI
+        /// </summary>
+        public string SelectedParameter
+        {
+            get
+            {
+                // check if a default view exists
+                if (_dvAvailableParameters == null)
+                {
+                    return null;
+                }
+                // check if the selected index is within the bounds of the rooms collection
+                if (_selectedIndexAvailableParameters >= 0 && _selectedIndexAvailableParameters < _dvAvailableParameters.Count)
+                {
+                    var selectedRow = _dvAvailableParameters[_selectedIndexAvailableParameters].Row;
+                    var parameterName = selectedRow[_columnNameAvailableProperties].ToString();
+                    return parameterName;
+                    
+                }
+                // return null if the selected index is out of bounds
+                return null;
+            }
+        }
+
 
         /// <summary>
         /// binding to show selected index of document name settings
@@ -183,6 +245,44 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
                 {
                     _selectedIndexDocumentNameSetting = value;
                     OnPropertyChanged(nameof(SelectedIndexDocumentNameSetting));
+
+                    if (_selectedIndexDocumentNameSetting >= 0 && _selectedIndexDocumentNameSetting <= _documentSettingsDictionary[SelectedDocumentType].Count)
+                        //change the selected item as well... that will trigger the command can execute state updates for move up and down buttons
+                        SelectedItemDocumentNameSetting = _documentSettingsDictionary[SelectedDocumentType][_selectedIndexDocumentNameSetting];
+                    else if (_selectedIndexDocumentNameSetting == -1)
+                    {
+                        //reset the selected item in the naming table
+                        SelectedItemDocumentNameSetting = null;
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// The selected document name setting
+        /// </summary>
+        private Utils.DocumentSetting _selectedItemDocumentNameSetting;
+
+        public Utils.DocumentSetting SelectedItemDocumentNameSetting
+        {
+            get => _selectedItemDocumentNameSetting;
+            set
+            {
+                _selectedItemDocumentNameSetting = value;
+                OnPropertyChanged(nameof(SelectedItemDocumentNameSetting));
+
+                // update the command can execute state
+                if (MoveUpCommand != null)
+                {
+                    //update the command can execute state
+                    ((RelayCommand)MoveUpCommand).RaiseCanExecuteChanged();
+                }
+
+                // update the command can execute state
+                if (MoveDownCommand !=null)
+                {
+                    ((RelayCommand)MoveDownCommand).RaiseCanExecuteChanged();
                 }
             }
         }
@@ -215,8 +315,34 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             {
                 _dvDocumentSettings = value;
                 OnPropertyChanged(nameof(DataViewDocumentTypeSettings));
-            }
 
+                //clear selection when changing doc type
+                if (SelectedIndexDocumentNameSetting != -1 || SelectedItemDocumentNameSetting != null) { ClearSelection(); }
+                
+                // update the command can execute state
+                if (MoveParameterToDocumentNameTableCommand != null)
+                {
+                    //update the command can execute state
+                    ((RelayCommand)MoveParameterToDocumentNameTableCommand).RaiseCanExecuteChanged();
+                }
+                // update the command can execute state
+                if (RemoveParameterFromDocumentNameTableCommand != null)
+                {
+                    //update the command can execute state
+                    ((RelayCommand)RemoveParameterFromDocumentNameTableCommand).RaiseCanExecuteChanged();
+                }
+                // update the command can execute state
+                if (MoveUpCommand != null)
+                {
+                    //update the command can execute state
+                    ((RelayCommand)MoveUpCommand).RaiseCanExecuteChanged();
+                }
+                // update the command can execute state
+                if (MoveDownCommand != null)
+                {
+                    ((RelayCommand)MoveDownCommand).RaiseCanExecuteChanged();
+                }
+            }
         }
 
         #endregion data views
@@ -293,7 +419,6 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             return dataTable;
         }
 
-
         /// <summary>
         /// populate the data table containing the pdf name settings
         /// </summary>
@@ -310,7 +435,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             if (_exportDataModel.Settings.PDFRenameString == null || _exportDataModel.Settings.PDFRenameString == "")
             {
                 //store the table in global
-                _dtDocumentSettingsPDF = dataTable;
+                _documentSettingsTables.Add(_documentTypePDFName, dataTable);
                 //setup a new data view based on the table created
                 //this will also trigger an on property changed event
                 DataViewDocumentTypeSettings = new DataView(dataTable);
@@ -320,8 +445,15 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             }
 
             //parse the settings string and add the values
-            List<Utils.DocumentSetting> pdfDocumentSettings = Utils.SettingsStringParser.ParsePdfSettingsString(_exportDataModel.Settings.PDFRenameString);
+            ObservableCollection<Utils.DocumentSetting> pdfDocumentSettings = Utils.SettingsStringParser.ParsePdfSettingsString(
+                _exportDataModel.Settings.PDFRenameString,
+                _exportDataModel.ParameterNames
+            );
 
+            //update the global dictionary with the parsed values
+            _documentSettingsDictionary[_documentTypePDFName] = pdfDocumentSettings;
+
+            //update the data table with the parsed values
             foreach (var pdfDocumentSetting in pdfDocumentSettings)
             {
                 // Add a row per room
@@ -335,10 +467,9 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             }
 
             //store the table in global
-            _dtDocumentSettingsPDF = dataTable;
+            _documentSettingsTables.Add(_documentTypePDFName, dataTable);
 
-            //setup a new data view based on the table created
-            //this will also trigger an on property changed event
+            //refresh the data view
             DataViewDocumentTypeSettings = new DataView(dataTable);
 
             return;
@@ -360,7 +491,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             if (_exportDataModel.Settings.DWGRenameString == null || _exportDataModel.Settings.DWGRenameString == "")
             {
                 //store the table in global
-                _dtDocumentSettingsDWG = dataTable;
+                _documentSettingsTables.Add(_documentTypeDWGName, dataTable);
                 // do not set the data view here, as this will be done in the populateAvailableFilters function
                 //and the default view will be set to the pdf settings table
                 // get out of the function
@@ -368,7 +499,15 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             }
 
             //parse the settings string and add the values
-            List<Utils.DocumentSetting> dwgDocumentSettings = Utils.SettingsStringParser.ParseDwgSettingsString(_exportDataModel.Settings.DWGRenameString);
+            ObservableCollection<Utils.DocumentSetting> dwgDocumentSettings = Utils.SettingsStringParser.ParseDwgSettingsString(
+                _exportDataModel.Settings.DWGRenameString,
+                _exportDataModel.ParameterNames
+            );
+
+            //update the global dictionary with the parsed values
+            _documentSettingsDictionary[_documentTypeDWGName] = dwgDocumentSettings;
+
+            //update the data table with the parsed values
             foreach (var dwgDocumentSetting in dwgDocumentSettings)
             {
                 // Add a row per room
@@ -382,8 +521,8 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             }
 
             //store the table in global
-            _dtDocumentSettingsDWG = dataTable;
-
+            _documentSettingsTables.Add(_documentTypeDWGName, dataTable);
+         
             // do not set the data view here, as this will be done in the populateAvailableFilters function
             //and the default view will be set to the pdf settings table
             // get out of the function
@@ -402,6 +541,15 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             _documentTypeNameDefaultList.Add(_documentTypePDFName);
             _documentTypeNameDefaultList.Add(_documentTypeDWGName);
 
+            //also populat global dictionary of document settings
+            foreach (var documentType in _documentTypeNameDefaultList)
+            {
+                //create an empty list of document settings
+                ObservableCollection<Utils.DocumentSetting> documentSettings = new ObservableCollection<Utils.DocumentSetting>();
+                //add the empty list to the dictionary
+                _documentSettingsDictionary.Add(documentType, documentSettings);
+            }
+
             // trigger the property changed event
             OnPropertyChanged(nameof(DocumentTypeNameDefaultList));
         }
@@ -412,6 +560,174 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             //this will be trigger a view change to show the selected data table
             SelectedDocumentType = _documentTypePDFName;
         }
+
+        #region button underlying functions
+
+        /// <summary>
+        /// checks if there are any parameters available to move to the document name table
+        /// and if not all parameteers are already in the document settings table
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        private bool CanMoveToTableDocumentSettings(object parameter) => _dvAvailableParameters.Count > 0 && _dvAvailableParameters.Count > _dvDocumentSettings.Count;
+
+        /// <summary>
+        /// Checks if there are any parameters available to move to the property namer table
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        private bool CanMoveToTableParameterNames(object parameter) => _dvDocumentSettings.Count>0;
+
+
+        /// <summary>
+        /// Move the selected parameter to the document name table
+        /// </summary>
+        /// <param name="parameter"></param>
+        private void MoveParameterToDocumentNameTable(object parameter)
+        {
+            // get the parameter from the selected row and check if already in the document settings table
+            //if not, add it to the document settings table
+
+            foreach (Utils.DocumentSetting documentSetting in _documentSettingsDictionary[SelectedDocumentType])
+            {
+                //check if the parameter is already in the document settings table
+                if (documentSetting.PropertyName == SelectedParameter)
+                {
+                    //add message to user
+                    AddMessage("Parameter already in document settings table.", MessageTypes.Error);
+                    return;
+                }
+            }
+
+            //create a new document setting object
+            Utils.DocumentSetting newDocumentSetting = new Utils.DocumentSetting(SelectedParameter);
+            //add the new document setting to the document settings table add the end
+            _documentSettingsDictionary[SelectedDocumentType].Add(newDocumentSetting);
+
+            //update the UI!!
+            RefreshDocumentNameTable();
+        }
+
+        private void RemoveParameterFromDocumentNameTable(object parameter)
+        {
+            // remove the selected parameter from the document name table
+            // check if the selected index is within the bounds of the rooms collection
+            if (_selectedIndexDocumentNameSetting >= 0 && _selectedIndexDocumentNameSetting < _dvDocumentSettings.Count)
+            {
+                var selectedRow = _dvDocumentSettings[_selectedIndexDocumentNameSetting].Row;
+                var parameterName = selectedRow[_columnNameRuleParameter].ToString();
+                //remove the parameter from the document settings table
+                foreach (Utils.DocumentSetting documentSetting in _documentSettingsDictionary[SelectedDocumentType])
+                {
+                    if (documentSetting.PropertyName == parameterName)
+                    {
+                        _documentSettingsDictionary[SelectedDocumentType].Remove(documentSetting);
+                        break;
+                    }
+                }
+            }
+
+            //update the UI!!
+            RefreshDocumentNameTable();
+        }
+
+        private void RefreshDocumentNameTable()
+        {
+            DataTable dt = CreateEmptySettingsDataTable();
+            //update the data table with the parsed values
+            foreach (var documentSetting in _documentSettingsDictionary[SelectedDocumentType])
+            {
+                // Add a row per room
+                DataRow row = dt.NewRow();
+                row[_columnNameRulePrefix] = documentSetting.Prefix;
+                row[_columnNameRuleParameter] = documentSetting.PropertyName;
+                row[_columnNameRuleSuffix] = documentSetting.Suffix;
+                row[_columnNameRuleSeparator] = documentSetting.Separator;
+                // Add the row to the data table
+                dt.Rows.Add(row);
+            }
+
+            _documentSettingsTables[SelectedDocumentType].Clear();
+            _documentSettingsTables[SelectedDocumentType]= dt;
+
+            //update the UI!!
+            DataViewDocumentTypeSettings = new DataView(dt);
+        }
+
+
+
+        private bool CanMoveUp(object parameter) => SelectedItemDocumentNameSetting != null && 
+            SelectedIndexDocumentNameSetting > 0;
+        private bool CanMoveDown(object parameter) => SelectedItemDocumentNameSetting != null && 
+            SelectedIndexDocumentNameSetting < _documentSettingsDictionary[SelectedDocumentType].Count - 1;
+
+
+        private void MoveUp(object parameter)
+        {
+            
+
+            int index = _documentSettingsDictionary[SelectedDocumentType].IndexOf(SelectedItemDocumentNameSetting);
+            if (index > 0)
+            {
+                var item = _documentSettingsDictionary[SelectedDocumentType][index];
+                _documentSettingsDictionary[SelectedDocumentType].RemoveAt(index);
+                _documentSettingsDictionary[SelectedDocumentType].Insert(index - 1, item);
+                RefreshDocumentNameTable();
+                SelectedItemDocumentNameSetting = item; // Ensure selection follows move
+            }
+
+            var dataGrid = parameter as DataGrid;  // Get the actual DataGrid instance
+            if (dataGrid != null)
+            {
+                // Select the row by index
+                SelectRowByIndex(dataGrid, index - 1);
+            }
+        }
+
+        private void MoveDown(object parameter)
+        {
+            int index = _documentSettingsDictionary[SelectedDocumentType].IndexOf(SelectedItemDocumentNameSetting);
+            if (index < _documentSettingsDictionary[SelectedDocumentType].Count - 1)
+            {
+                var item = _documentSettingsDictionary[SelectedDocumentType][index];
+                _documentSettingsDictionary[SelectedDocumentType].RemoveAt(index);
+                _documentSettingsDictionary[SelectedDocumentType].Insert(index + 1, item);
+                RefreshDocumentNameTable();
+                SelectedItemDocumentNameSetting = item;
+            }
+
+            var dataGrid = parameter as DataGrid;  // Get the actual DataGrid instance
+            if (dataGrid != null)
+            {
+                // Select the row by index
+                SelectRowByIndex(dataGrid, index + 1);
+            }
+        }
+
+        // Method to clear selection in document naming table
+        public void ClearSelection()
+        {
+            SelectedItemDocumentNameSetting = null;
+            SelectedIndexDocumentNameSetting = -1;
+        }
+
+        public static void SelectRowByIndex(DataGrid dataGrid, int rowIndex)
+        {
+
+            if (rowIndex < 0 || rowIndex >= dataGrid.Items.Count) return;
+
+            // Retrieve the row data
+            DataRowView rowView = dataGrid.Items[rowIndex] as DataRowView;
+
+            if (rowView != null)
+            {
+                dataGrid.SelectedItem = rowView;
+                dataGrid.ScrollIntoView(rowView);
+            }
+
+        }
+
+        #endregion button underlying functions
 
 
 
@@ -434,29 +750,52 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             //store the message store
             _messageStore = messageStore;
 
+            _documentSettingsTables = new Dictionary<string, DataTable>();
+            _documentSettingsDictionary = new Dictionary<string, ObservableCollection<Utils.DocumentSetting>>();
+
             //populate the data table containing the available parameters
             populateParameterDataTable();
+
+
+            //populate the available filters list ( PDF and DWG)
+            populateAvailableFilters();
 
             //check if the current settings contain a dwg or pdf settings string
             //and set up the data tables accordingly
             populatePDFSettingsDataTable();
             popualateDWGSettingsDataTable();
 
-            //populate the available filters list ( PDF and DWG)
-            populateAvailableFilters();
-
-            //set the filter to display pdf settings by default
-            //this will be trigger a view change to show the selected data table
-            setFilterToPDFSettings();
-
-            
             //set up all commands:
             //push in
+            _moveParameterToDocumentNameTableCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+                MoveParameterToDocumentNameTable,
+                CanMoveToTableDocumentSettings
+            );
+
             //push out
+            _removeParameterFromDocumentNameTableCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+                RemoveParameterFromDocumentNameTable,
+                CanMoveToTableParameterNames
+            );
+
             //push up
+            _moveUpCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+                MoveUp,
+                CanMoveUp
+            );
+
             //push down
+            _moveDownCommand = new duHastNet.Utils.WPF.Commands.RelayCommand(
+                MoveDown,
+                CanMoveDown
+            );
+
             //save and exit
             //cancel and exit
+
+            //set the filter to display pdf settings by default
+            //this will be trigger a view change to show the selected data table, hence last thing in the constructor
+            setFilterToPDFSettings();
         }
     }
 }

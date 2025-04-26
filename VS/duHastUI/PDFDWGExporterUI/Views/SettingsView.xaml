@@ -98,8 +98,7 @@
                     ItemsSource="{Binding DataViewDocumentTypeSettings}"
                     EnableRowVirtualization="True" 
                     EnableColumnVirtualization="True" 
-                    VirtualizingPanel.IsVirtualizing="True" 
-                    VirtualizingPanel.VirtualizationMode="Recycling"
+                    VirtualizingPanel.IsVirtualizing="False" 
                     AutoGenerateColumns="True" 
                     IsReadOnly="True"
                     CanUserSortColumns="True"
@@ -117,14 +116,14 @@
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0" Grid.Row="0"
                         Margin="5 5 5 5" 
-                        Command="{Binding RefreshGUICommand}" 
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">       
-                        <TextBlock Text="Up" TextWrapping="Wrap" TextAlignment="Center"/>
+                        Command="{Binding MoveUpCommand}" 
+                        CommandParameter="{Binding ElementName=dataGridSheetName}">
+                    <TextBlock Text="Up" TextWrapping="Wrap" TextAlignment="Center"/>
                     </Button>
                     <Button Grid.Column="1" Grid.Row="0"
                         Margin="5 5 5 5" 
-                        Command="{Binding RefreshGUICommand}" 
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                        Command="{Binding MoveDownCommand}" 
+                        CommandParameter="{Binding ElementName=dataGridSheetName}">
                         <TextBlock Text="Down" TextWrapping="Wrap" TextAlignment="Center"/>
                     </Button>
                 </Grid>
@@ -139,13 +138,13 @@
                 </Grid.RowDefinitions>
                 <Button Grid.Column="0" Grid.Row="1"
                     Margin="5 5 5 5" 
-                    Command="{Binding RefreshGUICommand}" 
+                    Command="{Binding MoveParameterToDocumentNameTableCommand}" 
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
                     <TextBlock Text="Add Parameter" TextWrapping="Wrap" TextAlignment="Center"/>
                 </Button>
                 <Button Grid.Column="0" Grid.Row="2"
                     Margin="5 5 5 5" 
-                    Command="{Binding RefreshGUICommand}" 
+                    Command="{Binding RemoveParameterFromDocumentNameTableCommand}" 
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
                     <TextBlock Text="Remove Parameter" TextWrapping="Wrap" TextAlignment="Center"/>
                 </Button>

@@ -22,46 +22,20 @@
 //
 
 
-using duHastNet.UI.PDFDWGExporterUI.Utils;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace duHastNet.UI.PDFDWGExporterUI.Models
+namespace duHastNet.UI.PDFDWGExporterUI.Utils
 {
-    public class ExportDataModel : duHastNet.Utils.WPF.Models.DataModelBase
+    public class DocumentSetting
     {
-        private Utils.Settings _settings;
-        public Settings Settings { get => _settings; set => _settings = value; }
-
-        /// <summary>
-        /// properties ( parameters ) available for renaming
-        /// </summary>
-        public List<string> ParameterNames { get;}
-
-
-        /// <summary>
-        /// Add a parameter name to the list of available parameters
-        /// </summary>
-        /// <param name="parameterName"> name of the parameter to add</param>
-        public void AddParameterName(string parameterName)
-        {
-            
-            if (!ParameterNames.Contains(parameterName))
-                ParameterNames.Add(parameterName);
-        }
-
-        /// <summary>
-        /// Constructor for the export data model
-        /// </summary>
-        public ExportDataModel()
-        {
-            // Initialize the settings object
-            _settings = new Utils.Settings();
-
-            ParameterNames = new List<string>();
-        }
+        public string  Prefix { get; set; }
+        public string Suffix { get; set; }
+        public string Separator { get; set; }
+        public string PropertyName { get; set; }
     }
 }

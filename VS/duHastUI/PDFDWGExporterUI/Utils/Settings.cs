@@ -33,8 +33,8 @@ namespace duHastNet.UI.PDFDWGExporterUI.Utils
     public class Settings
     {
         
-        public string? PDFRenameString { get; set; }
-        public string? DWGRenameString { get; set; }
+        public string PDFRenameString { get; set; }
+        public string DWGRenameString { get; set; }
 
 
         public Settings()
@@ -43,7 +43,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.Utils
         }
 
 
-        public Settings(string? pdfRenameString, string? dwgRenameString)
+        public Settings(string pdfRenameString, string dwgRenameString)
         {
             PDFRenameString = pdfRenameString;
             DWGRenameString = dwgRenameString;

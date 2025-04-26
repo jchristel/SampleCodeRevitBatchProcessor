@@ -22,46 +22,38 @@
 //
 
 
-using duHastNet.UI.PDFDWGExporterUI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace duHastNet.UI.PDFDWGExporterUI.Models
+namespace duHastNet.UI.PDFDWGExporterUI.Utils
 {
-    public class ExportDataModel : duHastNet.Utils.WPF.Models.DataModelBase
+    public static class SettingsStringParser
     {
-        private Utils.Settings _settings;
-        public Settings Settings { get => _settings; set => _settings = value; }
 
         /// <summary>
-        /// properties ( parameters ) available for renaming
+        /// parse the settings string for PDF export
+        /// <paramref name="settingsString"/> is the settings string to parse 
         /// </summary>
-        public List<string> ParameterNames { get;}
-
-
-        /// <summary>
-        /// Add a parameter name to the list of available parameters
-        /// </summary>
-        /// <param name="parameterName"> name of the parameter to add</param>
-        public void AddParameterName(string parameterName)
+        public static List<DocumentSetting> ParsePdfSettingsString(string settingsString)
         {
-            
-            if (!ParameterNames.Contains(parameterName))
-                ParameterNames.Add(parameterName);
+            List<DocumentSetting> settings = new List<DocumentSetting>();
+
+            return settings;
+
         }
 
         /// <summary>
-        /// Constructor for the export data model
+        /// parse the settings string for DWG export
         /// </summary>
-        public ExportDataModel()
+        /// <param name="settingsString"></param>
+        /// <returns></returns>
+        public static List<DocumentSetting> ParseDwgSettingsString(string settingsString)
         {
-            // Initialize the settings object
-            _settings = new Utils.Settings();
-
-            ParameterNames = new List<string>();
+            List<DocumentSetting> settings = new List<DocumentSetting>();
+            return settings;
         }
     }
 }

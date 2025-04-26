@@ -23,6 +23,8 @@
 
 using System;
 using System.Windows;
+using System.Collections;
+using System.Collections.Generic;
 using System.Security.Principal;
 using duHastNet.UI.PDFDWGExporterUI.Views;
 using duHastNet.Utils.WPF.Stores;
@@ -31,10 +33,10 @@ namespace duHastNet.UI.PDFDWGExporterUI
 {
     public class Main
     {
-        duHastNet.Utils.WPF.Stores.MessageStore? _messageStore;
+        duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
         duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
-        Models.ExportDataModel? _exportDataModel;
-        Utils.Settings? _settings;
+        Models.ExportDataModel _exportDataModel;
+        Utils.Settings _settings;
 
         /// <summary>
         /// Constructor for the Main class.
@@ -42,7 +44,7 @@ namespace duHastNet.UI.PDFDWGExporterUI
         /// <param name="currentDWGExportString">Current DWG export string</param>
         /// <param name="currentPDFExportString">Current PDF export string</param>
         /// <param name="parameterNames">List of parameter names associated to sheets</param>
-        public Main(string? currentPDFExportString, string? currentDWGExportString, List<string> parameterNames)
+        public Main(string currentPDFExportString, string currentDWGExportString, List<string> parameterNames)
         {
             //set up stores
             _navigationStore = new NavigationStore();
@@ -70,7 +72,7 @@ namespace duHastNet.UI.PDFDWGExporterUI
         /// <summary>
         /// Function which will display the settings window and return the pdf and dwg export settings to the caller
         /// </summary>
-        public Utils.Settings? Execute()
+        public Utils.Settings Execute()
         {
 
             //create the settings view model

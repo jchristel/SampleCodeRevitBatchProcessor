@@ -46,9 +46,9 @@ namespace duHastNet.UI.PDFDWGExporterUI.Views
         /// <summary>
         /// settings object to created by the UI
         /// </summary>
-        Utils.Settings? _settings;
+        Utils.Settings _settings;
 
-        public Utils.Settings? Settings
+        public Utils.Settings Settings
         {
             get { return _settings; }
         }
@@ -56,7 +56,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.Views
         /// <summary>
         /// Class constructor
         /// </summary>
-        public MainWindow(Utils.Settings? settings)
+        public MainWindow(Utils.Settings settings)
         {
             InitializeComponent();
             _settings = settings;

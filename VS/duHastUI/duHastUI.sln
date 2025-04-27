@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35514.174 d17.12
+VisualStudioVersion = 17.12.35514.174
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDFDWGExporterUI", "PDFDWGExporterUI\PDFDWGExporterUI.csproj", "{E3D8A25E-62CA-4E17-A2EE-CB43B92A31B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDFDWGExportTester", "PDFDWGExportTester\PDFDWGExportTester.csproj", "{F91886A7-71B2-49E7-8EC2-C2C7D08A10E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{E3D8A25E-62CA-4E17-A2EE-CB43B92A31B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E3D8A25E-62CA-4E17-A2EE-CB43B92A31B6}.Release|x64.ActiveCfg = Release|x64
 		{E3D8A25E-62CA-4E17-A2EE-CB43B92A31B6}.Release|x64.Build.0 = Release|x64
+		{F91886A7-71B2-49E7-8EC2-C2C7D08A10E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F91886A7-71B2-49E7-8EC2-C2C7D08A10E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F91886A7-71B2-49E7-8EC2-C2C7D08A10E7}.Debug|x64.ActiveCfg = Debug|x64
+		{F91886A7-71B2-49E7-8EC2-C2C7D08A10E7}.Debug|x64.Build.0 = Debug|x64
+		{F91886A7-71B2-49E7-8EC2-C2C7D08A10E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F91886A7-71B2-49E7-8EC2-C2C7D08A10E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F91886A7-71B2-49E7-8EC2-C2C7D08A10E7}.Release|x64.ActiveCfg = Release|x64
+		{F91886A7-71B2-49E7-8EC2-C2C7D08A10E7}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

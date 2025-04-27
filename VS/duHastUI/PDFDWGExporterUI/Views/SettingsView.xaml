@@ -94,19 +94,23 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <!-- sheet name grid -->
-                <DataGrid Grid.Row="0" Grid.Column="0" x:Name="dataGridSheetName" 
+                <DataGrid Grid.Row="0" Grid.Column="0" x:Name="dataGridSheetName"
                     ItemsSource="{Binding DataViewDocumentTypeSettings}"
-                    EnableRowVirtualization="True" 
-                    EnableColumnVirtualization="True" 
                     VirtualizingPanel.IsVirtualizing="False" 
-                    AutoGenerateColumns="True" 
-                    IsReadOnly="True"
-                    CanUserSortColumns="True"
-                    SelectionMode="Single" 
+                    AutoGenerateColumns="False" 
+                    CanUserSortColumns="False"
+                    SelectionMode="Single" SelectionUnit="FullRow"
                     SelectedIndex="{Binding SelectedIndexDocumentNameSetting}"
                     ColumnWidth="*"
                     RowHeight="23"
-                    HorizontalAlignment="Stretch">
+                    HorizontalAlignment="Stretch"
+                    CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Prefix" Binding="{Binding Prefix}" IsReadOnly="False"/>
+                        <DataGridTextColumn Header="Parameter" Binding="{Binding [Sheet property]}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Suffix" Binding="{Binding Suffix}" IsReadOnly="False"/>
+                        <DataGridTextColumn Header="Separator" Binding="{Binding Separator}" IsReadOnly="False"/>
+                    </DataGrid.Columns>
                 </DataGrid>
                 <!-- up and down button under document name grid -->
                 <Grid Grid.Row="1" Grid.Column="0" >
@@ -158,19 +162,12 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
                 Margin="10 10 10 10" 
                 Content="Save" 
                 FontSize="24"
-                Command="{Binding PushSingleRoomCommand}" 
-                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
-            <Button Grid.Column="1"
-                Margin="10 10 10 10" 
-                Content="Cancel" 
-                FontSize="24"
-                Command="{Binding PushSingleRoomCommand}" 
+                Command="{Binding SaveAndCloseCommand}" 
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
         </Grid>
     </Grid>

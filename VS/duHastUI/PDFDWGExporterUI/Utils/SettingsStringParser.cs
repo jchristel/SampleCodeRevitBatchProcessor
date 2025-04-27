@@ -46,6 +46,19 @@ namespace duHastNet.UI.PDFDWGExporterUI.Utils
 
         }
 
+        public static string ConvertSettingsToPDFString(ObservableCollection<DocumentSetting> settings)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (DocumentSetting setting in settings)
+            {
+                sb.Append(setting.Prefix);
+                sb.Append(setting.PropertyName);
+                sb.Append(setting.Suffix);
+                sb.Append(setting.Separator);
+            }
+            return sb.ToString();
+        }
+
         /// <summary>
         /// parse the settings string for DWG export
         /// </summary>
@@ -55,6 +68,19 @@ namespace duHastNet.UI.PDFDWGExporterUI.Utils
         {
             ObservableCollection<DocumentSetting> settings = new ObservableCollection<DocumentSetting>();
             return settings;
+        }
+
+        public static string ConvertSettingsToDwgString(ObservableCollection<DocumentSetting> settings)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (DocumentSetting setting in settings)
+            {
+                sb.Append(setting.Prefix);
+                sb.Append(setting.PropertyName);
+                sb.Append(setting.Suffix);
+                sb.Append(setting.Separator);
+            }
+            return sb.ToString();
         }
     }
 }

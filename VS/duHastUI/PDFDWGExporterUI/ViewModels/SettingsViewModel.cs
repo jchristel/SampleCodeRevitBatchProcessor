@@ -115,7 +115,6 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         private readonly duHastNet.Utils.WPF.Commands.RelayCommand _moveDownCommand;
         public ICommand MoveDownCommand { get { return _moveDownCommand; } }
 
-
         /// <summary>
         /// command to save the settings and close the window
         /// </summary>

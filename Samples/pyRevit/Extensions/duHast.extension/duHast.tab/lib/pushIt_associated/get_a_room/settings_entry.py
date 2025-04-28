@@ -85,9 +85,9 @@ def setup_schema():
     """
     
     schema = create_schema(
-        "Get_A_Room_Settings",
-        "The schema contains settings for a get a room add in.",
-        settings.GET_A_ROOM_ADD_IN_GUID,
+        schema_name="Get_A_Room_Settings",
+        schema_documentation= "This schema contains settings for the get a room add in.",
+        string_guid = settings.GET_A_ROOM_ADD_IN_GUID,
         field_builder=schema_builder,
     )
     

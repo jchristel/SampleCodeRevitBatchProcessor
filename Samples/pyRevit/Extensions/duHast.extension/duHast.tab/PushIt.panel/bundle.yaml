@@ -3,6 +3,7 @@ layout:
   - GetARoom
   - SwapWidthAndDepth
   - Stats
+  - PlaceRevitRooms
 
 # bundle tooltip
 tooltip: Hassell

@@ -18,8 +18,8 @@ namespace PDFDWGExportTester
             // Initialize the application
             var main = new duHastNet.UI.PDFDWGExporterUI.Main(
                 currentPDFExportString: "PDFExportString",
-                currentDWGExportString: "DWGExportString",
-                parameterNames: new List<string> { "Parameter1", "Parameter2" }
+                currentDWGExportString: "*Parameter1**Parameter2*-DWG-*Parameter3*[*Parameter4*]",
+                parameterNames: new List<string> { "Parameter1", "Parameter2", "Parameter3", "Parameter4" }
             );
 
             // Execute the main function to get the settings

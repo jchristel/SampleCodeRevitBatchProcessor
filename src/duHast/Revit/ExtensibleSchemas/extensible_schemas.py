@@ -27,14 +27,18 @@ This module contains a number of functions around Extensible storage in Revit.
 #
 #
 
+from duHast.Revit.Common.adesk_info import VENDOR_ID
+
 from Autodesk.Revit.DB.ExtensibleStorage import AccessLevel, Schema, SchemaBuilder
 from System import Guid
+
 
 
 def create_schema(
     schema_name,
     schema_documentation,
     string_guid,
+    vendor_id = VENDOR_ID,
     access_level_read=AccessLevel.Public,
     access_level_write=AccessLevel.Public,
     field_builder=None,

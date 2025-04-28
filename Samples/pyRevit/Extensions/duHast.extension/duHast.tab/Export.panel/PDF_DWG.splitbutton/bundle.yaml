@@ -1,0 +1,11 @@
+layout:
+  - PDF_DWG
+  - Settings
+
+# bundle tooltip
+tooltip: Exporting to PDF and DWG
+
+
+# bundle author
+author: 
+  - Jan Christel

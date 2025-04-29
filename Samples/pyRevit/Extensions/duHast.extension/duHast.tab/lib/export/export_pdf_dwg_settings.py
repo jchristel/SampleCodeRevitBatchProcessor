@@ -20,8 +20,16 @@
 #
 #
 
+import clr
+import os
+import sys
+
+from System.Collections.Generic import List
+
 from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.console_output import print_header, print_error
+
+from duHast.pyRevit.net_dll_loader import load_net_dll_path
 
 def settings_export_pdf_dwg_entry(doc, output, forms):
     """
@@ -41,7 +49,20 @@ def settings_export_pdf_dwg_entry(doc, output, forms):
     return_value = Result()
 
     try:
-        pass
+        set_dll_path_result = load_net_dll_path(["Utils.23.0.0.3.dll", "PDFDWGExporterUI.dll"])
+
+        if not set_dll_path_result.status:
+            print_error(set_dll_path_result.message)
+
+        # import the UI class from the PDFDWGExporterUI namespace
+        from duHastNet.UI.PDFDWGExporterUI import Main
+        parameter_names = List[str]()
+        parameter_names.Add("test")
+        parameter_names.Add("test2")
+        parameter_names.Add("test3")
+        main = Main(None, None, parameter_names)
+
+        main.Execute()
 
     except Exception as e:
         # handle any exceptions that occur during the export process

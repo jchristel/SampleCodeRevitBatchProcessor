@@ -139,6 +139,27 @@ def file_move(old_name, new_name):
     return value
 
 
+def move_all_files_from_dir_to_dir(src_dir, dest_dir):
+    """
+    Moves all files from one directory to another.
+    :param src_dir: Source directory path
+    :type src_dir: str
+    :param dest_dir: Destination directory path
+    :type dest_dir: str
+    :return: True if moved, otherwise False
+    :rtype: bool
+    """
+
+    value = True
+    try:
+        for file_name in os.listdir(src_dir):
+            full_file_name = os.path.join(src_dir, file_name)
+            if os.path.isfile(full_file_name):
+                shutil.move(full_file_name, dest_dir)
+    except Exception:
+        value = False
+    return value
+
 #: file size in KB conversion
 FILE_SIZE_IN_KB = 1024
 #: file size in MB conversion

@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using static System.Net.Mime.MediaTypeNames;
+using Newtonsoft.Json;
 
 
 namespace duHastNet.UI.PDFDWGExporterUI.Utils
@@ -43,36 +44,34 @@ namespace duHastNet.UI.PDFDWGExporterUI.Utils
         /// </summary>
         public static ObservableCollection<DocumentSetting> ParsePdfSettingsString(string settingsString, List<string> availableParameters)
         {
-            ObservableCollection<DocumentSetting> settings = new ObservableCollection<DocumentSetting>();
+            List<DocumentSetting> deserializedSettings = JsonConvert.DeserializeObject<List<DocumentSetting>>(settingsString);
 
+            // Create a new ObservableCollection to hold the valid settings
+            ObservableCollection<DocumentSetting> settings = new ObservableCollection<DocumentSetting>();
+            
+            // Check if the settings are valid (e.g., if the parameters are available)
+            foreach (DocumentSetting setting in deserializedSettings)
+            {
+                if (availableParameters.Contains(setting.PropertyName))
+                {
+                    settings.Add(setting);
+                }
+            }
+
+            //return settings;
             return settings;
 
         }
 
+        /// <summary>
+        /// Convert the settings to a string for PDF export
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
         public static string ConvertSettingsToPDFString(ObservableCollection<DocumentSetting> settings)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (DocumentSetting setting in settings)
-            {
-                sb.Append(setting.Prefix);
-                sb.Append(setting.PropertyName);
-                sb.Append(setting.Suffix);
-                sb.Append(setting.Separator);
-            }
-            return sb.ToString();
-        }
-
-
-        private static bool IsInMatchCollection(string value, MatchCollection matches)
-        {
-            foreach (Match match in matches)
-            {
-                if (match.Groups[1].Value == value)
-                {
-                    return true;
-                }
-            }
-            return false;
+            // Convert the ObservableCollection to a JSON string
+            return JsonConvert.SerializeObject(settings, Formatting.None);
         }
 
 
@@ -84,71 +83,33 @@ namespace duHastNet.UI.PDFDWGExporterUI.Utils
         /// <returns></returns>
         public static ObservableCollection<DocumentSetting> ParseDwgSettingsString(string settingsString, List<string> availableParameters)
         {
-            ObservableCollection<DocumentSetting> documentSettings = new ObservableCollection<DocumentSetting>();
-            string pattern = @"\*(.*?)\*"; // Matches anything between asterisks
+            List<DocumentSetting> deserializedSettings = JsonConvert.DeserializeObject<List<DocumentSetting>>(settingsString);
 
-            MatchCollection matches = Regex.Matches(settingsString, pattern);
-            string[] fixedText = Regex.Split(settingsString, pattern);
+            // Create a new ObservableCollection to hold the valid settings
+            ObservableCollection<DocumentSetting> settings = new ObservableCollection<DocumentSetting>();
 
-            //check if the first entry in fixed Text is empty, if so remove it
-            if (fixedText.Length > 0 && fixedText[0] == string.Empty)
+            // Check if the settings are valid (e.g., if the parameters are available)
+            foreach (DocumentSetting setting in deserializedSettings)
             {
-                fixedText = fixedText.Skip(1).ToArray();
-            }
-
-            //loop over matches and add to document settings if that parameter is still available
-            for (int i = 0; i < matches.Count; i++)
-            {
-                string matchValue = matches[i].Groups[1].Value;
-                // strip the leading and trailing asterisks
-                string matchValueTrimmed = matchValue.Trim('*');
-                if (availableParameters.Contains(matchValue))
+                if (availableParameters.Contains(setting.PropertyName))
                 {
-                    DocumentSetting setting = new DocumentSetting();
-                    setting.PropertyName = matchValueTrimmed;
-
-                    // check if there is a preceding fixed text
-                    int indexOf = Array.IndexOf(fixedText, matchValueTrimmed);
-                    if (indexOf > 0)
-                    {
-                        string prior_value = fixedText[indexOf - 1];
-                        // check if the prior value is a parameter in match value
-                        if (!IsInMatchCollection("*" + prior_value + "*", matches))
-                        {
-                            setting.Prefix = prior_value;
-                        }
-                    } 
-                    // check if the last entry is not a parameter and therefore a suffix
-                    if (indexOf == fixedText.Length-2)
-                    {
-                        string past_value = fixedText[indexOf+1];
-                        // check if the prior value is a parameter in match value
-                        if (!IsInMatchCollection("*" + past_value + "*", matches))
-                        {
-                            setting.Suffix = past_value;
-                        }
-                    }
-
-                    // add the settings to the collection
-                    documentSettings.Add(setting);
-
+                    settings.Add(setting);
                 }
             }
 
-            return documentSettings;
+            //return settings;
+            return settings;
         }
 
+        /// <summary>
+        /// Convert the settings to a string for DWG export
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
         public static string ConvertSettingsToDwgString(ObservableCollection<DocumentSetting> settings)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (DocumentSetting setting in settings)
-            {
-                sb.Append(setting.Prefix);
-                sb.Append(setting.PropertyName);
-                sb.Append(setting.Suffix);
-                sb.Append(setting.Separator);
-            }
-            return sb.ToString();
+            // Convert the ObservableCollection to a JSON string
+            return JsonConvert.SerializeObject(settings, Formatting.None);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.Utils
 {
     public class DocumentSetting
     {
-        public string  Prefix { get; set; }
+        public string Prefix { get; set; }
         public string Suffix { get; set; }
         public string Separator { get; set; }
         public string PropertyName { get; set; }

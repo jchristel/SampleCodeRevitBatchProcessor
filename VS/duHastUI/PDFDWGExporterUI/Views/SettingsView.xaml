@@ -59,18 +59,19 @@
         </Border>
 
         <!-- grid view -->
-        
-        <Grid Grid.Row="3">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <!-- parameter grid -->
-            <DataGrid Grid.Row="0" Grid.Column="0" x:Name="dataGridParameters" 
+        <Border Grid.Row="3" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+
+            <Grid Margin="5 5 5 5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <!-- parameter grid -->
+                <DataGrid Grid.Row="0" Grid.Column="0" x:Name="dataGridParameters" 
                 ItemsSource="{Binding DataViewAvailableParameters}"
                 EnableRowVirtualization="True" 
                 EnableColumnVirtualization="True" 
@@ -84,17 +85,17 @@
                 ColumnWidth="*"
                 RowHeight="23"
                 HorizontalAlignment="Stretch">
-            </DataGrid>
-            <Grid Grid.Row="0"  Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <!-- sheet name grid -->
-                <DataGrid Grid.Row="0" Grid.Column="0" x:Name="dataGridSheetName"
+                </DataGrid>
+                <Grid Grid.Row="0"  Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <!-- sheet name grid -->
+                    <DataGrid Grid.Row="0" Grid.Column="0" x:Name="dataGridSheetName"
                     ItemsSource="{Binding DataViewDocumentTypeSettings}"
                     VirtualizingPanel.IsVirtualizing="False" 
                     AutoGenerateColumns="False" 
@@ -105,70 +106,72 @@
                     RowHeight="23"
                     HorizontalAlignment="Stretch"
                     CanUserAddRows="False">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Prefix" Binding="{Binding Prefix}" IsReadOnly="False"/>
-                        <DataGridTextColumn Header="Parameter" Binding="{Binding [Sheet property]}" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="Suffix" Binding="{Binding Suffix}" IsReadOnly="False"/>
-                        <DataGridTextColumn Header="Separator" Binding="{Binding Separator}" IsReadOnly="False"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-                <!-- up and down button under document name grid -->
-                <Grid Grid.Row="1" Grid.Column="0" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Grid.Row="0"
-                        Margin="5 5 5 5" 
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Prefix" Binding="{Binding Prefix}" IsReadOnly="False"/>
+                            <DataGridTextColumn Header="Parameter" Binding="{Binding [Sheet property]}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Suffix" Binding="{Binding Suffix}" IsReadOnly="False"/>
+                            <DataGridTextColumn Header="Separator" Binding="{Binding Separator}" IsReadOnly="False"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <!-- up and down button under document name grid -->
+                    <Grid Grid.Row="1" Grid.Column="0" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Grid.Row="0"
+                        Margin="0 5 5 5" 
                         Command="{Binding MoveUpCommand}" 
                         CommandParameter="{Binding ElementName=dataGridSheetName}">
-                    <TextBlock Text="Up" TextWrapping="Wrap" TextAlignment="Center"/>
-                    </Button>
-                    <Button Grid.Column="1" Grid.Row="0"
-                        Margin="5 5 5 5" 
+                            <TextBlock Text="Up" TextWrapping="Wrap" TextAlignment="Center"/>
+                        </Button>
+                        <Button Grid.Column="1" Grid.Row="0"
+                        Margin="5 5 0 5" 
                         Command="{Binding MoveDownCommand}" 
                         CommandParameter="{Binding ElementName=dataGridSheetName}">
-                        <TextBlock Text="Down" TextWrapping="Wrap" TextAlignment="Center"/>
-                    </Button>
+                            <TextBlock Text="Down" TextWrapping="Wrap" TextAlignment="Center"/>
+                        </Button>
+                    </Grid>
                 </Grid>
-            </Grid>
-            <!-- buttons add and remove -->
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Button Grid.Column="0" Grid.Row="1"
+                <!-- buttons add and remove -->
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Button Grid.Column="0" Grid.Row="1"
                     Margin="5 5 5 5" 
                     Command="{Binding MoveParameterToDocumentNameTableCommand}" 
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
-                    <TextBlock Text="Add Parameter" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
-                <Button Grid.Column="0" Grid.Row="2"
+                        <TextBlock Text="Add Parameter" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </Button>
+                    <Button Grid.Column="0" Grid.Row="2"
                     Margin="5 5 5 5" 
                     Command="{Binding RemoveParameterFromDocumentNameTableCommand}" 
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
-                    <TextBlock Text="Remove Parameter" TextWrapping="Wrap" TextAlignment="Center"/>
-                </Button>
+                        <TextBlock Text="Remove Parameter" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </Button>
+                </Grid>
             </Grid>
-        </Grid>
-
+        </Border>
         <!-- save and cancel row content -->
-        <Grid Grid.Row="4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0"
-                Margin="10 10 10 10" 
+        <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+            <Grid Margin="5 2 5 2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0"
+                Margin="2 5 2 5" 
                 Content="Save" 
                 FontSize="24"
                 Command="{Binding SaveAndCloseCommand}" 
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
-        </Grid>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

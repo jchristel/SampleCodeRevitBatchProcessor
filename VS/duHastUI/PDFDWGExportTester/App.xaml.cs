@@ -1,4 +1,6 @@
-﻿using System;
+﻿using duHastNet.UI.PDFDWGExporterUI.Utils;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -15,11 +17,32 @@ namespace PDFDWGExportTester
     {
         public App()
         {
+            var settingsPDF = new List<DocumentSetting>
+            {
+                new DocumentSetting("", "", "", "Parameter1"),
+                new DocumentSetting("", "", "-", "Parameter2"),
+                new DocumentSetting("", "", "", "Parameter3"),
+                new DocumentSetting("[", "]", "", "Parameter4")
+            };
+
+            string jsonPDF = JsonConvert.SerializeObject(settingsPDF, Formatting.None);
+
+            var settingsDWG = new List<DocumentSetting>
+            {
+                new DocumentSetting("", "", "", "Parameter1"),
+                new DocumentSetting("", "-DWG", " ", "Parameter2"),
+                new DocumentSetting("", "", "", "Parameter3"),
+                new DocumentSetting("[", "]", "", "Parameter4")
+            };
+
+            string jsonDWG = JsonConvert.SerializeObject(settingsDWG, Formatting.None);
+
+
             // Initialize the application
             var main = new duHastNet.UI.PDFDWGExporterUI.Main(
-                currentPDFExportString: "PDFExportString",
-                currentDWGExportString: "*Parameter1**Parameter2*-DWG-*Parameter3*[*Parameter4*]",
-                parameterNames: new List<string> { "Parameter1", "Parameter2", "Parameter3", "Parameter4" }
+                currentPDFExportString: jsonPDF,
+                currentDWGExportString: jsonDWG,
+                parameterNames: new List<string> { "Parameter1", "Parameter2", "Parameter4" }
             );
 
             // Execute the main function to get the settings

@@ -1,4 +1,27 @@
+# License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# BSD License
+# Copyright 2025, Jan Christel
+# All rights reserved.
 
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#
+# This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+# or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+#
+#
+#
+
+
+import clr
 import System
 from System.IO import File
 from System.IO import MemoryStream
@@ -6,7 +29,10 @@ from System.Reflection import Assembly
 import traceback
 
 
-# do not load these, since they are the external command and dont need to be laoded
+# set up a debug flag 
+DEBUG = False
+
+# do not load these, since they are the external command and dont need to be loaded
 ignore_dlls = [
 ]
 
@@ -28,16 +54,17 @@ dlls_to_load  = System.IO.Directory.GetFiles(bin_directory, "*.dll")
 for dll in dlls_to_load:
 
     try:
-        #full_path = System.IO.Path.Combine(bin_directory, dll)
         # get the file name from the path
         dll_name_only = System.IO.Path.GetFileName(dll)
         
         # check if the dll should be ignored
         if dll_name_only in ignore_dlls:
-            # print("Ignoring: {dll}".format(dll=dll_name_only))
+            if DEBUG:
+                print("Ignoring: {dll}".format(dll=dll_name_only))
             continue
 
-        #print("Attempting to load: {dll}".format(dll=dll_name_only))
+        if DEBUG:
+            print("Attempting to load: {dll}".format(dll=dll_name_only))
         
         # Check if the file exists
         if not File.Exists(dll):
@@ -45,8 +72,10 @@ for dll in dlls_to_load:
             continue
 
         dll_bytes = File.ReadAllBytes(dll)
-        # Should print <class 'bytes'>
-        #print("bytes array is of type: {}".format(type(dll_bytes)))
+
+        if DEBUG:
+            # Should print <class 'bytearray'>
+            print("bytes array is of type: {}".format(type(dll_bytes)))
     
         # Load assembly into the default AppDomain
         stream = MemoryStream(dll_bytes)
@@ -54,7 +83,10 @@ for dll in dlls_to_load:
 
         # Ensure it's registered for other add-ins
         System.AppDomain.CurrentDomain.Load(assembly.GetName())
-        #print("loaded successfully: {dll}".format(dll=dll_name_only))
+
+        if DEBUG:
+            print("loaded successfully: {dll}".format(dll=dll_name_only))
+
     except Exception as e:
         print("Failed to load {dll} with exception: {e}".format(dll=dll, e=e))
         print(traceback.format_exc())

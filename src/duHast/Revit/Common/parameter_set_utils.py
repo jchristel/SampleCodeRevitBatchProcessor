@@ -394,6 +394,11 @@ def set_parameter_without_transaction_wrapper_by_name(
     para = element.LookupParameter(parameter_name)
 
     if para != None:
+
+        # check if the parameter value is a string, if not convert it to a string
+        if (isinstance(parameter_value, str)) == False:
+            parameter_value = str(parameter_value)
+
         return_value = set_parameter_value_simple(
             para=para, value_as_string=parameter_value
         )

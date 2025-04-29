@@ -22,6 +22,7 @@
 
 
 from duHast.Utilities.Objects.result import Result
+from duHast.Utilities.directory_io import create_temp_directory
 
 from duHast.Revit.UI.custom_selection_user import get_user_selection
 from duHast.Revit.DetailItems.filled_regions import  get_filled_region_curve_loops, get_filled_region_area
@@ -42,9 +43,9 @@ from pushIt_associated.get_a_room.host_family_create import create_get_a_room_fa
 from pushIt_associated.get_a_room.host_family_utils import load_push_it_family, create_push_it_family_instance
 from pushIt_associated.get_a_room.settings_utils import get_output_path_from_schema
 from pushIt_associated.get_a_room.Objects.FamilyTypeConfig import FamilyTypeConfig
-from pushIt_associated.get_a_room.utilities import get_filled_region_with_two_loops_area, FAMILY_TYPE_NAME_BAY, FAMILY_TYPE_NAME_ROOM
+from pushIt_associated.get_a_room.utilities import get_filled_region_with_two_loops_area, FAMILY_TYPE_NAME_BAY, FAMILY_TYPE_NAME_ROOM, verify_filled_region
 from pushIt_associated.get_a_room import debug as debug
-from pushIt_associated.get_a_room.post_processing import post_processing_filled_region
+from pushIt_associated.get_a_room.post_processing import post_processing_filled_region,  move_family_files
 
 from Autodesk.Revit.DB import Element, ViewType
 
@@ -199,6 +200,12 @@ def get_a_room_entry(doc, uiapp,output, forms):
     return_value = Result()
 
     print_header("Get A Room Entry")
+
+    # create a temp_directory
+    temp_dir = create_temp_directory()
+
+    if (DEBUG):
+        print("Temp directory: {}".format(temp_dir))
     
     # check ig extensible schema exists
     if not does_schema_exist(settings.GET_A_ROOM_ADD_IN_GUID):
@@ -249,24 +256,25 @@ def get_a_room_entry(doc, uiapp,output, forms):
 
     for f in filled_regions_selected:
         
-        # get the filled region curve loops
-        filled_region_curve_loops = get_filled_region_curve_loops(f)
-        # check if the filled region has curves
-        if filled_region_curve_loops is None:
-            message = "No curves found in filled region."
-            return_value.update_sep(False, message)
-            print(message)
-            return return_value
-        
-        # reject any filled region with a curve loop count greater than 2
-        if len(filled_region_curve_loops) > 2:
-            message = "Filled region {} has more than 2 curves".format(f.Name)
-            return_value.update_sep(False, message)
-            print(message)
-        else:
-            # add the filled region to the filtered regions
-            filtered_regions.append(f)
-            
+        # check if filled region can be used
+        filled_region_result = verify_filled_region(f)
+
+        if filled_region_result.status == False:
+            return_value.update(filled_region_result)
+            print_error(filled_region_result.message)
+            continue
+
+        # add the filled region to the filtered regions
+        filtered_regions.append(f)
+    
+
+    if len(filtered_regions) == 0:
+        message = "No valid filled regions where selected."
+        return_value.update_sep(False, message)
+        print_error(message)
+        print("Finished.")
+        return return_value
+    
     # get the active view
     active_view = doc.ActiveView
 
@@ -332,7 +340,7 @@ def get_a_room_entry(doc, uiapp,output, forms):
             filled_region_curve_loops=transformed_curve_loops,
             bounding_box_original=bounding_box,
             filled_region_original=f,
-            output_directory=output_directory
+            output_directory=temp_dir
         )
         
         if( create_family_result.status == False):
@@ -389,7 +397,13 @@ def get_a_room_entry(doc, uiapp,output, forms):
             print_error(message)
             continue
 
-        print("Post processed filled region")
+    # do some clean up
+    # move files from temp to output directory
+    cleanup_result = move_family_files(temp_dir, output_directory)
+    return_value.update(cleanup_result)
+
+       
+    print("Post processed filled region.\n")
 
     
     print("Finished.")

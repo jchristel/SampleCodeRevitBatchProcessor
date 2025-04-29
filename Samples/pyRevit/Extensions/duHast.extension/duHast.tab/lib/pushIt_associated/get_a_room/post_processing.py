@@ -20,10 +20,13 @@
 #
 #
 
+import time
 
 from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.console_output import print_error, print_header
 from duHast.Revit.Common.delete import delete_by_element_ids
+from duHast.Utilities.files_io import move_all_files_from_dir_to_dir
+from duHast.Utilities.directory_io import directory_delete
 
 # set up some options for the user to select
 YES = "Yes"
@@ -108,6 +111,46 @@ def post_processing_filled_region(doc, forms, filled_region):
 
     except Exception as e:
         message = "Failed to post process filled region: {}".format(e)
+        return_value.update_sep(False, message)
+    
+    return return_value
+
+
+def move_family_files (temp_dir, target_dir):
+    """
+    Move the family files from the temp directory to the target directory.
+
+    :param temp_dir: The temporary directory where the family files are located.
+    :type temp_dir: str
+    :param target_dir: The target directory where the family files should be moved.
+    :type target_dir: str
+    :return: None
+    """
+    
+    # set up a status tracker
+    return_value = Result()
+
+    try:
+        move_flag = move_all_files_from_dir_to_dir(temp_dir, target_dir)
+
+        if move_flag:
+            return_value.append_message("Moved family files from {} to {}".format(temp_dir, target_dir))
+        else:
+            return_value.update_sep(False, "Failed to move family files from {} to {}".format(temp_dir, target_dir))
+
+        # Wait a moment to let Windows process the move ( still does not allow to delete the temp dir )
+        time.sleep(1)
+
+        # delete the temp directory 
+        delete_result = directory_delete(temp_dir)
+
+        if delete_result:
+            return_value.append_message("Deleted temporary directory: {}".format(temp_dir))
+        else:
+            return_value.update_sep(False, "Failed to delete temporary directory: {}".format(temp_dir))
+
+    except Exception as e:
+        message = "Failed to move files: {}".format(e)
         return_value.update_sep(False, message)
     
     return return_value

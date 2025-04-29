@@ -31,7 +31,7 @@ from duHast.Revit.Common.Geometry.curve_loops import get_area_from_closed_curve_
 FAMILY_TYPE_NAME_ROOM = "Room"
 FAMILY_TYPE_NAME_BAY = "Bay"
 
-
+from Autodesk.Revit.DB import XYZ
 
 def get_filled_region_with_two_loops_area(doc, filled_region):
     """
@@ -113,4 +113,66 @@ def get_filled_region_with_two_loops_area(doc, filled_region):
         message = "Failed to get area: {}".format(e)
         return_value.result.append(area)
         return_value.update_sep(False, message)
+    return return_value
+
+
+
+def verify_filled_region(filled_region):
+    """
+    Verify if the filled region is valid:
+
+    - has at least one loop
+    - has at at maximum 2 loops
+    - if 2 loops, those must be nested
+
+    :param filled_region: The filled region to verify
+    :type filled_region: Autodesk.Revit.DB.FilledRegion
+    :return: True if the filled region complies with the rules, False otherwise
+    :rtype: bool
+    """
+    
+    # set up a status tracker
+    return_value = Result()
+    
+    try:
+        # get the filled region curve loops
+        filled_region_curve_loops = get_filled_region_curve_loops(filled_region)
+        # check if the filled region has curves
+        if filled_region_curve_loops is None:
+            message = "No curves found in filled region."
+            return_value.update_sep(False, message)
+            return return_value
+        
+        # reject any filled region with a curve loop count greater than 2
+        if len(filled_region_curve_loops) > 2:
+            message = "Filled region {} has more than 2 curves".format(filled_region.Name)
+            return_value.update_sep(False, message)
+            return return_value
+        
+        if (len(filled_region_curve_loops) == 2):
+            # print the direction of each loop
+            normal = XYZ(0, 0, 1)
+            counter = 0
+            over_all_ccw = True
+            for curve_loop in filled_region_curve_loops:
+                loop_is_ccw = curve_loop.IsCounterclockwise(normal)
+                if counter ==0 :
+                    # set the first loop direction to overall
+                    over_all_ccw = loop_is_ccw
+                    # increase the counter
+                    counter += 1
+                else:
+                    if loop_is_ccw == over_all_ccw:
+                        # both loops are in the same direction...thats bad
+                        message = "Filled region {} has 2 loops in the same direction".format(filled_region.Name)
+                        return_value.update_sep(False, message)
+                        return  return_value
+        else:
+            # add the filled region to the filtered regions
+            return_value.append_message("Filled region passes filter")
+            
+    except Exception as e:
+        message = "Failed to verify filled region: {}".format(e)
+        return_value.update_sep(False, message)
+    
     return return_value

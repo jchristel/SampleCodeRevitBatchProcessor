@@ -30,12 +30,14 @@ from duHast.Revit.Family.family_functions import get_name_and_category_to_family
 from duHast.Revit.Family.family_parameter_utils import associate_parameter_with_other_parameter_on_nested_family_instance, set_parameter_formula
 from duHast.Revit.Family.family_utils import get_family_instances_of_built_in_category, load_family
 
+from duHast.Revit.Common.parameter_set_utils import set_builtin_parameter_without_transaction_wrapper_by_name
+
 from duHast.Revit.SharedParameters.shared_parameters import get_all_shared_parameters
 
 from pushIt_associated.get_a_room import settings
 from pushIt_associated.get_a_room.utilities import get_filled_region_area
 
-from Autodesk.Revit.DB import BuiltInCategory, Element
+from Autodesk.Revit.DB import BuiltInCategory, BuiltInParameter, Element
 
 def rename_nested_families(doc, family_name_mapper):
     """
@@ -309,6 +311,20 @@ def create_push_it_family_instance (doc, push_it_family, location_point, active_
             family_symbol = doc.GetElement(symbol_is)
             break
 
+        # set up an action ensuring offset from the host ( level ) is set to 0
+        def action(element):
+            action_return_value = Result()
+            try:
+                set_offset_result = set_builtin_parameter_without_transaction_wrapper_by_name(
+                    element=element,
+                    parameter_definition=BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM,
+                    parameter_value=0.0,
+                )
+                action_return_value.update(set_offset_result)
+            except Exception as e:
+                message = "Failed to set offset parameter with error: {}".format(e)
+                action_return_value.update_sep(False, message)
+            return action_return_value
 
         # place an instance of the family symbol
         place_result = place_a_family_instance_by_level(
@@ -316,6 +332,7 @@ def create_push_it_family_instance (doc, push_it_family, location_point, active_
             location_point,
             family_symbol=family_symbol,
             target_placement_level= level,
+            modify_action=action,
         )
 
         return_value.update(place_result)

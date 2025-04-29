@@ -22,29 +22,25 @@
 
 from System.Collections.Generic import List
 
-
-from duHast.Revit.Family.family_element_utils import get_all_curve_based_elements_in_family,get_all_generic_forms_in_family, set_element_visibility_by_detail_level
 from duHast.Utilities.Objects.result import Result
+from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Common.parameter_set_utils import set_builtin_parameter_without_transaction_wrapper_by_name
 from duHast.Revit.Common.delete import delete_by_element_ids
+from duHast.Revit.Common.Geometry.curve_loops import create_curve_loop_through_offset
+from duHast.Revit.Family.family_element_utils import get_all_curve_based_elements_in_family,get_all_generic_forms_in_family, set_element_visibility_by_detail_level
 from duHast.Revit.Family.Geometry.extrusion_create import create_extrusion_on_level, associate_extrusion_height_with_parameter, set_extrusion_sub_category
 from duHast.Revit.Family.Geometry.symbolic_curve_create import create_symbolic_curves_on_level, set_symbolic_curve_sub_category
-from duHast.Revit.Common.Geometry.curve_loops import create_curve_loop_through_offset
-
-from duHast.Revit.Common import parameter_get_utils as rParaGet
-from duHast.Revit.Categories.Utility.category_properties_get_utils import (
-    get_category_graphic_style_ids,
-)
-
-from duHast.Revit.Levels.levels import get_levels_in_model
+from duHast.Revit.Categories.Utility.category_properties_get_utils import get_category_graphic_style_ids
 from duHast.Revit.Categories.categories import (
     ELEMENTS_PARAS_SUB,
     get_category_by_id,
 )
+from duHast.Revit.Levels.levels import get_levels_in_model
 
 from pushIt_associated.get_a_room.settings import HEIGHT_PARAMETER_NAME
 
 
-from Autodesk.Revit.DB import CurveLoop, FamilyElementVisibilityType
+from Autodesk.Revit.DB import BuiltInParameter, CurveLoop, FamilyElementVisibilityType
 
 
 def get_family_element_sub_category_id_name(doc, extrusion):
@@ -126,7 +122,7 @@ def set_family_element_visibility_by_detail_level(doc, element, is_visible_coars
 
 
 
-def create_extrusion(doc, curve_loops, detail_level, height_parameter_name, source_graphic_style):
+def create_extrusion(doc, curve_loops, detail_level, height_parameter_name, source_graphic_style, is_visible):
     """
     Create a new extrusion in the family document using the provided curve loops.
     
@@ -191,6 +187,18 @@ def create_extrusion(doc, curve_loops, detail_level, height_parameter_name, sour
                 else:
                     action_return_value.append_message("No height parameter provided, extrusion will not be associated with a parameter")
                 
+                # set the visibility of the extrusion ( assume its visible by default )
+                if is_visible == 0:
+                    # set the visibility of the extrusion to not visible
+                    set_visibility_result = set_builtin_parameter_without_transaction_wrapper_by_name(
+                        element=extrusion, 
+                        parameter_definition=BuiltInParameter.IS_VISIBLE_PARAM,
+                        parameter_value=is_visible,
+                    )
+                    action_return_value.update(set_visibility_result)
+                else:
+                    action_return_value.append_message("Extrusion is set to visible. No change required.")
+                
             except Exception as e:
                 action_return_value.update_sep(False, "Failed to create new extrusion in family: {}".format(e))
             return action_return_value
@@ -244,46 +252,71 @@ def create_new_extrusion_from_outlines(family_doc, curve_loops, height_parameter
         
         # get the existing extrusion
         generic_forms = get_all_generic_forms_in_family(family_doc)
-        source_extrusion_sub_category_id = None
-        source_extrusion_sub_category_name = None
-        source_extrusion_sub_category = None
-        source_extrusion_id = None
+        source_extrusion_sub_category_id = []
+        source_extrusion_sub_category_name = []
+        source_extrusion_sub_category = []
+        source_extrusion_id = []
+        source_extrusion_is_visible = []
         
-        # loop over generic forms to get the first extrusion (there should only be one)
+        # loop over generic forms to get the first extrusion (nested families have one generic form, host families have either none or two)
+
+        counter = 1
         for el in generic_forms:
-            source_extrusion_id = el.Id
-            source_extrusion_sub_category,source_extrusion_sub_category_id, source_extrusion_sub_category_name = get_family_element_sub_category_id_name(family_doc, el)
-            break
+            source_extrusion_id.append(el.Id)
+
+            # get extrusion visibility
+            is_visible_instance = rParaGet.get_built_in_parameter_value(el, BuiltInParameter.IS_VISIBLE_PARAM, rParaGet.getter_int_as_int)
+            source_extrusion_is_visible.append(is_visible_instance)
+
+            source_extrusion_sub_category_instance,source_extrusion_sub_category_id_instance, source_extrusion_sub_category_name_instance = get_family_element_sub_category_id_name(family_doc, el)
+
+            source_extrusion_sub_category.append(source_extrusion_sub_category_instance)
+            source_extrusion_sub_category_id.append(source_extrusion_sub_category_id_instance)
+            source_extrusion_sub_category_name.append(source_extrusion_sub_category_name_instance)
+
+            # debug print
+            # print("Generic form {}: id: {}, sub category id: {}, sub category name: {}, is visible: {}".format(
+            #    counter, el.Id, source_extrusion_sub_category_id_instance, source_extrusion_sub_category_name_instance, is_visible_instance)
+            #)
+            counter += 1
+
         
-        return_value.append_message("Source extrusion sub category id: {} and name : {}".format(
+        return_value.append_message("Source extrusion sub category id(s): {} and name(s) : {}".format(
             source_extrusion_sub_category_id, source_extrusion_sub_category_name))
         
-        # get the graphic style of the source extrusion sub category
-        source_graphic_style = get_category_graphic_style_ids(source_extrusion_sub_category)
+
+        # loop over extrusions and replace them
+        for i in range(len(source_extrusion_id)):
+            source_extrusion_sub_category[i] = get_category_by_id(family_doc, source_extrusion_sub_category_id[i])
+            
+            # get the graphic style of the source extrusion sub category
+            source_graphic_style = get_category_graphic_style_ids(source_extrusion_sub_category[i])
         
-        # create a new extrusion in the family document
-        create_extrusion_result = create_extrusion(
-            family_doc, 
-            curve_loops, 
-            is_visible_coarse_detail, 
-            height_parameter_name=height_parameter_name,
-            source_graphic_style=source_graphic_style,
-        )
-        return_value.update(create_extrusion_result)
+            # create a new extrusion in the family document
+            create_extrusion_result = create_extrusion(
+                family_doc, 
+                curve_loops, 
+                is_visible_coarse_detail, 
+                height_parameter_name=height_parameter_name,
+                source_graphic_style=source_graphic_style,
+                is_visible=source_extrusion_is_visible[i],
+            )
+            return_value.update(create_extrusion_result)
         
-        # get out if no extrusion was created
-        if not return_value.status:
-            return return_value
+            # get out if no extrusion was created
+            if not return_value.status:
+                return return_value
         
-        # get the new extrusion
-        element = create_extrusion_result.result[0]
-        # make sure only the element is returned in the result
-        return_value.result = [element]
+            # get the new extrusion
+            element = create_extrusion_result.result[0]
+
+            # make sure only the element is returned in the result
+            return_value.result.append(element)
         
-        # delete the old extrusion
-        if source_extrusion_id != None:
-            delete_result = delete_by_element_ids(family_doc, [source_extrusion_id], "Delete source extrusion", "Extrusion")
-            return_value.update(delete_result)
+            # delete the old extrusion
+            if source_extrusion_id[i] != None:
+                delete_result = delete_by_element_ids(family_doc, [source_extrusion_id[i]], "Delete source extrusion", "Extrusion")
+                return_value.update(delete_result)
                 
     except Exception as e:
         message = "Failed to update extrusion in family: {}".format(e)

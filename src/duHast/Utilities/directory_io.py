@@ -30,6 +30,8 @@ import os
 from os import path
 import os.path
 import shutil
+import uuid
+
 
 
 def is_directory(directory_path):
@@ -66,6 +68,7 @@ def directory_empty_delete(full_directory_path):
 def directory_delete(full_directory_path):
     """
     Deletes a directory (even if it contains files)
+
     :param full_directory_path: Path to directory
     :type full_directory_path: str
     :return: True directory deleted, otherwise False
@@ -74,15 +77,10 @@ def directory_delete(full_directory_path):
 
     try:
         shutil.rmtree(full_directory_path)
-        value = True
+        return  True
     except Exception as e:
-        print(
-            "When attempting to delete: {} an exception occurred: {}".format(
-                full_directory_path, e
-            )
-        )
-        value = False
-    return value
+        return  False
+
 
 
 def get_child_directories(full_directory_path):
@@ -195,3 +193,48 @@ def directory_exists(directory_path):
         return True
     else:
         return False
+
+
+
+def get_current_user_documents_directory():
+    """
+    Get the current user's documents directory.
+
+    :return: Path to the user's documents directory.
+    :rtype: str
+    """
+    
+    import clr
+    clr.AddReference("System")
+    from System import Environment
+
+    # Get the user's Documents folder path
+    documents_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+
+    return documents_path
+
+
+def create_temp_directory(root_directory=None):
+    """
+    Creates a temporary directory in the system temp folder.
+
+    :param root_directory: Root directory to create the temp folder in. If None, uses the system temp folder.
+    :type root_directory: str or None. If none provided, the user's documents folder is used.
+    :return: Path to the created temporary directory.
+    :rtype: str
+    """
+    
+    # Generate a random filename
+    random_filename = uuid.uuid4().hex  # Creates a unique random string
+
+    # If no root directory is provided, use the users doc folder
+    if root_directory is None:
+        root_directory = get_current_user_documents_directory()
+    
+    temp_directory = os.path.join(root_directory, random_filename)
+    # Check if the directory exists before creating
+    if not os.path.exists(temp_directory):
+        os.makedirs(temp_directory)
+        
+    
+    return temp_directory

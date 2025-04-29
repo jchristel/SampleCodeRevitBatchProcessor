@@ -149,27 +149,27 @@ def verify_filled_region(filled_region):
             return_value.update_sep(False, message)
             return return_value
         
-        if (len(filled_region_curve_loops) == 2):
-            # print the direction of each loop
-            normal = XYZ(0, 0, 1)
-            counter = 0
-            over_all_ccw = True
-            for curve_loop in filled_region_curve_loops:
-                loop_is_ccw = curve_loop.IsCounterclockwise(normal)
-                if counter ==0 :
-                    # set the first loop direction to overall
-                    over_all_ccw = loop_is_ccw
-                    # increase the counter
-                    counter += 1
-                else:
-                    if loop_is_ccw == over_all_ccw:
-                        # both loops are in the same direction...thats bad
-                        message = "Filled region {} has 2 loops in the same direction".format(filled_region.Name)
-                        return_value.update_sep(False, message)
-                        return  return_value
-        else:
-            # add the filled region to the filtered regions
-            return_value.append_message("Filled region passes filter")
+        # if (len(filled_region_curve_loops) == 2):
+        #     # print the direction of each loop
+        #     normal = XYZ(0, 0, 1)
+        #     counter = 0
+        #     over_all_ccw = True
+        #     for curve_loop in filled_region_curve_loops:
+        #         loop_is_ccw = curve_loop.IsCounterclockwise(normal)
+        #         if counter ==0 :
+        #             # set the first loop direction to overall
+        #             over_all_ccw = loop_is_ccw
+        #             # increase the counter
+        #             counter += 1
+        #         else:
+        #             if loop_is_ccw == over_all_ccw:
+        #                 # both loops are in the same direction...thats bad
+        #                 message = "Filled region {} has 2 loops in the same direction".format(filled_region.Name)
+        #                 return_value.update_sep(False, message)
+        #                 return  return_value
+        #else:
+        # add the filled region to the filtered regions
+        return_value.append_message("Filled region passes filter")
             
     except Exception as e:
         message = "Failed to verify filled region: {}".format(e)

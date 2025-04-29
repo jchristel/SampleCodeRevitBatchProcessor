@@ -27,6 +27,14 @@ from duHast.Revit.Links.links import get_link_docs
 
 
 def get_models_for_selection(doc):
+    """
+    Get all models in the current Revit document including the current model.
+
+    :param doc: The Revit document
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A list of all models in the current Revit document
+    :rtype: list
+    """
 
     docs = [doc]
      # get all linked models
@@ -40,6 +48,14 @@ def get_models_for_selection(doc):
 
 
 def ui_doc_name_builder(element):
+    """
+    Build a name for the document to be displayed in the UI.
+    :param element: The document element
+    :type element: Autodesk.Revit.DB.Document
+    :return: The name of the document
+    :rtype: str
+    """
+
     return element.Title
 
 
@@ -56,7 +72,7 @@ def get_model_selection_from_user(doc, forms, element_getter, element_selection_
     :param element_selection_description: Text to be displayes on button to prompt user
     :type element_selection_description: str
     
-    :return: None if nothing was selected. Otherwise a list of element ids
+    :return: None if nothing was selected. Otherwise a list of elements
     :rtype: None or [Autodesk.Revit.Element]
     """
     # set up return values
@@ -103,7 +119,18 @@ def get_model_selection_from_user(doc, forms, element_getter, element_selection_
 
 
 def get_model_selection(doc, forms):
+    """
+    get the model selection from the user
 
+    :param doc: The Revit document
+    :type doc: Autodesk.Revit.DB.Document
+    :param forms: The pyRevit forms module
+    :type forms: pyRevit.forms
+    :return: The selected model
+    :rtype: Autodesk.Revit.DB.Document
+    """
+
+    # get the user to select whether to use this model or a link to get the rooms from
     doc_selected = get_model_selection_from_user(
         doc=doc, 
         forms=forms, 
@@ -122,3 +149,49 @@ def get_model_selection(doc, forms):
     else:
         # if the user cancelled the selection, return None
         return None
+    
+
+def get_push_it_room_selection (doc, push_it_rooms,  unique_id_parameter_guid, forms):
+
+    def room_getter(doc):
+        """
+        Get all pushIt rooms in the current Revit document.
+        :param doc: The Revit document
+        :type doc: Autodesk.Revit.DB.Document
+        :return: A list of all pushIt rooms in the current Revit document
+        :rtype: list
+        """
+        return push_it_rooms
+    
+    def ui_name_builder(element):
+        """
+        Build a name for the room to be displayed in the UI.
+        :param element: The room element
+        :type element: Autodesk.Revit.DB.Element
+        :return: The name of the room
+        :rtype: str
+        """
+        return element.get_ui_name( unique_id_parameter_guid )
+
+
+
+    rooms_selected_result =  get_model_selection_from_user(
+        doc=doc, 
+        forms=forms, 
+        element_getter = room_getter, 
+        element_selection_description ="select push it rooms to convert", 
+        multiselect = True, 
+        ui_element_name_builder = ui_name_builder)
+    
+    # check if the user selected a room
+    if rooms_selected_result is not None and len(rooms_selected_result) > 0:
+        # get the selected rooms
+        selected_rooms = rooms_selected_result
+        return selected_rooms
+    else:
+        # if the user cancelled the selection, return None
+        return None
+    
+
+    
+    

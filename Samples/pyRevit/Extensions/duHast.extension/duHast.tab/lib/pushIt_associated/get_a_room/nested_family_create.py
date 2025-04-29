@@ -198,8 +198,8 @@ def create_medium_and_fine_detail_family(doc, family_config):
         nested_medium_and_fine_family_doc = fam_result.result[0]
 
         # update the extrusion outline
-        # get the filled region curve loops
-        filled_region_curve_loops = family_config.curve_loops
+        # get the filled region curve loops...if there are two loops, use the inner loop only
+        filled_region_curve_loops = family_config.curve_loops if len(family_config.curve_loops) == 1 else [family_config.curve_loops[1]]
         
         # create a new extrusion in the family
         create_extrusion_result = create_new_extrusion_from_outlines(

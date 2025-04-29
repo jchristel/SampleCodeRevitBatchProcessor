@@ -51,5 +51,5 @@ def get_output_path_from_schema(doc):
         else:
             return_value.update_sep(False, "...invalid Entity: [{}]".format(stored_entity))
     except Exception as e:
-        return_value.update_sep("Error retrieving family output directory from schema: {}".format(e))
+        return_value.update_sep(False, "Error retrieving family output directory from schema: {}".format(e))
     return return_value

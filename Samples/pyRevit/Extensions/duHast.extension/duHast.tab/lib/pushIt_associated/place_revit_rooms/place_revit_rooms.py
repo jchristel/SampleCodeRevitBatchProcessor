@@ -25,7 +25,7 @@ from duHast.Utilities.Objects.result import Result
 from duHast.pyRevit.console_output import print_header, print_error
 
 
-from pushIt_associated.place_revit_rooms.user_selection import get_model_selection
+from pushIt_associated.place_revit_rooms.user_selection import get_model_selection, get_push_it_room_selection
 
 
 from pushIt_associated.utilities import (
@@ -35,6 +35,16 @@ from pushIt_associated.utilities import (
     get_family_instances_of_supported_categories,
     convert_family_instances_to_storage,
 )
+
+from pushIt_associated.place_revit_rooms.push_it_fam_analysis import get_push_it_families_centroid
+from pushIt_associated.place_revit_rooms.create_rooms import create_rooms_from_push_it_instances
+
+from pushIt_associated.place_revit_rooms.debug import draw_bounding_box_and_centroid
+
+
+
+DEBUG = False
+
 
 
 def place_revit_rooms_entry(doc, uiapp,output, forms):
@@ -112,8 +122,25 @@ def place_revit_rooms_entry(doc, uiapp,output, forms):
     print("Converted family instances: {} of {} ".format(len(converted_fam_instances), len((revit_family_instances_result.result))))
     
     # get the user to choose which rooms to place
+    selected_rooms = get_push_it_room_selection(doc, converted_fam_instances,  unique_id_parameter_guid, forms)
+    if selected_rooms is None or len(selected_rooms) == 0:
+        message = "No rooms selected."
+        return_value.update_sep(False, message)
+        print_error("{} \nExiting".format(message))
+        
+        return return_value
+    
+    # give some user feedback
+    print("Selected rooms: {} ".format(len(selected_rooms)))
     
     # analyze the rooms selected to place ( can I get the centroid of the room family from a link? )
+    # not all rooms will return a centroid....
+    updated_fams_result = get_push_it_families_centroid(doc,selected_rooms)
+
+    print("updated: {} ".format(len(updated_fams_result.result)))
+    if(DEBUG):
+        draw_bounding_box_and_centroid(doc, updated_fams_result.result)
     
     # place the rooms in the current model and transfer the parameter data
+    create_result = create_rooms_from_push_it_instances(doc,updated_fams_result.result)
 

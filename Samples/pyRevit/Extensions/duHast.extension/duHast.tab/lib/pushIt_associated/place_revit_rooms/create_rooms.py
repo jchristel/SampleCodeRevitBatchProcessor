@@ -25,13 +25,32 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Levels.levels import  get_nearest_lowest_level, get_levels_list_ascending
 from duHast.Revit.Rooms.rooms_create import create_room
 from duHast.Revit.Common.parameter_set_utils import set_parameter_value_simple
+from duHast.Revit.Common.transaction import in_transaction_with_failure_handling
 
-from Autodesk.Revit.DB import SharedParameterElement, UV
+from duHast.Revit.Common.Objects.FailureHandlingConfiguration import (
+    FailureHandlingConfig,
+)
+
+from Autodesk.Revit.DB import UV, XYZ
+
+def apply_transform_to_uv(uv_point, rotation_matrix, translation_vector):
+    # Convert UV point to XYZ point (assuming Z = 0)
+    xyz_point = XYZ(uv_point.U, uv_point.V, 0)
+    
+    # Apply rotation (no rotation in this case)
+    rotated_u = uv_point.U + rotation_matrix[0]
+    rotated_v = uv_point.V + rotation_matrix[1]
+    
+    # Apply translation (identity translation matrix)
+    transformed_u = rotated_u + translation_vector[2][0]  # translation[2][0] should be 0
+    transformed_v = rotated_v + translation_vector[2][1]  # translation[2][1] should be 0
+    
+    return UV(transformed_u, transformed_v)
 
 
 
 
-def create_room_from_push_it_instance(doc, family_instance, levels_ascending):
+def create_room_from_push_it_instance(doc, family_instance, levels_ascending, rotation, translation):
     """
     Create a room in the Revit document.
     
@@ -39,9 +58,13 @@ def create_room_from_push_it_instance(doc, family_instance, levels_ascending):
     :type doc: Autodesk.Revit.DB.Document
     :param family_instance: The family instance to create the room from
     :type family_instance: Autodesk.Revit.DB.FamilyInstance
-    :return: The created room
-    :rtype: Autodesk.Revit.DB.Room
+    :param levels_ascending: The list of levels in the Revit document
+    :type levels_ascending: list
+
+    :return: Result class instance.
+    :rtype: Result
     """
+
     return_value = Result()
 
     try:
@@ -74,8 +97,42 @@ def create_room_from_push_it_instance(doc, family_instance, levels_ascending):
         # use the location point if there is no centroid
         placement_point = UV(family_instance.location_point[0], family_instance.location_point[1]) if family_instance.centroid is None else UV(family_instance.centroid[0], family_instance.centroid[1])
 
+        # apply the rotation and translation to the placement point ( works on shard coordinate projects only)
+        transformed_placement_uv = apply_transform_to_uv(uv_point=placement_point, rotation_matrix=rotation, translation_vector=translation)
+       
+        # define failure handling for the transaction ( roll back on any warnings or errors )
+        failure_handling_settings = FailureHandlingConfig(
+            roll_back_on_warning=False,
+            print_warnings=False,
+            roll_back_on_error=False,
+            print_errors=False,
+        )
+
+        # define the transaction manager overriding any warnings Revit might pop up when placing the room
+        def transaction_manager(transaction, action, *args, **kwargs):
+            """
+            Create a transaction manager for the Revit document.
+
+            :return: Result class instance.
+            :rtype: Result
+            """
+
+            # execute the transaction with failure handling
+            result_transaction = in_transaction_with_failure_handling(
+                transaction=transaction,
+                action=action,
+                failure_config=failure_handling_settings,
+            )
+            return  result_transaction
+
         # create the room
-        room_result = create_room (doc, level=placement_level, location_point = placement_point, modify_action = modify_action,)
+        room_result = create_room (
+            doc, 
+            level=placement_level, 
+            location_point = transformed_placement_uv,
+              modify_action = modify_action, 
+              transaction_manager = transaction_manager
+        )
 
         # update the return value
         return_value.update(room_result)
@@ -86,7 +143,22 @@ def create_room_from_push_it_instance(doc, family_instance, levels_ascending):
     return return_value
 
 
-def create_rooms_from_push_it_instances(doc, family_instances):
+def create_rooms_from_push_it_instances(doc, family_instances, rotation, translation):
+    """
+    Create rooms in the Revit document from pushIt family instances.
+
+    :param doc: The Revit document
+    :type doc: Autodesk.Revit.DB.Document
+    :param family_instances: The family instances to create the rooms from
+    :type family_instances: list
+    :param rotation: The rotation to apply to the family instances based on the source model
+    :type rotation: List float
+    :param translation: The translation to apply to the family instances based on the source model
+    :type translation: List float
+
+    :return: Result class instance.
+    :rtype: Result
+    """
 
     return_value = Result()
 
@@ -95,7 +167,7 @@ def create_rooms_from_push_it_instances(doc, family_instances):
         levels_ascending = get_levels_list_ascending(doc)  
         # create rooms in the Revit document
         for family_instance in family_instances:
-            room_result =  create_room_from_push_it_instance(doc, family_instance, levels_ascending)
+            room_result =  create_room_from_push_it_instance(doc, family_instance, levels_ascending, rotation, translation)
             return_value.update(room_result)
               
     except Exception as e:

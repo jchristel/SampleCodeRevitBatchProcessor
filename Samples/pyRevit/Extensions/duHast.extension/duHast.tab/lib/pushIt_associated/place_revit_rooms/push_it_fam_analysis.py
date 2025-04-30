@@ -26,7 +26,7 @@ from duHast.Utilities.Objects.result import Result
 
 from duHast.Revit.Common.Geometry.curve_loops import  get_curve_loop_centroid
 
-from Autodesk.Revit.DB import ElementId,GeometryElement,GeometryInstance, Options,Solid, XYZ
+from Autodesk.Revit.DB import ElementId,GeometryElement,GeometryInstance, Options,Solid, ViewDetailLevel, XYZ
 
 
 
@@ -113,7 +113,7 @@ def get_family_centroid(doc, family_instance):
         opt = Options()
         opt.ComputeReferences = True
         opt.IncludeNonVisibleObjects = True
-        opt.DetailLevel = doc.ActiveView.DetailLevel
+        opt.DetailLevel = ViewDetailLevel.Medium
         geom_element = revit_family_instance.get_Geometry(opt)
 
         # set up the centroid container

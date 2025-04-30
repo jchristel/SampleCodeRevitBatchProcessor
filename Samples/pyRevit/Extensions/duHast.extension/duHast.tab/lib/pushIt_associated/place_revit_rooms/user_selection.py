@@ -25,6 +25,8 @@ from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Links.links import get_link_docs
 
 
+from Autodesk.Revit.DB import Element
+
 
 def get_models_for_selection(doc):
     """
@@ -38,9 +40,10 @@ def get_models_for_selection(doc):
 
     docs = [doc]
      # get all linked models
-    link_docs = get_link_docs(doc, link_names_filter=[])
+    link_docs = get_link_docs(doc, link_names_filter=[], inverse_filter = True)
 
-    for link_doc in link_docs:
+    for link_doc_name, link_doc in link_docs.items():
+        
         # add the linked model to the list
         docs.append(link_doc)
 

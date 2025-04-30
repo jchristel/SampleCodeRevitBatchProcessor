@@ -20,6 +20,8 @@
 #
 #
 
+import clr
+
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.ExtensibleSchemas.extensible_schemas import create_schema, get_schema, does_schema_exist
 from duHast.Revit.ExtensibleSchemas.data_storage import create_project_data_storage, find_data_storage, update_entity_on_data_storage

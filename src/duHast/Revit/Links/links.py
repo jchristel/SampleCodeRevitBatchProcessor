@@ -96,27 +96,45 @@ def get_revit_link_type_from_instance(doc, link_instance):
             return lt
 
 
-def get_link_docs(doc, link_names_filter=[]):
+def get_link_docs(doc, link_names_filter=[], inverse_filter = False):
     """
     Gets the link documents for the specified link names.
+    
+    - If inverse filter is false only the link with names in the filter will be returned. ( an empty list will return no links! )
+    - If inverse filter is true only the link with names NOT in the filter will be returned. ( an empty list will return all links! )
 
     :param doc: The current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param link_names_filter: A list of link names to filter. Default is an empty list.
+    :param link_names_filter: A list of link names to filter. Default is an empty list. 
     :type link_names_filter: list[str]
+    :param inverse_filter: If True, only links not in the filter will be returned. Default is False.
+    :type inverse_filter: bool
 
     :return: A dictionary mapping link names to their respective link documents.
     :rtype: dict[str, Autodesk.Revit.DB.Document]
     """
+
     link_docs = {}
     link_instances = get_all_revit_link_instances(doc)
+
+    # loop over all link instancesand get the link type
     for link in link_instances:
         link_type = get_revit_link_type_from_instance(doc=doc, link_instance=link)
         link_name = Element.Name.GetValue(link_type)
-        if link_name in link_names_filter:
-            link_doc = link.GetLinkDocument()
-            if link_doc is not None:
-                link_docs[link_name] = link.GetLinkDocument()
+
+        # check if the filter is set to inverse
+        if inverse_filter:
+            # only links not in the filter will be returned
+            if link_name not in link_names_filter:
+                link_doc = link.GetLinkDocument()
+                if link_doc is not None:
+                    link_docs[link_name] = link.GetLinkDocument()
+        else:
+            # only links in the filter will be returned
+            if link_name in link_names_filter:
+                link_doc = link.GetLinkDocument()
+                if link_doc is not None:
+                    link_docs[link_name] = link.GetLinkDocument()
     return link_docs
 
 

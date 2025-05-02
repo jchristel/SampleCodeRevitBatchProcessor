@@ -236,6 +236,7 @@ def export_pdf_dwg_entry(doc, output, forms):
                 # check for cancel
                 if pb.cancelled:
                     return_value.update_sep(False, "User cancelled.")
+                    break
 
     except Exception as e:
         # handle any exceptions that occur during the export process

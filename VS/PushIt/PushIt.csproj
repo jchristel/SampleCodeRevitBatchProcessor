@@ -134,6 +134,7 @@
     <Compile Include="Commands\UpdateFromChangedCategoriesAsyncCommand.cs" />
     <Compile Include="Commands\WipeSelectedRevitRoomInstancesAsyncCommand.cs" />
     <Compile Include="Commands\WipeStaleDataRevitAsyncCommand.cs" />
+    <Compile Include="Converters\CountConverter.cs" />
     <Compile Include="Exceptions\CategoryConflictException.cs" />
     <Compile Include="Exceptions\RoomConflictException.cs" />
     <Compile Include="Main.cs" />

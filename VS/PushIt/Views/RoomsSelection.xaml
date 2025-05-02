@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:duHastNet.PushIt.Views"
              xmlns:utilsViews ="clr-namespace:duHastNet.Utils.WPF.Views;assembly=Utils.23.0.0.3"
              xmlns:converters="clr-namespace:duHastNet.Utils.WPF.Converters;assembly=Utils.23.0.0.3"
+             xmlns:pushItConverter ="clr-namespace:duHastNet.PushIt.Converters"
              xmlns:spinner="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinner"
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="800">
@@ -51,10 +52,11 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <!--boolean converters-->
+        <!--converters-->
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <pushItConverter:CountConverter x:Key="CountConverter"/>
     </UserControl.Resources>
     <Grid Margin="10 10 10 10">
         <!-- Add your UI elements here -->

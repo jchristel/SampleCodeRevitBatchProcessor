@@ -190,10 +190,6 @@
       <Project>{06b86732-e929-4467-8ce5-e98e637bf5e8}</Project>
       <Name>RevitUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Utils\Utils.csproj">
-      <Project>{d0ee5cd0-bc5e-44c8-901d-520b96291080}</Project>
-      <Name>Utils</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\MainWindow.xaml">

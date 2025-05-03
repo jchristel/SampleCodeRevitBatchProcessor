@@ -134,10 +134,6 @@
       <Name>RevitUtils</Name>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Utils\Utils.csproj">
-      <Project>{d0ee5cd0-bc5e-44c8-901d-520b96291080}</Project>
-      <Name>Utils</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

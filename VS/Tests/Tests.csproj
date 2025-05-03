@@ -29,7 +29,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PushIt\PushIt.csproj" />
-    <ProjectReference Include="..\Utils\Utils.csproj" />
   </ItemGroup>
 
   <ItemGroup>

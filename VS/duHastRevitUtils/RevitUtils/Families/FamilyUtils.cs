@@ -1,0 +1,78 @@
+﻿//
+//License:
+//
+//
+// Revit Batch Processor Sample Code
+//
+// BSD License
+// Copyright 2025, Jan Christel
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+// - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+// - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+// - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+//
+// This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+// In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+// or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+//
+//
+//
+
+
+using System.Collections.Generic;
+using Autodesk.Revit.DB;
+
+namespace duHastNet.RevitUtils.Families
+{
+    public static class FamilyUtils
+    {
+
+        /// <summary>
+        /// Get all family instances in the model.
+        /// </summary>
+        /// <param name="doc">The current model document.</param>
+        /// <param name="categories">A list of built in categories of which to return family instances from.</param>
+        /// <returns>A list of family instances belonging to the supplied categories. An empty list if none are present in the model.</returns>
+        public static List<FamilyInstance> GetFamilyInstancesByBuiltInCategories(Document doc, List<BuiltInCategory> categories)
+        {
+            List<FamilyInstance> familyInstances = new List<FamilyInstance>();
+            ElementMulticategoryFilter filter = new ElementMulticategoryFilter(categories);
+            FilteredElementCollector col = new FilteredElementCollector(doc).OfClass(typeof(FamilyInstance)).WherePasses(filter);
+            
+            foreach (Element instance in col)
+            {
+                familyInstances.Add(instance as FamilyInstance);
+            }
+
+            return familyInstances;
+        }
+
+        /// <summary>
+        /// Returns all families in the model.
+        /// </summary>
+        /// <param name="doc">The current model document.</param>
+        /// <returns>A list of all families in the model. An empty list if none are present in the model.</returns>
+        public static IList<Element> GetAllFamilies(Document doc)
+        {
+            return new FilteredElementCollector(doc).OfClass(typeof(Family)).ToElements();
+        }
+
+        /// <summary>
+        /// Returns the family types of a family.
+        /// </summary>
+        /// <param name="doc">The current model document.</param>
+        /// <param name="family">The family to get the types from.</param>
+        /// <returns>A list of family types of the supplied family. An empty list if none are present in the model.</returns>
+        public static List<FamilySymbol> GetFamilyTypes(Document doc, Family family)
+        {
+            List<FamilySymbol> familyTypes = new List<FamilySymbol>();
+            foreach (ElementId familySybmolId in family.GetFamilySymbolIds()){ 
+                familyTypes.Add(doc.GetElement(familySybmolId) as FamilySymbol);
+            }
+            return familyTypes;
+        }
+    }
+}

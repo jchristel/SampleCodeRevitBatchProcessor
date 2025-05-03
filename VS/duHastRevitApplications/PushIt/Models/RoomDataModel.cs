@@ -34,6 +34,11 @@ namespace duHastNet.PushIt.Models
         private List<RoomsRevit> _matchingRevitRooms;
 
         /// <summary>
+        /// List of matching rooms which are result of a split operation
+        /// </summary>
+        private List<RoomsRevit> _matchingSplitRevitRooms;
+
+        /// <summary>
         /// Room ID, must be unique
         /// </summary>
         public RoomDataProperty Id { get; set; }
@@ -46,18 +51,53 @@ namespace duHastNet.PushIt.Models
         public List<RoomDataProperty> Properties { get => _properties;}
 
         public List<RoomsRevit> MatchingRevitRooms { get => _matchingRevitRooms; set => _matchingRevitRooms = value; }
+        public List<RoomsRevit> MatchingSplitRevitRooms { get => _matchingSplitRevitRooms; set => _matchingSplitRevitRooms = value; }
 
+        /// <summary>
+        /// Clears the list of matching rooms
+        /// </summary>
         public void ClearMatchingRevitRooms()
         {
             _matchingRevitRooms.Clear();
         }
 
+        /// <summary>
+        /// Clears the list of matching rooms which are result of a split operation
+        /// </summary>
+        public void ClearMatchingSplitRevitRooms()
+        {
+            _matchingSplitRevitRooms.Clear();
+        }
+
+        /// <summary>
+        /// Clears the list of matching rooms and matching split rooms
+        /// </summary>
+        public void ClearAllMatchingRevitRooms()
+        {
+            ClearMatchingRevitRooms();
+            ClearMatchingSplitRevitRooms();
+        }
+
+        /// <summary>
+        /// Adds a matching room to the list of matching rooms
+        /// </summary>
         public void AddMatchingRevitRoom(RoomsRevit revitRoom)
         {
             _matchingRevitRooms.Add(revitRoom);
         }
 
+        /// <summary>
+        /// Adds a matching room to the list of matching split rooms
+        /// </summary>
+        public void AddMatchingSplitRevitRoom(RoomsRevit revitRoom)
+        {
+            _matchingSplitRevitRooms.Add(revitRoom);
+        }
 
+
+        /// <summary>
+        /// returns a list of unique values for a given property from each matching room
+        /// </summary>
         public List<string> GetUniquePropertyValueFromEachMatchingRevitRoom(string propertyName)
         {
             List<string> values = new List<string>();
@@ -74,14 +114,58 @@ namespace duHastNet.PushIt.Models
         }
 
         /// <summary>
+        /// Returns a list of unique values for a given property from each matching split room
+        /// </summary>
+        public List<string> GetUniquePropertyValueFromEachMatchingSplitRevitRoom(string propertyName)
+        {
+            List<string> values = new List<string>();
+            foreach (Models.RoomsRevit revitRoom in MatchingSplitRevitRooms)
+            {
+                Models.RoomDataProperty property = revitRoom.Properties.Find(x => x.Name == propertyName);
+                if (property != null)
+                {
+                    if (!values.Contains(property.Value))
+                        values.Add(property.Value);
+                }
+            }
+            return values;
+        }
+
+        /// <summary>
+        /// Returns a list of unique values for a given property from all matching rooms and matching split rooms
+        /// </summary>
+        public List<string> GetUniquePropertyValueFromAllMatchingRevitRoom(string propertyName)
+        {
+            List<string> valuesMatchingRooms = GetUniquePropertyValueFromEachMatchingRevitRoom(propertyName);
+            List<string> valuesMatchingSplitRooms = GetUniquePropertyValueFromEachMatchingSplitRevitRoom(propertyName);
+            List<string> values = new List<string>();
+            
+            // add the values from the matching rooms
+            foreach (string value in valuesMatchingRooms)
+            {
+                if (!values.Contains(value))
+                    values.Add(value);
+            }
+
+            // add the values from the matching split rooms
+            foreach (string value in valuesMatchingSplitRooms)
+            {
+                if (!values.Contains(value))
+                    values.Add(value);
+            }
+            
+            return values;
+        }
+
+        /// <summary>
         /// Update a read property
         /// </summary>
         /// <param name="propertyName"></param>
         /// <param name="value"></param>
         public void UpdateReadProperties()
         {
-            // if there is only one matching room
-            if (MatchingRevitRooms.Count == 1)
+            // if there is only one matching room and no matching split rooms, update the read only properties from the matching room
+            if (MatchingRevitRooms.Count == 1 && MatchingSplitRevitRooms.Count == 0)
             {
                 Models.RoomsRevit revitRoom = MatchingRevitRooms[0];
                 foreach (Models.RoomDataProperty property in Properties)
@@ -92,7 +176,8 @@ namespace duHastNet.PushIt.Models
                     }
                 }
             }
-            else if (MatchingRevitRooms.Count == 0)
+            // if ther are no matching rooms there cant (should not be ?? )be any matching split rooms
+            else if (MatchingRevitRooms.Count == 0 && MatchingSplitRevitRooms.Count == 0)
             {
                 // if there is no matching room, clear the read only properties
                 foreach (Models.RoomDataProperty property in Properties)
@@ -114,7 +199,7 @@ namespace duHastNet.PushIt.Models
                         // otherwise display 'varies'
 
                         // get the unique values for this property from each matching room
-                        List<string> propertyValues = GetUniquePropertyValueFromEachMatchingRevitRoom(property.Name);
+                        List<string> propertyValues = GetUniquePropertyValueFromAllMatchingRevitRoom(property.Name);
 
                         //check if more than one value
                         if (propertyValues.Count == 1)
@@ -135,7 +220,7 @@ namespace duHastNet.PushIt.Models
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Conflicts(RoomDataModel other)
+        public bool ConflictsById(RoomDataModel other)
         {
             if (other == null) return false;
             else if (other.Id.Value != Id.Value) { return false; }
@@ -143,6 +228,50 @@ namespace duHastNet.PushIt.Models
             {
                 return true;
             }
+        }
+
+        /// <summary>
+        /// Check if room conflicts by properties
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>True if all properties match, otherwise False</returns>
+        public bool ConflictsByProperties(RoomDataModel other)
+        {
+            if (other == null) return false;
+            else if (other.Properties.Count != Properties.Count) { return false; }
+            else
+            {
+                foreach (var property in Properties)
+                {
+                    if (property.Value != other.Properties.Find(x => x.Name == property.Name).Value)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Returns a string of all the properties that are not read only in ascending order
+        /// </summary>
+        public string GetWritePropertiesAsString()
+        {
+            string properties = "";
+
+            //get the properties that are not read only in ascending order
+            var sortedProperties = Properties.FindAll(x => !x.IsReadOnly);
+            sortedProperties.Sort((x, y) => x.Name.CompareTo(y.Name));
+
+            //loop through the properties and add them to the string
+            foreach (var property in sortedProperties)
+            {
+                if (!property.IsReadOnly)
+                {
+                    properties += property.Name + ": " + property.Value + "\n";
+                }
+            }
+            return properties;
         }
 
         public RoomDataModel()
@@ -159,6 +288,9 @@ namespace duHastNet.PushIt.Models
 
             // initialize the list of matching rooms
             _matchingRevitRooms = new List<RoomsRevit>();
+
+            // initialize the list of matching split rooms
+            _matchingSplitRevitRooms = new List<RoomsRevit>();
         }
     }
 }

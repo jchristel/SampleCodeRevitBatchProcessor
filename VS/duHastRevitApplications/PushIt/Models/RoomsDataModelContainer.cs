@@ -30,14 +30,24 @@ namespace duHastNet.PushIt.Models
 {
     public class RoomsDataModelContainer
     {
+        /// <summary>
+        /// Rooms added throught the Schedule Of Accomodation load process
+        /// </summary> 
         public List<Models.RoomDataModel> _rooms;
+
+        /// <summary>
+        /// Rooms added through the Push It UI which are in addition to the rooms from the Schedule Of Accomodation
+        /// These rooms have as ID the word "New"
+        /// The room ID is not unique, but the combined values of room properties marked as write are unique
+        /// </summary>
+        public List<Models.RoomDataModel> _newRooms;
 
         public void AddRoom(Models.RoomDataModel room)
         {
             //check if rooms are conflicting by id value
             foreach (var existingRoom in _rooms)
             {
-                if (existingRoom.Conflicts(room))
+                if (existingRoom.ConflictsById(room))
                 {
                     // throw an exception
                     throw new Exceptions.RoomConflictException(
@@ -48,16 +58,80 @@ namespace duHastNet.PushIt.Models
             _rooms.Add(room);
                 
         }
+
+        /// <summary>
+        /// Adds a new room to the list of new rooms if the properties are not conflicting with any other new room
+        /// </summary>
+        /// <param name="room"></param>
+        public void AddNewRoom(Models.RoomDataModel room)
+        {
+            //check if rooms are conflicting by id value
+            foreach (var existingRoom in _newRooms)
+            {
+                if (existingRoom.ConflictsByProperties(room))
+                {
+                    // there is a good chance that the room is already in the list
+                    // if that is the case ignore the duplicate
+                    return;
+
+                }
+            }
+            _newRooms.Add(room);
+        }
+
+        /// <summary>
+        /// Returns all rooms from the Schedule Of Accomodation
+        /// </summary>
+        /// <returns></returns>
         public List<Models.RoomDataModel> GetAllRooms()
         {
             return _rooms;
         }
 
+        /// <summary>
+        /// returns all new rooms added through the Push It UI
+        /// </summary>
+        public List<Models.RoomDataModel> GetAllNewRooms()
+        {
+            return _newRooms;
+        }
+
+        /// <summary>
+        /// Returns all rooms from the Schedule Of Accomodation and all new rooms added through the Push It UI
+        /// </summary>
+        public List<Models.RoomDataModel> GetAllRoomsCombined()
+        {
+            return _rooms.Concat(_newRooms).ToList();
+        }
+
+        /// <summary>
+        /// Clears the list of rooms from the Schedule Of Accomodation
+        /// </summary>
         public void ClearRooms() 
         {
             _rooms = new List<Models.RoomDataModel>();
         }
 
+        /// <summary>
+        /// Clears the list of new rooms added through the Push It UI
+        /// </summary>
+        public void ClearNewRooms()
+        {
+            _newRooms = new List<Models.RoomDataModel>();
+        }
+
+        /// <summary>
+        /// Clears the list of new rooms added through the Push It UI and the list of rooms from the Schedule Of Accomodation
+        /// </summary>
+        public void ClearAllRooms()
+        {
+            ClearRooms();
+            ClearNewRooms();
+        }
+
+        /// <summary>
+        /// Removes the placed room from the list of rooms from the Schedule Of Accomodation
+        /// </summary>
         public void RemovePlacedRevitRoom(int revitElementId)
         {
             foreach (var room in _rooms)
@@ -77,11 +151,53 @@ namespace duHastNet.PushIt.Models
             }
         }
 
+        /// <summary>
+        /// Removes the placed room from the list of new rooms added through the Push It UI
+        /// </summary>
+        /// <param name="propertyComparison">All write properties and their values in a string</param>
+        /// <param name="revitElementId">The element Id of the family representing this room</param>
+        public void RemoveNewPlacedRevitRoom(string propertyComparison, int revitElementId)
+        {
+            foreach (var room in _newRooms)
+            {
+                if (room.GetWritePropertiesAsString() == propertyComparison)
+                {
+                    // remove the placed room from the data model
+                    room.MatchingRevitRooms.RemoveAll(x => x.RevitElementId == revitElementId);
+                    // update rooms read-only properties from revit room
+                    room.UpdateReadProperties();
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds the placed room to the list of rooms from the Schedule Of Accomodation
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="revitRoom"></param>
         public void AddPlacedRevitRoom(string roomId, Models.RoomsRevit revitRoom)
         {
             foreach (var room in _rooms)
             {
                 if (room.Id.Value == roomId)
+                {
+                    // add the placed room to the data model
+                    room.AddMatchingRevitRoom(revitRoom);
+                    // update rooms read-only properties from revit room
+                    room.UpdateReadProperties();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds the placed room to the list of new rooms added through the Push It UI
+        /// </summary>
+        public void AddPlacedNewRevitRoom(string propertyComparison, Models.RoomsRevit revitRoom)
+        {
+            foreach (var room in _newRooms)
+            {
+                if (room.GetWritePropertiesAsString() == propertyComparison)
                 {
                     // add the placed room to the data model
                     room.AddMatchingRevitRoom(revitRoom);

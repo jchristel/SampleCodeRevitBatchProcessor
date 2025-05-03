@@ -141,6 +141,7 @@
     <Compile Include="Commands\WipeSelectedRevitRoomInstancesAsyncCommand.cs" />
     <Compile Include="Commands\WipeStaleDataRevitAsyncCommand.cs" />
     <Compile Include="Converters\CountConverter.cs" />
+    <Compile Include="Converters\EnumToBooleanConverter.cs" />
     <Compile Include="Exceptions\CategoryConflictException.cs" />
     <Compile Include="Exceptions\RoomConflictException.cs" />
     <Compile Include="Main.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="RevitActions\WipeStaleRoomData.cs" />
     <Compile Include="Utilities\IRoomProperty.cs" />
     <Compile Include="Utilities\PropertyChangedEventNames.cs" />
+    <Compile Include="Utilities\PushMode.cs" />
     <Compile Include="Utilities\ReadRoomsData.cs" />
     <Compile Include="Utilities\Revit\CustomExternalEvent.cs" />
     <Compile Include="Utilities\Revit\DesignSetAndOption.cs" />

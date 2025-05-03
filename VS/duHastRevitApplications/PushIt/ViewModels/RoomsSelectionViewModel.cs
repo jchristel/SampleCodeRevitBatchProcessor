@@ -22,6 +22,7 @@
 //
 
 
+using Autodesk.Revit.DB;
 using duHastNet.PushIt.Utilities;
 using duHastNet.Utils.WPF.Commands;
 using System;
@@ -101,6 +102,55 @@ namespace duHastNet.PushIt.ViewModels
             }
         }
 
+        #region push modus
+
+        /// the mode of operation for the push it command (push, push and split, push and  new)
+        private PushIt.Utilities.PushMode _pushOperationMode;
+
+        /// <summary>
+        /// property to set the push operation mode through the ui
+        /// </summary>
+        public PushIt.Utilities.PushMode PushOperationMode
+        {
+            get => _pushOperationMode;
+            set
+            {
+                _pushOperationMode = value;
+
+                // set the button text
+                if (_pushOperationMode == PushIt.Utilities.PushMode.Push)
+                {
+                    PushItButtonText = "Push It";
+                }
+                else if (_pushOperationMode == PushIt.Utilities.PushMode.New)
+                {
+                    PushItButtonText = "Push New Room";
+                }
+                else
+                {
+                    PushItButtonText = "Split It";
+                }
+
+                OnPropertyChanged(nameof(PushOperationMode));
+            }
+        }
+
+        //default button text for push it mode
+        string _pushItButtonText = "Push It";
+
+        //button text for push it mode
+        public string PushItButtonText
+        {
+            get => _pushItButtonText;
+            set
+            {
+                _pushItButtonText = value;
+                OnPropertyChanged(nameof(PushItButtonText));
+            }
+        }
+
+        #endregion push modus
+
         #region settings
 
         private string _dataFilePath;
@@ -169,13 +219,12 @@ namespace duHastNet.PushIt.ViewModels
                 _safetyOffMode = value;
 
                 // set the button text
-                _safetyOffButtonText = value ? "Safety off" : "Safety on";
+                SafetyOffButtonText = value ? "Safety off" : "Safety on";
 
                 //debug
                 //IsWaitingForRevitCommandToFinish = value;
 
                 // notify ui of changes
-                OnPropertyChanged(nameof(SafetyOffButtonText));
                 OnPropertyChanged(nameof(SafetyOffMode));
             }
         }
@@ -184,6 +233,11 @@ namespace duHastNet.PushIt.ViewModels
         public string SafetyOffButtonText
         {
             get => _safetyOffButtonText;
+            set
+            {
+                _safetyOffButtonText = value;
+                OnPropertyChanged(nameof(SafetyOffButtonText));
+            }
         }
 
         // the currently active design set name
@@ -446,6 +500,11 @@ namespace duHastNet.PushIt.ViewModels
                         dataTable.Columns.Add("Id");
                         continue;
                     }
+                    else if (column == "Count Split")
+                    {
+                        dataTable.Columns.Add("Count Split");
+                        continue;
+                    }
                     else
                     {
                         // Add a column per property
@@ -487,6 +546,8 @@ namespace duHastNet.PushIt.ViewModels
 
                 // Add the count column
                 dataTable.Columns.Add("Count");
+                // Add the count split column
+                dataTable.Columns.Add("Count Split");
             }
 
             
@@ -506,6 +567,11 @@ namespace duHastNet.PushIt.ViewModels
                         if (column == "Count")
                         {
                             row["Count"] = roomModelInstance.MatchingRevitRooms.Count;
+                            continue;
+                        }
+                        else if (column == "Count Split")
+                        {
+                            row["Count Split"] = roomModelInstance.MatchingSplitRevitRooms.Count;
                             continue;
                         }
                         else if (column == "Id")
@@ -542,6 +608,7 @@ namespace duHastNet.PushIt.ViewModels
                         if (prop.ShowInUI) { row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : ""; }
                     }
                     row["Count"] = roomModelInstance.MatchingRevitRooms.Count;
+                    row["Count Split"] = roomModelInstance.MatchingSplitRevitRooms.Count;
                     // Add the row to the data table
                     dataTable.Rows.Add(row);
                 }
@@ -860,6 +927,9 @@ namespace duHastNet.PushIt.ViewModels
                 roomsSelectionViewModel: this,
                 revitDataModel: _revitDataModel
             );
+
+            // set the default push operation mode to push
+            PushOperationMode = PushIt.Utilities.PushMode.Push;
 
             //update rooms data with data from revit through an external event
             RefreshGUICommand.Execute(null);

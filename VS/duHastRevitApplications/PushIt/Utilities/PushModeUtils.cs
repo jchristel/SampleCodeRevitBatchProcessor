@@ -21,14 +21,51 @@
 //
 //
 
-
+using System;
 namespace duHastNet.PushIt.Utilities
 {
-    public interface IRoomProperty
+    public class PushModeUtils
     {
-        string Value { get; }
-        string Name { get; }
-        string ParameterGUID { get; }
-        string ParameterName { get; }
+
+        public static string GetPushModeString(PushMode pushOperationMode)
+        {
+            switch (pushOperationMode)
+            {
+                case PushMode.Push:
+                    return "PUSH";
+                case PushMode.Split:
+                    return "SPLIT";
+                case PushMode.New:
+                    return "NEW";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(pushOperationMode), pushOperationMode, null);
+            }
+        }
+
+        public static string GetSplitModeIdValue(string idValue)
+        {
+            //check if the id value is empty
+            if (string.IsNullOrEmpty(idValue))
+            {
+                return "SPLIT";
+            }
+            else
+            {
+                return idValue+"::"+ GetPushModeString(PushMode.Split);
+            }
+        }
+
+        public static string GetIdWithoutSplitModeIndicator(string idValue)
+        {
+            //check if the id value is empty
+            if (string.IsNullOrEmpty(idValue))
+            {
+                return idValue;
+            }
+            else
+            {
+                return idValue.Split(new string[] { "::" }, StringSplitOptions.None)[0];
+            }
+        }
     }
 }

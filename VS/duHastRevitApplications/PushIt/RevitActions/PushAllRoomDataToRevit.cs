@@ -36,6 +36,7 @@ namespace duHastNet.PushIt.RevitActions
         /// <returns></returns>
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
+            // get all rooms in the model ( these rooms have their equivalent revit rooms already attached )??
             List<Models.RoomDataModel> roomsDataModel = RevitModel.GetAllRooms();
 
             if (roomsDataModel.Count == 0)
@@ -79,8 +80,10 @@ namespace duHastNet.PushIt.RevitActions
             // build a dictioanry of family instances that contain valid data ( valid data is a family instance where the room id has a match in the rooms data model)
             // the dictionary key is the room id and the value is a tuple of the room data model and a list of revit family instances
             Dictionary<string,(RoomDataModel,List < FamilyInstance>)> currentFamilyInstances = new Dictionary<string, (RoomDataModel, List<FamilyInstance>)>();
+            
             foreach (var revitRoomInstance in revitRooms)
             {
+                // check a pushed room ( id matches the room data model id)
                 if (roomsDataModel.Exists(x => x.Id.Value == revitRoomInstance.Id.Value))
                 {
                     if (currentFamilyInstances.ContainsKey(revitRoomInstance.Id.Value))
@@ -94,6 +97,38 @@ namespace duHastNet.PushIt.RevitActions
                             roomsDataModel.Find(x => x.Id.Value == revitRoomInstance.Id.Value), 
                             new List<FamilyInstance> { doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance }
                         );
+                    }
+                }
+                else if (revitRoomInstance.Id.Value == "NEW")
+                {
+                    // new rooms are not supported by this operation
+                }
+                else if (revitRoomInstance.Id.Value.Contains("SPLIT"))
+                {
+                    //a split room, remove the split from the id value
+                    string idValue = revitRoomInstance.Id.Value.Replace("::SPLIT", "");
+
+                    if (roomsDataModel.Exists(x => x.Id.Value == idValue))
+                    {
+                        // get the data model of the original room
+                        var originalRoom = roomsDataModel.Find(x => x.Id.Value == idValue);
+
+                        //make a copy of the original room and update the id to include split
+                        
+
+                        // add the split room to the family instances
+                        if (currentFamilyInstances.ContainsKey(idValue))
+                        {
+                            //add to existing key
+                            currentFamilyInstances[idValue].Item2.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
+                        }
+                        else
+                        {
+                            currentFamilyInstances[idValue] = (
+                                roomsDataModel.Find(x => x.Id.Value == idValue),
+                                new List<FamilyInstance> { doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance }
+                            );
+                        }
                     }
                 }
             }

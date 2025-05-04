@@ -148,6 +148,17 @@ namespace duHastNet.PushIt.Models
 
                     break;
                 }
+                //check if any matching split rooms...
+                else if ( room.MatchingSplitRevitRooms.Any(x=>x.RevitElementId == revitElementId))
+                {
+                    // remove the placed room from the data model
+                    room.MatchingSplitRevitRooms.RemoveAll(x => x.RevitElementId == revitElementId);
+
+                    // update rooms read-only properties from revit room
+                    room.UpdateReadProperties();
+
+                    break;
+                }
             }
         }
 
@@ -178,12 +189,27 @@ namespace duHastNet.PushIt.Models
         /// <param name="revitRoom"></param>
         public void AddPlacedRevitRoom(string roomId, Models.RoomsRevit revitRoom)
         {
+            //get the room id without the split mode indicator
+            string roomIdWithoutSplit = Utilities.PushModeUtils.GetIdWithoutSplitModeIndicator(roomId);
+
             foreach (var room in _rooms)
             {
-                if (room.Id.Value == roomId)
+                // check if the room id is the same as the one in the data model
+                if (room.Id.Value == roomIdWithoutSplit)
                 {
-                    // add the placed room to the data model
-                    room.AddMatchingRevitRoom(revitRoom);
+                    //check if this is a standard room ( room id is the same as the id without split mode indicator)
+                    if (roomId==roomIdWithoutSplit)
+                    {
+                        // add the placed room to the data model
+                        room.AddMatchingRevitRoom(revitRoom);
+                    }
+                    else
+                    {
+                        //must be a split room
+                        // add the placed room to the data model
+                        room.AddMatchingSplitRevitRoom(revitRoom);
+                    }
+
                     // update rooms read-only properties from revit room
                     room.UpdateReadProperties();
                 }

@@ -45,6 +45,25 @@ namespace duHastNet.PushIt.Models
         public bool DesignOptionIsPrimary { get => _designOptionIsPrimary; set => _designOptionIsPrimary = value; }
         public int RevitElementId { get => _revitElementId; set => _revitElementId = value; }
 
+        public string GetWritePropertiesAsString()
+        {
+            string properties = "";
+
+            //get the properties that are not read only in ascending order
+            var sortedProperties = Properties.FindAll(x => !x.IsReadOnly);
+            sortedProperties.Sort((x, y) => x.Name.CompareTo(y.Name));
+
+            //loop through the properties and add them to the string
+            foreach (var property in sortedProperties)
+            {
+                if (!property.IsReadOnly)
+                {
+                    properties += property.Name + ": " + property.Value + "\n";
+                }
+            }
+            return properties;
+        }
+
         public RoomsRevit() { }
 
         public RoomsRevit(Models.RoomDataProperty id,List<Models.RoomDataProperty> properties, string designSet,string designOption,bool designOptionIsPrimary,int revitElementId)

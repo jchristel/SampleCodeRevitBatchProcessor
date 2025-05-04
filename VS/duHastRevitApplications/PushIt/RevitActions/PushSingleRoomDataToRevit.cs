@@ -56,7 +56,7 @@ namespace duHastNet.PushIt.RevitActions
                     doc: doc,
                     familyInstance: _pushTarget as Autodesk.Revit.DB.FamilyInstance,
                     roomData: _roomToPush,
-                    safetyOff: _roomsSelectionViewModel.SafetyOffMode,
+                    pushOperationMode: _roomsSelectionViewModel.PushOperationMode,
                     AddMessage: AddMessage
                 );
 
@@ -81,12 +81,43 @@ namespace duHastNet.PushIt.RevitActions
                 //only remove previous data if there is a valid room
                 if (modelDataPrevious != null)
                 {
-                    // remove the previous Revit room from the data model before adding it back in with new data
-                    RevitModel.RemovePlacedRevitRoom(modelDataPrevious.RevitElementId);
+                    //depending on the push operation mode, remove the previous room from the data model
+                    if (_roomsSelectionViewModel.PushOperationMode == duHastNet.PushIt.Utilities.PushMode.Push || _roomsSelectionViewModel.PushOperationMode == duHastNet.PushIt.Utilities.PushMode.Split)
+                    {
+                        // remove the previous Revit room from the data model before adding it back in with new data
+                        RevitModel.RemovePlacedRevitRoom(modelDataPrevious.RevitElementId);
+                    }
+                    else if (_roomsSelectionViewModel.PushOperationMode == duHastNet.PushIt.Utilities.PushMode.New)
+                    {
+                        // remove the previous Revit room from the data model before adding it back in with new data
+                        RevitModel.RemovePlacedNewRevitRoom(
+                            propertyComparison: modelDataPrevious.GetWritePropertiesAsString(),
+                            revitElementId: modelDataPrevious.RevitElementId
+                        );
+                    }
                 }
 
-                // add the updated Revit room to the data model
-                RevitModel.AddPlacedRevitRoom(_roomToPush.Id.Value, modelDataUpdated);
+                //depending on the push operation mode, add the updated Revit room to the data model
+                if (_roomsSelectionViewModel.PushOperationMode == duHastNet.PushIt.Utilities.PushMode.Push)
+                {
+                    // add the updated Revit room to the data model
+                    RevitModel.AddPlacedRevitRoom(_roomToPush.Id.Value, modelDataUpdated);
+                }
+                else if(_roomsSelectionViewModel.PushOperationMode == duHastNet.PushIt.Utilities.PushMode.Split)
+                {
+                    // add the updated Revit room to the data model but mkae sure its added as a split room
+                    var splitId = Utilities.PushModeUtils.GetSplitModeIdValue(_roomToPush.Id.Value);
+                    RevitModel.AddPlacedRevitRoom(splitId, modelDataUpdated);
+                }
+                else if (_roomsSelectionViewModel.PushOperationMode == duHastNet.PushIt.Utilities.PushMode.New)
+                {
+                    // update the existing Revit room in the data model
+                    RevitModel.AddPlacedNewRevitRoom(
+                        propertyComparison: modelDataUpdated.GetWritePropertiesAsString(),
+                        revitRoom: modelDataUpdated
+                    );
+                }
+                
             }
             catch (System.Exception ex)
             {

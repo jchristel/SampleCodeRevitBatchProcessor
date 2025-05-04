@@ -136,12 +136,30 @@ namespace duHastNet.PushIt.Commands
             {
                 return false;
             }
-
-            // if safety off mode enabled this command is always available
-            if (_roomsSelectionViewModel.SafetyOffMode) { return true; }
-
+            // if push mode is split and a room has been pushed already allow split mode
+            else if (_roomsSelectionViewModel.PushOperationMode == PushMode.Split && 
+                !_roomsSelectionViewModel.IsMatchingRevitRoomsEmpty)
+            { 
+                return true; 
+            }
+            // if push mode is new allow push mode
+            else if (_roomsSelectionViewModel.PushOperationMode == PushMode.New) 
+            { 
+                return true; 
+            }
+            //if standard push mode check if a room is selected
+            else if (_roomsSelectionViewModel.PushOperationMode == PushMode.Push && 
+                _roomsSelectionViewModel.IsMatchingRevitRoomsEmpty)
+            {
+                return base.CanExecute(parameter);
+            }
+            else
+            {
+                return false;
+            }
             // check if IsMatchingRevitRoomsEmpty is true and call the base CanExecute method
-            return _roomsSelectionViewModel.IsMatchingRevitRoomsEmpty && base.CanExecute(parameter);
+            // 
+            //return _roomsSelectionViewModel.IsMatchingRevitRoomsEmpty && base.CanExecute(parameter);
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)

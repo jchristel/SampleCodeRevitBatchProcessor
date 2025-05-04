@@ -72,9 +72,23 @@ namespace duHastNet.PushIt.Models
             _roomsContainer.RemovePlacedRevitRoom(revitElementId);
         }
 
+
+        public void RemovePlacedNewRevitRoom(string propertyComparison, int revitElementId)
+        {
+             _roomsContainer.RemoveNewPlacedRevitRoom(
+                propertyComparison: propertyComparison,
+                revitElementId: revitElementId
+             );
+        }
+
         public void AddPlacedRevitRoom(string roomId, Models.RoomsRevit revitRoom)
         {
             _roomsContainer.AddPlacedRevitRoom(roomId, revitRoom);
+        }
+
+        public void AddPlacedNewRevitRoom(string propertyComparison, Models.RoomsRevit revitRoom)
+        {
+            _roomsContainer.AddPlacedNewRevitRoom(propertyComparison, revitRoom);
         }
 
         public void LoadRoomsData()

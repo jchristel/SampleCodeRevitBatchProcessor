@@ -36,9 +36,9 @@ namespace duHastNet.PushIt.Utilities.Revit
         /// <param name="doc"></param>
         /// <param name="familyInstance"></param>
         /// <param name="roomData"></param>
-        /// <param name="safetyOff"></param>
+        /// <param name="pushMode"></param>
         /// <returns></returns>
-        public static bool UpdateProperties(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff, Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
+        public static bool UpdateProperties(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, duHastNet.PushIt.Utilities.PushMode pushMode, Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
         {
 
             // set up a variable to store the name of the property that is being updated in case of an exception
@@ -47,12 +47,14 @@ namespace duHastNet.PushIt.Utilities.Revit
             try
             {
                 string room_id = roomData.Id.Value;
-                if (safetyOff)
+                if (pushMode == PushMode.Split)
                 {
-                    // in the moment, this will just push the same id again without changing it
-                    //string userName = doc.Application.Username;
-                    //string dateStamp = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss");
-                    // room_id = $"{room_id}::{userName}<{dateStamp}>";
+
+                    room_id = PushModeUtils.GetSplitModeIdValue(room_id);
+                }
+                else if (pushMode == PushMode.New)
+                {
+                    room_id = PushModeUtils.GetPushModeString(pushMode);
                 }
 
                 // set the room id parameter
@@ -103,11 +105,11 @@ namespace duHastNet.PushIt.Utilities.Revit
         /// <param name="doc"></param>
         /// <param name="familyInstance"></param>
         /// <param name="roomData"></param>
-        /// <param name="safetyOff"></param>
+        /// <param name="pushOperationMode"></param>
         /// <returns> 
         /// True if the update was successful, false if not
         /// </returns>
-        public static bool UpdateSingleFamilyInstance(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, bool safetyOff , Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
+        public static bool UpdateSingleFamilyInstance(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, duHastNet.PushIt.Utilities.PushMode pushOperationMode , Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
         {
 
             // set up an action to run inside a Revit transaction
@@ -116,7 +118,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 try
                 {
                     //update single family instance
-                    return UpdateProperties(doc, familyInstance, roomData, safetyOff, AddMessage);
+                    return UpdateProperties(doc, familyInstance, roomData, pushOperationMode, AddMessage);
                 }
                 catch (Exception ex)
                 {
@@ -157,7 +159,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                     foreach (var familyInstance in familyInstances)
                     {
                         // update the family instance
-                        bool flag_update = UpdateProperties(doc, familyInstance, roomData, false, AddMessage);
+                        bool flag_update = UpdateProperties(doc, familyInstance, roomData, duHastNet.PushIt.Utilities.PushMode.Push, AddMessage);
                         //log the overall success of the update
                         overallUpdateSuccess = overallUpdateSuccess && flag_update;
 
@@ -213,7 +215,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 foreach (var familyInstance in familyInstances)
                 {
                     // update the family instance
-                    bool flag_update = UpdateProperties(doc, familyInstance, emptyRoom, false, AddMessage);
+                    bool flag_update = UpdateProperties(doc, familyInstance, emptyRoom, duHastNet.PushIt.Utilities.PushMode.Push, AddMessage);
 
                     // if the update fails throw an exception to roll back the transaction and attempt to update one by one
                     if (!flag_update)

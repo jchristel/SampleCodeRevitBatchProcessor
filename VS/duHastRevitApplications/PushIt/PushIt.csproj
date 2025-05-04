@@ -165,6 +165,7 @@
     <Compile Include="Utilities\IRoomProperty.cs" />
     <Compile Include="Utilities\PropertyChangedEventNames.cs" />
     <Compile Include="Utilities\PushMode.cs" />
+    <Compile Include="Utilities\PushModeUtils.cs" />
     <Compile Include="Utilities\ReadRoomsData.cs" />
     <Compile Include="Utilities\Revit\CustomExternalEvent.cs" />
     <Compile Include="Utilities\Revit\DesignSetAndOption.cs" />

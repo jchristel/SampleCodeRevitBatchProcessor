@@ -124,7 +124,7 @@ namespace duHastNet.PushIt.ViewModels
                 }
                 else if (_pushOperationMode == PushIt.Utilities.PushMode.New)
                 {
-                    PushItButtonText = "Push New Room";
+                    PushItButtonText = "Create New";
                 }
                 else
                 {
@@ -356,7 +356,7 @@ namespace duHastNet.PushIt.ViewModels
                 {
                     return null;
                 }
-                // check if the selected index is within the bounds of the rooms collection
+                
                 // check if the selected index is within the bounds of the rooms collection
                 if (_selectedIndex >= 0 && _selectedIndex < _dv.Count)
                 {

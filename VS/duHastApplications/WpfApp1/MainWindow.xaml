@@ -11,7 +11,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid>
+        <Grid Grid.Row="1">
             <UniformGrid Columns="3" Grid.Row="1">
                 <RadioButton Margin="5 0 5 0" Content="Push It" GroupName="MyGroup" IsChecked="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <RadioButton Margin="5 0 5 0" Content="Split It" GroupName="MyGroup" HorizontalAlignment="Center" VerticalAlignment="Center"/>

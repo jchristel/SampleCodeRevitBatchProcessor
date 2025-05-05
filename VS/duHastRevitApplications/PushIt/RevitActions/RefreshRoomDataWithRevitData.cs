@@ -118,43 +118,19 @@ namespace duHastNet.PushIt.RevitActions
             List<Models.RoomDataModel> roomsDataModel, 
             List<string> supportedCategoryName)
         {
-            string refreshMessage = "";
-            // check if all shared parameters exist and are bound to the correct categories
-            bool parameterCheck = Utilities.Revit.SharedParameters.SharedParametersCheck(
-                doc, 
-                roomsDataModel, 
-                supportedCategoryName, 
-                out refreshMessage);
-            
-            // if not get out
-            if (!parameterCheck){
-                AddMessage(refreshMessage, Utils.WPF.Stores.MessageTypes.Error);
-                return null;
-            }
-            else
-            {
-                AddMessage("Successfully checked shared parameter mapping in file.", Utils.WPF.Stores.MessageTypes.Log);
-            }
 
-            // get supported categories
-            List<Category> categories = duHastNet.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, supportedCategoryName);
-            if (categories.Count == 0)
-            {
-                if (supportedCategoryName.Count > 0)
-                {
-                    // build a string of supported categories
-                    string supportedCategories = string.Join(", ", supportedCategoryName);
-                    AddMessage($"Supported categories are invalid: {supportedCategories}", Utils.WPF.Stores.MessageTypes.Error);
-                }
-                else
-                {
-                    AddMessage("No supported categories provided.", Utils.WPF.Stores.MessageTypes.Error);
-                }
-                return null;
-            }
+            List<duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
+                doc: doc,
+                roomsDataModel: roomsDataModel,
+                supportedCategoryName: supportedCategoryName,
+                AddMessage: AddMessage
+            );
 
-            // convert revit categories into revit builtIncategories for filtering
-            List<BuiltInCategory> familyInstanceFilterCategories = duHastNet.RevitUtils.Categories.CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
+            //if the update failed return the rooms data model unchanged
+            if (revitRooms == null || revitRooms.Count == 0)
+            {
+                return roomsDataModel;
+            }
 
             // get the documents current design set and option
             (string designSetName, string designOptionName) = Utilities.Revit.DesignSetAndOptionUtils.GetActiveDesignSetAndOptionName(doc);
@@ -162,35 +138,6 @@ namespace duHastNet.PushIt.RevitActions
             // update the ui with the current design set and option
             _roomsSelectionViewModel.ActiveDesignOptionName = designOptionName;
             _roomsSelectionViewModel.ActiveDesignSetName = designSetName;
-
-
-            //get families of supported built in categories
-            List<FamilyInstance> familyInstances = duHastNet.RevitUtils.Families.FamilyUtils.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
-
-            //check if any families in the model
-            if (familyInstances.Count == 0)
-            {
-                // if that is not the case return the rooms data model unchanged after popping a message to the user
-                AddMessage("No rooms found in the model.", Utils.WPF.Stores.MessageTypes.Information);
-
-                // need to remove any family instances from the rooms data model from previous runs
-                foreach (var room in roomsDataModel)
-                {
-                    // remove all matching revit rooms from the room data model
-                    // SoA and split rooms
-                    room.ClearAllMatchingRevitRooms();
-                }
-                
-                //return the updated model
-                return roomsDataModel;
-            }
-
-            // convert family instances to revit rooms
-            List <duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
-                familyInstances, 
-                roomsDataModel[0],
-                AddMessage
-            );
 
             // update rooms data model with revit rooms
             roomsDataModel = Utilities.UpdateRoomDataModelWithRoomsRevitModelUtils.UpdateRoomDataModelWithRoomsRevitModel(

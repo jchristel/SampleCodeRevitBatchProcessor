@@ -43,6 +43,19 @@ namespace duHastNet.PushIt.RevitActions
             try
             {
                 // get all new rooms from the model
+                var roomsInModel = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
+                    doc: doc,
+                    roomsDataModel: RevitModel.GetAllRooms(),
+                    supportedCategoryName: RevitModel.Settings.SupportedCategories,
+                    AddMessage: RoomsSelectionViewModel.AddMessage);
+
+                //check if any rooms where found in the model, if not get out
+                if (roomsInModel == null || roomsInModel.Count == 0)
+                {
+                    return GetReturnValue("No new rooms found in the model.");
+                }
+
+                //check which rooms are marked as new and add them to the data model
 
                 return ($"{countSoARooms} SoA rooms and {countNewRooms} new rooms in data model updated with rooms from the Revit model.", Utils.WPF.Stores.MessageTypes.Information);
             }
@@ -56,6 +69,10 @@ namespace duHastNet.PushIt.RevitActions
             return GetReturnValue("Created new rooms from Revit.");
         }
 
-    }
-}
+    }   public UpdateRoomDataModelWithNewRooms(RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
+        {
+            RevitModel = revitModel;
+            _roomsSelectionViewModel = roomsSelectionViewModel;
+        }
+    } }
 

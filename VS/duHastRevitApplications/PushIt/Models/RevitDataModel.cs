@@ -57,14 +57,21 @@ namespace duHastNet.PushIt.Models
             _roomsContainer.AddRoom(room);
         }
 
+        public void AddNewRoom(Models.RoomDataModel room)
+        {
+            _roomsContainer.AddNewRoom(room);
+        }
+
         public List<Models.RoomDataModel> GetAllRooms()
         {
-            return _roomsContainer.GetAllRooms();
+            // returns the SoA rooms as well as the new rooms from the data model
+            return _roomsContainer.GetAllRoomsCombined();
         }
 
         public void ClearRooms()
         {
-            _roomsContainer.ClearRooms();
+            // clears SoA rooms and new rooms from the data model
+            _roomsContainer.ClearAllRooms();
         }
 
         public void RemovePlacedRevitRoom(int revitElementId)

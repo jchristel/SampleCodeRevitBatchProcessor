@@ -37,27 +37,64 @@ namespace duHastNet.PushIt.RevitActions
         {
             try
             {
-                // refresh the rooms data model with the rooms from the revit model
-                List<Models.RoomDataModel> updatedRooms = RefreshRoomData(
+                // refresh the rooms data model rooms from the SoA with the rooms from the revit model
+                List<Models.RoomDataModel> updatedSoARooms = RefreshRoomData(
                     doc,
-                    RevitModel._roomsContainer.GetAllRooms(),
+                    RevitModel._roomsContainer.GetAllRooms(), // returns SoA rooms only
                     RevitModel.Settings.SupportedCategories
                  );
 
-                // clear all rooms in the data model
+                // refresh the rooms data model with the new rooms from the revit model
+                List<Models.RoomDataModel> updatedNewRooms = RefreshRoomData(
+                    doc,
+                    RevitModel._roomsContainer.GetAllNewRooms(), // returns new rooms only
+                    RevitModel.Settings.SupportedCategories
+                );
+
+                //remove any new room with 0 placed revit rooms
+                // this is needed to remove any new rooms that are not placed in the model
+                List<Models.RoomDataModel> updatedNewRoomsFiltered = new List<Models.RoomDataModel>();
+                if (updatedNewRooms != null)
+                {
+                    foreach (var room in updatedNewRooms)
+                    {
+                        if (room.MatchingRevitRooms.Count > 0)
+                        {
+                            updatedNewRoomsFiltered.Add(room);
+                        }
+                    }
+                }
+
+                // clear all rooms in the data model (SoA and new rooms)
                 // this will also clear all rooms if shared parameter setup in project file is wrong.
                 RevitModel.ClearRooms();
 
-                // add updated rooms to the data model if there are any
-                if (updatedRooms != null)
+                int countSoARooms = 0;
+                // add updated SoA rooms to the data model if there are any
+                if (updatedSoARooms != null)
                 {
                     // add updated rooms
-                    foreach (var rooms in updatedRooms)
+                    foreach (var rooms in updatedSoARooms)
                     {
                         RevitModel.AddRoom(rooms);
                     }
-                    return ($"{updatedRooms.Count} Rooms in data model updated with rooms from the Revit model.", Utils.WPF.Stores.MessageTypes.Information);
+                    countSoARooms = updatedSoARooms.Count;
                 }
+
+                int countNewRooms = 0;
+                if (updatedNewRoomsFiltered != null && updatedNewRoomsFiltered.Count>0)
+                {
+                    // add updated rooms
+                    foreach (var room in updatedNewRoomsFiltered)
+                    {
+                        RevitModel.AddNewRoom(room);
+                    }
+                    countNewRooms = updatedNewRoomsFiltered.Count;
+                }
+
+                return ($"{countSoARooms} SoA rooms and {countNewRooms} new rooms in data model updated with rooms from the Revit model.", Utils.WPF.Stores.MessageTypes.Information);
+
+
             }
             catch (System.Exception ex)
             {
@@ -76,7 +113,10 @@ namespace duHastNet.PushIt.RevitActions
         /// <param name="roomsDataModel"></param>
         /// <param name="supportedCategoryName"></param>
         /// <returns></returns>
-        public List<Models.RoomDataModel> RefreshRoomData(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName)
+        public List<Models.RoomDataModel> RefreshRoomData(
+            Document doc, 
+            List<Models.RoomDataModel> roomsDataModel, 
+            List<string> supportedCategoryName)
         {
             string refreshMessage = "";
             // check if all shared parameters exist and are bound to the correct categories
@@ -136,7 +176,9 @@ namespace duHastNet.PushIt.RevitActions
                 // need to remove any family instances from the rooms data model from previous runs
                 foreach (var room in roomsDataModel)
                 {
-                    room.ClearMatchingRevitRooms();
+                    // remove all matching revit rooms from the room data model
+                    // SoA and split rooms
+                    room.ClearAllMatchingRevitRooms();
                 }
                 
                 //return the updated model

@@ -27,6 +27,46 @@ namespace duHastNet.PushIt.Utilities
 {
     public static class UpdateRoomDataModelWithRoomsRevitModelUtils
     {
+        /// <summary>
+        /// Check if the room should be added to the data model based on the active design set and design option
+        /// </summary>
+        /// <param name="revitRoom"></param>
+        /// <param name="revitModelActiveDesignSetName"></param>
+        /// <param name="revitModelActiveDesignOptionName"></param>
+        /// <returns></returns>
+        public static bool AddRoom(
+            Models.RoomsRevit revitRoom,
+            string revitModelActiveDesignSetName,
+            string revitModelActiveDesignOptionName)
+        {
+            bool addRoom = false;
+
+            // check if the family is placed in the active design option / set
+            if (revitRoom.DesignOption == revitModelActiveDesignOptionName && revitRoom.DesignSet == revitModelActiveDesignSetName)
+            {
+                addRoom = true;
+            }
+            // check if the family is placed in the main model
+            else if (revitRoom.DesignOption == duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME
+                && revitRoom.DesignSet == duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME)
+            {
+                addRoom = true;
+            }
+            // check if the family is placed in another design sets primary design option
+            // and the main model is active
+            else if (revitModelActiveDesignSetName == duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME
+                && revitRoom.DesignOptionIsPrimary)
+            {
+                addRoom = true;
+            }
+            //check if the family is in a primary design option which does not match the active design set
+            else if (revitRoom.DesignOptionIsPrimary && revitRoom.DesignSet != revitModelActiveDesignSetName)
+            {
+                addRoom = true;
+            }
+
+            return addRoom;
+        }
 
         /// <summary>
         /// Attach the rooms from the revit model to the rooms in the data model based on the room id property
@@ -54,56 +94,58 @@ namespace duHastNet.PushIt.Utilities
             {
                 // clear the list of matching rooms in revit from the room in the data model
                 roomDataModel.ClearMatchingRevitRooms();
+                roomDataModel.ClearMatchingSplitRevitRooms();
 
-                // check if the room id exists in the revit model
-                if (!roomsRevitById.ContainsKey(roomDataModel.Id.Value))
+                // check if the room id exists in the revit model or a split room
+                if (!roomsRevitById.ContainsKey(roomDataModel.Id.Value) && 
+                    !roomsRevitById.ContainsKey(Utilities.PushModeUtils.GetSplitModeIdValue(roomDataModel.Id.Value)))
                 {
                     continue;
                 }
 
-                // iterate over all rooms with the same id and check if they match the active design set and design option
-                // if they do, add them to the list of matching rooms in the data model
-                foreach (Models.RoomsRevit revitRoom in roomsRevitById[roomDataModel.Id.Value])
-                {
-                    bool addRoom = false;
-
-                    // check if the family is placed in the active design option / set
-                    if (revitRoom.DesignOption == revitModelActiveDesignOptionName && revitRoom.DesignSet == revitModelActiveDesignSetName)
-                    {
-                        addRoom = true;
-                    }
-                    // check if the family is placed in the main model
-                    else if (revitRoom.DesignOption == duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME 
-                        && revitRoom.DesignSet == duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME)
-                    {
-                        addRoom = true;
-                    }
-                    // check if the family is placed in another design sets primary design option
-                    // and the main model is active
-                    else if (revitModelActiveDesignSetName == duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME 
-                        && revitRoom.DesignOptionIsPrimary)
-                    {
-                        addRoom = true;
-                    }
-                    //check if the family is in a primary design option which does not match the active design set
-                    else if (revitRoom.DesignOptionIsPrimary && revitRoom.DesignSet != revitModelActiveDesignSetName)
-                    {
-                        addRoom = true;
-                    }
-
-                    if (addRoom)
-                    {
-                        roomDataModel.AddMatchingRevitRoom(revitRoom);
-                    }
-                }
-
-                //Remove the matched families from the dictionary to speed up the search
                 // check if the room id exists in the revit model
-                if (!roomsRevitById.ContainsKey(roomDataModel.Id.Value))
+                if (roomsRevitById.ContainsKey(roomDataModel.Id.Value))
                 {
+                    // iterate over all rooms with the same id and check if they match the active design set and design option
+                    // if they do, add them to the list of matching rooms in the data model
+                    foreach (Models.RoomsRevit revitRoom in roomsRevitById[roomDataModel.Id.Value])
+                    {
+                        if (AddRoom(
+                            revitRoom: revitRoom,
+                            revitModelActiveDesignSetName: revitModelActiveDesignSetName,
+                            revitModelActiveDesignOptionName: revitModelActiveDesignOptionName))
+                        {
+                            roomDataModel.AddMatchingRevitRoom(revitRoom);
+                        }
+                    }
+
+                    //Remove the matched families from the dictionary to speed up the search
                     roomsRevitById.Remove(roomDataModel.Id.Value);
+                    
                 }
 
+                //get the split room id 
+                string splitRoomId = Utilities.PushModeUtils.GetSplitModeIdValue(roomDataModel.Id.Value);
+                
+                //check if there is an entry for the split room id in the dictionary
+                // if not, continue
+                if (roomsRevitById.ContainsKey(splitRoomId))
+                {
+                    // check if the room id exists in the revit model as a split room
+                    foreach (Models.RoomsRevit revitRoom in roomsRevitById[splitRoomId])
+                    {
+                        if (AddRoom(
+                            revitRoom: revitRoom,
+                            revitModelActiveDesignSetName: revitModelActiveDesignSetName,
+                            revitModelActiveDesignOptionName: revitModelActiveDesignOptionName))
+                        {
+                            roomDataModel.AddMatchingSplitRevitRoom(revitRoom);
+                        }
+                    }
+
+                    //Remove the matched families from the dictionary to speed up the search
+                    roomsRevitById.Remove(splitRoomId);
+                }
             }
 
 

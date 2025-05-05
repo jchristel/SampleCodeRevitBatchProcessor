@@ -278,6 +278,8 @@ namespace duHastNet.PushIt.Models
         {
             // initialize the list of matching rooms
             _matchingRevitRooms = new List<RoomsRevit>();
+            // initialize the list of matching split rooms
+            _matchingSplitRevitRooms = new List<RoomsRevit>();
         }
 
         public RoomDataModel(RoomDataProperty id, List<RoomDataProperty> otherProperties)

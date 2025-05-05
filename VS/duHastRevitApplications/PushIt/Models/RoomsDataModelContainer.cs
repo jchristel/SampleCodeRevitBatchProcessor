@@ -166,19 +166,38 @@ namespace duHastNet.PushIt.Models
         /// Removes the placed room from the list of new rooms added through the Push It UI
         /// </summary>
         /// <param name="propertyComparison">All write properties and their values in a string</param>
-        /// <param name="revitElementId">The element Id of the family representing this room</param>
-        public void RemoveNewPlacedRevitRoom(string propertyComparison, int revitElementId)
+        /// <param name="revitElemntId">The element Id of the family representing this room</param>
+        public void RemoveNewPlacedRevitRoom(string roomId, int revitElementId)
         {
+            //flag indicating whether the new room has no matching Revit room after removing the placed room
+            bool removeRoomFromDataModel = false;
+            RoomDataModel roomToRemove = null;
             foreach (var room in _newRooms)
             {
-                if (room.GetWritePropertiesAsString() == propertyComparison)
+                if (room.Id.Value == roomId)
                 {
                     // remove the placed room from the data model
                     room.MatchingRevitRooms.RemoveAll(x => x.RevitElementId == revitElementId);
                     // update rooms read-only properties from revit room
                     room.UpdateReadProperties();
+
+                    // check if the room has no matching Revit room
+                    if (room.MatchingRevitRooms.Count == 0)
+                    {
+                        // set the flag to true
+                        removeRoomFromDataModel = true;
+                        // set the room to remove
+                        roomToRemove = room;
+                    }
                     break;
                 }
+            }
+
+            // if the room has no matching Revit room, remove it from the data model
+            if (removeRoomFromDataModel)
+            {
+                // remove the room from the data model
+                _newRooms.Remove(roomToRemove);
             }
         }
 
@@ -219,23 +238,62 @@ namespace duHastNet.PushIt.Models
         /// <summary>
         /// Adds the placed room to the list of new rooms added through the Push It UI
         /// </summary>
-        public void AddPlacedNewRevitRoom(string propertyComparison, Models.RoomsRevit revitRoom)
+        public void AddPlacedNewRevitRoom(string roomId, Models.RoomsRevit revitRoom)
         {
+            bool roomFound = false;
+            
+            // the lieklyhood of this happening is very low, but just in case since the id contains a time stamp down to the milisecond
             foreach (var room in _newRooms)
             {
-                if (room.GetWritePropertiesAsString() == propertyComparison)
+                if (room.Id.Value == roomId)
                 {
                     // add the placed room to the data model
                     room.AddMatchingRevitRoom(revitRoom);
                     // update rooms read-only properties from revit room
                     room.UpdateReadProperties();
+
+                    // set the room found flag to true
+                    roomFound = true;
                 }
+            }
+
+            //if nor matching room was found...which is likely add a new room
+            if (!roomFound)
+            {
+                
+                List<Models.RoomDataProperty> properties = new List<Models.RoomDataProperty>();
+                //get the properties
+                foreach (var property in revitRoom.Properties)
+                {
+                    // add the property to the new room
+                    properties.Add(new Models.RoomDataProperty(name:property.Name, parameterGUID:property.ParameterGUID,
+                        parameterName:property.ParameterName, value:property.Value, showInUI:property.ShowInUI,
+                        isReadOnly:property.IsReadOnly));
+                }
+
+                Models.RoomDataProperty idProperty = new Models.RoomDataProperty(name: revitRoom.Id.Name, parameterGUID: revitRoom.Id.ParameterGUID,
+                    parameterName: revitRoom.Id.ParameterName, value: revitRoom.Id.Value, showInUI: revitRoom.Id.ShowInUI,
+                    isReadOnly: revitRoom.Id.IsReadOnly);
+
+                // add the placed room to the data model
+                Models.RoomDataModel newRoom = new Models.RoomDataModel(
+                    id:idProperty,
+                    otherProperties:properties);
+
+
+                // add the placed room to the data model
+                newRoom.AddMatchingRevitRoom(revitRoom);
+                newRoom.UpdateReadProperties();
+
+                // add the new room to the data model
+                _newRooms.Add(newRoom);
             }
         }
 
         public RoomsDataModelContainer()
         {
             _rooms = new List<Models.RoomDataModel>();
+            _newRooms = new List<Models.RoomDataModel>();
         }
     }
 }

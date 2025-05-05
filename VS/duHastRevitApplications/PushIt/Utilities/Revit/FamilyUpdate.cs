@@ -50,11 +50,11 @@ namespace duHastNet.PushIt.Utilities.Revit
                 if (pushMode == PushMode.Split)
                 {
 
-                    room_id = PushModeUtils.GetSplitModeIdValue(room_id);
+                    room_id = PushModeUtils.GetSplitModeIdValue(idValue: room_id);
                 }
                 else if (pushMode == PushMode.New)
                 {
-                    room_id = PushModeUtils.GetPushModeString(pushMode);
+                    room_id = PushModeUtils.GetNewModeIdValue(idValue:room_id);
                 }
 
                 // set the room id parameter

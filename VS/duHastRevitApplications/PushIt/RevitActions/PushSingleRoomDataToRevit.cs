@@ -81,19 +81,25 @@ namespace duHastNet.PushIt.RevitActions
                 //only remove previous data if there is a valid room
                 if (modelDataPrevious != null)
                 {
-                    //depending on the push operation mode, remove the previous room from the data model
-                    if (_roomsSelectionViewModel.PushOperationMode == duHastNet.PushIt.Utilities.PushMode.Push || _roomsSelectionViewModel.PushOperationMode == duHastNet.PushIt.Utilities.PushMode.Split)
+
+                    //check if the previous room was a pushed room ,split room or a new room
+                    if (Utilities.PushModeUtils.IsSplitRoomMode(modelDataPrevious.Id.Value))
                     {
                         // remove the previous Revit room from the data model before adding it back in with new data
                         RevitModel.RemovePlacedRevitRoom(modelDataPrevious.RevitElementId);
                     }
-                    else if (_roomsSelectionViewModel.PushOperationMode == duHastNet.PushIt.Utilities.PushMode.New)
+                    else if (Utilities.PushModeUtils.IsNewRoomMode(modelDataPrevious.Id.Value))
                     {
                         // remove the previous Revit room from the data model before adding it back in with new data
                         RevitModel.RemovePlacedNewRevitRoom(
-                            propertyComparison: modelDataPrevious.GetWritePropertiesAsString(),
+                            roomId:modelDataPrevious.Id.Value,
                             revitElementId: modelDataPrevious.RevitElementId
                         );
+                    }
+                    else
+                    {
+                        // remove the previous Revit room from the data model before adding it back in with new data
+                        RevitModel.RemovePlacedRevitRoom(modelDataPrevious.RevitElementId);
                     }
                 }
 
@@ -113,7 +119,7 @@ namespace duHastNet.PushIt.RevitActions
                 {
                     // update the existing Revit room in the data model
                     RevitModel.AddPlacedNewRevitRoom(
-                        propertyComparison: modelDataUpdated.GetWritePropertiesAsString(),
+                        roomId: modelDataUpdated.Id.Value,
                         revitRoom: modelDataUpdated
                     );
                 }

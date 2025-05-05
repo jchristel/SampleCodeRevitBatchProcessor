@@ -166,7 +166,8 @@ namespace duHastNet.PushIt.Commands
         {
             // check if the property that changed is the one that we are interested in
             if (e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsMatchingRevitRoomsEmpty) ||
-                e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsWaitingForRevitCommandToFinish))
+                e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.IsWaitingForRevitCommandToFinish) ||
+                e.PropertyName == nameof(ViewModels.RoomsSelectionViewModel.PushOperationMode))
             {
                 OnCanExecutedChanged();
             }

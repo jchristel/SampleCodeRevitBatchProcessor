@@ -26,32 +26,64 @@ namespace duHastNet.PushIt.Utilities
 {
     public class PushModeUtils
     {
-
+        private static string SplitIDentifier = "SPLIT";
+        private static string NewIDentifier = "NEW";
+        private static string PushIDentifier = "PUSH";
+        private static string Separator = "::";
         public static string GetPushModeString(PushMode pushOperationMode)
         {
             switch (pushOperationMode)
             {
                 case PushMode.Push:
-                    return "PUSH";
+                    return PushIDentifier;
                 case PushMode.Split:
-                    return "SPLIT";
+                    return SplitIDentifier;
                 case PushMode.New:
-                    return "NEW";
+                    return NewIDentifier;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(pushOperationMode), pushOperationMode, null);
             }
         }
+
+
+        public static bool IsSplitRoomMode(string idValue)
+        {
+            //check if the id value is empty
+            if (string.IsNullOrEmpty(idValue))
+            {
+                return false;
+            }
+            else
+            {
+                return idValue.Contains(SplitIDentifier);
+            }
+        }
+
+
+        public static bool IsNewRoomMode(string idValue)
+        {
+            //check if the id value is empty
+            if (string.IsNullOrEmpty(idValue))
+            {
+                return false;
+            }
+            else
+            {
+                return idValue.Contains(NewIDentifier);
+            }
+        }
+
 
         public static string GetSplitModeIdValue(string idValue)
         {
             //check if the id value is empty
             if (string.IsNullOrEmpty(idValue))
             {
-                return "SPLIT";
+                return SplitIDentifier;
             }
             else
             {
-                return idValue+"::"+ GetPushModeString(PushMode.Split);
+                return  $"{idValue}{Separator}{SplitIDentifier}";
             }
         }
 
@@ -64,8 +96,17 @@ namespace duHastNet.PushIt.Utilities
             }
             else
             {
-                return idValue.Split(new string[] { "::" }, StringSplitOptions.None)[0];
+                return idValue.Split(new string[] { Separator }, StringSplitOptions.None)[0];
             }
+        }
+
+        public static string GetNewModeIdValue(string idValue)
+        {
+            DateTime now = DateTime.Now;
+            string timestamp = now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            string username = Environment.UserName;
+
+            return $"{NewIDentifier}{Separator}{username}{Separator}{timestamp}";
         }
     }
 }

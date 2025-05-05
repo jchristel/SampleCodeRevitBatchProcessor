@@ -27,67 +27,9 @@ This module contains a number of functions around Extensible storage in Revit.
 #
 #
 
-from duHast.Revit.Common.adesk_info import VENDOR_ID
 
-from Autodesk.Revit.DB.ExtensibleStorage import AccessLevel, Schema, SchemaBuilder
+from Autodesk.Revit.DB.ExtensibleStorage import  Schema
 from System import Guid
-
-
-
-def create_schema(
-    schema_name,
-    schema_documentation,
-    string_guid,
-    vendor_id = VENDOR_ID,
-    access_level_read=AccessLevel.Public,
-    access_level_write=AccessLevel.Public,
-    field_builder=None,
-):
-    """
-    Basic schema creation sample (excludes any fields).
-    Creates a scheme or returns the already existing scheme with the same guid.
-
-    :param schema_name: The name of the schema
-    :type schema_name: str
-    :param schema_documentation: A short description of the schema
-    :type schema_documentation: str
-    :param string_guid: A guid. (unique identifier of this schema)
-    :type string_guid: str
-
-    :param access_level_read: Access level to schema for read operations. Default is Public.
-    :type access_level_read: Autodesk.Revit.DB.ExtensibleStorage.AccessLevel
-
-    :access_level_write: Access level to schema for write operations. Default is Public
-    :access_level_write: Autodesk.Revit.DB.ExtensibleStorage.AccessLevel
-
-    :return: The newly created schema, or existing schema with same guid.
-    :rtype: Autodesk.Revit.DB.ExtensibleStorage.Schema
-    """
-
-    # check if the schema name contains any spaces or not
-    if " " in schema_name:
-        raise ValueError("Schema name cannot contain spaces.")
-    
-    # Look for schema in memory
-    schema = Schema.Lookup(Guid(string_guid))
-    # Check if schema exists in the memory or not
-    if schema == None:
-        # Create a schema builder
-        schema_guid = Guid(string_guid)
-        builder = SchemaBuilder(schema_guid)
-        # Set read and write access levels
-        builder.SetReadAccessLevel(access_level_read)
-        builder.SetWriteAccessLevel(access_level_write)
-        # Set name to this schema builder
-        builder.SetSchemaName(schema_name)
-        builder.SetDocumentation(schema_documentation)
-        
-        # run the field builder
-        if field_builder:
-            field_builder(builder)
-            
-        schema = builder.Finish()
-    return schema
 
 
 def does_schema_exist(schema_guid):
@@ -120,3 +62,4 @@ def get_schema(schema_guid):
     # Look for schema in memory
     schema = Schema.Lookup(Guid(schema_guid))
     return schema
+

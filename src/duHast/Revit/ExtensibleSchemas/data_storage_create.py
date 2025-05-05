@@ -31,84 +31,53 @@ Obsolete in Revit 2025 ...
 #
 
 import duHast.Utilities.Objects.result as res
-
 from duHast.Revit.Common.transaction import in_transaction
-from duHast.Revit.ExtensibleSchemas.extensible_schemas import get_schema
 
 
-from Autodesk.Revit.DB import FilteredElementCollector, Transaction
-from Autodesk.Revit.DB.ExtensibleStorage import DataStorage
+from Autodesk.Revit.DB import Transaction
+from Autodesk.Revit.DB.ExtensibleStorage import DataStorage, Entity
 
 
-
-def find_data_storage(doc, schema_guid):
+def create_project_data_storage(doc, schema):
     """
-    Find a DataStorage element in the Revit document that contains the specified schema.
+    Create a new DataStorage element in the Revit document and set its schema.
     
-    :param doc: The Revit document to search in.
-    :type doc: Autodesk.Revit.DB.Document
-    :param schema_guid: The GUID of the schema to look for.
-    :type schema_guid: str
-    
-    :return: The DataStorage element if found, None otherwise.
-    :rtype: Autodesk.Revit.DB.DataStorage or None
-    """
-    
-    # Look up the schema using its GUID
-    schema = get_schema(schema_guid)
-    if not schema:
-        return None
-
-    # Use a FilteredElementCollector to find all DataStorage elements
-    collector = FilteredElementCollector(doc).OfClass(DataStorage)
-    for data_storage in collector:
-        # Check if the DataStorage element has an entity with the schema
-        entity = data_storage.GetEntity(schema)
-        if entity and entity.IsValid():
-            return data_storage
-
-    return None
-
-
-def update_entity_on_data_storage(doc, data_storage, entity):
-    """
-    Update the entity of a DataStorage element with new data.
-    
-    :param doc: The Revit document to update the DataStorage element in.
+    :param doc: The Revit document to create the DataStorage element in.
     :type doc: Autodesk.Revit.DB.Document
     
-    :param data_storage: The DataStorage element to update.
-    :type data_storage: Autodesk.Revit.DB.DataStorage
+    :param schema: The schema to set on the DataStorage element.
+    :type schema: Autodesk.Revit.DB.ExtensibleStorage.Schema
     
-    :param entity: The new entity to set on the DataStorage element.
-    :type entity: Autodesk.Revit.DB.ExtensibleStorage.Entity
-
-    :return: A Result object containing the updated DataStorage element in its result list or an error message.
+    :return: A Result object containing the created DataStorage element in its result list or an error message.
     :rtype: duHast.Utilities.Objects.result.Result
     """
     
     return_value = res.Result()
     
-    # build an action to update the DataStorage element
+    # build an action to create a new DataStorage element
     def action():
         action_return_value = res.Result()
         try:
-            # Update the DataStorage element with the new Entity
+            # Create a new DataStorage element
+            data_storage = DataStorage.Create(doc)
+            entity = Entity(schema)
+            # Set the schema to the DataStorage element
             data_storage.SetEntity(entity)
             action_return_value.append_message(
-                "DataStorage element updated successfully."
+                "DataStorage element created successfully."
             )
             action_return_value.result.append(data_storage)
         except Exception as e:
                 action_return_value.update_sep(
                     False,
-                    "Failed to update data storage: {}".format(e),
+                    "Failed to set up data storage: {}".format(e),
                 )
         return action_return_value
     
-    # attempt to update the DataStorage element in a transaction
-    transaction = Transaction(doc, "Updating data storage")
-    data_storage_update_result = in_transaction(transaction, action)
-    return_value.update(data_storage_update_result)
+    # attempt to create the DataStorage element in a transaction
+    transaction = Transaction(doc, "Creating data storage")
+    data_storage_creation_result = in_transaction(transaction, action)
+    return_value.update(data_storage_creation_result)
 
     return return_value
+

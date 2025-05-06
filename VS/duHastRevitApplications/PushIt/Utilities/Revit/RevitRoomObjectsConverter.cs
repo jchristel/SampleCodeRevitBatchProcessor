@@ -31,8 +31,8 @@ namespace duHastNet.PushIt.Utilities.Revit
     {
 
         public static Models.RoomsRevit ConvertSingleFamilyToRevitRoom(
-            FamilyInstance familyInstance, 
-            Models.RoomDataModel sampleModelRoom, 
+            FamilyInstance familyInstance,
+            Models.RoomDataModel sampleModelRoom,
             Dictionary<string, ElementId> sharedParameterIdsByGUIDs
             )
         {
@@ -54,7 +54,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 value: id_value,
                 parameterGUID: sampleModelRoom.Id.ParameterGUID,
                 parameterName: sampleModelRoom.Id.ParameterName,
-                showInUI:sampleModelRoom.Id.ShowInUI,
+                showInUI: sampleModelRoom.Id.ShowInUI,
                 isReadOnly: sampleModelRoom.Id.IsReadOnly);
 
             // get the other properties and store in list
@@ -86,7 +86,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 // add to the list of properties
                 properties.Add(roomDataProperty);
             }
-            
+
             // get the design set and option data
             var designSetAndOptionData = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionsUtils.GetDesignSetOptionInfo(familyInstance.Document, familyInstance);
 
@@ -102,7 +102,7 @@ namespace duHastNet.PushIt.Utilities.Revit
             return revitRoom;
         }
         public static List<duHastNet.PushIt.Models.RoomsRevit> ConvertFamiliesToRevitRooms(
-            List<FamilyInstance> familyInstances, 
+            List<FamilyInstance> familyInstances,
             Models.RoomDataModel sampleModelRoom,
             Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
         {
@@ -132,7 +132,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 {
                     AddMessage($"Error converting family instance to revit room: {ex.Message}", Utils.WPF.Stores.MessageTypes.Error);
                 }
-                
+
             }
             AddMessage($"Converted {revitRooms.Count} family instances to revit rooms.", Utils.WPF.Stores.MessageTypes.Log);
             return revitRooms;

@@ -28,7 +28,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 
 using System.Windows.Input;
@@ -85,7 +84,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
             set
             {
                 _dataFilePath = value;
-                
+
                 _errorsViewModel.ClearErrors(nameof(DataFilePath));
 
                 // check if the file path is valid, if not add an error
@@ -112,14 +111,14 @@ namespace duHastNet.AtTheLibrary.ViewModels
                     // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(DataFilePathValid))
                     // from the eventhandler ErrorsViewModel_ErrorsChanged
                     _errorsViewModel.ClearErrors(nameof(DataFilePath));
-                    
+
                     // update the data path in the settings
                     _revitDataModel.Settings.DataPath = value;
                 }
 
                 // call ui update
                 OnPropertyChanged(nameof(DataFilePath));
-                
+
             }
         }
 
@@ -128,13 +127,13 @@ namespace duHastNet.AtTheLibrary.ViewModels
         {
             get => _dataFilePathValid;
             set
-            { 
+            {
                 _dataFilePathValid = value;
                 // call ui update
                 OnPropertyChanged(nameof(DataFilePathValid));
             }
         }
-        
+
 
         #endregion settings
 
@@ -159,7 +158,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
             {
                 _selectedColumnFilterItem = value;
                 OnPropertyChanged(nameof(SelectedColumnFilterItem));
-                
+
                 //update is filter applied property
                 OnPropertyChanged(nameof(IsFilterApplied));
             }
@@ -189,9 +188,10 @@ namespace duHastNet.AtTheLibrary.ViewModels
         #region user selection
 
         //binding in xaml property to the default view of the families collection
-        public DataView DataView { 
+        public DataView DataView
+        {
             get => _dv;
-            private set 
+            private set
             {
                 _dv = value;
                 OnPropertyChanged(nameof(DataView));
@@ -246,7 +246,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
             get
             {
                 var selectedRoom = SelectedFamily;
-                if (selectedRoom != null && SelectedIndex >=0 )
+                if (selectedRoom != null && SelectedIndex >= 0)
                 {
                     return selectedRoom.MatchingRevitFamilies.Count == 0;
                 }
@@ -466,7 +466,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
                 // Add a row per room
                 DataRow row = dataTable.NewRow();
 
-               
+
                 // Add columns to the data table in the order specified by the column order
                 foreach (var column in columnOrder)
                 {
@@ -480,7 +480,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
                         row["Id"] = familyModelInstance.Id.Value;
                         continue;
                     }
-                    else if(column == "Family Name")
+                    else if (column == "Family Name")
                     {
                         row["Family Name"] = familyModelInstance.FamilyName.Value;
                         continue;
@@ -502,7 +502,8 @@ namespace duHastNet.AtTheLibrary.ViewModels
                         foreach (var prop in familyModelInstance.Properties)
                         {
                             // check if the column is meant to be displayed in the ui
-                            if (prop.ShowInUI && prop.Name == column) { 
+                            if (prop.ShowInUI && prop.Name == column)
+                            {
                                 row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : "";
                                 columnValueFound = true;
                                 break;
@@ -519,7 +520,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
 
                 // Add the row to the data table
                 dataTable.Rows.Add(row);
-                
+
             }
 
             return dataTable;
@@ -675,7 +676,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         /// <param name="messageType"></param>
         public void AddMessage(string message, Utils.WPF.Stores.MessageTypes messageType)
         {
-            
+
             _messageStore.SetCurrentMessage(message, messageType);
         }
 

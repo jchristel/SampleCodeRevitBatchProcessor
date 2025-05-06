@@ -21,13 +21,13 @@
 //
 //
 
+using Autodesk.Revit.DB;
 using duHastNet.PushIt.Models;
 using System.Collections.Generic;
-using Autodesk.Revit.DB;
 
 namespace duHastNet.PushIt.RevitActions
 {
-    public class PushAllRoomDataToRevit: RevitActionBase, IRevitAction
+    public class PushAllRoomDataToRevit : RevitActionBase, IRevitAction
     {
         /// <summary>
         /// Execute the action
@@ -46,41 +46,18 @@ namespace duHastNet.PushIt.RevitActions
                 return ("Data model contains no rooms to push to Revit.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
             }
 
-            // get shared parameter data from the model
-            // get shared parameter ids by GUID
-            Dictionary<string, ElementId> sharedParameterIdsByGUIDs = duHastNet.RevitUtils.Parameters.SharedParaUtils.GetSharedParameterIdsByGUID(doc);
-
-            // get supported categories
-            List<Category> categories = duHastNet.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, RevitModel.Settings.SupportedCategories);
-            if (categories.Count == 0)
-            {
-                return("No supported Revit categories selected in settings.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
-            }
-
-            // convert revit categories into revit builtIncategories for filtering
-            List<BuiltInCategory> familyInstanceFilterCategories = duHastNet.RevitUtils.Categories.CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
-
-            //get families of supported built in categories
-            List<FamilyInstance> familyInstances = duHastNet.RevitUtils.Families.FamilyUtils.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
-
-            //check if there are any family instances
-            if (familyInstances.Count == 0)
-            {
-                // no family instances available...nothing to push
-                return("No family instances of supported Revit categories found.", Utils.WPF.Stores.MessageTypes.Information);
-            }
-
-            // convert family instances to revit rooms
-            List<duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
-                familyInstances, 
-                roomsDataModel[0], 
-                AddMessage
-             );
+            // get the revit rooms
+            List<duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
+                doc: doc,
+                roomsDataModel: roomsDataModel,
+                supportedCategoryName: RevitModel.Settings.SupportedCategories,
+                AddMessage: AddMessage
+            );
 
             // build a dictioanry of family instances that contain valid data ( valid data is a family instance where the room id has a match in the rooms data model)
             // the dictionary key is the room id and the value is a tuple of the room data model and a list of revit family instances
-            Dictionary<string,(RoomDataModel,List < FamilyInstance>)> currentFamilyInstances = new Dictionary<string, (RoomDataModel, List<FamilyInstance>)>();
-            
+            Dictionary<string, (RoomDataModel, List<FamilyInstance>)> currentFamilyInstances = new Dictionary<string, (RoomDataModel, List<FamilyInstance>)>();
+
             foreach (var revitRoomInstance in revitRooms)
             {
                 // check a pushed room ( id matches the room data model id)
@@ -94,19 +71,19 @@ namespace duHastNet.PushIt.RevitActions
                     else
                     {
                         currentFamilyInstances[revitRoomInstance.Id.Value] = (
-                            roomsDataModel.Find(x => x.Id.Value == revitRoomInstance.Id.Value), 
+                            roomsDataModel.Find(x => x.Id.Value == revitRoomInstance.Id.Value),
                             new List<FamilyInstance> { doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance }
                         );
                     }
                 }
-                else if (revitRoomInstance.Id.Value == "NEW")
+                else if (Utilities.PushModeUtils.IsNewRoomMode (revitRoomInstance.Id.Value))
                 {
                     // new rooms are not supported by this operation
                 }
-                else if (revitRoomInstance.Id.Value.Contains("SPLIT"))
+                else if (Utilities.PushModeUtils.IsSplitRoomMode(revitRoomInstance.Id.Value))
                 {
                     //a split room, remove the split from the id value
-                    string idValue = revitRoomInstance.Id.Value.Replace("::SPLIT", "");
+                    string idValue = Utilities.PushModeUtils.GetIdWithoutSplitModeIndicator( revitRoomInstance.Id.Value);
 
                     if (roomsDataModel.Exists(x => x.Id.Value == idValue))
                     {
@@ -114,7 +91,7 @@ namespace duHastNet.PushIt.RevitActions
                         var originalRoom = roomsDataModel.Find(x => x.Id.Value == idValue);
 
                         //make a copy of the original room and update the id to include split
-                        
+                        //??
 
                         // add the split room to the family instances
                         if (currentFamilyInstances.ContainsKey(idValue))
@@ -161,16 +138,17 @@ namespace duHastNet.PushIt.RevitActions
                         AddMessage: AddMessage
                     );
 
-                    if (!updateFamily) {
+                    if (!updateFamily)
+                    {
                         // get all keys in the update family instances
                         string keys = string.Join(", ", updateFamilyInstances.Keys);
                         // log the error
-                        AddMessage($"Failed to update room(s): {keys}", Utils.WPF.Stores.MessageTypes.Error); 
+                        AddMessage($"Failed to update room(s): {keys}", Utils.WPF.Stores.MessageTypes.Error);
                     }
 
                     // update the overall success
                     overallUpdateSuccess = overallUpdateSuccess && updateFamily;
-                    
+
                     // clear the update family instances
                     updateFamilyInstances.Clear();
 
@@ -180,7 +158,7 @@ namespace duHastNet.PushIt.RevitActions
             }
 
             //update the remaining family instances if any
-            if (updateFamilyInstances.Count>0)
+            if (updateFamilyInstances.Count > 0)
             {
                 // update the overall counter
                 updateCounter = updateCounter + taskBucketFamilyInstancesCounter;

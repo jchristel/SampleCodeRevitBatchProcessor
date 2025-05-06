@@ -56,13 +56,20 @@ namespace duHastNet.PushIt.Commands
                         try
                         {
                             //clear out all rooms from the data model
-                            _revitDataModel.ClearRooms();
+                            _revitDataModel.ClearAllRooms();
 
                             // reset the column order in the view model in case it was changed
                             _roomsSelectionViewModel.ColumnOrder = new List<string>();
 
                             // reload data from the file path
                             _revitDataModel.LoadRoomsData();
+
+                            //add new rooms to the data model first
+                            UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
+                            (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
 
                             // Execute the action to refresh the room data with the Revit data
                             RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
@@ -71,8 +78,11 @@ namespace duHastNet.PushIt.Commands
                             //write messages to log...
                             _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
 
-                            // return status message for UI
-                            return (messageAction, messageActionType);
+                            // return the message to the caller
+                            return (
+                                $"{messageActionTypeUpdate}\n{messageAction}",
+                                Utilities.MessageActionTypesUtils.CombineMessageActionType(new List<MessageTypes> { messageActionTypeUpdate, messageActionType })
+                            );
                         }
                         catch (Exception ex)
                         {

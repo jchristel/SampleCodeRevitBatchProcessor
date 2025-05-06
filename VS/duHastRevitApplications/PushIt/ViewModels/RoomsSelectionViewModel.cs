@@ -22,7 +22,6 @@
 //
 
 
-using Autodesk.Revit.DB;
 using duHastNet.PushIt.Utilities;
 using duHastNet.Utils.WPF.Commands;
 using System;
@@ -32,8 +31,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -160,7 +157,7 @@ namespace duHastNet.PushIt.ViewModels
             set
             {
                 _dataFilePath = value;
-                
+
                 _errorsViewModel.ClearErrors(nameof(DataFilePath));
 
                 // check if the file path is valid, if not add an error
@@ -187,14 +184,14 @@ namespace duHastNet.PushIt.ViewModels
                     // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(DataFilePathValid))
                     // from the eventhandler ErrorsViewModel_ErrorsChanged
                     _errorsViewModel.ClearErrors(nameof(DataFilePath));
-                    
+
                     // update the data path in the settings
                     _revitDataModel.Settings.DataPath = value;
                 }
 
                 // call ui update
                 OnPropertyChanged(nameof(DataFilePath));
-                
+
             }
         }
 
@@ -203,7 +200,7 @@ namespace duHastNet.PushIt.ViewModels
         {
             get => _dataFilePathValid;
             set
-            { 
+            {
                 _dataFilePathValid = value;
                 // call ui update
                 OnPropertyChanged(nameof(DataFilePathValid));
@@ -285,7 +282,7 @@ namespace duHastNet.PushIt.ViewModels
             {
                 _selectedColumnFilterItem = value;
                 OnPropertyChanged(nameof(SelectedColumnFilterItem));
-                
+
                 //update is filter applied property
                 OnPropertyChanged(nameof(IsFilterApplied));
             }
@@ -315,16 +312,17 @@ namespace duHastNet.PushIt.ViewModels
         #region user selection
 
         //binding in xaml property to the default view of the rooms collection
-        public DataView DataView { 
+        public DataView DataView
+        {
             get => _dv;
-            private set 
+            private set
             {
                 _dv = value;
                 OnPropertyChanged(nameof(DataView));
             }
 
         }
-        
+
         //binding in xaml property to the default view of the supported categories collection
         public ICollectionView SupportedCategories => _supportedCategoriesView;
 
@@ -356,7 +354,7 @@ namespace duHastNet.PushIt.ViewModels
                 {
                     return null;
                 }
-                
+
                 // check if the selected index is within the bounds of the rooms collection
                 if (_selectedIndex >= 0 && _selectedIndex < _dv.Count)
                 {
@@ -376,7 +374,7 @@ namespace duHastNet.PushIt.ViewModels
             get
             {
                 var selectedRoom = SelectedRoom;
-                if (selectedRoom != null && SelectedIndex >=0 )
+                if (selectedRoom != null && SelectedIndex >= 0)
                 {
                     return selectedRoom.MatchingRevitRooms.Count == 0;
                 }
@@ -514,7 +512,8 @@ namespace duHastNet.PushIt.ViewModels
                             foreach (var prop in roomModelInstance.Properties)
                             {
                                 // check if the column is meant to be displayed in the ui
-                                if (prop.ShowInUI && prop.Name == column) { 
+                                if (prop.ShowInUI && prop.Name == column)
+                                {
                                     dataTable.Columns.Add(prop.Name);
                                     break;
                                 }
@@ -550,7 +549,7 @@ namespace duHastNet.PushIt.ViewModels
                 dataTable.Columns.Add("Count Split");
             }
 
-            
+
 
             // Add the rows to the data table
             foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
@@ -585,7 +584,8 @@ namespace duHastNet.PushIt.ViewModels
                             foreach (var prop in roomModelInstance.Properties)
                             {
                                 // check if the column is meant to be displayed in the ui
-                                if (prop.ShowInUI && prop.Name == column) { 
+                                if (prop.ShowInUI && prop.Name == column)
+                                {
                                     row[prop.Name] = !string.IsNullOrEmpty(prop.Value) ? prop.Value : "";
                                     break;
                                 }
@@ -787,7 +787,7 @@ namespace duHastNet.PushIt.ViewModels
         /// <param name="messageType"></param>
         public void AddMessage(string message, Utils.WPF.Stores.MessageTypes messageType)
         {
-            
+
             _messageStore.SetCurrentMessage(message, messageType);
         }
 
@@ -902,22 +902,22 @@ namespace duHastNet.PushIt.ViewModels
             );
             //highlight room in Revit
             _highLightRoomCommand = new Commands.HighlightRoomsInRevitAsyncCommand(
-                roomsSelectionViewModel: this, 
+                roomsSelectionViewModel: this,
                 revitDataModel: _revitDataModel
             );
             //wipe stale rooms data
             _wipeStaleRoomsDataCommand = new Commands.WipeStaleDataRevitAsyncCommand(
-                roomsSelectionViewModel: this, 
+                roomsSelectionViewModel: this,
                 revitDataModel: _revitDataModel
             );
             //update from changed categories
             _updateFromChangedCategoriesCommand = new Commands.UpdateFromChangedCategoriesAsyncCommand(
-                roomsSelectionViewModel: this, 
+                roomsSelectionViewModel: this,
                 revitDataModel: _revitDataModel
             );
             //update all rooms in revit from data model
             _updateAllRoomsCommand = new Commands.PushAllRoomsInRevitAsyncCommand(
-                roomsSelectionViewModel: this, 
+                roomsSelectionViewModel: this,
                 revitDataModel: _revitDataModel
             );
             // create the column order changed command

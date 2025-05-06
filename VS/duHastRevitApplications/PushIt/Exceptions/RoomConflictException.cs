@@ -21,12 +21,12 @@
 //
 //
 
-using System;
 using duHastNet.PushIt.Models;
+using System;
 
 namespace duHastNet.PushIt.Exceptions
 {
-    public class RoomConflictException:Exception
+    public class RoomConflictException : Exception
     {
         public RoomDataModel ExistingRoom { get; }
         public RoomDataModel IncomingRoom { get; }

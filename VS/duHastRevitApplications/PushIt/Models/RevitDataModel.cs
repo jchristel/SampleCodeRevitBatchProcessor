@@ -28,7 +28,7 @@ using System.ComponentModel;
 
 namespace duHastNet.PushIt.Models
 {
-    public class RevitDataModel:INotifyPropertyChanged
+    public class RevitDataModel : INotifyPropertyChanged
     {
         public Models.RoomsDataModelContainer _roomsContainer;
         public Models.CategoryDataModelContainer _categoriesContainer;
@@ -68,10 +68,22 @@ namespace duHastNet.PushIt.Models
             return _roomsContainer.GetAllRoomsCombined();
         }
 
-        public void ClearRooms()
+        public void ClearAllRooms()
         {
             // clears SoA rooms and new rooms from the data model
             _roomsContainer.ClearAllRooms();
+        }
+
+        public void ClearNewRooms()
+        {
+            // clears new rooms from the data model
+            _roomsContainer.ClearNewRooms();
+        }
+
+        public void ClearRooms()
+        {
+            // clears SoA rooms from the data model
+            _roomsContainer.ClearRooms();
         }
 
         public void RemovePlacedRevitRoom(int revitElementId)
@@ -82,10 +94,10 @@ namespace duHastNet.PushIt.Models
 
         public void RemovePlacedNewRevitRoom(string roomId, int revitElementId)
         {
-             _roomsContainer.RemoveNewPlacedRevitRoom(
-                roomId: roomId,
-                revitElementId: revitElementId
-             );
+            _roomsContainer.RemoveNewPlacedRevitRoom(
+               roomId: roomId,
+               revitElementId: revitElementId
+            );
         }
 
         public void AddPlacedRevitRoom(string roomId, Models.RoomsRevit revitRoom)
@@ -105,7 +117,7 @@ namespace duHastNet.PushIt.Models
 
             // TODO: if no rooms return (need to pop message to user...)
             if (rooms == null) return;
-            
+
             foreach (Models.RoomDataModel room in rooms)
             {
                 AddRoom(room);
@@ -143,7 +155,7 @@ namespace duHastNet.PushIt.Models
 
         public void LogMessages(List<(string, Utils.WPF.Stores.MessageTypes)> messages)
         {
-            if(_logger == null)
+            if (_logger == null)
             {
                 return;
             }

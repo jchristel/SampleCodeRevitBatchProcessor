@@ -21,8 +21,8 @@
 //
 //
 
-using System.Collections.Generic;
 using Autodesk.Revit.DB;
+using System.Collections.Generic;
 
 namespace duHastNet.PushIt.Utilities.Revit
 {
@@ -40,7 +40,7 @@ namespace duHastNet.PushIt.Utilities.Revit
         {
             List<Models.CategoryDataModel> revitCategoryObjects = new List<Models.CategoryDataModel>();
             List<Category> revitCategories = duHastNet.RevitUtils.Categories.CategoryUtils.GetMainCategoriesInModel(doc);
-            
+
             foreach (var revitCategory in revitCategories)
             {
                 if (SupportedRevitCategories.Contains(revitCategory.Name))

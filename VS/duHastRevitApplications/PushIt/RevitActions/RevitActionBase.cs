@@ -1,9 +1,5 @@
-﻿using duHastNet.PushIt.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.PushIt.RevitActions
 {
@@ -23,7 +19,7 @@ namespace duHastNet.PushIt.RevitActions
             return Messages.Where(m => m.Item2 == Utils.WPF.Stores.MessageTypes.Information).Select(m => m.Item1).ToList();
         }
 
-        public List<string>GetLogMessages()
+        public List<string> GetLogMessages()
         {
             return Messages.Where(m => m.Item2 == Utils.WPF.Stores.MessageTypes.Log).Select(m => m.Item1).ToList();
         }
@@ -60,7 +56,7 @@ namespace duHastNet.PushIt.RevitActions
                 return (allOKMessage, Utils.WPF.Stores.MessageTypes.Information);
             }
         }
-        
+
         public RevitActionBase()
         {
             Messages = new List<(string, Utils.WPF.Stores.MessageTypes)>();

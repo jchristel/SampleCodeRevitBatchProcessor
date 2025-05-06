@@ -1,9 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.AtTheLibrary.Utilities.Revit
 {
@@ -20,13 +17,13 @@ namespace duHastNet.AtTheLibrary.Utilities.Revit
         {
             // get the family types
             List<FamilySymbol> familyTypes = duHastNet.RevitUtils.Families.FamilyUtils.GetFamilyTypes(family.Document, family);
-            
+
             if (familyTypes.Count == 0)
             {
                 return null;
             }
 
-            List < Models.FamilyRevit > familiesRevit = new List<Models.FamilyRevit>();
+            List<Models.FamilyRevit> familiesRevit = new List<Models.FamilyRevit>();
 
             foreach (FamilySymbol familyType in familyTypes)
             {
@@ -36,7 +33,7 @@ namespace duHastNet.AtTheLibrary.Utilities.Revit
                 // create a new family revit object
                 Models.FamilyRevit familyRevit = new Models.FamilyRevit(
                     id: new Models.FamilyDataProperty(
-                        name:nameof(Models.FamilyRevit.Id),
+                        name: nameof(Models.FamilyRevit.Id),
                         showInUI: true,
                         value: famId),
                     familyName: new Models.FamilyDataProperty(

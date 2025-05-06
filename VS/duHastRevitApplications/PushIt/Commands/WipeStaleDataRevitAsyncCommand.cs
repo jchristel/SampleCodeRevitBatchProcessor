@@ -26,6 +26,7 @@ using duHastNet.PushIt.RevitActions;
 using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 
@@ -53,6 +54,13 @@ namespace duHastNet.PushIt.Commands
                         Autodesk.Revit.DB.Document doc = app.ActiveUIDocument.Document;
                         try
                         {
+                            //need to add any new rooms to the data model first...
+                            UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
+                            (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
+
                             // Execute the action to wipe stale room data from the Revit model
                             WipeStaleRoomData action = new WipeStaleRoomData(
                                 revitModel: _revitDataModel,
@@ -63,8 +71,12 @@ namespace duHastNet.PushIt.Commands
                             //write messages to log...
                             _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
 
-                            // return the message
-                            return (messageAction, messageActionType);
+                            // return the message to the caller
+                            return (
+                                $"{messageActionUpdate}\n{messageAction}",
+                                Utilities.MessageActionTypesUtils.CombineMessageActionType(new List<MessageTypes> { messageActionTypeUpdate, messageActionType })
+                            );
+                            
                         }
                         catch (Exception ex)
                         {

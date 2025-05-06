@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace duHastNet.PushIt.Commands
 {
-    public class WipeSelectedRevitRoomInstancesAsyncCommand: Utils.WPF.Commands.CommandBase
+    public class WipeSelectedRevitRoomInstancesAsyncCommand : Utils.WPF.Commands.CommandBase
     {
 
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
@@ -49,7 +49,8 @@ namespace duHastNet.PushIt.Commands
                             // filter selected elements by supported categories
                             List<FamilyInstance> validElements = new List<FamilyInstance>();
                             string return_message = "";
-                            foreach (ElementId elementId in selectedElementIds) {
+                            foreach (ElementId elementId in selectedElementIds)
+                            {
                                 Element selectedElement = doc.GetElement(elementId);
                                 // check if the selected element is of a supported category (or has category to start with)
                                 if (selectedElement.Category == null || !_revitDataModel.Settings.SupportedCategories.Contains(selectedElement.Category.Name))
@@ -80,35 +81,50 @@ namespace duHastNet.PushIt.Commands
                             {
                                 wipeCounter = validElements.Count;
                             }
-                            
+
+                            //add new rooms to the data model first
+                            UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
+                            (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
+
                             // Execute the action to wipe selected rooms in the Revit model
-                            WipeSelectedRevitRoomsData action = new WipeSelectedRevitRoomsData(
+                            WipeSelectedRevitRoomsData actionWipe = new WipeSelectedRevitRoomsData(
                                 revitModel: _revitDataModel,
                                 pushTargets: validElements,
                                 roomsSelectionViewModel: _roomsSelectionViewModel
                             );
-
                             // execute the wipe action
-                            (string messageActionWipe, Utils.WPF.Stores.MessageTypes messageActionTypeWipe) = action.Execute(doc);
+                            (string messageActionWipe, Utils.WPF.Stores.MessageTypes messageActionTypeWipe) = actionWipe.Execute(doc);
 
-                            //set up an action refreshing the data model
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionWipe.GetLogMessagesAndLogTypes());
+
+
+                            //update the room data model again ( this time to check whether a new room was wiped and therefore needs to be removed from the data model)
+                            //add new rooms to the data model first
+                            UpdateRoomDataModelWithNewRooms actionUpdateTwo = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
+                            (string messageActionUpdateTwo, Utils.WPF.Stores.MessageTypes messageActionTypeUpdateTwo) = actionUpdateTwo.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionUpdateTwo.GetLogMessagesAndLogTypes());
+
                             // refresh the rooms data model with the rooms from the revit model
                             RevitActions.RefreshRoomDataWithRevitData refreshRoomDataWithRevitData = new RevitActions.RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
                             //execute the refresh action
-                            (string messageActionRefresh, Utils.WPF.Stores.MessageTypes messageActionTypeRefresh)  = refreshRoomDataWithRevitData.Execute(doc);
+                            (string messageActionRefresh, Utils.WPF.Stores.MessageTypes messageActionTypeRefresh) = refreshRoomDataWithRevitData.Execute(doc);
 
                             //write messages to log...
-                            _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
+                            _revitDataModel.LogMessages(refreshRoomDataWithRevitData.GetLogMessagesAndLogTypes());
 
-                            //combine messages from both actions
-                            if (messageActionTypeWipe == Utils.WPF.Stores.MessageTypes.Information && messageActionTypeRefresh == MessageTypes.Information)
-                            {
-                                return ($"{messageActionWipe}\n{messageActionRefresh}", messageActionTypeWipe);
-                            }
-                            else
-                            {
-                                return ($"{messageActionWipe}\n{messageActionRefresh}", MessageTypes.Error);
-                            }
+                            // return the message to the caller
+                            return (
+                                $"{messageActionUpdate}\n{messageActionWipe}\n{messageActionUpdateTwo}\n{messageActionRefresh}",
+                                Utilities.MessageActionTypesUtils.CombineMessageActionType(
+                                    new List<MessageTypes> { messageActionTypeUpdate, messageActionTypeWipe, messageActionTypeUpdateTwo, messageActionTypeRefresh }
+                                )
+                            );
                         }
                         catch (Exception ex)
                         {

@@ -21,15 +21,15 @@
 //
 //
 
-using System.Collections.Generic;
 using Autodesk.Revit.DB;
 using duHastNet.PushIt.Models;
+using System.Collections.Generic;
 
 namespace duHastNet.PushIt.RevitActions
 {
-    public class RefreshRoomDataWithRevitData: RevitActionBase, IRevitAction
+    public class RefreshRoomDataWithRevitData : RevitActionBase, IRevitAction
     {
-       
+
         private ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
 
@@ -51,23 +51,11 @@ namespace duHastNet.PushIt.RevitActions
                     RevitModel.Settings.SupportedCategories
                 );
 
-                //remove any new room with 0 placed revit rooms
-                // this is needed to remove any new rooms that are not placed in the model
-                List<Models.RoomDataModel> updatedNewRoomsFiltered = new List<Models.RoomDataModel>();
-                if (updatedNewRooms != null)
-                {
-                    foreach (var room in updatedNewRooms)
-                    {
-                        if (room.MatchingRevitRooms.Count > 0)
-                        {
-                            updatedNewRoomsFiltered.Add(room);
-                        }
-                    }
-                }
+                // do not remove any new room with 0 placed revit rooms in case the new room is placed in a non primary design option...
 
                 // clear all rooms in the data model (SoA and new rooms)
                 // this will also clear all rooms if shared parameter setup in project file is wrong.
-                RevitModel.ClearRooms();
+                RevitModel.ClearAllRooms();
 
                 int countSoARooms = 0;
                 // add updated SoA rooms to the data model if there are any
@@ -82,14 +70,14 @@ namespace duHastNet.PushIt.RevitActions
                 }
 
                 int countNewRooms = 0;
-                if (updatedNewRoomsFiltered != null && updatedNewRoomsFiltered.Count>0)
+                if (updatedNewRooms != null && updatedNewRooms.Count > 0)
                 {
                     // add updated rooms
-                    foreach (var room in updatedNewRoomsFiltered)
+                    foreach (var room in updatedNewRooms)
                     {
                         RevitModel.AddNewRoom(room);
                     }
-                    countNewRooms = updatedNewRoomsFiltered.Count;
+                    countNewRooms = updatedNewRooms.Count;
                 }
 
                 return ($"{countSoARooms} SoA rooms and {countNewRooms} new rooms in data model updated with rooms from the Revit model.", Utils.WPF.Stores.MessageTypes.Information);
@@ -114,8 +102,8 @@ namespace duHastNet.PushIt.RevitActions
         /// <param name="supportedCategoryName"></param>
         /// <returns></returns>
         public List<Models.RoomDataModel> RefreshRoomData(
-            Document doc, 
-            List<Models.RoomDataModel> roomsDataModel, 
+            Document doc,
+            List<Models.RoomDataModel> roomsDataModel,
             List<string> supportedCategoryName)
         {
 

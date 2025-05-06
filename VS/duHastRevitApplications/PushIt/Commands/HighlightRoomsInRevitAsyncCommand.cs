@@ -22,11 +22,11 @@
 //
 
 
-using System;
-using System.ComponentModel;
 using duHastNet.PushIt.RevitActions;
 using duHastNet.Utils.WPF.Stores;
 using Revit.Async;
+using System;
+using System.ComponentModel;
 
 namespace duHastNet.PushIt.Commands
 {
@@ -56,7 +56,7 @@ namespace duHastNet.PushIt.Commands
                             //check if there is a room to highlight
                             if (_roomsSelectionViewModel.SelectedRoom == null)
                             {
-                                return("No room selected in the user interface to highlight in Revit.", Utils.WPF.Stores.MessageTypes.Error);
+                                return ("No room selected in the user interface to highlight in Revit.", Utils.WPF.Stores.MessageTypes.Error);
                             }
 
                             // Execute the action to highlight the selected room in the Revit model

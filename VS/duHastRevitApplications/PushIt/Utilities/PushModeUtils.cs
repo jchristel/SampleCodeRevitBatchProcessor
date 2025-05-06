@@ -83,7 +83,7 @@ namespace duHastNet.PushIt.Utilities
             }
             else
             {
-                return  $"{idValue}{Separator}{SplitIDentifier}";
+                return $"{idValue}{Separator}{SplitIDentifier}";
             }
         }
 

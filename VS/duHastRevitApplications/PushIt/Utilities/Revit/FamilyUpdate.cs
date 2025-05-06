@@ -21,9 +21,9 @@
 //
 //
 
+using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
-using Autodesk.Revit.DB;
 
 
 namespace duHastNet.PushIt.Utilities.Revit
@@ -54,13 +54,13 @@ namespace duHastNet.PushIt.Utilities.Revit
                 }
                 else if (pushMode == PushMode.New)
                 {
-                    room_id = PushModeUtils.GetNewModeIdValue(idValue:room_id);
+                    room_id = PushModeUtils.GetNewModeIdValue(idValue: room_id);
                 }
 
                 // set the room id parameter
                 bool flagId = duHastNet.RevitUtils.Parameters.SharedParaUtils.SetSharedParameterValueByGUID(doc, familyInstance, roomData.Id.ParameterGUID, room_id);
                 AddMessage($"Updated room id with value [{room_id}] for family instance [{familyInstance.Id}] with status: [{flagId}]", Utils.WPF.Stores.MessageTypes.Log);
-                
+
                 //update other properties
                 bool flagOtherProperties = true;
 
@@ -74,7 +74,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                         AddMessage($"Skipping read only property [{property.Name}] for family instance [{familyInstance.Id}]", Utils.WPF.Stores.MessageTypes.Log);
                         continue;
                     }
-                    
+
                     // update the property depending on whether it has a GUID or not
                     if (property.ParameterGUID != "")
                     {
@@ -109,7 +109,7 @@ namespace duHastNet.PushIt.Utilities.Revit
         /// <returns> 
         /// True if the update was successful, false if not
         /// </returns>
-        public static bool UpdateSingleFamilyInstance(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, duHastNet.PushIt.Utilities.PushMode pushOperationMode , Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
+        public static bool UpdateSingleFamilyInstance(Document doc, FamilyInstance familyInstance, Models.RoomDataModel roomData, duHastNet.PushIt.Utilities.PushMode pushOperationMode, Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
         {
 
             // set up an action to run inside a Revit transaction
@@ -128,7 +128,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                 }
             };
 
-            bool transactionFlag =  duHastNet.RevitUtils.Transactions.TransactionUtils.InTransaction(
+            bool transactionFlag = duHastNet.RevitUtils.Transactions.TransactionUtils.InTransaction(
                 doc, $"Pushing room {roomData.Id.Value}", actionInTranny);
 
             return transactionFlag;
@@ -192,10 +192,10 @@ namespace duHastNet.PushIt.Utilities.Revit
         /// <exception cref="Exception"></exception>
         public static bool WipeMultipleFamilyInstances(Document doc, List<FamilyInstance> familyInstances, Models.RoomDataModel sampleRoom, Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
         {
-            
+
             //update all room data properties
-            Models.RoomDataProperty Id =  new Models.RoomDataProperty(sampleRoom.Id.Name, sampleRoom.Id.ParameterGUID, sampleRoom.Id.ParameterName,"", sampleRoom.Id.ShowInUI, sampleRoom.Id.IsReadOnly);
-            
+            Models.RoomDataProperty Id = new Models.RoomDataProperty(sampleRoom.Id.Name, sampleRoom.Id.ParameterGUID, sampleRoom.Id.ParameterName, "", sampleRoom.Id.ShowInUI, sampleRoom.Id.IsReadOnly);
+
             List<Models.RoomDataProperty> otherProperties = new List<Models.RoomDataProperty>();
 
             foreach (var property in sampleRoom.Properties)

@@ -25,7 +25,7 @@
 
 namespace duHastNet.PushIt.Models
 {
-    public class RoomDataProperty:Utilities.IRoomProperty
+    public class RoomDataProperty : Utilities.IRoomProperty
     {
         private string _name;
         private string _parameterGUID;

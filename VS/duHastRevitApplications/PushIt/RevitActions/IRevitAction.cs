@@ -21,7 +21,6 @@
 //
 //
 
-using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
 namespace duHastNet.PushIt.RevitActions

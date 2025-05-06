@@ -21,8 +21,8 @@
 //
 //
 
-using System.Collections.Generic;
 using Autodesk.Revit.DB;
+using System.Collections.Generic;
 
 namespace duHastNet.PushIt.Utilities.Revit
 {
@@ -54,8 +54,8 @@ namespace duHastNet.PushIt.Utilities.Revit
             List<string> parameterMessages = new List<string>();
 
             // check if rooms data model is empty
-            if (roomsDataModel.Count == 0){ message = "No rooms in data model"; return false; }
-           
+            if (roomsDataModel.Count == 0) { message = "No rooms in data model"; return false; }
+
             //get the first room data model to check if all shared parameters exist
             Models.RoomDataModel firstRoomDataModel = roomsDataModel[0];
 
@@ -70,11 +70,11 @@ namespace duHastNet.PushIt.Utilities.Revit
             {
                 // skip if parameterGUID is empty
                 if (property.ParameterGUID == "") { continue; }
-                otherPropertiesBindings.Add(new Dictionary<(string Name,string GUID), List<string>> { { (property.Name, property.ParameterGUID), duHastNet.RevitUtils.Parameters.SharedParaUtils.ParameterBindingsByGUID(doc, property.ParameterGUID) } });
+                otherPropertiesBindings.Add(new Dictionary<(string Name, string GUID), List<string>> { { (property.Name, property.ParameterGUID), duHastNet.RevitUtils.Parameters.SharedParaUtils.ParameterBindingsByGUID(doc, property.ParameterGUID) } });
             }
 
 
-            if (bindingsId== null)
+            if (bindingsId == null)
             {
                 parameterMessages.Add($"Room Id [{firstRoomDataModel.Id.ParameterGUID}] shared parameters is  missing from file");
             }
@@ -93,7 +93,7 @@ namespace duHastNet.PushIt.Utilities.Revit
 
             //check parameter bindings and give some user feedback if something is wrong
             // check id parameter
-            if (bindingsId ==null || !CheckBindingsList(bindingsId, supportedCategoryName))
+            if (bindingsId == null || !CheckBindingsList(bindingsId, supportedCategoryName))
             {
                 parameterMessages.Add($"The shared parameter 'Room Id' [{firstRoomDataModel.Id.ParameterGUID}]is not bound to the correct categories.");
                 parameterBindingCheck = false;
@@ -114,7 +114,7 @@ namespace duHastNet.PushIt.Utilities.Revit
 
 
             // print messages
-            if (parameterMessages.Count>0)
+            if (parameterMessages.Count > 0)
             {
                 // one long message
                 message = string.Join("\n", parameterMessages);

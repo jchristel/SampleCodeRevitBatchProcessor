@@ -22,12 +22,12 @@
 //
 
 
-using duHastNet.PushIt.Models;
-using System.Collections.Generic;
-using System.IO;
 using CsvHelper;
 using CsvHelper.Configuration;
+using duHastNet.PushIt.Models;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 
 namespace duHastNet.PushIt.Utilities
 {
@@ -108,7 +108,7 @@ namespace duHastNet.PushIt.Utilities
                                 isReadOnly: bool.Parse(header3[0].ToLower())
                              ),
                             otherProperties: properties);
-                        
+
                         roomsData.Add(record);
                     }
                 }

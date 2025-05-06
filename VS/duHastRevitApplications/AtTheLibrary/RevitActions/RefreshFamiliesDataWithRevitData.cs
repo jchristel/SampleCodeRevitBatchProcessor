@@ -21,14 +21,14 @@
 //
 //
 
-using System.Collections.Generic;
-using System.Linq;
 using Autodesk.Revit.DB;
 using duHastNet.AtTheLibrary.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace duHastNet.AtTheLibrary.RevitActions
 {
-    public class RefreshFamiliesDataWithRevitData: RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
+    public class RefreshFamiliesDataWithRevitData : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
 
         private ViewModels.FamiliesSelectionViewModel _roomsSelectionViewModel;
@@ -44,10 +44,11 @@ namespace duHastNet.AtTheLibrary.RevitActions
         /// <returns></returns>
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
-            try { 
+            try
+            {
                 // refresh the rooms data model with the rooms from the revit model
                 List<Models.FamilyDataModel> updatedFamilies = RefreshFamiliesData(
-                    doc, 
+                    doc,
                     RevitModel.GetAllFamilies(),
                     RevitModel.Settings.SupportedTypeParameterNames
                  );
@@ -131,7 +132,7 @@ namespace duHastNet.AtTheLibrary.RevitActions
 
             // convert the families to revit families
             families = Utilities.Revit.RevitFamilyObjectsConverter.ConvertFamiliesToRevitFamilies(
-                families: familiesInModel.ToList(), 
+                families: familiesInModel.ToList(),
                 AddMessage: AddMessage
             );
 
@@ -148,7 +149,7 @@ namespace duHastNet.AtTheLibrary.RevitActions
         public List<Models.FamilyDataModel> UpdateFamiliesDataModel(List<Models.FamilyDataModel> familiesDataModel, List<Models.FamilyRevit> familiesInRevitModel)
         {
             // loop over families and update the data model
-            foreach(FamilyDataModel familyDataModel in familiesDataModel)
+            foreach (FamilyDataModel familyDataModel in familiesDataModel)
             {
                 // get the family revit object
                 FamilyRevit familyRevit = familiesInRevitModel.FirstOrDefault(f => f.Id.Value == familyDataModel.Id.Value);

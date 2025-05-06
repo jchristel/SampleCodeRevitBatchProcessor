@@ -1,9 +1,5 @@
-﻿using duHastNet.AtTheLibrary.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.AtTheLibrary.RevitActions
 {
@@ -23,7 +19,7 @@ namespace duHastNet.AtTheLibrary.RevitActions
             return Messages.Where(m => m.Item2 == Utils.WPF.Stores.MessageTypes.Information).Select(m => m.Item1).ToList();
         }
 
-        public List<string>GetLogMessages()
+        public List<string> GetLogMessages()
         {
             return Messages.Where(m => m.Item2 == Utils.WPF.Stores.MessageTypes.Log).Select(m => m.Item1).ToList();
         }

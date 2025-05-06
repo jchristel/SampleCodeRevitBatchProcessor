@@ -1,13 +1,10 @@
-﻿using System;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CsvHelper;
-using CsvHelper.Configuration;
 
 namespace duHastNet.AtTheLibrary.Utilities
 {
@@ -63,8 +60,8 @@ namespace duHastNet.AtTheLibrary.Utilities
 
                     //attempt to read the rest of the file
                     try
-                    { 
-                        string currentFamilyIdentifyer= ""; // family name + category + type name as a hash string
+                    {
+                        string currentFamilyIdentifyer = ""; // family name + category + type name as a hash string
                         string previousFamilyIdentifyer = ""; // family name + category + type name as a hash string
                         Models.FamilyDataModel currentFamilyData = null;
                         // read the rest of the file

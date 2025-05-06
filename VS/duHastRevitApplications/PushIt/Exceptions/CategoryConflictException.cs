@@ -21,8 +21,8 @@
 //
 //
 
-using System;
 using duHastNet.PushIt.Models;
+using System;
 
 namespace duHastNet.PushIt.Exceptions
 {

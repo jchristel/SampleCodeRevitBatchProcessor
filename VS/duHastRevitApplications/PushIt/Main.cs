@@ -22,16 +22,16 @@
 //
 
 
-using System;
-using System.Collections.Generic;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using duHastNet.PushIt.Views;
 using duHastNet.PushIt.Utilities;
+using duHastNet.PushIt.Views;
+using Revit.Async;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Revit.Async;
 
 
 namespace duHastNet.PushIt
@@ -43,7 +43,7 @@ namespace duHastNet.PushIt
         Models.RevitDataModel _revitDataModel;
         duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
         duHastNet.Utils.WPF.Stores.MessageStore _messageStore;
-        
+
         static Main()
         {
             //assembly resolver in order for this plugin to be used form pyRevit invoke.button
@@ -60,7 +60,7 @@ namespace duHastNet.PushIt
             //set up stores
             _navigationStore = new duHastNet.Utils.WPF.Stores.NavigationStore();
             _messageStore = new duHastNet.Utils.WPF.Stores.MessageStore();
-           
+
             // set up th revit data model
             _revitDataModel = new Models.RevitDataModel();
 

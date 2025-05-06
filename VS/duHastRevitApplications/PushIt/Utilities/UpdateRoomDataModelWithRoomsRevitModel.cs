@@ -72,7 +72,7 @@ namespace duHastNet.PushIt.Utilities
         /// Attach the rooms from the revit model to the rooms in the data model based on the room id property
         /// <\summary>
         public static List<Models.RoomDataModel> UpdateRoomDataModelWithRoomsRevitModel(
-            List<Models.RoomDataModel> roomsDataModel, 
+            List<Models.RoomDataModel> roomsDataModel,
             List<Models.RoomsRevit> roomsRevit,
             string revitModelActiveDesignSetName,
             string revitModelActiveDesignOptionName
@@ -97,7 +97,7 @@ namespace duHastNet.PushIt.Utilities
                 roomDataModel.ClearMatchingSplitRevitRooms();
 
                 // check if the room id exists in the revit model or a split room
-                if (!roomsRevitById.ContainsKey(roomDataModel.Id.Value) && 
+                if (!roomsRevitById.ContainsKey(roomDataModel.Id.Value) &&
                     !roomsRevitById.ContainsKey(Utilities.PushModeUtils.GetSplitModeIdValue(roomDataModel.Id.Value)))
                 {
                     continue;
@@ -121,12 +121,12 @@ namespace duHastNet.PushIt.Utilities
 
                     //Remove the matched families from the dictionary to speed up the search
                     roomsRevitById.Remove(roomDataModel.Id.Value);
-                    
+
                 }
 
                 //get the split room id 
                 string splitRoomId = Utilities.PushModeUtils.GetSplitModeIdValue(roomDataModel.Id.Value);
-                
+
                 //check if there is an entry for the split room id in the dictionary
                 // if not, continue
                 if (roomsRevitById.ContainsKey(splitRoomId))

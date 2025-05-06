@@ -33,7 +33,7 @@ namespace duHastNet.PushIt.RevitActions
     {
         private readonly RoomDataModel _roomToPush;
         private readonly UIDocument _uiDoc;
-       
+
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
             List<ElementId> elementIds = new List<ElementId>();
@@ -42,6 +42,12 @@ namespace duHastNet.PushIt.RevitActions
             {
                 // get the selected elements
                 foreach (var room in _roomToPush.MatchingRevitRooms)
+                {
+                    elementIds.Add(new ElementId(room.RevitElementId));
+                }
+
+                // add any split room
+                foreach (var room in _roomToPush.MatchingSplitRevitRooms)
                 {
                     elementIds.Add(new ElementId(room.RevitElementId));
                 }

@@ -29,9 +29,6 @@ using Revit.Async;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.PushIt.Commands
 {
@@ -58,15 +55,24 @@ namespace duHastNet.PushIt.Commands
                         try
                         {
                             //need to add any new rooms to the data model first...
+                            UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
+                            (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
 
                             // Execute the action to refresh the room data with the Revit data
                             RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
 
-                            //TODO write messages to log...
+                            //write messages to log...
+                            _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
 
                             // return the message to the caller
-                            return (messageAction, messageActionType);
+                            return (
+                                $"{messageActionUpdate}\n{messageAction}",
+                                Utilities.MessageActionTypesUtils.CombineMessageActionType(new List<MessageTypes> { messageActionTypeUpdate, messageActionType })
+                            );
                         }
                         catch (Exception ex)
                         {

@@ -54,9 +54,9 @@ namespace duHastNet.PushIt.Models
                         existingRoom, room);
                 }
             }
-                
+
             _rooms.Add(room);
-                
+
         }
 
         /// <summary>
@@ -68,11 +68,11 @@ namespace duHastNet.PushIt.Models
             //check if rooms are conflicting by id value
             foreach (var existingRoom in _newRooms)
             {
-                if (existingRoom.ConflictsByProperties(room))
+                if (existingRoom.ConflictsById(room))
                 {
-                    // there is a good chance that the room is already in the list
-                    // if that is the case ignore the duplicate
-                    return;
+                    // throw an exception
+                    throw new Exceptions.RoomConflictException(
+                        existingRoom, room);
 
                 }
             }
@@ -107,7 +107,7 @@ namespace duHastNet.PushIt.Models
         /// <summary>
         /// Clears the list of rooms from the Schedule Of Accomodation
         /// </summary>
-        public void ClearRooms() 
+        public void ClearRooms()
         {
             _rooms = new List<Models.RoomDataModel>();
         }
@@ -149,7 +149,7 @@ namespace duHastNet.PushIt.Models
                     break;
                 }
                 //check if any matching split rooms...
-                else if ( room.MatchingSplitRevitRooms.Any(x=>x.RevitElementId == revitElementId))
+                else if (room.MatchingSplitRevitRooms.Any(x => x.RevitElementId == revitElementId))
                 {
                     // remove the placed room from the data model
                     room.MatchingSplitRevitRooms.RemoveAll(x => x.RevitElementId == revitElementId);
@@ -217,7 +217,7 @@ namespace duHastNet.PushIt.Models
                 if (room.Id.Value == roomIdWithoutSplit)
                 {
                     //check if this is a standard room ( room id is the same as the id without split mode indicator)
-                    if (roomId==roomIdWithoutSplit)
+                    if (roomId == roomIdWithoutSplit)
                     {
                         // add the placed room to the data model
                         room.AddMatchingRevitRoom(revitRoom);
@@ -241,7 +241,7 @@ namespace duHastNet.PushIt.Models
         public void AddPlacedNewRevitRoom(string roomId, Models.RoomsRevit revitRoom)
         {
             bool roomFound = false;
-            
+
             // the lieklyhood of this happening is very low, but just in case since the id contains a time stamp down to the milisecond
             foreach (var room in _newRooms)
             {
@@ -260,15 +260,15 @@ namespace duHastNet.PushIt.Models
             //if nor matching room was found...which is likely add a new room
             if (!roomFound)
             {
-                
+
                 List<Models.RoomDataProperty> properties = new List<Models.RoomDataProperty>();
                 //get the properties
                 foreach (var property in revitRoom.Properties)
                 {
                     // add the property to the new room
-                    properties.Add(new Models.RoomDataProperty(name:property.Name, parameterGUID:property.ParameterGUID,
-                        parameterName:property.ParameterName, value:property.Value, showInUI:property.ShowInUI,
-                        isReadOnly:property.IsReadOnly));
+                    properties.Add(new Models.RoomDataProperty(name: property.Name, parameterGUID: property.ParameterGUID,
+                        parameterName: property.ParameterName, value: property.Value, showInUI: property.ShowInUI,
+                        isReadOnly: property.IsReadOnly));
                 }
 
                 Models.RoomDataProperty idProperty = new Models.RoomDataProperty(name: revitRoom.Id.Name, parameterGUID: revitRoom.Id.ParameterGUID,
@@ -277,8 +277,8 @@ namespace duHastNet.PushIt.Models
 
                 // add the placed room to the data model
                 Models.RoomDataModel newRoom = new Models.RoomDataModel(
-                    id:idProperty,
-                    otherProperties:properties);
+                    id: idProperty,
+                    otherProperties: properties);
 
 
                 // add the placed room to the data model

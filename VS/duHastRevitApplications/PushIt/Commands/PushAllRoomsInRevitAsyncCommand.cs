@@ -54,7 +54,7 @@ namespace duHastNet.PushIt.Commands
                         {
                             // Execute the action to update all rooms in the Revit model
                             PushAllRoomDataToRevit action = new PushAllRoomDataToRevit(_revitDataModel);
-                            (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType)  = action.Execute(doc);
+                            (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
 
                             //write messages to log...
                             _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());

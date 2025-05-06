@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace duHastNet.AtTheLibrary.Models
 {
@@ -40,7 +36,7 @@ namespace duHastNet.AtTheLibrary.Models
             _matchingRevitFamilies.Add(family);
         }
 
-        public FamilyDataModel(FamilyDataProperty id, FamilyDataProperty familyName, FamilyDataProperty familyCategory, FamilyDataProperty familyTypeName,  List<FamilyDataProperty> otherProperties)
+        public FamilyDataModel(FamilyDataProperty id, FamilyDataProperty familyName, FamilyDataProperty familyCategory, FamilyDataProperty familyTypeName, List<FamilyDataProperty> otherProperties)
         {
             // set the id and other properties
             Id = id;

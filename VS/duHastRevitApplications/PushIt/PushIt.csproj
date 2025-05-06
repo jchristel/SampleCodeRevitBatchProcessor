@@ -163,7 +163,9 @@
     <Compile Include="RevitActions\UpdateRoomDataModelWithNewRooms.cs" />
     <Compile Include="RevitActions\WipeSelectedRevitRoomsData.cs" />
     <Compile Include="RevitActions\WipeStaleRoomData.cs" />
+    <Compile Include="Utilities\ConvertRevitRoomObjectToDataModelRoomObject.cs" />
     <Compile Include="Utilities\IRoomProperty.cs" />
+    <Compile Include="Utilities\MessageActionTpesUtils.cs" />
     <Compile Include="Utilities\PropertyChangedEventNames.cs" />
     <Compile Include="Utilities\PushMode.cs" />
     <Compile Include="Utilities\PushModeUtils.cs" />

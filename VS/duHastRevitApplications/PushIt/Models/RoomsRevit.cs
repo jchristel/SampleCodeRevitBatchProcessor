@@ -22,7 +22,6 @@
 //
 
 using System.Collections.Generic;
-using System.Windows.Documents;
 
 namespace duHastNet.PushIt.Models
 {
@@ -66,7 +65,7 @@ namespace duHastNet.PushIt.Models
 
         public RoomsRevit() { }
 
-        public RoomsRevit(Models.RoomDataProperty id,List<Models.RoomDataProperty> properties, string designSet,string designOption,bool designOptionIsPrimary,int revitElementId)
+        public RoomsRevit(Models.RoomDataProperty id, List<Models.RoomDataProperty> properties, string designSet, string designOption, bool designOptionIsPrimary, int revitElementId)
         {
             _id = id;
             _properties = properties;

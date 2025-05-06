@@ -21,14 +21,10 @@
 //
 //
 
-using duHastNet.PushIt.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Autodesk.Revit.DB;
 using duHastNet.PushIt.Models;
+using duHastNet.PushIt.ViewModels;
+using System.Collections.Generic;
 
 namespace duHastNet.PushIt.RevitActions
 {
@@ -42,6 +38,9 @@ namespace duHastNet.PushIt.RevitActions
         {
             try
             {
+                // reset the new rooms in the data model
+                RevitModel.ClearNewRooms();
+
                 // get all new rooms from the model
                 var roomsInModel = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
                     doc: doc,
@@ -55,9 +54,44 @@ namespace duHastNet.PushIt.RevitActions
                     return GetReturnValue("No new rooms found in the model.");
                 }
 
-                //check which rooms are marked as new and add them to the data model
+                // set up a dictionary to hold the new rooms by their id...in case there are multiple rooms with the same id
+                Dictionary<string, List<duHastNet.PushIt.Models.RoomsRevit>> newRoomsInModel = new Dictionary<string, List<RoomsRevit>>();
 
-                return ($"{countSoARooms} SoA rooms and {countNewRooms} new rooms in data model updated with rooms from the Revit model.", Utils.WPF.Stores.MessageTypes.Information);
+                //check which rooms are marked as new and add them to the data model
+                foreach (var room in roomsInModel)
+                {
+                    // check if the room is marked as new
+                    if (duHastNet.PushIt.Utilities.PushModeUtils.IsNewRoomMode(room.Id.Value))
+                    {
+                        if (!newRoomsInModel.ContainsKey(room.Id.Value))
+                        {
+                            // add the room to the data model
+                            newRoomsInModel.Add(room.Id.Value, new List<RoomsRevit>());
+                        }
+                        // add the room to the data model
+                        newRoomsInModel[room.Id.Value].Add(room);
+                    }
+                }
+
+                // set up a counter for the number of new rooms added to the data model
+                int countNewRooms = 0;
+
+                // loop over new rooms and add them to the data model
+                foreach (KeyValuePair<string, List<duHastNet.PushIt.Models.RoomsRevit>> kvp in newRoomsInModel)
+                {
+                    // create a new room data model from the first room in the list
+                    Models.RoomDataModel newRoom = Utilities.ConvertRevitRoomObjectToDataModelRoomObject.ConvertRevitRoomToDataModelRoom(
+                        revitRoom: kvp.Value[0]
+                    );
+
+                    // add the new room to the data model
+                    RevitModel.AddNewRoom(newRoom);
+
+                    // increment the count of new rooms
+                    countNewRooms++;
+                }
+
+                return ($"{countNewRooms} new rooms added to the data model from the Revit model.", Utils.WPF.Stores.MessageTypes.Information);
             }
             catch (System.Exception ex)
             {
@@ -69,10 +103,11 @@ namespace duHastNet.PushIt.RevitActions
             return GetReturnValue("Created new rooms from Revit.");
         }
 
-    }   public UpdateRoomDataModelWithNewRooms(RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
+        public UpdateRoomDataModelWithNewRooms(RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
         {
             RevitModel = revitModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;
         }
-    } }
+    }
+}
 

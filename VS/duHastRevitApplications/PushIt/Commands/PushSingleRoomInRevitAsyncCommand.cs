@@ -36,7 +36,7 @@ using System.Linq;
 
 namespace duHastNet.PushIt.Commands
 {
-    public class PushSingleRoomInRevitAsyncCommand: Utils.WPF.Commands.CommandBase
+    public class PushSingleRoomInRevitAsyncCommand : Utils.WPF.Commands.CommandBase
     {
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         //private readonly Services.NavigationService _reservationViewNavigationService;
@@ -136,19 +136,25 @@ namespace duHastNet.PushIt.Commands
             {
                 return false;
             }
+            else if(_roomsSelectionViewModel.SelectedRoom == null)
+            {
+                return false;
+            }
             // if push mode is split and a room has been pushed already allow split mode
-            else if (_roomsSelectionViewModel.PushOperationMode == PushMode.Split && 
-                !_roomsSelectionViewModel.IsMatchingRevitRoomsEmpty)
-            { 
-                return true; 
+            //dont allow split mode on a new room
+            else if (_roomsSelectionViewModel.PushOperationMode == PushMode.Split &&
+                !_roomsSelectionViewModel.IsMatchingRevitRoomsEmpty &&
+                !Utilities.PushModeUtils.IsNewRoomMode (_roomsSelectionViewModel.SelectedRoom.Id.Value))
+            {
+                return true;
             }
             // if push mode is new allow push mode
-            else if (_roomsSelectionViewModel.PushOperationMode == PushMode.New) 
-            { 
-                return true; 
+            else if (_roomsSelectionViewModel.PushOperationMode == PushMode.New)
+            {
+                return true;
             }
             //if standard push mode check if a room is selected
-            else if (_roomsSelectionViewModel.PushOperationMode == PushMode.Push && 
+            else if (_roomsSelectionViewModel.PushOperationMode == PushMode.Push &&
                 _roomsSelectionViewModel.IsMatchingRevitRoomsEmpty)
             {
                 return base.CanExecute(parameter);

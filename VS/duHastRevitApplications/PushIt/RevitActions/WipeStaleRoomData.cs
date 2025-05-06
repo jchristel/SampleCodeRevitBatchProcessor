@@ -39,7 +39,7 @@ namespace duHastNet.PushIt.RevitActions
             {
                 WipeData(
                     doc,
-                    RevitModel._roomsContainer.GetAllRooms(),
+                    RevitModel._roomsContainer.GetAllRoomsCombined(), //include SoA and new rooms
                     RevitModel.Settings.SupportedCategories
                  );
             }
@@ -53,12 +53,72 @@ namespace duHastNet.PushIt.RevitActions
             return GetReturnValue($"Wiped {_wipeCounter} stale room(s) data in Revit");
         }
 
+
+        public void WipeData(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName)
+        {
+            if (roomsDataModel.Count == 0)
+            {
+                // no sample room available...means no parameter mapping available
+                AddMessage("Data model contains no rooms to push to Revit.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+                return;
+            }
+
+            // get the revit rooms
+            List<duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
+                doc: doc,
+                roomsDataModel: roomsDataModel,
+                supportedCategoryName: supportedCategoryName,
+                AddMessage: AddMessage
+            );
+
+            //build a list of family instances that contain stale data ( stale data is a family instance where the room id is not in the rooms data model)
+            List<FamilyInstance> staleFamilyInstances = new List<FamilyInstance>();
+            foreach (var revitRoomInstance in revitRooms)
+            {
+                if (!roomsDataModel.Exists(x => x.Id.Value == revitRoomInstance.Id.Value))
+                {
+                    staleFamilyInstances.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
+                }
+            }
+
+            // keep track of the overall success of the wipe operation
+            bool overallWipeSuccess = true;
+
+            //attempt to wipe the stale data in bundles of 20 family instances to speed up the process
+            List<FamilyInstance> familyInstancesToWipe = new List<FamilyInstance>();
+            foreach (var staleFamilyInstance in staleFamilyInstances)
+            {
+                //fill the task bucket
+                familyInstancesToWipe.Add(staleFamilyInstance);
+                _wipeCounter++;
+
+                //reached bucket limit?
+                if (familyInstancesToWipe.Count == 20)
+                {
+                    // update the family instances
+                    bool wipeSuccess = WipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
+                    AddMessage($"Wiping {familyInstancesToWipe.Count} family instances. {wipeSuccess}", Utils.WPF.Stores.MessageTypes.Log);
+                    overallWipeSuccess = overallWipeSuccess && wipeSuccess;
+                    // clear the update family instances
+                    familyInstancesToWipe.Clear();
+                }
+            }
+
+            //wipe the remaining family instances
+            if (familyInstancesToWipe.Count > 0)
+            {
+                bool wipeSuccess = WipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
+                AddMessage($"Wiping {familyInstancesToWipe.Count} family instances. {wipeSuccess}", Utils.WPF.Stores.MessageTypes.Log);
+                overallWipeSuccess = overallWipeSuccess && wipeSuccess;
+            }
+        }
+
         public bool WipeIt(Document doc, List<FamilyInstance> familyInstancesToWipe, RoomDataModel sampleRoom)
         {
             bool wipeSuccess = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(
                 doc: doc,
                 familyInstances: familyInstancesToWipe,
-                sampleRoom: sampleRoom, 
+                sampleRoom: sampleRoom,
                 AddMessage: AddMessage
             );
 
@@ -74,7 +134,7 @@ namespace duHastNet.PushIt.RevitActions
                     bool wipeSuccessSingle = Utilities.Revit.FamilyUpdate.WipeMultipleFamilyInstances(
                         doc: doc,
                         familyInstances: new List<FamilyInstance> { familyInstance },
-                        sampleRoom: sampleRoom, 
+                        sampleRoom: sampleRoom,
                         AddMessage: AddMessage
                     );
 
@@ -102,84 +162,6 @@ namespace duHastNet.PushIt.RevitActions
             }
         }
 
-        public void WipeData(Document doc, List<Models.RoomDataModel> roomsDataModel, List<string> supportedCategoryName)
-        {
-            if (roomsDataModel.Count == 0)
-            {
-                // no sample room available...means no parameter mapping available
-                AddMessage("Data model contains no rooms to push to Revit.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
-                return;
-            }
-
-            // get supported categories
-            List<Category> categories = duHastNet.RevitUtils.Categories.CategoryUtils.GetMainCategoriesByName(doc, supportedCategoryName);
-            if (categories.Count == 0)
-            {
-                // no supported categories found
-                AddMessage("Data model contains no supported Revit categories.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
-                return;
-            }
-
-            // convert revit categories into revit builtIncategories for filtering
-            List<BuiltInCategory> familyInstanceFilterCategories = duHastNet.RevitUtils.Categories.CategoryUtils.GetBuiltInCategoriesFromCategories(categories);
-
-            //get families of supported built in categories
-            List<FamilyInstance> familyInstances = duHastNet.RevitUtils.Families.FamilyUtils.GetFamilyInstancesByBuiltInCategories(doc, familyInstanceFilterCategories);
-
-            //check if there are any family instances
-            if (familyInstances.Count == 0)
-            {
-                // no family instances available...nothing to push
-                _roomsSelectionViewModel.AddMessage("No family instances found in the model", duHastNet.Utils.WPF.Stores.MessageTypes.Information);
-                return;
-            }
-
-            // convert family instances to revit rooms
-            List<duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.RevitRoomObjectsConverter.ConvertFamiliesToRevitRooms(
-                familyInstances, roomsDataModel[0], AddMessage);
-
-            //build a list of family instances that contain stale data ( stale data is a family instance where the room id is not in the rooms data model)
-            List<FamilyInstance> staleFamilyInstances = new List<FamilyInstance>();
-            foreach (var revitRoomInstance in revitRooms)
-            {
-                if (!roomsDataModel.Exists(x => x.Id.Value == revitRoomInstance.Id.Value))
-                {
-                    staleFamilyInstances.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
-                }
-            }
-
-            // keep track of the overall success of the wipe operation
-            bool overallWipeSuccess = true;
-            
-            //attempt to wipe the stale data in bundles of 20 family instances to speed up the process
-            List<FamilyInstance> familyInstancesToWipe = new List<FamilyInstance>();
-            foreach (var staleFamilyInstance in staleFamilyInstances)
-            {
-                //fill the task bucket
-                familyInstancesToWipe.Add(staleFamilyInstance);
-                _wipeCounter++;
-
-                //reached bucket limit?
-                if (familyInstancesToWipe.Count == 20)
-                {
-                    // update the family instances
-                    bool wipeSuccess = WipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
-                    AddMessage($"Wiping {familyInstancesToWipe.Count} family instances. {wipeSuccess}", Utils.WPF.Stores.MessageTypes.Log);
-                    overallWipeSuccess = overallWipeSuccess && wipeSuccess;
-                    // clear the update family instances
-                    familyInstancesToWipe.Clear();
-                }
-                
-            }
-
-            //wipe the remaining family instances
-            if (familyInstancesToWipe.Count > 0)
-            {
-                bool wipeSuccess = WipeIt(doc, familyInstancesToWipe, roomsDataModel[0]);
-                AddMessage($"Wiping {familyInstancesToWipe.Count} family instances. {wipeSuccess}", Utils.WPF.Stores.MessageTypes.Log);
-                overallWipeSuccess = overallWipeSuccess && wipeSuccess;
-            }
-        }
         public WipeStaleRoomData(Models.RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
         {
             RevitModel = revitModel;

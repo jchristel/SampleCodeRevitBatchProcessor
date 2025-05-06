@@ -22,17 +22,14 @@
 //
 
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Revit.Async;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace duHastNet.AtTheLibrary
 {
@@ -75,7 +72,7 @@ namespace duHastNet.AtTheLibrary
 
             // debug for now
             // set the settings
-            if(settings.SupportedTypeParameterNames == null || settings.SupportedTypeParameterNames.Count == 0)
+            if (settings.SupportedTypeParameterNames == null || settings.SupportedTypeParameterNames.Count == 0)
                 settings.SupportedTypeParameterNames = new List<string> { "HSL_AHFG_CODE", "HSL_AHFG_DESCRIPTION", "HSL_BUDGET_GROUP" };
 
             //store settings in data model
@@ -90,7 +87,7 @@ namespace duHastNet.AtTheLibrary
             {
                 _messageStore.SetCurrentMessage("Invalid data in file. Please set the data file path and reload.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
             }
-            
+
             // set up the navigation store
             _navigationStore.CurrentViewModel = CreateFamiliesSelectionViewModel();
 

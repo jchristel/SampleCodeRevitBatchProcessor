@@ -48,7 +48,7 @@ namespace duHastNet.PushIt.Models
         /// </summary>
         List<RoomDataProperty> _properties = new List<RoomDataProperty>();
 
-        public List<RoomDataProperty> Properties { get => _properties;}
+        public List<RoomDataProperty> Properties { get => _properties; }
 
         public List<RoomsRevit> MatchingRevitRooms { get => _matchingRevitRooms; set => _matchingRevitRooms = value; }
         public List<RoomsRevit> MatchingSplitRevitRooms { get => _matchingSplitRevitRooms; set => _matchingSplitRevitRooms = value; }
@@ -139,7 +139,7 @@ namespace duHastNet.PushIt.Models
             List<string> valuesMatchingRooms = GetUniquePropertyValueFromEachMatchingRevitRoom(propertyName);
             List<string> valuesMatchingSplitRooms = GetUniquePropertyValueFromEachMatchingSplitRevitRoom(propertyName);
             List<string> values = new List<string>();
-            
+
             // add the values from the matching rooms
             foreach (string value in valuesMatchingRooms)
             {
@@ -153,7 +153,7 @@ namespace duHastNet.PushIt.Models
                 if (!values.Contains(value))
                     values.Add(value);
             }
-            
+
             return values;
         }
 

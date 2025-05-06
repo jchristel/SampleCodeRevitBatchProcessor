@@ -107,6 +107,13 @@ namespace duHastNet.PushIt.Commands
                             //update the categories in the settings
                             _revitDataModel.Settings.SupportedCategories = supportedCategoryNamesFromViewModel;
 
+                            //add new rooms to the data model first
+                            UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
+                            (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
+
+                            //write messages to log...
+                            _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
+
                             // Execute the action to refresh the room data with the Revit data
                             RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
@@ -114,8 +121,11 @@ namespace duHastNet.PushIt.Commands
                             //write messages to log...
                             _revitDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
 
-                            // return status message for UI
-                            return (messageAction, messageActionType);
+                            // return the message to the caller
+                            return (
+                                $"{messageActionTypeUpdate}\n{messageAction}",
+                                Utilities.MessageActionTypesUtils.CombineMessageActionType(new List<MessageTypes> { messageActionTypeUpdate, messageActionType })
+                            );
 
                         }
                         catch (Exception ex)

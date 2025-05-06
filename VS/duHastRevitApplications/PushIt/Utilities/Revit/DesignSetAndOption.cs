@@ -37,7 +37,7 @@ namespace duHastNet.PushIt.Utilities.Revit
             // get the documents current design set and option
             var activeDesignOption = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionsUtils.GetActiveDesignOption(doc);
             var activeDesignSet = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionsUtils.GetDesignSetOfActiveDesignOption(doc);
-            
+
             string designSetName = activeDesignSet == null ? duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME : activeDesignSet.Name;
             string designOptionName = activeDesignOption == null ? duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME : activeDesignOption.Name;
 

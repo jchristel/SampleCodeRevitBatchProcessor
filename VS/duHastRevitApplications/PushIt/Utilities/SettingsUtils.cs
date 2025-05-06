@@ -23,8 +23,8 @@
 
 using Newtonsoft.Json;
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 
 namespace duHastNet.PushIt.Utilities
 {
@@ -77,8 +77,8 @@ namespace duHastNet.PushIt.Utilities
                     catch (Exception ex)
                     {
                         System.Windows.Forms.MessageBox.Show(
-                            $"failed to save settings with exception {ex.Message}", 
-                            "Exception at save", 
+                            $"failed to save settings with exception {ex.Message}",
+                            "Exception at save",
                             System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                         return;
                     }

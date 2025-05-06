@@ -24,7 +24,7 @@
 
 namespace duHastNet.AtTheLibrary.ViewModels
 {
-    public class MainViewModel:Utils.WPF.ViewModels.ViewModelBase
+    public class MainViewModel : Utils.WPF.ViewModels.ViewModelBase
     {
 
         private readonly Utils.WPF.Stores.NavigationStore _navigationStore;

@@ -21,20 +21,20 @@
 //
 //
 
+using Autodesk.Revit.DB;
 using duHastNet.PushIt.Models;
 using System.Collections.Generic;
-using Autodesk.Revit.DB;
 
 namespace duHastNet.PushIt.RevitActions
 {
     public class PushSingleRoomDataToRevit : RevitActionBase, IRevitAction
     {
-        
+
         private readonly RoomDataModel _roomToPush;
         private readonly Element _pushTarget;
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
 
-        
+
         public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
 
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
@@ -92,7 +92,7 @@ namespace duHastNet.PushIt.RevitActions
                     {
                         // remove the previous Revit room from the data model before adding it back in with new data
                         RevitModel.RemovePlacedNewRevitRoom(
-                            roomId:modelDataPrevious.Id.Value,
+                            roomId: modelDataPrevious.Id.Value,
                             revitElementId: modelDataPrevious.RevitElementId
                         );
                     }
@@ -109,7 +109,7 @@ namespace duHastNet.PushIt.RevitActions
                     // add the updated Revit room to the data model
                     RevitModel.AddPlacedRevitRoom(_roomToPush.Id.Value, modelDataUpdated);
                 }
-                else if(_roomsSelectionViewModel.PushOperationMode == duHastNet.PushIt.Utilities.PushMode.Split)
+                else if (_roomsSelectionViewModel.PushOperationMode == duHastNet.PushIt.Utilities.PushMode.Split)
                 {
                     // add the updated Revit room to the data model but mkae sure its added as a split room
                     var splitId = Utilities.PushModeUtils.GetSplitModeIdValue(_roomToPush.Id.Value);
@@ -123,7 +123,7 @@ namespace duHastNet.PushIt.RevitActions
                         revitRoom: modelDataUpdated
                     );
                 }
-                
+
             }
             catch (System.Exception ex)
             {

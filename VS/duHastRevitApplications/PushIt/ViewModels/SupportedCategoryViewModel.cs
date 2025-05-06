@@ -30,7 +30,7 @@ namespace duHastNet.PushIt.ViewModels
         bool _isSelected;
 
         public string CategoryName => _category.Name;
-        public bool IsSelected 
+        public bool IsSelected
         {
             get => _isSelected;
             set => _isSelected = value;

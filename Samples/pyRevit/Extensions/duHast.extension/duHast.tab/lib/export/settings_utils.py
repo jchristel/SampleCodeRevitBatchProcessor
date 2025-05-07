@@ -29,11 +29,9 @@ from export.Objects.Settings import Settings
 
 from export import settings
 
-def get_output_path_from_schema(doc):
+def get_name_settings_from_schema(doc):
     """
-    Get the output path from the schema in the document.
-    
-    This function retrieves the output path from the schema associated with the document.
+    Get the name settings from the schema associated with the document.
     
     :param doc: The Revit document to retrieve the output path from.
     :type doc: Autodesk.Revit.DB.Document

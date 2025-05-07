@@ -24,11 +24,12 @@
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Revit.Views.sheets import get_all_sheets
+from duHast.Revit.Exports.export_pdf import export_sheet_to_pdf
+from duHast.Revit.Exports.export_dwg import export_sheet_to_dwg
+from duHast.Revit.ExtensibleSchemas.extensible_schemas import does_schema_exist
 from duHast.pyRevit.ui_element_selection import get_element_selection_from_user
 from duHast.pyRevit.console_output import print_header, print_error
 from duHast.pyRevit.directory_picker import get_process_directory
-from duHast.Revit.Exports.export_pdf import export_sheet_to_pdf
-from duHast.Revit.Exports.export_dwg import export_sheet_to_dwg
 
 UI_SHEET_STRING = "*HSL_SHEET_SEQUENCE**Sheet Number*-*Sheet Name*[*Current Revision Date*,*Current Revision Description*]"
 SHEET_NAME_PDF = "*HSL_SHEET_SEQUENCE**Sheet Number*:-:*Sheet Name*?P?[?P?*Current Revision*?S?]?S?"
@@ -38,7 +39,8 @@ DWG_EXPORT_OPTION_NAME = "HSL_PROJECT_INTERNAL"
 
 
 from export.utility import get_sheet_parameter_data, get_naming_chunks, get_user_options, EXPORT_PDF_ONLY, EXPORT_PDF_AND_DWG
-
+from export import settings
+from export.settings_utils import get_name_settings_from_schema
 
 def sheet_name_builder_ui(element, sheet_name_string):
     """
@@ -117,6 +119,28 @@ def export_pdf_dwg_entry(doc, output, forms):
     try:
         print_header("Exporting sheets to PDF and DWG files")
         
+        # check if extensible schema exists
+        if not does_schema_exist(settings.EXPORTER_ADD_IN_GUID):
+            message = "Cant find any settings for this file. Please run the settings add-in first."
+            return_value.update_sep(False, message)
+            print_error(message)
+            return return_value
+
+        # place holder for the sheet name rule strings
+        rename_settings = None
+
+        # get the output directory from the schema
+        settings_getter_result = get_name_settings_from_schema(doc=doc)
+        if settings_getter_result.status is False:
+            message = "Failed to get settings: {}".format(settings_getter_result.message)
+            return_value.update_sep(False, message)
+            print_error(message)
+            return return_value
+        else:
+            # get the output directory from the schema
+            rename_settings = settings_getter_result.result[0]
+            
+
         # build action to get sheets from model
         def sheet_getter_in_line(doc):
             result_action =  sheet_getter(
@@ -197,7 +221,7 @@ def export_pdf_dwg_entry(doc, output, forms):
                 export_sheet_pdf_result = export_sheet_to_pdf(
                     doc=doc,
                     view_sheet=sheet,
-                    sheet_name_string=SHEET_NAME_PDF, 
+                    sheet_name_string=rename_settings.pdf_settings,    
                     output_directory= output_directory, 
                 )
 
@@ -215,7 +239,7 @@ def export_pdf_dwg_entry(doc, output, forms):
                     export_sheet_dwg_result = export_sheet_to_dwg(
                         doc=doc,
                         view_sheet=sheet,
-                        sheet_name_string=SHEET_NAME_DWG, 
+                        sheet_name_string=rename_settings.dwg_settings, 
                         output_directory= output_directory,
                         dwg_export_option_name=DWG_EXPORT_OPTION_NAME,
                     )

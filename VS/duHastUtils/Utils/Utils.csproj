@@ -101,6 +101,8 @@
     <Compile Include="WPF\Interfaces\ICloseable.cs" />
     <Compile Include="WPF\Models\DataModelBase.cs" />
     <Compile Include="WPF\Stores\MessageStore.cs" />
+    <Compile Include="WPF\Stores\MessageTpesUtils.cs" />
+    <Compile Include="WPF\Stores\MessageTypes.cs" />
     <Compile Include="WPF\Stores\NavigationStore.cs" />
     <Compile Include="WPF\ViewModels\ErrorsViewModel.cs" />
     <Compile Include="WPF\ViewModels\GlobalMessageViewModel.cs" />

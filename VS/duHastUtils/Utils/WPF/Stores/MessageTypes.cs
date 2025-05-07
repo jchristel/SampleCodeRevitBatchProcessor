@@ -25,57 +25,10 @@ using System;
 
 namespace duHastNet.Utils.WPF.Stores
 {
-    public class MessageStore
+    public enum MessageTypes
     {
-        string _currentMessage;
-        public string CurrentMessage
-        {
-            get => _currentMessage;
-            private set
-            {
-                _currentMessage = value;
-                CurrentMessageChanged?.Invoke();
-            }
-        }
-
-        MessageTypes _currentMessageType;
-        public MessageTypes CurrentMessageType
-        {
-            get => _currentMessageType;
-            private set
-            {
-                _currentMessageType = value;
-                CurrentMessageTypeChanged?.Invoke();
-            }
-        }
-
-        public event Action CurrentMessageChanged;
-        public event Action CurrentMessageTypeChanged;
-
-
-        public bool HasCurrentMessage => !string.IsNullOrEmpty(CurrentMessage);
-
-        public void ClearCurrentMessage()
-        {
-            CurrentMessage = string.Empty;
-        }
-
-        public void SetCurrentMessage(string message, MessageTypes messageType)
-        {
-
-            //allow a maximum of 10 rows in the message. Check for new line characters
-            if (message.Contains("\n"))
-            {
-                string[] lines = message.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                if (lines.Length > 10)
-                {
-                    message = string.Join("\n", lines, 0, 10);
-                }
-            }
-
-            CurrentMessage = message;
-            CurrentMessageType = messageType;
-        }
-
+        Error,
+        Information,
+        Log,
     }
 }

@@ -28,7 +28,7 @@ from duHast.Utilities.Objects import result as res
 from duHast.UI.Objects.ProgressBase import ProgressBase
 from duHast.Utilities.directory_io import directory_exists
 from duHast.Revit.Exports.Utility.export_options_pdf_2024 import set_pdf_export_option_2024
-
+from duHast.Revit.Exports.Utility.convert_pdf_dwg_settings import convert_settings_json_string_to_settings_objects
 
 def create_naming_rule(sheet_name_string, sample_sheet):
     """
@@ -46,52 +46,38 @@ def create_naming_rule(sheet_name_string, sample_sheet):
     paras = sample_sheet.GetOrderedParameters()
     for p in paras:
         para_dic[p.Definition.Name] = p.Id
-        
-    # Split the string by the delimiters and return the chunks
-    chunks = [chunk.strip() for chunk in sheet_name_string.split("*") if chunk.strip()]
 
+    # get settings from settings string
+    settings =  convert_settings_json_string_to_settings_objects(sheet_name_string)
+   
     # Create a list to hold the naming rules
     rules = List[TableCellCombinedParameterData]()
 
-    # Initialize the prefix variable
-    prefix = None
-
     # Build the naming rule using the provided string
-    for chunk in chunks:
+    for setting in settings:
+
+        # check if parameter exists if not skip this setting
+        if setting.propertyName not in para_dic.keys():
+            continue
 
         # Create a new naming rule
         rule = TableCellCombinedParameterData.Create()
 
         # set the prefix value if it is not None
-        if prefix is not None:
-            rule.Prefix = prefix
-            # reset the prefix
-            prefix = None
+        if setting.prefix is not None:
+            rule.Prefix = setting.prefix
+        
+        if setting.suffix is not None:
+            rule.Suffix = setting.suffix
+        
+        if setting.separator is not None:
+            rule.Separator = setting.separator
         
         # check if this is a parameter name
-        if chunk in para_dic.keys():
-            rule.ParamId = para_dic[chunk]
+        if setting.propertyName in para_dic.keys():
+            rule.ParamId = para_dic[setting.propertyName]
 
-        # if not check if this is a separator string (:-: is a dash)
-        elif chunk.startswith(":") and chunk.endswith(":"):
-            sep_string = chunk[1:-1]
-            # this is the separator string to the last parameter in the rules list!
-            if len(rules) > 0:
-                index = len(rules) - 1
-                rules[index].Separator = sep_string
-
-        # check if the is a prefix or suffix (?P?sdsds?P?) is a prefix and this is the suffix (?S?sdsds?S?)
-        elif chunk.startswith("?P?") and chunk.endswith("?P?"):
-            value = chunk[3:-3]
-            # prefix is applied to next rule
-            prefix = value
-        elif chunk.startswith("?S?") and chunk.endswith("?S?"):
-            value = chunk[3:-3]
-            # suffix is applied to previous rule
-            if len(rules) > 0:
-                index = len(rules) - 1
-            rules[index].Suffix = value
-            
+        # add the rule to the list of rules 
         rules.Add(rule)
 
     return rules

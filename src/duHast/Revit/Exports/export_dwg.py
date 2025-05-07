@@ -26,12 +26,16 @@ from duHast.Utilities.files_get import get_files_single_directory
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.directory_io import directory_exists
 from duHast.UI.Objects.ProgressBase import ProgressBase
+from duHast.Revit.Exports.Utility.convert_pdf_dwg_settings import convert_settings_json_string_to_settings_objects
+from duHast.Revit.Exports.Utility.export_utility import replace_illegal_characters_from_dwg_file_name
+
 
 from System.Collections.Generic import List
 
 from Autodesk.Revit.DB import ACADVersion, BaseExportOptions,Document, DWGExportOptions,ElementId,ViewSheet
 
-from duHast.Revit.Exports.Utility.export_utility import get_sheet_parameter_data, get_naming_chunks
+from duHast.Revit.Exports.Utility.export_utility import get_sheet_parameter_data
+
 
 def set_dwg_export_option():
 
@@ -141,21 +145,13 @@ def export_sheet_to_dwg (doc, view_sheet, sheet_name_string, output_directory, d
 
         # If the export was successful, rename the file
         if export_result:
-            # need to rename the cad file after export??
+            # need to rename the cad file after export...
             # Get the export file name
             exported_file_name = view_sheet.SheetNumber + " - " + view_sheet.Name
 
             # remove the invalid characters from the file name
-            exported_file_name = exported_file_name.replace(":", "-")
-            exported_file_name = exported_file_name.replace("\\", "-")
-            exported_file_name = exported_file_name.replace("/", "-")
-            exported_file_name = exported_file_name.replace("?", "-")
-            exported_file_name = exported_file_name.replace("*", "-")
-            exported_file_name = exported_file_name.replace("<", "-")
-            exported_file_name = exported_file_name.replace(">", "-")
-            exported_file_name = exported_file_name.replace("|", "-")
-            exported_file_name = exported_file_name.replace(".", "-")
-
+            exported_file_name = replace_illegal_characters_from_dwg_file_name(exported_file_name)
+            
             # find the file
             files_match = get_files_single_directory(
                 folder_path= output_directory, 
@@ -177,34 +173,45 @@ def export_sheet_to_dwg (doc, view_sheet, sheet_name_string, output_directory, d
             # Get the sheet parameter data
             sheet_parameter_data = get_sheet_parameter_data(view_sheet)
 
+            # convert name rules string to settings objects
+            dwg_name_rules = convert_settings_json_string_to_settings_objects(sheet_name_string)
+            
             # set up new sheet name
             sheet_name_new = []
 
-            # Split the string by the delimiters and return the chunks
-            chunks = get_naming_chunks(sheet_name_string)
+            # set up a rule counter to keep track of whether a rule is the last of the rules
+            rule_counter = 0
 
-            # Build the naming rule using the provided string
-            for chunk in chunks:
-                if chunk in sheet_parameter_data:
-                    # if the chunk is a parameter name, get the parameter value
-                    param_value = sheet_parameter_data[chunk]
-                    sheet_name_new.append(param_value)
-                else:
-                    # if the chunk does not contain a parameter name, add it as is
-                    sheet_name_new.append(chunk)
+            # loop over the naming rules
+            for rule in dwg_name_rules:
+
+                if rule.propertyName not in sheet_parameter_data:
+                    # if the rule is not a parameter name, skip it
+                    continue
+
+                # check if the rule has a prefix
+                if rule.prefix is not None:
+                    sheet_name_new.append(rule.prefix)
+
+                # add the parameter value to the sheet name
+                sheet_name_new.append(sheet_parameter_data[rule.propertyName])
+
+                # check if the rule has a suffix
+                if rule.suffix is not None:
+                    sheet_name_new.append(rule.suffix)
+
+                # only add the separator if it is not None and not the last one
+                if rule.separator is not None and rule_counter < len(dwg_name_rules):
+                    sheet_name_new.append(rule.separator)
+
+                # increase the rule counter
+                rule_counter += 1
 
             # build the sheet name from the chunks list
             sheet_name_new_joined = "".join(sheet_name_new)
 
             # remove the invalid characters from the file name
-            sheet_name_new_joined = sheet_name_new_joined.replace(":", "-")
-            sheet_name_new_joined = sheet_name_new_joined.replace("\\", "-")
-            sheet_name_new_joined = sheet_name_new_joined.replace("/", "-")
-            sheet_name_new_joined = sheet_name_new_joined.replace("?", "-")
-            sheet_name_new_joined = sheet_name_new_joined.replace("*", "-")
-            sheet_name_new_joined = sheet_name_new_joined.replace("<", "-")
-            sheet_name_new_joined = sheet_name_new_joined.replace(">", "-")
-            sheet_name_new_joined = sheet_name_new_joined.replace("|", "-")
+            sheet_name_new_joined = replace_illegal_characters_from_dwg_file_name(sheet_name_new_joined)
 
             # built the new file name
             new_file_name = os.path.join(output_directory , sheet_name_new_joined + ".dwg")

@@ -58,3 +58,24 @@ def get_naming_chunks(sheet_name_string):
     
     # Split the string by the delimiters and return the chunks
     return [chunk.strip() for chunk in sheet_name_string.split("*") if chunk.strip()]
+
+
+def replace_illegal_characters_from_dwg_file_name(current_file_name):
+    """
+    replaces illegal characters with underscores in the given string.
+    
+    :param string: The string to replace characters in.
+    :type string: str
+    
+    :return: The amended string.
+    :rtype: str
+    """
+    
+    # Define the illegal characters
+    illegal_characters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*', '.']
+    
+    # Replace each illegal character with an empty string
+    for char in illegal_characters:
+        string = string.replace(char, '_')
+    
+    return string

@@ -76,6 +76,6 @@ def replace_illegal_characters_from_dwg_file_name(current_file_name):
     
     # Replace each illegal character with an empty string
     for char in illegal_characters:
-        string = string.replace(char, '_')
+        current_file_name = current_file_name.replace(char, '_')
     
-    return string
+    return current_file_name

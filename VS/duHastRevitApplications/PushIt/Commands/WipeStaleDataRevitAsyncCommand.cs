@@ -64,7 +64,8 @@ namespace duHastNet.PushIt.Commands
                             // Execute the action to wipe stale room data from the Revit model
                             WipeStaleRoomData action = new WipeStaleRoomData(
                                 revitModel: _revitDataModel,
-                                roomsSelectionViewModel: _roomsSelectionViewModel
+                                roomsSelectionViewModel: _roomsSelectionViewModel,
+                                roomsData: actionUpdate.CurrentMockRoomsData // pass the updated rooms from the previous action
                             );
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
 

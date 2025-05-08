@@ -72,7 +72,12 @@ namespace duHastNet.PushIt.Commands
                             _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
 
                             // Execute the action to refresh the room data with the Revit data
-                            RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
+                            RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(
+                                revitModel: _revitDataModel, 
+                                roomsSelectionViewModel: _roomsSelectionViewModel,
+                                revitMockRooms: actionUpdate.CurrentMockRoomsData //re-use mock room data to speed things up
+                            );
+
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
 
                             //write messages to log...

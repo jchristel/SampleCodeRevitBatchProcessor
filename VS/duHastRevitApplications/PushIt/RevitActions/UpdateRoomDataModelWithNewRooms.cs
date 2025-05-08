@@ -34,6 +34,10 @@ namespace duHastNet.PushIt.RevitActions
         private ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         public ViewModels.RoomsSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
 
+        //current set or push it mock rooms
+        private List<RoomsRevit> _roomsData;
+        public List<RoomsRevit> CurrentMockRoomsData { get { return _roomsData; } }
+
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
             try
@@ -42,14 +46,14 @@ namespace duHastNet.PushIt.RevitActions
                 RevitModel.ClearNewRooms();
 
                 // get all new rooms from the model
-                var roomsInModel = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
+                _roomsData = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
                     doc: doc,
                     roomsDataModel: RevitModel.GetAllRooms(),
                     supportedCategoryName: RevitModel.Settings.SupportedCategories,
                     AddMessage: RoomsSelectionViewModel.AddMessage);
 
                 //check if any rooms where found in the model, if not get out
-                if (roomsInModel == null || roomsInModel.Count == 0)
+                if (_roomsData == null || _roomsData.Count == 0)
                 {
                     return GetReturnValue("No new rooms found in the model.");
                 }
@@ -58,7 +62,7 @@ namespace duHastNet.PushIt.RevitActions
                 Dictionary<string, List<duHastNet.PushIt.Models.RoomsRevit>> newRoomsInModel = new Dictionary<string, List<RoomsRevit>>();
 
                 //check which rooms are marked as new and add them to the data model
-                foreach (var room in roomsInModel)
+                foreach (var room in _roomsData)
                 {
                     // check if the room is marked as new
                     if (duHastNet.PushIt.Utilities.PushModeUtils.IsNewRoomMode(room.Id.Value))

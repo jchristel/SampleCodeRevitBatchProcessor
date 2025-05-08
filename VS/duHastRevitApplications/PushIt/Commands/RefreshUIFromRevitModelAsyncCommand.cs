@@ -32,6 +32,12 @@ using System.ComponentModel;
 
 namespace duHastNet.PushIt.Commands
 {
+    /// <summary>
+    /// Refreshes the UI from the Revit model asynchronously.
+    /// - updates pushed and split rooms counts for SoA rooms in the model
+    /// - updates new rooms from the model
+    /// - this command can be slow if there are a large amount of mock room families in the model
+    /// </summary>
     public class RefreshUIFromRevitModelAsyncCommand : Utils.WPF.Commands.CommandBase
     {
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
@@ -62,7 +68,12 @@ namespace duHastNet.PushIt.Commands
                             _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
 
                             // Execute the action to refresh the room data with the Revit data
-                            RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
+                            RefreshRoomDataWithRevitData action = new RefreshRoomDataWithRevitData(
+                                revitModel: _revitDataModel, 
+                                roomsSelectionViewModel: _roomsSelectionViewModel,
+                                revitMockRooms: actionUpdate.CurrentMockRoomsData //re-use mock room data to speed thhings up
+                            );
+
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
 
                             //write messages to log...

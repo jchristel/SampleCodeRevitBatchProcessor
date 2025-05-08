@@ -33,6 +33,9 @@ namespace duHastNet.PushIt.RevitActions
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         private int _wipeCounter = 0;
 
+        //current set or push it mock rooms
+        private List<RoomsRevit> _roomsData;
+
         public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
         {
             try
@@ -63,17 +66,29 @@ namespace duHastNet.PushIt.RevitActions
                 return;
             }
 
-            // get the revit rooms
-            List<duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
-                doc: doc,
-                roomsDataModel: roomsDataModel,
-                supportedCategoryName: supportedCategoryName,
-                AddMessage: AddMessage
-            );
+            if (_roomsData == null)
+            {
+                // get the revit rooms
+                _roomsData = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
+                    doc: doc,
+                    roomsDataModel: roomsDataModel,
+                    supportedCategoryName: supportedCategoryName,
+                    AddMessage: AddMessage
+                );
+
+                // check if any revit rooms were found
+                if (_roomsData == null || _roomsData.Count == 0)
+                {
+                    // no revit rooms found
+                    AddMessage("No Revit rooms found to wipe stale data.", Utils.WPF.Stores.MessageTypes.Error);
+                    return;
+                }
+            }
+            
 
             //build a list of family instances that contain stale data ( stale data is a family instance where the room id is not in the rooms data model)
             List<FamilyInstance> staleFamilyInstances = new List<FamilyInstance>();
-            foreach (var revitRoomInstance in revitRooms)
+            foreach (var revitRoomInstance in _roomsData)
             {
                 if (!roomsDataModel.Exists(x => x.Id.Value == revitRoomInstance.Id.Value))
                 {
@@ -162,10 +177,14 @@ namespace duHastNet.PushIt.RevitActions
             }
         }
 
-        public WipeStaleRoomData(Models.RevitDataModel revitModel, ViewModels.RoomsSelectionViewModel roomsSelectionViewModel)
+        public WipeStaleRoomData(
+            Models.RevitDataModel revitModel, 
+            ViewModels.RoomsSelectionViewModel roomsSelectionViewModel,
+            List<RoomsRevit> roomsData = null)
         {
             RevitModel = revitModel;
             _roomsSelectionViewModel = roomsSelectionViewModel;
+            _roomsData = roomsData;
         }
     }
 }

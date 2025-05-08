@@ -85,18 +85,8 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Grid.Row="0" Text="PushIt..Real Good(tm)" FontSize="24"/>
-            <ToggleButton
-                Grid.Column="1" Grid.Row="0"
-                x:Name = "toggleSafety" 
-                Content = "{Binding  SafetyOffButtonText}"   
-                Margin = "0 10 0 10"
-                Width = "108"
-                HorizontalAlignment = "Right"
-                IsChecked="{Binding SafetyOffMode, Mode=TwoWay}">
-            </ToggleButton>
         </Grid>
         <!-- message banner -->
         <Grid Grid.Row="1">
@@ -328,35 +318,37 @@
         <Grid Grid.Row="6">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Margin="2 2 0 2" Text="Mode" />
             <!--- operation modus radio buttons -->
-            <Border Grid.Row="0" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+            <Border Grid.Row="1" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
                 <UniformGrid Columns="3">
                     <RadioButton 
-                    Margin="5 0 5 0" 
-                    Content="Push It" 
-                    GroupName="ModusType" 
-                    IsChecked="{Binding PushOperationMode, Converter={StaticResource ModusConverter}, ConverterParameter=Push}" 
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center"/>
+                        Margin="5 0 5 0" 
+                        Content="Push It" 
+                        GroupName="ModusType" 
+                        IsChecked="{Binding PushOperationMode, Converter={StaticResource ModusConverter}, ConverterParameter=Push}" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center"/>
                     <RadioButton 
-                    Margin="5 0 5 0" 
-                    Content="Split It" 
-                    GroupName="ModusType"
-                    IsChecked="{Binding PushOperationMode, Converter={StaticResource ModusConverter}, ConverterParameter=Split}"
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center"/>
+                        Margin="5 0 5 0" 
+                        Content="Split It" 
+                        GroupName="ModusType"
+                        IsChecked="{Binding PushOperationMode, Converter={StaticResource ModusConverter}, ConverterParameter=Split}"
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center"/>
                     <RadioButton 
-                    Margin="5 0 5 0" 
-                    Content="Create New" 
-                    GroupName="ModusType"
-                    IsChecked="{Binding PushOperationMode, Converter={StaticResource ModusConverter}, ConverterParameter=New}"
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center"/>
+                        Margin="5 0 5 0" 
+                        Content="Create New" 
+                        GroupName="ModusType"
+                        IsChecked="{Binding PushOperationMode, Converter={StaticResource ModusConverter}, ConverterParameter=New}"
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center"/>
                 </UniformGrid>
             </Border>
-            <Button  Grid.Row="1"
+            <Button  Grid.Row="2"
                 Margin="0 10 0 10" 
                 Content = "{Binding  PushItButtonText}"  
                 FontSize="24"

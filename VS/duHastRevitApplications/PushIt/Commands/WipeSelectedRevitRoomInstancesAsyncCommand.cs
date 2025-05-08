@@ -83,11 +83,11 @@ namespace duHastNet.PushIt.Commands
                             }
 
                             //add new rooms to the data model first
-                            UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
-                            (string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
+                            //UpdateRoomDataModelWithNewRooms actionUpdate = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
+                            //(string messageActionUpdate, Utils.WPF.Stores.MessageTypes messageActionTypeUpdate) = actionUpdate.Execute(doc);
 
                             //write messages to log...
-                            _revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
+                            //_revitDataModel.LogMessages(actionUpdate.GetLogMessagesAndLogTypes());
 
                             // Execute the action to wipe selected rooms in the Revit model
                             WipeSelectedRevitRoomsData actionWipe = new WipeSelectedRevitRoomsData(
@@ -101,7 +101,6 @@ namespace duHastNet.PushIt.Commands
                             //write messages to log...
                             _revitDataModel.LogMessages(actionWipe.GetLogMessagesAndLogTypes());
 
-
                             //update the room data model again ( this time to check whether a new room was wiped and therefore needs to be removed from the data model)
                             //add new rooms to the data model first
                             UpdateRoomDataModelWithNewRooms actionUpdateTwo = new PushIt.RevitActions.UpdateRoomDataModelWithNewRooms(_revitDataModel, _roomsSelectionViewModel);
@@ -111,7 +110,13 @@ namespace duHastNet.PushIt.Commands
                             _revitDataModel.LogMessages(actionUpdateTwo.GetLogMessagesAndLogTypes());
 
                             // refresh the rooms data model with the rooms from the revit model
-                            RevitActions.RefreshRoomDataWithRevitData refreshRoomDataWithRevitData = new RevitActions.RefreshRoomDataWithRevitData(_revitDataModel, _roomsSelectionViewModel);
+                            RefreshRoomDataWithRevitData refreshRoomDataWithRevitData = new RefreshRoomDataWithRevitData(
+                                revitModel: _revitDataModel, 
+                                roomsSelectionViewModel: _roomsSelectionViewModel,
+                                revitMockRooms:actionUpdateTwo.CurrentMockRoomsData //re-use mock room data to speed thhings up
+                            );
+                            
+                            
                             //execute the refresh action
                             (string messageActionRefresh, Utils.WPF.Stores.MessageTypes messageActionTypeRefresh) = refreshRoomDataWithRevitData.Execute(doc);
 
@@ -120,9 +125,9 @@ namespace duHastNet.PushIt.Commands
 
                             // return the message to the caller
                             return (
-                                $"{messageActionUpdate}\n{messageActionWipe}\n{messageActionUpdateTwo}\n{messageActionRefresh}",
+                                $"{messageActionWipe}\n{messageActionUpdateTwo}\n{messageActionRefresh}",
                                 Utilities.MessageActionTypesUtils.CombineMessageActionType(
-                                    new List<MessageTypes> { messageActionTypeUpdate, messageActionTypeWipe, messageActionTypeUpdateTwo, messageActionTypeRefresh }
+                                    new List<MessageTypes> { messageActionTypeWipe, messageActionTypeUpdateTwo, messageActionTypeRefresh }
                                 )
                             );
                         }

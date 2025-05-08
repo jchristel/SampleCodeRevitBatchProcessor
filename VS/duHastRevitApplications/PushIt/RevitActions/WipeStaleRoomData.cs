@@ -90,7 +90,17 @@ namespace duHastNet.PushIt.RevitActions
             List<FamilyInstance> staleFamilyInstances = new List<FamilyInstance>();
             foreach (var revitRoomInstance in _roomsData)
             {
-                if (!roomsDataModel.Exists(x => x.Id.Value == revitRoomInstance.Id.Value))
+                string revitRoomInstanceId = revitRoomInstance.Id.Value;
+                
+                // check if the room is a split room
+                if (Utilities.PushModeUtils.IsSplitRoomMode(revitRoomInstance.Id.Value))
+                {
+                    // get the id without the split indicator
+                    revitRoomInstanceId = Utilities.PushModeUtils.GetIdWithoutSplitModeIndicator(revitRoomInstance.Id.Value);
+                }
+
+                // check if the room id is in the data model
+                if (!roomsDataModel.Exists(x => x.Id.Value == revitRoomInstanceId))
                 {
                     staleFamilyInstances.Add(doc.GetElement(new ElementId(revitRoomInstance.RevitElementId)) as FamilyInstance);
                 }

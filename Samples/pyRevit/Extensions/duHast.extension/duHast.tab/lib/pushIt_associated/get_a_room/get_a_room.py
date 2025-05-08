@@ -207,14 +207,14 @@ def get_a_room_entry(doc, uiapp,output, forms):
     if (DEBUG):
         print("Temp directory: {}".format(temp_dir))
     
-    # check ig extensible schema exists
+    # check if extensible schema exists
     if not does_schema_exist(settings.GET_A_ROOM_ADD_IN_GUID):
         message = "Extensible schema does not exist. Please run the settings add-in first."
         return_value.update_sep(False, message)
         print_error(message)
         return return_value
     
-    # # get the output directory from the schema
+    # get the output directory from the schema
     output_directory_result = get_output_path_from_schema(doc=doc)
     if output_directory_result.status is False:
         #get the user to select one ...for now
@@ -229,6 +229,9 @@ def get_a_room_entry(doc, uiapp,output, forms):
     else:
         # get the output directory from the schema
         output_directory = output_directory_result.result[0]
+
+    #temp debug step
+    temp_dir = output_directory 
         
     # get user to select filled regions
     filled_regions_selected_result = get_user_selection(
@@ -399,8 +402,8 @@ def get_a_room_entry(doc, uiapp,output, forms):
 
     # do some clean up
     # move files from temp to output directory
-    cleanup_result = move_family_files(temp_dir, output_directory)
-    return_value.update(cleanup_result)
+    #cleanup_result = move_family_files(temp_dir, output_directory)
+    #return_value.update(cleanup_result)
 
        
     print("Post processed filled region.\n")

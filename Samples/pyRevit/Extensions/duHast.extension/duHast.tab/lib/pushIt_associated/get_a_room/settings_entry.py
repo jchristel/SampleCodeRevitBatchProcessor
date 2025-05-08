@@ -20,11 +20,12 @@
 #
 #
 
+
 import clr
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Revit.ExtensibleSchemas.extensible_schemas import create_schema, get_schema, does_schema_exist
-from duHast.Revit.ExtensibleSchemas.data_storage import create_project_data_storage, find_data_storage, update_entity_on_data_storage
+from duHast.Revit.ExtensibleSchemas.extensible_schemas_create import verify_schema_data_storage_based
+from duHast.Revit.ExtensibleSchemas.data_storage import  update_entity_on_data_storage
 from duHast.pyRevit.directory_picker import get_process_directory
 from duHast.pyRevit.console_output import print_error, print_header
 
@@ -78,84 +79,6 @@ def get_user_options(forms):
     return ui_options
 
 
-def setup_schema():
-    """
-    Set up the schema for the Get A Room settings add-in.
-    
-    :return: The schema for the Get A Room settings add-in.
-    :rtype: Autodesk.Revit.DB.ExtensibleStorage.Schema
-    """
-    
-    schema = create_schema(
-        schema_name="Get_A_Room_Settings",
-        schema_documentation= "This schema contains settings for the get a room add in.",
-        string_guid = settings.GET_A_ROOM_ADD_IN_GUID,
-        field_builder=schema_builder,
-    )
-    
-    return schema
-
-
-def verify_schema(doc):
-    """
-    Verify if the schema exists in the file. if not it will attempt to create it.
-    
-    :return: True if the schema exists, False otherwise.
-    :rtype: bool
-    """
-    return_value = Result()
-    
-    schema = None
-    data_storage = None
-    
-    try:
-        # check if extended storage is set up in the file
-        if not does_schema_exist(settings.GET_A_ROOM_ADD_IN_GUID):
-            return_value.append_message("Schema does not exists in the file.")
-            # set up the schema in the file
-            schema = setup_schema()
-            
-            # setup the data storage in the file
-            data_storage_result = create_project_data_storage(doc, schema)
-            if data_storage_result==False:
-                message = "Failed to create data storage: {}".format(data_storage_result.message)
-                return_value.update_sep(False, message)
-                return return_value
-            else:
-                # get the data storage element
-                data_storage = data_storage_result.result[0]
-        else:
-            return_value.append_message("Schema exists in the file.")
-            # get the schema from the file
-            schema = get_schema(settings.GET_A_ROOM_ADD_IN_GUID)
-            # get the data storage element from the file
-            data_storage = find_data_storage(doc, settings.GET_A_ROOM_ADD_IN_GUID)
-            if data_storage == None:
-                return_value.append_message("Data storage element not found in the file. Attempting to create it.")
-                
-                # attempt to create the data storage element
-                data_storage_result = create_project_data_storage(doc, schema)
-                if data_storage_result==False:
-                    message = "Failed to create data storage: {}".format(data_storage_result.message)
-                    return_value.update_sep(False, message)
-                    return return_value
-                else:
-                    return_value.append_message("Data storage element created in the file.")
-                    # get the data storage element
-                    data_storage = data_storage_result.result[0]
-            else:
-                return_value.append_message("Data storage element found in the file.")
-                
-        # add the schema and data storage to the return value as a tuple
-        return_value.result.append((schema,data_storage))
-        
-    except Exception as e:
-        message = "Failed to set up schema: {}".format(e)
-        return_value.update_sep(False, message)
-    
-    return return_value
-
-
 def get_a_room_settings_entry(doc, uiapp, output, forms):
     """
     Entry for the Get A Room settings add-in.
@@ -179,7 +102,13 @@ def get_a_room_settings_entry(doc, uiapp, output, forms):
         # output a header to the console
         print_header("Get A Room Settings Entry")
         
-        schema_check_result = verify_schema(doc)
+        schema_check_result = verify_schema_data_storage_based(
+            doc=doc,
+            schema_name=settings.GET_A_ROOM_ADD_IN_SCHEMA_NAME,
+            schema_docs=settings.GET_A_ROOM_ADD_IN_SCHEMA_DOCUMENTATION,
+            schema_guid=settings.GET_A_ROOM_ADD_IN_GUID,
+            field_builder = schema_builder,
+        )
         # check if the schema check was successful. if not return the error message
         if schema_check_result.status==False:
             print_error (schema_check_result.message)

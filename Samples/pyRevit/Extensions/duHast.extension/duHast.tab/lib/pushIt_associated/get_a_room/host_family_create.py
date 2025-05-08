@@ -24,7 +24,7 @@ import os
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.utility import get_current_user_name
-from duHast.Utilities.date_stamps import get_file_date_stamp, FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC
+from duHast.Utilities.date_stamps import get_file_date_stamp, FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC_MSEC
 
 from duHast.Revit.Common.file_io import  save_as_family,  open_family
 from duHast.Revit.Family.family_reload import reload_all_families
@@ -149,7 +149,7 @@ def create_wall_host_family(doc, family_config, nested_medium_and_fine_detail_fa
         return_value.append_message("Wall {} host family: Updated overall dimension successfully".format(family_config.room_type))
         
         # save the wall family to the output directory first
-        wall_host_family_name = "WLL_{}_{}_{}".format(family_config.room_type, get_current_user_name(), get_file_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC))
+        wall_host_family_name = "WLL_{}_{}_{}".format(family_config.room_type, get_current_user_name(), get_file_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC_MSEC))
         save_wall_host_family_result = save_as_family(
             doc=wall_host_family_doc, 
             target_directory_path=family_config.output_directory, 

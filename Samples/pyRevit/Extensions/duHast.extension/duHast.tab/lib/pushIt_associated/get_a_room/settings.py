@@ -51,6 +51,12 @@ FAMILY_TEMPLATE_GENERIC_NESTED_ROOM_COARSE_PATH = os.path.join(FAMILY_TEMPLATE_D
 FAMILY_TEMPLATE_GENERIC_NESTED_BAY_COARSE = "GEN_Inner_Nested_Coarse_Bay_template"
 FAMILY_TEMPLATE_GENERIC_NESTED_BAY_COARSE_PATH = os.path.join(FAMILY_TEMPLATE_DIRECTORY, FAMILY_TEMPLATE_GENERIC_NESTED_BAY_COARSE+".rfa")
 
+# schema name
+GET_A_ROOM_ADD_IN_SCHEMA_NAME = "Get_A_Room_Settings"
+
+#schema documentation
+GET_A_ROOM_ADD_IN_SCHEMA_DOCUMENTATION = "This schema contains settings for the get a room add in."
+
 # guid of the schema to use for the Get A Room add-in
 GET_A_ROOM_ADD_IN_GUID= "d17b7416-53d7-46dc-8df7-b6624743a6b8"
 # schema field names

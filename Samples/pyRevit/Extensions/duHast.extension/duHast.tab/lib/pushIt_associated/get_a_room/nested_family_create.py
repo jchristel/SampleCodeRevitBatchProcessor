@@ -26,7 +26,7 @@ from System.Collections.Generic import List
 
 from duHast.Utilities.Objects.result import Result
 from duHast.Utilities.utility import get_current_user_name
-from duHast.Utilities.date_stamps import get_file_date_stamp, FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC
+from duHast.Utilities.date_stamps import get_file_date_stamp, FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC_MSEC
 
 
 from duHast.Revit.Common.file_io import  save_as_family,  open_family
@@ -123,7 +123,7 @@ def create_coarse_detail_family(doc, family_config):
         return_value.append_message("...Nested {} coarse detail family extrusion created".format(family_config.room_type))
 
         # save the family to the output directory
-        nested_coarse_detail_family_name = "GEN_Inner_Nested_{}_Coarse_{}_{}".format(family_config.room_type, get_current_user_name(), get_file_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC))
+        nested_coarse_detail_family_name = "GEN_Inner_Nested_{}_Coarse_{}_{}".format(family_config.room_type, get_current_user_name(), get_file_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC_MSEC))
         save_nested_coarse_family_result = save_as_family(
             doc=nested_coarse_detail_family_doc, 
             target_directory_path=family_config.output_directory, 
@@ -217,7 +217,7 @@ def create_medium_and_fine_detail_family(doc, family_config):
         return_value.append_message("...Nested {} medium and fine detail family extrusion created".format(family_config.room_type))
         
         # save the family to the output directory
-        nested_medium_and_fine_detail_family_name = "GEN_Inner_Nested_{}_{}_{}".format(family_config.room_type, get_current_user_name(), get_file_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC))
+        nested_medium_and_fine_detail_family_name = "GEN_Inner_Nested_{}_{}_{}".format(family_config.room_type, get_current_user_name(), get_file_date_stamp(FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC_MSEC))
         save_nested_medium_and_fine_detail_family_result = save_as_family(
             doc=nested_medium_and_fine_family_doc, 
             target_directory_path=family_config.output_directory, 

@@ -36,6 +36,7 @@ def update_by_values(doc, colour_fill_scheme, colour_fill_scheme_data, transacti
     :type colour_fill_scheme: ColourFillScheme
     :param colour_fill_scheme_data: The colour fill scheme data.
     :type colour_fill_scheme_data: dict
+    
     :return: The result of the update operation.
     :rtype: Result
     """

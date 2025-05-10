@@ -22,16 +22,11 @@
 //
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using duHastNet.Utils.WPF.ViewModels;
 
 namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
 {
-    public class MainWindowViewModel:ViewModelBase
+    public class MainWindowViewModel : ViewModelBase
     {
         private readonly duHastNet.Utils.WPF.Stores.NavigationStore _navigationStore;
         public duHastNet.Utils.WPF.ViewModels.ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;

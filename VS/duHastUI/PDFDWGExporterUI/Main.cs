@@ -21,13 +21,9 @@
 //
 //
 
-using System;
-using System.Windows;
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Principal;
 using duHastNet.UI.PDFDWGExporterUI.Views;
 using duHastNet.Utils.WPF.Stores;
+using System.Collections.Generic;
 
 namespace duHastNet.UI.PDFDWGExporterUI
 {
@@ -44,7 +40,14 @@ namespace duHastNet.UI.PDFDWGExporterUI
         /// <param name="currentDWGExportString">Current DWG export string</param>
         /// <param name="currentPDFExportString">Current PDF export string</param>
         /// <param name="parameterNames">List of parameter names associated to sheets</param>
-        public Main(string currentPDFExportString, string currentDWGExportString, List<string> parameterNames)
+        /// <param name="dwgExportSchemes">List of DWG export schemes from the model</param>
+        /// 
+        public Main(
+            string currentPDFExportString, 
+            string currentDWGExportString, 
+            List<string> parameterNames, 
+            List<string> dwgExportSchemes,
+            string selectedDWGExportScheme)
         {
             //set up stores
             _navigationStore = new NavigationStore();
@@ -52,8 +55,9 @@ namespace duHastNet.UI.PDFDWGExporterUI
 
             //set up a setting object
             _settings = new Utils.Settings(
-                pdfRenameString: currentPDFExportString, 
-                dwgRenameString: currentDWGExportString
+                pdfRenameString: currentPDFExportString,
+                dwgRenameString: currentDWGExportString,
+                dwgExportScheme: selectedDWGExportScheme
             );
 
             //set up the export data model
@@ -67,6 +71,12 @@ namespace duHastNet.UI.PDFDWGExporterUI
             {
                 _exportDataModel.AddParameterName(parameterName);
             }
+
+            // add the DWG export schemes to the data model
+            foreach (var schemeName in dwgExportSchemes)
+            {
+                _exportDataModel.AddDWGExportSchemeName(schemeName);
+            }
         }
 
         /// <summary>
@@ -77,7 +87,7 @@ namespace duHastNet.UI.PDFDWGExporterUI
 
             //create the settings view model
             var settingsViewModel = CreateSettingsViewModel();
-            
+
             //set the current view model to the settings view model
             _navigationStore.CurrentViewModel = settingsViewModel;
 

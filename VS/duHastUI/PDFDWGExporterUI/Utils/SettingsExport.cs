@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.UI.PDFDWGExporterUI.Utils
 {
     public static class SettingsExport
     {
         public static void ExportSettingsToJson(
-            string filePath, 
-            Dictionary<string, ObservableCollection<DocumentSetting>> settings, 
+            string filePath,
+            Dictionary<string, object> settings,
             Action<string, duHastNet.Utils.WPF.Stores.MessageTypes> AddMessage
             )
         {

@@ -21,32 +21,33 @@
 //
 //
 
-
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace duHastNet.UI.PDFDWGExporterUI.Utils
 {
     public class Settings
     {
-        
+
         public string PDFRenameString { get; set; }
         public string DWGRenameString { get; set; }
 
-
+        
+        public string DWGExportScheme { get; set; } 
+        
+        
         public Settings()
         {
-            
+           
         }
 
 
-        public Settings(string pdfRenameString, string dwgRenameString)
+        public Settings(string pdfRenameString, string dwgRenameString, string dwgExportScheme)
         {
             PDFRenameString = pdfRenameString;
             DWGRenameString = dwgRenameString;
+            DWGExportScheme = dwgExportScheme;
         }
     }
 }

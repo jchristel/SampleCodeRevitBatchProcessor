@@ -1,11 +1,6 @@
 ﻿using duHastNet.UI.PDFDWGExporterUI.Utils;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace PDFDWGExportTester
@@ -42,7 +37,9 @@ namespace PDFDWGExportTester
             var main = new duHastNet.UI.PDFDWGExporterUI.Main(
                 currentPDFExportString: jsonPDF,
                 currentDWGExportString: jsonDWG,
-                parameterNames: new List<string> { "Parameter1", "Parameter2", "Parameter4" }
+                parameterNames: new List<string> { "Parameter1", "Parameter2", "Parameter4" },
+                dwgExportSchemes: new List<string> { "Scheme1", "Scheme2" },
+                selectedDWGExportScheme: "Scheme2"
             );
 
             // Execute the main function to get the settings

@@ -23,11 +23,7 @@
 
 
 using duHastNet.UI.PDFDWGExporterUI.Utils;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace duHastNet.UI.PDFDWGExporterUI.Models
 {
@@ -39,7 +35,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.Models
         /// <summary>
         /// properties ( parameters ) available for renaming
         /// </summary>
-        public List<string> ParameterNames { get;}
+        public List<string> ParameterNames { get; }
 
 
         /// <summary>
@@ -48,9 +44,21 @@ namespace duHastNet.UI.PDFDWGExporterUI.Models
         /// <param name="parameterName"> name of the parameter to add</param>
         public void AddParameterName(string parameterName)
         {
-            
+
             if (!ParameterNames.Contains(parameterName))
                 ParameterNames.Add(parameterName);
+        }
+
+
+        /// <summary>
+        /// DWG export schemes available in the model
+        /// </summary>
+        public List<string> DWGExportSchemeNames { get; }
+
+        public void AddDWGExportSchemeName(string schemeName)
+        {
+            if (!DWGExportSchemeNames.Contains(schemeName))
+                DWGExportSchemeNames.Add(schemeName);
         }
 
         /// <summary>
@@ -62,6 +70,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.Models
             _settings = new Utils.Settings();
 
             ParameterNames = new List<string>();
+            DWGExportSchemeNames = new List<string>();
         }
     }
 }

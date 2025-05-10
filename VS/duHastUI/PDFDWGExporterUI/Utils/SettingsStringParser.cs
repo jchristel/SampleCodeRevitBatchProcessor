@@ -22,15 +22,9 @@
 //
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
-using static System.Net.Mime.MediaTypeNames;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 
 namespace duHastNet.UI.PDFDWGExporterUI.Utils
@@ -48,7 +42,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.Utils
 
             // Create a new ObservableCollection to hold the valid settings
             ObservableCollection<DocumentSetting> settings = new ObservableCollection<DocumentSetting>();
-            
+
             // Check if the settings are valid (e.g., if the parameters are available)
             foreach (DocumentSetting setting in deserializedSettings)
             {

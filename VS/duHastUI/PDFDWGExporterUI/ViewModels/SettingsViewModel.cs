@@ -22,21 +22,15 @@
 //
 
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data;
-using System.Diagnostics.Tracing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
 using duHastNet.Utils.WPF.Commands;
 using duHastNet.Utils.WPF.Stores;
 using duHastNet.Utils.WPF.ViewModels;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
 {
@@ -70,7 +64,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         /// data table containing the available parameters
         /// </summary>
         private DataTable _dtAvailableParameters;
-        
+
         /// <summary>
         /// default view of the data table
         /// </summary>
@@ -89,7 +83,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         /// <summary>
         /// Dictionary containing the document naming settings per document type
         /// </summary>
-        private Dictionary<string, ObservableCollection <Utils.DocumentSetting>> _documentSettingsDictionary;
+        private Dictionary<string, ObservableCollection<Utils.DocumentSetting>> _documentSettingsDictionary;
 
         /// <summary>
         /// Command to add a parameter to the document name table
@@ -146,7 +140,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         /// </summary>
         public override void OnClosing()
         {
-            
+
             if (GlobalMessageViewModel != null)
             {
                 // Unsubscribe from the event to prevent memory leaks
@@ -168,7 +162,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
 
         // Field to return a default list of document type names
         private readonly List<string> _documentTypeNameDefaultList = new List<string>();
-        
+
         // Property to expose the default list of document type names
         public List<string> DocumentTypeNameDefaultList => _documentTypeNameDefaultList;
 
@@ -185,12 +179,75 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
                 //this will also clear the selection in the document name table
                 DataViewDocumentTypeSettings = new DataView(_documentSettingsTables[_selectedDocumentType]);
 
+                // hide or show the dwg export option scheme names
+                IsDWGExportSchemeVisible = _selectedDocumentType == _documentTypeDWGName;
+
                 //update UI
                 OnPropertyChanged(nameof(SelectedDocumentType));
             }
         }
 
         #endregion document type filter
+
+        #region dwg export scheme name
+
+        /// json Field to return the selected export scheme name
+        private string _dwgExportSchemeNameProperty = "DWGExportSchemeName";
+
+        // Field to return a list of dwg export scheme names
+        private readonly List<string> _dwgExportSchemeNameList = new List<string>();
+
+        // Property to expose the list of dwg export scheme names
+        public List<string> DWGExportSchemeNameList => _dwgExportSchemeNameList;
+
+        //field to store the selected export scheme name
+        private string _selectedDWGExportSchemeName;
+        public string SelectedDWGExportSchemeName
+        {
+            get => _selectedDWGExportSchemeName;
+            set
+            {
+                _selectedDWGExportSchemeName = value;
+                OnPropertyChanged(nameof(SelectedDWGExportSchemeName));
+            }
+        }
+
+        // stores whether the dweg export scheme name is visible or not
+        // this is used to show or hide the export scheme name in the UI
+        private bool _isDWGExportSchemeVisible;
+
+        public bool IsDWGExportSchemeVisible
+        {
+            get => _isDWGExportSchemeVisible;
+            set
+            {
+                _isDWGExportSchemeVisible = value;
+                OnPropertyChanged(nameof(IsDWGExportSchemeVisible));
+            }
+        }
+
+
+        /// <summary>
+        /// populates the list of dwg export scheme names
+        /// </summary>
+        /// <param name="dwgExportSchemes"></param>
+        public void populateDWGExportSchemeNameList(List<string> dwgExportSchemes)
+        {
+            //populate the list of dwg export scheme names
+            //check if the current settings contain a dwg export scheme name
+            //and set up the data tables accordingly
+            //clear the list
+            _dwgExportSchemeNameList.Clear();
+            //add the values
+            foreach (var scheme in dwgExportSchemes)
+            {
+                _dwgExportSchemeNameList.Add(scheme);
+            }
+            //trigger property changed event
+            OnPropertyChanged(nameof(DWGExportSchemeNameList));
+        }
+
+        #endregion dwg export scheme name
 
         #region user selection
 
@@ -232,7 +289,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
                     var selectedRow = _dvAvailableParameters[_selectedIndexAvailableParameters].Row;
                     var parameterName = selectedRow[_columnNameAvailableProperties].ToString();
                     return parameterName;
-                    
+
                 }
                 // return null if the selected index is out of bounds
                 return null;
@@ -293,7 +350,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
                 }
 
                 // update the command can execute state
-                if (MoveDownCommand !=null)
+                if (MoveDownCommand != null)
                 {
                     ((RelayCommand)MoveDownCommand).RaiseCanExecuteChanged();
                 }
@@ -331,7 +388,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
 
                 //clear selection when changing doc type
                 if (SelectedIndexDocumentNameSetting != -1 || SelectedItemDocumentNameSetting != null) { ClearSelection(); }
-                
+
                 // update the command can execute state
                 if (MoveParameterToDocumentNameTableCommand != null)
                 {
@@ -534,7 +591,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
 
             //store the table in global
             _documentSettingsTables.Add(_documentTypeDWGName, dataTable);
-         
+
             // do not set the data view here, as this will be done in the populateAvailableFilters function
             //and the default view will be set to the pdf settings table
             // get out of the function
@@ -573,6 +630,42 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             SelectedDocumentType = _documentTypePDFName;
         }
 
+        /// <summary>
+        /// Set the selected export scheme name to the one in the settings if it exists
+        /// </summary>
+        private void setSelectedDWGExportScheme()
+        {
+            // set the dwg export scheme name to the first one in the list if none in settings
+            if (_exportDataModel.Settings.DWGExportScheme == null || _exportDataModel.Settings.DWGExportScheme == "")
+            {
+                //set the selected export scheme name to the first one in the list
+                if (_dwgExportSchemeNameList.Count > 0)
+                {
+                    SelectedDWGExportSchemeName = _dwgExportSchemeNameList[0];
+                }
+            }
+            else
+            {
+                //set the selected export scheme name to the one in the settings if it exists
+                //check if the selected export scheme name is in the list
+                if (_dwgExportSchemeNameList.Contains(_exportDataModel.Settings.DWGExportScheme))
+                {
+                    SelectedDWGExportSchemeName = _exportDataModel.Settings.DWGExportScheme;
+                }
+                else
+                {
+                    //add message to user
+                    AddMessage("Retrieved DWG export scheme name not in list.", MessageTypes.Error);
+                    //set the selected export scheme name to the first one in the list
+                    if (_dwgExportSchemeNameList.Count > 0)
+                    {
+                        SelectedDWGExportSchemeName = _dwgExportSchemeNameList[0];
+                    }
+                }
+            }
+        }
+
+
         #region button underlying functions
 
         /// <summary>
@@ -588,7 +681,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        private bool CanMoveToTableParameterNames(object parameter) => _dvDocumentSettings.Count>0;
+        private bool CanMoveToTableParameterNames(object parameter) => _dvDocumentSettings.Count > 0;
 
         /// <summary>
         /// Move the selected parameter to the document name table
@@ -672,12 +765,11 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             }
 
             _documentSettingsTables[SelectedDocumentType].Clear();
-            _documentSettingsTables[SelectedDocumentType]= dt;
+            _documentSettingsTables[SelectedDocumentType] = dt;
 
             //update the UI!!
             DataViewDocumentTypeSettings = new DataView(dt);
         }
-
 
         /// <summary>
         /// Synchronizes the document settings with data entered in the document name table
@@ -720,13 +812,13 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        private bool CanMoveUp(object parameter) => SelectedItemDocumentNameSetting != null && 
+        private bool CanMoveUp(object parameter) => SelectedItemDocumentNameSetting != null &&
             SelectedIndexDocumentNameSetting > 0;
 
         /// <summary>
         /// Checks if the selected item in the document name table can be moved down
         /// </summary>
-        private bool CanMoveDown(object parameter) => SelectedItemDocumentNameSetting != null && 
+        private bool CanMoveDown(object parameter) => SelectedItemDocumentNameSetting != null &&
             SelectedIndexDocumentNameSetting < _documentSettingsDictionary[SelectedDocumentType].Count - 1;
 
         /// <summary>
@@ -801,19 +893,20 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
                 if (_selectedExportFilePath != value)
                 {
                     _selectedExportFilePath = value;
-                    
+
                     //build a dictioanry to be written to file
-                    Dictionary<string, ObservableCollection<Utils.DocumentSetting>> settingsDictionary = new Dictionary<string, ObservableCollection<Utils.DocumentSetting>>()
+                    Dictionary<string, object> settingsDictionary = new Dictionary<string, object>()
                     {
                         { _documentTypePDFName, _documentSettingsDictionary[_documentTypePDFName] },
-                        { _documentTypeDWGName, _documentSettingsDictionary[_documentTypeDWGName] }
+                        { _documentTypeDWGName, _documentSettingsDictionary[_documentTypeDWGName] },
+                        {_dwgExportSchemeNameProperty, SelectedDWGExportSchemeName }
                     };
 
                     //export settings to given file path
                     duHastNet.UI.PDFDWGExporterUI.Utils.SettingsExport.ExportSettingsToJson(
-                        filePath:_selectedExportFilePath, 
-                        settings:settingsDictionary, 
-                        AddMessage:AddMessage);
+                        filePath: _selectedExportFilePath,
+                        settings: settingsDictionary,
+                        AddMessage: AddMessage);
 
                     OnPropertyChanged(nameof(ExportSettingsFilePath));
                 }
@@ -847,7 +940,9 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
                     if (settingsDictionary != null)
                     {
                         //check if required keys are present
-                        if (!settingsDictionary.ContainsKey(_documentTypePDFName) || !settingsDictionary.ContainsKey(_documentTypeDWGName))
+                        if (!settingsDictionary.ContainsKey(_documentTypePDFName) || 
+                            !settingsDictionary.ContainsKey(_documentTypeDWGName )||
+                            !settingsDictionary.ContainsKey(_dwgExportSchemeNameProperty))
                         {
                             //add message to user
                             AddMessage("Settings file does not contain required keys.", MessageTypes.Error);
@@ -860,10 +955,18 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
                         //store settings strings in settings
                         _exportDataModel.Settings.PDFRenameString = settingsDictionary[_documentTypePDFName];
                         _exportDataModel.Settings.DWGRenameString = settingsDictionary[_documentTypeDWGName];
+                        _exportDataModel.Settings.DWGExportScheme = settingsDictionary[_dwgExportSchemeNameProperty];
 
                         //populate data tables with the settings strings
                         populatePDFSettingsDataTable();
                         popualateDWGSettingsDataTable();
+
+                        //set the selected export scheme name
+                        setSelectedDWGExportScheme();
+
+                        // reset the current document type to the pdf settings
+                        //this will be trigger a view change to show the selected data table
+                        setFilterToPDFSettings();
                     }
 
                     OnPropertyChanged(nameof(ImportSettingsFilePath));
@@ -884,6 +987,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             // save the settings to the export data model
             _exportDataModel.Settings.PDFRenameString = Utils.SettingsStringParser.ConvertSettingsToPDFString(_documentSettingsDictionary[_documentTypePDFName]);
             _exportDataModel.Settings.DWGRenameString = Utils.SettingsStringParser.ConvertSettingsToDwgString(_documentSettingsDictionary[_documentTypeDWGName]);
+            _exportDataModel.Settings.DWGExportScheme = SelectedDWGExportSchemeName;
 
             if (window is Window w)
             {
@@ -937,7 +1041,7 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         /// <param name="messageStore"></param>
         public SettingsViewModel(
             Models.ExportDataModel exportDataModel,
-            duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel, 
+            duHastNet.Utils.WPF.ViewModels.GlobalMessageViewModel globalMessageViewModel,
             duHastNet.Utils.WPF.Stores.MessageStore messageStore
             )
         {
@@ -957,6 +1061,9 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
 
             //populate the available filters list ( PDF and DWG)
             populateAvailableFilters();
+
+            //populate available dwg export scheme names
+            populateDWGExportSchemeNameList(_exportDataModel.DWGExportSchemeNames);
 
             //check if the current settings contain a dwg or pdf settings string
             //and set up the data tables accordingly
@@ -994,8 +1101,8 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
                 (object parameter) => true //always enabled
             );
 
-
-            //cancel and exit
+            //set the selected dwg export scheme
+            setSelectedDWGExportScheme();
 
             //set the filter to display pdf settings by default
             //this will be trigger a view change to show the selected data table, hence last thing in the constructor

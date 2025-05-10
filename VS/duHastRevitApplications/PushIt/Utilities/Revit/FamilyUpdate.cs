@@ -24,6 +24,7 @@
 using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 
 namespace duHastNet.PushIt.Utilities.Revit
@@ -137,13 +138,67 @@ namespace duHastNet.PushIt.Utilities.Revit
 
 
         /// <summary>
+        /// Check out family instances in the document
+        /// </summary>
+        /// <param name="doc">Current Revit document</param>
+        /// <param name="processElementIds">The ids of elements to process</param>
+        /// <param name="roomIdByFamilyInstanceIdMapper">a dictioanry mapping a family id to a room id</param>
+        /// <param name="AddMessage">Function to provide user feedback</param>
+        /// <returns></returns>
+        public static HashSet<ElementId> CheckOutFamilyInstances(
+            Document doc, 
+            HashSet<ElementId> processElementIds, 
+            Dictionary<ElementId, string> roomIdByFamilyInstanceIdMapper, 
+            Action<string, Utils.WPF.Stores.MessageTypes> AddMessage
+            )
+        {
+            // create a transaction with central option
+            // instructing Revit not to wait for the lock
+            // this is done to avoid deadlocks when multiple users are trying to work on the same elements
+            TransactWithCentralOptions transactWithCentralOptions = new TransactWithCentralOptions();
+            Utilities.Revit.TransactionCallBack transactionCallBack = new Utilities.Revit.TransactionCallBack(shouldWaitForLock: false);
+            transactWithCentralOptions.SetLockCallback(transactionCallBack);
+
+            //attempt to check out all elements
+            ISet<ElementId> successfullyCheckedOutIds = WorksharingUtils.CheckoutElements(doc, processElementIds, transactWithCentralOptions);
+
+            StringBuilder stringBuilder = new StringBuilder();
+            //collect all room ids that were not checked out successfully
+            foreach (var id in processElementIds)
+            {
+                if (!successfullyCheckedOutIds.Contains(id))
+                {
+                    // get the room id from the family instance
+                    string roomId = roomIdByFamilyInstanceIdMapper[id];
+                    stringBuilder.Append($"\nFailed to check out family instance [{id.IntegerValue}]. Skipping update for room [{roomId}].");
+                }
+            }
+
+            //check if stringBuilder is empty
+            if (stringBuilder.Length > 0)
+            {
+                // log the message
+                AddMessage(stringBuilder.ToString(), Utils.WPF.Stores.MessageTypes.Error);
+            }
+
+            // Remove elements that could not be checked out
+            processElementIds.RemoveWhere(id => !successfullyCheckedOutIds.Contains(id));
+
+            //return the successfully checked out elements
+            return processElementIds;
+        }
+
+        /// <summary>
         /// Update the properties of multiple family instances with the room data
         /// </summary>
         /// <param name="doc">The current Revit document</param>
         /// <param name="familyData"></param>
         /// <returns>True if the update was successful, false if not</returns>
         /// <exception cref="Exception"></exception>
-        public static bool UpdateMultipleFamilyInstances(Document doc, Dictionary<string, (duHastNet.PushIt.Models.RoomDataModel, List<FamilyInstance>)> familyData, Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
+        public static bool UpdateMultipleFamilyInstances(
+            Document doc, 
+            Dictionary<string, (duHastNet.PushIt.Models.RoomDataModel, List<FamilyInstance>)> familyData, 
+            Action<string, Utils.WPF.Stores.MessageTypes> AddMessage)
         {
             // set up an action to run inside a Revit transaction
             Func<bool> actionInTranny = () =>
@@ -154,28 +209,30 @@ namespace duHastNet.PushIt.Utilities.Revit
                 // create a hash set to store the element ids of the family instances
                 HashSet<ElementId> processElementIds = new HashSet<ElementId>();
 
+                //create a set recording the family instance id to room id mapping
+                Dictionary<ElementId, string> familyInstancesByRoomId = new Dictionary<ElementId, string>(); // room id -> family instance ids
+
                 //build list of all family instance ids to check out
                 foreach (var (roomData, familyInstances) in familyData.Values)
                 {
+                    
                     foreach (var familyInstance in familyInstances)
                     {
                         processElementIds.Add(familyInstance.Id);
+                        familyInstancesByRoomId[familyInstance.Id] = roomData.Id.Value;
                     }
                 }
 
                 // check if the document is workshared and if so attempt to check out the elements to be edited
-                if (doc.IsWorkshared){ 
-                    // create a transaction with central option
-                    // instructing Revit not to wait for the lock
-                    // this is done to avoid deadlocks when multiple users are trying to work on the same elements
-                    TransactWithCentralOptions transactWithCentralOptions = new TransactWithCentralOptions();
-                    Utilities.Revit.TransactionCallBack transactionCallBack = new Utilities.Revit.TransactionCallBack(shouldWaitForLock: false);
-                    transactWithCentralOptions.SetLockCallback(transactionCallBack);
-
-                    //attempt to check out all elements
-                    ISet<ElementId> successfullyCheckedOutIds = WorksharingUtils.CheckoutElements(doc, processElementIds, transactWithCentralOptions);
-                    // Remove elements that could not be checked out
-                    processElementIds.RemoveWhere(id => !successfullyCheckedOutIds.Contains(id));
+                if (doc.IsWorkshared){
+                    
+                    // attempt to check out elements prior to updating them
+                    processElementIds = CheckOutFamilyInstances(
+                        doc:doc,
+                         processElementIds: processElementIds, 
+                         roomIdByFamilyInstanceIdMapper: familyInstancesByRoomId, 
+                         AddMessage: AddMessage
+                    );
 
                     //check if any elements were checked out successfully
                     if (processElementIds.Count == 0)
@@ -195,7 +252,7 @@ namespace duHastNet.PushIt.Utilities.Revit
                         //only update if the family instance is checked out
                         if (!processElementIds.Contains(familyInstance.Id))
                         {
-                            AddMessage($"Failed to check out family instance [{familyInstance.Id}]. Skipping update.", Utils.WPF.Stores.MessageTypes.Error);
+                            // no need to pop a message to the user here since already logged above
                             continue;
                         }
 

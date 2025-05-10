@@ -729,7 +729,6 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
         private bool CanMoveDown(object parameter) => SelectedItemDocumentNameSetting != null && 
             SelectedIndexDocumentNameSetting < _documentSettingsDictionary[SelectedDocumentType].Count - 1;
 
-
         /// <summary>
         /// Moves a selected item in the document name settings data table up
         /// </summary>
@@ -782,6 +781,93 @@ namespace duHastNet.UI.PDFDWGExporterUI.ViewModels
             {
                 // Select the row by index
                 SelectRowByIndex(dataGrid, index + 1);
+            }
+        }
+
+
+        /// <summary>
+        /// The file path for the export settings file
+        /// </summary>
+        private string _selectedExportFilePath;
+
+        /// <summary>
+        /// property handling file path changes
+        /// </summary>
+        public string ExportSettingsFilePath
+        {
+            get => _selectedExportFilePath;
+            set
+            {
+                if (_selectedExportFilePath != value)
+                {
+                    _selectedExportFilePath = value;
+                    
+                    //build a dictioanry to be written to file
+                    Dictionary<string, ObservableCollection<Utils.DocumentSetting>> settingsDictionary = new Dictionary<string, ObservableCollection<Utils.DocumentSetting>>()
+                    {
+                        { _documentTypePDFName, _documentSettingsDictionary[_documentTypePDFName] },
+                        { _documentTypeDWGName, _documentSettingsDictionary[_documentTypeDWGName] }
+                    };
+
+                    //export settings to given file path
+                    duHastNet.UI.PDFDWGExporterUI.Utils.SettingsExport.ExportSettingsToJson(
+                        filePath:_selectedExportFilePath, 
+                        settings:settingsDictionary, 
+                        AddMessage:AddMessage);
+
+                    OnPropertyChanged(nameof(ExportSettingsFilePath));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The file path for the import settings file
+        /// </summary>
+        private string _selectedImportFilePath;
+
+        /// <summary>
+        /// property handling import file path changes
+        /// </summary>
+        public string ImportSettingsFilePath
+        {
+            get => _selectedImportFilePath;
+            set
+            {
+                if (_selectedImportFilePath != value)
+                {
+                    _selectedImportFilePath = value;
+
+                    //import settings from given file path
+                    Dictionary<string, string> settingsDictionary = Utils.SettingsImport.ImportSettingsFromJson(
+                        filePath: _selectedImportFilePath,
+                        AddMessage: AddMessage
+                    );
+
+                    //check if the settings dictionary is not null
+                    if (settingsDictionary != null)
+                    {
+                        //check if required keys are present
+                        if (!settingsDictionary.ContainsKey(_documentTypePDFName) || !settingsDictionary.ContainsKey(_documentTypeDWGName))
+                        {
+                            //add message to user
+                            AddMessage("Settings file does not contain required keys.", MessageTypes.Error);
+                            return;
+                        }
+
+                        //clear the overalll settings tables dictionary so it can be repopulated
+                        _documentSettingsTables.Clear();
+
+                        //store settings strings in settings
+                        _exportDataModel.Settings.PDFRenameString = settingsDictionary[_documentTypePDFName];
+                        _exportDataModel.Settings.DWGRenameString = settingsDictionary[_documentTypeDWGName];
+
+                        //populate data tables with the settings strings
+                        populatePDFSettingsDataTable();
+                        popualateDWGSettingsDataTable();
+                    }
+
+                    OnPropertyChanged(nameof(ImportSettingsFilePath));
+                }
             }
         }
 

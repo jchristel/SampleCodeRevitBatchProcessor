@@ -24,18 +24,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace duHastNet.UI.PDFDWGExporterUI.Views
 {
@@ -47,6 +38,40 @@ namespace duHastNet.UI.PDFDWGExporterUI.Views
         public SettingsView()
         {
             InitializeComponent();
+        }
+
+        private void Export_OnClick(object sender, EventArgs e)
+        {
+            var dialog = new System.Windows.Forms.SaveFileDialog();
+            dialog.Filter = "json Files (*.json)|*.json";
+            var dialogResult = dialog.ShowDialog();
+            if (dialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                ExportFilePathTextBox.Text = dialog.FileName;
+
+                // Since setting the property explicitly bypasses the data binding, 
+                // we must explicitly update it by calling BindingExpression.UpdateSource()
+                this.ExportFilePathTextBox
+                  .GetBindingExpression(TextBox.TextProperty)
+                  .UpdateSource();
+            }
+        }
+
+        private void Import_OnClick(object sender, EventArgs e)
+        {
+            var dialog = new System.Windows.Forms.OpenFileDialog();
+            dialog.Filter = "json Files (*.json)|*.json|All Files (*.*)|*.*";
+            var dialogResult = dialog.ShowDialog();
+            if (dialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                ImportFilePathTextBox.Text = dialog.FileName;
+
+                // Since setting the property explicitly bypasses the data binding, 
+                // we must explicitly update it by calling BindingExpression.UpdateSource()
+                this.ImportFilePathTextBox
+                  .GetBindingExpression(TextBox.TextProperty)
+                  .UpdateSource();
+            }
         }
     }
 }

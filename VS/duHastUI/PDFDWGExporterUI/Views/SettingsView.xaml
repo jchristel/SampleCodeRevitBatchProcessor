@@ -17,6 +17,8 @@
             <RowDefinition Height="auto"/>
             <!-- data -->
             <RowDefinition Height="*"/>
+            <!-- buttons export import-->
+            <RowDefinition Height="Auto"/>
             <!-- buttons -->
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -156,8 +158,40 @@
                 </Grid>
             </Grid>
         </Border>
-        <!-- save and cancel row content -->
+        <!-- export and import buttons -->
         <Border Grid.Row="4" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
+            <Grid Margin="5 2 5 2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Row="0" Grid.Column="0"
+                    Margin="2 5 5 5" 
+                    Content="Export" 
+                    FontSize="18"
+                    Click="Export_OnClick"/>
+                <Button Grid.Row="0" Grid.Column="1"
+                    Margin="5 5 2 5" 
+                    Content="Import" 
+                    FontSize="18"
+                    Click="Import_OnClick"/>
+
+                <!-- Hidden TextBoxes for binding -->
+                <TextBox x:Name="ExportFilePathTextBox" Grid.Row="1" Grid.Column="0"
+                    Text="{Binding ExportSettingsFilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    Visibility="Collapsed" />
+                <!-- Hidden TextBoxes for binding -->
+                <TextBox x:Name="ImportFilePathTextBox" Grid.Row="1" Grid.Column="1"
+                    Text="{Binding ImportSettingsFilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    Visibility="Collapsed" />
+            </Grid>
+        </Border>
+        <!-- save row content -->
+        <Border Grid.Row="5" CornerRadius="1" BorderBrush="Gray" BorderThickness="1" Margin="0 2 0 2">
             <Grid Margin="5 2 5 2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -167,7 +201,7 @@
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0"
                 Margin="2 5 2 5" 
-                Content="Save" 
+                Content="Save To Project" 
                 FontSize="24"
                 Command="{Binding SaveAndCloseCommand}" 
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>

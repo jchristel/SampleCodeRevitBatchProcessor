@@ -139,7 +139,7 @@ namespace duHastNet.PushIt.Utilities.Revit
         /// <summary>
         /// Update the properties of multiple family instances with the room data
         /// </summary>
-        /// <param name="doc"></param>
+        /// <param name="doc">The current Revit document</param>
         /// <param name="familyData"></param>
         /// <returns>True if the update was successful, false if not</returns>
         /// <exception cref="Exception"></exception>
@@ -151,15 +151,57 @@ namespace duHastNet.PushIt.Utilities.Revit
                 // keep track of the overall success of the wipe operation
                 bool overallUpdateSuccess = true;
 
-                //run this outside of a try catch so the transaction can be rolled back if update fails
+                // create a hash set to store the element ids of the family instances
+                HashSet<ElementId> processElementIds = new HashSet<ElementId>();
+
+                //build list of all family instance ids to check out
+                foreach (var (roomData, familyInstances) in familyData.Values)
+                {
+                    foreach (var familyInstance in familyInstances)
+                    {
+                        processElementIds.Add(familyInstance.Id);
+                    }
+                }
+
+                // check if the document is workshared and if so attempt to check out the elements to be edited
+                if (doc.IsWorkshared){ 
+                    // create a transaction with central option
+                    // instructing Revit not to wait for the lock
+                    // this is done to avoid deadlocks when multiple users are trying to work on the same elements
+                    TransactWithCentralOptions transactWithCentralOptions = new TransactWithCentralOptions();
+                    Utilities.Revit.TransactionCallBack transactionCallBack = new Utilities.Revit.TransactionCallBack(shouldWaitForLock: false);
+                    transactWithCentralOptions.SetLockCallback(transactionCallBack);
+
+                    //attempt to check out all elements
+                    ISet<ElementId> successfullyCheckedOutIds = WorksharingUtils.CheckoutElements(doc, processElementIds, transactWithCentralOptions);
+                    // Remove elements that could not be checked out
+                    processElementIds.RemoveWhere(id => !successfullyCheckedOutIds.Contains(id));
+
+                    //check if any elements were checked out successfully
+                    if (processElementIds.Count == 0)
+                    {
+                        AddMessage("Failed to check out any family instances. Please try again later.", Utils.WPF.Stores.MessageTypes.Error);
+                        return false;
+                    }
+                }
+
+                // run this outside of a try catch so the transaction can be rolled back if update fails
                 // loop over instances and update with room data
                 foreach (var (roomData, familyInstances) in familyData.Values)
                 {
                     // loop over instances and update with blank room data
                     foreach (var familyInstance in familyInstances)
                     {
+                        //only update if the family instance is checked out
+                        if (!processElementIds.Contains(familyInstance.Id))
+                        {
+                            AddMessage($"Failed to check out family instance [{familyInstance.Id}]. Skipping update.", Utils.WPF.Stores.MessageTypes.Error);
+                            continue;
+                        }
+
                         // update the family instance
                         bool flag_update = UpdateProperties(doc, familyInstance, roomData, duHastNet.PushIt.Utilities.PushMode.Push, AddMessage);
+                        
                         //log the overall success of the update
                         overallUpdateSuccess = overallUpdateSuccess && flag_update;
 

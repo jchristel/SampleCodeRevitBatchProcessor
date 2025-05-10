@@ -24,36 +24,23 @@
 using Autodesk.Revit.DB;
 using duHastNet.PushIt.Models;
 using System.Collections.Generic;
+using System.Windows.Controls;
 
 namespace duHastNet.PushIt.RevitActions
 {
     public class PushAllRoomDataToRevit : RevitActionBase, IRevitAction
     {
+
         /// <summary>
-        /// Execute the action
+        /// build a dictionary of family instances that contain valid data ( valid data is a family instance where the room id has a match in the rooms data model)
+        /// the dictionary key is the room id and the value is a tuple of the room data model and a list of revit family instances
         /// </summary>
-        /// <param name="doc"></param>
+        /// <param name="roomsDataModel">rooms in the data model</param>
+        /// <param name="revitRooms">push it mock room intances</param>
+        /// <param name="doc">Revit document</param>
         /// <returns></returns>
-        public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
+        public Dictionary<string, (RoomDataModel, List<FamilyInstance>)> GetFamilyInstancesWithIdInDataModel(List<Models.RoomDataModel> roomsDataModel, List<duHastNet.PushIt.Models.RoomsRevit> revitRooms, Document doc)
         {
-            // get all rooms in the model ( these rooms have their equivalent revit rooms already attached )??
-            List<Models.RoomDataModel> roomsDataModel = RevitModel.GetAllRooms();
-
-            if (roomsDataModel.Count == 0)
-            {
-                // no rooms available...nothing to push
-                // todo log error
-                return ("Data model contains no rooms to push to Revit.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
-            }
-
-            // get the revit rooms
-            List<duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
-                doc: doc,
-                roomsDataModel: roomsDataModel,
-                supportedCategoryName: RevitModel.Settings.SupportedCategories,
-                AddMessage: AddMessage
-            );
-
             // build a dictioanry of family instances that contain valid data ( valid data is a family instance where the room id has a match in the rooms data model)
             // the dictionary key is the room id and the value is a tuple of the room data model and a list of revit family instances
             Dictionary<string, (RoomDataModel, List<FamilyInstance>)> currentFamilyInstances = new Dictionary<string, (RoomDataModel, List<FamilyInstance>)>();
@@ -76,14 +63,14 @@ namespace duHastNet.PushIt.RevitActions
                         );
                     }
                 }
-                else if (Utilities.PushModeUtils.IsNewRoomMode (revitRoomInstance.Id.Value))
+                else if (Utilities.PushModeUtils.IsNewRoomMode(revitRoomInstance.Id.Value))
                 {
                     // new rooms are not supported by this operation
                 }
                 else if (Utilities.PushModeUtils.IsSplitRoomMode(revitRoomInstance.Id.Value))
                 {
                     //a split room, remove the split from the id value
-                    string idValue = Utilities.PushModeUtils.GetIdWithoutSplitModeIndicator( revitRoomInstance.Id.Value);
+                    string idValue = Utilities.PushModeUtils.GetIdWithoutSplitModeIndicator(revitRoomInstance.Id.Value);
 
                     if (roomsDataModel.Exists(x => x.Id.Value == idValue))
                     {
@@ -110,13 +97,60 @@ namespace duHastNet.PushIt.RevitActions
                 }
             }
 
+            return currentFamilyInstances;
+        }
+
+        /// <summary>
+        /// Update the family instances in the Revit model with data from the data model
+        /// </summary>
+        /// <param name="updateCounter"></param>
+        /// <param name="taskBucketFamilyInstancesCounter"></param>
+        /// <param name="updateFamilyInstances"></param>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public (bool, int) UpdateFamiliesInBucket(int updateCounter, int taskBucketFamilyInstancesCounter, Dictionary<string, (RoomDataModel, List<FamilyInstance>)> updateFamilyInstances, Document doc)
+        {
+            //update the overall counter when then task bucket is full
+            updateCounter = updateCounter + taskBucketFamilyInstancesCounter;
+
+            // update the family instances
+            bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateMultipleFamilyInstances(
+                doc: doc,
+                familyData: updateFamilyInstances,
+                AddMessage: AddMessage
+            );
+
+            // log the error if the update failed
+            if (!updateFamily)
+            {
+                // get all keys in the update family instances
+                string keys = string.Join(", ", updateFamilyInstances.Keys);
+                // log the error
+                AddMessage($"Failed to update room(s): {keys}", Utils.WPF.Stores.MessageTypes.Error);
+            }
+
+            // return tjhe flag for update family and the update counter
+            return (updateFamily, updateCounter);
+        }
+
+        /// <summary>
+        /// Update the psuh it family instances in the Revit model with data from the data model
+        /// </summary>
+        /// <param name="currentFamilyInstances">A dictionary where the key is the room id and the value is a tuple of the room data model instance and a list of revit family instances belonging to it</param>
+        /// <param name="doc">Revit document</param>
+        /// <param name="bucketSize">The number of families to be updated in one transaction</param>
+        /// <returns></returns>
+        public (bool, int) UpdateRevitModel(Dictionary<string, (RoomDataModel, List<FamilyInstance>)> currentFamilyInstances, Document doc, int bucketSize)
+        {
             // keep track of the overall success of the wipe operation
             bool overallUpdateSuccess = true;
             int updateCounter = 0;
             int taskBucketFamilyInstancesCounter = 0;
 
-            //attempt to update room data in bundles of 20 family instances to speed up the process
+            //attempt to update room data in bundles of bucket size number of family instances to speed up the process
             Dictionary<string, (RoomDataModel, List<FamilyInstance>)> updateFamilyInstances = new Dictionary<string, (RoomDataModel, List<FamilyInstance>)>();
+
+            // loop through the family instances and add them to the task bucket
             foreach (var currentFamilyInstance in currentFamilyInstances)
             {
                 //fill the task bucket
@@ -126,26 +160,14 @@ namespace duHastNet.PushIt.RevitActions
                 taskBucketFamilyInstancesCounter = taskBucketFamilyInstancesCounter + currentFamilyInstance.Value.Item2.Count;
 
                 // check if max number of family instances to update for the task bucket has been reached
-                if (taskBucketFamilyInstancesCounter >= 20)
+                if (taskBucketFamilyInstancesCounter >= bucketSize)
                 {
-                    //update the overall counter when then task bucket is full
-                    updateCounter = updateCounter + taskBucketFamilyInstancesCounter;
+                    // flag for update family
+                    bool updateFamily = true;
 
-                    // update the family instances
-                    bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateMultipleFamilyInstances(
-                        doc: doc,
-                        familyData: updateFamilyInstances,
-                        AddMessage: AddMessage
-                    );
-
-                    if (!updateFamily)
-                    {
-                        // get all keys in the update family instances
-                        string keys = string.Join(", ", updateFamilyInstances.Keys);
-                        // log the error
-                        AddMessage($"Failed to update room(s): {keys}", Utils.WPF.Stores.MessageTypes.Error);
-                    }
-
+                    //update all families in the task bucket
+                    (updateFamily, updateCounter) = UpdateFamiliesInBucket(updateCounter, taskBucketFamilyInstancesCounter, updateFamilyInstances, doc);
+                    
                     // update the overall success
                     overallUpdateSuccess = overallUpdateSuccess && updateFamily;
 
@@ -157,32 +179,83 @@ namespace duHastNet.PushIt.RevitActions
                 }
             }
 
-            //update the remaining family instances if any
+            //update the remaining family instances if any ( if the last task bucket was not full )
             if (updateFamilyInstances.Count > 0)
             {
-                // update the overall counter
-                updateCounter = updateCounter + taskBucketFamilyInstancesCounter;
+                // flag for update family
+                bool updateFamily = true;
 
-                bool updateFamily = Utilities.Revit.FamilyUpdate.UpdateMultipleFamilyInstances(
-                    doc: doc,
-                    familyData: updateFamilyInstances,
-                    AddMessage: AddMessage
-                );
-
-                // log the error if the update failed
-                if (!updateFamily)
-                {
-                    // get all keys in the update family instances
-                    string keys = string.Join(", ", updateFamilyInstances.Keys);
-                    // log the error
-                    AddMessage($"Failed to update room(s): {keys}", Utils.WPF.Stores.MessageTypes.Error);
-                }
+                //update all families in the task bucket
+                (updateFamily, updateCounter) = UpdateFamiliesInBucket(updateCounter, taskBucketFamilyInstancesCounter, updateFamilyInstances, doc);
 
                 // update the overall success
                 overallUpdateSuccess = overallUpdateSuccess && updateFamily;
+
                 // clear the update family instances
                 updateFamilyInstances.Clear();
             }
+
+            return (overallUpdateSuccess, updateCounter);
+        }
+
+        /// <summary>
+        /// Execute the action
+        /// </summary>
+        /// <param name="doc">The current Revit document</param>
+        /// <returns></returns>
+        public (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) Execute(Document doc)
+        {
+            // get all rooms in the model ( these rooms have their equivalent revit rooms already attached )??
+            List<Models.RoomDataModel> roomsDataModel = RevitModel.GetAllRooms();
+
+            if (roomsDataModel.Count == 0)
+            {
+                // no rooms available...nothing to push
+                // todo log error
+                return ("Data model contains no rooms to push to Revit.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+            }
+
+            // get the revit rooms
+            List<duHastNet.PushIt.Models.RoomsRevit> revitRooms = Utilities.Revit.FamilyGet.GetAllSupportedFamilies(
+                doc: doc,
+                roomsDataModel: roomsDataModel,
+                supportedCategoryName: RevitModel.Settings.SupportedCategories,
+                AddMessage: AddMessage
+            );
+
+            // check if any rooms were found in the model
+            if (revitRooms.Count == 0)
+            {
+                // no rooms available...nothing to push
+                // todo log error
+                return ("No rooms found in the model to push data to.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+            }
+
+            // build a dictionary of family instances that contain valid data ( valid data is a family instance where the room id has a match in the rooms data model)
+            // the dictionary key is the room id and the value is a tuple of the room data model and a list of revit family instances
+            Dictionary<string, (RoomDataModel, List<FamilyInstance>)> currentFamilyInstances = GetFamilyInstancesWithIdInDataModel(
+                roomsDataModel,
+                revitRooms,
+                doc);
+
+            // check if any family instances with id's were found in the model
+            if (currentFamilyInstances.Count == 0)
+            {
+                // no family instances available...nothing to push
+                // todo log error
+                return ("No push it family instances with valid id's found in the model to push data to.", duHastNet.Utils.WPF.Stores.MessageTypes.Error);
+            }
+
+            // keep track of the overall success of the wipe operation
+            bool overallUpdateSuccess = true;
+            int updateCounter = 0;
+
+            //attempt to update room data in bundles of 20 family instances to speed up the process
+            (overallUpdateSuccess, updateCounter) = UpdateRevitModel(
+                currentFamilyInstances,
+                doc,
+                bucketSize: 20
+            );
 
             // build the return message depending on error count
             return GetReturnValue($"Updated {updateCounter} rooms in the model with status: {overallUpdateSuccess}");

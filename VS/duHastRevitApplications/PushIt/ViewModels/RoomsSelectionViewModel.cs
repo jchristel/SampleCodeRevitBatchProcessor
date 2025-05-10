@@ -43,17 +43,19 @@ namespace duHastNet.PushIt.ViewModels
         private readonly Models.RevitDataModel _revitDataModel;
         private readonly Utils.WPF.ViewModels.ErrorsViewModel _errorsViewModel;
 
+
+        // default column names for the data table
+        public static readonly string columNameId = "Id";
+        public static readonly string columNameCount = "Count";
+        public static readonly string columNameCountSplit = "Count Split";
+
+        // the global message view model
         public Utils.WPF.ViewModels.GlobalMessageViewModel GlobalMessageViewModel { get; }
 
         // data table containing push it data
         private DataTable _dt;
         // default view of the data table
         private DataView _dv;
-
-        //flag to indicate if safety off mode is enabled
-        private bool _safetyOffMode = false;
-        //default button text for safety off mode
-        private string _safetyOffButtonText = "Safety on";
 
         private string _activeDesignSetName = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_SET_NAME;
         private string _activeDesignOptionName = duHastNet.RevitUtils.DesignSetAndOptions.DesignSetAndOptionDefaultNames.MAIN_MODEL_DEFAULT_DESIGN_OPTION_NAME;
@@ -207,36 +209,7 @@ namespace duHastNet.PushIt.ViewModels
             }
         }
 
-        //is UI in safety off mode ? (rooms can be pushed multiple times)
-        public bool SafetyOffMode
-        {
-            get => _safetyOffMode;
-            set
-            {
-                _safetyOffMode = value;
-
-                // set the button text
-                SafetyOffButtonText = value ? "Safety off" : "Safety on";
-
-                //debug
-                //IsWaitingForRevitCommandToFinish = value;
-
-                // notify ui of changes
-                OnPropertyChanged(nameof(SafetyOffMode));
-            }
-        }
-
-        //button text for safety off mode
-        public string SafetyOffButtonText
-        {
-            get => _safetyOffButtonText;
-            set
-            {
-                _safetyOffButtonText = value;
-                OnPropertyChanged(nameof(SafetyOffButtonText));
-            }
-        }
-
+        
         // the currently active design set name
         public string ActiveDesignSetName
         {
@@ -266,8 +239,9 @@ namespace duHastNet.PushIt.ViewModels
         // Field to return a default list of column names
         private readonly List<string> _columnNameDefaultList = new List<string>
         {
-            "Id",
-            "Count"
+            columNameId,
+            columNameCount,
+            columNameCountSplit,
         };
 
         // Property to expose the default list of column names
@@ -488,19 +462,19 @@ namespace duHastNet.PushIt.ViewModels
                 foreach (var column in ColumnOrder)
                 {
                     //check for default columns
-                    if (column == "Count")
+                    if (column == columNameCount)
                     {
-                        dataTable.Columns.Add("Count");
+                        dataTable.Columns.Add(columNameCount);
                         continue;
                     }
-                    else if (column == "Id")
+                    else if (column == columNameId)
                     {
-                        dataTable.Columns.Add("Id");
+                        dataTable.Columns.Add(columNameId);
                         continue;
                     }
-                    else if (column == "Count Split")
+                    else if (column == columNameCountSplit)
                     {
-                        dataTable.Columns.Add("Count Split");
+                        dataTable.Columns.Add(columNameCountSplit);
                         continue;
                     }
                     else
@@ -528,7 +502,7 @@ namespace duHastNet.PushIt.ViewModels
             {
                 //othrwise add columns in default order
                 //add the default id column
-                dataTable.Columns.Add("Id");
+                dataTable.Columns.Add(columNameId);
 
                 // Add columns to the data table
                 foreach (var roomModelInstance in _revitDataModel.GetAllRooms())
@@ -544,9 +518,9 @@ namespace duHastNet.PushIt.ViewModels
                 }
 
                 // Add the count column
-                dataTable.Columns.Add("Count");
+                dataTable.Columns.Add(columNameCount);
                 // Add the count split column
-                dataTable.Columns.Add("Count Split");
+                dataTable.Columns.Add(columNameCountSplit);
             }
 
 
@@ -563,19 +537,19 @@ namespace duHastNet.PushIt.ViewModels
                     // Add columns to the data table in the order specified by the column order
                     foreach (var column in ColumnOrder)
                     {
-                        if (column == "Count")
+                        if (column == columNameCount)
                         {
-                            row["Count"] = roomModelInstance.MatchingRevitRooms.Count;
+                            row[columNameCount] = roomModelInstance.MatchingRevitRooms.Count;
                             continue;
                         }
-                        else if (column == "Count Split")
+                        else if (column == columNameCountSplit)
                         {
-                            row["Count Split"] = roomModelInstance.MatchingSplitRevitRooms.Count;
+                            row[columNameCountSplit] = roomModelInstance.MatchingSplitRevitRooms.Count;
                             continue;
                         }
-                        else if (column == "Id")
+                        else if (column == columNameId)
                         {
-                            row["Id"] = roomModelInstance.Id.Value;
+                            row[columNameId] = roomModelInstance.Id.Value;
                             continue;
                         }
                         else
@@ -599,7 +573,7 @@ namespace duHastNet.PushIt.ViewModels
                 {
                     //add data to the row in default order
                     // add the id value
-                    row["Id"] = roomModelInstance.Id.Value;
+                    row[columNameId] = roomModelInstance.Id.Value;
 
                     // add the property values
                     foreach (var prop in roomModelInstance.Properties)

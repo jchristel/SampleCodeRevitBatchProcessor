@@ -33,3 +33,4 @@ class Settings(Base):
 
         self.pdf_settings = None
         self.dwg_settings = None
+        self.dwg_export_scheme_name = None

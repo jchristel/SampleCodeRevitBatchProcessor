@@ -51,6 +51,24 @@ def set_dwg_export_option():
     return dwg_export_options
 
 
+def get_all_dwg_export_options(doc):
+    """
+    Retrieves all DWG export options.
+
+    :param doc: The Revit document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A list of DWG export options.
+    :rtype: list
+    """
+
+    # Get the export options for the specified setup name
+    dwg_export_options = DWGExportOptions.GetPredefinedOptions(doc)
+
+    # Get the export option names
+    setup_names = BaseExportOptions.GetPredefinedSetupNames(doc)
+
+    return dwg_export_options
+
 def get_dwg_export_option_by_name(doc, dwg_export_option_name):
     """
     Retrieves the DWG export option by name.

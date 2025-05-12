@@ -32,10 +32,10 @@ from duHast.pyRevit.console_output import print_header, print_error
 from duHast.pyRevit.directory_picker import get_process_directory
 
 UI_SHEET_STRING = "*HSL_SHEET_SEQUENCE**Sheet Number*-*Sheet Name*[*Current Revision Date*,*Current Revision Description*]"
-SHEET_NAME_PDF = "*HSL_SHEET_SEQUENCE**Sheet Number*:-:*Sheet Name*?P?[?P?*Current Revision*?S?]?S?"
-SHEET_NAME_DWG = "*HSL_SHEET_SEQUENCE**Sheet Number*-DWG-*Sheet Name*[*Current Revision*]"
+#SHEET_NAME_PDF = "*HSL_SHEET_SEQUENCE**Sheet Number*:-:*Sheet Name*?P?[?P?*Current Revision*?S?]?S?"
+#SHEET_NAME_DWG = "*HSL_SHEET_SEQUENCE**Sheet Number*-DWG-*Sheet Name*[*Current Revision*]"
 
-DWG_EXPORT_OPTION_NAME = "HSL_PROJECT_INTERNAL"
+#DWG_EXPORT_OPTION_NAME = "HSL_PROJECT_INTERNAL"
 
 
 from export.utility import get_sheet_parameter_data, get_naming_chunks, get_user_options, EXPORT_PDF_ONLY, EXPORT_PDF_AND_DWG
@@ -241,7 +241,7 @@ def export_pdf_dwg_entry(doc, output, forms):
                         view_sheet=sheet,
                         sheet_name_string=rename_settings.dwg_settings, 
                         output_directory= output_directory,
-                        dwg_export_option_name=DWG_EXPORT_OPTION_NAME,
+                        dwg_export_option_name=rename_settings.dwg_export_scheme_name,
                     )
                     # check if the export was successful
                     if export_sheet_dwg_result.status == False:

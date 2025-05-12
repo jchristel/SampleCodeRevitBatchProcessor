@@ -56,6 +56,10 @@ def get_name_settings_from_schema(doc):
             exporter_settings.dwg_settings = stored_entity.Get[str](settings.DU_HAST_EXPORTER_DWG_SETTING_FIELD_NAME)
             return_value.append_message("...dwg settings [{}]".format(exporter_settings.dwg_settings))
 
+            # get the dwg export scheme name from the entity
+            exporter_settings.dwg_export_scheme_name = stored_entity.Get[str](settings.DU_HAST_EXPORTER_DWG_SCHEME_NAME_SETTING_FIELD_NAME)
+            return_value.append_message("...dwg export scheme settings [{}]".format(exporter_settings.dwg_export_scheme_name))
+
             return_value.result.append(exporter_settings)
         else:
             return_value.update_sep(False, "...invalid Entity: [{}]".format(stored_entity))

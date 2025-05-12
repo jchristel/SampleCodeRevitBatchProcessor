@@ -51,11 +51,15 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RevitAPI">
-      <HintPath>..\..\_References\RevitAPI.dll</HintPath>
+    <Reference Include="RevitAPI, Version=24.3.10.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\_References\Autodesk\RevitAPI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="RevitAPIUI">
-      <HintPath>..\..\_References\RevitAPIUI.dll</HintPath>
+    <Reference Include="RevitAPIUI, Version=24.3.10.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\_References\Autodesk\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -67,7 +71,8 @@
     <Reference Include="System.Xml" />
     <Reference Include="Utils.23.0.0.3, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\_References\Utils.23.0.0.3.dll</HintPath>
+      <HintPath>..\..\_References\duHast\Utils.23.0.0.3.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>

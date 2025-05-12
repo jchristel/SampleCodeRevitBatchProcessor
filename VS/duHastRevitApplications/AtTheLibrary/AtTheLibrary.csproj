@@ -67,16 +67,17 @@
       <HintPath>..\PushIt\packages\Revit.Async.2.1.1\lib\net45\Revit.Async.dll</HintPath>
     </Reference>
     <Reference Include="RevitAPI">
-      <HintPath>..\..\_References\RevitAPI.dll</HintPath>
+      <HintPath>..\..\_References\Autodesk\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIUI">
-      <HintPath>..\..\_References\RevitAPIUI.dll</HintPath>
+      <HintPath>..\..\_References\Autodesk\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitUtils.23.0.0.3, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\_References\RevitUtils.23.0.0.3.dll</HintPath>
+      <HintPath>..\..\_References\duHast\RevitUtils.23.0.0.3.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -106,7 +107,8 @@
     <Reference Include="System.Xml" />
     <Reference Include="Utils.23.0.0.3, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\_References\Utils.23.0.0.3.dll</HintPath>
+      <HintPath>..\..\_References\duHast\Utils.23.0.0.3.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>

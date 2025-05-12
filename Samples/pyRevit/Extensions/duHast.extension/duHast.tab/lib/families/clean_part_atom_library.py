@@ -22,7 +22,7 @@
 
 
 from duHast.Utilities.Objects.result import Result
-from duHast.Revit.Family.Utility.xml_remove_obsolete_exports.py import remove_obsolete_part_atom_exports
+from duHast.Revit.Family.Utility.xml_remove_obsolete_exports import remove_obsolete_part_atom_exports
 from duHast.pyRevit.directory_picker import get_process_directories
 from duHast.pyRevit.console_output import print_header
 

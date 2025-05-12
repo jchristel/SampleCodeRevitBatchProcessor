@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hash\ComputeHashUtils.cs" />
+    <Compile Include="Logging\LogActionsBase.cs" />
     <Compile Include="Logging\LogEntry.cs" />
     <Compile Include="Logging\SimpleLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

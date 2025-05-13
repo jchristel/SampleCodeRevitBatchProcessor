@@ -52,8 +52,8 @@ namespace duHastNet.AtTheLibrary.ViewModels
         private readonly Commands.RefreshUIFromRevitModelAsyncCommand _raiseRefreshGUICommand;
         //command to raise an event to reload data from file path
         private readonly Commands.ReloadDataFromFileAsyncCommand _raiseReloadDataCommand;
-        //command to push a single room to revit
-        //private readonly Commands.PushSingleRoomInRevitAsyncCommand _raisePushSingleRoomCommand;
+        //command to load family from file path
+        private readonly Commands.LoadFamilyAsyncCommand _loadFamilyCommand;
 
         //command to update the view model if the column order changes
         public RelayCommand ColumnOrderChangedCommand { get; private set; }
@@ -266,8 +266,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
         //commands
         public ICommand RefreshGUICommand { get { return _raiseRefreshGUICommand; } }
         public ICommand ReloadDataCommand { get { return _raiseReloadDataCommand; } }
-        //public ICommand PushSingleRoomCommand { get { return _raisePushSingleRoomCommand; } }
-
+        public ICommand LoadFamilyCommand { get { return _loadFamilyCommand; } }
 
         #endregion Commands
 
@@ -777,6 +776,12 @@ namespace duHastNet.AtTheLibrary.ViewModels
             _raiseReloadDataCommand = new Commands.ReloadDataFromFileAsyncCommand(
                 roomsSelectionViewModel: this,
                 revitDataModel: _revitDataModel
+            );
+
+            // load family from file path
+            _loadFamilyCommand = new Commands.LoadFamilyAsyncCommand(
+                familiesSelectionViewModel: this,
+                revitFamiliesDataModel: _revitDataModel
             );
 
             // create the column order changed command

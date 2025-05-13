@@ -31,8 +31,8 @@ namespace duHastNet.AtTheLibrary.RevitActions
     public class RefreshFamiliesDataWithRevitData : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
 
-        private ViewModels.FamiliesSelectionViewModel _roomsSelectionViewModel;
-        public ViewModels.FamiliesSelectionViewModel RoomsSelectionViewModel => _roomsSelectionViewModel;
+        private ViewModels.FamiliesSelectionViewModel _familiesSelectionViewModel;
+        public ViewModels.FamiliesSelectionViewModel FamiliesSelectionViewModel => _familiesSelectionViewModel;
 
 
         /// <summary>
@@ -176,10 +176,10 @@ namespace duHastNet.AtTheLibrary.RevitActions
             return familiesDataModel;
         }
 
-        public RefreshFamiliesDataWithRevitData(RevitFamiliesDataModel revitModel, ViewModels.FamiliesSelectionViewModel roomsSelectionViewModel)
+        public RefreshFamiliesDataWithRevitData(RevitFamiliesDataModel revitModel, ViewModels.FamiliesSelectionViewModel familiesSelectionViewModel)
         {
             RevitModel = revitModel;
-            _roomsSelectionViewModel = roomsSelectionViewModel;
+            _familiesSelectionViewModel = familiesSelectionViewModel;
         }
     }
 }

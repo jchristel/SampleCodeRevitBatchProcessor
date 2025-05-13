@@ -65,5 +65,10 @@ namespace duHastNet.Utils.Logging
         {
             Messages.Clear();
         }
+
+        public LogActionsBase()
+        {
+            Messages = new List<(string, Utils.WPF.Stores.MessageTypes)>();
+        }
     }
 }

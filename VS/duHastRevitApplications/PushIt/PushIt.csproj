@@ -181,7 +181,6 @@
     <Compile Include="Utilities\Revit\RevitCategoryObjectsConverter.cs" />
     <Compile Include="Utilities\Revit\RevitRoomObjectsConverter.cs" />
     <Compile Include="Utilities\Revit\SharedParameters.cs" />
-    <Compile Include="Utilities\Revit\TransactionCallBack.cs" />
     <Compile Include="Utilities\SettingsUtils.cs" />
     <Compile Include="Utilities\UpdateRoomDataModelWithRoomsRevitModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

@@ -156,7 +156,7 @@ namespace duHastNet.PushIt.Utilities.Revit
             // instructing Revit not to wait for the lock
             // this is done to avoid deadlocks when multiple users are trying to work on the same elements
             TransactWithCentralOptions transactWithCentralOptions = new TransactWithCentralOptions();
-            Utilities.Revit.TransactionCallBack transactionCallBack = new Utilities.Revit.TransactionCallBack(shouldWaitForLock: false);
+            duHastNet.RevitUtils.Transactions.TransactionCallBack transactionCallBack = new duHastNet.RevitUtils.Transactions.TransactionCallBack(shouldWaitForLock: false);
             transactWithCentralOptions.SetLockCallback(transactionCallBack);
 
             //attempt to check out all elements

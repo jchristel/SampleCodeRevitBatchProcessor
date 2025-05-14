@@ -21,10 +21,13 @@ function Get-BuildType($basePath, $config) {
 # Define base paths for PushIt and AtTheLibrary
 $pushItBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastRevitApplications\PushIt"
 $atTheLibraryBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastRevitApplications\AtTheLibrary"
+$uiPDFDWGExporterBasePath = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastUI\PDFDWGExporterUI"
+
 
 # Determine correct build paths using user-selected configuration
 $pushItBuildPath = Get-BuildType $pushItBasePath $buildConfig
 $atTheLibraryBuildPath = Get-BuildType $atTheLibraryBasePath $buildConfig
+$uiPDFDWGExporterBuildPath = Get-BuildType $uiPDFDWGExporterBasePath $buildConfig
 
 # Define source and destination paths for PushIt
 $sourceFilePushIt = "$pushItBuildPath\PushIt.dll"
@@ -49,6 +52,14 @@ $destinationFileRevitAsync = "C:\Users\janchristel\Documents\GitHub\SampleCodeRe
 # Copy Revit Async DLL
 Copy-Item -Path $sourceFileRevitAsync -Destination $destinationFileRevitAsync -Force
 Write-Output "File copied successfully from $sourceFileRevitAsync to $destinationFileRevitAsync"
+
+
+# copy UI dlls
+$sourceFileUI = "$uiPDFDWGExporterBuildPath\PDFDWGExporterUI.dll"
+$destinationFileUI = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\_References\duHast\PDFDWGExporterUI.dll"
+
+Copy-Item -Path $sourceFileUI -Destination $destinationFileUI -Force
+Write-Output "File copied successfully from $sourceFileUI to $destinationFileUI"
 
 
 # lib directory

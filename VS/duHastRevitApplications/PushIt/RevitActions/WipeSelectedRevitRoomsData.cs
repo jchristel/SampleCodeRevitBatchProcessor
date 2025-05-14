@@ -28,7 +28,7 @@ using System.Collections.Generic;
 
 namespace duHastNet.PushIt.RevitActions
 {
-    public class WipeSelectedRevitRoomsData : RevitActionBase, IRevitAction
+    public class WipeSelectedRevitRoomsData : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
         private readonly List<FamilyInstance> _pushTargets;
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;

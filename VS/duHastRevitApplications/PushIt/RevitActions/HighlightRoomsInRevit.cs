@@ -29,7 +29,7 @@ using System.Collections.Generic;
 
 namespace duHastNet.PushIt.RevitActions
 {
-    public class HighlightRoomsInRevit : RevitActionBase, IRevitAction
+    public class HighlightRoomsInRevit : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
         private readonly RoomDataModel _roomToPush;
         private readonly UIDocument _uiDoc;

@@ -27,7 +27,7 @@ using System.Collections.Generic;
 
 namespace duHastNet.PushIt.RevitActions
 {
-    public class RefreshRoomDataWithRevitData : RevitActionBase, IRevitAction
+    public class RefreshRoomDataWithRevitData : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
 
         private ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;

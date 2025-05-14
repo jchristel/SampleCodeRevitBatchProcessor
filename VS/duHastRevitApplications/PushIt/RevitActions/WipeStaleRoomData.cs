@@ -28,7 +28,7 @@ using System.Collections.Generic;
 
 namespace duHastNet.PushIt.RevitActions
 {
-    public class WipeStaleRoomData : RevitActionBase, IRevitAction
+    public class WipeStaleRoomData : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
         private readonly ViewModels.RoomsSelectionViewModel _roomsSelectionViewModel;
         private int _wipeCounter = 0;

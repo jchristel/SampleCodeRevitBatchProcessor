@@ -27,7 +27,7 @@ using System.Collections.Generic;
 
 namespace duHastNet.PushIt.RevitActions
 {
-    public class PushSingleRoomDataToRevit : RevitActionBase, IRevitAction
+    public class PushSingleRoomDataToRevit : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
 
         private readonly RoomDataModel _roomToPush;

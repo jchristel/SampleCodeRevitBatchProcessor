@@ -28,7 +28,7 @@ using System.Windows.Controls;
 
 namespace duHastNet.PushIt.RevitActions
 {
-    public class PushAllRoomDataToRevit : RevitActionBase, IRevitAction
+    public class PushAllRoomDataToRevit : RevitActionBase, duHastNet.RevitUtils.RevitActions.IRevitAction
     {
 
         /// <summary>

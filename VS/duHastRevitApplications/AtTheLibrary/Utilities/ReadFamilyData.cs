@@ -120,6 +120,11 @@ namespace duHastNet.AtTheLibrary.Utilities
                                             showInUI: true,
                                             value: hashValue
                                         ),
+                                    familyFilePath: new Models.FamilyDataProperty(
+                                            name: nameof(Models.FamilyDataModel.FamilyFilePath),
+                                            showInUI: true,
+                                            value: csv.GetField(0)
+                                        ),
                                     familyName: new Models.FamilyDataProperty(
                                             name: nameof(Models.FamilyDataModel.FamilyName),
                                             showInUI: true,

@@ -57,6 +57,7 @@ namespace duHastNet.AtTheLibrary.Commands
                             (string messageAction, Utils.WPF.Stores.MessageTypes messageActionType) = action.Execute(doc);
 
                             //TODO write messages to log...
+                            _revitFamiliesDataModel.LogMessages(action.GetLogMessagesAndLogTypes());
 
                             // return the message to the caller
                             return (messageAction, messageActionType);

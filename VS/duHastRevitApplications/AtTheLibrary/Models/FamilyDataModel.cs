@@ -5,10 +5,11 @@ namespace duHastNet.AtTheLibrary.Models
     public class FamilyDataModel
     {
         /// <summary>
-        /// Family ID ,ade up from family name and category
+        /// Family ID , up from family name and category
         /// </summary>
         public FamilyDataProperty Id { get; private set; }
 
+        public FamilyDataProperty FamilyFilePath { get; private set; }
         public FamilyDataProperty FamilyName { get; private set; }
         public FamilyDataProperty FamilyCategory { get; private set; }
         public FamilyDataProperty FamilyTypeName { get; private set; }
@@ -36,10 +37,17 @@ namespace duHastNet.AtTheLibrary.Models
             _matchingRevitFamilies.Add(family);
         }
 
-        public FamilyDataModel(FamilyDataProperty id, FamilyDataProperty familyName, FamilyDataProperty familyCategory, FamilyDataProperty familyTypeName, List<FamilyDataProperty> otherProperties)
+        public FamilyDataModel(
+            FamilyDataProperty id,
+            FamilyDataProperty familyFilePath,
+            FamilyDataProperty familyName,
+            FamilyDataProperty familyCategory,
+            FamilyDataProperty familyTypeName,
+            List<FamilyDataProperty> otherProperties)
         {
             // set the id and other properties
             Id = id;
+            FamilyFilePath = familyFilePath;
             FamilyName = familyName;
             FamilyCategory = familyCategory;
             FamilyTypeName = familyTypeName;

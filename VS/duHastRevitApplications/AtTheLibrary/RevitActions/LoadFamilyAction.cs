@@ -49,7 +49,7 @@ namespace duHastNet.AtTheLibrary.RevitActions
                 try
                 {
                     var familyLoader = new duHastNet.RevitUtils.Families.FamilyLoad();
-                    bool loadResult = familyLoader.LoadFamilyType(doc, fam.FamilyName.Value,fam.FamilyTypeName.Value, true);
+                    bool loadResult = familyLoader.LoadFamilyType(doc, fam.FamilyFilePath.Value,fam.FamilyTypeName.Value, true);
 
                     if (familyLoader.GetErrorMessages().Count > 0)
                     {

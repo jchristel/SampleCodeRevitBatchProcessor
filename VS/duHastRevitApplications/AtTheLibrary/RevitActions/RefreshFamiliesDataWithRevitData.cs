@@ -140,6 +140,7 @@ namespace duHastNet.AtTheLibrary.RevitActions
             return families;
         }
 
+
         /// <summary>
         /// Update the families data model with the families from the revit model
         /// </summary>
@@ -151,6 +152,9 @@ namespace duHastNet.AtTheLibrary.RevitActions
             // loop over families and update the data model
             foreach (FamilyDataModel familyDataModel in familiesDataModel)
             {
+                //clear the matching families first before adding the new ones
+                familyDataModel.MatchingRevitFamilies.Clear();
+
                 // get the family revit object
                 FamilyRevit familyRevit = familiesInRevitModel.FirstOrDefault(f => f.Id.Value == familyDataModel.Id.Value);
                 // if the family revit object is not null

@@ -156,6 +156,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
                 Margin="0 5 5 5" 
@@ -167,6 +168,10 @@
                 Content="Load family into model"
                 Command="{Binding LoadFamilyCommand}"
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <Button Grid.Column="2"
+                Margin="0 5 5 5" 
+                Content="Edit family"
+                />
         </Grid>
         <!-- admin model data expander -->
         <Border Grid.Row="5" CornerRadius="1" BorderBrush="Gray"  BorderThickness="1" Margin="0 2 0 2">

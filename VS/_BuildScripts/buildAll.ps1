@@ -115,5 +115,5 @@ Build-Solution $solution4
 Build-Solution $solution5
 Copy-DLLs $solution5 @($targetDirSolution5)
 
-Write-Host "✅ Build and copy process completed!"
+Write-Host "Build and copy process completed!"
 Read-Host "Press Enter to exit"

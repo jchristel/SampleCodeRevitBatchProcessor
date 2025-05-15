@@ -23,14 +23,14 @@
 import System
 
 from duHast.Utilities.Objects.result import Result
-
+from duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry import get_entry_value_as_string, set_entry_value
 from duHast.Revit.Common.transaction import in_transaction
 
-from Autodesk.Revit.DB import ColorFillScheme, Color,  ElementId, Transaction
+from Autodesk.Revit.DB import ColorFillScheme, ColorFillSchemeEntry,Color,  ElementId, Transaction, StorageType
 
 def update_by_values(doc, colour_fill_scheme, colour_fill_scheme_data, transaction_manager = in_transaction):
     """
-    Updates the colours of a colour fill scheme by values.
+    Updates the colours and fill patterns of a colour fill scheme by values.
 
     :param colour_fill_scheme: The colour fill scheme.
     :type colour_fill_scheme: ColourFillScheme
@@ -63,9 +63,9 @@ def update_by_values(doc, colour_fill_scheme, colour_fill_scheme_data, transacti
                 # loop over the entries and get the report data
                 for entry in entries:
 
-                    # get the value...may need to cater for other storage types than string
-                    parameter_value = entry.GetStringValue()
-
+                    # get the value as string
+                    parameter_value = get_entry_value_as_string(entry=entry)
+                    
                     # set update flag to default
                     entry_requires_update = False
 
@@ -97,7 +97,6 @@ def update_by_values(doc, colour_fill_scheme, colour_fill_scheme_data, transacti
                            
                             break
 
-
                     # this can throw an exception if the entry values are the same...
                     if entry_requires_update == False:
                         action_return_value.append_message("No update required for entry: {}".format(parameter_value))
@@ -110,7 +109,6 @@ def update_by_values(doc, colour_fill_scheme, colour_fill_scheme_data, transacti
                     entry_requires_update = False
 
                     # if the entry was updated, append the message
-
                     action_return_value.append_message("Updated entry: {} with colour: {},{},{} and fill pattern: {}".format(
                         parameter_value, 
                         colour_fill_scheme_entry.colour_red, 
@@ -125,6 +123,110 @@ def update_by_values(doc, colour_fill_scheme, colour_fill_scheme_data, transacti
                 action_return_value.update_sep(False, "Error in action: {}".format(e))
                 return action_return_value
         
+        if transaction_manager is None:
+           action_result =  action()
+           return action_result
+        else:
+            tranny = Transaction(doc, "Updating colour fill scheme")
+            result_delete = transaction_manager(tranny, action)
+            return_value.update(result_delete)
+            return return_value
+       
+    except Exception as e:
+        return_value.update_sep(False, "Error updating colour fill scheme: {}".format(e))
+        return return_value
+   
+
+def update_existing_and_add_new_values (doc, colour_fill_scheme, colour_fill_scheme_data, transaction_manager = in_transaction):
+    """
+    Updates the colours and fill patterns of a colour fill scheme by values and adds new values if provided in colour fill scheme data.
+
+    :param colour_fill_scheme: The colour fill scheme.
+    :type colour_fill_scheme: ColourFillScheme
+    :param colour_fill_scheme_data: The colour fill scheme data.
+    :type colour_fill_scheme_data: dict
+    
+    :return: The result of the update operation.
+    :rtype: Result
+    """
+
+    return_value = Result()
+
+    try:
+        # Check types
+        if not isinstance(colour_fill_scheme, ColorFillScheme):
+            raise TypeError("colour_fill_scheme must be of type ColourFillScheme. Got {}".format(type(colour_fill_scheme)))
+        
+        if not isinstance(colour_fill_scheme_data, list):
+            raise TypeError("colour_fill_scheme_data must be of type list. Got {}".format(type(colour_fill_scheme_data)))
+
+        # define action to run inside a transaction
+        def action():
+            action_return_value = Result()
+
+            try:
+                # update existing values first
+                update_existing_values_result = update_by_values(doc, colour_fill_scheme, colour_fill_scheme_data, transaction_manager = None)
+                action_return_value.update(update_existing_values_result)
+
+                # add new values
+                # get all entries in the colour fill scheme
+                entries = colour_fill_scheme.GetEntries()
+
+                # loop over the colour fill scheme data and get the matching entry
+                for colour_fill_scheme_entry in colour_fill_scheme_data:
+
+                    entry_exists = False
+                    # loop over the entries and get the report data
+                    for entry in entries:
+
+                        # get the value
+                        parameter_value = get_entry_value_as_string(entry=entry)
+                       
+                        # check if the entry is already in the colour fill scheme
+                        if parameter_value.lower() == colour_fill_scheme_entry.parameter_value.lower():
+                            # skip this value as already updated in first step
+                            entry_exists = True
+                            break
+
+                    # if the entry is in the colour fill scheme, skip it
+                    if entry_exists == True:
+                        entry_exists = False
+                        continue
+
+                    # create a new entry
+                    new_entry = ColorFillSchemeEntry(StorageType(colour_fill_scheme_entry.storage_type))
+                    
+                    # set the value
+                    new_entry = set_entry_value(new_entry, colour_fill_scheme_entry.parameter_value)
+                    
+                    # create a color instance
+                    new_colour = Color(
+                        System.Convert.ToByte(colour_fill_scheme_entry.colour_red),
+                        System.Convert.ToByte(colour_fill_scheme_entry.colour_green),
+                        System.Convert.ToByte(colour_fill_scheme_entry.colour_blue),
+                    )
+                    # set the fill color
+                    entry.Color = new_colour
+                    # set the fill pattern id
+                    entry.FillPatternId = ElementId(colour_fill_scheme_entry.fill_pattern_id)
+
+                    # add the entry to the colour fill scheme
+                    colour_fill_scheme.AddEntry(new_entry)
+                    action_return_value.append_message("Added new entry: {} with colour: {},{},{} and fill pattern: {}".format(
+                        colour_fill_scheme_entry.parameter_value, 
+                        colour_fill_scheme_entry.colour_red, 
+                        colour_fill_scheme_entry.colour_green, 
+                        colour_fill_scheme_entry.colour_blue, 
+                        colour_fill_scheme_entry.fill_pattern_id)
+                    )
+
+                action_return_value.append_message("Colour fill scheme entries updated successfully.")
+                return action_return_value
+            except Exception as e:
+                action_return_value.update_sep(False, "Error in action: {}".format(e))
+                return action_return_value
+            
         if transaction_manager is None:
            action_result =  action()
            return action_result

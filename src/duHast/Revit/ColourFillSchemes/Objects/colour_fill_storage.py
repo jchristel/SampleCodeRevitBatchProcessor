@@ -39,6 +39,7 @@ class ColourFillStorage(Base):
         self.fill_pattern_id = -1
         self.is_in_use=True
         self.is_visible=True
+        self.storage_type=0
         self.colour_red=0
         self.colour_green=0
         self.colour_blue=0
@@ -54,7 +55,8 @@ class ColourFillStorage(Base):
         return [
             "Fill Scheme Name",
             "Area Scheme Name", 
-            "Parameter Value", 
+            "Parameter Value",
+            "Parameter Storage Type",
             "Fill Pattern ID", 
             "Is In Use", 
             "Is Visible", 
@@ -74,6 +76,7 @@ class ColourFillStorage(Base):
             self.fill_scheme_name,
             self.area_scheme_name,
             self.parameter_value,
+            str(self.storage_type),
             str(self.fill_pattern_id),
             str(self.is_in_use),
             str(self.is_visible),

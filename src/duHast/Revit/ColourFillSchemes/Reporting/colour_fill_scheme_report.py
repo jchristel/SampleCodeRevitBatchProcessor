@@ -24,6 +24,7 @@ from Autodesk.Revit.DB import ElementId
 
 
 from duHast.Revit.ColourFillSchemes.Objects.colour_fill_storage import ColourFillStorage
+from duHast.Revit.ColourFillSchemes.colour_fill_scheme_entry import get_entry_value_storage_type
 
 def get_report_data_of_colour_fill_scheme(doc, colour_fill_scheme):
 
@@ -32,6 +33,7 @@ def get_report_data_of_colour_fill_scheme(doc, colour_fill_scheme):
 
     :param colour_fill_scheme: The colour fill scheme element from which to retrieve report data.
     :type colour_fill_scheme: Autodesk.Revit.DB.ColorFillScheme
+    
     :return: A dictionary containing the report data.
     :rtype: dict
     """
@@ -56,7 +58,13 @@ def get_report_data_of_colour_fill_scheme(doc, colour_fill_scheme):
         entry_data = ColourFillStorage()
         entry_data.fill_scheme_name = colour_fill_scheme.Name
         entry_data.area_scheme_name = area_scheme_name
-        entry_data.parameter_value = entry.GetStringValue()
+
+        # get the value and storage type of the entry
+        value_type = get_entry_value_storage_type(entry)
+       
+        entry_data.parameter_value = value_type[0]
+        entry_data.storage_type = value_type[1]
+
         entry_data.fill_pattern_id = entry.FillPatternId.IntegerValue
         entry_data.is_in_use = entry.IsInUse
         entry_data.is_visible = entry.IsVisible

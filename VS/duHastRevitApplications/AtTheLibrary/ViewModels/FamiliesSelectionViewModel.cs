@@ -232,7 +232,7 @@ namespace duHastNet.AtTheLibrary.ViewModels
                 {
                     var selectedRow = _dv[_selectedIndex].Row;
                     var roomId = selectedRow["Id"].ToString();
-                    return _revitDataModel.GetAllFamilies().FirstOrDefault(r => r.Id.Name == roomId);
+                    return _revitDataModel.GetAllFamilies().FirstOrDefault(r => r.Id.Value == roomId);
                 }
                 // return null if the selected index is out of bounds
                 return null;

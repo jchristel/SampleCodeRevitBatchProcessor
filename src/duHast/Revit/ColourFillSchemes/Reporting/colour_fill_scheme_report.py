@@ -61,7 +61,6 @@ def get_report_data_of_colour_fill_scheme(doc, colour_fill_scheme):
 
         # get the value and storage type of the entry
         value_type = get_entry_value_storage_type(entry)
-       
         entry_data.parameter_value = value_type[0]
         entry_data.storage_type = value_type[1]
 
@@ -72,5 +71,6 @@ def get_report_data_of_colour_fill_scheme(doc, colour_fill_scheme):
         entry_data.colour_green = entry.Color.Green
         entry_data.colour_blue = entry.Color.Blue
         report_data.append(entry_data)
+
         
     return report_data

@@ -20,7 +20,7 @@
 #
 #
 
-from Autodesk.Revit.DB import  ColorFillSchemeEntry, ElementId
+from Autodesk.Revit.DB import  ColorFillSchemeEntry, ElementId, StorageType
 
 def get_entry_value_storage_type(entry):
     """
@@ -36,15 +36,15 @@ def get_entry_value_storage_type(entry):
     if isinstance(entry, ColorFillSchemeEntry) == False:
         raise TypeError("entry must be of type ColorFillSchemeEntry. Got {}".format(type(entry)))
 
-    if entry.StorageType == 0:
-           return (None,0)
-    elif entry.StorageType == 1:
+    if entry.StorageType == StorageType.None:
+        return (None,0)
+    elif entry.StorageType == StorageType.Integer:
         return (entry.GetIntegerValue(), 1)
-    elif entry.StorageType == 2:
+    elif entry.StorageType == StorageType.Double:
         return (entry.GetDoubleValue(),2)
-    elif entry.StorageType == 3:
+    elif entry.StorageType == StorageType.String:
         return(entry.GetStringValue(),3)
-    elif entry.StorageType == 4:
+    elif entry.StorageType == StorageType.ElementId:
        return( entry.GetElementIdValue(),4)
 
 
@@ -60,7 +60,7 @@ def get_entry_value_as_string(entry):
 
     value_type = get_entry_value_storage_type(entry)
 
-    if value_type[0] == 0: 
+    if value_type[0] == None: 
         return "None"
     elif value_type[1] == 1:
         return str(value_type[0])

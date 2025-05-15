@@ -54,7 +54,7 @@ namespace duHastNet.AtTheLibrary.RevitActions
                     if (familyLoader.GetErrorMessages().Count > 0)
                     {
                         //log the error
-                        AddMessage($"Error loading family {fam.FamilyName} and type {fam.FamilyTypeName} into Revit: {string.Join("\n", familyLoader.GetErrorMessages())}", Utils.WPF.Stores.MessageTypes.Error);
+                        AddMessage($"Error loading family {fam.FamilyName.Value} and type {fam.FamilyTypeName.Value} into Revit: \n{string.Join("\n", familyLoader.GetErrorMessages())}", Utils.WPF.Stores.MessageTypes.Error);
                     }
                     else
                     {

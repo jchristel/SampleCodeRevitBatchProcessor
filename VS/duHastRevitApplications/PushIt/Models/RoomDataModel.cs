@@ -274,6 +274,36 @@ namespace duHastNet.PushIt.Models
             return properties;
         }
 
+
+        /// <summary>
+        /// Get the value of a property by its name. If the property does not exist, return "N/A"
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        public string GetPropertyValueByName(string propertyName)
+        {
+            // get the property from the list of properties
+            Models.RoomDataProperty property = Properties.Find(x => x.Name == propertyName);
+            if (property != null)
+            {
+                return property.Value;
+            }
+            else
+            {
+                //check if the property is the id
+                if (propertyName == Id.Name)
+                {
+                    return Id.Value;
+                }
+                else
+                {
+                    // if the property is not found, return an empty string
+                    return "N/A";
+                }
+            }
+        }
+
+
         public RoomDataModel()
         {
             // initialize the list of matching rooms

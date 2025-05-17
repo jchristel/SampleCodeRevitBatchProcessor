@@ -33,6 +33,60 @@ namespace duHastNet.PushIt.Utilities
 {
     public static class ReadRoomsData
     {
+
+        /// <summary>
+        /// get the header rows from the file as properties
+        /// </summary>
+        public static List<RoomDataProperty> GetRoomsDataHeaderRows(string filePath, int headerRowsCount=4)
+        {
+            List<List<string>> headerRows = new List<List<string>>();
+
+            //check if valid path
+            if (!File.Exists(filePath))
+            {
+                System.Windows.Forms.MessageBox.Show(
+                            $"Schedule of accomodation file does not exist at: {filePath}",
+                            "Attention",
+                            System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                return null;
+            }
+
+            //read data from comma separated file
+            using (StreamReader sr = new StreamReader(filePath))
+            {
+                for (int i = 0; i < headerRowsCount; i++)
+                {
+                    // Read the header row
+                    var headerRow = sr.ReadLine().Split(',');
+                    headerRows.Add(new List<string>(headerRow));
+                }
+            }
+
+            if (headerRows.Count == 0)
+            {
+                return null;
+            }
+
+            //build properties from the header rows
+            var properties = new List<RoomDataProperty>();
+            for (int i = 0; i < headerRows[0].Count; i++)
+            {
+                var property = new RoomDataProperty(
+                    name: headerRows[0][i],
+                    parameterGUID: headerRows[1][i],
+                    parameterName: "",
+                    value: "empty",
+                    showInUI: bool.Parse(headerRows[3][i].ToLower()),
+                    isReadOnly: bool.Parse(headerRows[2][i].ToLower())
+                );
+                properties.Add(property);
+            }
+
+            // return list of properties
+            return properties;
+        }
+
+
         public static List<Models.RoomDataModel> GetRoomsData(string filePath, int rowsToSkip = 4)
         {
             //Console.WriteLine("Reading Rooms Data from file: " + filePath);
@@ -43,7 +97,7 @@ namespace duHastNet.PushIt.Utilities
             if (!File.Exists(filePath))
             {
                 System.Windows.Forms.MessageBox.Show(
-                            $"Invalid data file path: {filePath}",
+                            $"Schedule of accomodation file does not exist at: {filePath}",
                             "Attention",
                             System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                 return null;

@@ -206,6 +206,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button 
                             Grid.Row="0" 
@@ -217,10 +218,25 @@
                         <Button 
                             Grid.Row="0"
                             Grid.Column="1"
-                            Margin="5 10 0 10" 
+                            Margin="5 10 5 10" 
                             Content="Wipe stale data from rooms in model"
                             Command="{Binding WipeStaleRoomsDataCommand}"
                             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                        <!-- save data as stack panel so the file path can be stored in a hidden text box (MVVM pattern) -->
+                        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="2">
+                            <Button 
+                                Grid.Row="0" 
+                                Grid.Column="2"
+                                Margin="5 10 5 10" 
+                                Content="Save room data"
+                                Click="SaveFile_OnClick"/>
+                            <TextBox 
+                                x:Name="SaveAsPathTextBox" 
+                                Visibility="Collapsed" 
+                                Width="200" 
+                                Height="30"
+                                Text="{Binding SaveFilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
                     </Grid>
                     <Grid>
                         <Grid.RowDefinitions>

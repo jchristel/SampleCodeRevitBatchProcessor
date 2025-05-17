@@ -83,6 +83,8 @@ namespace duHastNet.PushIt.ViewModels
         public RelayCommand ColumnOrderChangedCommand { get; private set; }
         //command to wipe selected rooms in revit
         private readonly Commands.WipeSelectedRevitRoomInstancesAsyncCommand _wipeSelectedRoomDataCommand;
+        //command to save data to csv file
+        private readonly Commands.SaveRoomDataAsyncCommand _saveDataCommand;
 
         //property to check if there are any errors
         public bool HasErrors => _errorsViewModel.HasErrors;
@@ -361,6 +363,53 @@ namespace duHastNet.PushIt.ViewModels
             }
         }
 
+
+
+        private bool _saveFilePathValid;
+        public bool SaveFilePathValid
+        {
+            get => _saveFilePathValid;
+            set
+            {
+                _saveFilePathValid = value;
+                OnPropertyChanged(nameof(SaveFilePathValid));
+            }
+        }
+
+        private string _saveFilePath;
+        public string SaveFilePath
+        {
+            get => _saveFilePath;
+            set
+            {
+                _saveFilePath = value;
+                // check if the file path is valid, if not add an error
+                if (string.IsNullOrEmpty(value))
+                {
+                    // set the data path to invalid
+                    SaveFilePathValid = false;
+                    // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(SaveFilePathValid))
+                    // from the eventhandler ErrorsViewModel_ErrorsChanged
+                    _errorsViewModel.AddError(nameof(SaveFilePath), "Save file path cannot be empty");
+                    AddMessage($"Save file path cannot be empty: {value}", Utils.WPF.Stores.MessageTypes.Error);
+                }
+                else
+                {
+                    // set the data path to valid
+                    SaveFilePathValid = true;
+                    // this will trigger data validation, which in turn will eventually call OnPropertyChanged(nameof(SaveFilePathValid))
+                    // from the eventhandler ErrorsViewModel_ErrorsChanged
+                    _errorsViewModel.ClearErrors(nameof(SaveFilePath));
+                    //excute the command to save data if set up
+                    if (SaveDataCommand is null == false)
+                    {
+                        SaveDataCommand.Execute(null);
+                    }
+                }
+
+                OnPropertyChanged(nameof(SaveFilePath));
+            }
+        }
         #endregion user selection
 
         #region Commands
@@ -374,6 +423,7 @@ namespace duHastNet.PushIt.ViewModels
         public ICommand UpdateFromChangedCategoriesCommand { get { return _updateFromChangedCategoriesCommand; } }
         public ICommand UpdateAllRoomsCommand { get { return _updateAllRoomsCommand; } }
         public ICommand WipeSelectedRoomDataCommand { get { return _wipeSelectedRoomDataCommand; } }
+        public ICommand SaveDataCommand { get { return _saveDataCommand; } }
 
         #endregion Commands
 
@@ -898,6 +948,11 @@ namespace duHastNet.PushIt.ViewModels
             ColumnOrderChangedCommand = new RelayCommand(OnColumnOrderChanged);
             //wipe selected rooms in revit
             _wipeSelectedRoomDataCommand = new Commands.WipeSelectedRevitRoomInstancesAsyncCommand(
+                roomsSelectionViewModel: this,
+                revitDataModel: _revitDataModel
+            );
+            //save data to file command
+            _saveDataCommand = new Commands.SaveRoomDataAsyncCommand(
                 roomsSelectionViewModel: this,
                 revitDataModel: _revitDataModel
             );

@@ -77,5 +77,24 @@ namespace duHastNet.PushIt.Views
                 }
             }
         }
+
+        private void SaveFile_OnClick(object sender, EventArgs e)
+        {
+            var dialog = new System.Windows.Forms.SaveFileDialog
+            {
+                Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*"
+            };
+            var dialogResult = dialog.ShowDialog();
+            if (dialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                SaveAsPathTextBox.Text = dialog.FileName;
+
+                // Since setting the property explicitly bypasses the data binding, 
+                // we must explicitly update it by calling BindingExpression.UpdateSource()
+                this.SaveAsPathTextBox
+                  .GetBindingExpression(TextBox.TextProperty)
+                  .UpdateSource();
+            }
+        }
     }
 }

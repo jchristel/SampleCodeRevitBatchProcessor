@@ -56,6 +56,10 @@
     <Reference Include="CsvHelper, Version=33.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>packages\CsvHelper.33.0.1\lib\net48\CsvHelper.dll</HintPath>
     </Reference>
+    <Reference Include="FileIOWrapper">
+      <HintPath>..\..\_References\duHast\FileIOWrapper.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="LoadingSpinner, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\LoadingSpinner.1.0.0\lib\net48\LoadingSpinner.dll</HintPath>
     </Reference>
@@ -141,6 +145,7 @@
     <Compile Include="Commands\PushSingleRoomInRevitAsyncCommand.cs" />
     <Compile Include="Commands\RefreshUIFromRevitModelAsyncCommand.cs" />
     <Compile Include="Commands\ReloadDataFromFileAsyncCommand.cs" />
+    <Compile Include="Commands\SaveRoomDataAsyncCommand.cs" />
     <Compile Include="Commands\UpdateFromChangedCategoriesAsyncCommand.cs" />
     <Compile Include="Commands\WipeSelectedRevitRoomInstancesAsyncCommand.cs" />
     <Compile Include="Commands\WipeStaleDataRevitAsyncCommand.cs" />

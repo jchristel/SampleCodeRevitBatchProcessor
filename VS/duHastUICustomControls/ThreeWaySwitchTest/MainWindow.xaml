@@ -1,0 +1,17 @@
+﻿<Window x:Class="ThreeWaySwitchTest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ThreeWaySwitchTest"
+        xmlns:custom="clr-namespace:duHastNet.UI.CustomControls;assembly=duHastUICustomControls"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <custom:ThreeWaySwitch 
+            Width="Auto" 
+            Height="Auto"
+            Margin="10 2 10 2"
+            LabelLeft="Push It" LabelCenter="Split It" LabelRight="New Room" DisplayName="Mode" />
+    </Grid>
+</Window>

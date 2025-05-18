@@ -1,0 +1,9 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:duHastNet.UI.CustomControls">
+    <ResourceDictionary.MergedDictionaries>
+        <!-- add the three way switch style !-->
+        <ResourceDictionary Source="/duHastUICustomControls;component/ThreeWaySwitch/ThreeWaySwitchStyle.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

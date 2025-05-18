@@ -23,6 +23,7 @@
 
 
 using duHastNet.PushIt.Utilities;
+using duHastNet.UI.CustomControls;
 using duHastNet.Utils.WPF.Commands;
 using System;
 using System.Collections;
@@ -105,6 +106,42 @@ namespace duHastNet.PushIt.ViewModels
 
         #region push modus
 
+        //three way control setting the operation modus
+        private ThreeWaySwitch.SwitchState _switchState;
+
+        /// <summary>
+        /// property containing the three possible operation modi
+        /// </summary>
+        public ThreeWaySwitch.SwitchState SwitchState
+        {
+            get => _switchState;
+            set
+            {
+                if (_switchState != value)
+                {
+                    _switchState = value;
+
+                    if (_switchState == ThreeWaySwitch.SwitchState.Left)
+                    {
+                        PushItButtonText = "Push It";
+                        _pushOperationMode = PushIt.Utilities.PushMode.Push;
+                    }
+                    else if (_switchState == ThreeWaySwitch.SwitchState.Centre)
+                    {
+                        PushItButtonText = "Split It";
+                        _pushOperationMode = PushMode.Split;
+                    }
+                    else
+                    {
+                        _pushOperationMode = PushIt.Utilities.PushMode.New;
+                        PushItButtonText = "Create New";
+                    }
+
+                    OnPropertyChanged(nameof(SwitchState));
+                }
+            }
+        }
+
         /// the mode of operation for the push it command (push, push and split, push and  new)
         private PushIt.Utilities.PushMode _pushOperationMode;
 
@@ -114,26 +151,6 @@ namespace duHastNet.PushIt.ViewModels
         public PushIt.Utilities.PushMode PushOperationMode
         {
             get => _pushOperationMode;
-            set
-            {
-                _pushOperationMode = value;
-
-                // set the button text
-                if (_pushOperationMode == PushIt.Utilities.PushMode.Push)
-                {
-                    PushItButtonText = "Push It";
-                }
-                else if (_pushOperationMode == PushIt.Utilities.PushMode.New)
-                {
-                    PushItButtonText = "Create New";
-                }
-                else
-                {
-                    PushItButtonText = "Split It";
-                }
-
-                OnPropertyChanged(nameof(PushOperationMode));
-            }
         }
 
         //default button text for push it mode
@@ -363,7 +380,21 @@ namespace duHastNet.PushIt.ViewModels
             }
         }
 
-
+        /// <summary>
+        /// property returning true if either no room is selected or the selected room has no matching split rooms
+        /// </summary>
+        public bool IsMatchingSplitRoomsEmpty
+        {
+            get
+            {
+                var selectedRoom = SelectedRoom;
+                if (selectedRoom != null && SelectedIndex >=0)
+                {
+                    return SelectedRoom.MatchingSplitRevitRooms.Count == 0;
+                }
+                return true;
+            }
+        }
 
         private bool _saveFilePathValid;
         public bool SaveFilePathValid
@@ -958,7 +989,7 @@ namespace duHastNet.PushIt.ViewModels
             );
 
             // set the default push operation mode to push
-            PushOperationMode = PushIt.Utilities.PushMode.Push;
+            _pushOperationMode = PushIt.Utilities.PushMode.Push;
 
             //update rooms data with data from revit through an external event
             RefreshGUICommand.Execute(null);

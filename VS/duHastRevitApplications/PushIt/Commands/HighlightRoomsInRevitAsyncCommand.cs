@@ -99,8 +99,15 @@ namespace duHastNet.PushIt.Commands
             if (_roomsSelectionViewModel.IsWaitingForRevitCommandToFinish)
             {
                 return false;
+            } else if (!_roomsSelectionViewModel.IsMatchingRevitRoomsEmpty)
+            {
+                return true;
+            }else if(!_roomsSelectionViewModel.IsMatchingSplitRoomsEmpty)
+            {
+                return true;
             }
-            return !_roomsSelectionViewModel.IsMatchingRevitRoomsEmpty && base.CanExecute(parameter);
+
+            return base.CanExecute(parameter);
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)

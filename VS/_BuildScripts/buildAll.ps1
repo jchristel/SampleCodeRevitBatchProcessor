@@ -4,6 +4,7 @@ $solution2 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcesso
 $solution3 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastRevitApplications\duHastRevitApplications.sln"
 $solution4 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastApplications\duHastApplications.sln"
 $solution5 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastUI\duHastUI.sln"
+$solution6 = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\duHastUICustomControls\duHastUICustomControls.sln"
 
 $commonDir = "C:\Users\janchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\VS\_References\duHast"
 
@@ -51,9 +52,9 @@ if (Test-Path $commonDir) {
 
     # Verify creation
     if (Test-Path $commonDir) {
-        Write-Host "✅ Successfully created $commonDir."
+        Write-Host "Successfully created $commonDir."
     } else {
-        Write-Host "❌ Error: Failed to create $commonDir."
+        Write-Host "Error: Failed to create $commonDir."
     }
 }
 
@@ -100,6 +101,10 @@ function Copy-DLLs {
 # Build and copy DLLs for Utils
 Build-Solution $solution1
 Copy-DLLs $solution1 @($commonDir)
+
+# Build and copy DLLs for CustomControls
+Build-Solution $solution6
+Copy-DLLs $solution6 @($commonDir)
 
 # Build and copy DLLs for RevitUtils
 Build-Solution $solution2

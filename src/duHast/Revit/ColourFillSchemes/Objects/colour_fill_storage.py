@@ -23,6 +23,20 @@
 
 from duHast.Utilities.Objects.base import Base
 
+from duHast.Revit.ColourFillSchemes.Reporting.colour_fill_scheme_report import (
+    COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX,
+    PROPERTY_FILL_SCHEME_NAME,
+    PROPERTY_AREA_SCHEME_NAME,
+    PROPERTY_PARAMETER_VALUE,
+    PROPERTY_STORAGE_TYPE,
+    PROPERTY_FILL_PATTERN_ID,
+    PROPERTY_IS_IN_USE,
+    PROPERTY_IS_VISIBLE,
+    PROPERTY_COLOUR_RED,
+    PROPERTY_COLOUR_GREEN,
+    PROPERTY_COLOUR_BLUE,
+)
+
 class ColourFillStorage(Base):
     """
     A class to store colour fill information for objects.
@@ -45,6 +59,44 @@ class ColourFillStorage(Base):
         self.colour_blue=0
 
     
+    def import_from_data_row(self, data_row):
+        """
+        Imports data from a data row into the ColourFillStorage object.
+
+        :param data_row: The data row to import from.
+        :type data_row: list
+        :raises TypeError: If data_row is not a list.
+        :raises ValueError: If data_row does not have the correct number of elements.
+        :raises TypeError: If data_row is not a list of strings.
+
+        :return: None
+        :rtype: None
+        """
+
+        # type checking:
+        if not isinstance(data_row, list):
+            raise TypeError("data_row must be of type list. Got {}".format(type(data_row)))
+
+        if len(data_row) != len(COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX):
+            raise ValueError("data_row must have {} elements. Got {}".format(len(COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX), len(data_row)))
+        
+        # check if the data_row is a list of strings
+        if not all(isinstance(item, str) for item in data_row):
+            raise TypeError("data_row must be a list of strings. Got {}".format(type(data_row)))
+        
+        # populate the properties from the data_row
+        self.fill_scheme_name =data_row[COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX[PROPERTY_FILL_SCHEME_NAME]]
+        self.area_scheme_name =data_row[COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX[PROPERTY_AREA_SCHEME_NAME]]
+        self.parameter_value =data_row[COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX[PROPERTY_PARAMETER_VALUE]]
+        self.storage_type = int(data_row[COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX[PROPERTY_STORAGE_TYPE]])
+        self.fill_pattern_id = int(data_row[COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX[PROPERTY_FILL_PATTERN_ID]])
+        self.is_in_use = bool(data_row[COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX[PROPERTY_IS_IN_USE]])
+        self.is_visible = bool(data_row[COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX[PROPERTY_IS_VISIBLE]])
+        self.colour_red = int(data_row[COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX[PROPERTY_COLOUR_RED]])
+        self.colour_green = int(data_row[COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX[PROPERTY_COLOUR_GREEN]])
+        self.colour_blue = int(data_row[COLOUR_FILL_SCHEME_CSV_PROPERTY_INDEX[PROPERTY_COLOUR_BLUE]])
+
+
     def get_report_headers(self):
         """
         Returns the headers for the report.
@@ -72,10 +124,26 @@ class ColourFillStorage(Base):
         :return: A list of data.
         :rtype: list
         """
+
+        # get the value of the entry as a string depending on the storage type
+        entry_value = "None"
+
+        if self.storage_type == 0:
+            entry_value = "None"
+        elif self.storage_type == 1:
+            entry_value = str(self.parameter_value)
+        elif self.storage_type == 2:
+            entry_value = str(self.parameter_value)
+        elif self.storage_type == 3:
+            entry_value = self.parameter_value
+        elif self.storage_type == 4:
+            entry_value = str(self.parameter_value.IntegerValue)
+
+
         return [
             self.fill_scheme_name,
             self.area_scheme_name,
-            self.parameter_value,
+            entry_value,
             str(self.storage_type),
             str(self.fill_pattern_id),
             str(self.is_in_use),

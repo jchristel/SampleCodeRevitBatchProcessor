@@ -86,24 +86,24 @@ def set_entry_value (entry, value):
     if isinstance(entry, ColorFillSchemeEntry) == False:
         raise TypeError("entry must be of type ColorFillSchemeEntry. Got {}".format(type(entry)))
 
-    if entry.StorageType == 0:
+    if entry.StorageType == StorageType.None:
         raise TypeError("entry has no storage type. Got {}".format(type(entry)))
-    elif entry.StorageType == 1:
+    elif entry.StorageType == StorageType.Integer:
         if isinstance(value, int):
             entry.SetIntegerValue(value)
         else:
             entry.SetIntegerValue(int(value))
-    elif entry.StorageType == 2:
+    elif entry.StorageType == StorageType.Double:
         if isinstance(value, float):
             entry.SetDoubleValue(value)
         else:
             entry.SetDoubleValue(float(value))
-    elif entry.StorageType == 3:
+    elif entry.StorageType ==  StorageType.String:
         if isinstance(value, str):
             entry.SetStringValue(value)
         else:
             entry.SetStringValue(str(value))
-    elif entry.StorageType == 4:
+    elif entry.StorageType == StorageType.ElementId:
         if isinstance(value, ElementId):
             entry.SetElementIdValue(value)
         else:

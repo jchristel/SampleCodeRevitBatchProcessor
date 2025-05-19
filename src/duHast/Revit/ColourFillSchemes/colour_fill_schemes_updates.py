@@ -199,6 +199,7 @@ def update_existing_and_add_new_values (doc, colour_fill_scheme, colour_fill_sch
                     
                     # set the value
                     new_entry = set_entry_value(new_entry, colour_fill_scheme_entry.parameter_value)
+
                     
                     # create a color instance
                     new_colour = Color(
@@ -206,13 +207,17 @@ def update_existing_and_add_new_values (doc, colour_fill_scheme, colour_fill_sch
                         System.Convert.ToByte(colour_fill_scheme_entry.colour_green),
                         System.Convert.ToByte(colour_fill_scheme_entry.colour_blue),
                     )
+                   
                     # set the fill color
-                    entry.Color = new_colour
+                    new_entry.Color = new_colour
+                    
                     # set the fill pattern id
-                    entry.FillPatternId = ElementId(colour_fill_scheme_entry.fill_pattern_id)
+                    new_entry.FillPatternId = ElementId(colour_fill_scheme_entry.fill_pattern_id)
+                    
 
                     # add the entry to the colour fill scheme
                     colour_fill_scheme.AddEntry(new_entry)
+                    
                     action_return_value.append_message("Added new entry: {} with colour: {},{},{} and fill pattern: {}".format(
                         colour_fill_scheme_entry.parameter_value, 
                         colour_fill_scheme_entry.colour_red, 

@@ -1,4 +1,27 @@
-﻿using duHastNet.FileIOWrapper;
+﻿//
+//License:
+//
+//
+// Revit Batch Processor Sample Code
+//
+// BSD License
+// Copyright 2025, Jan Christel
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+// - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+// - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+// - Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+//
+// This software is provided by the copyright holder "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+// In no event shall the copyright holder be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+// or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+//
+//
+//
+
+using duHastNet.FileIOWrapper;
 using duHastNet.PushIt.RevitActions;
 using duHastNet.PushIt.Utilities;
 using duHastNet.Utils.WPF.Stores;
@@ -212,6 +235,8 @@ namespace duHastNet.PushIt.Commands
         {
             //build data rows
             List<List<string>> dataRows = new List<List<string>>();
+            
+            //loop over each room and get its report data
             foreach (Models.RoomDataModel room in rooms)
             {
                 // get the property values for the room
@@ -228,11 +253,36 @@ namespace duHastNet.PushIt.Commands
                         dataRow.Add(propertyValue);
                     }
                 }
-                //add the count values
-                dataRow.Add(room.MatchingRevitRooms.Count.ToString());
-                dataRow.Add(room.MatchingSplitRevitRooms.Count.ToString());
 
-                dataRows.Add(dataRow);
+                // need to check how many matching rooms there are and add 1 entry for each of them
+                for (int i = 0; i < room.MatchingRevitRooms.Count; i++)
+                {
+                    //duplicate the data row list
+                    List<string> copyData = new List<string>(dataRow);
+
+                    // add 1 for count and 0 for split count
+                    copyData.Add(1.ToString());
+                    copyData.Add(0.ToString());
+
+                    // add the new list to the return value
+                    dataRows.Add(copyData);
+                }
+
+                //loop over any split rooms:
+                for (int i = 0; i < room.MatchingSplitRevitRooms.Count; i++)
+                {
+                    //duplicate the data row list
+                    List<string> copySplitData = new List<string>(dataRow);
+                    
+                    // add 0 for count and 1 for split count
+                    copySplitData.Add(0.ToString());
+                    copySplitData.Add(1.ToString());
+
+                    //update the id value ( first entry in the list) with the value from the split room
+                    copySplitData[0] = room.MatchingSplitRevitRooms[i].Id.Value;
+                    // add the new list to the return value
+                    dataRows.Add(copySplitData);
+                }
             }
             return dataRows;
         }
@@ -258,6 +308,5 @@ namespace duHastNet.PushIt.Commands
             _roomsSelectionViewModel = roomsSelectionViewModel;
             _roomsSelectionViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
-
     }
 }

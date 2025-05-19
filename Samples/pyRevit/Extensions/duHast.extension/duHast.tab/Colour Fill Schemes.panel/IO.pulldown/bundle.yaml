@@ -1,0 +1,11 @@
+layout:
+  - ExportColourScheme
+  - ImportColourScheme
+
+# bundle tooltip
+tooltip: Manipulating colour fill schemes
+
+
+# bundle author
+author: 
+  - Jan Christel

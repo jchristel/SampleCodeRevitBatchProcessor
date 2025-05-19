@@ -41,6 +41,11 @@ namespace duHastNet.PushIt.Views
             InitializeComponent();
         }
 
+        /// <summary>
+        /// used when browsing SoA data file.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PickFile_OnClick(object sender, EventArgs e)
         {
             var dialog = new System.Windows.Forms.OpenFileDialog();
@@ -58,6 +63,11 @@ namespace duHastNet.PushIt.Views
             }
         }
 
+        /// <summary>
+        /// keep track of columns re-ordered by user
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RoomsDataGrid_ColumnReordered(object sender, EventArgs e)
         {
             // check the view model
@@ -78,11 +88,16 @@ namespace duHastNet.PushIt.Views
             }
         }
 
+        /// <summary>
+        /// used to store dave file path when saving push it room data to disk
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveFile_OnClick(object sender, EventArgs e)
         {
             var dialog = new System.Windows.Forms.SaveFileDialog
             {
-                Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*"
+                Filter = "Text files (*.csv)|*.csv|All files (*.*)|*.*"
             };
             var dialogResult = dialog.ShowDialog();
             if (dialogResult == System.Windows.Forms.DialogResult.OK)

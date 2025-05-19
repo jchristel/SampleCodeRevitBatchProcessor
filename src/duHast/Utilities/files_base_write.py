@@ -191,6 +191,7 @@ def write_report_data(
             )
         finally:
             # make sure to close the file
-            f.close()
+            if (f):
+                f.close()
 
     return return_value

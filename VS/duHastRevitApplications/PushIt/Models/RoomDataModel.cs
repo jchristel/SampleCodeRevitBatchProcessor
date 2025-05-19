@@ -277,6 +277,7 @@ namespace duHastNet.PushIt.Models
 
         /// <summary>
         /// Get the value of a property by its name. If the property does not exist, return "N/A"
+        /// if the property contains a new line character it will be replaced with an _
         /// </summary>
         /// <param name="propertyName"></param>
         /// <returns></returns>
@@ -286,7 +287,10 @@ namespace duHastNet.PushIt.Models
             Models.RoomDataProperty property = Properties.Find(x => x.Name == propertyName);
             if (property != null)
             {
-                return property.Value;
+                // check if there is a new row character, if so replace with an underscore
+                string modifiedString = property.Value.Replace("\r\n", "_").Replace("\n", "_");
+                //return the modified string
+                return modifiedString;
             }
             else
             {
@@ -298,11 +302,10 @@ namespace duHastNet.PushIt.Models
                 else
                 {
                     // if the property is not found, return an empty string
-                    return "N/A";
+                    return $"Property {propertyName} does not exist on room: {Id.Value}";
                 }
             }
         }
-
 
         public RoomDataModel()
         {
@@ -310,6 +313,8 @@ namespace duHastNet.PushIt.Models
             _matchingRevitRooms = new List<RoomsRevit>();
             // initialize the list of matching split rooms
             _matchingSplitRevitRooms = new List<RoomsRevit>();
+            //initialise the ID value
+            Id = new RoomDataProperty("Id", string.Empty, string.Empty, string.Empty, false, false);
         }
 
         public RoomDataModel(RoomDataProperty id, List<RoomDataProperty> otherProperties)

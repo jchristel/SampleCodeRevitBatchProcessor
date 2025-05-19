@@ -124,17 +124,17 @@ namespace duHastNet.PushIt.ViewModels
                     if (_switchState == ThreeWaySwitch.SwitchState.Left)
                     {
                         PushItButtonText = "Push It";
-                        _pushOperationMode = PushIt.Utilities.PushMode.Push;
+                        PushOperationMode = PushIt.Utilities.PushMode.Push;
                     }
                     else if (_switchState == ThreeWaySwitch.SwitchState.Centre)
                     {
                         PushItButtonText = "Split It";
-                        _pushOperationMode = PushMode.Split;
+                        PushOperationMode = PushMode.Split;
                     }
                     else
                     {
-                        _pushOperationMode = PushIt.Utilities.PushMode.New;
                         PushItButtonText = "Create New";
+                        PushOperationMode = PushIt.Utilities.PushMode.New;
                     }
 
                     OnPropertyChanged(nameof(SwitchState));
@@ -146,11 +146,20 @@ namespace duHastNet.PushIt.ViewModels
         private PushIt.Utilities.PushMode _pushOperationMode;
 
         /// <summary>
-        /// property to set the push operation mode through the ui
+        /// property to set the push operation mode through the three way switch
+        /// some commands are checking this value to work out whether they can exceute!
         /// </summary>
         public PushIt.Utilities.PushMode PushOperationMode
         {
             get => _pushOperationMode;
+
+            set
+            {
+                _pushOperationMode = value;
+
+                //notify commands of change
+                OnPropertyChanged(nameof(PushOperationMode));
+            }
         }
 
         //default button text for push it mode
